@@ -6,10 +6,11 @@ $installedAt = @($ModulePathRoots | ForEach-Object { $_ | Join-Path -ChildPath:$
 
 if ($installedAt.Count -gt 0) {
     @(
-        'Module folders have been found at the following locations',
+        'Module folders have been found at the following locations:',
         ($installedAt | ForEach-Object { "`t{0}" -f $_ } | Out-String),
         'Please run the uninstaller, first.'
     ) | Write-Warning;
+    
     return;
 }
 
