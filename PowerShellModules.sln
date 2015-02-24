@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinForms", "WinForms", "{7FB70CDA-4CD6-422A-A62D-7E41613C3388}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GDIPlus", "GDIPlus", "{72F8B79D-B5A3-4C8B-ABD7-4E5A35E11529}"
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Installer", "GDIPlus\Installer\Installer.pssproj", "{8EB5728D-9171-4FFF-8680-18C408002019}"
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Installer", "WinForms\Installer\Installer.pssproj", "{833B8745-0431-4DFC-986A-340C840667C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "WinForms\WinForms\WinForms.csproj", "{F3508D88-E526-4DB8-8879-3D844BBD4AC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDIPlus", "GDIPlus\GDIPlus\GDIPlus.csproj", "{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A19AF169-44DD-4737-82DD-AB83CF18B77A}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EB5728D-9171-4FFF-8680-18C408002019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EB5728D-9171-4FFF-8680-18C408002019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EB5728D-9171-4FFF-8680-18C408002019}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EB5728D-9171-4FFF-8680-18C408002019}.Release|Any CPU.Build.0 = Release|Any CPU
+		{833B8745-0431-4DFC-986A-340C840667C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{833B8745-0431-4DFC-986A-340C840667C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{833B8745-0431-4DFC-986A-340C840667C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{833B8745-0431-4DFC-986A-340C840667C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3508D88-E526-4DB8-8879-3D844BBD4AC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3508D88-E526-4DB8-8879-3D844BBD4AC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3508D88-E526-4DB8-8879-3D844BBD4AC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3508D88-E526-4DB8-8879-3D844BBD4AC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8EB5728D-9171-4FFF-8680-18C408002019} = {72F8B79D-B5A3-4C8B-ABD7-4E5A35E11529}
+		{833B8745-0431-4DFC-986A-340C840667C4} = {7FB70CDA-4CD6-422A-A62D-7E41613C3388}
+		{F3508D88-E526-4DB8-8879-3D844BBD4AC2} = {7FB70CDA-4CD6-422A-A62D-7E41613C3388}
+		{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F} = {72F8B79D-B5A3-4C8B-ABD7-4E5A35E11529}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+	EndGlobalSection
+EndGlobal
