@@ -1,8 +1,8 @@
 $ModuleBaseName = 'GDIPlus';
 
-$ModulePaths = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
+$ModulePathRoots = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
 
-$installedAt = @($ModulePaths | ForEach-Object { $_ | Join-Path -ChildPath:$ModuleBaseName } | Where-Object { Test-Path -Path:$_ });
+$installedAt = @($ModulePathRoots | ForEach-Object { $_ | Join-Path -ChildPath:$ModuleBaseName } | Where-Object { Test-Path -Path:$_ });
 
 if ($installedAt.Count -gt 0) {
     @(
@@ -15,7 +15,7 @@ if ($installedAt.Count -gt 0) {
 
 $i = 0;
 $choices = @(
-    $env:PSModulePath.Split([System.IO.Path]::PathSeparator) | ForEach-Object {
+    $ModulePathRoots | ForEach-Object {
         $i = $i + 1;
         (New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:($i, $_))
     }
