@@ -51,7 +51,7 @@ $Script:InstallLocation = $choices[$result].HelpMessage;
 if (-not ($Script:InstallLocation | Test-Path)) {
 	$AppsFolder = $Script:InstallLocation | Split-Path -Parent;
 	if (-not ($AppsFolder | Test-Path)) {
-		$PsFolder = $Script:InstallLocation | Split-Path -Parent;
+		$PsFolder = $AppsFolder | Split-Path -Parent;
 		if (-not ($PsFolder | Test-Path)) {
 			$PsFolder = New-Item -Path:$PsFolder -ItemType:'Directory';
 		}
