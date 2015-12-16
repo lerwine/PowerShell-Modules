@@ -33,20 +33,19 @@ if ($installedAt.Count -gt 0) {
 }
 
 $i = 0;
-$choices = @(
-    $InstallOptions | ForEach-Object {
-        $i = $i + 1;
-        (New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:($i, $_))
-    }
-);
+$Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
+$InstallOptions | ForEach-Object {
+    $i = $i + 1;
+    $Choices.Add((New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:($i, $_)));
+}
 
-$result = $Host.UI.PromptForChoice("Select Module Location", (@($choices | ForEach-Object { '{0}: {1}' -f $_.Label, $_.HelpMessage }) | Out-String), $choices, 1);
-if ($result -eq $null -or $result -lt 0 -or $result -ge $choices.Count) {
+$result = $Host.UI.PromptForChoice("Select Module Location", (@($Choices | ForEach-Object { '{0}: {1}' -f $_.Label, $_.HelpMessage }) | Out-String).Trim(), $Choices, 0);
+if ($result -eq $null -or $result -lt 0 -or $result -ge $Choices.Count) {
 	'Aborted.' | Write-Warning;
 	return;
 }
 
-$Script:InstallLocation = $choices[$result].HelpMessage;
+$Script:InstallLocation = $Choices[$result].HelpMessage;
 
 if (-not ($Script:InstallLocation | Test-Path)) {
 	$AppsFolder = $Script:InstallLocation | Split-Path -Parent;
@@ -57,12 +56,14 @@ if (-not ($Script:InstallLocation | Test-Path)) {
 		}
 		$AppsFolder = New-Item -Path:$AppsFolder -ItemType:'Directory';
 	}
-	$Script:InstallLocation = New-Item -Path:$Script:InstallLocation -ItemType:'Directory';
+	$folder = New-Item -Path:$Script:InstallLocation -ItemType:'Directory';
+    if ($folder -eq $null) {
+        'Error creating destination folder.' | Write-Warning;
+    	return;
+    }
 }
-if ($Script:InstallLocation -eq $null) {
-    'Error creating destination folder.' | Write-Warning;
-	return;
-}
+
+if ($PSScriptRoot -eq $null) { $PSScriptRoot = Get-Location }
 
 $InstallInfo | ForEach-Object {
 	$source = $PSScriptRoot | Join-Path -ChildPath $_.FileName;
@@ -77,14 +78,14 @@ $InstallInfo | ForEach-Object {
 			$a = ($a | Out-String).Trim();
 			if ($a.Length -gt 0) { $a = ' {0}' -f $a }
 		}
-		@(
+        [System.IO.File]::WriteAllLines($destination, @(
 			'SET BatchPath=%~dp0',
 			'pushd',
 			'cd "%BatchPath%"',
 			('powershell -ExecutionPolicy Bypass -File {0}{1}' -f $_.FileName, $a),
 			'popd',
 			'pause'
-		) | Set-Content -Encoding UTF8 -Path $destination;
+		));
 	}
 }
 
