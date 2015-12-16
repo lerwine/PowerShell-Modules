@@ -2,9 +2,9 @@ $Script:AppName = 'CryptographyScripts';
 $Script:AppFolderName = 'Apps';
 
 $InstallInfo = @(
-	@{ FileName = 'CredentialManager.ps1'; GenerateBatchFile = $true; Args = '-STA' },
-	@{ FileName = 'EncryptFile.ps1'; GenerateBatchFile = $true; Args = '-STA' }
-	@{ FileName = 'DecryptFile.ps1'; GenerateBatchFile = $true; Args = '-STA' }
+	@{ FileName = 'CredentialManager.ps1'; GenerateBatchFile = $true },
+	@{ FileName = 'EncryptFile.ps1'; GenerateBatchFile = $true }
+	@{ FileName = 'DecryptFile.ps1'; GenerateBatchFile = $true; }
 );
 
 $MyDocumentsPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyDocuments);
