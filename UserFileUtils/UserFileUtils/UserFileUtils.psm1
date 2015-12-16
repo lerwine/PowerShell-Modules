@@ -54,8 +54,8 @@ Function Get-SpecialFolder {
         } else {
             if ($PSVersionTable.ClrVersion.Major -lt 4) {
                 switch ($Name) {
-                    'CommonProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'); break; }
-                    'ProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'); break; }
+                    'CommonProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'); break; }
+                    'ProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'); break; }
                     'Windows' { [System.Environment]::GetEnvironmentVariable('SystemRoot'); break; }
                     default { [System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true)); break; }
                 }
