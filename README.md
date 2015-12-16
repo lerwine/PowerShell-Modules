@@ -1,15 +1,30 @@
 Powershell-Modules
 =========================
-This is just a collection of PowerShell modules that I have been working on for personal research.
+This is just a collection of PowerShell modules that I have been working on through personal research.
 
 Contents
 --------
 
-### WinForms
-Module to support creating GUI components.
+### CertificateCryptography
+Encrypt and decrypt using PKI technology.
 
 ### GDIPlus
-Module to support graphic file manipulation.
+Binary Module to support graphic file manipulation.
+
+### LteDev
+PowerShell development utility functions.
+
+### LteUtils
+System and web admin utility functions.
+
+### UserFileUtils
+Utility functions to manage files in user folders.
+
+### WindowsForms
+Script Module to support windows forms in Powershell.
+
+### WinForms
+Not completed: Binary Module to support creating GUI components.
 
 Contributing
 ------------
