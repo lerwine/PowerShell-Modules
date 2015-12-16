@@ -47,6 +47,8 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "LteDev", "LteDev\LteDev\Lte
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "WindowsForms", "WindowsForms\WindowsForms\WindowsForms.pssproj", "{96B46506-A3B4-4CCC-ABDB-B6C2DE5CCBFB}"
 EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "CryptographyScripts", "CertificateCryptography\CryptographyScripts\CryptographyScripts.pssproj", "{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{96B46506-A3B4-4CCC-ABDB-B6C2DE5CCBFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96B46506-A3B4-4CCC-ABDB-B6C2DE5CCBFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96B46506-A3B4-4CCC-ABDB-B6C2DE5CCBFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +119,7 @@ Global
 		{D32F7AEF-0707-4425-A032-BF9F38F50867} = {EEC1FC30-205E-46D6-9AF3-2DE3589D40C4}
 		{40F4C26C-05B3-436E-ABF1-3044176D1FE8} = {F3C490C4-AE6E-410F-918B-D31F248BBD1A}
 		{96B46506-A3B4-4CCC-ABDB-B6C2DE5CCBFB} = {FA296C2F-A68A-4071-85DA-8FCD91CCFECF}
+		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406} = {76C6386C-D283-454E-B9EE-680976C6C247}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35

@@ -1,18 +1,17 @@
-<#
-.SYNOPSIS
-Get special folder names
- 
-.DESCRIPTION
-Returns a list of valid special folder names.
-
-.EXAMPLE
-$NameArray = Get-SpecialFolderNames;
-#>
 Function Get-SpecialFolderNames {
 	[CmdletBinding()]
 	[OutputType([string[]])]
     Param()
-    
+    <#
+        .SYNOPSIS
+			Get special folder names
+         
+        .DESCRIPTION
+			Returns a list of names that can be used to refer to actual spcial folder paths.
+        
+        .OUTPUTS
+			System.String[]. List of non-empty string values.
+    #>
     if ($PSVersionTable.ClrVersion.Major -lt 4) {
         [System.Enum]::GetNames([System.Environment+SpecialFolder]) + @('ProgramFilesX86', 'CommonProgramFilesX86', 'Windows');
     } else {
@@ -20,37 +19,35 @@ Function Get-SpecialFolderNames {
     }
 }
 
-<#
-.SYNOPSIS
-Get special folder path
- 
-.DESCRIPTION
-Converts special folder enumerated value to string path
-
-.PARAMETER Folder
-Enumerated folder value.
-
-.PARAMETER Name
-Name of special folder.
-
-.EXAMPLE
-$WindowsPath = Get-SpecialFolder -Name 'Windows';
-
-.EXAMPLE
-$MyDocumentsPath = Get-SpecialFolder [System.Environment+SpecialFolder]::MyDocuments;
-#>
 Function Get-SpecialFolder {
 	[CmdletBinding(DefaultParameterSetName = 'Enum')]
 	[OutputType([string])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Enum')]
+		# Enumerated folder value.
 		[System.Environment+SpecialFolder]$Folder,
         
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String')]
         [ValidateScript({(Get-SpecialFolderNames) -icontains $_})]
+		# Name of special folder.
 		[string]$Name
 	)
-	
+	<#
+		.SYNOPSIS
+			Get special folder path
+ 
+		.DESCRIPTION
+			Converts special folder enumerated value to string path
+        
+        .OUTPUTS
+			System.String. Path of special folder.
+
+		.EXAMPLE
+			$WindowsPath = Get-SpecialFolder -Name 'Windows';
+
+		.EXAMPLE
+			$MyDocumentsPath = Get-SpecialFolder [System.Environment+SpecialFolder]::MyDocuments;
+	#>
 	Process {
         if ($PSBoundParameters.ContainsKey('Folder')) {
             [System.Environment]::GetFolderPath($Folder);
@@ -69,45 +66,39 @@ Function Get-SpecialFolder {
 	}
 }
 
-<#
-.SYNOPSIS
-Converts a string to a usable file name.
- 
-.DESCRIPTION
-Encodes a string in a format which is compatible with a file name, and can be converted back to the original text.
-
-.PARAMETER InputText
-String to convert to file name
-
-.PARAMETER AllowExtension
-Whether to allow file extensions. If this switch is not present, then the '.' character will be encoded.
-
-.PARAMETER IgnorePathSeparatorChars
-Whether to ignore path separator characters when encoding.
-
-.EXAMPLE
-ConvertTo-SafeFileName -InputText 'My *unsafe* file';
-# Returns 
-
-.EXAMPLE
-'c:\my*path\User.string' | ConvertTo-SafeFileName -IgnorePathSeparatorChars;
-# Returns 
-
-.EXAMPLE
-'*.txt' | ConvertTo-SafeFileName -AllowExtension;
-# Returns 
-#>
 Function ConvertTo-SafeFileName {
     [CmdletBinding()]
 	[OutputType([string])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		# String to convert to file name
         [string[]]$InputText,
         
+		# Whether to allow file extensions. If this switch is not present, then the '.' character will be encoded.
         [switch]$AllowExtension,
         
+		# Whether to ignore path separator characters when encoding.
         [switch]$IgnorePathSeparatorChars
     )
+	<#
+		.SYNOPSIS
+			Converts a string to a usable file name.
+ 
+		.DESCRIPTION
+			Encodes a string in a format which is compatible with a file name, and can be converted back to the original text.
+        
+		.OUTPUTS
+			System.String. Text encoded as a valid file name.
+
+		.EXAMPLE
+			ConvertTo-SafeFileName -InputText 'My *unsafe* file';
+
+		.EXAMPLE
+			'c:\my*path\User.string' | ConvertTo-SafeFileName -IgnorePathSeparatorChars;
+
+		.EXAMPLE
+		'*.txt' | ConvertTo-SafeFileName -AllowExtension;
+	#>
     
     Begin {
         [char[]]$InvalidFileNameChars = [System.IO.Path]::GetInvalidFileNameChars();
@@ -136,30 +127,30 @@ Function ConvertTo-SafeFileName {
     }
 }
 
-<#
-.SYNOPSIS
-Decodes a file name back to the original text
- 
-.DESCRIPTION
-If a file name was creating using 'ConvertTo-SafeFileName', this method will convert it back.
-
-.PARAMETER InputText
-File name to decode
-
-.EXAMPLE
-'' | ConvertFrom-SafeFileName;
-# Returns
-
-.NOTES
-This is just an example function.
-#>
 Function ConvertFrom-SafeFileName {
     [CmdletBinding()]
 	[OutputType([string])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		# File name to decode
         [string[]]$InputText
     )
+	<#
+		.SYNOPSIS
+			Decodes a file name back to the original text
+ 
+		.DESCRIPTION
+			If a file name was creating using 'ConvertTo-SafeFileName', this method will convert it back.
+
+		.OUTPUTS
+			System.String. Encoded file name decoded to its original text.
+
+		.EXAMPLE
+			'' | ConvertFrom-SafeFileName;
+
+		.NOTES
+			This is just an example function.
+	#>
     
     Begin {
         $Regex = New-Object -TypeName:'System.Text.RegularExpressions.Regex' -ArgumentList:('_0x(?<hex>[\da-f]{2})_',
@@ -192,73 +183,61 @@ Function ConvertFrom-SafeFileName {
     }
 }
 
-<#
-.SYNOPSIS
- Reads file path by prompting user.
- 
-.DESCRIPTION
-Displays an open file dialog to allow the user to specify a file path.
-
-.PARAMETER Title
-Title of the file browser window.
-
-.PARAMETER FileName
-Initial file name.
-
-.PARAMETER Filter
-File name filter where the keys are the wildcard file filters, and the values are the descriptions.
-
-.PARAMETER CheckFileExists
-Indicates that the file must exist.
-
-.PARAMETER CheckPathExists
-Indicates that the parent path must exist.
-
-.PARAMETER AddExtension
-Indicates that the default extension should be added, if not specified.
-
-.PARAMETER OpenFile
-Explicitly indicate that the "Open File" dialog should be used.
-
-.PARAMETER SaveFile
-Indicates that the "Save File" dialog should be used.
-
-.EXAMPLE
-$Path = Read-FilePath -Title 'Open config file' -Filter @{ '*.xml' = 'XML Files (*.xml)' }
-if ($Path -eq $null) { 'No file selected' | Write-Warning }
-#>
 Function Read-FilePath {
     [CmdletBinding(DefaultParameterSetName = "OpenFile")]
 	[OutputType([string])]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Title of the file browser window.
         [string]$Title,
         
         [Parameter(Mandatory = $false)]
+		# File name filter where the keys are the wildcard file filters, and the values are the descriptions.
         [HashTable]$Filter,
                 
         [Parameter(Mandatory = $false)]
+		# Initial file name.
         [string]$FileName,
         
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [string[]]$DefaultExt,
+        [Parameter(Mandatory = $false)]
+		# Default extension.
+        [string]$DefaultExt,
 
         [Parameter(Mandatory = $true, ParameterSetName = "FileExists")]
+		# Indicates that the file must exist.
         [switch]$CheckFileExists,
         
         [Parameter(Mandatory = $false, ParameterSetName = "OpenFile")]
+		# Indicates that the parent path must exist.
         [switch]$CheckPathExists,
         
         [Parameter(Mandatory = $false)]
+		# Indicates that the default extension should be added, if not specified.
         [switch]$AddExtension,
         
         [Parameter(Mandatory = $false, ParameterSetName = "OpenFile")]
         [Parameter(Mandatory = $false, ParameterSetName = "FileExists")]
+		# Explicitly indicate that the "Open File" dialog should be used.
         [switch]$OpenFile,
         
         [Parameter(Mandatory = $true, ParameterSetName = "SaveFile")]
+		# Indicates that the "Save File" dialog should be used.
         [switch]$SaveFile
     )
+	<#
+		.SYNOPSIS
+			Reads file path by prompting user.
+ 
+		.DESCRIPTION
+			Displays an open file dialog to allow the user to specify a file path.
+			
+		.OUTPUTS
+			System.String. Path of file selected by user or null if no file was selected.
+
+		.EXAMPLE
+			$Path = Read-FilePath -Title 'Open config file' -Filter @{ '*.xml' = 'XML Files (*.xml)' }
+			if ($Path -eq $null) { 'No file selected' | Write-Warning }
+	#>
 	
 	$FileDialog = &{
 		if ($SaveFile) {
@@ -298,45 +277,40 @@ Function Read-FilePath {
 	}
 }
 
-<#
-.SYNOPSIS
-Reads subdirectory path by prompting user.
- 
-.DESCRIPTION
-Displays an open folder dialog to allow the user to specify a subdirectory path.
-
-.PARAMETER Description
-Description to be displayed in the folder browser window.
-
-.PARAMETER SelectedPath
-Initially selected fold.
-
-.PARAMETER RootFolder
-[Optional] Root folder for browsing.
-
-.PARAMETER ShowNewFolderButton
-Whether to show the 'New Folder' button, which allows the user to create new folders.
-
-.EXAMPLE
-$Path = Read-FolderPath -Description 'Open config location';
-if ($Path -eq $null) { 'No folder selected' | Write-Warning }
-#>
 Function Read-FolderPath {
     [CmdletBinding()]
 	[OutputType([string])]
     Param(
         [Parameter(Mandatory = $true)]
+		# Description to be displayed in the folder browser window.
         [string]$Description,
         
         [Parameter(Mandatory = $false)]
+		# Initially selected folder.
         [string]$SelectedPath,
         
         [Parameter(Mandatory = $false)]
+		# Root folder for browsing.
 		[System.Environment+SpecialFolder]$RootFolder,
         
         [Parameter(Mandatory = $false)]
+		# Whether to show the 'New Folder' button, which allows the user to create new folders.
         [switch]$ShowNewFolderButton
     )
+	<#
+		.SYNOPSIS
+			Reads subdirectory path by prompting user.
+ 
+		.DESCRIPTION
+			Displays an open folder dialog to allow the user to specify a subdirectory path.
+			
+		.OUTPUTS
+			System.String. Path of folder selected by user or null if no folder was selected.
+
+		.EXAMPLE
+			$Path = Read-FolderPath -Description 'Open config location';
+			if ($Path -eq $null) { 'No folder selected' | Write-Warning }
+	#>
     
     $FolderBrowserDialog = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog';
     try {
@@ -508,6 +482,16 @@ Function Get-MinBase64BlockSize {
     [CmdletBinding()]
     [OutputType([int])]
     Param()
+	<#
+		.SYNOPSIS
+			Get minimum base-64 encoding block size.
+ 
+		.DESCRIPTION
+			Get minimum base-64 encoding block size when you intend on emitting line-separated chunks of base64-encoded data.
+			
+		.OUTPUTS
+			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
+	#>
     
     return [UserFileUtils.DataBuffer]::MinBase64BlockSize;
 }
@@ -517,8 +501,19 @@ Function Read-IntegerFromStream {
     [OutputType([int])]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Stream from which to read the bytes of an integer value.
         [System.IO.Stream]$Stream
     )
+	<#
+		.SYNOPSIS
+			Read integer value from stream.
+ 
+		.DESCRIPTION
+			Reads bytes from a stream and converts them to an integer.
+			
+		.OUTPUTS
+			System.Int32. Integer value read from stream.
+	#>
     
     return [UserFileUtils.StreamHelper]::ReadInteger($Stream);
 }
@@ -528,8 +523,19 @@ Function Read-LongIntegerFromStream {
     [OutputType([long])]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Stream from which to read the bytes of a long integer value.
         [System.IO.Stream]$Stream
     )
+	<#
+		.SYNOPSIS
+			Read long integer value from stream.
+ 
+		.DESCRIPTION
+			Reads bytes from a stream and converts them to a long integer.
+			
+		.OUTPUTS
+			System.Int64. Long Integer value read from stream.
+	#>
     
     return [UserFileUtils.StreamHelper]::ReadLongInteger($Stream);
 }
@@ -539,8 +545,19 @@ Function Read-LengthEncodedBytes {
     [OutputType([System.Byte[]])]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Stream to read length-encoded data from.
         [System.IO.Stream]$Stream
     )
+	<#
+		.SYNOPSIS
+			Read length-encoded array of bytes from a Stream.
+ 
+		.DESCRIPTION
+			Reads a length value from the Stream, and then reads the associated number of bytes.
+			
+		.OUTPUTS
+			System.Byte[]. Array of length-encoded bytes read from stream.
+	#>
 
     return ,[UserFileUtils.StreamHelper]::ReadLengthEncodedBytes($Stream);
 }
@@ -549,11 +566,20 @@ Function Write-IntegerToStream {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Stream to write integer value to
         [System.IO.Stream]$Stream,
         
         [Parameter(Mandatory = $true, Position = 0)]
+		# Integer value to be written
         [int]$Value
     )
+	<#
+		.SYNOPSIS
+			Write integer value to a Stream.
+ 
+		.DESCRIPTION
+			Writes an integer value to the Stream as an array of bytes.
+	#>
     
     [UserFileUtils.StreamHelper]::WriteInteger($Stream, $Value);
 }
@@ -562,11 +588,20 @@ Function Write-LongIntegerToStream {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Stream to write long integer value to
         [System.IO.Stream]$Stream,
         
         [Parameter(Mandatory = $true, Position = 0)]
+		# Long Integer value to be written
         [long]$Value
     )
+	<#
+		.SYNOPSIS
+			Write long integer value to a Stream.
+ 
+		.DESCRIPTION
+			Writes a long integer value to the Stream as an array of bytes.
+	#>
     
     [UserFileUtils.StreamHelper]::WriteLongInteger($Stream, $Value);
 }
@@ -575,17 +610,28 @@ Function Write-LengthEncodedBytes {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
+		# Stream to write length-encoded data from
         [System.IO.Stream]$Stream,
 
         [Parameter(Mandatory = $true)]
+		# Bytes to write
         [byte[]]$Bytes,
 
         [Parameter(Mandatory = $false)]
+		# Offset within the array of bytes to be writing
         [int]$Offset = 0,
 
         [Parameter(Mandatory = $false)]
+		# Number of bytes to write
         [int]$Count
     )
+	<#
+		.SYNOPSIS
+			Writes length-encoded data a Stream.
+ 
+		.DESCRIPTION
+			Writes a length-encoded byte array to the Stream.
+	#>
 
     if ($PSBoundParameters.ContainsKey('Offset') -or $PSBoundParameters.ContainsKey('Count')) {
         if ($PSBoundParameters.ContainsKey('Count')) {
@@ -602,11 +648,20 @@ Function New-DataBuffer {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
+		# Minimum capacity, in bytes, of the new data buffer.
         [int]$Capacity,
 		
 		[Parameter(Mandatory = $false)]
+		# Ensures capacity value can be evenly divided by the minimum base-64 block size.
 		[switch]$Base64Encoding
     )
+	<#
+		.SYNOPSIS
+			Create new data buffer object.
+ 
+		.DESCRIPTION
+			Initialize a new object for the purpose of buffering data.
+	#>
 	
 	if ($Base64Encoding) {
         $c = $Capacity - $Capacity % [UserFileUtils.DataBuffer]::MinBase64BlockSize;
@@ -622,17 +677,31 @@ Function ConvertTo-Base64String {
     [OutputType([string])]
     Param(
         [Parameter(Mandatory = $true)]
+		# Data buffer to be converted to base-64 encoded text.
         [UserFileUtils.DataBuffer]$Buffer,
 		
         [Parameter(Mandatory = $false)]
+		# Offset within data buffer, in bytes, to begin encoding.
         [int]$Offset = 0,
 		
         [Parameter(Mandatory = $false)]
+		# Number of bytes to encode
         [int]$Length,
 		
         [Parameter(Mandatory = $false)]
+		# Whether to insert line breaks
 		[switch]$InsertLineBreaks
     )
+	<#
+		.SYNOPSIS
+			Convert data buffer to base-64 encoded text.
+ 
+		.DESCRIPTION
+			Converts the contents of a data buffer to line-separated base64-encoded text.
+
+		.OUTPUTS
+			System.String. Line-separated base64-encoded data.
+	#>
 	
 	if ($PSBoundParameters.ContainsKey('Length')) {
 		$Buffer.ToBase64String($Offset, $Length, $InsertLineBreaks.IsPresent);
@@ -645,11 +714,23 @@ Function ConvertFrom-Base64String {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
+		# Base-64 encoded text
         [string]$InputString,
 		
         [Parameter(Mandatory = $false)]
+		# Minimum capacity, in bytes, of the returned data buffer.
         [int]$MinCapacity
     )
+	<#
+		.SYNOPSIS
+			Convert base-64 encoded text to a data buffer.
+ 
+		.DESCRIPTION
+			Converts the base-64 encoded text to a data buffer object.
+
+		.OUTPUTS
+			UserFileUtils.DataBuffer. Data buffer object.
+	#>
 	
 	if ($PSBoundParameters.ContainsKey('MinCapacity')) {
 		[UserFileUtils.DataBuffer]::FromBase64String($InputString, $MinCapacity);
@@ -663,17 +744,32 @@ Function Read-DataBuffer {
     [OutputType([int])]
     Param(
         [Parameter(Mandatory = $true)]
+		# Data buffer which will contain the data that was read.
         [UserFileUtils.DataBuffer]$Buffer,
 		
         [Parameter(Mandatory = $true)]
+		# Stream to read data from.
         [System.IO.Stream]$Stream,
 		
         [Parameter(Mandatory = $false)]
+		# Offset within data buffer, in bytes, to begin reading.
         [int]$Offset = 0,
 		
         [Parameter(Mandatory = $false)]
+		# Number of bytes to read
         [int]$Count
     )
+	<#
+		.SYNOPSIS
+			Read block of data into data buffer.
+ 
+		.DESCRIPTION
+			Reads a block of data into the data buffer.
+
+		.OUTPUTS
+			System.Integer. The number of bytes read from the Stream.
+	#>
+	
 	
 	if ($PSBoundParameters.ContainsKey('Count')) {
 		$Buffer.Read($Stream, $Offset, $Count);
@@ -686,17 +782,28 @@ Function Write-DataBuffer {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
+		# Data buffer containing data to be written
         [UserFileUtils.DataBuffer]$Buffer,
 		
         [Parameter(Mandatory = $true)]
+		# Stream to write data to.
         [System.IO.Stream]$Stream,
 		
         [Parameter(Mandatory = $false)]
+		# Offset within data buffer, in bytes, to begin writing.
         [int]$Offset = 0,
 		
         [Parameter(Mandatory = $false)]
+		# Number of bytes to write
         [int]$Count
     )
+	<#
+		.SYNOPSIS
+			Write block of data to Stream.
+ 
+		.DESCRIPTION
+			Writes a block of data from the data buffer, to the Stream.
+	#>
 	
 	if ($PSBoundParameters.ContainsKey('Count')) {
 		$Buffer.Write($Stream, $Offset, $Count);

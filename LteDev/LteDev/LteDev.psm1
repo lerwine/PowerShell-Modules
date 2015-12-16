@@ -1,51 +1,43 @@
-<#
-.SYNOPSIS
-Get simple CLR full name
- 
-.DESCRIPTION
-Displays simple CLR full name of a type
-
-.PARAMETER InputType
-Type of CLR object
-
-.PARAMETER InputObject
-Object for get CRL full name
-
-.PARAMETER ForceFullName
-Always include namespace
-
-.PARAMETER NameOnly
-Do not include the namespace
-
-.EXAMPLE
-Get-ClrSimpleFullName -InputType [System.Uri]
-
-.EXAMPLE
-$MyObject.GetType() | Get-ClrSimpleFullName -NameOnly
-
-.EXAMPLE
-$MyObject | Get-ClrSimpleFullName -ForceFullName
-
-.NOTES
-Makes type names simpler, omitting fully qualified assembly names and generic parameter count references.
-#>
 Function Get-ClrSimpleName {
 	[CmdletBinding(DefaultParameterSetName = 'Type')]
 	[OutputType([string])]
 	Param(
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0, ParameterSetName = 'Type')]
+		# Type of CLR object
 		[System.Type]$InputType,
         
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0, ParameterSetName = 'Object')]
+		# Object for get CRL full name
 		[object[]]$InputObject,
         
         [Parameter(Mandatory = $false)]
+		# Always include namespace
         [switch]$ForceFullName,
         
         [Parameter(Mandatory = $false)]
+		# Do not include the namespace
         [switch]$NameOnly
     )
-    
+    <#
+		.SYNOPSIS
+			Get simple CLR full name
+ 
+		.DESCRIPTION
+			Displays simple CLR full name of a type
+
+		.EXAMPLE
+			Get-ClrSimpleFullName -InputType [System.Uri]
+
+		.EXAMPLE
+			$MyObject.GetType() | Get-ClrSimpleFullName -NameOnly
+
+		.EXAMPLE
+			$MyObject | Get-ClrSimpleFullName -ForceFullName
+
+		.NOTES
+			Makes type names simpler, omitting fully qualified assembly names and generic parameter count references.
+	#>
+
     Process {
         if ($PSBoundParameters.ContainsKey('InputObject')) {
             if ($ForceFullName) {
@@ -269,89 +261,69 @@ Function Get-MethodUsage {
     }
 }
 
-<#
-.SYNOPSIS
-Get object type sample usage
- 
-.DESCRIPTION
-Displays sample code text for an object type, to demonstrate usage
-
-.PARAMETER InputType
-Type of CLR object
-
-.PARAMETER InputObject
-Object for which to get usage info
-
-.PARAMETER Constructors
-Return constructors
-
-.PARAMETER Methods
-Return methods
-
-.PARAMETER Properties
-Return properties
-
-.PARAMETER Fields
-Return fields
-
-.PARAMETER Static
-Return static members
-
-.PARAMETER Instance
-Return instance members
-
-.PARAMETER Inherited
-Include inherited members
-
-.PARAMETER ShowBaseTypes
-Include base type names
-
-.EXAMPLE
-Get-TypeUsage -InputType [System.Uri]
-
-.EXAMPLE
-$MyObject.GetType() | Get-TypeUsage -Methods
-
-.EXAMPLE
-$MyObject | Get-TypeUsage
-
-.NOTES
-If none of the optional switches are used, then all information will be returned.
-#>
 Function Get-TypeUsage {
 	[CmdletBinding(DefaultParameterSetName = 'Type')]
 	[OutputType([string[]])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Type')]
+		# Type of CLR object
 		[Type]$InputType,
         
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Object')]
+		# Object for which to get usage info
 		[object[]]$InputObject,
         
 		[Parameter(Mandatory = $false)]
+		# Return constructors
 		[switch]$Constructors,
         
 		[Parameter(Mandatory = $false)]
+		# Return methods
 		[switch]$Methods,
         
 		[Parameter(Mandatory = $false)]
+		# Return properties
 		[switch]$Properties,
         
 		[Parameter(Mandatory = $false)]
+		# Return fields
 		[switch]$Fields,
         
 		[Parameter(Mandatory = $false)]
+		# Return static members
 		[switch]$Static,
         
 		[Parameter(Mandatory = $false)]
+		# Return instance (non-static) members
 		[switch]$Instance,
         
 		[Parameter(Mandatory = $false)]
+		# Include inherited members
 		[switch]$Inherited,
         
 		[Parameter(Mandatory = $false)]
+		# Include base type names
 		[switch]$ShowBaseTypes
 	)
+	<#
+		.SYNOPSIS
+			Get object type sample usage
+ 
+		.DESCRIPTION
+			Displays sample code text for an object type, to demonstrate usage
+
+		.EXAMPLE
+			Get-TypeUsage -InputType [System.Uri]
+
+		.EXAMPLE
+			$MyObject.GetType() | Get-TypeUsage -Methods
+
+		.EXAMPLE
+			$MyObject | Get-TypeUsage
+
+		.NOTES
+			If none of the optional switches are used, then all information will be returned.
+	#>
 	
     Begin {
         $Options = @{
