@@ -43,9 +43,10 @@ if ($installedAt.Count -gt 1) {
     );
 }
 
-$result = $Host.UI.PromptForChoice("Confirm Uninstall",$Message, @(
-    (New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:"Yes"),
-    (New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:"No")), 1);
+$Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
+$Choices.Add((New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:"Yes"));
+$Choices.Add((New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:"No"));
+$result = $Host.UI.PromptForChoice("Confirm Uninstall",$Message, $Choices, 1);
 if ($result -ne $null -and $result -eq 0) {
     $installedAt | ForEach-Object { Remove-Item -Path:$_ -Force -Recurse; }
 }
