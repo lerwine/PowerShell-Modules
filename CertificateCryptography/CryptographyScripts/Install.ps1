@@ -79,6 +79,7 @@ $InstallInfo | ForEach-Object {
 			if ($a.Length -gt 0) { $a = ' {0}' -f $a }
 		}
         [System.IO.File]::WriteAllLines($destination, @(
+        		'@ECHO OFF',
 			'SET BatchPath=%~dp0',
 			'pushd',
 			'cd "%BatchPath%"',
