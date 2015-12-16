@@ -707,7 +707,7 @@ Function New-AesManaged {
         
         [Parameter(Mandatory = $false)]
         # Initialization vector (IV) to use for the symmetric algorithm.
-        [byte[]]$IV,
+        [byte[]]$InitializationVector,
         
         [Parameter(Mandatory = $false)]
         # The secret key used for the symmetric algorithm.
@@ -745,7 +745,7 @@ Function New-AesManaged {
     $AesManaged.BlockSize = $BlockSize;
     $AesManaged.Mode = $Mode;
     $AesManaged.Padding = $PaddingMode;
-    if ($PSBoundParameters.ContainsKey('IV')) { $AesManaged.IV = $IV; }
+    if ($PSBoundParameters.ContainsKey('InitializationVector')) { $AesManaged.IV = $InitializationVector; }
     if ($PSBoundParameters.ContainsKey('Key')) {
         if ($PSBoundParameters.ContainsKey('Key')) {
             $AesManaged.KeySize = $KeySize;
@@ -760,7 +760,7 @@ Function New-AesManaged {
 }
 
 Function Protect-WithRSA {
-    [CmdletBinding(DefaultParameterSetName = "Implicit")]
+    [CmdletBinding()]
     [OutputType([byte[]])]
     Param(
         [Parameter(Mandatory = $true)]
@@ -771,11 +771,7 @@ Function Protect-WithRSA {
         # The data to be encrypted. 
         [byte[]]$Bytes,
         
-        [Parameter(Mandatory = $true, ParameterSetName = "Explicit")]
-        # Padding to use during encryption
-        [System.Security.Cryptography.RSAEncryptionPadding]$Padding,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
+        [Parameter(Mandatory = $false)]
         # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
         [switch]$OAEP
     )
@@ -796,17 +792,12 @@ Function Protect-WithRSA {
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
     
-    $encrypted = $null;
-    if ($PSBoundParameters.ContainsKey('Padding')) {
-        $encrypted = $RSA.Encrypt($Bytes, $Padding);
-    } else {
-        $encrypted = $RSA.Encrypt($Bytes, $OAEP.IsPresent);
-    }
+    $encrypted = $encrypted = $RSA.Encrypt($Bytes, $OAEP.IsPresent);
     return ,$encrypted;
 }
 
 Function Protect-WithX509Certificate {
-    [CmdletBinding(DefaultParameterSetName = "Implicit")]
+    [CmdletBinding()]
     [OutputType([byte[]])]
     Param(
         [Parameter(Mandatory = $true)]
@@ -818,11 +809,7 @@ Function Protect-WithX509Certificate {
         # The data to be encrypted. 
         [byte[]]$Bytes,
         
-        [Parameter(Mandatory = $true, ParameterSetName = "Explicit")]
-        # Padding to use during encryption
-        [System.Security.Cryptography.RSAEncryptionPadding]$Padding,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
+        [Parameter(Mandatory = $false)]
         # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
         [switch]$OAEP
     )
@@ -843,14 +830,10 @@ Function Protect-WithX509Certificate {
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
     
-    if ($PSBoundParameters.ContainsKey('Padding')) {
-        Protect-WithRSA -RSA $Certificate.PublicKey.Key -Padding $Padding;
+    if ($OAEP) {
+        Protect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes -OAEP;
     } else {
-        if ($OAEP) {
-            Protect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes -OAEP;
-        } else {
-            Protect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes;
-        }
+        Protect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes;
     }
 }
 
@@ -886,11 +869,6 @@ Function Protect-WithSymmetricAlgorithm {
         [Parameter(Mandatory = $false)]
         # Id of parent progress indicator.
         [int]$ParentProgressId,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = "CertificateExplicit")]
-        [Parameter(Mandatory = $true, ParameterSetName = "RSAExplicit")]
-        # Padding to use during encryption
-        [System.Security.Cryptography.RSAEncryptionPadding]$Padding,
         
         [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
         # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
@@ -1047,7 +1025,7 @@ Function Protect-WithSymmetricAlgorithm {
 }
 
 Function Unprotect-WithRSA {
-    [CmdletBinding(DefaultParameterSetName = "Implicit")]
+    [CmdletBinding()]
     [OutputType([byte[]])]
     Param(
         [Parameter(Mandatory = $true)]
@@ -1058,11 +1036,7 @@ Function Unprotect-WithRSA {
         # The encryptd data.
         [byte[]]$Bytes,
         
-        [Parameter(Mandatory = $true, ParameterSetName = "Explicit")]
-        # Padding to use during decryption
-        [System.Security.Cryptography.RSAEncryptionPadding]$Padding,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
+        [Parameter(Mandatory = $false)]
         # $true to perform direct RSA decryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
         [switch]$OAEP
     )
@@ -1083,12 +1057,7 @@ Function Unprotect-WithRSA {
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
     
-    $decrypted = $null;
-    if ($PSBoundParameters.ContainsKey('Padding')) {
-        $decrypted = $RSA.Decrypt($Bytes, $Padding);
-    } else {
-        $decrypted = $RSA.Decrypt($Bytes, $OAEP.IsPresent);
-    }
+    $decrypted = $RSA.Decrypt($Bytes, $OAEP.IsPresent);
     return ,$decrypted;
 }
 
@@ -1104,10 +1073,6 @@ Function Unprotect-WithX509Certificate {
         [Parameter(Mandatory = $true)]
         # The encryptd data.
         [byte[]]$Bytes,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = "Explicit")]
-        # Padding to use during encryption
-        [System.Security.Cryptography.RSAEncryptionPadding]$Padding,
         
         [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
         # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
@@ -1130,19 +1095,15 @@ Function Unprotect-WithX509Certificate {
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
     
-    if ($PSBoundParameters.ContainsKey('Padding')) {
-        Unprotect-WithRSA -RSA $Certificate.PublicKey.Key -Padding $Padding;
+    if ($OAEP) {
+        Unprotect-WithRSA -RSA $Certificate.PrivateKey -Bytes $Bytes -OAEP;
     } else {
-        if ($OAEP) {
-            Unprotect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes -OAEP;
-        } else {
-            Unprotect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes;
-        }
+        Unprotect-WithRSA -RSA $Certificate.PrivateKey -Bytes $Bytes;
     }
 }
 
 Function Unprotect-WithSymmetricAlgorithm {
-    [CmdletBinding(DefaultParameterSetName = 'Certificate')]
+    [CmdletBinding(DefaultParameterSetName = 'Implicit')]
     [OutputType([long])]
     Param(
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
@@ -1174,11 +1135,6 @@ Function Unprotect-WithSymmetricAlgorithm {
         [Parameter(Mandatory = $false)]
         # Id of parent progress indicator.
         [int]$ParentProgressId,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = "CertificateExplicit")]
-        [Parameter(Mandatory = $true, ParameterSetName = "RSAExplicit")]
-        # Padding to use during decryption
-        [System.Security.Cryptography.RSAEncryptionPadding]$Padding,
         
         [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
         # $true to perform direct RSA decryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
@@ -1223,18 +1179,19 @@ Function Unprotect-WithSymmetricAlgorithm {
         }
 
         $Algorithm.IV = Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop;
+        [byte[]]$EncryptedKey = Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop;
     
         if ($PSBoundParameters.ContainsKey('Certificate')) {
             if ($OAEP) {
-                $Algorithm.Key = Unprotect-WithX509Certificate -Certificate $Certificate -Bytes (Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop) -OAEP;
+                $Algorithm.Key = Unprotect-WithX509Certificate -Certificate $Certificate -Bytes $EncryptedKey -OAEP;
             } else {
-                $Algorithm.Key = Unprotect-WithX509Certificate -Certificate $Certificate -Bytes (Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop);
+                $Algorithm.Key = Unprotect-WithX509Certificate -Certificate $Certificate -Bytes $EncryptedKey;
             }
         } else {
             if ($OAEP) {
-                $Algorithm.Key = Unprotect-WithRSA -RSA $RSA -Bytes (Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop) -OAEP;
+                $Algorithm.Key = Unprotect-WithRSA -RSA $RSA -Bytes $EncryptedKey -OAEP;
             } else {
-                $Algorithm.Key = Unprotect-WithRSA -RSA $RSA -Bytes (Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop);
+                $Algorithm.Key = Unprotect-WithRSA -RSA $RSA -Bytes $EncryptedKey;
             }
         }
     
