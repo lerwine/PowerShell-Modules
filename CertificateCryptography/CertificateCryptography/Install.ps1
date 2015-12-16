@@ -11,6 +11,9 @@ if ($installedAt.Count -gt 0) {
         '',
 		'Do you wish to overwrite?'
     ) | Out-String).Trim();
+    $result = $Host.UI.PromptForChoice("Confirm Overwrite", $Message, @(
+        (New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:"Yes"),
+        (New-Object -TypeName:'System.Management.Automation.Host.ChoiceDescription' -ArgumentList:"No")), 1);
 	if ($result -eq $null -or $result -ne 0) {
 		'Aborted.' | Write-Warning;
 		return;
@@ -28,11 +31,13 @@ $choices = @(
 $result = $Host.UI.PromptForChoice("Select Module Location", (@($choices | ForEach-Object { '{0}: {1}' -f $_.Label, $_.HelpMessage }) | Out-String), $choices, 1);
 $ModuleInstallLocation = $choices[$result].HelpMessage | Join-Path -ChildPath:$ModuleBaseName;
 
-$folder = New-Item -Path:$ModuleInstallLocation -ItemType:'Directory';
+if (-not ($ModuleInstallLocation | Test-Path)) {
+    $folder = New-Item -Path:$ModuleInstallLocation -ItemType:'Directory';
 
-if ($folder -eq $null) {
-    'Error creating destination folder.' | Write-Warning;
-    return;
+    if ($folder -eq $null) {
+        'Error creating destination folder.' | Write-Warning;
+        return;
+    }
 }
 
 $fileName = $ModuleBaseName + '.psm1';
@@ -41,8 +46,8 @@ $destination = $ModuleInstallLocation | Join-Path -ChildPath:$fileName;
 Copy-Item -Path:$source -Destination:$destination -Force;
 
 $fileName = $ModuleBaseName + '.psd1';
-$source = $PSScriptRoot | Join-Path -ChildPath:$DllFileName;
-$destination = $ModuleInstallLocation | Join-Path -ChildPath:$DllFileName;
+$source = $PSScriptRoot | Join-Path -ChildPath:$fileName;
+$destination = $ModuleInstallLocation | Join-Path -ChildPath:$fileName;
 Copy-Item -Path:$source -Destination:$destination -Force;
 
 'Finished.' | Write-Host;

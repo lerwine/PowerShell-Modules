@@ -1,3 +1,4 @@
+@ECHO OFF
 SET BatchPath=%~dp0
 pushd
 cd "%BatchPath%"

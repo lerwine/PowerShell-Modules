@@ -86,4 +86,3 @@ try {
     }
     if ([System.IO.File]::Exists($TempPath)) { [System.IO.File]::Delete($TempPath) }
 }
-}
