@@ -26,11 +26,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Content Include="CredentialManager.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CredentialManager.ps1" />
+    <Compile Include="DecryptFile.bat" />
     <Compile Include="DecryptFile.ps1" />
+    <Compile Include="EncryptFile.bat" />
     <Compile Include="EncryptFile.ps1" />
-    <Compile Include="Script.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
