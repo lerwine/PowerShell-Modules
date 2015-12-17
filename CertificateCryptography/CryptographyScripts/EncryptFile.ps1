@@ -63,7 +63,7 @@ try {
         for ($count = (Read-DataBuffer -Buffer $DataBuffer -Stream $TempStream); $count -gt 0; $count = (Read-DataBuffer -Buffer $DataBuffer -Stream $TempStream)) {
             $StreamWriter.WriteLine((ConvertTo-Base64String -Buffer $DataBuffer -Length $count -InsertLineBreaks).Trim());
             [long]$totalBytesRead = $totalBytesRead + [long]$count;
-            [int]$pct = (($totalBytesRead * 100) / $TempStream.Length -shr 1) + 50;
+            [int]$pct = ((($totalBytesRead * 100) / $TempStream.Length) / 2) + 50;
             if ($pct -ne $percentComplete) {
                 $percentComplete = $pct;
                 Write-Progress -Activity 'Encoding File' -Status 'Working' -Id 1 -PercentComplete $percentComplete -CurrentOperation ('Encoding {0} bytes of {1}' -f $totalBytesRead, $TempStream.Length);
