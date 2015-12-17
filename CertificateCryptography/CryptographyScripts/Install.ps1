@@ -83,7 +83,7 @@ $InstallInfo | ForEach-Object {
 			'SET BatchPath=%~dp0',
 			'pushd',
 			'cd "%BatchPath%"',
-			('powershell -ExecutionPolicy Bypass -File {0}{1}' -f $_.FileName, $a),
+			('powershell -ExecutionPolicy Bypass{0} -File {1}' -f $a, $_.FileName),
 			'popd',
 			'pause'
 		));
