@@ -57,11 +57,13 @@ try {
     }
         
     try {
-        $DataBuffer = New-DataBuffer -Capacity 65535 -Base64Encoding;
+		$BlockSize = 65535;
+		$BlockSize -= $BlockSize % (Get-MinBase64BlockSize);
+        $Buffer = New-Object -TypeName 'System.Byte[]' -ArgumentList $BlockSize;
         $percentComplete = 0;
         [long]$totalBytesRead = 0;
-        for ($count = (Read-DataBuffer -Buffer $DataBuffer -Stream $TempStream); $count -gt 0; $count = (Read-DataBuffer -Buffer $DataBuffer -Stream $TempStream)) {
-            $StreamWriter.WriteLine((ConvertTo-Base64String -Buffer $DataBuffer -Length $count -InsertLineBreaks).Trim());
+        for ($count =  $TempStream.Read($Buffer, 0, $BlockSize); $count -gt 0; $count = $TempStream.Read($Buffer, 0, $BlockSize)) {
+            $StreamWriter.WriteLine((ConvertTo-Base64String -Buffer $Buffer -Length $count -InsertLineBreaks).Trim());
             [long]$totalBytesRead = $totalBytesRead + [long]$count;
             [int]$pct = ((($totalBytesRead * 100) / $TempStream.Length) / 2) + 50;
             if ($pct -ne $percentComplete) {

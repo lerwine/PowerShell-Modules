@@ -374,6 +374,24 @@ namespace UserFileUtils {
     using System.Text;
     using System.Text.RegularExpressions;
     public class StreamHelper {
+		private static int? _minBase64BlockSize = null;
+		public static int MinBase64BlockSize {
+			get {
+				if (StreamHelper._minBase64BlockSize.HasValue)
+					return StreamHelper._minBase64BlockSize.Value;
+				int minBase64BlockSize = 0;
+				string s = "";
+				Regex regex = new Regex(@"\s");
+				do {
+					minBase64BlockSize++;
+					byte[] buffer = new byte[minBase64BlockSize];
+					s = Convert.ToBase64String(buffer, 0, minBase64BlockSize, Base64FormattingOptions.InsertLineBreaks).Trim();
+				} while (!regex.IsMatch(s));
+				
+				StreamHelper._minBase64BlockSize = minBase64BlockSize;
+				return minBase64BlockSize;
+			}
+		}
         public static int ReadInteger(Stream inputStream) {
             if (inputStream == null)
                 throw new ArgumentNullException("inputStream");
@@ -447,73 +465,6 @@ namespace UserFileUtils {
             StreamHelper._WriteLengthEncodedBytes(outputStream, buffer, 0, buffer.Length);
         }
     }
-	public class DataBuffer {
-		private byte[] _data;
-		public byte[] Data { get { return this._data; } }
-		public int Capacity { get { return this._data.Length; } }
-		private static int? _minBase64BlockSize = null;
-		public static int MinBase64BlockSize {
-			get {
-				if (DataBuffer._minBase64BlockSize.HasValue)
-					return DataBuffer._minBase64BlockSize.Value;
-				int minBase64BlockSize = 0;
-				string s = "";
-				Regex regex = new Regex(@"\s");
-				do {
-					minBase64BlockSize++;
-					byte[] buffer = new byte[minBase64BlockSize];
-					s = Convert.ToBase64String(buffer, 0, minBase64BlockSize, Base64FormattingOptions.InsertLineBreaks).Trim();
-				} while (!regex.IsMatch(s));
-				
-				DataBuffer._minBase64BlockSize = minBase64BlockSize;
-				return minBase64BlockSize;
-			}
-		}
-		internal DataBuffer(byte[] data) {
-			if (data == null)
-                throw new ArgumentNullException("data");
-			this._data = data;
-		}
-		internal DataBuffer(byte[] data, int minCapacity) {
-			if (data == null)
-				this._data = new byte[minCapacity];
-			else if (data.Length < minCapacity) {
-				this._data = new byte[minCapacity];
-				Array.Copy(data, 0, this._data, 0, data.Length);
-			} else
-				this._data = data;
-		}
-		public DataBuffer(int capacity) {
-            if (capacity < 1)
-                throw new ArgumentOutOfRangeException("Capacity cannot be less than 1.", "capacity");
-			this._data = new byte[capacity];
-		}
-		public int Read(Stream stream, int offset, int count) {
-			if (stream == null)
-                throw new ArgumentNullException("stream");
-			return stream.Read(this._data, offset, count);
-		}
-		public void Write(Stream stream, int offset, int count) {
-			if (stream == null)
-                throw new ArgumentNullException("stream");
-			stream.Write(this._data, offset, count);
-		}
-		public string ToBase64String(int offset, int length, bool insertLineBreaks) {
-			if (insertLineBreaks)
-				return Convert.ToBase64String(this._data, offset, length, Base64FormattingOptions.InsertLineBreaks);
-			return Convert.ToBase64String(this._data, offset, length);
-		}
-		public static DataBuffer FromBase64String(string s) {
-			byte[] data = Convert.FromBase64String(s);
-			if (data.Length == 0)
-				return null;
-				
-			return new DataBuffer(data);
-		}
-		public static DataBuffer FromBase64String(string s, int minCapacity) {
-			return new DataBuffer(Convert.FromBase64String(s), minCapacity);
-		}
-	}
 }
 '@;
 
@@ -532,7 +483,7 @@ Function Get-MinBase64BlockSize {
 			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
 	#>
     
-    return [UserFileUtils.DataBuffer]::MinBase64BlockSize;
+    return [UserFileUtils.StreamHelper]::MinBase64BlockSize;
 }
 
 Function Read-IntegerFromStream {
@@ -731,56 +682,13 @@ Function Write-LengthEncodedBytes {
     }
 }
 
-Function New-DataBuffer {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Minimum capacity, in bytes, of the new data buffer.
-        [int]$Capacity,
-		
-		[Parameter(Mandatory = $false)]
-		# Ensures capacity value can be evenly divided by the minimum base-64 block size.
-		[switch]$Base64Encoding
-    )
-	<#
-		.SYNOPSIS
-			Create new data buffer object.
- 
-		.DESCRIPTION
-			Initialize a new object for the purpose of buffering data.
-
-        .OUTPUTS
-            UserFileUtils.DataBuffer. Represents a re-usable data buffer.
-        
-        .LINK
-            ConvertTo-Base64String
-        
-        .LINK
-            ConvertFrom-Base64String
-        
-        .LINK
-            Read-DataBuffer
-        
-        .LINK
-            Write-DataBuffer
-	#>
-	
-	if ($Base64Encoding) {
-        $c = $Capacity - $Capacity % [UserFileUtils.DataBuffer]::MinBase64BlockSize;
-		if ($c -lt [UserFileUtils.DataBuffer]::MinBase64BlockSize) { $c = [UserFileUtils.DataBuffer]::MinBase64BlockSize }
-		New-Object -TypeName 'UserFileUtils.DataBuffer' -ArgumentList $c;
-	} else {
-		New-Object -TypeName 'UserFileUtils.DataBuffer' -ArgumentList $Capacity;
-	}
-}
-
 Function ConvertTo-Base64String {
     [CmdletBinding()]
     [OutputType([string])]
     Param(
         [Parameter(Mandatory = $true)]
 		# Data buffer to be converted to base-64 encoded text.
-        [UserFileUtils.DataBuffer]$Buffer,
+        [byte[]]$Buffer,
 		
         [Parameter(Mandatory = $false)]
 		# Offset within data buffer, in bytes, to begin encoding.
@@ -805,16 +713,19 @@ Function ConvertTo-Base64String {
 			System.String. Line-separated base64-encoded data.
         
         .LINK
-            New-DataBuffer
-        
-        .LINK
             ConvertFrom-Base64String
 	#>
 	
+	$l = $Length;
 	if ($PSBoundParameters.ContainsKey('Length')) {
-		$Buffer.ToBase64String($Offset, $Length, $InsertLineBreaks.IsPresent);
+		$l = $Length;
 	} else {
-		$Buffer.ToBase64String($Offset, $Buffer.Capacity, $InsertLineBreaks.IsPresent);
+		$l = $Buffer.Length - $Offset;
+	}
+	if ($InsertLineBreaks) {
+		[System.Convert]::ToBase64String($Buffer, $Offset, $Length, [System.Base64FormattingOptions]::InsertLineBreaks);
+	} else {
+		[System.Convert]::ToBase64String($Buffer, $Offset, $Length, [System.Base64FormattingOptions]::None);
 	}
 }
 
@@ -841,107 +752,14 @@ Function ConvertFrom-Base64String {
         
         .LINK
             ConvertTo-Base64String
-        
-        .LINK
-            New-DataBuffer
 	#>
 	
-	if ($PSBoundParameters.ContainsKey('MinCapacity')) {
-		[UserFileUtils.DataBuffer]::FromBase64String($InputString, $MinCapacity);
-	} else {
-		[UserFileUtils.DataBuffer]::FromBase64String($InputString);
+	$Buffer = [System.Convert]::FromBase64String($InputString);
+	if ($PSBoundParameters.ContainsKey('MinCapacity') -and $MinCapacity -gt $Buffer.Length) {
+		[System.Array]::Resize([ref]$Buffer, $MinCapacity);
 	}
-}
 
-Function Read-DataBuffer {
-    [CmdletBinding()]
-    [OutputType([int])]
-    Param(
-        [Parameter(Mandatory = $true)]
-		# Data buffer which will contain the data that was read.
-        [UserFileUtils.DataBuffer]$Buffer,
-		
-        [Parameter(Mandatory = $true)]
-		# Stream to read data from.
-        [System.IO.Stream]$Stream,
-		
-        [Parameter(Mandatory = $false)]
-		# Offset within data buffer, in bytes, to begin reading.
-        [int]$Offset = 0,
-		
-        [Parameter(Mandatory = $false)]
-		# Number of bytes to read
-        [int]$Count
-    )
-	<#
-		.SYNOPSIS
-			Read block of data into data buffer.
- 
-		.DESCRIPTION
-			Reads a block of data into the data buffer.
-
-		.OUTPUTS
-			System.Integer. The number of bytes read from the Stream.
-        
-        .LINK
-            New-DataBuffer
-        
-        .LINK
-            Write-DataBuffer
-        
-        .LINK
-            https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
-	#>
-	
-	
-	if ($PSBoundParameters.ContainsKey('Count')) {
-		$Buffer.Read($Stream, $Offset, $Count);
-	} else {
-		$Buffer.Read($Stream, $Offset, $Buffer.Capacity);
-	}
-}
-
-Function Write-DataBuffer {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-		# Data buffer containing data to be written
-        [UserFileUtils.DataBuffer]$Buffer,
-		
-        [Parameter(Mandatory = $true)]
-		# Stream to write data to.
-        [System.IO.Stream]$Stream,
-		
-        [Parameter(Mandatory = $false)]
-		# Offset within data buffer, in bytes, to begin writing.
-        [int]$Offset = 0,
-		
-        [Parameter(Mandatory = $false)]
-		# Number of bytes to write
-        [int]$Count
-    )
-	<#
-		.SYNOPSIS
-			Write block of data to Stream.
- 
-		.DESCRIPTION
-			Writes a block of data from the data buffer, to the Stream.
-        
-        .LINK
-            New-DataBuffer
-        
-        .LINK
-            Read-DataBuffer
-        
-        .LINK
-            https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
-	#>
-	
-	if ($PSBoundParameters.ContainsKey('Count')) {
-		$Buffer.Write($Stream, $Offset, $Count);
-	} else {
-		$Buffer.Write($Stream, $Offset, $Buffer.Capacity);
-	}
+	return ,$Buffer;
 }
 
 Function Get-TextEncoding {
@@ -1136,7 +954,6 @@ Function New-XmlReaderSettings {
     if ($PSBoundParameters.ContainsKey('CloseInput')) { $XmlReaderSettings.CloseInput = $CloseInput }
     $XmlReaderSettings | Write-Output;
 }
-
 
 Function New-XmlWriterSettings {
 	[CmdletBinding()]
@@ -1629,7 +1446,7 @@ Function Set-XmlAttribute {
     }
 }
 
-Function Append-XmlElement {
+Function Add-XmlElement {
 	[CmdletBinding(DefaultParameterSetName = 'Implicit')]
     [OutputType([System.Xml.XmlElement])]
 	Param(
@@ -1745,10 +1562,10 @@ Function Write-XmlDocument {
 	)
 	<#
 		.SYNOPSIS
-			Writes XML data.
+			Writes XML data with custom options.
  
 		.DESCRIPTION
-			Writes XML data contained within an XmlDocument object.
+			Writes XML data contained within an XmlDocument object with custom output options.
         
 		.OUTPUTS
 			System.Byte[]. The XML data as a byte array. This is only when using the AsByteArray switch.

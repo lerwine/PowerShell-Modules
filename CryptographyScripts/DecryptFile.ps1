@@ -46,7 +46,7 @@ try {
             if ($t.Length -eq 0) { continue }
             try {
                 $Buffer = ConvertFrom-Base64String -InputString $t;
-                if ($Buffer -ne $null) { Write-DataBuffer -Buffer $Buffer -Stream $TempStream }
+                if ($Buffer -ne $null) { $TempStream.Write($Buffer, 0, $Buffer.Length) }
             } catch { }
             
             [int]$pct = (($InputStream.Position * 100) / $InputStream.Length) / 2;

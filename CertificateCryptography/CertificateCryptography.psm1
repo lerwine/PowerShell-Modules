@@ -837,8 +837,166 @@ Function Protect-WithX509Certificate {
     }
 }
 
+Function New-ProgressWriterObject {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$Activity,
+        
+        [Parameter(Mandatory = $false)]
+        [string]$Status = 'Initializing',
+        
+        [Parameter(Mandatory = $false)]
+        [string]$CurrentOperation = 0,
+        
+        [Parameter(Mandatory = $false)]
+        [int]$StageCount = 1,
+        
+        [Parameter(Mandatory = $false)]
+        [long]$TotalBytes = 0,
+        
+        [Parameter(Mandatory = $false)]
+        [int]$ProgressId,
+
+        [Parameter(Mandatory = $false)]
+        [int]$ParentProgressId
+    )
+
+    $ProgressObject = @{
+        Activity = $Activity;
+        Status = $Status;
+        StageCount = $StageCount;
+        CurrentStage = 1;
+        PercentComplete = $null;
+        CurrentOperation = $CurrentOperation;
+        TotalBytes = $TotalBytes;
+        RemainingBytes = $TotalBytes;
+        BytesRead = 0;
+        HasChanges = $true
+    };
+    if ($PSBoundParameters.ContainsKey('ProgressId')) {
+        $ProgressObject.Add('ProgressId', $ProgressId);
+        if ($PSBoundParameters.ContainsKey('ParentProgressId')) { $ProgressObject.Add('ParentProgressId', $ParentProgressId) }
+    }
+    $ProgressObject = New-Object -TypeName 'System.Management.Automation.PSObject' -Property $ProgressObject;
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'WriteProgress' -Value {
+        Param(
+            [Parameter(Mandatory = $true, Position = 0)]
+            [bool]$Completed
+        )
+        if ($this.ProgressId -ne $null -and $this.HasChanges) {
+            $splat = @{ Activity = $this.Activity; Status = $this.Status; Id = $this.ProgressId }
+            if ($this.PercentComplete -ne $null) { $splat.Add('PercentComplete', $this.PercentComplete) }
+            if ($this.ParentProgressId -ne $null) { $splat.Add('ParentId', $this.ParentProgressId) }
+            if ($this.CurrentOperation -ne '') { $splat.Add('CurrentOperation', $this.CurrentOperation) }
+            if ($this.Completed) { $splat.Add('Completed', [switch]$true) }
+            Write-Progress @splat;
+            $this.HasChanges = $false;
+        }
+    };
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'WriteOperationProgress' -Value {
+        Param(
+            [Parameter(Mandatory = $true, Position = 0)]
+            [string]$CurrentOperation
+        )
+        if ($this.CurrentOperation -ne $CurrentOperation) { $this.HasChanges = $true }
+        $this.CurrentOperation = $CurrentOperation;
+        $this.WriteProgress($false);
+    };
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'SetTotalBytes' -Value {
+        Param(
+            [Parameter(Mandatory = $true, Position = 0)]
+            [long]$TotalBytes
+        )
+        if ($this.TotalBytes -ne $TotalBytes) { $this.HasChanges = $true }
+        $this.BytesRead = [long]0;
+        $this.RemainingBytes = $TotalBytes;
+        $this.TotalBytes = $TotalBytes;
+    };
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'IncrementStage' -Value {
+        Param(
+            [Parameter(Mandatory = $true, Position = 0)]
+            [long]$TotalBytes
+        )
+        if ($this.StageCount -gt $this.CurrentStage) {
+            $this.CurrentStage++;
+            $this.HasChanges = $true;
+            $this.PercentComplete = (($this.CurrentStage - 1) * 100) / $this.StageCount;
+        } else {
+            if ($this.TotalBytes -ne $TotalBytes) { $this.HasChanges = $true }
+        }
+
+        $this.BytesRead = [long]0;
+        $this.RemainingBytes = $TotalBytes;
+        $this.TotalBytes = $TotalBytes;
+    };
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'WriteStatusProgress' -Value {
+        Param(
+            [Parameter(Mandatory = $true, Position = 0)]
+            [string]$Activity,
+            [Parameter(Mandatory = $true, Position = 1)]
+            [string]$Status,
+            [Parameter(Mandatory = $false, Position = 2)]
+            [AllowEmptyString()]
+            [string]$CurrentOperation,
+            [Parameter(Mandatory = $false, Position = 3)]
+            [int]$PercentComplete
+        )
+        if ($this.Activity -ne $Activity -or $this.Status -ne $Status -or $this.CurrentOperation -ne $CurrentOperation) { $this.HasChanges = $true }
+        $this.Activity = $Activity;
+        $this.Status = $Status;
+        $this.CurrentOperation = $CurrentOperation;
+        if ($PSBoundParameters.ContainsKey('PercentComplete')) {
+            if ($this.PercentComplete -ne $PercentComplete) { $this.HasChanges = $true }
+            $this.PercentComplete = $PercentComplete;
+        }
+        $this.WriteProgress($false);
+    };
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'UpdateBytesRead' -Value {
+        Param(
+            [Parameter(Mandatory = $true, Position = 0)]
+            [long]$Count,
+            [Parameter(Mandatory = $false, Position = 1)]
+            [string]$Format = 'Processed {0} bytes of {1}',
+            [Parameter(Mandatory = $false, Position = 2)]
+            [double]$Delta = 1.0
+        )
+        if ($Count -ne 0) { $this.HasChanges = $true }
+        $this.BytesRead += $Count;
+        $this.RemainingBytes -= $Count;
+        if ($this.TotalBytes -lt 1 -or $this.BytesRead -lt 0) {
+            [int]$pct = 0;
+        } else {
+            if ($this.BytesRead -ge $this.TotalBytes) {
+                [int]$pct = ($this.CurrentStage * 100) / $this.StageCount;
+            } else {
+                [int]$pct = ($this.BytesRead * 100) / $this.TotalBytes;
+                if ($this.StageCount -gt 1) {
+                    [int]$pct = ($pct / $this.StageCount) + ((($this.CurrentStage - 1) * 100) / $this.StageCount);
+                }
+            }
+        }
+        if ($pct -ne $this.PercentComplete) { $this.HasChanges = $true }
+        $this.PercentComplete = $pct;
+        $this.WriteOperationProgress(($Format -f $this.BytesRead, $this.TotalBytes));
+    };
+    $ProgressObject | Add-Member -MemberType ScriptMethod -Name 'WriteCompleted' -Value {
+        Param(
+            [bool]$Success
+        )
+        $this.CurrentOperation = '';
+        if ($Success) {
+            $this.Status = 'Success';
+        } else {
+            $this.Status = 'Fail';
+        }
+        $this.WriteProgress($true);
+    };
+    return $ProgressObject;
+}
+
 Function Protect-WithSymmetricAlgorithm {
     [CmdletBinding(DefaultParameterSetName = 'Implicit')]
+    [OutputType([long])]
     Param(
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
@@ -882,7 +1040,7 @@ Function Protect-WithSymmetricAlgorithm {
             Encrypts data with symmetric encryption, using the PKI certificate's public key to encrypt the symmetric encryption key.
          
         .OUTPUTS
-            System.Byte[]. The encrypted data. 
+            System.Int64. The number of bytes encrypted. Due to header information being written to the output stream, this will be less than the total number of bytes written. 
 
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificate2.aspx
@@ -890,46 +1048,40 @@ Function Protect-WithSymmetricAlgorithm {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    
+    $TotalSourceLength = $InputStream.Length - $InputStream.Position;
+    if ($TotalSourceLength -eq 0) { return $TotalSourceLength }
+    if ($PSBoundParameters.ContainsKey('ProgressId')) {
+        if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
+            $ProgressObject = New-ProgressWriterObject -Activity 'Encrypting Data' -TotalBytes $TotalSourceLength -StageCount 2 -ProgressId $ProgressId -ParentProgressId $ParentProgressId;
+        } else {
+            $ProgressObject = New-ProgressWriterObject -Activity 'Encrypting Data' -TotalBytes $TotalSourceLength -StageCount 2 -ProgressId $ProgressId;
+        }
+    } else {
+        $ProgressObject = New-ProgressWriterObject -Activity 'Encrypting Data' -TotalBytes $TotalSourceLength -StageCount 2;
+    }
 
     try {
         $Algorithm = $SymmetricAlgorithm;
         if (-not $PSBoundParameters.ContainsKey('SymmetricAlgorithm')) {
-            if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                    Write-Progress -Activity 'Encrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Initializing encryption provider' -ParentId $ParentProgressId;
-                } else {
-                    Write-Progress -Activity 'Encrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Initializing encryption provider';
-                }
-            }
+            $ProgressObject.WriteOperationProgress('Initializing data encryption provider');
             $Algorithm = New-AesManaged -ErrorAction Stop;
         }
 
-        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                Write-Progress -Activity 'Encrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Writing encryption data headers' -ParentId $ParentProgressId;
-            } else {
-                Write-Progress -Activity 'Encrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Writing encryption data headers';
-            }
-        }
-
+        $ProgressObject.WriteOperationProgress('Writing encryption data headers');
         Write-LengthEncodedBytes -Stream $OutputStream -Bytes $Algorithm.IV -ErrorAction Stop;
-    
+
+        $splat = @{ Bytes = $Algorithm.Key; ErrorAction = [System.Management.Automation.ActionPreference]::Stop };
+        if ($OAEP) { $splat.Add('OAEP', [switch]$true) }
         if ($PSBoundParameters.ContainsKey('Certificate')) {
-            if ($OAEP) {
-                Write-LengthEncodedBytes -Stream $OutputStream -Bytes (Protect-WithX509Certificate -Certificate $Certificate -Bytes $Algorithm.Key -OAEP) -ErrorAction Stop;
-            } else {
-                Write-LengthEncodedBytes -Stream $OutputStream -Bytes (Protect-WithX509Certificate -Certificate $Certificate -Bytes $Algorithm.Key) -ErrorAction Stop;
-            }
+            $splat.Add('Certificate', $Certificate);
+            $EncryptedKey = Protect-WithX509Certificate @splat;
         } else {
-            if ($OAEP) {
-                Write-LengthEncodedBytes -Stream $OutputStream -Bytes (Protect-WithRSA -RSA $RSA -Bytes $Algorithm.Key -OAEP) -ErrorAction Stop;
-            } else {
-                Write-LengthEncodedBytes -Stream $OutputStream -Bytes (Protect-WithRSA -RSA $RSA -Bytes $Algorithm.Key) -ErrorAction Stop;
-            }
+            $splat.Add('RSA', $RSA);
+            $EncryptedKey = Protect-WithRSA @splat;
         }
-    
-        [long]$totalBytes = $InputStream.Length - $InputStream.Position;
-        Write-LongIntegerToStream -Stream $OutputStream -Value $totalBytes;
+        Write-LengthEncodedBytes -Stream $OutputStream -Bytes $EncryptedKey -ErrorAction Stop;
+        Write-LongIntegerToStream -Stream $OutputStream -Value $ProgressObject.TotalBytes -ErrorAction Stop;
     
         $ICryptoTransform = $Algorithm.CreateEncryptor();
 	    $Path = [System.IO.Path]::GetTempFileName();
@@ -944,13 +1096,7 @@ Function Protect-WithSymmetricAlgorithm {
 	
         $CryptoStream = $null;
         try {
-            if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                    Write-Progress -Activity 'Encrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Opening cryptographic stream' -ParentId $ParentProgressId;
-                } else {
-                    Write-Progress -Activity 'Encrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Opening cryptographic stream';
-                }
-            }
+            $ProgressObject.WriteOperationProgress('Opening cryptographic stream');
             $CryptoStream = New-Object -TypeName 'System.Security.Cryptography.CryptoStream' -ArgumentList ($FileStream, $ICryptoTransform, `
                 [System.Security.Cryptography.CryptoStreamMode]::Write) -ErrorAction Stop;
         } catch {
@@ -959,67 +1105,34 @@ Function Protect-WithSymmetricAlgorithm {
         }
     
         try {
-		    $DataBuffer = New-DataBuffer -Capacity ($Algorithm.BlockSize / 8);
-		    [long]$bytesRead = 0;
-            $percentComplete = 0;
-		    for ($count = (Read-DataBuffer -Buffer $DataBuffer -Stream $InputStream); $count -eq $DataBuffer.Capacity; $count = (Read-DataBuffer -Buffer $DataBuffer `
-                -Stream $InputStream)) {
-			    Write-DataBuffer -Buffer $DataBuffer -Stream $CryptoStream;
-			    [long]$bytesRead = $bytesRead + [long]$count;
-                if ($bytesRead -lt $totalBytes) {
-                    [int]$pct = ($bytesRead * 100) / $totalBytes / 2;
-                    if ($pct -ne $percentComplete) {
-                        $percentComplete = $pct;
-                        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                                Write-Progress -Activity 'Encrypting Data' -Status 'Working' -Id $ProgressId -PercentComplete $percentComplete -CurrentOperation ('Encrypting {0} bytes of {1}' -f $bytesRead, $totalBytes) -ParentId $ParentProgressId;
-                            } else {
-                                Write-Progress -Activity 'Encrypting Data' -Status 'Working' -Id $ProgressId -PercentComplete $percentComplete -CurrentOperation ('Encrypting {0} bytes of {1}' -f $bytesRead, $totalBytes);
-                            }
-                        }
-                    }
-                }
+            $ProgressObject.WriteStatusProgress('Encrypting Data', 'Working');
+			[int]$BlockSizeBytes = $Algorithm.BlockSize / 8;
+		    $Buffer = New-Object -TypeName 'System.Byte[]' -ArgumentList $BlockSizeBytes;
+		    for ($count = $InputStream.Read($Buffer, 0, $BlockSizeBytes); $count -gt 0 -and $ProgressObject.BytesRead -lt $ProgressObject.TotalBytes; `
+					$count = $InputStream.Read($Buffer, 0, $BlockSizeBytes)) {
+				$CryptoStream.Write($Buffer, 0, $BlockSizeBytes);
+                $ProgressObject.UpdateBytesRead($count, 'Encrypted {0} bytes of {1}');
 		    }
             $CryptoStream.FlushFinalBlock();
-            $FileStream.Seek(0L, [System.IO.SeekOrigin]::Begin);
-		    [long]$bytesRead = 0;
-            $percentComplete = 0;
-		    for ($count = (Read-DataBuffer -Buffer $DataBuffer -Stream $FileStream); $count -gt 0; $count = (Read-DataBuffer -Buffer $DataBuffer -Stream $FileStream)) {
-			    [long]$bytesRead = $bytesRead + [long]$count;
-                [int]$pct = (($bytesRead * 100) / $FileStream.Length / 2) + 50;
-			    Write-DataBuffer -Buffer $DataBuffer -Stream $OutputStream -Count $count;
-                if ($pct -ne $percentComplete) {
-                    $percentComplete = $pct;
-                    if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                        if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                            Write-Progress -Activity 'Saving Data' -Status 'Working' -Id $ProgressId -PercentComplete $percentComplete -CurrentOperation ('Saving {0} bytes of {1}' -f $bytesRead, $FileStream.Length) -ParentId $ParentProgressId;
-                        } else {
-                            Write-Progress -Activity 'Saving Data' -Status 'Working' -Id $ProgressId -PercentComplete $percentComplete -CurrentOperation ('Saving {0} bytes of {1}' -f $bytesRead, $FileStream.Length);
-                        }
-                    }
-                }
+            $FileStream.Seek(0L, [System.IO.SeekOrigin]::Begin) | Out-Null;
+            $ProgressObject.IncrementStage($FileStream.Length);
+            $ProgressObject.WriteStatusProgress('Saving Data', 'Working');
+			$BlockSizeBytes = 32768;
+		    $Buffer = New-Object -TypeName 'System.Byte[]' -ArgumentList $BlockSizeBytes;
+		    for ($count = $FileStream.Read($Buffer, 0, $BlockSizeBytes); $count -gt 0; $count = $FileStream.Read($Buffer, 0, $BlockSizeBytes)) {
+				$OutputStream.Write($Buffer, 0, $count);
+                $ProgressObject.UpdateBytesRead($count, 'Saved {0} bytes of {1}');
 		    }
+            $TotalSourceLength | Write-Output;
         } catch { throw; }
         finally {
             $CryptoStream.Close();
             $CryptoStream.Dispose();
 		    if ([System.IO.File]::Exists($Path)) { [System.IO.File]::Delete($Path) }
         }
-        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                Write-Progress -Activity 'Encrypting Data' -Status 'Success' -Id $ProgressId -PercentComplete 0 -ParentId $ParentProgressId;
-            } else {
-                Write-Progress -Activity 'Encrypting Data' -Status 'Success' -Id $ProgressId -PercentComplete 0;
-            }
-        }
+        $ProgressObject.WriteCompleted($true);
     } catch {
-        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                Write-Progress -Activity 'Encrypting Data' -Status 'Failed' -Id $ProgressId -PercentComplete 0 -ParentId $ParentProgressId;
-            } else {
-                Write-Progress -Activity 'Encrypting Data' -Status 'Failed' -Id $ProgressId -PercentComplete 0;
-            }
-        }
+        $ProgressObject.WriteCompleted($false);
         throw;
     }
 }
@@ -1148,7 +1261,7 @@ Function Unprotect-WithSymmetricAlgorithm {
             Decrypts data with symmetric encryption, using the PKI certificate's private key to decrypt the symmetric encryption key.
          
         .OUTPUTS
-            System.Byte[]. The decrypted data. 
+            System.Int64. The number of bytes decrypted. 
 
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificate2.aspx
@@ -1156,27 +1269,26 @@ Function Unprotect-WithSymmetricAlgorithm {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+
+    if ($InputStream.Length -eq $InputStream.Position) { return [long]0 }
+
+    if ($PSBoundParameters.ContainsKey('ProgressId')) {
+        if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
+            $ProgressObject = New-ProgressWriterObject -Activity 'Decrypting Data' -ProgressId $ProgressId -ParentProgressId $ParentProgressId;
+        } else {
+            $ProgressObject = New-ProgressWriterObject -Activity 'Decrypting Data' -ProgressId $ProgressId;
+        }
+    } else {
+        $ProgressObject = New-ProgressWriterObject -Activity 'Decrypting Data';
+    }
     
     try {
         $Algorithm = $SymmetricAlgorithm;
         if (-not $PSBoundParameters.ContainsKey('SymmetricAlgorithm')) {
-            if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                    Write-Progress -Activity 'Decrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Initializing encryption provider' -ParentId $ParentProgressId;
-                } else {
-                    Write-Progress -Activity 'Decrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Initializing encryption provider';
-                }
-            }
+            $ProgressObject.WriteOperationProgress('Initializing data encryption provider');
             $Algorithm = New-AesManaged;
         }
-    
-        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                Write-Progress -Activity 'Decrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Reading encryption data headers' -ParentId $ParentProgressId;
-            } else {
-                Write-Progress -Activity 'Decrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Reading encryption data headers';
-            }
-        }
+        $ProgressObject.WriteOperationProgress('Reading encryption data headers');
 
         $Algorithm.IV = Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop;
         [byte[]]$EncryptedKey = Read-LengthEncodedBytes -Stream $InputStream -ErrorAction Stop;
@@ -1195,49 +1307,26 @@ Function Unprotect-WithSymmetricAlgorithm {
             }
         }
     
-        [long]$totalBytes = Read-LongIntegerFromStream -Stream $InputStream;
-        if ($totalBytes -lt 0) { throw 'Invalid data length' }
+        [long]$TotalSourceLength = Read-LongIntegerFromStream -Stream $InputStream;
+        if ($TotalSourceLength -lt 0) { throw 'Invalid data length' }
+
+        $ProgressObject.SetTotalBytes($TotalSourceLength);
     
-        if ($totalBytes -gt 0) {
+        if ($TotalSourceLength -gt 0) {
             $ICryptoTransform = $Algorithm.CreateDecryptor();
-            $CryptoStream = $null;
-            try {
-                if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                    if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                        Write-Progress -Activity 'Decrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Opening cryptographic stream' -ParentId $ParentProgressId;
-                    } else {
-                        Write-Progress -Activity 'Decrypting Data' -Status 'Initializing' -Id $ProgressId -PercentComplete 0 -CurrentOperation 'Opening cryptographic stream';
-                    }
-                }
-                $CryptoStream = New-Object -TypeName 'System.Security.Cryptography.CryptoStream' -ArgumentList ($InputStream, $ICryptoTransform, `
-                    [System.Security.Cryptography.CryptoStreamMode]::Read);
-            } catch {
-                $MemoryStream.Dispose();
-                throw;
-            }
+            $ProgressObject.WriteOperationProgress('Opening cryptographic stream');
+            $CryptoStream = New-Object -TypeName 'System.Security.Cryptography.CryptoStream' -ArgumentList ($InputStream, $ICryptoTransform, `
+                [System.Security.Cryptography.CryptoStreamMode]::Read);
         
             try {
-			    $DataBuffer = New-DataBuffer -Capacity ($Algorithm.BlockSize / 8);
-                $remainingBytes = $totalBytes;
-                $percentComplete = 0;
-			    for ($count = (Read-DataBuffer -Buffer $DataBuffer -Stream $CryptoStream); $count -gt 0; $count = (Read-DataBuffer -Buffer $DataBuffer -Stream $CryptoStream)) {
-                    if ($remainingBytes -lt 1) { continue }
-					if ($totalBytes -lt [long]$count) { [int]$count = $totalBytes; }
-                    if ($count -eq 0) { continue }
-					Write-DataBuffer -Buffer $DataBuffer -Stream $OutputStream -Count $count;
-			        [long]$remainingBytes = $remainingBytes - [long]$count;
-                    $bytesRead = $totalBytes - $remainingBytes;
-                    [int]$pct = ($bytesRead * 100) / $totalBytes;
-                    if ($pct -ne $percentComplete) {
-                        $percentComplete = $pct;
-                        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-                            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                                Write-Progress -Activity 'Decrypting Data' -Status 'Working' -Id $ProgressId -PercentComplete $percentComplete -CurrentOperation ('Decrypting {0} bytes of {1}' -f $bytesRead, $totalBytes) -ParentId $ParentProgressId;
-                            } else {
-                                Write-Progress -Activity 'Decrypting Data' -Status 'Working' -Id $ProgressId -PercentComplete $percentComplete -CurrentOperation ('Decrypting {0} bytes of {1}' -f $bytesRead, $totalBytes);
-                            }
-                        }
-                    }
+                $ProgressObject.WriteStatusProgress('Decrypting Data', 'Working');
+				[int]$BlockSizeBytes = $Algorithm.BlockSize / 8;
+				$Buffer = New-Object -TypeName 'System.Byte[]' -ArgumentList $BlockSizeBytes;
+			    for ($count =  $CryptoStream.Read($Buffer, 0, $BlockSizeBytes); $count -gt 0; $count = $CryptoStream.Read($Buffer, 0, $BlockSizeBytes)) {
+                    if ($ProgressObject.RemainingBytes -lt 1) { continue }
+					if ($ProgressObject.RemainingBytes -lt [long]$count) { [int]$count = $ProgressObject.RemainingBytes; }
+					$OutputStream.Write($Buffer, 0, $count);
+                    $ProgressObject.UpdateBytesRead($count, 'Decrypted {0} bytes of {1}');
 			    }
             } catch { throw; }
             finally {
@@ -1245,14 +1334,10 @@ Function Unprotect-WithSymmetricAlgorithm {
                 $CryptoStream.Dispose();
             }
         }
+        $TotalSourceLength | Write-Output;
+        $ProgressObject.WriteCompleted($true);
     } catch {
-        if ($PSBoundParameters.ContainsKey('ProgressId')) {
-            if ($PSBoundParameters.ContainsKey('ParentProgressId')) {
-                Write-Progress -Activity 'Decrypting Data' -Status 'Failed' -Id $ProgressId -PercentComplete 0 -ParentId $ParentProgressId;
-            } else {
-                Write-Progress -Activity 'Decrypting Data' -Status 'Failed' -Id $ProgressId -PercentComplete 0;
-            }
-        }
+        $ProgressObject.WriteCompleted($false);
         throw;
     }
 }
