@@ -43,8 +43,6 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "WindowsForms", "WindowsForm
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "CryptographyScripts", "CertificateCryptography\CryptographyScripts\CryptographyScripts.pssproj", "{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}"
 EndProject
-Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "PowerShellModulesSetup", "PowerShellModulesSetup\PowerShellModulesSetup.isproj", "{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -154,16 +152,6 @@ Global
 		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{1D07BEB6-EDA9-4A68-B2D3-7BA5B66C5406}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.CD_ROM|Any CPU.Build.0 = CD_ROM
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.Debug|Any CPU.ActiveCfg = DVD-5
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.Debug|Any CPU.Build.0 = DVD-5
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.DVD-5|Any CPU.ActiveCfg = DVD-5
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.DVD-5|Any CPU.Build.0 = DVD-5
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.Release|Any CPU.ActiveCfg = SingleImage
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.Release|Any CPU.Build.0 = SingleImage
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.SingleImage|Any CPU.ActiveCfg = SingleImage
-		{31B4019A-08B7-4A6F-8D07-9E45A6CE4453}.SingleImage|Any CPU.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
