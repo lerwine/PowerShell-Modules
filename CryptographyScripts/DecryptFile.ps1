@@ -1,4 +1,4 @@
-﻿Import-Module UserFileUtils;
+﻿Import-Module IOUtility;
 Import-Module CertificateCryptography;
 
 $CertificateCollection = Select-X509Certificate -UsageFlags (New-X509KeyUsageFlags -KeyEncipherment);
