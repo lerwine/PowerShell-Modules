@@ -846,7 +846,7 @@ Function New-ProgressWriterObject {
         [string]$Status = 'Initializing',
         
         [Parameter(Mandatory = $false)]
-        [string]$CurrentOperation = 0,
+        [string]$CurrentOperation,
         
         [Parameter(Mandatory = $false)]
         [int]$StageCount = 1,
@@ -888,7 +888,7 @@ Function New-ProgressWriterObject {
             if ($this.PercentComplete -ne $null) { $splat.Add('PercentComplete', $this.PercentComplete) }
             if ($this.ParentProgressId -ne $null) { $splat.Add('ParentId', $this.ParentProgressId) }
             if ($this.CurrentOperation -ne '') { $splat.Add('CurrentOperation', $this.CurrentOperation) }
-            if ($this.Completed) { $splat.Add('Completed', [switch]$true) }
+            if ($Completed) { $splat.Add('Completed', [switch]$true) }
             Write-Progress @splat;
             $this.HasChanges = $false;
         }
