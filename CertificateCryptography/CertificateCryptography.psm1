@@ -1071,7 +1071,7 @@ Function Protect-WithSymmetricAlgorithm {
         $ProgressObject.WriteOperationProgress('Writing encryption data headers');
         Write-LengthEncodedBytes -Stream $OutputStream -Bytes $Algorithm.IV -ErrorAction Stop;
 
-        $splat = @{ Bytes = $Algorithm.Key; ErrorAction = [System.Management.Automation.ActionPreference]::Stop };
+        $splat = @{ Bytes = $Algorithm.Key; ErrorAction = ([System.Management.Automation.ActionPreference]::Stop) };
         if ($OAEP) { $splat.Add('OAEP', [switch]$true) }
         if ($PSBoundParameters.ContainsKey('Certificate')) {
             $splat.Add('Certificate', $Certificate);
