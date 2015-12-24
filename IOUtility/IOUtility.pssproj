@@ -32,8 +32,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Install.ps1" />
-    <Compile Include="IOUtility.psd1" />
-    <Compile Include="IOUtility.psm1" />
+    <Compile Include="Erwine.Leonard.T.IOUtility.psd1" />
+    <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
     <Compile Include="IOUtility.tests.ps1" />
     <Compile Include="Uninstall.ps1" />
   </ItemGroup>

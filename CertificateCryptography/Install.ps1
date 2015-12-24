@@ -1,4 +1,4 @@
-$ModuleBaseName = 'CertificateCryptography';
+$ModuleBaseName = 'Erwine.Leonard.T.CertificateCryptography';
 
 $ModulePaths = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
 

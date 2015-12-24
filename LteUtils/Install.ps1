@@ -1,4 +1,4 @@
-$ModuleBaseName = 'LteUtils';
+$ModuleBaseName = 'Erwine.Leonard.T.LteUtils';
 
 $ModulePaths = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
 

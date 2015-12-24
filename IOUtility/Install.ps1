@@ -1,4 +1,4 @@
-$ModuleBaseName = 'IOUtility';
+$ModuleBaseName = 'Erwine.Leonard.T.IOUtility';
 
 $ModulePaths = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
 

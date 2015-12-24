@@ -1,4 +1,4 @@
-$ModuleBaseName = 'WindowsForms';
+$ModuleBaseName = 'Erwine.Leonard.T.WindowsForms';
 $ModuleInfo = $null;
 Try {
     Import-Module -Name:$ModuleBaseName;

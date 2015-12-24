@@ -1,5 +1,7 @@
-﻿Import-Module IOUtility;
-Import-Module CertificateCryptography;
+﻿#Requires –Version 2
+('Erwine.Leonard.T.IOUtility', 'Erwine.Leonard.T.CertificateCryptography') | ForEach-Object {
+	if ((Get-Module -Name $_) -eq $null) { Import-Module -Name $_ -ErrorAction Stop }
+}
 
 $CertificateCollection = Select-X509Certificate -UsageFlags (New-X509KeyUsageFlags -KeyEncipherment);
 $X509Certificate2 = $null;

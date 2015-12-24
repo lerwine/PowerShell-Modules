@@ -42,8 +42,8 @@
     <Content Include="Uninstall.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CertificateCryptography.psd1" />
-    <Compile Include="CertificateCryptography.psm1" />
+    <Compile Include="Erwine.Leonard.T.CertificateCryptography.psd1" />
+    <Compile Include="Erwine.Leonard.T.CertificateCryptography.psm1" />
     <Compile Include="CertificateCryptography.tests.ps1" />
     <Compile Include="Install.ps1" />
     <Compile Include="Uninstall.ps1" />

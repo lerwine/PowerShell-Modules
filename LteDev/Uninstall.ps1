@@ -1,4 +1,4 @@
-$ModuleBaseName = 'LteDev';
+$ModuleBaseName = 'Erwine.Leonard.T.LteDev';
 $ModuleInfo = $null;
 Try {
     Import-Module -Name:$ModuleBaseName;

@@ -1,4 +1,4 @@
-$ModuleBaseName = 'CertificateCryptography';
+$ModuleBaseName = 'Erwine.Leonard.T.CertificateCryptography';
 $ModuleInfo = $null;
 Try {
     Import-Module -Name:$ModuleBaseName;

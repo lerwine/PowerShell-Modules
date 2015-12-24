@@ -1,4 +1,4 @@
-$Script:AppName = 'CryptographyScripts';
+$Script:AppName = 'Erwine.Leonard.T.CryptographyScripts';
 $Script:AppFolderName = 'Apps';
 
 $InstallInfo = @(
