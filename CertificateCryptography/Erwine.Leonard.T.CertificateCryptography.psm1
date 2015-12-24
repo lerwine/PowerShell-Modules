@@ -851,7 +851,7 @@ Function New-ProgressWriterObject {
         [string]$Status = 'Initializing',
         
         [Parameter(Mandatory = $false)]
-        [string]$CurrentOperation = 0,
+        [string]$CurrentOperation,
         
         [Parameter(Mandatory = $false)]
         [int]$StageCount = 1,
@@ -893,7 +893,7 @@ Function New-ProgressWriterObject {
             if ($this.PercentComplete -ne $null) { $splat.Add('PercentComplete', $this.PercentComplete) }
             if ($this.ParentProgressId -ne $null) { $splat.Add('ParentId', $this.ParentProgressId) }
             if ($this.CurrentOperation -ne '') { $splat.Add('CurrentOperation', $this.CurrentOperation) }
-            if ($this.Completed) { $splat.Add('Completed', [switch]$true) }
+            if ($Completed) { $splat.Add('Completed', [switch]$true) }
             Write-Progress @splat;
             $this.HasChanges = $false;
         }
@@ -1076,7 +1076,7 @@ Function Protect-WithSymmetricAlgorithm {
         $ProgressObject.WriteOperationProgress('Writing encryption data headers');
         Write-LengthEncodedBytes -Stream $OutputStream -Bytes $Algorithm.IV -ErrorAction Stop;
 
-        $splat = @{ Bytes = $Algorithm.Key; ErrorAction = [System.Management.Automation.ActionPreference]::Stop };
+        $splat = @{ Bytes = $Algorithm.Key; ErrorAction = ([System.Management.Automation.ActionPreference]::Stop) };
         if ($OAEP) { $splat.Add('OAEP', [switch]$true) }
         if ($PSBoundParameters.ContainsKey('Certificate')) {
             $splat.Add('Certificate', $Certificate);

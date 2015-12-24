@@ -163,13 +163,10 @@ Function ConvertFrom-SafeFileName {
 			System.String. Encoded file name decoded to its original text.
 
 		.EXAMPLE
+		
 			'' | ConvertFrom-SafeFileName;
-
-		.NOTES
-			This is just an example function.
-        
-        .LINK
-            ConvertTo-SafeFileName
+        	.LINK
+        		ConvertTo-SafeFileName
 	#>
     
     Begin {
@@ -470,9 +467,6 @@ Function Read-FolderPath {
         
         .LINK
             Read-FilePath
-        
-        .LINK
-            https://msdn.microsoft.com/en-us/library/system.windows.forms.savefiledialog.aspx
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
@@ -937,7 +931,7 @@ Function Get-TextEncoding {
 			Gets an instance of the Encoding class.
  
 		.DESCRIPTION
-			Gets an instance of the Encoding class, which represents a character encodding class.
+			Gets an instance of the Encoding class, which represents a character encoding.
         
 		.OUTPUTS
 			System.Text.Encoding. Represents the character encoding.
