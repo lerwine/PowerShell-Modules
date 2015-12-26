@@ -550,6 +550,114 @@ Function New-FormsPadding {
 }
 New-Alias -Name 'New-FormsMargin' -Value 'New-FormsPadding' -Scope Global -Force;
 
+Function Show-FormsControl {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The control whose Visible property is to be set.
+        [System.Windows.Forms.Control]$Control
+	)
+    <#
+        .SYNOPSIS
+            Set Visible to true.
+
+        .DESCRIPTION
+            Sets Visible property to true for form controls.
+        
+        .LINK
+            Hide-FormsControl
+        
+        .LINK
+            Set-FormControlProperties
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.control.aspx
+    #>
+
+	Process { $Control.Visible = $true; }
+}
+
+Function Hide-FormsControl {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The control whose Visible property is to be set.
+        [System.Windows.Forms.Control]$Control
+	)
+    <#
+        .SYNOPSIS
+            Set Visible to false.
+
+        .DESCRIPTION
+            Sets Visible property to false for form controls.
+        
+        .LINK
+            Set-FormControlProperties
+        
+        .LINK
+            Show-FormsControl
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.control.aspx
+    #>
+
+	Process { $Control.Visible = $false; }
+}
+
+Function Enable-FormsControl {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The control whose Enabled property is to be set.
+        [System.Windows.Forms.Control]$Control
+	)
+    <#
+        .SYNOPSIS
+            Set Enabled to true.
+
+        .DESCRIPTION
+            Sets Enabled property to true for form controls.
+        
+        .LINK
+            Disable-FormsControl
+        
+        .LINK
+            Set-FormControlProperties
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.control.aspx
+    #>
+
+	Process { $Control.Enabled = $true; }
+}
+
+Function Disable-FormsControl {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The control whose Enabled property is to be set.
+        [System.Windows.Forms.Control]$Control
+	)
+    <#
+        .SYNOPSIS
+            Set Enabled to false.
+
+        .DESCRIPTION
+            Sets Enabled property to false for form controls.
+        
+        .LINK
+            Enable-FormsControl
+        
+        .LINK
+            Set-FormControlProperties
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.control.aspx
+    #>
+
+	Process { $Control.Enabled = $false; }
+}
+
 Function Set-FormControlProperties {
     [CmdletBinding()]
     Param(
@@ -2042,18 +2150,10 @@ Function New-FormsButton {
 		[Alias('Result')]
         # Sets a value that is returned to the parent form when the button is clicked.
         [System.Windows.Forms.DialogResult]$DialogResult,
-        
-        [Parameter(Mandatory = $false)]
-        # Indicates whether the control can respond to user interaction.
-        [bool]$Enabled,
 
         [Parameter(Mandatory = $false)]
         # Sets the Tag property, which is the object that contains data about the control.
         [object]$Tag,
-        
-        [Parameter(Mandatory = $false)]
-        # Sets the Visible property, which indicates whether the control and all its child controls are displayed.
-        [bool]$Visible,
         
         [Parameter(Mandatory = $false)]
         # Handle event which occurs when the button is clicked.
@@ -2098,7 +2198,15 @@ Function New-FormsButton {
         
         [Parameter(Mandatory = $false)]
         # Sets the TabStop property, which indicates whether the user can give the focus to this control using the TAB key.
-        [bool]$TabStop
+        [bool]$TabStop,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the Visible property to false.
+        [switch]$NotVisible,
+        
+        [Parameter(Mandatory = $false)]
+        # The control cannot respond to user interaction.
+        [switch]$Disabled
     )
     <#
         .SYNOPSIS
@@ -2167,14 +2275,14 @@ Function New-FormsButton {
     
     $Button = New-Object -TypeName 'System.Windows.Forms.Button';
 	
-	$buttonSplat = @{ Button = $Button };
+	$buttonSplat = @{ Button = $Button; Visible = (-not $NotVisible); Enabled = (-not $Disabled) };
 	$controlSpat = @{ Control = $Button };
-	$buttonKeys = @('DialogResult', 'DialogResult', 'Tag', 'Text', 'Visible', 'OnClick', 'OnDoubleClick', 'OnMouseClick', 'OnMouseDoubleClick');
+	$buttonKeys = @('DialogResult', 'DialogResult', 'Tag', 'Text', 'OnClick', 'OnDoubleClick', 'OnMouseClick', 'OnMouseDoubleClick');
 	foreach ($key in $PSBoundParameters.Keys) {
 		if ($buttonKeys -icontains $key) {
 			$buttonSplat.Add($key, $PSBoundParameters[$key]);
 		} else {
-			$controlSpat.Add($key, $PSBoundParameters[$key]);
+			if ($key -ine 'NotVisible' -and $key -ine 'Disabled') { $controlSpat.Add($key, $PSBoundParameters[$key]) };
 		}
 	}
 	
@@ -2639,6 +2747,33 @@ Function New-WindowsForm {
     $Form | Write-Output;
 }
 
+Function Get-ParentWindowsForm {
+    [CmdletBinding()]
+    [OutputType([System.Windows.Forms.Form])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The control whose parent form is to be returned.
+        [System.Windows.Forms.Control]$Control
+    )
+    <#
+        .SYNOPSIS
+            Get parent windows form.
+
+        .DESCRIPTION
+            Searches parent chain for windows form.
+        
+        .OUTPUTS
+            System.Windows.Forms.Form. Represents a windows form.
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.form.aspx
+    #>
+    
+	for ($c = $Control; $c -ne $null; $c = $c.Parent) {
+		if ($c -is [System.Windows.Forms.Form]) { return $c }
+	}
+}
+
 Function New-TableLayoutPanel {
     [CmdletBinding()]
     [OutputType([System.Windows.Forms.TableLayoutPanel])]
@@ -2647,10 +2782,6 @@ Function New-TableLayoutPanel {
         [ValidatePattern('^[\S]+$')]
         # Name of the control.
         [string]$Name,
-        
-        [Parameter(Mandatory = $false)]
-        # Sets the Visible property, which indicates whether the control and all its child controls are displayed.
-        [bool]$Visible,
 
         [Parameter(Mandatory = $false)]
         # A bitwise combination of the AnchorStyles values.
@@ -2670,7 +2801,11 @@ Function New-TableLayoutPanel {
         
         [Parameter(Mandatory = $false)]
         # A Size that represents the size of the control.
-        [System.Drawing.Size]$Size
+        [System.Drawing.Size]$Size,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the Visible property to false.
+        [switch]$NotVisible
     )
     <#
         .SYNOPSIS
@@ -2730,6 +2865,7 @@ Function New-TableLayoutPanel {
     
     $TableLayoutPanel = New-Object -TypeName 'System.Windows.Forms.TableLayoutPanel';
     $TableLayoutPanel.Name = $Name;
+    $TableLayoutPanel.Visible = -not $NotVisible;
 	if ($PSBoundParameters.ContainsKey('Visible')) { $TableLayoutPanel.Visible = $Visible }
 	if ($PSBoundParameters.ContainsKey('Anchor')) { $TableLayoutPanel.Anchor = $Anchor }
 	if ($PSBoundParameters.ContainsKey('Dock')) { $TableLayoutPanel.Dock = $Dock }
@@ -4116,12 +4252,368 @@ Function Clear-TableLayoutControls  {
 	}
 }
 
-#$Form = New-WindowsForm -Name 'My.Form' -Title 'My Title';
-#$TableLayoutPanel = New-TableLayoutPanel -Name 'outerTableLayoutPanel';
-#$Form.Controls.Add($TableLayoutPanel);
-#$TableLayoutPanel.Rows.GetType();
-#$Form.ShowDialog();
-#$Form.Dispose();
-$FontFamily = ('Times New Roman', 'Arial') | New-FontFamily;
+Function New-FormsLabel {
+    [CmdletBinding()]
+    [OutputType([System.Windows.Forms.Label])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidatePattern('^[\S]+$')]
+        # Name of the control.
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true, Position = 0)]
+		[AllowEmptyString()]
+        # Sets the text associated with this control.
+        [string]$Text,
+        
+        [Parameter(Mandatory = $false)]
+        # A bitwise combination of the AnchorStyles values.
+        [System.Windows.Forms.AnchorStyles]$Anchor,
 
-$FontFamily = New-FontFamily -Generic SansSerif;
+        [Parameter(Mandatory = $false)]
+        # Determines how the control should be docked within its parent container.
+        [System.Windows.Forms.DockStyle]$Dock,
+
+        [Parameter(Mandatory = $false)]
+        # A Point that represents the location of the control.
+        [System.Drawing.Point]$Location,
+        
+        [Parameter(Mandatory = $false)]
+        # A Padding representing the space between controls.
+        [System.Windows.Forms.Padding]$Margin,
+        
+        [Parameter(Mandatory = $false)]
+        # A Size that represents the size of the control.
+        [System.Drawing.Size]$Size,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the Visible property to false.
+        [switch]$NotVisible
+    )
+    <#
+        .SYNOPSIS
+            Create new label control.
+
+        .DESCRIPTION
+            Initializes a new instance of System.Windows.Forms.Label.
+        
+        .OUTPUTS
+            System.Windows.Forms.Label. Represents a standard Windows label.
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.label.aspx
+			
+        .LINK
+            Set-FormControlProperties
+    #>
+    
+    $Label = New-Object -TypeName 'System.Windows.Forms.Label';
+    $Label.Name = $Name;
+    $Label.Text = $Text;
+    $Label.Visible = -not $NotVisible;
+	if ($PSBoundParameters.ContainsKey('Visible')) { $Label.Visible = $Visible }
+	if ($PSBoundParameters.ContainsKey('Anchor')) { $Label.Anchor = $Anchor }
+	if ($PSBoundParameters.ContainsKey('Dock')) { $Label.Dock = $Dock }
+	if ($PSBoundParameters.ContainsKey('Location')) { $Label.Location = $Location }
+	if ($PSBoundParameters.ContainsKey('Margin')) { $Label.Margin = $Margin }
+	if ($PSBoundParameters.ContainsKey('Size')) { $Label.Size = $Size }
+    
+    $Label | Write-Output;
+}
+
+Function New-DataGridView {
+    [CmdletBinding()]
+    [OutputType([System.Windows.Forms.DataGridView])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidatePattern('^[\S]+$')]
+        # Name of the control.
+        [string]$Name,
+        
+        [Parameter(Mandatory = $false)]
+        # A bitwise combination of the AnchorStyles values.
+        [System.Windows.Forms.AnchorStyles]$Anchor,
+
+        [Parameter(Mandatory = $false)]
+        # Determines how the control should be docked within its parent container.
+        [System.Windows.Forms.DockStyle]$Dock,
+
+        [Parameter(Mandatory = $false)]
+        # A Point that represents the location of the control.
+        [System.Drawing.Point]$Location,
+        
+        [Parameter(Mandatory = $false)]
+        # A Padding representing the space between controls.
+        [System.Windows.Forms.Padding]$Margin,
+        
+        [Parameter(Mandatory = $false)]
+        # A Size that represents the size of the control.
+        [System.Drawing.Size]$Size,
+        
+        [Parameter(Mandatory = $false)]
+        # Occurs when a key is pressed while the DataGridView has the focus.
+        [ScriptBlock]$OnKeyPress,
+        
+        [Parameter(Mandatory = $false)]
+        # Occurs when the cell content is clicked.
+        [ScriptBlock]$OnCellContentClick,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the Visible property to false.
+        [switch]$NotVisible,
+        
+        [Parameter(Mandatory = $false)]
+        # The control cannot respond to user interaction.
+        [switch]$Disabled,
+        
+        [Parameter(Mandatory = $false)]
+        # The option to add rows is displayed to the user.
+        [switch]$AllowUserToAddRows,
+        
+        [Parameter(Mandatory = $false)]
+        # User is allowed to delete rows from the DataGridView.
+        [switch]$AllowUserToDeleteRows,
+        
+        [Parameter(Mandatory = $false)]
+        # Columns are created automatically when the DataSource or DataMember properties are set.
+        [switch]$AutoGenerateColumns,
+        
+        [Parameter(Mandatory = $false)]
+        # Column header row is not displayed.
+        [switch]$HideColumnHeaders,
+        
+        [Parameter(Mandatory = $false)]
+        # User is allowed to select more than one cell, row, or column of the DataGridView at a time.
+        [switch]$MultiSelect,
+        
+        [Parameter(Mandatory = $false)]
+        # User cannot edit the cells of the DataGridView control.
+        [switch]$ReadOnly
+    )
+    <#
+        .SYNOPSIS
+            Create new data grid view control.
+
+        .DESCRIPTION
+            Initializes a new instance of System.Windows.Forms.DataGridView.
+        
+        .OUTPUTS
+            System.Windows.Forms.DataGridView. Displays data in a customizable grid.
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.datagridview.aspx
+			
+        .LINK
+			Add-DataGridViewTextBoxColumn
+			
+        .LINK
+			Set-ScrollableControlProperties
+			
+        .LINK
+            Set-FormControlProperties
+    #>
+    
+    $DataGridView = New-Object -TypeName 'System.Windows.Forms.DataGridView';
+    $DataGridView.Name = $Name;
+	if ($PSBoundParameters.ContainsKey('Visible')) { $DataGridView.Visible = $Visible }
+	if ($PSBoundParameters.ContainsKey('Anchor')) { $DataGridView.Anchor = $Anchor }
+	if ($PSBoundParameters.ContainsKey('Dock')) { $DataGridView.Dock = $Dock }
+	if ($PSBoundParameters.ContainsKey('Location')) { $DataGridView.Location = $Location }
+	if ($PSBoundParameters.ContainsKey('Margin')) { $DataGridView.Margin = $Margin }
+	if ($PSBoundParameters.ContainsKey('Size')) { $DataGridView.Size = $Size }
+	if ($PSBoundParameters.ContainsKey('Visible')) { $DataGridView.Visible = $Visible }
+	if ($PSBoundParameters.ContainsKey('OnKeyPress')) { $DataGridView.add_KeyPress($OnKeyPress) }
+	if ($PSBoundParameters.ContainsKey('OnCellContentClick')) { $DataGridView.add_CellContentClick($OnCellContentClick) }
+	$DataGridView.AllowUserToAddRows = $AllowUserToAddRows;
+	$DataGridView.AllowUserToDeleteRows = $AllowUserToDeleteRows;
+	$DataGridView.AutoGenerateColumns = $AutoGenerateColumns;
+	$DataGridView.ColumnHeadersVisible = -not $HideColumnHeaders;
+	$DataGridView.MultiSelect = $MultiSelect;
+	$DataGridView.ReadOnly = $ReadOnly;
+    $DataGridView.Visible = -not $NotVisible;
+    $DataGridView.Enabled = -not $Disabled;
+    
+    $DataGridView | Write-Output;
+}
+
+Function Add-DataGridViewTextBoxColumn {
+    [CmdletBinding()]
+    [OutputType([System.Windows.Forms.DataGridViewTextBoxColumn])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # DataGridView to which column is to be added.
+        [System.Windows.Forms.DataGridView]$DataGridView,
+        
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidatePattern('^[\S]+$')]
+        # Sets the name of the data source property or database column to which the DataGridViewColumn is bound.
+        [string]$DataPropertyName,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the caption text on the column's header cell.
+        [string]$HeaderText,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the mode by which the column automatically adjusts its width.
+        [System.Windows.Forms.DataGridViewAutoSizeColumnMode]$AutoSizeMode,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets a value that represents the width of the column when it is in fill mode relative to the widths of other fill-mode columns in the control.
+        [float]$FillWeight,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the sort mode for the column.
+        [System.Windows.Forms.DataGridViewColumnSortMode]$SortMode,
+        
+        [Parameter(Mandatory = $false)]
+        # Width, in pixels, of column.
+        [int]$Width,
+        
+        [Parameter(Mandatory = $false)]
+        # Column will not move when a user scrolls the DataGridView control horizontally.
+        [switch]$Frozen,
+        
+        [Parameter(Mandatory = $false)]
+        # User cannot edit the column's cells.
+        [switch]$ReadOnly,
+        
+        [Parameter(Mandatory = $false)]
+        # Column is not visible.
+        [switch]$NotVisible,
+        
+        [Parameter(Mandatory = $false)]
+        # Returns the DataGridViewTextBoxColumn that was added to the DataGridView.
+        [switch]$PassThru
+    )
+    <#
+        .SYNOPSIS
+            Add a new text box column to a data grid view control.
+
+        .DESCRIPTION
+            Initializes a new instance of System.Windows.Forms.DataGridViewTextBoxColumn and adds it to a DataGridView.
+        
+        .OUTPUTS
+            System.Windows.Forms.DataGridViewTextBoxColumn. Hosts a collection of DataGridViewTextBoxCell cells.
+			
+        .LINK
+			Add-DataGridViewButtonColumn
+			
+        .LINK
+			New-DataGridView
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.datagridviewtextboxcolumn.aspx
+			
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.datagridviewtextboxcell.aspx
+    #>
+    
+    $DataGridViewTextBoxColumn = New-Object -TypeName 'System.Windows.Forms.DataGridView';
+    $DataGridViewTextBoxColumn.DataPropertyName = $DataPropertyName;
+	if ($PSBoundParameters.ContainsKey('HeaderText')) { $DataGridViewTextBoxColumn.HeaderText = $HeaderText }
+	if ($PSBoundParameters.ContainsKey('AutoSizeMode')) { $DataGridViewTextBoxColumn.AutoSizeMode = $AutoSizeMode }
+	if ($PSBoundParameters.ContainsKey('FillWeight')) { $DataGridViewTextBoxColumn.FillWeight = $FillWeight }
+	if ($PSBoundParameters.ContainsKey('SortMode')) { $DataGridViewTextBoxColumn.SortMode = $SortMode }
+	if ($PSBoundParameters.ContainsKey('Width')) { $DataGridViewTextBoxColumn.Width = $Width }
+	if ($PSBoundParameters.ContainsKey('Size')) { $DataGridViewTextBoxColumn.Size = $Size }
+	$DataGridViewTextBoxColumn.Frozen = $Frozen;
+	$DataGridViewTextBoxColumn.ReadOnly = $ReadOnly;
+	$DataGridViewTextBoxColumn.Visible = -not $NotVisible;
+    
+    if ($PassThru) { $DataGridViewTextBoxColumn | Write-Output };
+}
+
+Function Add-DataGridViewButtonColumn {
+    [CmdletBinding(DefaultParameterSetName = 'StaticText')]
+    [OutputType([System.Windows.Forms.DataGridViewButtonColumn])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # DataGridView to which column is to be added.
+        [System.Windows.Forms.DataGridView]$DataGridView,
+        
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'StaticText')]
+        # Sets the default text displayed on the button cell.
+        [string]$Text,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'BoundText')]
+        [ValidatePattern('^[\S]+$')]
+        # Sets the name of the data source property or database column to which the DataGridViewColumn is bound.
+        [string]$DataPropertyName,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the mode by which the column automatically adjusts its width.
+        [System.Windows.Forms.DataGridViewAutoSizeColumnMode]$AutoSizeMode = [System.Windows.Forms.DataGridViewAutoSizeColumnMode]::AllCells,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets a value that represents the width of the column when it is in fill mode relative to the widths of other fill-mode columns in the control.
+        [float]$FillWeight,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the caption text on the column's header cell.
+        [string]$HeaderText,
+        
+        [Parameter(Mandatory = $false)]
+        # Sets the sort mode for the column.
+        [System.Windows.Forms.DataGridViewColumnSortMode]$SortMode = [System.Windows.Forms.DataGridViewColumnSortMode]::NotSortable,
+        
+        [Parameter(Mandatory = $false)]
+        # Width, in pixels, of column.
+        [int]$Width,
+        
+        [Parameter(Mandatory = $false)]
+        # Column will not move when a user scrolls the DataGridView control horizontally.
+        [switch]$Frozen,
+        
+        [Parameter(Mandatory = $false)]
+        # User can edit the column's cells.
+        [switch]$CanEdit,
+        
+        [Parameter(Mandatory = $false)]
+        # Column is not visible.
+        [switch]$NotVisible,
+        
+        [Parameter(Mandatory = $false)]
+        # Returns the DataGridViewButtonColumn that was added to the DataGridView.
+        [switch]$PassThru
+    )
+    <#
+        .SYNOPSIS
+            Add a new button column to a data grid view control.
+
+        .DESCRIPTION
+            Initializes a new instance of System.Windows.Forms.DataGridViewButtonColumn and adds it to a DataGridView.
+        
+        .OUTPUTS
+            System.Windows.Forms.DataGridViewButtonColumn. Hosts a collection of DataGridViewButtonCell objects.
+			
+        .LINK
+			Add-DataGridViewTextBoxColumn
+			
+        .LINK
+			New-DataGridView
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.datagridviewbuttoncolumn.aspx
+			
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.datagridviewtextboxcell.aspx
+    #>
+    
+    $DataGridViewButtonColumn = New-Object -TypeName 'System.Windows.Forms.DataGridViewButtonColumn';
+	if ($PSBoundParameters.ContainsKey('DataPropertyName')) {
+		$DataGridViewButtonColumn.DataPropertyName = $DataPropertyName;
+	} else {
+		$DataGridViewButtonColumn.Text = $Text;
+	}
+	if ($PSBoundParameters.ContainsKey('HeaderText')) { $DataGridViewButtonColumn.HeaderText = $HeaderText }
+	if ($PSBoundParameters.ContainsKey('Text') -or $PSBoundParameters.ContainsKey('AutoSizeMode')) { $DataGridViewButtonColumn.AutoSizeMode = $AutoSizeMode }
+	if ($PSBoundParameters.ContainsKey('FillWeight')) { $DataGridViewButtonColumn.FillWeight = $FillWeight }
+	if ($PSBoundParameters.ContainsKey('Text') -or $PSBoundParameters.ContainsKey('SortMode')) { $DataGridViewButtonColumn.SortMode = $SortMode }
+	if ($PSBoundParameters.ContainsKey('Width')) { $DataGridViewButtonColumn.Width = $Width }
+	if ($PSBoundParameters.ContainsKey('Size')) { $DataGridViewButtonColumn.Size = $Size }
+	$DataGridViewButtonColumn.Frozen = $Frozen;
+	$DataGridViewButtonColumn.ReadOnly = -not $CanEdit;
+	$DataGridViewButtonColumn.Visible = -not $NotVisible;
+    
+    if ($PassThru) { $DataGridViewButtonColumn | Write-Output };
+}

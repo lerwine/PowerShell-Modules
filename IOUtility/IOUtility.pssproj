@@ -27,10 +27,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Setup.bat" />
     <Content Include="Install.bat" />
     <Content Include="Uninstall.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Setup.ps1" />
     <Compile Include="Install.ps1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
