@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Management.Automation;
-using System.Windows.Forms;
-
-namespace PSModuleInstallUtil
+﻿namespace PSModuleInstallUtil
 {
-    public partial class InstallLocationSelectForm : Form
+    public partial class InstallLocationSelectForm : System.Windows.Forms.Form
     {
-        private BindingList<InstallationLocationInfo> _dataSource = new BindingList<InstallationLocationInfo>();
-        private ScriptBlock _onFormShown = null;
-        private ScriptBlock _onModeChanged = null;
-        private ScriptBlock _onSelectionChanged = null;
-        private ScriptBlock _onFolderBrowsing = null;
+        private System.ComponentModel.BindingList<InstallationLocationInfo> _dataSource = new System.ComponentModel.BindingList<InstallationLocationInfo>();
+        private System.Management.Automation.ScriptBlock _onFormShown = null;
+        private System.Management.Automation.ScriptBlock _onModeChanged = null;
+        private System.Management.Automation.ScriptBlock _onSelectionChanged = null;
+        private System.Management.Automation.ScriptBlock _onFolderBrowsing = null;
 
         public bool ContinueButtonVisible
         {
@@ -45,9 +39,9 @@ namespace PSModuleInstallUtil
             {
                 this.messageTextboxColumn.Visible = value;
                 if (value)
-                    this.pathTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    this.pathTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
                 else
-                    this.pathTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    this.pathTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             }
         }
 
@@ -91,25 +85,25 @@ namespace PSModuleInstallUtil
             set { this.customLocationadioButton.Checked = value; }
         }
 
-        public ScriptBlock OnFormShown
+        public System.Management.Automation.ScriptBlock OnFormShown
         {
             get { return this._onFormShown; }
             set { this._onFormShown = value; }
         }
 
-        public ScriptBlock OnModeChanged
+        public System.Management.Automation.ScriptBlock OnModeChanged
         {
             get { return this._onModeChanged; }
             set { this._onModeChanged = value; }
         }
 
-        public ScriptBlock OnSelectionChanged
+        public System.Management.Automation.ScriptBlock OnSelectionChanged
         {
             get { return this._onSelectionChanged; }
             set { this._onSelectionChanged = value; }
         }
 
-        public ScriptBlock OnFolderBrowsing
+        public System.Management.Automation.ScriptBlock OnFolderBrowsing
         {
             get { return this._onFolderBrowsing; }
             set { this._onFolderBrowsing = value; }
@@ -127,8 +121,8 @@ namespace PSModuleInstallUtil
                     return new string[] { this.customPathTextBox.Text };
                 }
 
-                List<string> result = new List<string>();
-                foreach (DataGridViewRow row in this.installLocationsDataGridView.SelectedRows)
+                System.Collections.Generic.List<string> result = new System.Collections.Generic.List<string>();
+                foreach (System.Windows.Forms.DataGridViewRow row in this.installLocationsDataGridView.SelectedRows)
                     result.Add((row.DataBoundItem as InstallationLocationInfo).Path);
 
                 return result.ToArray();
@@ -168,7 +162,7 @@ namespace PSModuleInstallUtil
             return this.AddInstallationLocationInfo(path, false);
         }
         
-        private void InstallLocationSelectForm_Shown(object sender, EventArgs e)
+        private void InstallLocationSelectForm_Shown(object sender, System.EventArgs e)
         {
             for (int i = this._dataSource.Count - 1; i >= 0; i--)
             {
@@ -190,12 +184,12 @@ namespace PSModuleInstallUtil
             
             this.BringToFront();
 
-            ScriptBlock sb = this.OnFormShown;
+            System.Management.Automation.ScriptBlock sb = this.OnFormShown;
             if (sb != null)
                 sb.Invoke(this);
         }
 
-        private void commonLocationsRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void commonLocationsRadioButton_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.commonLocationsRadioButton.Checked)
             {
@@ -207,7 +201,7 @@ namespace PSModuleInstallUtil
                 this.customLocationadioButton.Checked = true;
         }
 
-        private void customLocationadioButton_CheckedChanged(object sender, EventArgs e)
+        private void customLocationadioButton_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.customLocationadioButton.Checked)
             {
@@ -238,60 +232,60 @@ namespace PSModuleInstallUtil
                 this.browseButton.Visible = false;
             }
 
-            ScriptBlock sb = this.OnModeChanged;
+            System.Management.Automation.ScriptBlock sb = this.OnModeChanged;
             if (sb != null)
                 sb.Invoke(this, this.customLocationadioButton.Checked);
         }
 
-        private void installLocationsDataGridView_SelectionChanged(object sender, EventArgs e)
+        private void installLocationsDataGridView_SelectionChanged(object sender, System.EventArgs e)
         {
-            ScriptBlock sb = this.OnSelectionChanged;
+            System.Management.Automation.ScriptBlock sb = this.OnSelectionChanged;
             if (sb != null)
                 sb.Invoke(this, this.SelectedPaths);
         }
 
-        private void customPathTextBox_TextChanged(object sender, EventArgs e)
+        private void customPathTextBox_TextChanged(object sender, System.EventArgs e)
         {
-            ScriptBlock sb = this.OnSelectionChanged;
+            System.Management.Automation.ScriptBlock sb = this.OnSelectionChanged;
             if (sb != null)
                 sb.Invoke(this, this.SelectedPaths);
         }
 
-        private void customPathTextBox_Leave(object sender, EventArgs e)
+        private void customPathTextBox_Leave(object sender, System.EventArgs e)
         {
-            ScriptBlock sb = this.OnSelectionChanged;
+            System.Management.Automation.ScriptBlock sb = this.OnSelectionChanged;
             if (sb != null)
                 sb.Invoke(this, this.SelectedPaths);
         }
 
-        private void browseButton_Click(object sender, EventArgs e)
+        private void browseButton_Click(object sender, System.EventArgs e)
         {
-            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            using (System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
-                ScriptBlock sb = this.OnFolderBrowsing;
+                System.Management.Automation.ScriptBlock sb = this.OnFolderBrowsing;
                 if (sb != null)
                     sb.Invoke(this, dialog);
                 dialog.ShowNewFolderButton = true;
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     this.customPathTextBox.Text = dialog.SelectedPath;
             }
         }
 
-        private void actionButton_Click(object sender, EventArgs e)
+        private void actionButton_Click(object sender, System.EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
-        private void continueButton_Click(object sender, EventArgs e)
+        private void continueButton_Click(object sender, System.EventArgs e)
         {
-            this.DialogResult = DialogResult.Ignore;
+            this.DialogResult = System.Windows.Forms.DialogResult.Ignore;
             this.Close();
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, System.EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
         }
     }

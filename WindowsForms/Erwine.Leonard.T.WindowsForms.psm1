@@ -658,6 +658,8 @@ Function Disable-FormsControl {
 	Process { $Control.Enabled = $false; }
 }
 
+
+
 Function Set-FormControlProperties {
     [CmdletBinding()]
     Param(
@@ -2640,9 +2642,8 @@ Function Set-FormAcceptButton {
     $Form.AcceptButton = $Button;
 }
 
-Function New-WindowsForm {
+Function New-WindowObject {
     [CmdletBinding()]
-    [OutputType([System.Windows.Forms.Form])]
     Param(
         [Parameter(Mandatory = $true)]
         [ValidatePattern('^[\S]+(\.\S+)*$')]
@@ -4359,7 +4360,7 @@ Function New-DataGridView {
         [ScriptBlock]$OnCellContentClick,
         
         [Parameter(Mandatory = $false)]
-        # Sets the Visible property to false.
+        # Sets the Visible p`roperty to false.
         [switch]$NotVisible,
         
         [Parameter(Mandatory = $false)]
