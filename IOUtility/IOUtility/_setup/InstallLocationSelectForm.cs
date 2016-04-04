@@ -8,8 +8,8 @@ namespace PSModuleInstallUtil
         
         public bool ContinueButtonVisible
         {
-            get { return this.installButton.Visible; }
-            set { this.installButton.Visible = value; }
+            get { return this.continueButton.Visible; }
+            set { this.continueButton.Visible = value; }
         }
 
         public bool IsAllUsersColumnVisible
@@ -42,7 +42,31 @@ namespace PSModuleInstallUtil
                     this.locationTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             }
         }
-        
+
+        public bool LocationTypeRadioButtonsVisible
+        {
+            get { return this.locationTypeTableLayoutPanel.Visible; }
+            set { this.locationTypeTableLayoutPanel.Visible = value; }
+        }
+
+        private bool _actionButtonEnabled = true;
+
+        public bool ActionButtonEnabled
+        {
+            get { return this._actionButtonEnabled; }
+            set
+            {
+                this._actionButtonEnabled = value;
+                this.actionButton.Enabled = value && this.ErrorText.Length == 0;
+            }
+        }
+
+        public string ActionButtonText
+        {
+            get { return this.actionButton.Text; }
+            set { this.continueButton.Text = (value == null) ? "" : value.Trim(); }
+        }
+
         public string ErrorText
         {
             get { return (this.pathErrorLabel.Visible) ? this.pathErrorLabel.Text : ""; }
@@ -50,7 +74,20 @@ namespace PSModuleInstallUtil
             {
                 this.pathErrorLabel.Text = (value == null) ? "" : value.Trim();
                 this.pathErrorLabel.Visible = this.pathErrorLabel.Text.Length > 0;
+                this.actionButton.Enabled = this.ActionButtonEnabled && this.ErrorText.Length == 0;
             }
+        }
+
+        public bool IsMultiSelect
+        {
+            get { return this.installLocationsDataGridView.MultiSelect; }
+            set { this.installLocationsDataGridView.MultiSelect = value; }
+        }
+
+        public bool IsCustomLocation
+        {
+            get { return this.customLocationadioButton.Checked; }
+            set { this.customLocationadioButton.Checked = value; }
         }
         
         public string[] SelectedPaths
@@ -103,7 +140,7 @@ namespace PSModuleInstallUtil
             else
                 this.installLocationsDataGridView.DataSource = this._dataSource;
 
-            this.UpdateControlDisplay();
+            this.UpdateCustomLocationMode();
 
             this.BringToFront();
         }
@@ -114,7 +151,7 @@ namespace PSModuleInstallUtil
             {
                 if (this.customLocationadioButton.Checked)
                     this.customLocationadioButton.Checked = false;
-                this.UpdateControlDisplay();
+                this.UpdateCustomLocationMode();
             }
             else if (!this.customLocationadioButton.Checked)
                 this.customLocationadioButton.Checked = true;
@@ -126,13 +163,13 @@ namespace PSModuleInstallUtil
             {
                 if (this.commonLocationsRadioButton.Checked)
                     this.commonLocationsRadioButton.Checked = false;
-                this.UpdateControlDisplay();
+                this.UpdateCustomLocationMode();
             }
             else if (!this.commonLocationsRadioButton.Checked)
                 this.commonLocationsRadioButton.Checked = true;
         }
 
-        private void UpdateControlDisplay()
+        private void UpdateCustomLocationMode()
         {
             if (this.customLocationadioButton.Checked)
             {
@@ -141,7 +178,7 @@ namespace PSModuleInstallUtil
                 if (this.installLocationsDataGridView.Focused)
                     this.customPathTextBox.Focus();
                 this.installLocationsDataGridView.Visible = false;
-                this.uninstallButton.Visible = false;
+                this.actionButton.Visible = false;
                 if (this.customPathTextBox.Text.Trim() == "")
                     this.ErrorText = "You must specify a module installation location.";
                 else
@@ -168,53 +205,9 @@ namespace PSModuleInstallUtil
                     this.installLocationsDataGridView.Focus();
                 this.customPathTextBox.Visible = false;
                 this.browseButton.Visible = false;
-                this.uninstallButton.Visible = true;
+                this.actionButton.Visible = true;
                 this.ErrorText = "";
             }
-
-            bool enabled = true;
-            if (this.ErrorText.Length > 0)
-                enabled = false;
-            else if (!this.customLocationadioButton.Checked)
-            {
-                if (this.installLocationsDataGridView.SelectedRows.Count == 0)
-                    enabled = false;
-                else
-                {
-                    foreach (System.Windows.Forms.DataGridViewRow row in this.installLocationsDataGridView.SelectedRows)
-                    {
-                        InstallationLocationInfo info = row.DataBoundItem as InstallationLocationInfo;
-                        if (!info.Exists || !info.IsInstallable)
-                        {
-                            enabled = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            this.uninstallButton.Enabled = enabled;
-
-            enabled = true;
-            if (this.ErrorText.Length > 0)
-                enabled = false;
-            else if (!this.customLocationadioButton.Checked)
-            {
-                if (this.installLocationsDataGridView.SelectedRows.Count == 0)
-                    enabled = false;
-                else
-                {
-                    foreach (System.Windows.Forms.DataGridViewRow row in this.installLocationsDataGridView.SelectedRows)
-                    {
-                        InstallationLocationInfo info = row.DataBoundItem as InstallationLocationInfo;
-                        if (info.Exists || !info.IsInstallable)
-                        {
-                            enabled = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            this.installButton.Enabled = enabled;
         }
 
         private void browseButton_Click(object sender, System.EventArgs e)
@@ -225,28 +218,19 @@ namespace PSModuleInstallUtil
 
         private void actionButton_Click(object sender, System.EventArgs e)
         {
-        }
-        
-        private void installLocationsDataGridView_SelectionChanged(object sender, EventArgs e)
-        {
-            this.UpdateControlDisplay();
-        }
-
-        private void exitButton_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void installButton_Click(object sender, EventArgs e)
-        {
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
-        private void uninstallButton_Click(object sender, EventArgs e)
+        private void continueButton_Click(object sender, System.EventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.Retry;
+            this.DialogResult = System.Windows.Forms.DialogResult.Ignore;
+            this.Close();
+        }
+
+        private void cancelButton_Click(object sender, System.EventArgs e)
+        {
+            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
         }
     }

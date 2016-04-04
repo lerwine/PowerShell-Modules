@@ -32,12 +32,22 @@
     <Content Include="Uninstall.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SchemaSetCollection.cs" />
+    <Compile Include="SchemaValidationError.cs" />
+    <Compile Include="SchemaValidationHandler.cs" />
     <Compile Include="Setup.ps1" />
     <Compile Include="Install.ps1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
     <Compile Include="IOUtility.tests.ps1" />
+    <Compile Include="StreamHelper.cs" />
     <Compile Include="Uninstall.ps1" />
+    <Compile Include="_setup\InstallationLocationInfo.cs" />
+    <Compile Include="_setup\InstallLocationSelectForm.cs" />
+    <Compile Include="_setup\InstallLocationSelectForm.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="_setup\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

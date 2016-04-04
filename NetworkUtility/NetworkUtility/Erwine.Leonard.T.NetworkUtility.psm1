@@ -64,6 +64,117 @@ Function New-WebRequest {
     }
 }
 
+Function ConvertFrom-UrlEncoded {
+    [CmdletBinding(DefaultParameterSetName = 'Value')]
+    [OutputType([Hashtable])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Hashtable')]
+		[AllowEmptyString()]
+		[AllowNull()]
+        [string]$Data
+	)
+
+	Process {
+		$Hastable = @{};
+		if ($Data -ne $null) {
+			$FirstQueryChar = $Data.IndexOf('?');
+			if ($FirstQueryChar -ge 0) {
+				$FirstSeparatorChar = $Data.IndexOf('=');
+				if ($FirstSeparatorChar -lt 0) { $FirstSeparatorChar = $Data.IndexOf('&') }
+				if ($FirstSeparatorChar -ge 0 -and $FirstQueryChar -gt $FirstSeparatorChar) {
+					$Data = $Data.Substring($FirstSeparatorChar);
+				} else {
+					$Data = $Data.Substring($FirstQueryChar);
+				}
+			}
+			if ($Data.Contains('&')) {
+				$Pairs = $Data -split '&';
+			} else {
+				$Pairs = @($Data);
+			}
+			$Pairs | ForEach-Object {
+				$Index = $_.Split('=', 2);
+				if ($Index -lt 0) {
+					if ($HashTable.ContainsKey($_)) {
+						$Hastable[$_] = @($Hastable[$_]) + @($null);
+					} else {
+						$Hastable.Add($_, $null);
+					}
+				} else {
+					$k = $_.Substring(0, $Index);
+					if ($HashTable.ContainsKey($k)) {
+						$Hastable[$k] = @($Hastable[$k]) + @($_.Substring($Index + 1));
+					} else {
+						$Hastable.Add($k, $_.Substring($Index + 1));
+					}
+				}
+			}
+		}
+	}
+}
+
+Function ConvertTo-UrlEncoded {
+    [CmdletBinding(DefaultParameterSetName = 'Value')]
+    [OutputType([string])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Hashtable')]
+        [Hashtable]$Data,
+		
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipelineByProperptyName = $true, ParameterSetName = 'KeyValue')]
+		[AllowEmptyString()]
+        [string]$Key,
+		
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Value')]
+        [Parameter(Mandatory = $true, Position = 1, ValueFromPipelineByProperptyName = $true, ParameterSetName = 'KeyValue')]
+		[AllowEmptyString()]
+		[AllowNull()]
+        [object]$Value
+	)
+
+	Process {
+		switch ($PSCmdlet.ParameterSetName) {
+			'Value' {
+				if ($Value -ne $null) {
+					if ($Value -is [string]) {
+						[System.Uri]::EscapeDataString($Value);
+					} else {
+						[System.Uri]::EscapeDataString((($Value | Out-String) -replace '(\r\n?\n)$', ''));
+					}
+				}
+			}
+			'Hashtable' {
+				$StringBuilder = New-Object -TypeName 'System.Text.StringBuilder';
+
+				foreach ($key in $Data.Keys) {
+					if ($key -is [string]) {
+						$KeyValue = ConvertTo-UrlEncoded -Key $key -Value $Data[$key];
+					} else {
+						$KeyValue = ConvertTo-UrlEncoded -Key (($key | Out-String) -replace '(\r\n?\n)$', '') -Value $Data[$key];
+					}
+					
+					if ($KeyValue.Length -gt 0) {
+						if ($StringBuilder.Length -gt 0) { $StringBuilder.Append('&') }
+						$StringBuilder.Append($KeyValue);
+					}
+				}
+				$StringBuilder.ToString();
+			}
+			default {
+				$ValueEnc = ConvertTo-UrlEncoded -Value $Value
+				if ($Key.Length -eq 0) {
+					if ($ValueEnc -eq $null) { '' } else { $ValueEnc }
+				} else {
+					if ($ValueEnc -eq $null) {
+						ConvertTo-UrlEncoded -Value $Key;
+					} else {
+						'{0}={1}' -f $ValueEnc, (ConvertTo-UrlEncoded -Value $Key);
+					}
+				}
+			}
+		}
+	}
+}
+
 Function Initialze-WebRequestPostForm {
     [CmdletBinding(DefaultParameterSetName = 'GetRequest')]
     [OutputType([System.Net.WebRequest], ParameterSetName = 'GetRequest')]
@@ -75,14 +186,14 @@ Function Initialze-WebRequestPostForm {
         [Parameter(Mandatory = $true)]
         [Hashtable]$FormData,
         
-        [Parameter(Mandatory = $true, ParameterSetName = 'GetRequest')]
-        [switch]$PassThru,
-        
         [Parameter(ParameterSetName = 'GetResponse')]
         [bool]$AllowRedirect,
         
         [Parameter(Mandatory = $true, ParameterSetName = 'GetResponse')]
-        [switch]$GetResponse
+        [switch]$GetResponse,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'GetRequest')]
+        [switch]$PassThru
     )
     
     Process {

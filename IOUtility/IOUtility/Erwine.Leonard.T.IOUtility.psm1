@@ -1,4 +1,6 @@
-Add-Type -AssemblyName 'System.Windows.Forms' -PassThru -ErrorAction Stop;
+Add-Type -AssemblyName 'System.Windows.Forms' -ErrorAction Stop;
+Add-Type -Path 'SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'StreamHelper.cs' `
+	-ReferencedAssemblies 'System', 'System.Core', 'System.Management.Automation', 'System.Net.Http', 'System.Xml';
 
 Function Get-SpecialFolderNames {
 	[CmdletBinding()]
@@ -504,17 +506,6 @@ Function Read-FileDialog {
     }
 }
 
-Add-Type -TypeDefinition @'
-namespace UserFileUtils {
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    public class StreamHelper {
-    }
-}
-'@;
-
 Function Get-MinBase64BlockSize {
     [CmdletBinding()]
     [OutputType([int])]
@@ -530,7 +521,7 @@ Function Get-MinBase64BlockSize {
 			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
 	#>
     
-    return [UserFileUtils.StreamHelper]::MinBase64BlockSize;
+    return [IOUtilityCLR.StreamHelper]::MinBase64BlockSize;
 }
 
 Function Read-IntegerFromStream {
@@ -561,7 +552,7 @@ Function Read-IntegerFromStream {
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
     
-    return [UserFileUtils.StreamHelper]::ReadInteger($Stream);
+    return [IOUtilityCLR.StreamHelper]::ReadInteger($Stream);
 }
 
 Function Read-LongIntegerFromStream {
@@ -592,7 +583,7 @@ Function Read-LongIntegerFromStream {
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
     
-    return [UserFileUtils.StreamHelper]::ReadLongInteger($Stream);
+    return [IOUtilityCLR.StreamHelper]::ReadLongInteger($Stream);
 }
 
 Function Write-IntegerToStream {
@@ -623,7 +614,7 @@ Function Write-IntegerToStream {
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
     
-    [UserFileUtils.StreamHelper]::WriteInteger($Stream, $Value);
+    [IOUtilityCLR.StreamHelper]::WriteInteger($Stream, $Value);
 }
 
 Function Write-LongIntegerToStream {
@@ -654,7 +645,7 @@ Function Write-LongIntegerToStream {
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
     
-    [UserFileUtils.StreamHelper]::WriteLongInteger($Stream, $Value);
+    [IOUtilityCLR.StreamHelper]::WriteLongInteger($Stream, $Value);
 }
 
 Function Read-LengthEncodedBytes {
@@ -682,7 +673,7 @@ Function Read-LengthEncodedBytes {
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
 
-    return ,[UserFileUtils.StreamHelper]::ReadLengthEncodedBytes($Stream);
+    return ,[IOUtilityCLR.StreamHelper]::ReadLengthEncodedBytes($Stream);
 }
 
 Function Write-LengthEncodedBytes {
@@ -720,12 +711,12 @@ Function Write-LengthEncodedBytes {
 
     if ($PSBoundParameters.ContainsKey('Offset') -or $PSBoundParameters.ContainsKey('Count')) {
         if ($PSBoundParameters.ContainsKey('Count')) {
-            [UserFileUtils.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes, $Offset, $Count);
+            [IOUtilityCLR.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes, $Offset, $Count);
         } else {
-            [UserFileUtils.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes, $Offset, $Bytes.Length - $Offset);
+            [IOUtilityCLR.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes, $Offset, $Bytes.Length - $Offset);
         }
     } else {
-        [UserFileUtils.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes);
+        [IOUtilityCLR.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes);
     }
 }
 
@@ -795,7 +786,7 @@ Function ConvertFrom-Base64String {
 			Converts the base-64 encoded text to a data buffer object.
 
         .OUTPUTS
-            UserFileUtils.DataBuffer. Represents a re-usable data buffer.
+            IOUtilityCLR.DataBuffer. Represents a re-usable data buffer.
         
         .LINK
             ConvertTo-Base64String

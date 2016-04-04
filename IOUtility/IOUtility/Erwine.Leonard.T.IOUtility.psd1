@@ -78,7 +78,7 @@ AliasesToExport = '*'
 # ModuleList = @()
 
 # List of all files packaged with this module
-# FileList = @()
+# FileList = @('SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'StreamHelper.cs')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess
 # PrivateData = ''
