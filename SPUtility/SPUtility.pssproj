@@ -30,6 +30,7 @@
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.SPUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.SPUtility.psm1" />
+    <Compile Include="SharePointWebServices.ps1" />
     <Compile Include="SPUtility.tests.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
