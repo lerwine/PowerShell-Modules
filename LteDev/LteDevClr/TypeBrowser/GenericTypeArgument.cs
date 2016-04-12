@@ -16,5 +16,29 @@ namespace LteDevClr.TypeBrowser
             if (!representedMember.DeclaringType.Equals(declaringMember))
                 throw new ArgumentException("Declaring type and type definition do not match.", "declaringMember");
         }
+
+        public override string FullName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected override bool CanHaveGenericParameters
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected override bool CanHaveNestedTypes
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

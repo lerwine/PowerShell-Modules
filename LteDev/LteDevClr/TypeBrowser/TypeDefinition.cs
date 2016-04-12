@@ -16,5 +16,29 @@ namespace LteDevClr.TypeBrowser
             if (representedMember.HasElementType || representedMember.IsGenericParameter || representedMember.IsGenericType && !representedMember.IsGenericTypeDefinition)
                 throw new ArgumentException("Type must be a Type Definition, and not Generic Parameter", "representedMember");
         }
+
+        public override string FullName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected override bool CanHaveGenericParameters
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected override bool CanHaveNestedTypes
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

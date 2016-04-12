@@ -90,6 +90,14 @@ namespace LteDevClr.TypeBrowser
 
         protected override bool CanHaveNestedTypes { get { return true; } }
 
+        protected override bool CanHaveGenericParameters
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public ConstructedTypeDefinition(Type representedMember)
             : base(representedMember)
         {
