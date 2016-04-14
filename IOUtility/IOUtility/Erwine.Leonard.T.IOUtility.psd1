@@ -1,11 +1,12 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = 'Module.psd1'
+# Uncomment next line for PowerShell 3.0+
+# RootModule = 'Erwine.Leonard.T.IOUtility.psd1'
 ModuleToProcess = 'Erwine.Leonard.T.IOUtility.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.2'
+ModuleVersion = '0.3'
 
 # ID used to uniquely identify this module
 GUID = 'bd4390dc-a8ad-4bce-8d69-f53ccf8e4163'
@@ -17,7 +18,7 @@ Author = 'Leonard T. Erwine'
 CompanyName = 'Leonard T. Erwine'
 
 # Copyright statement for this module
-Copyright = '(c) 2015 Leonard T. Erwine. All rights reserved.'
+Copyright = '(c) 2016 Leonard T. Erwine. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Utility functions to manage filesystem and stream IO.'
@@ -62,10 +63,7 @@ CLRVersion = '2.0'
 FunctionsToExport = @( 'Get-SpecialFolderNames', 'Get-SpecialFolder', 'ConvertTo-SafeFileName', 'ConvertFrom-SafeFileName', 'Get-AppDataPath',
 	'Read-FileDialog', 'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream', 'Write-IntegerToStream',
 	'Write-LongIntegerToStream', 'Read-LengthEncodedBytes', 'Write-LengthEncodedBytes', 'ConvertTo-Base64String', 'ConvertFrom-Base64String',
-    'Get-TextEncoding', 'New-MemoryStream', 'New-XmlReaderSettings', 'New-XmlWriterSettings', 'Read-XmlDocument', 'Write-XmlDocument',
-    'ConvertTo-XmlEncodedName', 'ConvertTo-XmlEncodedNmToken', 'ConvertTo-XmlEncodedLocalName', 'ConvertFrom-XmlEncodedName',
-    'ConvertTo-XmlString', 'ConvertFrom-XmlString', 'ConvertTo-XmlBinary', 'ConvertFrom-XmlBinary', 'ConvertTo-XmlList', 'ConvertFrom-XmlList',
-    'Add-XmlAttribute', 'Set-XmlAttribute', 'Add-XmlElement', 'Add-XmlTextElement', 'Set-XmlText' )
+    'Get-TextEncoding', 'New-MemoryStream' )
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'

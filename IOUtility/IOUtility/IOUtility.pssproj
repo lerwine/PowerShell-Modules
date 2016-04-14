@@ -37,9 +37,6 @@
     <Compile Include="LinqEmul.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
     <Compile Include="RegularExpressions.cs" />
-    <Compile Include="SchemaSetCollection.cs" />
-    <Compile Include="SchemaValidationError.cs" />
-    <Compile Include="SchemaValidationHandler.cs" />
     <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="Setup.ps1" />
     <Compile Include="Install.ps1" />
