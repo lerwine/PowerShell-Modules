@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="IOUtilityCLR.DecodeRegexReplaceHandler">
+    <Position X="3.5" Y="2.25" Width="2.25" />
+    <Members>
+      <Method Name="Evaluator" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>DecodeRegexReplaceHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.EncodeRegexReplaceHandler">
+    <Position X="6.5" Y="2.25" Width="2.25" />
+    <Members>
+      <Method Name="Evaluator" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>EncodeRegexReplaceHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.RegexReplaceHandler">
+    <Position X="6.5" Y="0.5" Width="2" />
+    <Members>
+      <Field Name="_regex" Hidden="true" />
+      <Method Name="Evaluator" Hidden="true" />
+      <Property Name="Regex" Hidden="true" />
+      <Method Name="RegexReplaceHandler" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAIAACAAACA=</HashCode>
+      <FileName>RegexReplaceHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.RegularExpressions">
+    <Position X="0.5" Y="2.25" Width="2" />
+    <Members>
+      <Method Name="RegularExpressions" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAEQACAAAAAAA=</HashCode>
+      <FileName>RegularExpressions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.SchemaSetCollection">
+    <Position X="0.5" Y="5.75" Width="2.75" />
+    <Members>
+      <Field Name="_syncRoot" Hidden="true" />
+      <Field Name="_validationEventHandler" Hidden="true" />
+      <Method Name="ClearItems" Hidden="true" />
+      <Method Name="InsertItem" Hidden="true" />
+      <Method Name="RemoveItem" Hidden="true" />
+      <Method Name="SetItem" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAABAABAAAAAAAAQAAIAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>SchemaSetCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.SchemaValidationError">
+    <Position X="3.5" Y="8" Width="2.75" />
+    <Members>
+      <Field Name="_exception" Hidden="true" />
+      <Field Name="_message" Hidden="true" />
+      <Field Name="_sender" Hidden="true" />
+      <Field Name="_severity" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAgAEAAAAAAAAEAAAAAAAAAAAAAIAAEABAIAQIAAE=</HashCode>
+      <FileName>SchemaValidationError.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.SchemaValidationHandler">
+    <Position X="4.5" Y="5.75" Width="2" />
+    <Members>
+      <Field Name="_errors" Hidden="true" />
+      <Field Name="_schemaSets" Hidden="true" />
+      <Field Name="_syncRoot" Hidden="true" />
+      <Method Name="ValidationEventHandler" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAZAAQAAAAAABAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SchemaValidationHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SchemaSets" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Errors" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="IOUtilityCLR.ScriptRegexReplaceHandler">
+    <Position X="9.5" Y="2.25" Width="2.25" />
+    <Members>
+      <Field Name="_scriptBlock" Hidden="true" />
+      <Method Name="Evaluator" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAA=</HashCode>
+      <FileName>ScriptRegexReplaceHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.StreamHelper">
+    <Position X="8.75" Y="4.25" Width="3" />
+    <Members>
+      <Field Name="_minBase64BlockSize" Hidden="true" />
+      <Method Name="_WriteLengthEncodedBytes" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAEABACAAAQAAAAAEAAAQAAAABBAAAAAAAACAAAAA=</HashCode>
+      <FileName>StreamHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.TextHelper">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>TextHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
