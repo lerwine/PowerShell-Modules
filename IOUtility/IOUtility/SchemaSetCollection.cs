@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
 using System.Xml.Schema;
 
 namespace IOUtilityCLR
@@ -12,6 +10,7 @@ namespace IOUtilityCLR
         private object _syncRoot = new object();
         private ValidationEventHandler _validationEventHandler;
 
+        
         public SchemaSetCollection(ValidationEventHandler validationEventHandler) : this(validationEventHandler, new XmlSchemaSet[0]) { }
 
         public SchemaSetCollection(ValidationEventHandler validationEventHandler, IList<XmlSchemaSet> list)
@@ -23,7 +22,7 @@ namespace IOUtilityCLR
 
             foreach (XmlSchemaSet item in list)
             {
-                if (list == null || this.Any(i => Object.ReferenceEquals(i, item)))
+                if (list == null || LinqEmul.Any<XmlSchemaSet>(this, i => Object.ReferenceEquals(i, item)))
                     continue;
 
                 base.InsertItem(this.Count, item);
@@ -31,7 +30,7 @@ namespace IOUtilityCLR
                     item.ValidationEventHandler += this._validationEventHandler;
             }
         }
-
+        
         protected override void InsertItem(int index, XmlSchemaSet item)
         {
             if (item == null)
@@ -45,7 +44,7 @@ namespace IOUtilityCLR
                 if (index > this.Count)
                     throw new ArgumentOutOfRangeException("index", "Index cannot be greater than Count.");
 
-                int oldIndex = this.SkipWhile(i => !Object.ReferenceEquals(i, item)).Count();
+                int oldIndex = LinqEmul.Count<XmlSchemaSet>(LinqEmul.SkipWhile<XmlSchemaSet>(this, i => !Object.ReferenceEquals(i, item)), null);
                 if (oldIndex < this.Count)
                 {
                     base.RemoveItem(oldIndex);
@@ -85,7 +84,7 @@ namespace IOUtilityCLR
                 if (Object.ReferenceEquals(item, this[index]))
                     return;
 
-                int oldIndex = this.SkipWhile(i => !Object.ReferenceEquals(i, item)).Count();
+                int oldIndex = LinqEmul.Count<XmlSchemaSet>(LinqEmul.SkipWhile< XmlSchemaSet>(this, i => !Object.ReferenceEquals(i, item)), null);
                 if (oldIndex < this.Count)
                     base.SetItem(oldIndex, this[index]);
                 else if (this._validationEventHandler != null)

@@ -5,7 +5,7 @@
 ModuleToProcess = 'Erwine.Leonard.T.IOUtility.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1'
+ModuleVersion = '0.2'
 
 # ID used to uniquely identify this module
 GUID = 'bd4390dc-a8ad-4bce-8d69-f53ccf8e4163'
@@ -59,11 +59,13 @@ CLRVersion = '2.0'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = @( 'Get-SpecialFolderNames', 'Get-SpecialFolder', 'ConvertTo-SafeFileName', 'ConvertFrom-SafeFileName', 'New-ProductInfo', 'Get-AppDataPath',
-	'Read-FilePath', 'Read-FolderPath', 'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream', 'Read-LengthEncodedBytes', 'Write-IntegerToStream',
-	'Write-LongIntegerToStream', 'Write-LengthEncodedBytes', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'Get-TextEncoding', 'New-XmlReaderSettings',
-	'New-XmlWriterSettings', 'Read-XmlDocument', 'ConvertTo-XmlString', 'ConvertFrom-XmlString', 'Get-XmlAttributeValue', 'Set-XmlAttribute', 'Add-XmlElement',
-	'New-XmlDocument', 'Write-XmlDocument' )
+FunctionsToExport = @( 'Get-SpecialFolderNames', 'Get-SpecialFolder', 'ConvertTo-SafeFileName', 'ConvertFrom-SafeFileName', 'Get-AppDataPath',
+	'Read-FileDialog', 'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream', 'Write-IntegerToStream',
+	'Write-LongIntegerToStream', 'Read-LengthEncodedBytes', 'Write-LengthEncodedBytes', 'ConvertTo-Base64String', 'ConvertFrom-Base64String',
+    'Get-TextEncoding', 'New-MemoryStream', 'New-XmlReaderSettings', 'New-XmlWriterSettings', 'Read-XmlDocument', 'Write-XmlDocument',
+    'ConvertTo-XmlEncodedName', 'ConvertTo-XmlEncodedNmToken', 'ConvertTo-XmlEncodedLocalName', 'ConvertFrom-XmlEncodedName',
+    'ConvertTo-XmlString', 'ConvertFrom-XmlString', 'ConvertTo-XmlBinary', 'ConvertFrom-XmlBinary', 'ConvertTo-XmlList', 'ConvertFrom-XmlList',
+    'Add-XmlAttribute', 'Set-XmlAttribute', 'Add-XmlElement', 'Add-XmlTextElement', 'Set-XmlText' )
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
@@ -78,7 +80,8 @@ AliasesToExport = '*'
 # ModuleList = @()
 
 # List of all files packaged with this module
-# FileList = @('SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'StreamHelper.cs')
+FileList = @('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'SchemaSetCollection.cs',
+	'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess
 # PrivateData = ''

@@ -32,15 +32,22 @@
     <Content Include="Uninstall.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DecodeRegexReplaceHandler.cs" />
+    <Compile Include="EncodeRegexReplaceHandler.cs" />
+    <Compile Include="LinqEmul.cs" />
+    <Compile Include="RegexReplaceHandler.cs" />
+    <Compile Include="RegularExpressions.cs" />
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />
     <Compile Include="SchemaValidationHandler.cs" />
+    <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="Setup.ps1" />
     <Compile Include="Install.ps1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
     <Compile Include="IOUtility.tests.ps1" />
     <Compile Include="StreamHelper.cs" />
+    <Compile Include="TextHelper.cs" />
     <Compile Include="Uninstall.ps1" />
     <Compile Include="_setup\InstallationLocationInfo.cs" />
     <Compile Include="_setup\InstallLocationSelectForm.cs" />
