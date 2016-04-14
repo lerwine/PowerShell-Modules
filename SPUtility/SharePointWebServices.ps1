@@ -1,6 +1,8 @@
 ﻿Add-Type -AssemblyName 'System.Web';
 Add-Type -AssemblyName 'System.Web.Services';
 
+$Script:AllMimeMediaTypes = @{};
+
 Function Read-WebResponse {
     [CmdletBinding(DefaultParameterSetName = 'GET')]
     Param(
@@ -117,8 +119,87 @@ Function Read-WebResponse {
             }
         }
 
-        New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
+        $ResponseContent = New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
+        $ResponseContent.TypeNames.Insert(0, 'Erwine.Leonard.T.WebClient.ResponseContent');
+        $ResponseContent | Write-Output;
     }
+}
+
+Function Get-MimeMediaTypes {
+    [CmdletBinding(DefaultParameterSetName = 'AsString')]
+    Param(
+        [ValidateSet('Application', 'Image', 'Text', 'Text')]
+        [string[]]$Names,
+        
+        [Parameter(ParameterSetName = 'AsHashtable')]
+        [switch]$AsHashtable,
+        
+        [Parameter(ParameterSetName = 'AsContentType')]
+        [switch]$AsContentType,
+        
+        [Parameter(ParameterSetName = 'AsString')]
+        [switch]$AsString
+        
+    )
+
+    $ContentTypeStrings = @{};
+    if ($Names.Count -eq 0 -or $Names -icontains 'Application') {
+        if ($Script:AllMimeMediaTypes.ContainsKey('Application')) {
+            $ContentTypeStrings['Application'] = $Script:AllMimeMediaTypes['Application'];
+        } else {
+            $ContentTypeStrings['Application'] = @{};
+            [System.Net.Mime.MediaTypeNames+Application].GetFields() | ForEach-Object {
+                $ContentTypeStrings['Application'][$_.Name] = [System.Net.Mime.MediaTypeNames+Application]::($_.Name);
+            }
+            $Additional = @{
+                FormUlrEncoded = 'application/x-www-form-urlencoded'
+            };
+            $Additional.Keys | ForEach-Object {
+                if ($ContentTypeStrings.Values -inotcontains $Additional[$_]) {
+                    $ContentTypeStrings['Application'][$_] = $Additional[$_];
+                }
+            }
+            $Script:AllMimeMediaTypes['Application'] = $ContentTypeStrings['Application'];
+        }
+    }
+    if ($Names.Count -eq 0 -or $Names -icontains 'Image') {
+        if ($Script:AllMimeMediaTypes.ContainsKey('Application')) {
+            $ContentTypeStrings['Image'] = $Script:AllMimeMediaTypes['Image'];
+        } else {
+            $ContentTypeStrings['Image'] = @{};
+            [System.Net.Mime.MediaTypeNames+Application].GetFields() | ForEach-Object {
+                $ContentTypeStrings['Image'][$_.Name] = [System.Net.Mime.MediaTypeNames+Application]::($_.Name);
+            }
+            $Additional = @{
+                FormUlrEncoded = 'application/x-www-form-urlencoded'
+            };
+            $Additional.Keys | ForEach-Object {
+                if ($ContentTypeStrings.Values -inotcontains $Additional[$_]) {
+                    $ContentTypeStrings['Application'][$_] = $Additional[$_];
+                }
+            }
+            $Script:AllMimeMediaTypes['Application'] = $ContentTypeStrings['Application'];
+        }
+        [System.Net.Mime.MediaTypeNames+Image].GetFields() | ForEach-Object { [System.Net.Mime.MediaTypeNames+Image]::($_.Name) }
+    }
+    if ($Names.Count -eq 0 -or $Names -icontains 'Text') {
+        [System.Net.Mime.MediaTypeNames+Text].GetFields() | ForEach-Object { [System.Net.Mime.MediaTypeNames+Text]::($_.Name) }
+    }
+}
+
+Function Set-FormPostData {
+    [CmdletBinding(DefaultParameterSetName = 'GET')]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [Alias('Request')]
+        [System.Net.WebRequest]$WebRequest,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Post_FormData')]
+        [Hashtable]$FormData
+    )
+
+    $WebRequest.ContentType = 'application/x-www-form-urlencoded';
+    
 }
 
 Function Get-HttpWebResponse {
@@ -233,26 +314,11 @@ Function Get-HttpWebResponse {
             $Properties['StatusDescription'] = $Properties['StatusCode'].ToString('F');
         }
             
-        New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
+        $HttpWebResponse = New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
+        $HttpWebResponse.TypeNames.Insert(0, 'Erwine.Leonard.T.WebClient.WebResponse');
+        $HttpWebResponse.TypeNames.Insert(0, 'Erwine.Leonard.T.WebClient.HttpWebResponse');
+        $HttpWebResponse | Write-Output;
     }
-}
-
-Function Read-Wsdl {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -eq 'http' -or $_.Scheme -eq 'https') })]
-        [Alias('WebServiceUrl', 'WebServiceUri', 'Url')]
-        [System.Uri]$Uri,
-
-        [bool]$UseDefaultCredentials,
-        
-        [Alias('Certificates', 'X509Certificates', 'Certificate', 'X509Certificate', 'X509Certificate2')]
-        [System.Security.Cryptography.X509Certificates.X509Certificate[]]$ClientCertificates,
-
-        [Alias('PSCredential')]
-        [System.Management.Automation.PSCredential]$Credentials
-    )
 }
 
 Function Read-SharePointWebServiceWsdl {
@@ -294,5 +360,8 @@ $ServiceDescription =
 #$WsdlImport = New-Object -TypeName 'System.Web.Services.Description.Import';
 
 if ($PSCredential -eq $null) { $PSCredential = Get-Credential }
-$HttpWebResponse = Read-SharePointWebServiceWsdl -Uri 'http://win-52jfnf2doeh/_vti_bin/SiteData.asmx' -Credentials $PSCredential;
-$HttpWebResponse
+$WsdlResponse = Read-SharePointWebServiceWsdl -Uri 'http://win-52jfnf2doeh/_vti_bin/SiteData.asmx' -Credentials $PSCredential;
+$ServiceDescriptionImporter = New-Object -TypeName 'System.Web.Services.Description.ServiceDescriptionImporter';
+$ServiceDescriptionImporter.ProtocolName = 'Soap12';
+AddServiceDescription(System.Web.Services.Description.ServiceDescription serviceDescription, string appSettingUrlKey, string appSettingBaseUrl)
+$ServiceDescriptionImporter.AddServiceDescription(
