@@ -32,8 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
@@ -49,9 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
     <Compile Include="RegularExpressions.cs" />
-    <Compile Include="SchemaSetCollection.cs" />
-    <Compile Include="SchemaValidationError.cs" />
-    <Compile Include="SchemaValidationHandler.cs" />
     <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />

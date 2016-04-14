@@ -8,7 +8,6 @@ namespace IOUtilityCLR
     public static class RegularExpressions
     {
         public static readonly Regex Whitespace = new Regex(@"\s+", RegexOptions.Compiled);
-        public static readonly Regex WhitespaceEncode = new Regex(@"(_(?=0x[\dA-F]{4}_)|\s)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static readonly Regex EncodedName = new Regex(@"_0x(?<hex>[\dA-F]{4})_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static readonly Regex ControlChar = new Regex(@"\p{Cc}", RegexOptions.Compiled);
         public static readonly Regex InvalidFileNameChars;
