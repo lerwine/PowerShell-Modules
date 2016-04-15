@@ -8,7 +8,7 @@ namespace IOUtilityCLR
     {
         public delegate bool ItemPredicateHandler<T>(T item);
 
-        public static bool Any<T>(IEnumerable<T> collection, ItemPredicateHandler<T> predicate)
+        private static bool _Any<T>(IEnumerable<T> collection, ItemPredicateHandler<T> predicate)
         {
             foreach (T item in collection)
             {
@@ -19,12 +19,31 @@ namespace IOUtilityCLR
             return false;
         }
 
-        public static IEnumerable<T> SkipWhile<T>(IEnumerable<T> collection, ItemPredicateHandler<T> predicate)
+        public static bool Any<T>(IEnumerable<T> collection)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            return LinqEmul._Any<T>(collection, null);
+        }
+
+        public static bool Any<T>(IEnumerable<T> collection, ItemPredicateHandler<T> predicate)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            return LinqEmul._Any<T>(collection, null);
+        }
+
+        private static IEnumerable<T> _SkipWhile<T>(IEnumerable<T> collection, ItemPredicateHandler<T> predicate)
         {
             IEnumerator<T> enumerator = collection.GetEnumerator();
             try
             {
-                return LinqEmul.SkipWhile<T>(enumerator, predicate);
+                return LinqEmul._SkipWhile<T>(enumerator, predicate);
             }
             catch
             {
@@ -33,6 +52,50 @@ namespace IOUtilityCLR
             finally
             {
                 enumerator.Dispose();
+            }
+        }
+
+        public static IEnumerable<T> SkipWhile<T>(IEnumerable<T> collection)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+            
+            return LinqEmul._SkipWhile<T>(collection, null);
+        }
+
+        public static IEnumerable<T> SkipWhile<T>(IEnumerable<T> collection, ItemPredicateHandler<T> predicate)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            return LinqEmul._SkipWhile<T>(collection, predicate);
+        }
+
+        private static IEnumerable<T> _SkipWhile<T>(IEnumerator<T> enumerator, ItemPredicateHandler<T> predicate)
+        {
+            if (enumerator == null)
+                throw new ArgumentNullException("enumerator");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            bool matched = false;
+            while (enumerator.MoveNext())
+            {
+                if (!predicate(enumerator.Current))
+                {
+                    matched = true;
+                    yield return enumerator.Current;
+                    break;
+                }
+            }
+            if (matched)
+            {
+                while (enumerator.MoveNext())
+                    yield return enumerator.Current;
             }
         }
 

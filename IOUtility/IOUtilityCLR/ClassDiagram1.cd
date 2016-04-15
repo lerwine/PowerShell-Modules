@@ -43,53 +43,6 @@
       <FileName>RegularExpressions.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="IOUtilityCLR.SchemaSetCollection">
-    <Position X="0.5" Y="5.75" Width="2.75" />
-    <Members>
-      <Field Name="_syncRoot" Hidden="true" />
-      <Field Name="_validationEventHandler" Hidden="true" />
-      <Method Name="ClearItems" Hidden="true" />
-      <Method Name="InsertItem" Hidden="true" />
-      <Method Name="RemoveItem" Hidden="true" />
-      <Method Name="SetItem" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAABAAAAABAABAAAAAAAAQAAIAAAEAAAAAAAAAAA=</HashCode>
-      <FileName>SchemaSetCollection.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="IOUtilityCLR.SchemaValidationError">
-    <Position X="3.5" Y="8" Width="2.75" />
-    <Members>
-      <Field Name="_exception" Hidden="true" />
-      <Field Name="_message" Hidden="true" />
-      <Field Name="_sender" Hidden="true" />
-      <Field Name="_severity" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAgAEAAAAAAAAEAAAAAAAAAAAAAIAAEABAIAQIAAE=</HashCode>
-      <FileName>SchemaValidationError.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="IOUtilityCLR.SchemaValidationHandler">
-    <Position X="4.5" Y="5.75" Width="2" />
-    <Members>
-      <Field Name="_errors" Hidden="true" />
-      <Field Name="_schemaSets" Hidden="true" />
-      <Field Name="_syncRoot" Hidden="true" />
-      <Method Name="ValidationEventHandler" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAZAAQAAAAAABAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>SchemaValidationHandler.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="SchemaSets" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Errors" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="IOUtilityCLR.ScriptRegexReplaceHandler">
     <Position X="9.5" Y="2.25" Width="2.25" />
     <Members>

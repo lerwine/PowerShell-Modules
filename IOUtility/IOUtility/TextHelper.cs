@@ -114,7 +114,7 @@ namespace IOUtilityCLR
                         patterns.Add(pattern);
                 }
             }
-            if (otherChars != null && !LinqEmul.Any<char>(otherChars, null))
+            if (otherChars != null && !LinqEmul.Any<char>(otherChars))
             {
                 Regex regex;
                 if (patterns.Count == 1)

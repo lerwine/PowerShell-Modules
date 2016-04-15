@@ -10,7 +10,162 @@ namespace IOUtilityCLR
         private object _syncRoot = new object();
         private ValidationEventHandler _validationEventHandler;
 
-        
+        private static bool _Any(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
+        {
+            foreach (XmlSchemaSet item in collection)
+            {
+                if (predicate == null || predicate(item))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool Any(IEnumerable<XmlSchemaSet> collection)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            return SchemaSetCollection._Any(collection, null);
+        }
+
+        public static bool Any(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            return SchemaSetCollection._Any(collection, null);
+        }
+
+        private static IEnumerable<XmlSchemaSet> _SkipWhile(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
+        {
+            IEnumerator<XmlSchemaSet> enumerator = collection.GetEnumerator();
+            try
+            {
+                return SchemaSetCollection._SkipWhile(enumerator, predicate);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                enumerator.Dispose();
+            }
+        }
+
+        public static IEnumerable<XmlSchemaSet> SkipWhile(IEnumerable<XmlSchemaSet> collection)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            return SchemaSetCollection._SkipWhile(collection, null);
+        }
+
+        public static IEnumerable<XmlSchemaSet> SkipWhile(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            return SchemaSetCollection._SkipWhile(collection, predicate);
+        }
+
+        private static IEnumerable<XmlSchemaSet> _SkipWhile(IEnumerator<XmlSchemaSet> enumerator, Predicate<XmlSchemaSet> predicate)
+        {
+            if (enumerator == null)
+                throw new ArgumentNullException("enumerator");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            bool matched = false;
+            while (enumerator.MoveNext())
+            {
+                if (!predicate(enumerator.Current))
+                {
+                    matched = true;
+                    yield return enumerator.Current;
+                    break;
+                }
+            }
+            if (matched)
+            {
+                while (enumerator.MoveNext())
+                    yield return enumerator.Current;
+            }
+        }
+
+        public static IEnumerable<XmlSchemaSet> SkipWhile(IEnumerator<XmlSchemaSet> enumerator, Predicate<XmlSchemaSet> predicate)
+        {
+            if (enumerator == null)
+                throw new ArgumentNullException("enumerator");
+
+            if (predicate == null)
+                throw new ArgumentNullException("predicate");
+
+            bool matched = false;
+            while (enumerator.MoveNext())
+            {
+                if (!predicate(enumerator.Current))
+                {
+                    matched = true;
+                    yield return enumerator.Current;
+                    break;
+                }
+            }
+            if (matched)
+            {
+                while (enumerator.MoveNext())
+                    yield return enumerator.Current;
+            }
+        }
+
+        public static int ItemCount(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
+        {
+            IEnumerator<XmlSchemaSet> enumerator = collection.GetEnumerator();
+            try
+            {
+                return SchemaSetCollection.ItemCount(enumerator, predicate);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                enumerator.Dispose();
+            }
+        }
+
+        public static int ItemCount(IEnumerator<XmlSchemaSet> enumerator, Predicate<XmlSchemaSet> predicate)
+        {
+            if (enumerator == null)
+                throw new ArgumentNullException("enumerator");
+
+            int count = 0;
+            if (predicate == null)
+            {
+                while (enumerator.MoveNext())
+                    count++;
+            }
+            else
+            {
+                while (enumerator.MoveNext())
+                {
+                    if (predicate(enumerator.Current))
+                        count++;
+                }
+            }
+
+            return count;
+        }
+
         public SchemaSetCollection(ValidationEventHandler validationEventHandler) : this(validationEventHandler, new XmlSchemaSet[0]) { }
 
         public SchemaSetCollection(ValidationEventHandler validationEventHandler, IList<XmlSchemaSet> list)
@@ -22,7 +177,7 @@ namespace IOUtilityCLR
 
             foreach (XmlSchemaSet item in list)
             {
-                if (list == null || LinqEmul.Any<XmlSchemaSet>(this, i => Object.ReferenceEquals(i, item)))
+                if (list == null || SchemaSetCollection.Any(this, i => Object.ReferenceEquals(i, item)))
                     continue;
 
                 base.InsertItem(this.Count, item);
@@ -44,7 +199,7 @@ namespace IOUtilityCLR
                 if (index > this.Count)
                     throw new ArgumentOutOfRangeException("index", "Index cannot be greater than Count.");
 
-                int oldIndex = LinqEmul.Count<XmlSchemaSet>(LinqEmul.SkipWhile<XmlSchemaSet>(this, i => !Object.ReferenceEquals(i, item)), null);
+                int oldIndex = SchemaSetCollection.ItemCount(SchemaSetCollection.SkipWhile(this, i => !Object.ReferenceEquals(i, item)), null);
                 if (oldIndex < this.Count)
                 {
                     base.RemoveItem(oldIndex);
@@ -84,7 +239,7 @@ namespace IOUtilityCLR
                 if (Object.ReferenceEquals(item, this[index]))
                     return;
 
-                int oldIndex = LinqEmul.Count<XmlSchemaSet>(LinqEmul.SkipWhile< XmlSchemaSet>(this, i => !Object.ReferenceEquals(i, item)), null);
+                int oldIndex = SchemaSetCollection.ItemCount(SchemaSetCollection.SkipWhile(this, i => !Object.ReferenceEquals(i, item)), null);
                 if (oldIndex < this.Count)
                     base.SetItem(oldIndex, this[index]);
                 else if (this._validationEventHandler != null)
