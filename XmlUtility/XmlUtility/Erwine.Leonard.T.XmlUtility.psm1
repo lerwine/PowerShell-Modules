@@ -1,5 +1,5 @@
 Add-Type -Path 'SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs'
-	-ReferencedAssemblies 'System', 'System.Core', 'System.Management.Automation', 'System.Net.Http', 'System.Xml';
+	-ReferencedAssemblies 'System', 'System.Management.Automation', 'System.Net.Http', 'System.Xml';
 
 Function New-XmlReaderSettings {
 	[CmdletBinding(DefaultParameterSetName = 'New')]
@@ -32,8 +32,8 @@ Function New-XmlReaderSettings {
         # Sets a value indicating the schema validation settings. This setting applies to XmlReader objects that validate schemas (ValidationType property set to ValidationType.Schema).
         [System.Xml.Schema.XmlSchemaValidationFlags]$ValidationFlags,
         
-        # Sets the XmlSchemaSet to use when performing schema validation.
-        [System.Xml.Schema.XmlSchemaSet]$Schemas,
+        # Sets the XmlSchemas to use when performing schema validation.
+        [System.Xml.Schema.XmlSchema[]]$Schema,
         
         # Sets a value indicating whether to ignore insignificant white space.
         [bool]$IgnoreWhitespace,
@@ -102,7 +102,7 @@ Function New-XmlReaderSettings {
     if ($PSBoundParameters.ContainsKey('MaxCharactersFromEntities')) { $XmlReaderSettings.MaxCharactersFromEntities = $MaxCharactersFromEntities }
     if ($PSBoundParameters.ContainsKey('ValidationType')) { $XmlReaderSettings.ValidationType = $ValidationType }
     if ($PSBoundParameters.ContainsKey('ValidationFlags')) { $XmlReaderSettings.ValidationFlags = $ValidationFlags }
-    if ($PSBoundParameters.ContainsKey('Schemas')) { $XmlReaderSettings.Schemas = $Schemas }
+    if ($PSBoundParameters.ContainsKey('Schema')) { foreach ($XmlSchema in $Schema) { $XmlReaderSettings.Schemas.Add($XmlSchema) } }
     if ($PSBoundParameters.ContainsKey('IgnoreWhitespace')) { $XmlReaderSettings.IgnoreWhitespace = $IgnoreWhitespace }
     if ($PSBoundParameters.ContainsKey('IgnoreProcessingInstructions')) { $XmlReaderSettings.IgnoreProcessingInstructions = $IgnoreProcessingInstructions }
     if ($PSBoundParameters.ContainsKey('IgnoreComments')) { $XmlReaderSettings.IgnoreComments = $IgnoreComments }
@@ -253,7 +253,7 @@ Function Read-XmlDocument {
             Write-XmlDocument
         
         .LINK
-            https://msdn.microsoft.com/en-us/library/system.xml.xmldocument.aspx
+            https://msdn.microsoft.com/en-us/library/system.xml.xmldocument.load.aspx
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
