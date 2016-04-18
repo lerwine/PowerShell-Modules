@@ -1,385 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="CredentialStorageCLR.CredentialComponentCollection">
-    <Position X="13" Y="6.25" Width="3.25" />
-    <Members>
-      <Method Name="_Clear" Hidden="true" />
-      <Field Name="_ids" Hidden="true" />
-      <Field Name="_names" Hidden="true" />
-      <Field Name="_parent" Hidden="true" />
-      <Method Name="_RemoveAt" Hidden="true" />
-      <Method Name="_SetAt" Hidden="true" />
-      <Field Name="_values" Hidden="true" />
-      <Method Name="EnsureNestable" Hidden="true" />
-      <Method Name="GetEnumerator" Hidden="true" />
-      <Property Name="ICollection&lt;ICredentialContent&gt;.IsReadOnly" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Add" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Contains" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.CopyTo" Hidden="true" />
-      <Property Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.IsReadOnly" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Remove" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Add" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Contains" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.CopyTo" Hidden="true" />
-      <Property Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.IsReadOnly" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Remove" Hidden="true" />
-      <Method Name="IDictionary&lt;Guid, ICredentialContent&gt;.Add" Hidden="true" />
-      <Property Name="IDictionary&lt;string, ICredentialContent&gt;.Keys" Hidden="true" />
-      <Property Name="IDictionary&lt;string, ICredentialContent&gt;.this" Hidden="true" />
-      <Method Name="IDictionary&lt;string, ICredentialContent&gt;.TryGetValue" Hidden="true" />
-      <Method Name="IEnumerable&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.GetEnumerator" Hidden="true" />
-      <Method Name="IEnumerable&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.GetEnumerator" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Nested Types" Collapsed="false" />
-    </Compartments>
-    <NestedTypes>
-      <Class Name="CredentialStorageCLR.CredentialComponentCollection.ContentCollection">
-        <Members>
-          <Field Name="_innerList" Hidden="true" />
-          <Method Name="GetEnumerator" Hidden="true" />
-          <Method Name="ICollection&lt;ICredentialContent&gt;.Add" Hidden="true" />
-          <Method Name="ICollection&lt;ICredentialContent&gt;.Clear" Hidden="true" />
-          <Method Name="ICollection&lt;ICredentialContent&gt;.CopyTo" Hidden="true" />
-          <Property Name="ICollection&lt;ICredentialContent&gt;.IsReadOnly" Hidden="true" />
-          <Method Name="ICollection&lt;ICredentialContent&gt;.Remove" Hidden="true" />
-          <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
-          <Method Name="IList&lt;ICredentialContent&gt;.Insert" Hidden="true" />
-          <Method Name="IList&lt;ICredentialContent&gt;.RemoveAt" Hidden="true" />
-          <Property Name="IList&lt;ICredentialContent&gt;.this" Hidden="true" />
-        </Members>
-        <TypeIdentifier>
-          <NewMemberFileName>CredentialComponentCollection.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-      <Class Name="CredentialStorageCLR.CredentialComponentCollection.GuidCollection">
-        <Members>
-          <Field Name="_innerList" Hidden="true" />
-          <Method Name="ICollection&lt;Guid&gt;.Add" Hidden="true" />
-          <Method Name="ICollection&lt;Guid&gt;.Clear" Hidden="true" />
-          <Method Name="ICollection&lt;Guid&gt;.CopyTo" Hidden="true" />
-          <Method Name="ICollection&lt;Guid&gt;.Remove" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Add" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Clear" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Contains" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.CopyTo" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Remove" Hidden="true" />
-          <Method Name="IDictionary&lt;Guid, ICredentialContent&gt;.Add" Hidden="true" />
-          <Method Name="IDictionary&lt;Guid, ICredentialContent&gt;.ContainsKey" Hidden="true" />
-          <Property Name="IDictionary&lt;Guid, ICredentialContent&gt;.Keys" Hidden="true" />
-          <Method Name="IDictionary&lt;Guid, ICredentialContent&gt;.Remove" Hidden="true" />
-          <Property Name="IDictionary&lt;Guid, ICredentialContent&gt;.this" Hidden="true" />
-          <Property Name="IDictionary&lt;Guid, ICredentialContent&gt;.Values" Hidden="true" />
-          <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
-          <Method Name="IEnumerable&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.GetEnumerator" Hidden="true" />
-          <Method Name="IList&lt;Guid&gt;.Insert" Hidden="true" />
-          <Method Name="IList&lt;Guid&gt;.RemoveAt" Hidden="true" />
-          <Property Name="IList&lt;Guid&gt;.this" Hidden="true" />
-        </Members>
-        <TypeIdentifier>
-          <NewMemberFileName>CredentialComponentCollection.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-      <Class Name="CredentialStorageCLR.CredentialComponentCollection.NameCollection">
-        <Members>
-          <Field Name="_innerList" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Add" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Clear" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Contains" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.CopyTo" Hidden="true" />
-          <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Remove" Hidden="true" />
-          <Method Name="ICollection&lt;string&gt;.Add" Hidden="true" />
-          <Method Name="ICollection&lt;string&gt;.Clear" Hidden="true" />
-          <Method Name="ICollection&lt;string&gt;.CopyTo" Hidden="true" />
-          <Method Name="ICollection&lt;string&gt;.Remove" Hidden="true" />
-          <Method Name="IDictionary&lt;string, ICredentialContent&gt;.Add" Hidden="true" />
-          <Method Name="IDictionary&lt;string, ICredentialContent&gt;.ContainsKey" Hidden="true" />
-          <Property Name="IDictionary&lt;string, ICredentialContent&gt;.Keys" Hidden="true" />
-          <Method Name="IDictionary&lt;string, ICredentialContent&gt;.Remove" Hidden="true" />
-          <Property Name="IDictionary&lt;string, ICredentialContent&gt;.this" Hidden="true" />
-          <Property Name="IDictionary&lt;string, ICredentialContent&gt;.Values" Hidden="true" />
-          <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
-          <Method Name="IEnumerable&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.GetEnumerator" Hidden="true" />
-          <Method Name="IList&lt;string&gt;.Insert" Hidden="true" />
-          <Method Name="IList&lt;string&gt;.RemoveAt" Hidden="true" />
-          <Property Name="IList&lt;string&gt;.this" Hidden="true" />
-        </Members>
-        <TypeIdentifier>
-          <NewMemberFileName>CredentialComponentCollection.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
-    <TypeIdentifier>
-      <HashCode>SEIEIGGBAIEEABAQqAAIBAGQBAAAAEAIKgAgIQxUICA=</HashCode>
-      <FileName>CredentialComponentCollection.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Values" />
-    </ShowAsCollectionAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="CredentialStorageCLR.CredentialStorageComponent">
-    <Position X="5" Y="10.75" Width="3" />
-    <Members>
-      <Field Name="_isDisposed" Hidden="true" />
-      <Field Name="_site" Hidden="true" />
-      <Method Name="~CredentialStorageComponent" Hidden="true" />
-      <Method Name="BaseClone" Hidden="true" />
-      <Method Name="Dispose" Hidden="true" />
-      <Method Name="Equals" Hidden="true" />
-      <Method Name="ICloneable.Clone" Hidden="true" />
-      <Property Name="IComponent.Site" Hidden="true" />
-      <Method Name="ICredentialComponent.Clone" Hidden="true" />
-      <Property Name="ICredentialComponent.Site" Hidden="true" />
-      <Method Name="IEquatable&lt;ICredentialComponent&gt;.Equals" Hidden="true" />
-      <Method Name="OnSiteChanged" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAABAAKBAgAAIwAAAAACAAAAAAIACAAAIAAAKAAA=</HashCode>
-      <FileName>CredentialStorageComponent.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Site" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="CredentialStorageCLR.CredentialStorageComponent&lt;T&gt;">
-    <Position X="5.25" Y="13" Width="2.5" />
-    <Members>
-      <Method Name="BaseClone" Hidden="true" />
-      <Method Name="Clone" Hidden="true" />
-      <Method Name="ICredentialComponent&lt;T&gt;.Clone" Hidden="true" />
-      <Property Name="ICredentialComponent&lt;T&gt;.Site" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgAAAQAAAAAAAAAAAEAAAAAAAAAAACBA=</HashCode>
-      <FileName>CredentialStorageComponent.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Site" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="CredentialStorageCLR.CredentialStorageContainer&lt;T&gt;">
-    <Position X="2.25" Y="14.75" Width="4.75" />
-    <Members>
-      <Field Name="_components" Hidden="true" />
-      <Field Name="_keyedComponents" Hidden="true" />
-      <Field Name="_namedComponents" Hidden="true" />
-      <Method Name="Clone" Hidden="true" />
-      <Method Name="CredentialStorageContainer" Hidden="true" />
-      <Property Name="ICollection&lt;ICredentialContent&gt;.IsReadOnly" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Add" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Contains" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.CopyTo" Hidden="true" />
-      <Property Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.IsReadOnly" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.Remove" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Add" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Contains" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.CopyTo" Hidden="true" />
-      <Property Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.IsReadOnly" Hidden="true" />
-      <Method Name="ICollection&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.Remove" Hidden="true" />
-      <Method Name="IContainer.Add" Hidden="true" />
-      <Property Name="IContainer.Components" Hidden="true" />
-      <Method Name="IContainer.Remove" Hidden="true" />
-      <Method Name="ICredentialContainer.Add" Hidden="true" />
-      <Property Name="ICredentialContainer.Components" Hidden="true" />
-      <Method Name="ICredentialContainer.GetParents" Hidden="true" />
-      <Method Name="IDictionary&lt;Guid, ICredentialContent&gt;.Add" Hidden="true" />
-      <Method Name="IDictionary&lt;Guid, ICredentialContent&gt;.Remove" Hidden="true" />
-      <Property Name="IDictionary&lt;Guid, ICredentialContent&gt;.Values" Hidden="true" />
-      <Method Name="IDictionary&lt;string, ICredentialContent&gt;.Add" Hidden="true" />
-      <Property Name="IDictionary&lt;string, ICredentialContent&gt;.Keys" Hidden="true" />
-      <Property Name="IDictionary&lt;string, ICredentialContent&gt;.Values" Hidden="true" />
-      <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
-      <Method Name="IEnumerable&lt;KeyValuePair&lt;Guid, ICredentialContent&gt;&gt;.GetEnumerator" Hidden="true" />
-      <Method Name="IEnumerable&lt;KeyValuePair&lt;string, ICredentialContent&gt;&gt;.GetEnumerator" Hidden="true" />
-      <Method Name="IEquatable&lt;ICredentialContainer&gt;.Equals" Hidden="true" />
-      <Property Name="IList&lt;ICredentialContent&gt;.this" Hidden="true" />
-      <Property Name="IsReadOnly" Hidden="true" />
-      <Property Name="KeyedComponents" Hidden="true" />
-      <Property Name="NamedComponents" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>CEoEgGGBAAEEILAUuCAIBg0gFAAAAEUECgAAIQJQIBA=</HashCode>
-      <FileName>CredentialStorageContainer.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Components" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="CredentialStorageCLR.CredentialStorageDocument">
-    <Position X="1" Y="19.75" Width="3.5" />
-    <Members>
-      <Method Name="Clone" Hidden="true" />
-      <Method Name="OnSiteChanged" Hidden="true" />
-    </Members>
+    <Position X="5.5" Y="6" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAABAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAEAAAAAA=</HashCode>
       <FileName>CredentialStorageDocument.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CredentialStorageCLR.CredentialFolder">
-    <Position X="5.25" Y="19.75" Width="3.25" />
+  <Class Name="CredentialStorageCLR.CredentialContainer">
+    <Position X="7.5" Y="3.75" Width="1.5" />
     <Members>
-      <Field Name="_id" Hidden="true" />
-      <Field Name="_name" Hidden="true" />
-      <Field Name="_normalizedName" Hidden="true" />
-      <Method Name="ICredentialContent.Clone" Hidden="true" />
-      <Method Name="ICredentialContent.EnsureNestable" Hidden="true" />
-      <Method Name="ICredentialContent&lt;CredentialFolder&gt;.Clone" Hidden="true" />
-      <Method Name="IEquatable&lt;ICredentialContent&gt;.Equals" Hidden="true" />
-      <Method Name="OnSiteChanged" Hidden="true" />
+      <Field Name="_contents" Hidden="true" />
     </Members>
-    <Compartments>
-      <Compartment Name="Nested Types" Collapsed="false" />
-    </Compartments>
-    <NestedTypes>
-      <Class Name="CredentialStorageCLR.CredentialFolder.ComponentSite">
-        <Members>
-          <Field Name="_component" Hidden="true" />
-          <Field Name="_container" Hidden="true" />
-          <Property Name="ICredentialSite.Component" Hidden="true" />
-          <Property Name="ICredentialSite&lt;CredentialFolder&gt;.Component" Hidden="true" />
-          <Method Name="IServiceProvider.GetService" Hidden="true" />
-          <Property Name="ISite.Component" Hidden="true" />
-          <Property Name="ISite.Container" Hidden="true" />
-          <Property Name="ISite.DesignMode" Hidden="true" />
-        </Members>
-        <TypeIdentifier>
-          <NewMemberFileName>CredentialFolder.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAACIAAAAABCAQAAgABAAEQAAAAAAIAIBQAAAACAABA=</HashCode>
-      <FileName>CredentialFolder.cs</FileName>
+      <HashCode>AAAAAAAAAAAAACABAAAAAAAAAAAAAAAAAAAAEABAABA=</HashCode>
+      <FileName>CredentialContainer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Contents" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="CredentialStorageCLR.CredentialComponent">
+    <Position X="10.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>CredentialComponent.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="CredentialStorageCLR.CredentialItem">
-    <Position X="9.25" Y="14.75" Width="3" />
-    <Members>
-      <Field Name="_id" Hidden="true" />
-      <Field Name="_name" Hidden="true" />
-      <Field Name="_normalizedName" Hidden="true" />
-      <Method Name="Clone" Hidden="true" />
-      <Method Name="ICredentialContent.Clone" Hidden="true" />
-      <Method Name="ICredentialContent.EnsureNestable" Hidden="true" />
-      <Method Name="ICredentialContent&lt;CredentialItem&gt;.Clone" Hidden="true" />
-      <Method Name="IEquatable&lt;ICredentialContent&gt;.Equals" Hidden="true" />
-      <Method Name="OnSiteChanged" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Nested Types" Collapsed="false" />
-    </Compartments>
-    <NestedTypes>
-      <Class Name="CredentialStorageCLR.CredentialItem.ComponentSite">
-        <Members>
-          <Field Name="_component" Hidden="true" />
-          <Field Name="_container" Hidden="true" />
-          <Property Name="ICredentialSite.Component" Hidden="true" />
-          <Property Name="ICredentialSite&lt;CredentialItem&gt;.Component" Hidden="true" />
-          <Method Name="IServiceProvider.GetService" Hidden="true" />
-          <Property Name="ISite.Component" Hidden="true" />
-          <Property Name="ISite.Container" Hidden="true" />
-          <Property Name="ISite.DesignMode" Hidden="true" />
-        </Members>
-        <TypeIdentifier>
-          <NewMemberFileName>CredentialItem.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
+  <Class Name="CredentialStorageCLR.CredentialStorageFolder">
+    <Position X="8.75" Y="6" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAACIAAAAABAAQAAgABAAEQAAAAAAIAIBQAAAASAABA=</HashCode>
-      <FileName>CredentialItem.cs</FileName>
+      <HashCode>AAADAAAAAAAAAAAAAABAAAAAAAAAgAAAAAIQMAAAAAA=</HashCode>
+      <FileName>CredentialStorageFolder.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="CredentialStorageCLR.ICredentialComponent&lt;T&gt;">
-    <Position X="5" Y="3" Width="2.5" />
+  <Class Name="CredentialStorageCLR.StoredCredential">
+    <Position X="11.75" Y="3.75" Width="2" />
+    <Members>
+      <Field Name="_displayText" Hidden="true" />
+      <Field Name="_id" Hidden="true" />
+      <Field Name="_location" Hidden="true" />
+      <Field Name="_password" Hidden="true" />
+      <Field Name="_userName" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>ICredentialComponent.cs</FileName>
+      <HashCode>AAQDAAAAAAAAAAAAAAJAAAAAAAAAAAACASIAIAAAABA=</HashCode>
+      <FileName>StoredCredential.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Site" />
-    </ShowAsAssociation>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialContainer&lt;T&gt;">
-    <Position X="10.25" Y="6.75" Width="1.75" />
+  </Class>
+  <Class Name="CredentialStorageCLR.CredentialDomain">
+    <Position X="14.5" Y="3.75" Width="2.5" />
+    <Members>
+      <Field Name="_credentials" Hidden="true" />
+      <Field Name="_displayText" Hidden="true" />
+      <Field Name="_id" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ICredentialContainer.cs</FileName>
+      <HashCode>AAADAAAAAAAAAAAAAABAAAAAAAAEgAAAAEIQIAAAABA=</HashCode>
+      <FileName>CredentialDomain.cs</FileName>
     </TypeIdentifier>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialContent&lt;T&gt;">
-    <Position X="6.5" Y="6.25" Width="2" />
+    <ShowAsCollectionAssociation>
+      <Property Name="Credentials" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="CredentialStorageCLR.ICredentialContentItem">
+    <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAABA=</HashCode>
-      <FileName>ICredentialContent.cs</FileName>
+      <HashCode>AAADAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>ICredentialContentItem.cs</FileName>
     </TypeIdentifier>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialSite&lt;T&gt;">
-    <Position X="0.5" Y="2.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
-      <FileName>ICredentialSite.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Component" />
-    </ShowAsAssociation>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.INestedCredentialContainer&lt;T&gt;">
-    <Position X="10" Y="8.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>INestedCredentialContainer.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialContent">
-    <Position X="8.25" Y="3" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAQAAAAAAAEQAAAAAAAAIAAAAAAAAABA=</HashCode>
-      <FileName>ICredentialContent.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialComponent">
-    <Position X="8" Y="0.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>ICredentialComponent.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Site" />
-    </ShowAsAssociation>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialSite">
-    <Position X="0.5" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
-      <FileName>ICredentialSite.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Component" />
-      <Property Name="Container" />
-    </ShowAsAssociation>
-  </Interface>
-  <Interface Name="CredentialStorageCLR.ICredentialContainer">
-    <Position X="10.75" Y="3" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAIAAAAAAgAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ICredentialContainer.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Components" />
-    </ShowAsAssociation>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
