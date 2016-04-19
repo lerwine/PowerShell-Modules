@@ -76,11 +76,128 @@ Function Save-CredentialStorageDocument {
 	}
 }
 
-Function Enter-CredentialFolder {
+Function Resolve-CredentialLocation {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Path
+    )
+    
+    Process {
+		$List = New-Object -TypeName 'System.Collections.Generic.List[string]';
+		$List.AddRange(@(Split-CredentialLocation -Elements));
+		for ($i=0; $i -lt $List.Count; $i++) {
+			if ($List[$i] -eq '.') {
+				$List.RemoveAt($i);
+				$i--;
+			} else {
+				if ($List[$i] -eq '..') {
+					$List.RemoveAt($i);
+					if ($i -gt 0) {
+						$List.RemoveAt($i - 1);
+						$i--;
+					}
+					$i--;
+				}
+			}
+		}
+
+		$List.ToArray() -join [System.IO.Path]::AltDirectorySeparatorChar;
+	}
+}
+
+Function Split-CredentialLocation {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Parent')]
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Leaf')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Elements')]
+        [string]$Path,
+		
+        [Parameter(Mandatory = $true, ParameterSetName = 'Parent')]
+		[switch]$Parent,
+		
+        [Parameter(Mandatory = $true, ParameterSetName = 'Leaf')]
+		[switch]$Leaf,
+		
+        [Parameter(Mandatory = $true, ParameterSetName = 'Elements')]
+		[switch]$Elements,
+		
+        [Parameter(ParameterSetName = 'Parent')]
+        [Parameter(ParameterSetName = 'Leaf')]
+		[switch]$Resolve
+    )
+    
+    Process {
+		switch ($PSCmdlet.ParameterSetName) {
+			'Parent' {
+				if ($Resolve) { $Path = $Path | Resolve-CredentialLocation }
+				if ($Path -eq '') {
+					'' | Write-Output;
+				} else {
+					$e = @(Split-CredentialLocation -Path $Path -Elements);
+					if ($e.Count -lt 2) {
+						'' | Write-Output;
+					} else {
+						$Path = $e[1..($e.Count)] -join [System.IO.Path]::AltDirectorySeparatorChar;
+					}
+				}
+				break;
+			}
+			'Leaf' {
+				if ($Resolve) { $Path = $Path | Resolve-CredentialLocation }
+				if ($Path -eq '') {
+					'' | Write-Output;
+				} else {
+					$e = @(Split-CredentialLocation -Path $Path -Elements);
+					if ($e.Count -eq  0) {
+						'' | Write-Output;
+					} else {
+						$e[($e.Count) - 1];
+					}
+				}
+				break;
+			}
+			'Elements' {
+				@($Path.Split([System.IO.Path]::DirectorySeparatorChar) | ForEach-Object { $_.Split([System.IO.Path]::AltDirectorySeparatorChar) }) | Where-Object { $_ -ne '' }
+				break;
+			}
+		}
+	}
+}
+
+Function Join-CredentialLocation {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 1)]
+        [string]$Path,
+		
+        [Parameter(Mandatory = $true, Position = 1)]
+        [string]$ChildPath
+    )
+    
+    Process {
+	}
+}
+
+Function Test-CredentialLocation {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Path,
+
+		[Microsoft.PowerShell.Commands.TestPathType]$PathType = [Microsoft.PowerShell.Commands.TestPathType]::Any
+    )
+    
+    Process {
+	}
+}
+
+Function Set-CredentialLocation {
     [CmdletBinding(DefaultParameterSetName = 'Path')]
     Param(
-        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Name')]
-        [string]$Name
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Name')]
+        [string]$Path
     )
     
     Process {
@@ -92,15 +209,6 @@ Function Enter-CredentialFolder {
 			$Script:ContainerStack[0] | Write-Output;
 		}
     }
-}
-
-Function Exit-CredentialFolder {
-    [CmdletBinding()]
-    Param()
-
-	if ($Script:ContainerStack.Count -gt 1) { $Script:ContainerStack = @($Script:ContainerStack[1..($Script.ContainerStack.Count)]) }
-
-	$Script:ContainerStack[0] | Write-Output;
 }
 
 Function New-CredentialFolder {
