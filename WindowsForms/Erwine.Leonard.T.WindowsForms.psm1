@@ -690,7 +690,7 @@ Function Set-FormControlProperties {
 
         [Parameter(Mandatory = $false)]
         # Sets the font of the text displayed by the control.
-        [System.Windows.Forms.Font]$Font,
+        [System.Drawing.Font]$Font,
 
         [Parameter(Mandatory = $false)]
         [ValidateRange(0, 2147483647)]
@@ -1037,10 +1037,10 @@ Function Set-FormButtonProperties {
         if ($PSBoundParameters.ContainsKey('Tag')) { $Button.Tag = $Tag }
         if ($PSBoundParameters.ContainsKey('Text')) { $Button.Text = $Text }
         if ($PSBoundParameters.ContainsKey('Visible')) { $Button.Visible = $Visible }
-        if ($PSBoundParameters.ContainsKey('OnClick')) { $Button.add_OnClick($OnClick) }
-        if ($PSBoundParameters.ContainsKey('OnDoubleClick')) { $Button.add_OnClick($OnDoubleClick) }
-        if ($PSBoundParameters.ContainsKey('OnMouseClick')) { $Button.add_OnClick($OnMouseClick) }
-        if ($PSBoundParameters.ContainsKey('OnMouseDoubleClick')) { $Button.add_OnClick($OnMouseDoubleClick) }
+        if ($PSBoundParameters.ContainsKey('OnClick')) { $Button.add_Click($OnClick) }
+        if ($PSBoundParameters.ContainsKey('OnDoubleClick')) { $Button.add_DoubleClick($OnDoubleClick) }
+        if ($PSBoundParameters.ContainsKey('OnMouseClick')) { $Button.add_MouseClick($OnMouseClick) }
+        if ($PSBoundParameters.ContainsKey('OnMouseDoubleClick')) { $Button.add_MouseDoubleClick($OnMouseDoubleClick) }
     }
 }
 
@@ -1293,7 +1293,7 @@ Function Set-FormControlFont {
         
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'FromFont')]
         # The Font to apply to the text displayed by the control.
-        [System.Windows.Forms.Font]$Font,
+        [System.Drawing.Font]$Font,
         
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'FromFamily')]
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'GdiCharSet')]
@@ -2303,7 +2303,10 @@ Function Add-FormControl  {
         
         [Parameter(Mandatory = $true, Position = 1, ValueFromPipeline = $true)]
         # Child control to add to parent
-        [System.Windows.Forms.Control]$Child
+        [System.Windows.Forms.Control]$Child,
+        
+        # If set, then the child control is returned.
+        [switch]$Passthru
     )
     <#
         .SYNOPSIS
@@ -2319,7 +2322,10 @@ Function Add-FormControl  {
             https://msdn.microsoft.com/en-us/library/system.windows.forms.control.aspx
     #>
     
-	Process { $Parent.Controls.Add($Child) }
+	Process {
+        $Parent.Controls.Add($Child);
+        if ($PassThru) { $Child | Write-Output }
+    }
 }
 
 Function Set-FormStartPosition {
@@ -2366,7 +2372,7 @@ Function Set-FormStartPosition {
             System.Windows.Forms.FormStartPosition. Specifies the initial position of a form.
         
         .LINK
-            New-WindowsForm
+            New-WindowObject
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.windows.forms.form.aspx
@@ -2412,7 +2418,7 @@ Function Set-FormSize {
             Sets the size of the form.
         
         .LINK
-            New-WindowsForm
+            New-WindowObject
         
         .LINK
             New-DrawingSize
@@ -2470,7 +2476,7 @@ Function Set-FormLocation {
             Sets the Point that represents the upper-left corner of the Form in screen coordinates.
         
         .LINK
-            New-WindowsForm
+            New-WindowObject
         
         .LINK
             New-DrawingPoint
@@ -2526,7 +2532,7 @@ Function Set-MaximumFormSize {
             Sets the maximum size the form can be resized to.
         
         .LINK
-            New-WindowsForm
+            New-WindowObject
         
         .LINK
             New-DrawingSize
@@ -2582,7 +2588,7 @@ Function Set-MinimumFormSize {
             Sets the minimum size the form can be resized to.
         
         .LINK
-            New-WindowsForm
+            New-WindowObject
         
         .LINK
             New-DrawingSize
@@ -2671,10 +2677,6 @@ Function New-WindowObject {
         [switch]$NoAutoScroll,
         
         [Parameter(Mandatory = $false)]
-        # The form is not displayed modally.
-        [switch]$NotModal,
-        
-        [Parameter(Mandatory = $false)]
         # The form is not displayed as a top-level window.
         [switch]$NotTopLevel,
         
@@ -2737,13 +2739,12 @@ Function New-WindowObject {
     $Form.Name = $Name;
     $Form.Text = $Title;
     $Form.AutoScroll = -not $NoAutoScroll.IsPresent;
-    $Form.Modal = -not $NotModal.IsPresent;
     $Form.TopLevel = -not $NotTopLevel.IsPresent;
     $Form.MaximizeBox = -not $NoMaximizeBox.IsPresent;
     $Form.MinimizeBox = -not $NoMaximizeBox.IsPresent;
-	if ($PSBoundParameters.ContainsKey('AutoScrollMargin')) { $TableLayoutPanel.AutoScrollMargin = $AutoScrollMargin }
-	if ($PSBoundParameters.ContainsKey('AutoScrollMinSize')) { $TableLayoutPanel.AutoScrollMinSize = $AutoScrollMinSize }
-	if ($PSBoundParameters.ContainsKey('AutoScrollPosition')) { $TableLayoutPanel.AutoScrollPosition = $AutoScrollPosition }
+	if ($PSBoundParameters.ContainsKey('AutoScrollMargin')) { $Form.AutoScrollMargin = $AutoScrollMargin }
+	if ($PSBoundParameters.ContainsKey('AutoScrollMinSize')) { $Form.AutoScrollMinSize = $AutoScrollMinSize }
+	if ($PSBoundParameters.ContainsKey('AutoScrollPosition')) { $Form.AutoScrollPosition = $AutoScrollPosition }
     
     $Form | Write-Output;
 }
@@ -2822,10 +2823,10 @@ Function New-TableLayoutPanel {
             https://msdn.microsoft.com/en-us/library/system.windows.forms.tablelayoutpanel.aspx
 			
         .LINK
-			New-LayoutRowStyle
+			New-LayoutPanelRowStyle
 			
         .LINK
-			New-LayoutColumnStyle
+			New-LayoutPanelColumnStyle
 			
         .LINK
 			Get-LayoutPanelRowStyle
@@ -2834,7 +2835,7 @@ Function New-TableLayoutPanel {
 			Add-LayoutPanelRowStyle
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
 			
         .LINK
 			Remove-LayoutPanelRowStyle
@@ -2849,14 +2850,23 @@ Function New-TableLayoutPanel {
 			Add-LayoutPanelRowStyle
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
 			
         .LINK
 			Remove-LayoutPanelColumnStyle
 			
         .LINK
 			Clear-LayoutPanelColumnStyles
-			
+		
+        .LINK
+            Add-TableLayoutControl
+            
+        .LINK
+            Remove-TableLayoutControl
+            
+        .LINK
+            Clear-TableLayoutControls
+            
         .LINK
 			Set-ScrollableControlProperties
 			
@@ -2878,7 +2888,7 @@ Function New-TableLayoutPanel {
     $TableLayoutPanel | Write-Output;
 }
 
-Function New-LayoutColumnStyle {
+Function New-LayoutPanelColumnStyle {
     [CmdletBinding(DefaultParameterSetName = 'AutoSize')]
     Param(
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = 'Absolute')]
@@ -2966,7 +2976,7 @@ Function Get-LayoutPanelColumnStyle {
 			Add-LayoutPanelColumnStyle
 			
         .LINK
-			Insert-LayoutPanelColumnStyle
+			Push-LayoutPanelColumnStyle
 			
         .LINK
 			Remove-LayoutPanelColumnStyle
@@ -3061,7 +3071,7 @@ Function Set-LayoutPanelColumnStyle {
 			New-TableLayoutPanel
 			
         .LINK
-			New-LayoutRowStyle
+			New-LayoutPanelRowStyle
 			
         .LINK
 			Set-LayoutPanelColumnStyle
@@ -3133,7 +3143,7 @@ Function Set-LayoutPanelColumnWidth {
 			New-TableLayoutPanel
 			
         .LINK
-			New-LayoutRowStyle
+			New-LayoutPanelRowStyle
 			
         .LINK
 			Set-LayoutPanelColumnWidth
@@ -3201,7 +3211,7 @@ Function Add-LayoutPanelColumnStyle {
 			Get-LayoutPanelColumnStyle
 			
         .LINK
-			Insert-LayoutPanelColumnStyle
+			Push-LayoutPanelColumnStyle
 			
         .LINK
 			Remove-LayoutPanelColumnStyle
@@ -3226,8 +3236,8 @@ Function Add-LayoutPanelColumnStyle {
     Process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'ColumnStyle' { $TableLayoutPanel.ColumnStyles.Add($ColumnStyle) | Out-Null; break; }
-			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.ColumnStyles.Add((New-ColumnStyle -AutoSize)) | Out-Null; break; } }
-			default { $TableLayoutPanel.ColumnStyles.Add((New-ColumnStyle @splat)) | Out-Null; break; }
+			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.ColumnStyles.Add((New-LayoutPanelColumnStyle -AutoSize)) | Out-Null; break; } }
+			default { $TableLayoutPanel.ColumnStyles.Add((New-LayoutPanelColumnStyle @splat)) | Out-Null; break; }
 		}
 	}
 	
@@ -3241,7 +3251,7 @@ Function Add-LayoutPanelColumnStyle {
 	}
 }
 
-Function Insert-LayoutPanelColumnStyle {
+Function Push-LayoutPanelColumnStyle {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
@@ -3310,7 +3320,7 @@ Function Insert-LayoutPanelColumnStyle {
 			New-TableLayoutPanel
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
     #>
     
 	Begin {
@@ -3324,8 +3334,8 @@ Function Insert-LayoutPanelColumnStyle {
     Process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'ColumnStyle' { $TableLayoutPanel.ColumnStyles.Insert($CurrentIndex, $ColumnStyle); $CurrentIndex++; break; }
-			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.ColumnStyles.Insert($CurrentIndex, (New-ColumnStyle -AutoSize)); $CurrentIndex++; break; } }
-			default { $TableLayoutPanel.ColumnStyles.Insert($CurrentIndex, (New-ColumnStyle @splat)); $CurrentIndex++; break; }
+			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.ColumnStyles.Insert($CurrentIndex, (New-LayoutPanelColumnStyle -AutoSize)); $CurrentIndex++; break; } }
+			default { $TableLayoutPanel.ColumnStyles.Insert($CurrentIndex, (New-LayoutPanelColumnStyle @splat)); $CurrentIndex++; break; }
 		}
 	}
 	
@@ -3377,7 +3387,7 @@ Function Remove-LayoutPanelColumnStyle {
 			Add-LayoutPanelColumnStyle
 			
         .LINK
-			Insert-LayoutPanelColumnStyle
+			Push-LayoutPanelColumnStyle
 			
         .LINK
 			Clear-LayoutPanelColumnStyles
@@ -3429,7 +3439,7 @@ Function Clear-LayoutPanelColumnStyles {
 			Add-LayoutPanelColumnStyle
 			
         .LINK
-			Insert-LayoutPanelColumnStyle
+			Push-LayoutPanelColumnStyle
 			
         .LINK
 			Remove-LayoutPanelColumnStyles
@@ -3452,7 +3462,7 @@ Function Clear-LayoutPanelColumnStyles {
     }
 }
 
-Function New-LayoutRowStyle {
+Function New-LayoutPanelRowStyle {
     [CmdletBinding(DefaultParameterSetName = 'AutoSize')]
     Param(
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = 'Absolute')]
@@ -3540,7 +3550,7 @@ Function Get-LayoutPanelRowStyle {
 			Add-LayoutPanelRowStyle
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
 			
         .LINK
 			Remove-LayoutPanelRowStyle
@@ -3636,7 +3646,7 @@ Function Set-LayoutPanelRowStyle {
 			
 			
         .LINK
-			New-LayoutRowStyle
+			New-LayoutPanelRowStyle
 			
         .LINK
 			Set-LayoutPanelColumnStyle
@@ -3708,7 +3718,7 @@ Function Set-LayoutPanelRowHeight {
 			New-TableLayoutPanel
 			
         .LINK
-			New-LayoutRowStyle
+			New-LayoutPanelRowStyle
 			
         .LINK
 			Set-LayoutPanelColumnWidth
@@ -3777,7 +3787,7 @@ Function Add-LayoutPanelRowStyle {
 			Get-LayoutPanelRowStyle
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
 			
         .LINK
 			Remove-LayoutPanelRowStyle
@@ -3802,8 +3812,8 @@ Function Add-LayoutPanelRowStyle {
     Process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'RowStyle' { $TableLayoutPanel.RowStyles.Add($RowStyle) | Out-Null; break; }
-			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.RowStyles.Add((New-RowStyle -AutoSize)) | Out-Null; break; } }
-			default { $TableLayoutPanel.RowStyles.Add((New-RowStyle @splat)) | Out-Null; break; }
+			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.RowStyles.Add((New-LayoutPanelRowStyle -AutoSize)) | Out-Null; break; } }
+			default { $TableLayoutPanel.RowStyles.Add((New-LayoutPanelRowStyle @splat)) | Out-Null; break; }
 		}
 	}
 	
@@ -3817,7 +3827,7 @@ Function Add-LayoutPanelRowStyle {
 	}
 }
 
-Function Insert-LayoutPanelRowStyle {
+Function Push-LayoutPanelRowStyle {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, Position = 0)]
@@ -3886,7 +3896,7 @@ Function Insert-LayoutPanelRowStyle {
 			New-TableLayoutPanel
 			
         .LINK
-			Insert-LayoutPanelColumnStyle
+			Push-LayoutPanelColumnStyle
     #>
     
 	Begin {
@@ -3900,8 +3910,8 @@ Function Insert-LayoutPanelRowStyle {
     Process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'RowStyle' { $TableLayoutPanel.RowStyles.Insert($CurrentIndex, $RowStyle); $CurrentIndex++; break; }
-			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.RowStyles.Insert($CurrentIndex, (New-RowStyle -AutoSize)); $CurrentIndex++; break; } }
-			default { $TableLayoutPanel.RowStyles.Insert($CurrentIndex, (New-RowStyle @splat)); $CurrentIndex++; break; }
+			'AutoSize' { for ($i = 0; $i -lt $Count; $i++) { $TableLayoutPanel.RowStyles.Insert($CurrentIndex, (New-LayoutPanelRowStyle -AutoSize)); $CurrentIndex++; break; } }
+			default { $TableLayoutPanel.RowStyles.Insert($CurrentIndex, (New-LayoutPanelRowStyle @splat)); $CurrentIndex++; break; }
 		}
 	}
 	
@@ -3953,7 +3963,7 @@ Function Remove-LayoutPanelRowStyle {
 			Add-LayoutPanelRowStyle
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
 			
         .LINK
 			Clear-LayoutPanelRowStyles
@@ -4005,7 +4015,7 @@ Function Clear-LayoutPanelRowStyles {
 			Add-LayoutPanelRowStyle
 			
         .LINK
-			Insert-LayoutPanelRowStyle
+			Push-LayoutPanelRowStyle
 			
         .LINK
 			Remove-LayoutPanelRowStyles
@@ -4106,10 +4116,10 @@ Function Set-LayoutPanelSizeType {
 			Set-LayoutPanelColumnWidth
 			
         .LINK
-			New-LayoutRowStyle
+			New-LayoutPanelRowStyle
 			
         .LINK
-			New-LayoutColumnStyle
+			New-LayoutPanelColumnStyle
     #>
     
     Begin {
@@ -4141,24 +4151,24 @@ Function Add-TableLayoutControl  {
         [ValidateRange(0, 2147483647)]
 		[Alias('ColumnIndex', 'Col')]
         # Column for child control
-        [System.Windows.Forms.Control]$Column,
+        [int]$Column,
         
         [Parameter(Mandatory = $true, Position = 3)]
         [ValidateRange(0, 2147483647)]
 		[Alias('RowIndex')]
         # Row for child control
-        [System.Windows.Forms.Control]$Row,
+        [int]$Row,
         
         [Parameter(Mandatory = $false)]
         [ValidateRange(1, 2147483647)]
 		[Alias('ColSpan')]
         # Column Span for child control
-        [System.Windows.Forms.Control]$ColumnSpan,
+        [int]$ColumnSpan,
         
         [Parameter(Mandatory = $false)]
         [ValidateRange(1, 2147483647)]
         # Row Span for child control
-        [System.Windows.Forms.Control]$RowSpan
+        [int]$RowSpan
     )
     <#
         .SYNOPSIS
@@ -4359,6 +4369,9 @@ Function New-DataGridView {
         # Occurs when the cell content is clicked.
         [ScriptBlock]$OnCellContentClick,
         
+        # Occurs when the selection is changed.
+        [ScriptBlock]$OnSelectionChanged,
+        
         [Parameter(Mandatory = $false)]
         # Sets the Visible p`roperty to false.
         [switch]$NotVisible,
@@ -4425,6 +4438,7 @@ Function New-DataGridView {
 	if ($PSBoundParameters.ContainsKey('Visible')) { $DataGridView.Visible = $Visible }
 	if ($PSBoundParameters.ContainsKey('OnKeyPress')) { $DataGridView.add_KeyPress($OnKeyPress) }
 	if ($PSBoundParameters.ContainsKey('OnCellContentClick')) { $DataGridView.add_CellContentClick($OnCellContentClick) }
+	if ($PSBoundParameters.ContainsKey('OnSelectionChanged')) { $DataGridView.add_SelectionChanged($OnSelectionChanged) }
 	$DataGridView.AllowUserToAddRows = $AllowUserToAddRows;
 	$DataGridView.AllowUserToDeleteRows = $AllowUserToDeleteRows;
 	$DataGridView.AutoGenerateColumns = $AutoGenerateColumns;
@@ -4509,7 +4523,7 @@ Function Add-DataGridViewTextBoxColumn {
             https://msdn.microsoft.com/en-us/library/system.windows.forms.datagridviewtextboxcell.aspx
     #>
     
-    $DataGridViewTextBoxColumn = New-Object -TypeName 'System.Windows.Forms.DataGridView';
+    $DataGridViewTextBoxColumn = New-Object -TypeName 'System.Windows.Forms.DataGridViewTextBoxColumn';
     $DataGridViewTextBoxColumn.DataPropertyName = $DataPropertyName;
 	if ($PSBoundParameters.ContainsKey('HeaderText')) { $DataGridViewTextBoxColumn.HeaderText = $HeaderText }
 	if ($PSBoundParameters.ContainsKey('AutoSizeMode')) { $DataGridViewTextBoxColumn.AutoSizeMode = $AutoSizeMode }
