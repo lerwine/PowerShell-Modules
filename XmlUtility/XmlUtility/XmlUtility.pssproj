@@ -26,7 +26,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="about_Erwine.Leonard.T.XmlUtility.help.txt" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.XmlUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.XmlUtility.psm1" />
@@ -36,7 +38,6 @@
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />
     <Compile Include="SchemaValidationHandler.cs" />
-    <Compile Include="about_Erwine.Leonard.T.XmlUtility.help.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
