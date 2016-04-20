@@ -30,6 +30,7 @@
     <Content Include="Setup.bat" />
     <Content Include="Install.bat" />
     <Content Include="Uninstall.bat" />
+    <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DecodeRegexReplaceHandler.cs" />
