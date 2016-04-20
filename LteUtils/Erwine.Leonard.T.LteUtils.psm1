@@ -1,4 +1,4 @@
-('System.Windows.Forms', 'System.Core', 'System.Web', 'System.Security') | ForEach-Object {
+('System.Windows.Forms', 'System.Web', 'System.Security') | ForEach-Object {
 	if ((Add-Type -AssemblyName $_ -PassThru -ErrorAction Stop) -eq $null) { throw ('Cannot load assembly "{0}".' -f $_) }
 }
 
