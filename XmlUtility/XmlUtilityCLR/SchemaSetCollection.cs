@@ -28,7 +28,7 @@ namespace IOUtilityCLR
 
             return SchemaSetCollection._Any(collection, null);
         }
-
+        
         public static bool Any(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
         {
             if (collection == null)
@@ -177,7 +177,20 @@ namespace IOUtilityCLR
 
             foreach (XmlSchemaSet item in list)
             {
-                if (list == null || SchemaSetCollection.Any(this, i => Object.ReferenceEquals(i, item)))
+                if (list == null)
+                    continue;
+                
+                bool refEquals = false;
+                foreach (XmlSchemaSet ss in this)
+                {
+                    if (Object.ReferenceEquals(ss, item))
+                    {
+                        refEquals = true;
+                        break;
+                    }
+                }
+                
+                if (refEquals)
                     continue;
 
                 base.InsertItem(this.Count, item);
@@ -199,7 +212,13 @@ namespace IOUtilityCLR
                 if (index > this.Count)
                     throw new ArgumentOutOfRangeException("index", "Index cannot be greater than Count.");
 
-                int oldIndex = SchemaSetCollection.ItemCount(SchemaSetCollection.SkipWhile(this, i => !Object.ReferenceEquals(i, item)), null);
+                int oldIndex = 0;
+                foreach (XmlSchemaSet ss in this)
+                {
+                    if (Object.ReferenceEquals(ss, item))
+                        break;
+                    oldIndex++;
+                }
                 if (oldIndex < this.Count)
                 {
                     base.RemoveItem(oldIndex);
@@ -239,7 +258,13 @@ namespace IOUtilityCLR
                 if (Object.ReferenceEquals(item, this[index]))
                     return;
 
-                int oldIndex = SchemaSetCollection.ItemCount(SchemaSetCollection.SkipWhile(this, i => !Object.ReferenceEquals(i, item)), null);
+                int oldIndex = 0;
+                foreach (XmlSchemaSet ss in this)
+                {
+                    if (Object.ReferenceEquals(ss, item))
+                        break;
+                    oldIndex++;
+                }
                 if (oldIndex < this.Count)
                     base.SetItem(oldIndex, this[index]);
                 else if (this._validationEventHandler != null)
