@@ -36,6 +36,7 @@
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />
     <Compile Include="SchemaValidationHandler.cs" />
+    <Compile Include="about_Erwine.Leonard.T.XmlUtility.help.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
