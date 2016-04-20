@@ -1,7 +1,8 @@
 if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
 if ((Get-Module -Name 'Erwine.Leonard.T.XmlUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.XmlUtility' -ErrorAction Stop }
-Add-Type -Path 'CredentialComponentCollection.cs', 'CredentialFolder.cs', 'CredentialItem.cs', 'CredentialStorageComponent.cs', 'CredentialStorageContainer.cs',
-	'CredentialStorageDocument.cs', 'ICredentialComponent.cs', 'ICredentialContainer.cs', 'ICredentialContent.cs', 'ICredentialSite.cs', 'INestedCredentialContainer.cs' `
+Add-Type -Path (('CredentialComponentCollection.cs', 'CredentialFolder.cs', 'CredentialItem.cs', 'CredentialStorageComponent.cs', 'CredentialStorageContainer.cs',
+	'CredentialStorageDocument.cs', 'ICredentialComponent.cs', 'ICredentialContainer.cs', 'ICredentialContent.cs', 'ICredentialSite.cs',
+    'INestedCredentialContainer.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
 	-ReferencedAssemblies 'System', 'System.Management.Automation', 'System.Xml';
 
 $Script:CredentialsNamespace = 'urn:Erwine.Leonard.T:PowerShell:CredentialStorage';
