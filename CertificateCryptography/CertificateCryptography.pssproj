@@ -40,6 +40,7 @@
   <ItemGroup>
     <Content Include="Install.bat" />
     <Content Include="Uninstall.bat" />
+    <Content Include="about_Erwine.Leonard.T.CertificateCryptography.help.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.CertificateCryptography.psd1" />

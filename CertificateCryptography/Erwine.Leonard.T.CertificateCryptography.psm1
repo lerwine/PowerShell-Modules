@@ -4,23 +4,6 @@
 if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
 
 Function New-CryptographyOid {
-    [CmdletBinding(DefaultParameterSetName = 'String')]
-    [OutputType([System.Security.Cryptography.Oid])]
-    Param(
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true, ParameterSetName = 'String')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Friendly')]
-        [ValidatePattern('^[\d]+(\.\d+)*$')]
-        # The dotted number of the identifier.
-        [string]$Value,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'Friendly')]
-        # The friendly name of the identifier.
-        [string]$FriendlyName,
-        
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Oid')]
-        # An object which represents identifier information be duplicated.
-        [System.Security.Cryptography.Oid]$Oid
-    )
     <#
         .SYNOPSIS
             Create new cryptographic object identifier.
@@ -63,6 +46,24 @@ Function New-CryptographyOid {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.oid.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'String')]
+    [OutputType([System.Security.Cryptography.Oid])]
+    Param(
+        # The dotted number of the identifier.
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true, ParameterSetName = 'String')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Friendly')]
+        [ValidatePattern('^[\d]+(\.\d+)*$')]
+        [string]$Value,
+        
+        # The friendly name of the identifier.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Friendly')]
+        [string]$FriendlyName,
+        
+        # An object which represents identifier information be duplicated.
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Oid')]
+        [System.Security.Cryptography.Oid]$Oid
+    )
+    
     switch ($PSCmdlet.ParameterSetName) {
         'Friendly' {
             New-Object -TypeName 'System.Security.Cryptography.Oid' -ArgumentList $Value, $FriendlyName;
@@ -85,22 +86,6 @@ Function New-CryptographyOid {
 New-Alias -Name 'New-CryptoObjectIdentifier' -Value 'New-CryptographyOid' -Scope Global -Force;
 
 Function New-AsnEncodedData {
-    [CmdletBinding(DefaultParameterSetName = 'RawData')]
-    [OutputType([System.Security.Cryptography.AsnEncodedData])]
-    Param(
-        [Parameter(Mandatory = $false, ParameterSetName = 'RawData')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Oid')]
-        # A byte array that contains Abstract Syntax Notation One (ASN.1)-encoded data.
-        [byte[]]$RawData,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'Oid')]
-        # An object which represents a cryptographic object identifier.
-        [System.Security.Cryptography.Oid]$Oid,
-        
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'AsnEncodedData')]
-        # An instance of the AsnEncodedData class to be duplicated.
-        [System.Security.Cryptography.AsnEncodedData]$AsnEncodedData
-    )
     <#
         .SYNOPSIS
             Create new cryptographic object identifier.
@@ -148,6 +133,22 @@ Function New-AsnEncodedData {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.oid.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'RawData')]
+    [OutputType([System.Security.Cryptography.AsnEncodedData])]
+    Param(
+        # A byte array that contains Abstract Syntax Notation One (ASN.1)-encoded data.
+        [Parameter(Mandatory = $false, ParameterSetName = 'RawData')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Oid')]
+        [byte[]]$RawData,
+        
+        # An object which represents a cryptographic object identifier.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Oid')]
+        [System.Security.Cryptography.Oid]$Oid,
+        
+        # An instance of the AsnEncodedData class to be duplicated.
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'AsnEncodedData')]
+        [System.Security.Cryptography.AsnEncodedData]$AsnEncodedData
+    )
     
     Process {
         switch ($PSCmdlet.ParameterSetName) {
@@ -172,24 +173,6 @@ Function New-AsnEncodedData {
 }
 
 Function New-X509StoreOpenFlags {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $false)]
-        # If store does not exist, it will be created
-        [switch]$CreateOrOpen,
-        
-        [Parameter(Mandatory = $false)]
-        # Include archived certificates when opening the store
-        [switch]$IncludeArchived,
-        
-        [Parameter(Mandatory = $false)]
-        # Open the X.509 certificate store for the highest access allowed
-        [switch]$MaxAllowed,
-        
-        [Parameter(Mandatory = $false)]
-        # Open the X.509 certificate store for both reading and writing
-        [switch]$Write
-    )
     <#
         .SYNOPSIS
             Create X.509 certificate store open flags.
@@ -215,6 +198,25 @@ Function New-X509StoreOpenFlags {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.openflags.aspx
     #>
+    [CmdletBinding()]
+    Param(
+        # If store does not exist, it will be created
+        [Parameter(Mandatory = $false)]
+        [switch]$CreateOrOpen,
+        
+        # Include archived certificates when opening the store
+        [Parameter(Mandatory = $false)]
+        [switch]$IncludeArchived,
+        
+        # Open the X.509 certificate store for the highest access allowed
+        [Parameter(Mandatory = $false)]
+        [switch]$MaxAllowed,
+        
+        # Open the X.509 certificate store for both reading and writing
+        [Parameter(Mandatory = $false)]
+        [switch]$Write
+    )
+    
     $OpenFlags = [System.Security.Cryptography.X509Certificates.OpenFlags]::ReadOnly;
     if ($Write) { $OpenFlags = [System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite }
     if (-not $CreateOrOpen) {
@@ -231,16 +233,6 @@ Function New-X509StoreOpenFlags {
 }
 
 Function Get-X509Store {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $false)]
-        # Specifies the name of the X.509 certificate store to open.
-        [System.Security.Cryptography.X509Certificates.StoreName]$Name,
-        
-        [Parameter(Mandatory = $false)]
-        # Specifies the location of the X.509 certificate store.
-        [System.Security.Cryptography.X509Certificates.StoreLocation]$Location
-    )
     <#
         .SYNOPSIS
             Create an X.509 store object.
@@ -295,6 +287,17 @@ Function Get-X509Store {
                 CurrentUser = The X.509 certificate store used by the current user.
                 LocalMachine = The X.509 certificate store assigned to the local machine.
     #>
+    [CmdletBinding()]
+    Param(
+        # Specifies the name of the X.509 certificate store to open.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.X509Certificates.StoreName]$Name,
+        
+        # Specifies the location of the X.509 certificate store.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.X509Certificates.StoreLocation]$Location
+    )
+    
     $X509Store = $null;
     if ($PSBoundParameters.ContainsKey('Name')) {
         if ($PSBoundParameters.ContainsKey('Location')) {
@@ -312,45 +315,6 @@ Function Get-X509Store {
 }
 
 Function New-X509KeyUsageFlags {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $false)]
-        # Can sign Certificate Revocation Lists.
-        [switch]$CrlSign,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used for data encryption.
-        [switch]$DataEncipherment,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used for decryption only.
-        [switch]$DecipherOnly,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used as a digital signature.
-        [switch]$DigitalSignature,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used for encryption only.
-        [switch]$EncipherOnly,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used to determine key agreement, such as a key created using the Diffie-Hellman key agreement algorithm.
-        [switch]$KeyAgreement,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used to sign certificates.
-        [switch]$KeyCertSign,
-        
-        [Parameter(Mandatory = $false)]
-        # The key can be used for key encryption.
-        [switch]$KeyEncipherment,
-
-        [Parameter(Mandatory = $false)]
-        # The key can be used for authentication.
-        [switch]$NonRepudiation 
-
-    )
     <#
         .SYNOPSIS
             Create X.509 certificate key usage flags.
@@ -372,6 +336,45 @@ Function New-X509KeyUsageFlags {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.x509keyusageflags.aspx
     #>
+    [CmdletBinding()]
+    Param(
+        # Can sign Certificate Revocation Lists.
+        [Parameter(Mandatory = $false)]
+        [switch]$CrlSign,
+        
+        # The key can be used for data encryption.
+        [Parameter(Mandatory = $false)]
+        [switch]$DataEncipherment,
+        
+        # The key can be used for decryption only.
+        [Parameter(Mandatory = $false)]
+        [switch]$DecipherOnly,
+        
+        # The key can be used as a digital signature.
+        [Parameter(Mandatory = $false)]
+        [switch]$DigitalSignature,
+        
+        # The key can be used for encryption only.
+        [Parameter(Mandatory = $false)]
+        [switch]$EncipherOnly,
+        
+        # The key can be used to determine key agreement, such as a key created using the Diffie-Hellman key agreement algorithm.
+        [Parameter(Mandatory = $false)]
+        [switch]$KeyAgreement,
+        
+        # The key can be used to sign certificates.
+        [Parameter(Mandatory = $false)]
+        [switch]$KeyCertSign,
+        
+        # The key can be used for key encryption.
+        [Parameter(Mandatory = $false)]
+        [switch]$KeyEncipherment,
+
+        # The key can be used for authentication.
+        [Parameter(Mandatory = $false)]
+        [switch]$NonRepudiation 
+
+    )
     $X509KeyUsageFlags = [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]::None;
     if ($CrlSign) {
         [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]$X509KeyUsageFlags = $X509KeyUsageFlags -bor [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]::CrlSign;
@@ -405,33 +408,6 @@ Function New-X509KeyUsageFlags {
 }
 
 Function Select-X509Certificate {
-    [CmdletBinding(DefaultParameterSetName = 'ByDate')]
-    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection])]
-    Param(
-        [Parameter(Mandatory = $false)]
-        # The X.509 certificate store from which to retreive certificates
-        [System.Security.Cryptography.X509Certificates.X509Store]$Store,
-        
-        [Parameter(Mandatory = $false)]
-        # Selects only certificates which have usage indications that match this value. You can use 'New-X509KeyUsageFlags' to create this value.
-        [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]$UsageFlags,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'ByDate')]
-        # Select certificates whose valid dates occur on or after this date. If no date range is specified, then only currently valid certificates are selected.
-        [DateTime]$From,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'ByDate')]
-        # Select certificates whose valid dates occur before this date. If no date range is specified, then only currently valid certificates are selected.
-        [DateTime]$To,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'ByDate')]
-        # Inverts the 'Date' match - selects certificates which are NOT valid durring the specified date range.
-        [switch]$Invalid,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'All')]
-        # Selects certificates, regardless of whether their effective dates are valid.
-        [switch]$AllDates
-    )
     <#
         .SYNOPSIS
             Select X.509 certificates from a store.
@@ -477,6 +453,34 @@ Function Select-X509Certificate {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.x509certificate2collection.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'ByDate')]
+    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection])]
+    Param(
+        # The X.509 certificate store from which to retreive certificates
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.X509Certificates.X509Store]$Store,
+        
+        # Selects only certificates which have usage indications that match this value. You can use 'New-X509KeyUsageFlags' to create this value.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]$UsageFlags,
+        
+        # Select certificates whose valid dates occur on or after this date. If no date range is specified, then only currently valid certificates are selected.
+        [Parameter(Mandatory = $false, ParameterSetName = 'ByDate')]
+        [DateTime]$From,
+        
+        # Select certificates whose valid dates occur before this date. If no date range is specified, then only currently valid certificates are selected.
+        [Parameter(Mandatory = $false, ParameterSetName = 'ByDate')]
+        [DateTime]$To,
+        
+        # Inverts the 'Date' match - selects certificates which are NOT valid durring the specified date range.
+        [Parameter(Mandatory = $false, ParameterSetName = 'ByDate')]
+        [switch]$Invalid,
+        
+        # Selects certificates, regardless of whether their effective dates are valid.
+        [Parameter(Mandatory = $true, ParameterSetName = 'All')]
+        [switch]$AllDates
+    )
+    
     $X509Store = $Store;
     if (-not $PSBoundParameters.ContainsKey('Store')) { $X509Store = Get-X509Store }
     $Certificates = New-Object -TypeName 'System.Security.Cryptography.X509Certificates.X509Certificate2Collection';
@@ -531,12 +535,6 @@ Function Select-X509Certificate {
 }
 
 Function Show-X509Certificate {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        # The X.509 certificate to display.
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate
-    )
     <#
         .SYNOPSIS
             Display certificate information.
@@ -556,35 +554,17 @@ Function Show-X509Certificate {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.x509certificate2ui.aspx
     #>
+    [CmdletBinding()]
+    Param(
+        # The X.509 certificate to display.
+        [Parameter(Mandatory = $true)]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate
+    )
     
     [System.Security.Cryptography.X509Certificates.X509Certificate2UI]::DisplayCertificate($Certificate);
 }
 
 Function Read-X509Certificate {
-    [CmdletBinding(DefaultParameterSetName = 'Single')]
-    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2], ParameterSetName = 'Single')]
-    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection], ParameterSetName = 'Multi')]
-    Param(
-        [Parameter(Mandatory = $true)]
-        # A descriptive message to guide the user. The message is displayed in the dialog box.
-        [string]$Message,
-        
-        [Parameter(Mandatory = $false)]
-        # The title of the dialog box.
-        [string]$Title = 'Select Certificate',
-        
-        [Parameter(Mandatory = $false)]
-        # A collection of X.509 certificates to select from.
-        [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$CertificateCollection,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'Single')]
-        # Select only a single certificate
-        [switch]$SingleSelection,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'Multi')]
-        # Allow user to select one or more certificates
-        [switch]$MultiSelection
-    )
     <#
         .SYNOPSIS
             Prompt user for certificate selection.
@@ -638,6 +618,30 @@ Function Read-X509Certificate {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x509certificates.x509certificate2ui.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'Single')]
+    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2], ParameterSetName = 'Single')]
+    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection], ParameterSetName = 'Multi')]
+    Param(
+        # A descriptive message to guide the user. The message is displayed in the dialog box.
+        [Parameter(Mandatory = $true)]
+        [string]$Message,
+        
+        # The title of the dialog box.
+        [Parameter(Mandatory = $false)]
+        [string]$Title = 'Select Certificate',
+        
+        # A collection of X.509 certificates to select from.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$CertificateCollection,
+        
+        # Select only a single certificate
+        [Parameter(Mandatory = $false, ParameterSetName = 'Single')]
+        [switch]$SingleSelection,
+        
+        # Allow user to select one or more certificates
+        [Parameter(Mandatory = $true, ParameterSetName = 'Multi')]
+        [switch]$MultiSelection
+    )
     
     [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$Certificates = $CertificateCollection;
     if (-not $PSBoundParameters.ContainsKey('CertificateCollection')) {
@@ -655,17 +659,6 @@ Function Read-X509Certificate {
 }
 
 Function New-RSACryptoServiceProvider {
-    [CmdletBinding()]
-    [OutputType([System.Security.Cryptography.RSACryptoServiceProvider])]
-    Param(
-        [Parameter(Mandatory = $false)]
-        # The size of the key to use in bits.
-        [int]$KeySize,
-        
-        [Parameter(Mandatory = $false)]
-        # The parameters to be passed to the cryptographic service provider (CSP).
-        [System.Security.Cryptography.CspParameters]$Parameters
-    )
     <#
         .SYNOPSIS
             Create new RSA crypto service provider.
@@ -682,6 +675,17 @@ Function New-RSACryptoServiceProvider {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsacryptoserviceprovider.aspx
     #>
+    [CmdletBinding()]
+    [OutputType([System.Security.Cryptography.RSACryptoServiceProvider])]
+    Param(
+        # The size of the key to use in bits.
+        [Parameter(Mandatory = $false)]
+        [int]$KeySize,
+        
+        # The parameters to be passed to the cryptographic service provider (CSP).
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.CspParameters]$Parameters
+    )
     
     if ($PSBoundParameters.ContainsKey('Parameters')) {
         if ($PSBoundParameters.ContainsKey('KeySize')) {
@@ -699,33 +703,6 @@ Function New-RSACryptoServiceProvider {
 }
 
 Function New-AesManaged {
-    [CmdletBinding()]
-    [OutputType([System.Security.Cryptography.AesManaged])]
-    Param(
-        [Parameter(Mandatory = $false)]
-        # Size, in bits, of the secret key used for the symmetric algorithm
-        [int]$KeySize = 256,
-        
-        [Parameter(Mandatory = $false)]
-        # Block size, in bits, of the cryptographic operation.
-        [int]$BlockSize = 128,
-        
-        [Parameter(Mandatory = $false)]
-        # Initialization vector (IV) to use for the symmetric algorithm.
-        [byte[]]$InitializationVector,
-        
-        [Parameter(Mandatory = $false)]
-        # The secret key used for the symmetric algorithm.
-        [byte[]]$Key,
-        
-        [Parameter(Mandatory = $false)]
-        # Mode for operation of the symmetric algorithm
-        [System.Security.Cryptography.CipherMode]$Mode = [System.Security.Cryptography.CipherMode]::CBC,
-        
-        [Parameter(Mandatory = $false)]
-        # Padding mode used in the symmetric algorithm
-        [System.Security.Cryptography.PaddingMode]$PaddingMode = [System.Security.Cryptography.PaddingMode]::PKCS7
-    )
     <#
         .SYNOPSIS
             Create AES encryption provider.
@@ -745,6 +722,33 @@ Function New-AesManaged {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.aesmanaged.aspx
     #>
+    [CmdletBinding()]
+    [OutputType([System.Security.Cryptography.AesManaged])]
+    Param(
+        # Size, in bits, of the secret key used for the symmetric algorithm.
+        [Parameter(Mandatory = $false)]
+        [int]$KeySize = 256,
+        
+        # Block size, in bits, of the cryptographic operation.
+        [Parameter(Mandatory = $false)]
+        [int]$BlockSize = 128,
+        
+        # Initialization vector (IV) to use for the symmetric algorithm.
+        [Parameter(Mandatory = $false)]
+        [byte[]]$InitializationVector,
+        
+        # The secret key used for the symmetric algorithm.
+        [Parameter(Mandatory = $false)]
+        [byte[]]$Key,
+        
+        # Mode for operation of the symmetric algorithm.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.CipherMode]$Mode = [System.Security.Cryptography.CipherMode]::CBC,
+        
+        # Padding mode used in the symmetric algorithm.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.PaddingMode]$PaddingMode = [System.Security.Cryptography.PaddingMode]::PKCS7
+    )
     
     $AesManaged = New-Object -TypeName 'System.Security.Cryptography.AesManaged';
     $AesManaged.BlockSize = $BlockSize;
@@ -765,21 +769,6 @@ Function New-AesManaged {
 }
 
 Function Protect-WithRSA {
-    [CmdletBinding()]
-    [OutputType([byte[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        # Cryptographic service provider which will perform the encryption.
-        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
-        
-        [Parameter(Mandatory = $true)]
-        # The data to be encrypted. 
-        [byte[]]$Bytes,
-        
-        [Parameter(Mandatory = $false)]
-        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
-        [switch]$OAEP
-    )
     <#
         .SYNOPSIS
             Encrypt data with RSA.
@@ -796,28 +785,27 @@ Function Protect-WithRSA {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    [CmdletBinding()]
+    [OutputType([byte[]])]
+    Param(
+        # Cryptographic service provider which will perform the encryption.
+        [Parameter(Mandatory = $true)]
+        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
+        
+        # The data to be encrypted. 
+        [Parameter(Mandatory = $true)]
+        [byte[]]$Bytes,
+        
+        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
+        [Parameter(Mandatory = $false)]
+        [switch]$OAEP
+    )
     
     $encrypted = $encrypted = $RSA.Encrypt($Bytes, $OAEP.IsPresent);
     return ,$encrypted;
 }
 
 Function Protect-WithX509Certificate {
-    [CmdletBinding()]
-    [OutputType([byte[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
-        # The PKI certificate containing a public key to use for encryption.
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
-        
-        [Parameter(Mandatory = $true)]
-        # The data to be encrypted. 
-        [byte[]]$Bytes,
-        
-        [Parameter(Mandatory = $false)]
-        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
-        [switch]$OAEP
-    )
     <#
         .SYNOPSIS
             Encrypt data with PKI certificate.
@@ -834,6 +822,22 @@ Function Protect-WithX509Certificate {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    [CmdletBinding()]
+    [OutputType([byte[]])]
+    Param(
+        # The PKI certificate containing a public key to use for encryption.
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
+        
+        # The data to be encrypted. 
+        [Parameter(Mandatory = $true)]
+        [byte[]]$Bytes,
+        
+        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
+        [Parameter(Mandatory = $false)]
+        [switch]$OAEP
+    )
     
     if ($OAEP) {
         Protect-WithRSA -RSA $Certificate.PublicKey.Key -Bytes $Bytes -OAEP;
@@ -1000,43 +1004,6 @@ Function New-ProgressWriterObject {
 }
 
 Function Protect-WithSymmetricAlgorithm {
-    [CmdletBinding(DefaultParameterSetName = 'Implicit')]
-    [OutputType([long])]
-    Param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
-        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
-        # The PKI certificate containing a public key to use for symmetric key encryption.
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'RSAExplicit')]
-        # Encryption provider to use for symmetric key encryption.
-        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
-        
-        [Parameter(Mandatory = $true)]
-        # Stream containing data to be encrypted.
-        [System.IO.Stream]$InputStream,
-        
-        [Parameter(Mandatory = $true)]
-        # Destination stream for encrypted data.
-        [System.IO.Stream]$OutputStream,
-        
-        [Parameter(Mandatory = $false)]
-        # Symmetric algorithm to use for encryption.
-        [System.Security.Cryptography.SymmetricAlgorithm]$SymmetricAlgorithm,
-        
-        [Parameter(Mandatory = $false)]
-        # Identifier to use for progress indicator. If this is not specified, then no progess indicator will be used.
-        [int]$ProgressId,
-
-        [Parameter(Mandatory = $false)]
-        # Id of parent progress indicator.
-        [int]$ParentProgressId,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
-        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
-        [switch]$OAEP
-    )
     <#
         .SYNOPSIS
             Encrypt data with symmetric algorithm.
@@ -1053,6 +1020,43 @@ Function Protect-WithSymmetricAlgorithm {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'Implicit')]
+    [OutputType([long])]
+    Param(
+        # The PKI certificate containing a public key to use for symmetric key encryption.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
+        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
+        
+        # Encryption provider to use for symmetric key encryption.
+        [Parameter(Mandatory = $true, ParameterSetName = 'RSAExplicit')]
+        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
+        
+        # Stream containing data to be encrypted.
+        [Parameter(Mandatory = $true)]
+        [System.IO.Stream]$InputStream,
+        
+        # Destination stream for encrypted data.
+        [Parameter(Mandatory = $true)]
+        [System.IO.Stream]$OutputStream,
+        
+        # Symmetric algorithm to use for encryption.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.SymmetricAlgorithm]$SymmetricAlgorithm,
+        
+        # Identifier to use for progress indicator. If this is not specified, then no progess indicator will be used.
+        [Parameter(Mandatory = $false)]
+        [int]$ProgressId,
+
+        # Id of parent progress indicator.
+        [Parameter(Mandatory = $false)]
+        [int]$ParentProgressId,
+        
+        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
+        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
+        [switch]$OAEP
+    )
     
     $TotalSourceLength = $InputStream.Length - $InputStream.Position;
     if ($TotalSourceLength -eq 0) { return $TotalSourceLength }
@@ -1143,21 +1147,6 @@ Function Protect-WithSymmetricAlgorithm {
 }
 
 Function Unprotect-WithRSA {
-    [CmdletBinding()]
-    [OutputType([byte[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        # Cryptographic service provider which will perform the decryption.
-        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
-        
-        [Parameter(Mandatory = $true)]
-        # The encryptd data.
-        [byte[]]$Bytes,
-        
-        [Parameter(Mandatory = $false)]
-        # $true to perform direct RSA decryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
-        [switch]$OAEP
-    )
     <#
         .SYNOPSIS
             Decrypt data with RSA.
@@ -1174,28 +1163,27 @@ Function Unprotect-WithRSA {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    [CmdletBinding()]
+    [OutputType([byte[]])]
+    Param(
+        # Cryptographic service provider which will perform the decryption.
+        [Parameter(Mandatory = $true)]
+        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
+        
+        # The encryptd data.
+        [Parameter(Mandatory = $true)]
+        [byte[]]$Bytes,
+        
+        # $true to perform direct RSA decryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
+        [Parameter(Mandatory = $false)]
+        [switch]$OAEP
+    )
     
     $decrypted = $RSA.Decrypt($Bytes, $OAEP.IsPresent);
     return ,$decrypted;
 }
 
 Function Unprotect-WithX509Certificate {
-    [CmdletBinding(DefaultParameterSetName = "Implicit")]
-    [OutputType([byte[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
-        # The PKI certificate containing a private key to use for encryption.
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
-        
-        [Parameter(Mandatory = $true)]
-        # The encryptd data.
-        [byte[]]$Bytes,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
-        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
-        [switch]$OAEP
-    )
     <#
         .SYNOPSIS
             Decrypt data with PKI certificate.
@@ -1212,6 +1200,22 @@ Function Unprotect-WithX509Certificate {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = "Implicit")]
+    [OutputType([byte[]])]
+    Param(
+        # The PKI certificate containing a private key to use for encryption.
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
+        
+        # The encryptd data.
+        [Parameter(Mandatory = $true)]
+        [byte[]]$Bytes,
+        
+        # $true to perform direct RSA encryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
+        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
+        [switch]$OAEP
+    )
     
     if ($OAEP) {
         Unprotect-WithRSA -RSA $Certificate.PrivateKey -Bytes $Bytes -OAEP;
@@ -1221,43 +1225,6 @@ Function Unprotect-WithX509Certificate {
 }
 
 Function Unprotect-WithSymmetricAlgorithm {
-    [CmdletBinding(DefaultParameterSetName = 'Implicit')]
-    [OutputType([long])]
-    Param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
-        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
-        # The PKI certificate containing a private key to use for symmetric key encryption.
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'RSAExplicit')]
-        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
-        # Encryption provider to use for symmetric key encryption.
-        
-        [Parameter(Mandatory = $true)]
-        # Stream containing encrypted data.
-        [System.IO.Stream]$InputStream,
-        
-        [Parameter(Mandatory = $true)]
-        # Destination stream for decrypted data.
-        [System.IO.Stream]$OutputStream,
-        
-        [Parameter(Mandatory = $false)]
-        # Symmetric algorithm to use for decryption.
-        [System.Security.Cryptography.SymmetricAlgorithm]$SymmetricAlgorithm,
-        
-        [Parameter(Mandatory = $false)]
-        # Identifier to use for progress indicator. If this is not specified, then no progess indicator will be used.
-        [int]$ProgressId,
-
-        [Parameter(Mandatory = $false)]
-        # Id of parent progress indicator.
-        [int]$ParentProgressId,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
-        # $true to perform direct RSA decryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
-        [switch]$OAEP
-    )
     <#
         .SYNOPSIS
             Decrypt data with symmetric algorithm.
@@ -1274,6 +1241,43 @@ Function Unprotect-WithSymmetricAlgorithm {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.rsaencryptionpadding.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'Implicit')]
+    [OutputType([long])]
+    Param(
+        # The PKI certificate containing a private key to use for symmetric key encryption.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
+        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
+        
+        # Encryption provider to use for symmetric key encryption.
+        [Parameter(Mandatory = $true, ParameterSetName = 'RSAExplicit')]
+        [System.Security.Cryptography.RSACryptoServiceProvider]$RSA,
+        
+        # Stream containing encrypted data.
+        [Parameter(Mandatory = $true)]
+        [System.IO.Stream]$InputStream,
+        
+        # Destination stream for decrypted data.
+        [Parameter(Mandatory = $true)]
+        [System.IO.Stream]$OutputStream,
+        
+        # Symmetric algorithm to use for decryption.
+        [Parameter(Mandatory = $false)]
+        [System.Security.Cryptography.SymmetricAlgorithm]$SymmetricAlgorithm,
+        
+        # Identifier to use for progress indicator. If this is not specified, then no progess indicator will be used.
+        [Parameter(Mandatory = $false)]
+        [int]$ProgressId,
+
+        # Id of parent progress indicator.
+        [Parameter(Mandatory = $false)]
+        [int]$ParentProgressId,
+        
+        # $true to perform direct RSA decryption using OAEP padding (only available on a computer running Microsoft Windows XP or later); otherwise, $false to use PKCS#1 v1.5 padding. 
+        [Parameter(Mandatory = $false, ParameterSetName = "Implicit")]
+        [switch]$OAEP
+    )
 
     if ($InputStream.Length -eq $InputStream.Position) { return [long]0 }
 
@@ -1348,25 +1352,6 @@ Function Unprotect-WithSymmetricAlgorithm {
 }
 
 Function New-X500DistinguishedName {
-    [CmdletBinding(DefaultParameterSetName = 'String')]
-    [OutputType([System.Security.Cryptography.X509Certificates.X500DistinguishedName])]
-    Param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'AsnEncoded')]
-        # An AsnEncodedData object that represents the distinguished name.
-        [System.Security.Cryptography.AsnEncodedData]$AsnEncodedData,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'Bytes')]
-        # A byte array that contains distinguished name information.
-        [byte[]]$Bytes,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'String')]
-        # A string that represents the distinguished name
-        [string]$DistinguishedName,
-        
-        [Parameter(Mandatory = $false, ParameterSetName = 'String')]
-        # A bitwise combination of the enumeration values that specify the characteristics of the distinguished name.
-        [System.Security.Cryptography.X509Certificates.X500DistinguishedNameFlags]$Flags
-    )
     <#
         .SYNOPSIS
             Create new X500 Distinguished Name.
@@ -1389,6 +1374,25 @@ Function New-X500DistinguishedName {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x500distinguishedname.aspx
     #>
+    [CmdletBinding(DefaultParameterSetName = 'String')]
+    [OutputType([System.Security.Cryptography.X509Certificates.X500DistinguishedName])]
+    Param(
+        # An AsnEncodedData object that represents the distinguished name.
+        [Parameter(Mandatory = $true, ParameterSetName = 'AsnEncoded')]
+        [System.Security.Cryptography.AsnEncodedData]$AsnEncodedData,
+        
+        # A byte array that contains distinguished name information.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Bytes')]
+        [byte[]]$Bytes,
+        
+        # A string that represents the distinguished name.
+        [Parameter(Mandatory = $true, ParameterSetName = 'String')]
+        [string]$DistinguishedName,
+        
+        # A bitwise combination of the enumeration values that specify the characteristics of the distinguished name.
+        [Parameter(Mandatory = $false, ParameterSetName = 'String')]
+        [System.Security.Cryptography.X509Certificates.X500DistinguishedNameFlags]$Flags
+    )
 }
 
 Function New-SelfSignedCertificateExample {
