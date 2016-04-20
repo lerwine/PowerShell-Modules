@@ -29,6 +29,7 @@
   <ItemGroup>
     <Content Include="Install.bat" />
     <Content Include="Uninstall.bat" />
+    <Content Include="about_Erwine.Leonard.T.LteDev.help.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Install.ps1" />
