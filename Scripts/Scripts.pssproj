@@ -29,6 +29,8 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Script.ps1" />
+    <Compile Include="CheckDiff.ps1" />
+    <Compile Include="GenerateModuleAbout.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
