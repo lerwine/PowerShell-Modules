@@ -1,17 +1,13 @@
 Add-Type -AssemblyName 'System.Windows.Forms' -ErrorAction Stop;
-Add-Type -Path 'DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'ScriptRegexReplaceHandler.cs',
-        'StreamHelper.cs', 'TextHelper.cs' `
-	-ReferencedAssemblies 'System', 'System.Core', 'System.Management.Automation', 'System.Net.Http', 'System.Xml';
-
+Add-Type -Path (('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'ScriptRegexReplaceHandler.cs',
+        'StreamHelper.cs', 'TextHelper.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
+	-ReferencedAssemblies 'System.Management.Automation', 'System.Web.Services', 'System.Xml';
 $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
     Whitespace = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
     UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
 };
 
 Function Get-SpecialFolderNames {
-	[CmdletBinding()]
-	[OutputType([string[]])]
-    Param()
     <#
         .SYNOPSIS
 			Get special folder names
@@ -28,6 +24,9 @@ Function Get-SpecialFolderNames {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
     #>
+	[CmdletBinding()]
+	[OutputType([string[]])]
+    Param()
     if ($PSVersionTable.ClrVersion.Major -lt 4) {
         [System.Enum]::GetNames([System.Environment+SpecialFolder]) + @('ProgramFilesX86', 'CommonProgramFilesX86', 'Windows');
     } else {
@@ -36,18 +35,6 @@ Function Get-SpecialFolderNames {
 }
 
 Function Get-SpecialFolder {
-	[CmdletBinding(DefaultParameterSetName = 'Enum')]
-	[OutputType([string])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Enum')]
-		# Enumerated folder value.
-		[System.Environment+SpecialFolder]$Folder,
-        
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String')]
-        [ValidateScript({(Get-SpecialFolderNames) -icontains $_})]
-		# Name of special folder.
-		[string]$Name
-	)
 	<#
 		.SYNOPSIS
 			Get special folder path
@@ -70,6 +57,18 @@ Function Get-SpecialFolder {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
 	#>
+	[CmdletBinding(DefaultParameterSetName = 'Enum')]
+	[OutputType([string])]
+	Param(
+		# Enumerated folder value.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Enum')]
+		[System.Environment+SpecialFolder]$Folder,
+        
+		# Name of special folder.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String')]
+        [ValidateScript({(Get-SpecialFolderNames) -icontains $_})]
+		[string]$Name
+	)
 	Process {
         if ($PSBoundParameters.ContainsKey('Folder')) {
             [System.Environment]::GetFolderPath($Folder);
@@ -89,25 +88,6 @@ Function Get-SpecialFolder {
 }
 
 Function ConvertTo-SafeFileName {
-    [CmdletBinding()]
-	[OutputType([string])]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		# String to convert to file name
-        [string[]]$InputText,
-        
-        [Parameter(ParameterSetName = 'FileName')]
-        # Only allow file names. This is the default.
-        [switch]$FileName,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'RelativePath')]
-        # Only allow relative paths
-        [switch]$RelativePath,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'FullPath')]
-        # Allow full path specification
-        [switch]$FullPath
-    )
 	<#
 		.SYNOPSIS
 			Converts a string to a usable file name / path.
@@ -127,6 +107,25 @@ Function ConvertTo-SafeFileName {
         .LINK
             ConvertFrom-SafeFileName
 	#>
+    [CmdletBinding()]
+	[OutputType([string])]
+    Param(
+		# String to convert to file name
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string[]]$InputText,
+        
+        # Only allow file names. This is the default.
+        [Parameter(ParameterSetName = 'FileName')]
+        [switch]$FileName,
+        
+        # Only allow relative paths
+        [Parameter(Mandatory = $true, ParameterSetName = 'RelativePath')]
+        [switch]$RelativePath,
+        
+        # Allow full path specification
+        [Parameter(Mandatory = $true, ParameterSetName = 'FullPath')]
+        [switch]$FullPath
+    )
     
     Begin {
 		switch ($PSCmdlet.ParameterSetName){
@@ -149,13 +148,6 @@ Function ConvertTo-SafeFileName {
 }
 
 Function ConvertFrom-SafeFileName {
-    [CmdletBinding()]
-	[OutputType([string])]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		# File name to decode
-        [string[]]$InputText
-    )
 	<#
 		.SYNOPSIS
 			Decodes a file name back to the original text
@@ -172,6 +164,13 @@ Function ConvertFrom-SafeFileName {
         .LINK
         		ConvertTo-SafeFileName
 	#>
+    [CmdletBinding()]
+	[OutputType([string])]
+    Param(
+		# File name to decode
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string[]]$InputText
+    )
     
     Begin {
         $DecodeRegexReplaceHandler = New-Object -TypeName 'IOUtilityCLR.DecodeRegexReplaceHandler';
@@ -181,40 +180,6 @@ Function ConvertFrom-SafeFileName {
 }
 
 Function Get-AppDataPath {
-    [CmdletBinding(DefaultParameterSetName = 'Roaming')]
-	[OutputType([string])]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Name of company
-        [string]$Company,
-
-        [Parameter(Mandatory = $true, Position = 1)]
-		# Name of application
-        [string]$ProductName,
-
-        [Parameter(Position = 2)]
-		# Version of application
-        [System.Version]$Version,
-
-        [Parameter(Position = 3)]
-		# Name of component
-        [string]$ComponentName,
-
-		# Create folder structure if it does not exist
-        [switch]$Create,
-
-        [Parameter(ParameterSetName = 'Roaming')]
-		# Create folder structure under roaming profile.
-        [switch]$Roaming,
-
-        [Parameter(ParameterSetName = 'Local')]
-		# Create folder structure under local profile.
-        [switch]$Local,
-
-        [Parameter(ParameterSetName = 'Common')]
-		# Create folder structure under common location.
-        [switch]$Common
-    )
 	<#
 		.SYNOPSIS
 			Get path for application data storage.
@@ -225,6 +190,40 @@ Function Get-AppDataPath {
 		.OUTPUTS
 			System.String. Path to application data storage folder.
 	#>
+    [CmdletBinding(DefaultParameterSetName = 'Roaming')]
+	[OutputType([string])]
+    Param(
+		# Name of company
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$Company,
+
+		# Name of application
+        [Parameter(Mandatory = $true, Position = 1)]
+        [string]$ProductName,
+
+		# Version of application
+        [Parameter(Position = 2)]
+        [System.Version]$Version,
+
+		# Name of component
+        [Parameter(Position = 3)]
+        [string]$ComponentName,
+
+		# Create folder structure if it does not exist
+        [switch]$Create,
+
+		# Create folder structure under roaming profile.
+        [Parameter(ParameterSetName = 'Roaming')]
+        [switch]$Roaming,
+
+		# Create folder structure under local profile.
+        [Parameter(ParameterSetName = 'Local')]
+        [switch]$Local,
+
+		# Create folder structure under common location.
+        [Parameter(ParameterSetName = 'Common')]
+        [switch]$Common
+    )
     
     Process {
 		switch ($PSCmdlet.ParameterSetName) {
@@ -273,126 +272,6 @@ Function Get-AppDataPath {
 }
 
 Function Read-FileDialog {
-    [CmdletBinding()]
-    Param(
-        [Alias('FileName')]
-        # Path to initially selected file or folder.
-		[string]$SelectedPath,
-        
-        [Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box displays a warning if the user specifies a file name that does not exist.
-		[bool]$CheckFileExists,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box displays a warning if the user specifies a path that does not exist.
-		[bool]$CheckPathExists,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box returns the location of the file referenced by the shortcut or whether it returns the location of the shortcut (.lnk).
-		[bool]$DereferenceLinks,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box restores the directory to the previously selected directory before closing
-		[bool]$RestoreDirectory,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Custom places to be added to the dialog.
-		[System.Windows.Forms.FileDialogCustomPlace[]]$CustomPlaces,
-        
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box allows multiple files to be selected.
-		[bool]$Multiselect,
-        
-		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
-        # Indicates whether the New Folder button appears in the folder browser dialog box.
-		[bool]$ShowNewFolderButton,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box supports displaying and saving files that have multiple file name extensions.
-		[bool]$SupportMultiDottedExtensions,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box accepts only valid Win32 file names.
-		[bool]$ValidateNames,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Sets the index of the filter currently selected in the file dialog box.
-		[int]$FilterIndex,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box automatically adds an extension to a file name if the user omits the extension.
-		[bool]$AddExtension,
-        
-		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
-        # Sets the descriptive text displayed above the tree view control in the dialog box.
-		[string]$Description,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Sets the file dialog box title
-		[string]$Title,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-        # Indicates whether the Save As dialog box displays a warning if the user specifies a file name that already exists.
-		[bool]$OverwritePrompt,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Sets the initial directory displayed by the file dialog box.
-		[string]$InitialDirectory,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Sets the current file name filter string, which determines the choices that appear in the "Save as file type" or "Files of type" box in the dialog box.
-		[string]$Filter,
-        
-		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
-        # Sets the root folder where the browsing starts from.
-		[System.Environment+SpecialFolder]$RootFolder,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Sets the default file name extension
-		[string]$DefaultExt,
-        
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the dialog box contains a read-only check box. 
-		[bool]$ShowReadOnly,
-        
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the read-only check box is selected.
-		[bool]$ReadOnlyChecked,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Indicates whether the Help button is displayed in the file dialog box.
-		[bool]$ShowHelp,
-        
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-        # Indicates whether the dialog box prompts the user for permission to create a file if the user specifies a file that does not exist.
-		[bool]$CreatePrompt,
-        
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        # Use the 'Open File' dialog. This is the default, if 'Save' or 'Folder' is not specified.
-        [switch]$Open,
-        
-		[Parameter(Mandatory = $true, ParameterSetName = 'SaveFileDialog')]
-        # Use the 'Save File' dialog.
-        [switch]$Save,
-        
-		[Parameter(Mandatory = $true, ParameterSetName = 'FolderBrowserDialog')]
-        # Use the 'Folder Browser' dialog.
-        [switch]$Folder
-    )
 	<#
 		.SYNOPSIS
 			Prompt user for filesystem path.
@@ -412,6 +291,126 @@ Function Read-FileDialog {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.windows.forms.folderbrowserdialog.aspx
 	#>
+    [CmdletBinding()]
+    Param(
+        # Path to initially selected file or folder.
+        [Alias('FileName')]
+		[string]$SelectedPath,
+        
+        # Indicates whether the dialog box displays a warning if the user specifies a file name that does not exist.
+        [Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$CheckFileExists,
+        
+        # Indicates whether the dialog box displays a warning if the user specifies a path that does not exist.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$CheckPathExists,
+        
+        # Indicates whether the dialog box returns the location of the file referenced by the shortcut or whether it returns the location of the shortcut (.lnk).
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$DereferenceLinks,
+        
+        # Indicates whether the dialog box restores the directory to the previously selected directory before closing.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$RestoreDirectory,
+        
+        # Custom places to be added to the dialog.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[System.Windows.Forms.FileDialogCustomPlace[]]$CustomPlaces,
+        
+        # Indicates whether the dialog box allows multiple files to be selected.
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$Multiselect,
+        
+        # Indicates whether the New Folder button appears in the folder browser dialog box.
+		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
+		[bool]$ShowNewFolderButton,
+        
+        # Indicates whether the dialog box supports displaying and saving files that have multiple file name extensions.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$SupportMultiDottedExtensions,
+        
+        # Indicates whether the dialog box accepts only valid Win32 file names.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$ValidateNames,
+        
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+        # Sets the index of the filter currently selected in the file dialog box.
+		[int]$FilterIndex,
+        
+        # Indicates whether the dialog box automatically adds an extension to a file name if the user omits the extension.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$AddExtension,
+        
+        # Sets the descriptive text displayed above the tree view control in the dialog box.
+		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
+		[string]$Description,
+        
+        # Sets the file dialog box title
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[string]$Title,
+        
+        # Indicates whether the Save As dialog box displays a warning if the user specifies a file name that already exists.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[bool]$OverwritePrompt,
+        
+        # Sets the initial directory displayed by the file dialog box.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[string]$InitialDirectory,
+        
+        # Sets the current file name filter string, which determines the choices that appear in the "Save as file type" or "Files of type" box in the dialog box.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[string]$Filter,
+        
+        # Sets the root folder where the browsing starts from.
+		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
+		[System.Environment+SpecialFolder]$RootFolder,
+        
+        # Sets the default file name extension.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[string]$DefaultExt,
+        
+        # Indicates whether the dialog box contains a read-only check box. 
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$ShowReadOnly,
+        
+        # Indicates whether the read-only check box is selected.
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$ReadOnlyChecked,
+        
+        # Indicates whether the Help button is displayed in the file dialog box.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+		[bool]$ShowHelp,
+        
+        # Indicates whether the dialog box prompts the user for permission to create a file if the user specifies a file that does not exist.
+		[Parameter(ParameterSetName = 'SaveFileDialog')]
+		[bool]$CreatePrompt,
+        
+        # Use the 'Open File' dialog. This is the default, if 'Save' or 'Folder' is not specified.
+		[Parameter(ParameterSetName = 'OpenFileDialog')]
+        [switch]$Open,
+        
+        # Use the 'Save File' dialog.
+		[Parameter(Mandatory = $true, ParameterSetName = 'SaveFileDialog')]
+        [switch]$Save,
+        
+        # Use the 'Folder Browser' dialog.
+		[Parameter(Mandatory = $true, ParameterSetName = 'FolderBrowserDialog')]
+        [switch]$Folder
+    )
     
     $Dialog = New-Object -TypeName ('System.Windows.Forms.{0}' -f $PSCmdlet.ParameterSetName);
     try {
@@ -480,9 +479,6 @@ Function Read-FileDialog {
 }
 
 Function Get-MinBase64BlockSize {
-    [CmdletBinding()]
-    [OutputType([int])]
-    Param()
 	<#
 		.SYNOPSIS
 			Get minimum base-64 encoding block size.
@@ -493,18 +489,14 @@ Function Get-MinBase64BlockSize {
 		.OUTPUTS
 			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
 	#>
+    [CmdletBinding()]
+    [OutputType([int])]
+    Param()
     
     return [IOUtilityCLR.StreamHelper]::MinBase64BlockSize;
 }
 
 Function Read-IntegerFromStream {
-    [CmdletBinding()]
-    [OutputType([int])]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Stream from which to read the bytes of an integer value.
-        [System.IO.Stream]$Stream
-    )
 	<#
 		.SYNOPSIS
 			Read integer value from stream.
@@ -524,18 +516,18 @@ Function Read-IntegerFromStream {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
+    [CmdletBinding()]
+    [OutputType([int])]
+    Param(
+		# Stream from which to read the bytes of an integer value.
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.IO.Stream]$Stream
+    )
     
     return [IOUtilityCLR.StreamHelper]::ReadInteger($Stream);
 }
 
 Function Read-LongIntegerFromStream {
-    [CmdletBinding()]
-    [OutputType([long])]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Stream from which to read the bytes of a long integer value.
-        [System.IO.Stream]$Stream
-    )
 	<#
 		.SYNOPSIS
 			Read long integer value from stream.
@@ -555,21 +547,18 @@ Function Read-LongIntegerFromStream {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
+    [CmdletBinding()]
+    [OutputType([long])]
+    Param(
+		# Stream from which to read the bytes of a long integer value.
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.IO.Stream]$Stream
+    )
     
     return [IOUtilityCLR.StreamHelper]::ReadLongInteger($Stream);
 }
 
 Function Write-IntegerToStream {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Stream to write integer value to
-        [System.IO.Stream]$Stream,
-        
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Integer value to be written
-        [int]$Value
-    )
 	<#
 		.SYNOPSIS
 			Write integer value to a Stream.
@@ -586,21 +575,21 @@ Function Write-IntegerToStream {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
+    [CmdletBinding()]
+    Param(
+		# Stream to write integer value to
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.IO.Stream]$Stream,
+        
+		# Integer value to be written
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int]$Value
+    )
     
     [IOUtilityCLR.StreamHelper]::WriteInteger($Stream, $Value);
 }
 
 Function Write-LongIntegerToStream {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Stream to write long integer value to
-        [System.IO.Stream]$Stream,
-        
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Long Integer value to be written
-        [long]$Value
-    )
 	<#
 		.SYNOPSIS
 			Write long integer value to a Stream.
@@ -617,18 +606,21 @@ Function Write-LongIntegerToStream {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
+    [CmdletBinding()]
+    Param(
+		# Stream to write long integer value to
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.IO.Stream]$Stream,
+        
+		# Long Integer value to be written
+        [Parameter(Mandatory = $true, Position = 0)]
+        [long]$Value
+    )
     
     [IOUtilityCLR.StreamHelper]::WriteLongInteger($Stream, $Value);
 }
 
 Function Read-LengthEncodedBytes {
-    [CmdletBinding()]
-    [OutputType([System.Byte[]])]
-    Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-		# Stream to read length-encoded data from.
-        [System.IO.Stream]$Stream
-    )
 	<#
 		.SYNOPSIS
 			Read length-encoded array of bytes from a Stream.
@@ -645,29 +637,18 @@ Function Read-LengthEncodedBytes {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
+    [CmdletBinding()]
+    [OutputType([System.Byte[]])]
+    Param(
+		# Stream to read length-encoded data from.
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.IO.Stream]$Stream
+    )
 
     return ,[IOUtilityCLR.StreamHelper]::ReadLengthEncodedBytes($Stream);
 }
 
 Function Write-LengthEncodedBytes {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-		# Stream to write length-encoded data from
-        [System.IO.Stream]$Stream,
-
-        [Parameter(Mandatory = $true)]
-		# Bytes to write
-        [byte[]]$Bytes,
-
-        [Parameter(Mandatory = $false)]
-		# Offset within the array of bytes to be writing
-        [int]$Offset = 0,
-
-        [Parameter(Mandatory = $false)]
-		# Number of bytes to write
-        [int]$Count
-    )
 	<#
 		.SYNOPSIS
 			Writes length-encoded data a Stream.
@@ -681,6 +662,24 @@ Function Write-LengthEncodedBytes {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
+    [CmdletBinding()]
+    Param(
+		# Stream to write length-encoded data from
+        [Parameter(Mandatory = $true)]
+        [System.IO.Stream]$Stream,
+
+		# Bytes to write
+        [Parameter(Mandatory = $true)]
+        [byte[]]$Bytes,
+
+		# Offset within the array of bytes to be writing
+        [Parameter(Mandatory = $false)]
+        [int]$Offset = 0,
+
+		# Number of bytes to write
+        [Parameter(Mandatory = $false)]
+        [int]$Count
+    )
 
     if ($PSBoundParameters.ContainsKey('Offset') -or $PSBoundParameters.ContainsKey('Count')) {
         if ($PSBoundParameters.ContainsKey('Count')) {
@@ -694,25 +693,6 @@ Function Write-LengthEncodedBytes {
 }
 
 Function ConvertTo-Base64String {
-    [CmdletBinding()]
-    [OutputType([string])]
-    Param(
-        [Parameter(Mandatory = $true)]
-		# Data buffer to be converted to base-64 encoded text.
-        [byte[]]$Buffer,
-		
-        [Parameter(Mandatory = $false)]
-		# Offset within data buffer, in bytes, to begin encoding.
-        [int]$Offset = 0,
-		
-        [Parameter(Mandatory = $false)]
-		# Number of bytes to encode
-        [int]$Length,
-		
-        [Parameter(Mandatory = $false)]
-		# Whether to insert line breaks
-		[switch]$InsertLineBreaks
-    )
 	<#
 		.SYNOPSIS
 			Convert data buffer to base-64 encoded text.
@@ -726,6 +706,25 @@ Function ConvertTo-Base64String {
         .LINK
             ConvertFrom-Base64String
 	#>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
+		# Data buffer to be converted to base-64 encoded text.
+        [Parameter(Mandatory = $true)]
+        [byte[]]$Buffer,
+		
+		# Offset within data buffer, in bytes, to begin encoding.
+        [Parameter(Mandatory = $false)]
+        [int]$Offset = 0,
+		
+		# Number of bytes to encode
+        [Parameter(Mandatory = $false)]
+        [int]$Length,
+		
+		# Whether to insert line breaks
+        [Parameter(Mandatory = $false)]
+		[switch]$InsertLineBreaks
+    )
 	
 	$l = $Length;
 	if ($PSBoundParameters.ContainsKey('Length')) {
@@ -741,16 +740,6 @@ Function ConvertTo-Base64String {
 }
 
 Function ConvertFrom-Base64String {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-		# Base-64 encoded text
-        [string]$InputString,
-		
-        [Parameter(Mandatory = $false)]
-		# Minimum capacity, in bytes, of the returned data buffer.
-        [int]$MinCapacity
-    )
 	<#
 		.SYNOPSIS
 			Convert base-64 encoded text to a data buffer.
@@ -764,6 +753,18 @@ Function ConvertFrom-Base64String {
         .LINK
             ConvertTo-Base64String
 	#>
+    [CmdletBinding()]
+    Param(
+		# Base-64 encoded text
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^\s*[a-zA-Z\d+/]*((\r\n?|\n)[a-zA-Z\d+/]*)*((\r\n?|\n)?==?)?')]
+        [string]$InputString,
+		
+		# Minimum capacity, in bytes, of the returned data buffer.
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, 2147483647)]
+        [int]$MinCapacity
+    )
 	
 	$Buffer = [System.Convert]::FromBase64String($InputString);
 	if ($PSBoundParameters.ContainsKey('MinCapacity') -and $MinCapacity -gt $Buffer.Length) {
@@ -774,59 +775,6 @@ Function ConvertFrom-Base64String {
 }
 
 Function Get-TextEncoding {
-    [CmdletBinding(DefaultParameterSetName = 'Name')]
-    [OutputType([System.Text.Encoding])]
-    Param(
-        [Parameter(Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Name')]
-        # The code page name of the encoding to be returned. Any value returned by the WebName property is valid.
-        [string]$Name,
-
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Codepage')]
-        # The code page identifier of the encoding to be returned.
-        [int]$Codepage,
-
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ContentType')]
-        # Get encoding from mime type
-        [System.Net.Mime.ContentType]$ContentType,
-
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'XmlDocument')]
-        # Get encoding from XML document's xml declaration.
-        [System.Xml.XmlDocument]$Xml,
-        
-        [Parameter(ParameterSetName = 'XmlDocument')]
-        [Parameter(ParameterSetName = 'ContentType')]
-        # Default encoding to use if the encoding could not be determined.
-        [System.Text.Encoding]$DefaultValue = [System.Text.Encoding]::UTF8,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'UTF8')]
-        # Gets an encoding for the UTF-8 format.
-        [switch]$UTF8,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'ASCII')]
-        # Gets an encoding for the ASCII (7-bit) character set.
-        [switch]$ASCII,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'BigEndianUnicode')]
-        # Gets an encoding for the UTF-16 format that uses the big endian byte order.
-        [switch]$BigEndianUnicode,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'Unicode')]
-        [Alias('UTF16')]
-        # Gets an encoding for the UTF-16 format using the little endian byte order.
-        [switch]$Unicode,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'UTF32')]
-        # Gets an encoding for the UTF-32 format using the little endian byte order.
-        [switch]$UTF32,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'UTF7')]
-        # Gets an encoding for the UTF-7 format.
-        [switch]$UTF7,
-        
-        [Parameter(Mandatory = $true, ParameterSetName = 'Default')]
-        # Gets an encoding for the operating system's current ANSI code page.
-        [switch]$Default
-    )
 	<#
 		.SYNOPSIS
 			Gets an instance of the Encoding class.
@@ -840,6 +788,60 @@ Function Get-TextEncoding {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.text.encoding.aspx
 	#>
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Text.Encoding])]
+    Param(
+        # The code page name of the encoding to be returned. Any value returned by the WebName property is valid.
+        [Parameter(Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Name')]
+        [string]$Name,
+
+        # The code page identifier of the encoding to be returned.
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Codepage')]
+        [int]$Codepage,
+
+        # Get encoding from mime type
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ContentType')]
+        [System.Net.Mime.ContentType]$ContentType,
+
+        # Get encoding from mime type
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'XmlDocument')]
+        # Get encoding from XML document's xml declaration.
+        [System.Xml.XmlDocument]$Xml,
+        
+        # Default encoding to use if the encoding could not be determined.
+        [Parameter(ParameterSetName = 'XmlDocument')]
+        [Parameter(ParameterSetName = 'ContentType')]
+        [System.Text.Encoding]$DefaultValue = [System.Text.Encoding]::UTF8,
+        
+        # Gets an encoding for the UTF-8 format.
+        [Parameter(Mandatory = $true, ParameterSetName = 'UTF8')]
+        [switch]$UTF8,
+        
+        # Gets an encoding for the ASCII (7-bit) character set.
+        [Parameter(Mandatory = $true, ParameterSetName = 'ASCII')]
+        [switch]$ASCII,
+        
+        # Gets an encoding for the UTF-16 format that uses the big endian byte order.
+        [Parameter(Mandatory = $true, ParameterSetName = 'BigEndianUnicode')]
+        [switch]$BigEndianUnicode,
+        
+        # Gets an encoding for the UTF-16 format using the little endian byte order.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Unicode')]
+        [Alias('UTF16')]
+        [switch]$Unicode,
+        
+        # Gets an encoding for the UTF-32 format using the little endian byte order.
+        [Parameter(Mandatory = $true, ParameterSetName = 'UTF32')]
+        [switch]$UTF32,
+        
+        # Gets an encoding for the UTF-7 format.
+        [Parameter(Mandatory = $true, ParameterSetName = 'UTF7')]
+        [switch]$UTF7,
+        
+        # Gets an encoding for the operating system's current ANSI code page.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Default')]
+        [switch]$Default
+    )
 
     Process {
         switch ($PSCmdlet.ParameterSetName) {
@@ -884,31 +886,6 @@ Function Get-TextEncoding {
 }
 
 Function New-MemoryStream {
-	[CmdletBinding(DefaultParameterSetName = 'Opt')]
-	[OutputType([System.IO.MemoryStream])]
-	Param(
-		[Parameter(Position = 0, ParameterSetName = 'Opt')]
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Buffer')]
-        [Alias('Bytes')]
-        # Initializes a new non-resizable instance of the MemoryStream class based an array of bytes.
-		[string]$Buffer,
-
-		[Parameter(Position = 1, ParameterSetName = 'Buffer')]
-        # The index into buffer at which the stream begins.
-        [int]$Index = 0,
-        
-		[Parameter(Position = 2, ParameterSetName = 'Buffer')]
-        # The length of the stream in bytes.
-        [int]$Count,
-        
-		[Parameter(Position = 3, ParameterSetName = 'Buffer')]
-        # The setting of the CanWrite property, which determines whether the stream supports writing.
-        [bool]$CanWrite = $true,
-        
-		[Parameter(Position = 4, ParameterSetName = 'Buffer')]
-        # $true to enable GetBuffer, which returns the unsigned byte array from which the stream was created; otherwise, $false.
-        [bool]$PubliclyVisible
-    )
 	<#
 		.SYNOPSIS
 			Creates a stream whose backing store is memory.
@@ -922,6 +899,32 @@ Function New-MemoryStream {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.io.memorystream.aspx
 	#>
+	[CmdletBinding(DefaultParameterSetName = 'Opt')]
+	[OutputType([System.IO.MemoryStream])]
+	Param(
+        # Initializes a new non-resizable instance of the MemoryStream class based an array of bytes.
+		[Parameter(Position = 0, ParameterSetName = 'Opt')]
+		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Buffer')]
+        [AllowEmptyCollection()]
+        [Alias('Bytes')]
+		[byte[]]$Buffer,
+
+        # The index into buffer at which the stream begins.
+		[Parameter(Position = 1, ParameterSetName = 'Buffer')]
+        [int]$Index = 0,
+        
+        # The length of the stream in bytes.
+		[Parameter(Position = 2, ParameterSetName = 'Buffer')]
+        [int]$Count,
+        
+        # The setting of the CanWrite property, which determines whether the stream supports writing.
+		[Parameter(Position = 3, ParameterSetName = 'Buffer')]
+        [bool]$CanWrite = $true,
+        
+        # $true to enable GetBuffer, which returns the unsigned byte array from which the stream was created; otherwise, $false.
+		[Parameter(Position = 4, ParameterSetName = 'Buffer')]
+        [bool]$PubliclyVisible
+    )
 
     if ($PSBoundParameters.ContainsKey('Index') -or $PSBoundParameters.ContainsKey('PubliclyVisible') -and -not $PSBoundParameters.ContainsKey('Count')) {
         if ($Index -lt $Buffer.Length) {

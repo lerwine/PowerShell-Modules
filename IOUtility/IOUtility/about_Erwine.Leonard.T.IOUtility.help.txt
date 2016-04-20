@@ -1,0 +1,82 @@
+﻿TOPIC
+    about_Erwine.Leonard.T.IOUtility
+
+SHORT DESCRIPTION
+    Provides Input/Output utility functions.
+
+LONG DESCRIPTION
+    Contains support for input/output processing functions, mainly from the
+    System.IO and System.Data .NET CLR namespaces.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    New-MemoryStream
+        Creates a stream whose backing store is memory.
+
+    Get-SpecialFolderNames
+        Get special folder names
+
+    ConvertTo-Base64String
+        Convert data buffer to base-64 encoded text.
+
+    Read-LengthEncodedBytes
+        Read length-encoded array of bytes from a Stream.
+
+    Get-MinBase64BlockSize
+        Get minimum base-64 encoding block size.
+
+    Get-AppDataPath
+        Get path for application data storage.
+
+    ConvertFrom-SafeFileName
+        Decodes a file name back to the original text
+
+    ConvertTo-SafeFileName
+        Converts a string to a usable file name / path.
+
+    ConvertFrom-Base64String
+        Convert base-64 encoded text to a data buffer.
+
+    Write-LongIntegerToStream
+        Write long integer value to a Stream.
+
+    Read-FileDialog
+        Prompt user for filesystem path.
+
+    Read-IntegerFromStream
+        Read integer value from stream.
+
+    Write-LengthEncodedBytes
+        Writes length-encoded data a Stream.
+
+    Read-LongIntegerFromStream
+        Read long integer value from stream.
+
+    Get-TextEncoding
+        Gets an instance of the Encoding class.
+
+    Get-SpecialFolder
+        Get special folder path
+
+    Write-IntegerToStream
+        Write integer value to a Stream.
+
+SEE ALSO
+    New-MemoryStream
+    Get-SpecialFolderNames
+    ConvertTo-Base64String
+    Read-LengthEncodedBytes
+    Get-MinBase64BlockSize
+    Get-AppDataPath
+    ConvertFrom-SafeFileName
+    ConvertTo-SafeFileName
+    ConvertFrom-Base64String
+    Write-LongIntegerToStream
+    Read-FileDialog
+    Read-IntegerFromStream
+    Write-LengthEncodedBytes
+    Read-LongIntegerFromStream
+    Get-TextEncoding
+    Get-SpecialFolder
+    Write-IntegerToStream
