@@ -300,7 +300,7 @@ Function Read-XmlDocument {
 	} catch {
 		throw;
 	} finally {
-		if ($Reader -is [System.Xml.XmlReader] -and -not $PSBoundParameters.ContainsKey('XmlReader')) { $XmlReader.Dispose() }
+		if ($Reader -is [System.Xml.XmlReader] -and -not $PSBoundParameters.ContainsKey('XmlReader')) { $XmlReader.Close() }
 		if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
 	}
 }
@@ -424,7 +424,7 @@ Function Write-XmlDocument {
     } catch {
         throw;
     } finally {
-		if ($Writer -is [System.Xml.XmlWriter] -and -not $PSBoundParameters.ContainsKey('XmlWriter')) { $Writer.Dispose() }
+		if ($Writer -is [System.Xml.XmlWriter] -and -not $PSBoundParameters.ContainsKey('XmlWriter')) { $Writer.Close() }
 		if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
     }
 }
