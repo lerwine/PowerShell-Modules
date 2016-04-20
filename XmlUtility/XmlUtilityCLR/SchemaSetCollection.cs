@@ -28,7 +28,7 @@ namespace IOUtilityCLR
 
             return SchemaSetCollection._Any(collection, null);
         }
-
+        
         public static bool Any(IEnumerable<XmlSchemaSet> collection, Predicate<XmlSchemaSet> predicate)
         {
             if (collection == null)
@@ -177,7 +177,7 @@ namespace IOUtilityCLR
 
             foreach (XmlSchemaSet item in list)
             {
-                if (list == null || SchemaSetCollection.Any(this, i => Object.ReferenceEquals(i, item)))
+                if (list == null || SchemaSetCollection.Any(this, i => Object.ReferenceEquals(i, item))
                     continue;
 
                 base.InsertItem(this.Count, item);
