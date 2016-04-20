@@ -11,7 +11,6 @@ namespace XmlUtilityCLR
     {
         private XmlSerializer _serializer = new XmlSerializer(typeof(T));
         private Uri _location = null;
-        private string _localPath = null;
         private string _baseURI = null;
         private XmlReaderSettings _readerSettings = null;
         private bool? _detectEncodingFromByteOrderMarks = null;
