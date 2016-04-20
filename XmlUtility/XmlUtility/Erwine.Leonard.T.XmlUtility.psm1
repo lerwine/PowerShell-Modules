@@ -403,15 +403,15 @@ Function Write-XmlDocument {
     }
     
     try {
-        $XmlDocument.WriteTo($Writer);
-		if ($Writer -isnot [string]) { $XmlWriter.Flush() }
+        $Document.WriteTo($Writer);
+		if ($Writer -isnot [string]) { $Writer.Flush() }
         if ($AsByteArray) {
             Write-Output -InputObject (,$Stream.ToArray());
         } else {
             if ($AsString) {
 				if ($XmlDocument.FirstChild.NodeType -eq [System.Xml.XmlNodeType]::XmlDeclaration) {
 					try {
-						$Encoding = [System.Text.Encoding]::GetEncoding($XmlDocument.FirstChild.Encoding);
+						$Encoding = [System.Text.Encoding]::GetEncoding($Document.FirstChild.Encoding);
 					} catch {
 						$Encoding = [System.Text.Encoding]::UTF8;
 					}
