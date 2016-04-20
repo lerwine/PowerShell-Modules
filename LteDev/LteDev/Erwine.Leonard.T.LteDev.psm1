@@ -1,25 +1,6 @@
 if ((Get-Module -Name 'Erwine.Leonard.T.LteUtils') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.LteUtils' -ErrorAction Stop }
 
 Function Get-ClrSimpleName {
-	[CmdletBinding(DefaultParameterSetName = 'Type')]
-	[OutputType([string])]
-	Param(
-		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0, ParameterSetName = 'Type')]
-		# Type of CLR object
-		[System.Type]$InputType,
-        
-		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0, ParameterSetName = 'Object')]
-		# Object for get CRL full name
-		[object[]]$InputObject,
-        
-        [Parameter(Mandatory = $false)]
-		# Always include namespace
-        [switch]$ForceFullName,
-        
-        [Parameter(Mandatory = $false)]
-		# Do not include the namespace
-        [switch]$NameOnly
-    )
     <#
 		.SYNOPSIS
 			Get simple CLR full name
@@ -39,6 +20,25 @@ Function Get-ClrSimpleName {
 		.NOTES
 			Makes type names simpler, omitting fully qualified assembly names and generic parameter count references.
 	#>
+	[CmdletBinding(DefaultParameterSetName = 'Type')]
+	[OutputType([string])]
+	Param(
+		# Type of CLR object
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0, ParameterSetName = 'Type')]
+		[System.Type]$InputType,
+        
+		# Object for get CRL full name
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0, ParameterSetName = 'Object')]
+		[object[]]$InputObject,
+        
+		# Always include namespace
+        [Parameter(Mandatory = $false)]
+        [switch]$ForceFullName,
+        
+		# Do not include the namespace
+        [Parameter(Mandatory = $false)]
+        [switch]$NameOnly
+    )
 
     Process {
         if ($PSBoundParameters.ContainsKey('InputObject')) {
@@ -264,49 +264,6 @@ Function Get-MethodUsage {
 }
 
 Function Get-TypeUsage {
-	[CmdletBinding(DefaultParameterSetName = 'Type')]
-	[OutputType([string[]])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Type')]
-		# Type of CLR object
-		[Type]$InputType,
-        
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Object')]
-		# Object for which to get usage info
-		[object[]]$InputObject,
-        
-		[Parameter(Mandatory = $false)]
-		# Return constructors
-		[switch]$Constructors,
-        
-		[Parameter(Mandatory = $false)]
-		# Return methods
-		[switch]$Methods,
-        
-		[Parameter(Mandatory = $false)]
-		# Return properties
-		[switch]$Properties,
-        
-		[Parameter(Mandatory = $false)]
-		# Return fields
-		[switch]$Fields,
-        
-		[Parameter(Mandatory = $false)]
-		# Return static members
-		[switch]$Static,
-        
-		[Parameter(Mandatory = $false)]
-		# Return instance (non-static) members
-		[switch]$Instance,
-        
-		[Parameter(Mandatory = $false)]
-		# Include inherited members
-		[switch]$Inherited,
-        
-		[Parameter(Mandatory = $false)]
-		# Include base type names
-		[switch]$ShowBaseTypes
-	)
 	<#
 		.SYNOPSIS
 			Get object type sample usage
@@ -326,6 +283,49 @@ Function Get-TypeUsage {
 		.NOTES
 			If none of the optional switches are used, then all information will be returned.
 	#>
+	[CmdletBinding(DefaultParameterSetName = 'Type')]
+	[OutputType([string[]])]
+	Param(
+		# Type of CLR object
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Type')]
+		[Type]$InputType,
+        
+		# Object for which to get usage info
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Object')]
+		[object[]]$InputObject,
+        
+		# Return constructors
+		[Parameter(Mandatory = $false)]
+		[switch]$Constructors,
+        
+		# Return methods
+		[Parameter(Mandatory = $false)]
+		[switch]$Methods,
+        
+		# Return properties
+		[Parameter(Mandatory = $false)]
+		[switch]$Properties,
+        
+		# Return fields
+		[Parameter(Mandatory = $false)]
+		[switch]$Fields,
+        
+		# Return static members
+		[Parameter(Mandatory = $false)]
+		[switch]$Static,
+        
+		# Return instance (non-static) members
+		[Parameter(Mandatory = $false)]
+		[switch]$Instance,
+        
+		# Include inherited members
+		[Parameter(Mandatory = $false)]
+		[switch]$Inherited,
+        
+		# Include base type names
+		[Parameter(Mandatory = $false)]
+		[switch]$ShowBaseTypes
+	)
 	
     Begin {
         $Options = @{
