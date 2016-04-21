@@ -1,8 +1,6 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# Uncomment next line for PowerShell 3.0+
-# RootModule = 'Erwine.Leonard.T.IOUtility.psd1'
 ModuleToProcess = 'Erwine.Leonard.T.IOUtility.psm1'
 
 # Version number of this module.

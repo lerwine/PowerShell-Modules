@@ -1,7 +1,6 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = 'Module.psd1'
 ModuleToProcess = 'Erwine.Leonard.T.LteDev.psm1'
 
 # Version number of this module.
