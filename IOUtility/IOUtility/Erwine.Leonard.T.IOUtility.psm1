@@ -956,3 +956,183 @@ Function New-MemoryStream {
         New-Object -TypeName 'System.IO.MemoryStream';
     }
 }
+
+Function New-DataTable {
+	<#
+		.SYNOPSIS
+			Creates a new DataTable object.
+ 
+		.DESCRIPTION
+			Initializes a new instance of the System.Data.DataTable class.
+        
+		.OUTPUTS
+			System.Data.DataTable. The new DataTable object.
+        
+        .LINK
+			Add-DataColumn
+
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.datatable.aspx
+	#>
+	[CmdletBinding(DefaultParameterSetName = 'Opt')]
+	[OutputType([System.Data.DataTable])]
+	Param(
+		# The name to give the table.
+		[Parameter(Position = 0, ParameterSetName = 'Opt')]
+		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Namespace')]
+        [Alias('Name')]
+		[string]$TableName,
+
+		# The namespace for the XML representation of the data stored in the DataTable.
+		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Namespace')]
+		[Alias('Namespace')]
+		[string]$TableNamespace,
+
+		[Parameter(Position = 2, ParameterSetName = 'Namespace')]
+		# The namespace prefix for the XML representation of the data stored in the System.Data.DataTable
+		[string]$Prefix,
+
+		# Indicates whether string comparisons within the table are case-sensitive
+		[switch]$CaseSensitive
+	)
+	
+	if ($PSBoundParameters.ContainsKey('TableName')) {
+		if ($PSBoundParameters.ContainsKey('TableNamespace')) {
+			$DataTable = New-Object -TypeName 'System.Data.DataTable' -ArgumentList $TableName, $TableNamespace;
+		} else {
+			$DataTable = New-Object -TypeName 'System.Data.DataTable' -ArgumentList $TableName;
+		}
+	} else {
+		$DataTable = New-Object -TypeName 'System.Data.DataTable';
+	}
+
+	$DataTable.CaseSensitive = $CaseSensitive.IsPresent;
+	
+	if ($PSBoundParameters.ContainsKey('Prefix')) { $DataTable.Prefix = $Prefix }
+}
+
+Function Add-DataColumn {
+	<#
+		.SYNOPSIS
+			Adds a new DataColumn object to a DataTable.
+ 
+		.DESCRIPTION
+			Creates a new instance of the System.Data.DataColumn class and adds it to a System.Data.DataTable object.
+        
+		.OUTPUTS
+			System.Data.DataColumn. The new DataColumn which was added to the DataTable objedct.
+        
+        .LINK
+			New-DataTable
+
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.datacolumn.aspx
+
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.datatable.columns.aspx
+
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.datacolumncollection.add.aspx
+	#>
+	[CmdletBinding(DefaultParameterSetName = 'Opt')]
+	[OutputType([System.Data.DataColumn])]
+	Param(
+		# DataTable to add the DataColumn to.
+		[Parameter(Mandatory = $true, Position = 0)]
+		[Alias('Table')]
+		[System.Data.DataTable]$DataTable,
+
+		# A string that represents the name of the column to be added.
+		[Parameter(Position = 1, ParameterSetName = 'Opt')]
+		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Expression')]
+        [Alias('Name')]
+		[string]$ColumnName,
+
+		# A supported column type.
+		[Parameter(Position = 2, ParameterSetName = 'Opt')]
+		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Expression')]
+		[System.Type]$DataType,
+
+		# An expression to calculate the value of a column, or create an aggregate column. The return type of an expression is determined by the System.Data.DataColumn.DataType of the column
+		[Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Expression')]
+        [Alias('Expression')]
+		[string]$Expr,
+
+		# One of the System.Data.MappingType values
+		[Parameter(Position = 4, ParameterSetName = 'Expression')]
+        [Alias('MappingType')]
+		[System.Data.MappingType]$Type,
+		
+		# The caption for the column.
+		[string]$Caption,
+		
+		# Indicates whether null values are allowed in this column for rows that belong to the table.
+		[switch]$AllowDBNull,
+
+		# Indicates whether the column automatically increments the value of the column for new rows added to the table.
+		[switch]$AutoIncrement,
+
+		# The starting value for a column when AutoIncrement is set.
+		[long]$AutoIncrementSeed,
+
+		# The increment used by a column when AutoIncrement is set.
+		[long]$AutoIncrementStep,
+		
+		# The DateTimeMode for the column.
+		[System.Data.DataSetDateTime]$DateTimeMode,
+
+		# The default value for the column when you are creating new rows.
+		[AllowNull()]
+		[AllowEmptyString()]
+		[object]$DefaultValue,
+
+		# The maximum length of a text column.
+		[int]$MaxLength,
+
+		# The position of the column in the System.Data.DataColumnCollection collection.
+		[int]$Ordinal,
+
+		# Indicates whether the column allows for changes as soon as a row has been added to the table.
+		[switch]$ReadOnly,
+
+		# Indicates whether the values in each row of the column must be unique.
+		[switch]$Unique,
+
+		# Indicates whether the new data column is returned.
+		[switch]$PassThru
+	)
+	
+	if ($PSCmdlet.ParameterSetName -eq 'Expression') {
+		if ($PSBoundParameters.ContainsKey('Type')) {
+			$DataColumn = New-Object -TypeName 'System.Data.DataColumn' -ArgumentList $ColumnName, $DataType, $Expr, $Type;
+		} else {
+			$DataColumn = New-Object -TypeName 'System.Data.DataColumn' -ArgumentList $ColumnName, $DataType, $Expr;
+		}
+	}
+	if ($PSBoundParameters.ContainsKey('DataType')) {
+		$DataColumn = New-Object -TypeName 'System.Data.DataColumn' -ArgumentList $ColumnName, $DataType;
+	} else {
+		if ($PSBoundParameters.ContainsKey('ColumnName')) {
+			$DataColumn = New-Object -TypeName 'System.Data.DataColumn' -ArgumentList $ColumnName;
+		} else {
+			$DataColumn = New-Object -TypeName 'System.Data.DataColumn';
+		}
+	}
+	
+	if ($PSBoundParameters.ContainsKey('Prefix')) { $DataTable.Prefix = $Prefix }
+
+	$DataTable.Columns.Add($DataColumn);
+	
+	$DataColumn.AllowDBNull = $AllowDBNull.IsPresent;
+	$DataColumn.AutoIncrement = $AutoIncrement.IsPresent;
+	$DataColumn.ReadOnly = $ReadOnly.IsPresent;
+	$DataColumn.Unique = $Unique.IsPresent;
+	if ($PSBoundParameters.ContainsKey('Caption')) { $DataColumn.Caption = $Caption }
+	if ($PSBoundParameters.ContainsKey('AutoIncrementSeed')) { $DataColumn.AutoIncrementSeed = $AutoIncrementSeed }
+	if ($PSBoundParameters.ContainsKey('AutoIncrementStep')) { $DataColumn.AutoIncrementStep = $AutoIncrementStep }
+	if ($PSBoundParameters.ContainsKey('DateTimeMode')) { $DataColumn.DateTimeMode = $DateTimeMode }
+	if ($PSBoundParameters.ContainsKey('DefaultValue')) { $DataColumn.DefaultValue = $DefaultValue }
+	if ($PSBoundParameters.ContainsKey('MaxLength')) { $DataColumn.MaxLength = $MaxLength }
+	if ($PSBoundParameters.ContainsKey('Ordinal')) { $DataColumn.Ordinal = $Ordinal }
+	if ($PassThru) { $DataColumn | Write-Output }
+}
