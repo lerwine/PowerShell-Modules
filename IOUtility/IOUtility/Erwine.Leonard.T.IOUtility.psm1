@@ -956,3 +956,456 @@ Function New-MemoryStream {
         New-Object -TypeName 'System.IO.MemoryStream';
     }
 }
+
+Function Test-IsNullOrWhitespace {
+	<#
+		.SYNOPSIS
+			Tests if string is null or whitespace.
+ 
+		.DESCRIPTION
+			This is intended to act the same as [System.String]::IsNullOrWhitespace() from later .NET versions.
+        
+		.OUTPUTS
+			System.Boolean. Indicates whether the input text was null, empty or whitespace.
+        
+        .LINK
+            Out-NormalizedText
+        
+        .LINK
+            Split-DelimitedText
+        
+        .LINK
+            Out-IndentedText
+        
+        .LINK
+            Out-UnindentedText
+        
+        .LINK
+            Get-IndentLevel
+	#>
+	[CmdletBinding()]
+	[OutputType([bool])]
+	Param(
+        # Text to be indented.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [AllowNull()]
+        # String to be tested whether it is null, empty or consists only of whitespace.
+		[string]$InputString
+    )
+    
+    Process {
+        if ($InputString -eq $null -or $InputString -eq '') {
+            $false | Write-Output;
+        } else {
+            $IsWhiteSpace = $true;
+            foreach ($c in $InputString.ToCharArray()) {
+                if (-not [System.Char]::IsWhiteSpace($c)) {
+                    $IsWhiteSpace = $false;
+                    break;
+                }
+            }
+            $IsWhiteSpace | Write-Output;
+        }
+    }               
+}
+
+Function Split-DelimitedText {
+	<#
+		.SYNOPSIS
+			Splits text by delimiter.
+ 
+		.DESCRIPTION
+			Splits text according to a delimiter pattern.
+        
+		.OUTPUTS
+			System.String[]. The text separated by delimiters.
+        
+        .LINK
+            Out-NormalizedText
+        
+        .LINK
+            Out-IndentedText
+        
+        .LINK
+            Out-UnindentedText
+        
+        .LINK
+            Get-IndentLevel
+        
+        .LINK
+            Test-IsNullOrWhitespace
+	#>
+	[CmdletBinding()]
+	[OutputType([string[]])]
+	Param(
+        # Text to be split by delimiter pattern.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+		[string[]]$InputString,
+        
+        # Pattern to use for detecting newlines. Default is newline ('\r\n?|\n').
+        [ValidateScript({
+            try {
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $_;
+            } catch {
+                $Regex = $null;
+            }
+            $Regex -ne $null
+        })]
+        [Alias('DelimiterPattern', 'Delimiter')]
+        [string]$Pattern = '\r\n?|\n',
+        
+        # Options for the delimiter pattern. Note: You can use "Compiled" to optimize for large pipelines.
+        [Alias('RegexOptions', 'RegexOption', 'Option')]
+        [System.Text.RegularExpressions.RegexOptions[]]$PatternOption
+    )
+    
+    Begin {
+        if ($PSBoundParameters.ContainsKey('PatternOption')) {
+            $RegexOptions = $PatternOption[0];
+            for ($i = 1; $i -lt $PatternOption.Length; $i++) {
+                [System.Text.RegularExpressions.RegexOptions]$RegexOptions = $RegexOptions -bor  $PatternOption[$i];
+            }
+            $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern, $RegexOptions;
+        } else {
+            $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern;
+        }
+    }
+    
+    Process { $InputString | ForEach-Object { if ($_ -eq '') { $_ | Write-Output } else { $Regex.Split($_) | Write-Output } } }
+}
+
+Function Out-NormalizedText {
+	<#
+		.SYNOPSIS
+			Normalizes text.
+ 
+		.DESCRIPTION
+			Splits text according a pattern.
+        
+		.OUTPUTS
+			System.String. The normalized text.
+        
+        .LINK
+            Split-DelimitedText
+        
+        .LINK
+            Out-IndentedText
+        
+        .LINK
+            Out-UnindentedText
+        
+        .LINK
+            Get-IndentLevel
+        
+        .LINK
+            Test-IsNullOrWhitespace
+	#>
+	[CmdletBinding()]
+	[OutputType([string])]
+	Param(
+        # Text to be split by delimiter pattern.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+		[string]$InputString,
+        
+        # Pattern to use for normalizing text. Default is multi-whitespace: '(?(?= )\s{2,}|\s+)'.
+		[Parameter(Position = 1, ParameterSetName = 'ByPattern')]
+        [ValidateScript({
+            try {
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $_;
+            } catch {
+                $Regex = $null;
+            }
+            $Regex -ne $null
+        })]
+        [Alias('DelimiterPattern', 'Delimiter')]
+        [string]$Pattern = '(?(?= )\s{2,}|\s+)',
+        
+        # Text to replace where Pattern matches
+		[Parameter(Position = 2, ParameterSetName = 'ByPattern')]
+        [Alias('Replace')]
+        [string]$ReplaceWith = ' ',
+        
+        # Options for the normalization pattern. Note: You can use "Compiled" to optimize for large pipelines.
+		[Parameter(ParameterSetName = 'ByPattern')]
+        [Alias('RegexOptions', 'RegexOption', 'Option')]
+        [System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
+        
+		[Parameter(Mandatory = $true, ParameterSetName = 'Trim')]
+        [switch]$Trim,
+        
+		[Parameter(Mandatory = $true, ParameterSetName = 'TrimStart')]
+        [switch]$TrimStart,
+        
+		[Parameter(Mandatory = $true, ParameterSetName = 'TrimEnd')]
+        [switch]$TrimEnd
+    )
+    
+    Begin {
+        if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
+            if ($PSBoundParameters.ContainsKey('PatternOption')) {
+                $RegexOptions = $PatternOption[0];
+                for ($i = 1; $i -lt $PatternOption.Length; $i++) {
+                    [System.Text.RegularExpressions.RegexOptions]$RegexOptions = $RegexOptions -bor  $PatternOption[$i];
+                }
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern, $RegexOptions;
+            } else {
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern;
+            }
+        }
+    }
+    
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
+            $Regex.Replace($InputString, $ReplaceWith) | Write-Output
+        } else {
+            if ($InputString -eq '') { 
+                $InputString | Write-Output;
+            } else {
+                if ($Trim) {
+                    $InputString.Trim() | Write-Output;
+                } else {
+                    if ($TrimStart) { $InputString.TrimStart() | Write-Output } else {  $InputString.TrimEnd() | Write-Output }
+                }
+            }
+        }
+    }
+}
+
+Function Out-IndentedText {
+	<#
+		.SYNOPSIS
+			Indents text.
+ 
+		.DESCRIPTION
+			Prepends indent text to input text
+        
+		.OUTPUTS
+			System.String. The indented text.
+        
+        .LINK
+            Out-UnindentedText
+        
+        .LINK
+            Get-IndentLevel
+        
+        .LINK
+            Out-NormalizedText
+        
+        .LINK
+            Split-DelimitedText
+	#>
+	[CmdletBinding()]
+	[OutputType([string])]
+	Param(
+        # Text to be indented.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+		[string]$InputString,
+        
+        # Number of times to indent text
+        [int]$Level = 1,
+        
+        # Text to use for indenting. Default is 4 spaces.
+        [string]$IndentText = '    ',
+        
+        # Indicates that zero-length lines are to be indented as well.
+        [switch]$IndentEmptyLine
+    )
+    
+    Begin {
+        $Indent = $IndentText;
+        for ($i = 1; $i -lt $Level; $i++) { $Indent += $IndentText }
+    }
+    
+    Process {
+        if ($Level -gt 0 -and ($IndentEmptyLine -or $InputString -ne '')) {
+            ($Indent + $InputString) | Write-Output;
+        } else {
+            $InputString | Write-Output;
+        }
+    }
+}
+
+Function Get-IndentLevel {
+	<#
+		.SYNOPSIS
+			Get number of times text is indented.
+ 
+		.DESCRIPTION
+			Determines number of times text has been indented.
+        
+		.OUTPUTS
+			System.Int32. The number of indentations detected.
+        
+        .LINK
+            Out-IndentedText
+        
+        .LINK
+            Out-UnindentedText
+        
+        .LINK
+            Split-DelimitedText
+        
+        .LINK
+            Out-NormalizedText
+	#>
+	[CmdletBinding(DefaultParameterSetName = 'ByPattern')]
+	[OutputType([int])]
+	Param(
+        # Text to be un-indented.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+		[string]$InputString,
+        
+        # Pattern to detect indentation. Default is tab or 1 to 4 whitespaces at the beginning of the text: '^(\t|[^\S\t]{1,4})'
+		[Parameter(ParameterSetName = 'ByPattern')]
+        [AllowEmptyString()]
+        [string]$Pattern = '^(\t|[^\S\t]{1,4})',
+        
+        # Options for the indent detection pattern. Note: You can use "Compiled" to optimize for large pipelines.
+		[Parameter(ParameterSetName = 'ByPattern')]
+        [Alias('RegexOptions', 'RegexOption', 'Option')]
+        [System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
+        
+        # Text which represents an indentation.
+		[Parameter(Mandatory = $true, ParameterSetName = 'ByString')]
+        [string]$IndentText
+    )
+    
+    Begin {
+        if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
+            if ($PSBoundParameters.ContainsKey('PatternOption')) {
+                $RegexOptions = $PatternOption[0];
+                for ($i = 1; $i -lt $PatternOption.Length; $i++) {
+                    [System.Text.RegularExpressions.RegexOptions]$RegexOptions = $RegexOptions -bor  $PatternOption[$i];
+                }
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern, $RegexOptions;
+            } else {
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern;
+            }
+        }
+    }
+    
+    Process {
+        $Level = 0;
+        
+        if ($InputString -ne '') {
+            if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
+                $M = $Regex.Match($InputString);
+                while ($M.Success -and $M.Length -gt 0) {
+                    $Level++;
+                    if (($M.Index + $M.Length) -eq $InputString.Length) { break }
+                    $M = $Regex.Match($InputString, $M.Index + $M.Length);
+                }
+            } else {
+                if ($InputString.StartsWith($IndentText)) {
+                    $Level++;
+                    for ($i = $IndentText.Length; ($i + $IndentText.Length) -le $InputString.Length; $i+= $IndentText.Length) {
+                        if ($InputString.Substring($i, $IndentText.Length) -ne $IndentText) { break }
+                        $Level++;
+                    }
+                }
+            }
+        }
+        
+        $Level | Write-Output;
+    }
+}
+
+Function Out-UnindentedText {
+	<#
+		.SYNOPSIS
+			Un-indents text.
+ 
+		.DESCRIPTION
+			Removes indentation from input text.
+        
+		.OUTPUTS
+			System.String[]. The text with indentation removed.
+        
+        .LINK
+            Get-IndentLevel
+        
+        .LINK
+            Out-IndentedText
+        
+        .LINK
+            Split-DelimitedText
+        
+        .LINK
+            Out-NormalizedText
+	#>
+	[CmdletBinding(DefaultParameterSetName = 'ByPattern')]
+	[OutputType([string])]
+	Param(
+        # Text to be un-indented.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+		[string]$InputString,
+        
+        # Number of times to un-indent text
+        [Parameter(ParameterSetName = 'ByString')]
+        [int]$Level = 1,
+        
+        # Pattern to detect indentation. Default is tab or 1 to 4 whitespaces at the beginning of the text: '^(\t|[^\S\t]{1,4})'
+		[Parameter(ParameterSetName = 'ByPattern')]
+        [AllowEmptyString()]
+        [string]$Pattern = '^(\t|[^\S\t]{1,4})',
+        
+        # Options for the indent detection pattern. Note: You can use "Compiled" to optimize for large pipelines.
+		[Parameter(ParameterSetName = 'ByPattern')]
+        [Alias('RegexOptions', 'RegexOption', 'Option')]
+        [System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
+        
+        # Text which represents an indentation.
+		[Parameter(Mandatory = $true, ParameterSetName = 'ByString')]
+        [string]$IndentText
+    )
+    
+    Begin {
+        if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
+            if ($PSBoundParameters.ContainsKey('PatternOption')) {
+                $RegexOptions = $PatternOption[0];
+                for ($i = 1; $i -lt $PatternOption.Length; $i++) {
+                    [System.Text.RegularExpressions.RegexOptions]$RegexOptions = $RegexOptions -bor  $PatternOption[$i];
+                }
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern, $RegexOptions;
+            } else {
+                $Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern;
+            }
+        } else {
+            $Indent = $IndentText;
+            for ($i = 1; $i -lt $Level; $i++) { $Indent += $IndentText }
+        }
+    }
+    
+    Process {
+        if ($InputString -eq '') {
+            $InputString | Write-Output;
+        } else {
+            if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
+                $M = $Regex.Match($InputString);
+                if ($M.Success) {
+                    do {
+                        $Index = $M.Index + $M.Length;
+                        $M = $Regex.Match($InputString, $M.Index + $M.Length);
+                    } while ($M.Success -and $M.Length -gt 0);
+                    $InputString.Substring($Index) | Write-Output;
+                } else {
+                    $InputString | Write-Output;
+                }
+            } else {
+                if ($InputString.StartsWith($IndentText)) {
+                    $Index = $IndentText.Length;
+                    while (($Index + $IndentText.Length) -le $InputString.Length -and $InputString.Substring($Index, $InputString.Length) -eq $InputString) { $Index += $IndentText.Length }
+                    $InputString.Substring($Index) | Write-Output;
+                } else {
+                    $InputString | Write-Output;
+                }
+            }
+        }
+    }
+}

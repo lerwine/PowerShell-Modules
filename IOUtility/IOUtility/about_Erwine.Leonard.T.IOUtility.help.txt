@@ -11,35 +11,47 @@ LONG DESCRIPTION
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    New-MemoryStream
-        Creates a stream whose backing store is memory.
-
-    Get-SpecialFolderNames
-        Get special folder names
-
-    ConvertTo-Base64String
-        Convert data buffer to base-64 encoded text.
-
-    Read-LengthEncodedBytes
-        Read length-encoded array of bytes from a Stream.
-
-    Get-MinBase64BlockSize
-        Get minimum base-64 encoding block size.
-
-    Get-AppDataPath
-        Get path for application data storage.
+    ConvertFrom-Base64String
+        Convert base-64 encoded text to a data buffer.
 
     ConvertFrom-SafeFileName
         Decodes a file name back to the original text
 
+    ConvertTo-Base64String
+        Convert data buffer to base-64 encoded text.
+
     ConvertTo-SafeFileName
         Converts a string to a usable file name / path.
 
-    ConvertFrom-Base64String
-        Convert base-64 encoded text to a data buffer.
+    Get-AppDataPath
+        Get path for application data storage.
 
-    Write-LongIntegerToStream
-        Write long integer value to a Stream.
+    Get-IndentLevel
+        Get number of times text is indented.
+
+    Get-MinBase64BlockSize
+        Get minimum base-64 encoding block size.
+
+    Get-SpecialFolder
+        Get special folder path
+
+    Get-SpecialFolderNames
+        Get special folder names
+
+    Get-TextEncoding
+        Gets an instance of the Encoding class.
+
+    New-MemoryStream
+        Creates a stream whose backing store is memory.
+
+    Out-IndentedText
+        Indents text.
+
+    Out-NormalizedText
+        Normalizes text.
+
+    Out-UnindentedText
+        Un-indents text.
 
     Read-FileDialog
         Prompt user for filesystem path.
@@ -47,36 +59,48 @@ EXPORTED COMMANDS
     Read-IntegerFromStream
         Read integer value from stream.
 
-    Write-LengthEncodedBytes
-        Writes length-encoded data a Stream.
+    Read-LengthEncodedBytes
+        Read length-encoded array of bytes from a Stream.
 
     Read-LongIntegerFromStream
         Read long integer value from stream.
 
-    Get-TextEncoding
-        Gets an instance of the Encoding class.
+    Split-DelimitedText
+        Splits text by delimiter.
 
-    Get-SpecialFolder
-        Get special folder path
+    Test-IsNullOrWhitespace
+        Tests if string is null or whitespace.
 
     Write-IntegerToStream
         Write integer value to a Stream.
 
-SEE ALSO
-    New-MemoryStream
-    Get-SpecialFolderNames
-    ConvertTo-Base64String
-    Read-LengthEncodedBytes
-    Get-MinBase64BlockSize
-    Get-AppDataPath
-    ConvertFrom-SafeFileName
-    ConvertTo-SafeFileName
-    ConvertFrom-Base64String
+    Write-LengthEncodedBytes
+        Writes length-encoded data a Stream.
+
     Write-LongIntegerToStream
+        Write long integer value to a Stream.
+
+SEE ALSO
+    ConvertFrom-Base64String
+    ConvertFrom-SafeFileName
+    ConvertTo-Base64String
+    ConvertTo-SafeFileName
+    Get-AppDataPath
+    Get-IndentLevel
+    Get-MinBase64BlockSize
+    Get-SpecialFolder
+    Get-SpecialFolderNames
+    Get-TextEncoding
+    New-MemoryStream
+    Out-IndentedText
+    Out-NormalizedText
+    Out-UnindentedText
     Read-FileDialog
     Read-IntegerFromStream
-    Write-LengthEncodedBytes
+    Read-LengthEncodedBytes
     Read-LongIntegerFromStream
-    Get-TextEncoding
-    Get-SpecialFolder
+    Split-DelimitedText
+    Test-IsNullOrWhitespace
     Write-IntegerToStream
+    Write-LengthEncodedBytes
+    Write-LongIntegerToStream

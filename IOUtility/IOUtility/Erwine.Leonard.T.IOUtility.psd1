@@ -61,7 +61,8 @@ CLRVersion = '2.0'
 FunctionsToExport = @( 'Get-SpecialFolderNames', 'Get-SpecialFolder', 'ConvertTo-SafeFileName', 'ConvertFrom-SafeFileName', 'Get-AppDataPath',
 	'Read-FileDialog', 'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream', 'Write-IntegerToStream',
 	'Write-LongIntegerToStream', 'Read-LengthEncodedBytes', 'Write-LengthEncodedBytes', 'ConvertTo-Base64String', 'ConvertFrom-Base64String',
-    'Get-TextEncoding', 'New-MemoryStream' )
+    'Get-TextEncoding', 'New-MemoryStream', 'Test-IsNullOrWhitespace', 'Split-DelimitedText', 'Out-NormalizedText', 'Out-IndentedText',
+    'Get-IndentLevel', 'Out-UnindentedText' )
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
