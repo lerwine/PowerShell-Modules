@@ -1,7 +1,6 @@
 Powershell-Modules
 =========================
 This is just a collection of PowerShell modules that I have been working on through personal research.
-This branch is for scripts which are intended to be compatible with PowerShell version 2.0.
 
 Contents
 --------

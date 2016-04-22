@@ -1,7 +1,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-ModuleToProcess = 'Erwine.Leonard.T.LteDev.psm1'
+RootModule = 'Erwine.Leonard.T.LteDev.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.1.0.0'
@@ -22,7 +22,7 @@ Copyright = '(c) 2015 Leonard T. Erwine. All rights reserved.'
 Description = 'PowerShell Dev utility functions.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '2.0'
+PowerShellVersion = '4.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -31,10 +31,10 @@ PowerShellVersion = '2.0'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-DotNetFrameworkVersion = '2.0'
+DotNetFrameworkVersion = '4.5'
 
 # Minimum version of the common language runtime (CLR) required by this module
-CLRVersion = '2.0'
+CLRVersion = '4.5'
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''

@@ -5,86 +5,85 @@ SHORT DESCRIPTION
     Provides advanced XML functionality
 
 LONG DESCRIPTION
-    Provides XML functions for advanced manipulation and formatting of XML
-    data.
+Provides XML functions for advanced manipulation and formatting of XML data.
 
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    Add-XmlAttribute
-        Adds or sets an XML attribute.
-
-    Add-XmlElement
-        Adds an XML element.
-
-    Add-XmlTextElement
-        Adds an XML element with text content.
-
-    ConvertFrom-XmlBinary
-        Converts XML String to byte array.
-
-    ConvertFrom-XmlEncodedName
-        Decodes a name.
-
-    ConvertFrom-XmlList
-        Converts XML list string item values.
-
-    ConvertFrom-XmlString
-        Converts data from XML String.
-
     ConvertTo-XmlBinary
         Converts byte array XML String.
-
-    ConvertTo-XmlEncodedLocalName
-        Converts the name to a valid XML local name.
-
-    ConvertTo-XmlEncodedName
-        Converts the name to a valid XML name.
-
-    ConvertTo-XmlEncodedNmToken
-        Verifies the name is valid according to the XML specification.
-
-    ConvertTo-XmlList
-        Converts string values to an XML list.
-
-    ConvertTo-XmlString
-        Converts data to XML String.
-
-    New-XmlReaderSettings
-        Creates an instance of the XmlReaderSettings class.
-
-    New-XmlWriterSettings
-        Creates an instance of the XmlWriterSettings class.
-
-    Read-XmlDocument
-        Reads XML data.
-
-    Set-XmlAttribute
-        Sets an XML attribute.
-
-    Set-XmlText
-        Sets XML element inner text.
 
     Write-XmlDocument
         Writes XML data with custom options.
 
-SEE ALSO
-    Add-XmlAttribute
-    Add-XmlElement
-    Add-XmlTextElement
-    ConvertFrom-XmlBinary
     ConvertFrom-XmlEncodedName
-    ConvertFrom-XmlList
-    ConvertFrom-XmlString
-    ConvertTo-XmlBinary
-    ConvertTo-XmlEncodedLocalName
-    ConvertTo-XmlEncodedName
+        Decodes a name.
+
     ConvertTo-XmlEncodedNmToken
-    ConvertTo-XmlList
-    ConvertTo-XmlString
+        Verifies the name is valid according to the XML specification.
+
     New-XmlReaderSettings
-    New-XmlWriterSettings
-    Read-XmlDocument
+        Creates an instance of the XmlReaderSettings class.
+
+    Add-XmlElement
+        Adds an XML element.
+
+    Add-XmlAttribute
+        Adds or sets an XML attribute.
+
     Set-XmlAttribute
+        Sets an XML attribute.
+
+    ConvertTo-XmlEncodedLocalName
+        Converts the name to a valid XML local name.
+
+    Add-XmlTextElement
+        Adds an XML element with text content.
+
+    Read-XmlDocument
+        Reads XML data.
+
+    ConvertTo-XmlString
+        Converts data to XML String.
+
     Set-XmlText
+        Sets XML element inner text.
+
+    ConvertTo-XmlList
+        Converts string values to an XML list.
+
+    ConvertFrom-XmlString
+        Converts data from XML String.
+
+    ConvertFrom-XmlList
+        Converts XML list string item values.
+
+    ConvertFrom-XmlBinary
+        Converts XML String to byte array.
+
+    ConvertTo-XmlEncodedName
+        Converts the name to a valid XML name.
+
+    New-XmlWriterSettings
+        Creates an instance of the XmlWriterSettings class.
+
+SEE ALSO
+    ConvertTo-XmlBinary
     Write-XmlDocument
+    ConvertFrom-XmlEncodedName
+    ConvertTo-XmlEncodedNmToken
+    New-XmlReaderSettings
+    Add-XmlElement
+    Add-XmlAttribute
+    Set-XmlAttribute
+    ConvertTo-XmlEncodedLocalName
+    Add-XmlTextElement
+    Read-XmlDocument
+    ConvertTo-XmlString
+    Set-XmlText
+    ConvertTo-XmlList
+    ConvertFrom-XmlString
+    ConvertFrom-XmlList
+    ConvertFrom-XmlBinary
+    ConvertTo-XmlEncodedName
+    New-XmlWriterSettings

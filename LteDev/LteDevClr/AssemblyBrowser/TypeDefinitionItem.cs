@@ -45,15 +45,7 @@ namespace LteDevClr.AssemblyBrowser
             }
         }
 
-        public string Name { get
-            {
-                throw new NotImplementedException();
-            }
-            private set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public string Name { get; private set; }
 
         public TypeDefinitionItem(Type type)
         {
