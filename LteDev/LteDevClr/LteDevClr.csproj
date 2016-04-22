@@ -51,8 +51,8 @@
     <Compile Include="AssemblyBrowser\InstantiatedTypeDefinition.cs" />
     <Compile Include="AssemblyBrowser\MethodDataItem.cs" />
     <Compile Include="AssemblyBrowser\MethodDefinitionItem.cs" />
-    <Compile Include="ComparisonResult.cs" />
-    <Compile Include="ComparisonStatus.cs" />
+    <Compile Include="Diff\ComparisonResult.cs" />
+    <Compile Include="Diff\ComparisonStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyBrowser\TypeInfoDataItem.cs" />
     <Compile Include="AssemblyBrowser\TypeDefinitionItem.cs" />

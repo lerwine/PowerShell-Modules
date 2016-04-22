@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace LteDevClr
+namespace LteDevClr.Diff
 {
     public struct ComparisonResult
     {
@@ -11,7 +11,7 @@ namespace LteDevClr
         private string _targetPath;
         private bool _isFile;
         private string _message;
-        private LteDevClr.ComparisonStatus _status;
+        private ComparisonStatus _status;
 
         private static string GetMessage(ComparisonStatus status, bool isFile)
         {
