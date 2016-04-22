@@ -14,47 +14,38 @@ EXPORTED COMMANDS
     Get-X509Store
         Create an X.509 store object.
 
+    New-AesManaged
+        Create AES encryption provider.
+
+    New-AsnEncodedData
+        Create new cryptographic object identifier.
+
+    New-CryptographyOid
+        Create new cryptographic object identifier.
+
     New-SelfSignedCertificate
         New-SelfSignedCertificate [-CN] <String> [-Verbose] [-Debug]
         [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>]
         [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable
         <String>] [-OutBuffer <Int32>]
 
-    New-CryptographyOid
-        Create new cryptographic object identifier.
-
-    Protect-WithSymmetricAlgorithm
-        Encrypt data with symmetric algorithm.
+    New-X500DistinguishedName
+        Create new X500 Distinguished Name.
 
     New-X509KeyUsageFlags
         Create X.509 certificate key usage flags.
 
-    Unprotect-WithRSA
-        Decrypt data with RSA.
-
-    New-AsnEncodedData
-        Create new cryptographic object identifier.
-
-    Show-X509Certificate
-        Display certificate information.
+    New-X509StoreOpenFlags
+        Create X.509 certificate store open flags.
 
     Protect-WithRSA
         Encrypt data with RSA.
 
-    Unprotect-WithSymmetricAlgorithm
-        Decrypt data with symmetric algorithm.
-
-    New-AesManaged
-        Create AES encryption provider.
+    Protect-WithSymmetricAlgorithm
+        Encrypt data with symmetric algorithm.
 
     Protect-WithX509Certificate
         Encrypt data with PKI certificate.
-
-    New-X500DistinguishedName
-        Create new X500 Distinguished Name.
-
-    Unprotect-WithX509Certificate
-        Decrypt data with PKI certificate.
 
     Read-X509Certificate
         Prompt user for certificate selection.
@@ -62,24 +53,33 @@ EXPORTED COMMANDS
     Select-X509Certificate
         Select X.509 certificates from a store.
 
-    New-X509StoreOpenFlags
-        Create X.509 certificate store open flags.
+    Show-X509Certificate
+        Display certificate information.
+
+    Unprotect-WithRSA
+        Decrypt data with RSA.
+
+    Unprotect-WithSymmetricAlgorithm
+        Decrypt data with symmetric algorithm.
+
+    Unprotect-WithX509Certificate
+        Decrypt data with PKI certificate.
 
 SEE ALSO
     Get-X509Store
-    New-SelfSignedCertificate
-    New-CryptographyOid
-    Protect-WithSymmetricAlgorithm
-    New-X509KeyUsageFlags
-    Unprotect-WithRSA
-    New-AsnEncodedData
-    Show-X509Certificate
-    Protect-WithRSA
-    Unprotect-WithSymmetricAlgorithm
     New-AesManaged
-    Protect-WithX509Certificate
+    New-AsnEncodedData
+    New-CryptographyOid
+    New-SelfSignedCertificate
     New-X500DistinguishedName
-    Unprotect-WithX509Certificate
+    New-X509KeyUsageFlags
+    New-X509StoreOpenFlags
+    Protect-WithRSA
+    Protect-WithSymmetricAlgorithm
+    Protect-WithX509Certificate
     Read-X509Certificate
     Select-X509Certificate
-    New-X509StoreOpenFlags
+    Show-X509Certificate
+    Unprotect-WithRSA
+    Unprotect-WithSymmetricAlgorithm
+    Unprotect-WithX509Certificate
