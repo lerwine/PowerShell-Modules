@@ -10,7 +10,6 @@ namespace LteDevClr.AssemblyBrowser
         private Type _type;
         private string _baseName = null;
         private string _fullName = null;
-        private string _name = null;
         public Dictionary<string, TypeDefinitionItem> _nestedTypes = new Dictionary<string, TypeDefinitionItem>();
         public Dictionary<string, TypeDefinitionItem> _genericTypes = null;
         public Dictionary<string, MethodDefinitionItem> _methods = null;
@@ -45,15 +44,7 @@ namespace LteDevClr.AssemblyBrowser
             }
         }
 
-        public string Name { get
-            {
-                throw new NotImplementedException();
-            }
-            private set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public string Name { get; private set; }
 
         public TypeDefinitionItem(Type type)
         {
