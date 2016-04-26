@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinForms", "WinForms", "{7FB70CDA-4CD6-422A-A62D-7E41613C3388}"
+	ProjectSection(SolutionItems) = preProject
+		WinForms\README.md = WinForms\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GDIPlus", "GDIPlus", "{72F8B79D-B5A3-4C8B-ABD7-4E5A35E11529}"
+	ProjectSection(SolutionItems) = preProject
+		GDIPlus\README.md = GDIPlus\README.md
+	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Installer", "GDIPlus\Installer\Installer.pssproj", "{8EB5728D-9171-4FFF-8680-18C408002019}"
 EndProject
@@ -34,18 +40,28 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSModuleInstallUtil", "PSModuleInstallUtil\PSModuleInstallUtil.csproj", "{E9D28345-72EA-4A65-8015-96678EE45272}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IOUtility", "IOUtility", "{C774424F-FA1E-4E77-AC61-054B848FD993}"
+	ProjectSection(SolutionItems) = preProject
+		IOUtility\README.md = IOUtility\README.md
+	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "IOUtility", "IOUtility\IOUtility\IOUtility.pssproj", "{F4998CDB-2949-4C2B-9A2B-72B61F44CA4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOUtilityCLR", "IOUtility\IOUtilityCLR\IOUtilityCLR.csproj", "{F32B9A73-7059-4CC3-B376-D6BAB4AB76FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetworkUtility", "NetworkUtility", "{9BC7C0D9-B0A0-4F34-93E7-29E3136CB622}"
+	ProjectSection(SolutionItems) = preProject
+		NetworkUtility\README.md = NetworkUtility\README.md
+	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "NetworkUtility", "NetworkUtility\NetworkUtility\NetworkUtility.pssproj", "{EE4D730A-CF19-41EB-93AB-A1183C9EC14D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityCLR", "NetworkUtility\NetworkUtilityCLR\NetworkUtilityCLR.csproj", "{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LteDev", "LteDev", "{F5D07E3B-5C87-4C20-A129-C3FF471C23A2}"
+	ProjectSection(SolutionItems) = preProject
+		LteDev\README.md = LteDev\README.md
+		LteDev\Untitled1.ps1 = LteDev\Untitled1.ps1
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LteDevClr", "LteDev\LteDevClr\LteDevClr.csproj", "{A96E6692-A11C-4AE0-AF41-D35323C1F8A1}"
 EndProject
@@ -54,6 +70,9 @@ EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "LteDev", "LteDev\LteDev\LteDev.pssproj", "{40F4C26C-05B3-436E-ABF1-3044176D1FE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XmlUtility", "XmlUtility", "{1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}"
+	ProjectSection(SolutionItems) = preProject
+		XmlUtility\README.md = XmlUtility\README.md
+	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "XmlUtility", "XmlUtility\XmlUtility\XmlUtility.pssproj", "{2BB4AEF1-5684-44A0-ACEE-326E4C676659}"
 EndProject
@@ -62,12 +81,13 @@ EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Scripts", "Scripts\Scripts.pssproj", "{8C1F29FD-EB34-4DBB-A1CA-819BF73A4AEC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CredentialStorage", "CredentialStorage", "{BCCB6DAD-6011-459F-9109-8FC23F343149}"
+	ProjectSection(SolutionItems) = preProject
+		CredentialStorage\README.md = CredentialStorage\README.md
+	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "CredentialStorage", "CredentialStorage\CredentialStorage\CredentialStorage.pssproj", "{2D0DD060-7FB7-4019-ACCA-64897ED26E81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CredentialStorageCLR", "CredentialStorage\CredentialStorageCLR\CredentialStorageCLR.csproj", "{A1E5A88F-9D7A-485A-A801-9EA350E52F0F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCompare", "DataCompare", "{57503BAD-964E-4BAC-87F2-12BD4030565B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

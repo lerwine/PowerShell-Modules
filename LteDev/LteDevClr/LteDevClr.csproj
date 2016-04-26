@@ -67,6 +67,7 @@
     <Compile Include="TypeBrowser\TypeInfoDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="TypeBrowser\ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

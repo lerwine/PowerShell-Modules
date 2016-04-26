@@ -36,6 +36,7 @@
     <Compile Include="DecodeRegexReplaceHandler.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="LinqEmul.cs" />
+    <Compile Include="README.md" />
     <Compile Include="RegexReplaceHandler.cs" />
     <Compile Include="RegularExpressions.cs" />
     <Compile Include="ScriptRegexReplaceHandler.cs" />

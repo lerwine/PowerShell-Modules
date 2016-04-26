@@ -29,6 +29,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="PasswordStorage.ps1" />
+    <Compile Include="README.md" />
     <Compile Include="Script.ps1" />
     <Compile Include="CheckDiff.ps1" />
     <Compile Include="GenerateModuleAbout.ps1" />

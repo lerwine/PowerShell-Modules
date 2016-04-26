@@ -47,6 +47,7 @@
     <Compile Include="Erwine.Leonard.T.CertificateCryptography.psm1" />
     <Compile Include="CertificateCryptography.tests.ps1" />
     <Compile Include="Install.ps1" />
+    <Compile Include="README.md" />
     <Compile Include="Uninstall.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

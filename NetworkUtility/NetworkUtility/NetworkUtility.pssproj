@@ -32,6 +32,7 @@
     <Compile Include="Erwine.Leonard.T.NetworkUtility.psm1" />
     <Compile Include="NetworkUtility.tests.ps1" />
     <Compile Include="Class1.cs" />
+    <Compile Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

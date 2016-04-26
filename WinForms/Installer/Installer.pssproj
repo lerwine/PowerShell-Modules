@@ -29,6 +29,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Install.bat" />
+    <Compile Include="README.md" />
     <Compile Include="Uninstall.bat" />
     <Compile Include="WinForms.dll" />
     <Compile Include="WinForms.psd1" />
