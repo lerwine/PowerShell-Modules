@@ -1,5 +1,5 @@
-Miscellaneous Powershell Scripts Project
-========================================
+Miscellaneous Powershell Scripts
+================================
 
 Contributing
 ------------

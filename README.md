@@ -1,5 +1,5 @@
 Powershell-Modules
-=========================
+==================
 This project is a collection of various PowerShell modules, which I have been developing during personal studies and research.
 Please reference the appropriate version-named branch for versions which are deemed releasable.
 
