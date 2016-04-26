@@ -957,7 +957,7 @@ Function New-SoapEnvelope {
     [OutputType([System.Xml.XmlDocument])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [System.Xml.XmlElement[]]$Body,
+        [System.Xml.XmlElement[]]$Body
     )
     
     [Xml]$XmlDocument = @'
