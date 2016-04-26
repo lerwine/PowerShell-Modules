@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinForms", "WinForms", "{7FB70CDA-4CD6-422A-A62D-7E41613C3388}"
 EndProject
@@ -66,6 +66,8 @@ EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "CredentialStorage", "CredentialStorage\CredentialStorage\CredentialStorage.pssproj", "{2D0DD060-7FB7-4019-ACCA-64897ED26E81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CredentialStorageCLR", "CredentialStorage\CredentialStorageCLR\CredentialStorageCLR.csproj", "{A1E5A88F-9D7A-485A-A801-9EA350E52F0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCompare", "DataCompare", "{57503BAD-964E-4BAC-87F2-12BD4030565B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="IOUtilityCLR.DecodeRegexReplaceHandler">
-    <Position X="3.5" Y="2.25" Width="2.25" />
+    <Position X="4.75" Y="2.25" Width="2.25" />
     <Members>
       <Method Name="Evaluator" Hidden="true" />
     </Members>
@@ -11,7 +11,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="IOUtilityCLR.EncodeRegexReplaceHandler">
-    <Position X="6.5" Y="2.25" Width="2.25" />
+    <Position X="7.75" Y="2.25" Width="2.25" />
     <Members>
       <Method Name="Evaluator" Hidden="true" />
     </Members>
@@ -21,7 +21,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="IOUtilityCLR.RegexReplaceHandler">
-    <Position X="6.5" Y="0.5" Width="2" />
+    <Position X="7.75" Y="0.5" Width="2" />
     <Members>
       <Field Name="_regex" Hidden="true" />
       <Method Name="Evaluator" Hidden="true" />
@@ -33,18 +33,15 @@
       <FileName>RegexReplaceHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="IOUtilityCLR.RegularExpressions">
-    <Position X="0.5" Y="2.25" Width="2" />
-    <Members>
-      <Method Name="RegularExpressions" Hidden="true" />
-    </Members>
+  <Class Name="IOUtilityCLR.RegularExpressions" Collapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAEQACAAAAAAA=</HashCode>
       <FileName>RegularExpressions.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="IOUtilityCLR.ScriptRegexReplaceHandler">
-    <Position X="9.5" Y="2.25" Width="2.25" />
+    <Position X="10.75" Y="2.25" Width="2.25" />
     <Members>
       <Field Name="_scriptBlock" Hidden="true" />
       <Method Name="Evaluator" Hidden="true" />
@@ -54,22 +51,25 @@
       <FileName>ScriptRegexReplaceHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="IOUtilityCLR.StreamHelper">
-    <Position X="8.75" Y="4.25" Width="3" />
-    <Members>
-      <Field Name="_minBase64BlockSize" Hidden="true" />
-      <Method Name="_WriteLengthEncodedBytes" Hidden="true" />
-    </Members>
+  <Class Name="IOUtilityCLR.StreamHelper" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEABACAAAQAAAAAEAAAQAAAABBAAAAAAAACAAAAA=</HashCode>
       <FileName>StreamHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="IOUtilityCLR.TextHelper">
-    <Position X="0.5" Y="0.5" Width="2.5" />
+  <Class Name="IOUtilityCLR.TextHelper" Collapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
       <FileName>TextHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOUtilityCLR.MimeTypeDetector" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEIIAAAAEIAQAAAIAAAAABIAAAAAACAAABABQAAiA=</HashCode>
+      <FileName>MimeTypeDetector.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

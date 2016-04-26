@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace IOUtilityCLR
@@ -114,7 +115,7 @@ namespace IOUtilityCLR
                         patterns.Add(pattern);
                 }
             }
-            if (otherChars != null && !LinqEmul.Any<char>(otherChars))
+            if (otherChars != null && !otherChars.Any())
             {
                 Regex regex;
                 if (patterns.Count == 1)
