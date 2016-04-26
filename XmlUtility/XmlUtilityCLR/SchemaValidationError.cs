@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Schema;
 
-namespace IOUtilityCLR
+namespace XmlUtilityCLR
 {
     public class SchemaValidationError
     {
