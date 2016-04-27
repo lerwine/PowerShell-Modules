@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Schema;
 
-namespace IOUtilityCLR
+namespace XmlUtilityCLR
 {
     public class SchemaSetCollection : Collection<XmlSchemaSet>
     {

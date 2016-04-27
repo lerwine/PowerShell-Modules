@@ -28,8 +28,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Setup.bat" />
-    <Content Include="Install.bat" />
-    <Content Include="Uninstall.bat" />
     <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -41,16 +39,16 @@
     <Compile Include="RegularExpressions.cs" />
     <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="Setup.ps1" />
-    <Compile Include="Install.ps1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
     <Compile Include="IOUtility.tests.ps1" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
-    <Compile Include="Uninstall.ps1" />
-    <Compile Include="_setup\InstallationLocationInfo.cs" />
-    <Compile Include="_setup\InstallLocationSelectForm.cs" />
-    <Compile Include="_setup\InstallLocationSelectForm.Designer.cs" />
+    <Compile Include="_setup\ModuleManifest.cs" />
+    <Compile Include="_setup\NotificationForm.cs" />
+    <Compile Include="_setup\NotificationForm.Designer.cs" />
+    <Compile Include="_setup\SetupForm.cs" />
+    <Compile Include="_setup\SetupForm.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="_setup\" />

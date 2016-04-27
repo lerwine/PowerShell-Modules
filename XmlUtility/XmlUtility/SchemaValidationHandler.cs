@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Schema;
 
-namespace IOUtilityCLR
+namespace XmlUtilityCLR
 {
     public class SchemaValidationHandler
     {
