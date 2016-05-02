@@ -1,7 +1,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'Erwine.Leonard.T.LteDev.psm1'
+ModuleToProcess = 'Erwine.Leonard.T.LteDev.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.1.0.0'
@@ -22,7 +22,7 @@ Copyright = '(c) 2015 Leonard T. Erwine. All rights reserved.'
 Description = 'PowerShell Dev utility functions.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '4.0'
+PowerShellVersion = '2.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -31,10 +31,10 @@ PowerShellVersion = '4.0'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-DotNetFrameworkVersion = '4.5'
+DotNetFrameworkVersion = '2.0'
 
 # Minimum version of the common language runtime (CLR) required by this module
-CLRVersion = '4.5'
+CLRVersion = '2.0'
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''
@@ -58,7 +58,7 @@ CLRVersion = '4.5'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = 'Get-ClrSimpleName', 'Get-FieldUsage', 'Get-PropertyUsage', 'Get-ParameterUsage', 'Get-ConstructorUsage', 'Get-MethodUsage', 'Get-TypeUsage'
+FunctionsToExport = 'Get-ClrSimpleName', 'Get-FieldUsage', 'Get-PropertyUsage', 'Get-ParameterUsage', 'Get-ConstructorUsage', 'Get-MethodUsage', 'Get-TypeUsage', 'Out-TextBox'
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
