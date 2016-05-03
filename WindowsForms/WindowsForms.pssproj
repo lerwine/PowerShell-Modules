@@ -36,7 +36,6 @@
     <Compile Include="Uninstall.ps1" />
     <Compile Include="Erwine.Leonard.T.WindowsForms.psd1" />
     <Compile Include="Erwine.Leonard.T.WindowsForms.psm1" />
-    <Compile Include="WindowsForms.tests.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

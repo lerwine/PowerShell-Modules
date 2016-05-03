@@ -35,7 +35,6 @@
     <Compile Include="Install.ps1" />
     <Compile Include="Erwine.Leonard.T.LteDev.psd1" />
     <Compile Include="Erwine.Leonard.T.LteDev.psm1" />
-    <Compile Include="LteDev.tests.ps1" />
     <Compile Include="README.md" />
     <Compile Include="Uninstall.ps1" />
   </ItemGroup>

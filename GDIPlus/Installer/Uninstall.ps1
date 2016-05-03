@@ -1,4 +1,4 @@
-$ModuleBaseName = 'GDIPlus';
+$ModuleBaseName = 'Erwine.Leonard.T.GDIPlus';
 $ModuleInfo = $null;
 Try {
     Import-Module -Name:$ModuleBaseName;

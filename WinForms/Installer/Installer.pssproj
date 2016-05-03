@@ -28,11 +28,11 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="Erwine.Leonard.T.WinForms.dll" />
     <Compile Include="Install.bat" />
     <Compile Include="README.md" />
     <Compile Include="Uninstall.bat" />
-    <Compile Include="WinForms.dll" />
-    <Compile Include="WinForms.psd1" />
+    <Compile Include="Erwine.Leonard.T.WinForms.psd1" />
     <Compile Include="Uninstall.ps1" />
     <Compile Include="Install.ps1" />
   </ItemGroup>

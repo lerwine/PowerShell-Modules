@@ -34,7 +34,6 @@
     <Compile Include="Erwine.Leonard.T.XmlUtility.psm1" />
     <Compile Include="README.md" />
     <Compile Include="SerializationManager.cs" />
-    <Compile Include="XmlUtility.tests.ps1" />
     <Compile Include="XmlUtility.cs" />
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />

@@ -28,8 +28,8 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="GDIPlus.dll" />
-    <Compile Include="GDIPlus.psd1" />
+    <Compile Include="Erwine.Leonard.T.GDIPlus.dll" />
+    <Compile Include="Erwine.Leonard.T.GDIPlus.psd1" />
     <Compile Include="Install.bat" />
     <Compile Include="README.md" />
     <Compile Include="Uninstall.bat" />

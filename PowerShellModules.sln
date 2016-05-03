@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A19AF169-44DD-4737-82DD-AB83CF18B77A}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
+		PSModule.testsettings = PSModule.testsettings
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -117,6 +118,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C4
 		XmlUtility\Schemas\XMLSchema-instance.xsd = XmlUtility\Schemas\XMLSchema-instance.xsd
 		XmlUtility\Schemas\XmlSchema.xsd = XmlUtility\Schemas\XmlSchema.xsd
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{4BE857E7-98B4-436E-A623-2F0941ABCA3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextToSpeech", "TextToSpeech", "{3016C94D-A884-44AD-B0FD-0A7CD5C347CF}"
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "TextToSpeech", "TextToSpeech\TextToSpeech\TextToSpeech.pssproj", "{C206C8AC-A485-4919-BC3D-698A71CBE3EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeechCLR", "TextToSpeech\TextToSpeechCLR\TextToSpeechCLR.csproj", "{DE1E790E-3E0B-4F21-B859-E224719A4D88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -347,6 +356,36 @@ Global
 		{A1E5A88F-9D7A-485A-A801-9EA350E52F0F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1E5A88F-9D7A-485A-A801-9EA350E52F0F}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{A1E5A88F-9D7A-485A-A801-9EA350E52F0F}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -368,6 +407,8 @@ Global
 		{2D0DD060-7FB7-4019-ACCA-64897ED26E81} = {BCCB6DAD-6011-459F-9109-8FC23F343149}
 		{A1E5A88F-9D7A-485A-A801-9EA350E52F0F} = {BCCB6DAD-6011-459F-9109-8FC23F343149}
 		{48C415CD-E07B-4E0B-9087-A3A33F90CE73} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
+		{C206C8AC-A485-4919-BC3D-698A71CBE3EC} = {3016C94D-A884-44AD-B0FD-0A7CD5C347CF}
+		{DE1E790E-3E0B-4F21-B859-E224719A4D88} = {3016C94D-A884-44AD-B0FD-0A7CD5C347CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35

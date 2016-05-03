@@ -1,4 +1,4 @@
-$ModuleBaseName = 'GDIPlus';
+$ModuleBaseName = 'Erwine.Leonard.T.GDIPlus';
 
 $ModulePathRoots = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
 

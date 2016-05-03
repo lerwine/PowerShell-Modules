@@ -32,7 +32,6 @@
     <Compile Include="Erwine.Leonard.T.SPUtility.psm1" />
     <Compile Include="README.md" />
     <Compile Include="SharePointWebServices.ps1" />
-    <Compile Include="SPUtility.tests.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

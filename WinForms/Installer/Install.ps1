@@ -1,4 +1,4 @@
-$ModuleBaseName = 'WinForms';
+$ModuleBaseName = 'Erwine.Leonard.T.WinForms';
 
 $ModulePaths = $env:PSModulePath.Split([System.IO.Path]::PathSeparator);
 
