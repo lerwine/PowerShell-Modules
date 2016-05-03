@@ -44,7 +44,7 @@ Import-Module $args[0] -PassThru;
                     if (powershell.HadErrors)
                     {
                         foreach (ErrorRecord errorRecord in powershell.Streams.Error)
-                            testContext.WriteLine("Error: {0}", errorRecord);
+                            WriteErrorRecord(testContext, errorRecord);
                         Assert.IsFalse(powershell.HadErrors, "Multiple errors encountered: See test output for details.");
                     }
                     Assert.AreEqual(1, result.Count, "There was not exactly one item returned.");
@@ -62,6 +62,29 @@ Import-Module $args[0] -PassThru;
                     Assert.AreEqual(psModuleInfo.DotNetFrameworkVersion, new Version(4, 0), "Invalid .NET Framework version");
                 }
             }
+        }
+
+        private static void WriteErrorRecord(TestContext testContext, ErrorRecord errorRecord)
+        {
+            if (errorRecord.InvocationInfo != null)
+            {
+                if (!String.IsNullOrEmpty(errorRecord.InvocationInfo.ScriptName))
+                    testContext.WriteLine("Error in \"{0}\", line {1}, positon {2}:", errorRecord.InvocationInfo.ScriptName, errorRecord.InvocationInfo.ScriptLineNumber, errorRecord.InvocationInfo.OffsetInLine);
+                else
+                    testContext.WriteLine("Error on line {0}, positon {1}:", errorRecord.InvocationInfo.ScriptLineNumber, errorRecord.InvocationInfo.OffsetInLine);
+                if (!String.IsNullOrEmpty(errorRecord.InvocationInfo.Line))
+                    testContext.WriteLine("\tLine: \"{0}\"", errorRecord.InvocationInfo.Line);
+            }
+            else
+                testContext.WriteLine("Error:");
+            testContext.WriteLine("\tFullyQualifiedErrorId: {0}", errorRecord.FullyQualifiedErrorId);
+
+            if (errorRecord.ErrorDetails != null && !String.IsNullOrEmpty(errorRecord.ErrorDetails.Message))
+                testContext.WriteLine("\tDetails: {0}", errorRecord.ErrorDetails.Message);
+
+            if (errorRecord.Exception != null)
+                testContext.WriteLine(errorRecord.Exception.ToString());
+            testContext.WriteLine("");
         }
     }
 }
