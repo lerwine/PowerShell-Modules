@@ -16,8 +16,6 @@ namespace UnitTests
         public static void TestLoadModule(TestContext testContext, string moduleName, string relativeModulePath, string moduleExtension, params string[] additionalModules)
         {
             InitialSessionState iss = InitialSessionState.CreateDefault();
-            if (additionalModules != null && additionalModules.Length > 0)
-                iss.ImportPSModule(additionalModules);
             iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
             // this.TestContext;
             using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
@@ -28,9 +26,20 @@ namespace UnitTests
                     string modulePath = Path.GetFullPath(Path.Combine(@"..\..\..", relativeModulePath, moduleName + ".psd1"));
                     testContext.WriteLine("Path: {0}", modulePath);
                     powershell.Runspace = runspace;
-                    PowerShell ps = powershell.AddCommand("Import-Module");
-                    ps.AddParameter("Name", modulePath);
-                    ps.AddParameter("PassThru");
+                    
+                    PowerShell ps = powershell.AddScript(@"
+for ($i = 1; $i -lt $args.Count; $i++) {
+    Import-Module $args[$i];
+}
+Import-Module $args[0] -PassThru;
+");
+                    ps.AddArgument(modulePath);
+                    if (additionalModules != null && additionalModules.Length > 0)
+                    {
+                        foreach (string m in additionalModules)
+                            ps.AddArgument(m);
+                    }
+
                     Collection<PSObject> result = powershell.Invoke();
                     if (powershell.HadErrors)
                     {

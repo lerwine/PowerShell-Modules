@@ -68,7 +68,7 @@ namespace UnitTests
         [TestMethod]
         public void ImportCertificateCryptographyTestMethod()
         {
-            PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1", Path.GetFullPath(@"..\..\..\IOUtiity\IOUtility\Erwine.Leonard.T.IOUtility.psd1"));
+            PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1", Path.GetFullPath(@"..\..\..\IOUtility\IOUtility\Erwine.Leonard.T.IOUtility.psd1"));
         }
     }
 }

@@ -55,7 +55,7 @@ namespace TextToSpeechCLR
             }
         }
         private Collection<PositionAndValue<string>> _BookmarksReached = new Collection<PositionAndValue<string>>();
-        public ReadOnlyCollection<PositionAndValue<string>> BookmarksReached { get; private set; } }
+        public ReadOnlyCollection<PositionAndValue<string>> BookmarksReached { get; private set; }
         protected virtual void OnSpeakStarted(Prompt prompt)
         {
             throw new NotImplementedException();

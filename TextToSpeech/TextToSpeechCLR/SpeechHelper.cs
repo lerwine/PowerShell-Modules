@@ -17,13 +17,12 @@ namespace TextToSpeechCLR
     {
         public static VoiceInfo[] GetInstalledVoices(SpeechSynthesizer obj) { return GetInstalledVoices(obj, false); }
 
-        public static VoiceInfo[] GetInstalledVoices(PSObject obj, bool disabled) { return GetInstalledVoices(obj, disabled, null); }
+        public static VoiceInfo[] GetInstalledVoices(SpeechSynthesizer obj, bool disabled) { return GetInstalledVoices(obj, disabled, null); }
 
-        public static VoiceInfo[] GetInstalledVoices(PSObject obj, CultureInfo culture) { return GetInstalledVoices(obj, false, culture); }
+        public static VoiceInfo[] GetInstalledVoices(SpeechSynthesizer obj, CultureInfo culture) { return GetInstalledVoices(obj, false, culture); }
 
-        public static VoiceInfo[] GetInstalledVoices(PSObject obj, bool disabled, CultureInfo culture)
+        public static VoiceInfo[] GetInstalledVoices(SpeechSynthesizer speechSynthesizer, bool disabled, CultureInfo culture)
         {
-            SpeechSynthesizer speechSynthesizer = (obj.BaseObject is SpeechHelper) ? (obj.BaseObject as SpeechHelper)._speechSynthesizer : obj.BaseObject as SpeechSynthesizer;
             return (((culture == null) ? speechSynthesizer.GetInstalledVoices() : speechSynthesizer.GetInstalledVoices(culture))
                     .Where(v => v.Enabled != disabled).Select(v => v.VoiceInfo)).ToArray();
         }
