@@ -1,4 +1,4 @@
-Add-Type -Path (('SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
+Add-Type -Path (('LinqEmul.cs', 'SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'SerializationManager.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
 	-ReferencedAssemblies 'System.Management.Automation', 'System.Xml';
 
 Function New-XmlReaderSettings {
