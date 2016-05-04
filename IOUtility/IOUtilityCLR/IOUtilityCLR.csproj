@@ -53,6 +53,7 @@
     <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
+    <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

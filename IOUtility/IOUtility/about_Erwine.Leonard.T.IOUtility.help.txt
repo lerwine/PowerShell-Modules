@@ -44,6 +44,9 @@ EXPORTED COMMANDS
     New-MemoryStream
         Creates a stream whose backing store is memory.
 
+    New-WindowOwner
+        Create new window owner object.
+
     Out-IndentedText
         Indents text.
 

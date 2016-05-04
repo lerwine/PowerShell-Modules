@@ -1,7 +1,7 @@
 Add-Type -AssemblyName 'System.Windows.Forms' -ErrorAction Stop;
 Add-Type -Path (('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'ScriptRegexReplaceHandler.cs',
-        'StreamHelper.cs', 'TextHelper.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
-	-ReferencedAssemblies 'System.Management.Automation', 'System.Web.Services', 'System.Xml';
+        'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
+	-ReferencedAssemblies 'System.Management.Automation', 'System.Web.Services', 'System.Windows.Forms', 'System.Xml';
 $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
     Whitespace = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
     UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
@@ -271,6 +271,47 @@ Function Get-AppDataPath {
     }
 }
 
+Function New-WindowOwner {
+	<#
+		.SYNOPSIS
+			Create new window owner object.
+ 
+		.DESCRIPTION
+			Initializes a new object which implements System.Windows.Forms.IWin32Window, representing an owner window.
+
+		.OUTPUTS
+			System.Windows.Forms.IWin32Window. Path to selected file or folder.
+            
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.iwin32window.aspx
+            
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.diagnostics.process.getcurrentprocess.aspx
+            
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.diagnostics.process.mainwindowhandle.aspx
+            
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.windows.forms.control.handle.aspx
+	#>
+    [CmdletBinding()]
+    [OutputType([System.Windows.Forms.IWin32Window])]
+    Param(
+        [Parameter(Position = 0, ValueFromPipeline = $true)]
+        # The Win32 HWND handle of a window. If this is not specified, then the handle of the current process's main window is used.
+        [Alias('HWND', 'Handle')]
+        [System.IntPtr]$WindowHandle
+    )
+    
+    Process {
+        if ($PSBoundParameters.ContainsKey('WindowHandle')) {
+            New-Object -TypeName 'IOUtilityCLR.WindowOwner' -ArgumentList $WindowHandle;
+        } else {
+            New-Object -TypeName 'IOUtilityCLR.WindowOwner' -ArgumentList ([System.Diagnostics.Process]::GetCurrentProcess().MainWindowHandle);
+        }
+    }
+}
+
 Function Read-FileDialog {
 	<#
 		.SYNOPSIS
@@ -290,7 +331,10 @@ Function Read-FileDialog {
             
         .LINK
             https://msdn.microsoft.com/en-us/library/system.windows.forms.folderbrowserdialog.aspx
-	#>
+
+        .LINK
+            New-WindowOwner
+    #>
     [CmdletBinding()]
     Param(
         # Path to initially selected file or folder.
@@ -399,6 +443,9 @@ Function Read-FileDialog {
 		[Parameter(ParameterSetName = 'SaveFileDialog')]
 		[bool]$CreatePrompt,
         
+        # Owner window. If this is not specified, then the current process's main window will be the owner.
+        [System.Windows.Forms.IWin32Window]$Owner,
+        
         # Use the 'Open File' dialog. This is the default, if 'Save' or 'Folder' is not specified.
 		[Parameter(ParameterSetName = 'OpenFileDialog')]
         [switch]$Open,
@@ -450,8 +497,10 @@ Function Read-FileDialog {
                 if ($PSBoundParameters.ContainsKey('OverwritePrompt')) { $Dialog.OverwritePrompt = $OverwritePrompt }
             }
         }
+        
+        if (-not $PSBoundParameters.ContainsKey('Owner')) { $Owner = New-WindowOwner }
 
-        if ($Dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        if ($Dialog.ShowDialog($Owner) -eq [System.Windows.Forms.DialogResult]::OK) {
             switch ($PSCmdlet.ParameterSetName) {
                 'FolderBrowserDialog' {
                     $Dialog.SelectedPath | Write-Output;
@@ -1584,6 +1633,155 @@ Function Out-UnindentedText {
                     $InputString.Substring($Index) | Write-Output;
                 } else {
                     $InputString | Write-Output;
+                }
+            }
+        }
+    }
+}
+
+Function Compare-FileSystemInfo {
+	<#
+		.SYNOPSIS
+			Compares 2 filesystem items.
+ 
+		.DESCRIPTION
+			Compares 2 file system items by paths.
+        
+		.OUTPUTS
+			System.Management.Automation.PSObject. Comparison results.
+	#>
+	[CmdletBinding(DefaultParameterSetName = 'Optional')]
+	[OutputType([System.Management.Automation.PSObject])]
+	Param(
+        # Path used as a reference for comparison.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipelineByPropertyName = $true)]
+		[string]$ReferencePath,
+        
+        # Specifies the path that is compared to the reference path.
+		[Parameter(Mandatory = $true, Position = 1, ValueFromPipelineByPropertyName = $true)]
+        [string]$DifferencePath,
+        
+        # Indicates that the comparison should recurse into subdirectories.
+        [switch]$DoNotRecurse,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'ExcludeDifferent')]
+        #  Displays only the compared items that are equal.
+        [switch]$ExcludeDifferent,
+        
+        [Parameter(ParameterSetName = 'Optional')]
+        #  Displays compared items that are equal. By default, only reference and difference items that differ are displayed.
+        [switch]$IncludeEqual
+    )
+    
+    Process {
+        $Properties = @{
+            ReferencePath = $ReferencePath;
+            ReferenceInfo = $null;
+            DifferencePath = $DifferencePath;
+            DifferenceInfo = $null;
+            AreEqual = $false;
+            Message = '';
+            Type = [Microsoft.PowerShell.Commands.TestPathType]::Any;
+        };
+        
+        if ([System.IO.Directory]::Exists($ReferencePath)) {
+            $Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $ReferencePath;
+            $Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Container;
+            if ([System.IO.File]::Exists($DifferencePath)) {
+                $Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $DifferencePath;
+                $Properties['Message'] = 'Reference is a subdirectory, but difference path is a file.';
+            } else {
+                $Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $DifferencePath;
+                $Properties['AreEqual'] = $Properties['DifferenceInfo'].Exists;
+                if (-not $Properties['AreEqual']) {
+                    $Properties['Message'] = 'Difference subdirectory does not exist';
+                }
+            }
+        } else {
+            if ([System.IO.File]::Exists($ReferencePath)) {
+                $Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $ReferencePath;
+                $Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Leaf;
+                if ([System.IO.Directory]::Exists($DifferencePath)) {
+                    $Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $DifferencePath;
+                    $Properties['Message'] = 'Reference is a file, but difference path is a subdirectory.';
+                } else {
+                    $Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $DifferencePath;
+                    $Properties['AreEqual'] = $Properties['DifferenceInfo'].Exists;
+                    if (-not $Properties['AreEqual']) {
+                        $Properties['Message'] = 'Difference file does not exist';
+                    }
+                }
+            } else {
+                if ([System.IO.Directory]::Exists($DifferencePath)) {
+                    $Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Container;
+                    $Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $DifferencePath;
+                    $Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $ReferencePath;
+                    $Properties['Message'] = 'Reference subdirectory does not exist.';
+                } else {
+                    $Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $ReferencePath;
+                    $Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $DifferencePath;
+                    $Properties['AreEqual'] = -not $Properties['DifferenceInfo'].Exists;
+                    if ($Properties['AreEqual']) {
+                        $Properties['Message'] = 'Neither reference nor difference paths exist.';
+                    } else {
+                        $Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Container;
+                        $Properties['Message'] = 'Reference file does not exist.';
+                    }
+                }
+            }
+        }
+        
+        if ($Properties['Type'] -eq [Microsoft.PowerShell.Commands.TestPathType]::Leaf) {
+            if ($Properties['AreEqual']) {
+                [System.Management.Automation.PSObject[]]$Differences = @(Compare-Object -ReferenceObject (Get-Content $Properties['ReferenceInfo'].FullName) -DifferenceObject (Get-Content $Properties['DifferenceInfo'].FullName));
+                if ($Differences.Count -gt 0) {
+                    $Properties['AreEqual'] = $false;
+                    $Properties['Message'] = '{0} differences found.' -f $Differences.Count;
+                }
+            } else {
+                [System.Management.Automation.PSObject[]]$Differences = @();
+            }
+            $Properties.Add('Differences', $Differences);
+        }
+        
+        if ($Properties['AreEqual']) {
+            if ($IncludeEqual) {
+                $Properties['Message'] = 'Both paths are equal.';
+                (New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties) | Write-Output;
+            }
+        } else {
+            if (-not $ExcludeDifferent) {
+                (New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties) | Write-Output;
+            }
+        }
+        
+        if ($Properties['AreEqual'] -and $Properties['ReferenceInfo'] -is [System.IO.DirectoryInfo] -and $Properties['ReferenceInfo'].Exists -and -not $DoNotRecurse) {
+            $ReferenceContents = $Properties['ReferenceInfo'].GetFileSystemInfos();
+            $DifferenceContents = $Properties['DifferenceInfo'].GetFileSystemInfos();
+            $AllNames = @(($ReferenceContents + $DifferenceContents) | ForEach-Object { $_.Name.ToLower() } | Select-Object -Unique | Sort-Object);
+            $AllNames | ForEach-Object {
+                $Name = $_;
+                $r = $ReferenceContents | Where-Object { $_.Name -ieq $Name };
+                $d = $DifferenceContents | Where-Object { $_.Name -ieq $Name };
+                if ($d -eq $null) {
+                    $d = [System.IO.Path]::Combine($Properties['DifferenceInfo'].FullName, $r.Name);
+                    $r = $r.FullName;
+                } else {
+                    if ($r -eq $null) {
+                        $r = [System.IO.Path]::Combine($Properties['ReferenceInfo'].FullName, $d.Name);
+                    } else {
+                        $r = $r.FullName;
+                    }
+                    $d = $d.FullName;
+                }
+                if ($IncludeEqual) {
+                    Compare-FileSystemInfo -ReferencePath $r -DifferencePath $d -IncludeEqual | Write-Output;
+                } else {
+                    if ($ExcludeDifferent) {
+                        Compare-FileSystemInfo -ReferencePath $r -DifferencePath $d -ExcludeDifferent | Write-Output;
+                    } else {
+                        Compare-FileSystemInfo -ReferencePath $r -DifferencePath $d | Write-Output;
+                    }
                 }
             }
         }
