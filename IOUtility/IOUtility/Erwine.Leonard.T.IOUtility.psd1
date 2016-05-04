@@ -1,7 +1,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'Erwine.Leonard.T.IOUtility.psm1'
+ModuleToProcess = 'Erwine.Leonard.T.IOUtility.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.3'
@@ -22,7 +22,7 @@ Copyright = '(c) 2016 Leonard T. Erwine. All rights reserved.'
 Description = 'Utility functions to manage filesystem and stream IO.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '4.0'
+PowerShellVersion = '2.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -31,10 +31,10 @@ PowerShellVersion = '4.0'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-DotNetFrameworkVersion = '4.0'
+DotNetFrameworkVersion = '2.0'
 
 # Minimum version of the common language runtime (CLR) required by this module
-CLRVersion = '4.0'
+CLRVersion = '2.0'
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''
@@ -59,10 +59,10 @@ CLRVersion = '4.0'
 
 # Functions to export from this module
 FunctionsToExport = @( 'Get-SpecialFolderNames', 'Get-SpecialFolder', 'ConvertTo-SafeFileName', 'ConvertFrom-SafeFileName', 'Get-AppDataPath',
-	'Read-FileDialog', 'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream', 'Write-IntegerToStream',
-	'Write-LongIntegerToStream', 'Read-LengthEncodedBytes', 'Write-LengthEncodedBytes', 'ConvertTo-Base64String', 'ConvertFrom-Base64String',
-    'Get-TextEncoding', 'New-MemoryStream', 'Test-IsNullOrWhitespace', 'Split-DelimitedText', 'Out-NormalizedText', 'Out-IndentedText',
-    'Get-IndentLevel', 'Out-UnindentedText' )
+	'New-WindowOwner', 'Read-FileDialog', 'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream',
+	'Write-IntegerToStream', 'Write-LongIntegerToStream', 'Read-LengthEncodedBytes', 'Write-LengthEncodedBytes', 'ConvertTo-Base64String',
+    'ConvertFrom-Base64String', 'Get-TextEncoding', 'New-MemoryStream', 'Test-IsNullOrWhitespace', 'Split-DelimitedText', 'Out-NormalizedText',
+    'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText', 'Compare-FileSystemInfo' )
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
@@ -78,7 +78,7 @@ AliasesToExport = '*'
 
 # List of all files packaged with this module
 FileList = @('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'SchemaSetCollection.cs',
-	'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs')
+	'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess
 # PrivateData = ''
