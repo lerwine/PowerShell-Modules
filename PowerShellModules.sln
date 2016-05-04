@@ -127,6 +127,13 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "TextToSpeech", "TextToSpeec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeechCLR", "TextToSpeech\TextToSpeechCLR\TextToSpeechCLR.csproj", "{DE1E790E-3E0B-4F21-B859-E224719A4D88}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HelpInfo", "HelpInfo", "{D483E8B0-4B28-4D3E-BB8B-0C86AEB3F4EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SPUtility", "SPUtility", "{27BD1997-71C3-489B-B38A-7029BE850AD8}"
+	ProjectSection(SolutionItems) = preProject
+		HelpInfo\SPUtility\Default.html = HelpInfo\SPUtility\Default.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -409,6 +416,7 @@ Global
 		{48C415CD-E07B-4E0B-9087-A3A33F90CE73} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
 		{C206C8AC-A485-4919-BC3D-698A71CBE3EC} = {3016C94D-A884-44AD-B0FD-0A7CD5C347CF}
 		{DE1E790E-3E0B-4F21-B859-E224719A4D88} = {3016C94D-A884-44AD-B0FD-0A7CD5C347CF}
+		{27BD1997-71C3-489B-B38A-7029BE850AD8} = {D483E8B0-4B28-4D3E-BB8B-0C86AEB3F4EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35

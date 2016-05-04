@@ -28,9 +28,12 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="CrawlWebs.ps1" />
     <Compile Include="Erwine.Leonard.T.SPUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.SPUtility.psm1" />
+    <Compile Include="GetWsdl.ps1" />
     <Compile Include="README.md" />
+    <Compile Include="ServiceInstanceManager.ps1" />
     <Compile Include="SharePointWebServices.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

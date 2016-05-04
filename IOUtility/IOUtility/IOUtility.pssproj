@@ -41,7 +41,6 @@
     <Compile Include="Setup.ps1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
-    <Compile Include="IOUtility.tests.ps1" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
