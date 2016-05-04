@@ -162,6 +162,7 @@ Function New-WebRequest {
                     }
                 }
             }
+            $WebRequest | Write-Output;
         }
     }
 }
@@ -385,6 +386,7 @@ Function Write-FormUrlEncoded2 {
         
         [Parameter(Mandatory = $true, ParameterSetName = 'Hashtable_WebRequest')]
         [Parameter(Mandatory = $true, ParameterSetName = 'KeyValue_WebRequest')]
+        [Alias('Request')]
         [System.Net.WebRequest]$WebRequest
 	)
 
@@ -550,6 +552,7 @@ Function Write-XmlData {
         
         [Parameter(Mandatory = $true, ParameterSetName = 'WebRequestEncoding')]
         [Parameter(Mandatory = $true, ParameterSetName = 'WebRequestContentType')]
+        [Alias('Request')]
         [System.Net.WebRequest]$WebRequest,
         
         [Parameter(ParameterSetName = 'String')]
@@ -637,6 +640,7 @@ Function Initialize-WebRequestPostXml {
     [OutputType([System.Management.Automation.PSObject], ParameterSetName = 'GetResponse')]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [Alias('Request')]
         [System.Net.WebRequest]$WebRequest,
         
         [Parameter(Mandatory = $true)]
@@ -696,10 +700,44 @@ Function Get-WebResponse {
     [OutputType([System.Management.Automation.PSObject])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [Alias('Request')]
         [System.Net.WebRequest]$WebRequest,
         
         [bool]$AllowRedirect
     )
+    
+    Begin {
+        $SuccessCodes = @(
+            [System.Net.HttpStatusCode]::Continue,
+            [System.Net.HttpStatusCode]::SwitchingProtocols,
+            [System.Net.HttpStatusCode]::OK,
+            [System.Net.HttpStatusCode]::Created,
+            [System.Net.HttpStatusCode]::Accepted,
+            [System.Net.HttpStatusCode]::PartialContent,
+            [System.Net.HttpStatusCode]::MultipleChoices,
+            [System.Net.HttpStatusCode]::MovedPermanently,
+            [System.Net.HttpStatusCode]::Moved,
+            [System.Net.HttpStatusCode]::Found,
+            [System.Net.HttpStatusCode]::Redirect,
+            [System.Net.HttpStatusCode]::NotModified,
+            [System.Net.HttpStatusCode]::TemporaryRedirect,
+            [System.Net.HttpStatusCode]::RedirectKeepVerb,
+            [System.Net.FtpStatusCode]::OpeningData,
+            [System.Net.FtpStatusCode]::CommandOK,
+            [System.Net.FtpStatusCode]::DirectoryStatus,
+            [System.Net.FtpStatusCode]::FileStatus,
+            [System.Net.FtpStatusCode]::SystemType,
+            [System.Net.FtpStatusCode]::SendUserCommand,
+            [System.Net.FtpStatusCode]::ClosingControl,
+            [System.Net.FtpStatusCode]::ClosingData,
+            [System.Net.FtpStatusCode]::EnteringPassive,
+            [System.Net.FtpStatusCode]::LoggedInProceed,
+            [System.Net.FtpStatusCode]::FileActionOK,
+            [System.Net.FtpStatusCode]::PathnameCreated,
+            [System.Net.FtpStatusCode]::SendPasswordCommand,
+            [System.Net.FtpStatusCode]::FileCommandPending
+        );
+    }
     
     Process {
         if ($PSBoundParameters.ContainsKey('AllowRedirect')) { $WebRequest.AllowRedirect = $AllowRedirect }
@@ -790,9 +828,7 @@ Function Get-WebResponse {
                 }
             }
         }
-        New-Object -TypeName 'System.Management.Automation.PSObject' -Parameter $Response;
-        if ($PSBoundParameters.ContainsKey('AllowRedirect')) { $WebRequest.AllowRedirect = $AllowRedirect }
-        $WebRequest.GetResponse() | Write-Output;
+        New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Response;
     }
 }
 

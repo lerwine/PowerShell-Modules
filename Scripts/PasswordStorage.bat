@@ -1,12 +1,6 @@
 @ECHO OFF
 SET BatchPath=%~dp0
 
-pushd
-
 cd "%BatchPath%"
 
-powershell -STA -ExecutionPolicy Bypass -File PasswordStorage.ps1
-
-popd
-
-pause
+powershell -STA -WindowStyle Hidden -ExecutionPolicy Bypass -File PasswordStorage.ps1
