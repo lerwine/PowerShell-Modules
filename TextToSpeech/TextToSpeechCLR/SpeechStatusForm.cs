@@ -54,56 +54,68 @@ namespace TextToSpeechCLR
                 }
             }
         }
-        private Collection<PositionAndValue<string>> _BookmarksReached = new Collection<PositionAndValue<string>>();
-        public ReadOnlyCollection<PositionAndValue<string>> BookmarksReached { get; private set; }
+        private long _eventIndex = 0;
+        private Collection<IEventRecord> _eventLog = new Collection<IEventRecord>();
+        public ReadOnlyCollection<IEventRecord> EventLog { get; private set; }
+
+        public SpeechStatusForm()
+        {
+            this.EventLog = new ReadOnlyCollection<IEventRecord>(this._eventLog);
+            InitializeComponent();
+        }
+
         protected virtual void OnSpeakStarted(Prompt prompt)
         {
-            throw new NotImplementedException();
+            lock (this._eventLog)
+                this._eventLog.Add(new MilestoneEvent(this._eventIndex++, "Speak Started"));
         }
 
         protected virtual void OnSpeakCompleted(Prompt prompt)
         {
-            throw new NotImplementedException();
+            lock (this._eventLog)
+                this._eventLog.Add(new MilestoneEvent(this._eventIndex++, "Speak Completed"));
         }
 
         protected virtual void OnPromptCanceled(Prompt prompt)
         {
-            throw new NotImplementedException();
+            lock (this._eventLog)
+                this._eventLog.Add(new MilestoneEvent(this._eventIndex++, "Prompt Canceled"));
+
         }
 
         protected virtual void OnPromptError(Exception error, Prompt prompt)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnVoiceChange(VoiceInfo voice)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnStateChanged(SynthesizerState state, SynthesizerState previousState)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnBookmarkReached(string bookmark, TimeSpan audioPosition)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnSpeakProgress(string text, int characterPosition, int characterCount, TimeSpan audioPosition)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnPhonemeReached(string phoneme, SynthesizerEmphasis emphasis, TimeSpan audioPosition, TimeSpan duration, string nextPhoneme)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnVisemeReached(int viseme, SynthesizerEmphasis emphasis, TimeSpan audioPosition, TimeSpan duration, int nextViseme)
         {
-            throw new NotImplementedException();
+
         }
 
         protected virtual void OnPromptEvent(PromptEventArgs args)
@@ -113,6 +125,11 @@ namespace TextToSpeechCLR
 
             if (args.Error != null)
                 this.OnPromptError(args.Error, args.Prompt);
+        }
+
+        private void SpeechStatusForm_Shown(object sender, EventArgs e)
+        {
+
         }
 
         private void SpeechSynthesizer_VoiceChange(object sender, VoiceChangeEventArgs e)
@@ -162,14 +179,49 @@ namespace TextToSpeechCLR
             this.OnBookmarkReached(e.Bookmark, e.AudioPosition);
         }
 
-        public SpeechStatusForm()
-        {
-            InitializeComponent();
-        }
-
         private void backButton_Click(object sender, EventArgs e)
         {
 
+
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pauseButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void resumeButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SpeechStatusForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void SpeechStatusForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
+
+        private void deleteQueueEntryButton_Click(object sender, EventArgs e)
+        {
 
         }
     }

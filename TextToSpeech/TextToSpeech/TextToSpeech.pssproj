@@ -32,6 +32,10 @@
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.TextToSpeech.psd1" />
     <Compile Include="Erwine.Leonard.T.TextToSpeech.psm1" />
+    <Compile Include="speaktest2.ps1" />
+    <Compile Include="SpeakText.ps1" />
+    <Compile Include="Test.ps1" />
+    <Compile Include="TextToAudio.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

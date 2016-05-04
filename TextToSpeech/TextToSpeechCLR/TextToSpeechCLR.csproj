@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="IEventRecord.cs" />
     <Compile Include="IPositionalEventRecord.cs" />
+    <Compile Include="MilestoneEvent.cs" />
     <Compile Include="PositionAndValue.cs" />
     <Compile Include="SpeechHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
