@@ -7,6 +7,7 @@ if ((Get-PSSnapin 'Microsoft.SharePoint.PowerShell') -eq $null) {
     }
 }
 
+$Script:DefaultSiteCollectionUrl = $MyInvocation.MyCommand.Module.PrivateData.MySitesUrl;
 $Script:MySitesUrl = $MyInvocation.MyCommand.Module.PrivateData.MySitesUrl;
 
 function Get-Function {
