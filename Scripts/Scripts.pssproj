@@ -29,6 +29,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="CreateFileMoveMap.ps1" />
+    <Compile Include="PasswordStorage.bat" />
     <Compile Include="PasswordStorage.ps1" />
     <Compile Include="README.md" />
     <Compile Include="Script.ps1" />
