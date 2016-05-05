@@ -60,47 +60,51 @@ namespace TextToSpeechCLR
 
         public SpeechStatusForm()
         {
-            this.EventLog = new ReadOnlyCollection<IEventRecord>(this._eventLog);
+            EventLog = new ReadOnlyCollection<IEventRecord>(_eventLog);
             InitializeComponent();
         }
 
         protected virtual void OnSpeakStarted(Prompt prompt)
         {
-            lock (this._eventLog)
-                this._eventLog.Add(new MilestoneEvent(this._eventIndex++, "Speak Started"));
+            lock (_eventLog)
+                _eventLog.Add(new MilestoneEvent(_eventIndex++, "Speak Started"));
         }
 
         protected virtual void OnSpeakCompleted(Prompt prompt)
         {
-            lock (this._eventLog)
-                this._eventLog.Add(new MilestoneEvent(this._eventIndex++, "Speak Completed"));
+            lock (_eventLog)
+                _eventLog.Add(new MilestoneEvent(_eventIndex++, "Speak Completed"));
         }
 
         protected virtual void OnPromptCanceled(Prompt prompt)
         {
-            lock (this._eventLog)
-                this._eventLog.Add(new MilestoneEvent(this._eventIndex++, "Prompt Canceled"));
+            lock (_eventLog)
+                _eventLog.Add(new MilestoneEvent(_eventIndex++, "Prompt Canceled"));
 
         }
 
         protected virtual void OnPromptError(Exception error, Prompt prompt)
         {
-
+            lock (_eventLog)
+                _eventLog.Add(new ErrorEvent(_eventIndex++, error));
         }
 
         protected virtual void OnVoiceChange(VoiceInfo voice)
         {
-
+            lock (_eventLog)
+                _eventLog.Add(new ChangeEvent<VoiceInfo>(_eventIndex++, voice, String.Format("Voice change: {0}", voice.Name)));
         }
 
         protected virtual void OnStateChanged(SynthesizerState state, SynthesizerState previousState)
         {
-
+            lock (_eventLog)
+                _eventLog.Add(new ChangeEvent<SynthesizerState>(_eventIndex++, state, String.Format("State change: {0}", state.ToString("F"))));
         }
 
         protected virtual void OnBookmarkReached(string bookmark, TimeSpan audioPosition)
         {
-
+            lock (_eventLog)
+                _eventLog.Add(new PositionAndValue<string>(audioPosition, _eventIndex++, String.Format("Bookmark Reached: {0}", bookmark), bookmark));
         }
 
         protected virtual void OnSpeakProgress(string text, int characterPosition, int characterCount, TimeSpan audioPosition)

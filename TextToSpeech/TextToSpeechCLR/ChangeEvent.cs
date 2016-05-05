@@ -1,25 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Speech.Synthesis;
 
 namespace TextToSpeechCLR
 {
-    public struct MilestoneEvent : IEventRecord
+    public struct ChangeEvent<T> : IEventRecord
     {
         private long _eventOrder;
         private string _message;
+        private T _value;
+
+        public ChangeEvent(long eventOrder, T value, string message)
+        {
+            _eventOrder = eventOrder;
+            _value = value;
+            _message = message ?? "";
+        }
 
         public long EventOrder { get { return _eventOrder; } }
 
         public string Message { get { return _message; } }
 
-        public MilestoneEvent(long eventOrder, string message)
-        {
-            _eventOrder = eventOrder;
-            _message = message ?? "";
-        }
+        public T Value { get { return _value; } }
 
         public int CompareTo(IEventRecord other)
         {

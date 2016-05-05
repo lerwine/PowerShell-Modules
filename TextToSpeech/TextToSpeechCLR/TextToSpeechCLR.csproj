@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeEvent.cs" />
+    <Compile Include="ErrorEvent.cs" />
     <Compile Include="IEventRecord.cs" />
     <Compile Include="IPositionalEventRecord.cs" />
     <Compile Include="MilestoneEvent.cs" />

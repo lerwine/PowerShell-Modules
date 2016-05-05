@@ -6,19 +6,32 @@ using System.Threading.Tasks;
 
 namespace TextToSpeechCLR
 {
-    public struct MilestoneEvent : IEventRecord
+    public struct ErrorEvent : IEventRecord
     {
         private long _eventOrder;
         private string _message;
+        Exception _error;
 
         public long EventOrder { get { return _eventOrder; } }
 
         public string Message { get { return _message; } }
 
-        public MilestoneEvent(long eventOrder, string message)
+        public Exception Error { get { return _error; } }
+
+        public ErrorEvent(long eventOrder, string message)
         {
             _eventOrder = eventOrder;
             _message = message ?? "";
+            _error = null;
+        }
+
+        public ErrorEvent(long eventOrder, Exception error)
+        {
+            if (error == null)
+                throw new ArgumentNullException("error");
+            _eventOrder = eventOrder;
+            _message = error.Message ?? "";
+            _error = error;
         }
 
         public int CompareTo(IEventRecord other)
@@ -43,7 +56,10 @@ namespace TextToSpeechCLR
 
         public override string ToString()
         {
-            return String.Format("({0}): {1}", _eventOrder, _message);
+            if (_error == null)
+                return String.Format("Error ({0}): {1}", _eventOrder, _message);
+
+            return String.Format("{0} ({1}): {2}", _error.GetType().FullName, _eventOrder, _message);
         }
     }
 }
