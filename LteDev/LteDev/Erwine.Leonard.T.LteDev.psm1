@@ -216,7 +216,10 @@ Function Get-ParameterUsage {
 		[switch]$IsInitVars,
         
 		[Parameter(Mandatory = $false)]
-		[switch]$NonOptional
+		[switch]$NonOptional,
+        
+		[Parameter(Mandatory = $false)]
+		[switch]$IncludeType
     )
     Process {
         $Parameters = @($Method.GetParameters());
@@ -230,7 +233,11 @@ Function Get-ParameterUsage {
                     '[{0}]${1} = $value{2}' -f ($Parameters[$i].ParameterType | Get-ClrSimpleName), $Parameters[$i].Name, $i;
                 }
             } else {
-                ($Parameters | ForEach-Object { '$' + $_.Name  }) -join ', ';
+                if ($IncludeType) {
+                    ($Parameters | ForEach-Object { '[{0}]${1}' -f ($_.ParameterType | Get-ClrSimpleName), $_.Name  }) -join ', ';
+                } else {
+                    ($Parameters | ForEach-Object { '$' + $_.Name  }) -join ', ';
+                }
             }
         } else {
             if (-not $IsInitVars) { '' };
@@ -247,11 +254,11 @@ Function Get-ConstructorUsage {
     )
     
     Process {
-        $ConstructorInfo.ToString();
-        Get-ParameterUsage -Method $ConstructorInfo -IsInitVars | Out-IndentedText -IndentText $Script:IndentText;
         $ArgList = Get-ParameterUsage -Method $ConstructorInfo;
         $FullName = $ConstructorInfo.ReflectedType | Get-ClrSimpleName;
         $SimpleName = $ConstructorInfo.ReflectedType | Get-ClrSimpleName -NameOnly;
+        '{0}({1});' -f $SimpleName, ((Get-ParameterUsage -Method $ConstructorInfo -IncludeType) -join ', ');
+        Get-ParameterUsage -Method $ConstructorInfo -IsInitVars | Out-IndentedText -IndentText $Script:IndentText;
         if ($ArgList.Length -eq 0) {
             '{0}${1} = New-Object -TypeName ''{2}''' -f $Script:IndentText, $SimpleName, $FullName;
         } else {
@@ -277,9 +284,9 @@ Function Get-MethodUsage {
     
     Process {
         if ($IncludeSpecialNamed -or -not $MethodInfo.IsSpecialName) {
-            '{0}: {1}' -f $MethodInfo.Name, $MethodInfo.ToString();
-            Get-ParameterUsage -Method $MethodInfo -IsInitVars | Out-IndentedText -IndentText $Script:IndentText;
             $ArgList = Get-ParameterUsage -Method $MethodInfo;
+            '{0}: {1} {0}({2});' -f $MethodInfo.Name, ($MethodInfo.ReturnType | Get-ClrSimpleName), ((Get-ParameterUsage -Method $MethodInfo -IncludeType) -join ', ');
+            Get-ParameterUsage -Method $MethodInfo -IsInitVars | Out-IndentedText -IndentText $Script:IndentText;
             $Pre = '';
             if ($MethodInfo.ReturnType -ne [System.Void]) { $Pre = '[{0}]${1} = ' -f ($MethodInfo.ReturnType | Get-ClrSimpleName), ($MethodInfo.ReturnType | Get-ClrSimpleName -NameOnly) }
             if ($MethodInfo.IsStatic) {
@@ -420,45 +427,45 @@ Function Get-TypeUsage {
                     $Script:IndentText + 'Inherits From:';
                     for ($t = $InputType.BaseType; $t.BaseType -ne $null; $t = $t.BaseType) { '{0}{0}$obj -is [{1}]' -f $Script:IndentText, ($t | Get-ClrSimpleName) };
                 }
-                $Interfaces = $InputType.GetInterfaces();
-                if ($Interfaces.Length -gt 0) {
+                $InterfaceArray = $InputType.GetInterfaces();
+                if ($InterfaceArray.Length -gt 0) {
                     $Script:IndentText + 'Implements:';
-                    $Interfaces | Get-ClrSimpleName | Foreach-Object { '{0}{0}$obj -is [{1}]' -f $Script:IndentText, $_ } | Out-IndentedText -IndentText $Script:IndentText;
+                    $InterfaceArray | Get-ClrSimpleName | Foreach-Object { '{0}{0}$obj -is [{1}]' -f $Script:IndentText, $_ } | Out-IndentedText -IndentText $Script:IndentText;
                 }
             }
             if ($Options.Events) {
-                $Events = @($InputType.GetEvents($BindingFlags) | Sort-Object -Property 'Name');
-                if ($Events.Count -gt 0) {
+                $EventArray = @($InputType.GetEvents($BindingFlags) | Sort-Object -Property 'Name');
+                if ($EventArray.Count -gt 0) {
                     $Script:IndentText + 'Events:';
-                    $Events | Get-EventUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
+                    $EventArray | Get-EventUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
                 }
             }
             if ($Options.Fields) {
-                $Fields = @($InputType.GetFields($BindingFlags) | Sort-Object -Property 'Name');
-                if ($Fields.Count -gt 0) {
+                $FieldArray = @($InputType.GetFields($BindingFlags) | Sort-Object -Property 'Name');
+                if ($FieldArray.Count -gt 0) {
                     $Script:IndentText + 'Fields:';
-                    $Fields | Get-FieldUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
+                    $FieldArray | Get-FieldUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
                 }
             }
             if ($Options.Properties) {
-                $Properties = @($InputType.GetProperties($BindingFlags) | Sort-Object -Property 'Name');
-                if ($Properties.Count -gt 0) {
+                $PropertyArray = @($InputType.GetProperties($BindingFlags) | Sort-Object -Property 'Name');
+                if ($PropertyArray.Count -gt 0) {
                     $Script:IndentText + 'Properties:';
-                    $Properties | Get-PropertyUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
+                    $PropertyArray | Get-PropertyUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
                 }
             }
             if ($Options.Constructors -and -not ($InputType.IsAbstract -or $InputType.IsInterface)) {
-                $Constructors = $InputType.GetConstructors();
-                if ($Constructors.Count -gt 0) {
+                $ConstructorArray = $InputType.GetConstructors();
+                if ($ConstructorArray.Count -gt 0) {
                     $Script:IndentText + 'Constructors:';
-                    $Constructors | Get-ConstructorUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
+                    $ConstructorArray | Get-ConstructorUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
                 }
             }
             if ($Options.Methods) {
-                $Methods = $InputType.GetMethods($BindingFlags) | Where-Object { -not $_.IsSpecialName } | Group-Object -Property 'Name' | Sort-Object -Property 'Name';
-                if ($Methods.Count -gt 0) {
+                $MethodArray = $InputType.GetMethods($BindingFlags) | Where-Object { -not $_.IsSpecialName } | Group-Object -Property 'Name' | Sort-Object -Property 'Name';
+                if ($MethodArray.Count -gt 0) {
                     $Script:IndentText + 'Methods:';
-                    foreach ($GroupInfo in $Methods) {
+                    foreach ($GroupInfo in $MethodArray) {
                         if ($GroupInfo.Group.Count -eq 1) {
                             $GroupInfo.Group[0] | Get-MethodUsage | Out-IndentedText -IndentText $Script:IndentText -Level 2;
                         } else {
