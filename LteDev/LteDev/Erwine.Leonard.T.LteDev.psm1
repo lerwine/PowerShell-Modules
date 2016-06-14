@@ -471,3 +471,243 @@ Function Get-TypeUsage {
         }
 	}
 }
+
+Function New-HelpItemsDocument {
+	<#
+		.SYNOPSIS
+			Create new XML Help document
+ 
+		.DESCRIPTION
+			Generates empty MAML help XML document.
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Xml.XmlDocument])]
+	Param()
+	
+	$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+	$XmlDocument.AppendChild($XmlDocument.CreateElement('helpItems', 'http://msh')).Attributes.Append('schema').Value = 'maml';
+	$XmlDocument | Write-Output;
+}
+
+Function Assert-HelpItemsDocument {
+	[CmdletBinding()]
+	[OutputType([System.Xml.XmlDocument])]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_.DocumentElement -ne $null -and $_.DocumentElement.LocalName -eq 'helpItems' -and $_.DocumentElement.NamespaceURI -eq 'http://msh' })]
+		[System.Xml.XmlDocument]$XmlDocument
+	)
+	
+	Process {
+		if ($XmlDocument.DocumentElement -ne $null -and $XmlDocument.DocumentElement.LocalName -eq 'helpItems' -and $XmlDocument.
+	}
+	$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+	$XmlDocument.AppendChild($XmlDocument.CreateElement('helpItems', 'http://msh')).Attributes.Append('schema').Value = 'maml';
+	$XmlDocument | Write-Output;
+}
+
+Function Add-CommandNode {
+	<#
+		.SYNOPSIS
+			Add command element
+ 
+		.DESCRIPTION
+			Adds commmand element to MAML help file
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Xml.XmlElement])]
+	Param(
+		# Command object used to generate MAML xml
+		[Parameter(Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_ -is [System.Management.Automation.CmdletInfo] -or $_ -is [System.Management.Automation.FunctionInfo] })]
+		[System.Management.Automation.CommandInfo]$CommandInfo,
+		
+		# Command object used to generate MAML xml
+		[Parameter(Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_.DocumentElement -ne $null -and $_.DocumentElement.LocalName -eq 'helpItems' -and $_.DocumentElement.NamespaceURI -eq 'http://msh' })]
+		[System.Xml.XmlDocument]$HelpItems
+	)
+	
+	Begin {
+		$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+		$XmlDocument.LoadXml(@'
+<helpItems xmlns="http://msh" schema="maml" />
+'@);
+#<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+#	xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" />
+	}
+
+	Process {
+		$XmlElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement('command', 'command', 'http://schemas.microsoft.com/maml/dev/command/2004/10'));
+		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/2004/10';
+		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/dev/2004/10';
+		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'MSHelp', 'http://www.w3.org/2000/xmlns/')).Value = 'http://msdn.microsoft.com/mshelp';
+}
+
+Function Convert-CommandToMamlHelp {
+	<#
+		.SYNOPSIS
+			Get MAML help for Cmdlet or Function
+ 
+		.DESCRIPTION
+			Generates MAML help XML from a System.Management.Automation.CommandInfo object.
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Xml.XmlDocument])]
+	Param(
+		# Command object used to generate MAML xml
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_ -is [System.Management.Automation.CmdletInfo] -or $_ -is [System.Management.Automation.FunctionInfo] })]
+		[System.Management.Automation.CommandInfo]$CommandInfo
+	)
+	
+	Begin {
+		$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+		$XmlDocument.LoadXml(@'
+<helpItems xmlns="http://msh" schema="maml" />
+'@);
+#<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+#	xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" />
+	}
+
+	Process {
+		$XmlElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement('command', 'command', 'http://schemas.microsoft.com/maml/dev/command/2004/10'));
+		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/2004/10';
+		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/dev/2004/10';
+		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'MSHelp', 'http://www.w3.org/2000/xmlns/')).Value = 'http://msdn.microsoft.com/mshelp';
+		if ($CommandInfo -is [System.Management.Automation.FunctionInfo]) {
+			# Boolean CmdletBinding
+			# System.String Description
+			# System.Management.Automation.ScriptBlock ScriptBlock
+		} else {
+			# System.Type ImplementingType
+			# System.Management.Automation.PSSnapInInfo PSSnapIn
+
+		}
+		# System.Management.Automation.CommandTypes CommandType
+		# System.String DefaultParameterSet
+		# System.String Definition
+		# System.String HelpFile
+		# System.Management.Automation.PSModuleInfo Module
+		# System.String ModuleName
+		# System.String Name
+		# System.String Noun
+		# System.Management.Automation.ScopedItemOptions Options
+		# System.Collections.ObjectModel.ReadOnlyCollection`1[System.Management.Automation.PSTypeName] OutputType
+		# System.Collections.Generic.Dictionary`2[System.String,System.Management.Automation.ParameterMetadata] Parameters
+		# System.Collections.ObjectModel.ReadOnlyCollection`1[System.Management.Automation.CommandParameterSetInfo] ParameterSets
+		# System.Management.Automation.RemotingCapability RemotingCapability
+		# System.String Source
+		# System.String Verb
+		# System.Version Version
+		# System.Management.Automation.SessionStateEntryVisibility Visibility
+		<#
+    xe ($command + "command") -maml $maml -command $command -dev $dev {
+            xe ($command + "details") {
+                xe ($command + "name") {"$commandName"}
+                xe ($maml + "description") {
+                    xe ($maml + "para") {"TODO Add Short description"}
+                }
+                xe ($maml + "copyright") {
+                    xe ($maml + "para") {}
+                }
+                xe ($command + "verb") {"$(($CommandName -split '-')[0])"}
+                xe ($command + "noun") {"$(($commandName -split '-')[1])"}
+                xe ($dev + "version") {}
+            }
+            xe ($maml + "description") {
+                xe ($maml + "para") {"TODO Add Long description"}
+            }
+            xe ($command + "syntax") {
+                xe ($command + "syntaxItem") {
+                $parameters | foreach { 
+                    xe ($command + "name") {"$commandName"}
+                        xe ($command + "parameter") -require "false" -variableLength "false" -globbing "false" -pipelineInput "false" -postion "0" {
+                            xe ($maml + "name") {"$($_.Name)"}
+                            xe ($maml + "description") {
+                                xe ($maml + "para") {"TODO Add $($_.Name) Description"}
+                            }
+                            xe ($command + "parameterValue") -required "false" -variableLength "false" {"$($_.ParameterType.Name)"}
+                        }
+                    }
+                }
+            }
+            xe ($command + "parameters") {
+                $parameters | foreach { 
+                xe ($command + "parameter") -required "false" -variableLength "false" -globbing "false" -pipelineInput "false (ByValue)" -position "0" {
+                    xe ($maml + "name") {"$($_.Name)"}
+		    xe ($maml + "description") {
+			xe ($maml + "para") {"TODO Add $($_.Name) Description"}
+                    }
+		    xe ($command + "parameterValue") -required "true" -variableLength "false" {"$($_.ParameterType.Name)"}
+                    xe ($dev + "type") {
+                        xe ($maml + "name") {"$($_.ParameterType.Name)"}
+			xe ($maml + "uri"){}
+                    }
+		    xe ($dev + "defaultValue") {}
+                }
+                }
+            }
+	    xe ($command + "inputTypes") {
+                xe ($command + "inputType") {
+                    xe ($dev + "type") {
+                        xe ($maml + "name") {"TODO Add $commandName inputType"}
+                        xe ($maml + "uri") {}
+                        xe ($maml + "description") {
+                            xe ($maml + "para") {}
+                        }
+                    }
+			xe ($maml + "description") {}
+                }
+            }
+	    xe ($command + "returnValues") {
+		xe ($command + "returnValue") {
+		    xe ($dev + "type") {
+		        xe ($maml + "name") {"TODO Add $commandName returnType"}
+                        xe ($maml + "uri") {}
+                        xe ($maml + "description") {
+                            xe ($maml + "para") {}
+                        }
+                    }
+		    xe ($maml + "description") {}
+		}
+	    }
+            xe ($command + "terminatingErrors") {}
+	    xe ($command + "nonTerminatingErrors") {}
+	    xe ($maml + "alertSet") {
+		xe ($maml + "title") {}
+		xe ($maml + "alert") {
+		    xe ($maml + "para") {}
+                }
+            }
+            xe ($command + "examples") {
+		xe ($command + "example") {
+                    xe ($maml + "title") {"--------------  EXAMPLE 1 --------------"}
+                    xe ($maml + "introduction") {
+                        xe ($maml + "para") {"C:\PS&gt;"}
+                    }
+                    xe ($dev + "code") {"TODO Add $commandName Example code"}
+                    xe ($dev + "remarks") {
+                        xe ($maml + "para") {"TODO Add $commandName Example Comment"}
+                        xe ($maml + "para") {}
+                        xe ($maml + "para") {}
+                        xe ($maml + "para") {}
+                        xe ($maml + "para") {}
+                    }
+                    xe ($command + "commandLines") {
+                        xe ($command + "commandLine") {
+                            xe ($command + "commandText") {}
+                        }
+                    }
+                }
+            }   
+            xe ($maml + "relatedLinks") {
+                xe ($maml + "navigationLink") {
+		    xe ($maml + "linkText") {"$commandName"}
+		    xe ($maml + "uri") {}
+                }
+            }
+        }
+		#>
+	}
+}

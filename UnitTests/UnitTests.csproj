@@ -68,9 +68,24 @@
     <Compile Include="SPUtilityUnitTest.cs" />
     <Compile Include="WindowsFormsUnitTest.cs" />
     <Compile Include="WinFormsUnitTest.cs" />
+    <Compile Include="XmlHelp.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>XmlHelp.resx</DependentUpon>
+    </Compile>
     <Compile Include="XmlUtilityUnitTest.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="XmlHelp.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>XmlHelp.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\HelpItems.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

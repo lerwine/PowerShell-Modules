@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace UnitTests
 {
     public static class PowerShellHelper
-    {
+    {   
         public static void TestLoadModule(TestContext testContext, string moduleName, string relativeModulePath, string moduleExtension, params string[] additionalModules)
         {
             InitialSessionState iss = InitialSessionState.CreateDefault();

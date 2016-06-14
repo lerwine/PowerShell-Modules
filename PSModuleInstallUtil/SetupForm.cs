@@ -26,6 +26,14 @@ namespace PSModuleInstallUtil
                 return (source == null) ? "" : source.ModuleName;
             }
         }
+        public Guid? ModuleGUID
+        {
+            get
+            {
+                ModuleManifest source = this.Source;
+                return (source == null) ? null : source.GUID;
+            }
+        }
 
         public ModuleManifest Source
         {
@@ -90,10 +98,10 @@ namespace PSModuleInstallUtil
 
             path = Path.GetFullPath(path);
 
-            if (this._ContainsPath(path))
+            if (_ContainsPath(path))
                 return;
-
-            this._installationLocations.Add(new ModuleManifest(path, this.ModuleName));
+            
+            _installationLocations.Add(new ModuleManifest(path, ModuleName, ModuleGUID));
 
             bool isInstalled = false;
             foreach (DataGridViewRow row in this.installationLocationsDataGridView.SelectedRows)

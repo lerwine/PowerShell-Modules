@@ -36,11 +36,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -57,10 +59,34 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Erwine.Leonard.T.IOUtility.psd1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Erwine.Leonard.T.IOUtility.tt</DependentUpon>
+    </None>
+    <None Include="Erwine.Leonard.T.IOUtility.psm1" />
+    <None Include="PSModuleDetail.ttinc" />
     <None Include="README.md" />
+    <None Include="Setup.ps1">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Setup.tt</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Erwine.Leonard.T.IOUtility.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Erwine.Leonard.T.IOUtility.psd1</LastGenOutput>
+    </Content>
     <Content Include="KnownMimeTypes.xml" />
+    <Content Include="ModuleDefinition.xml" />
+    <Content Include="Setup.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Setup.ps1</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

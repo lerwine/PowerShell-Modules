@@ -1,0 +1,127 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Management.Automation" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ import namespace="System.Management.Automation" #>
+<#@ import namespace="System.Management.Automation.Runspaces" #>
+<#@ output extension=".psd1" #>
+<#@ include file="PSModuleDetail.ttinc" #>
+<#
+GenerationEnvironment.Clear();
+#>
+Title: (<#=DteInfo.CurrentProject.Properties.Item("Title").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Title").Value.ToString()#>
+FileName: (<#=DteInfo.CurrentProject.Properties.Item("FileName").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("FileName").Value.ToString()#>
+Copyright: (<#=DteInfo.CurrentProject.Properties.Item("Copyright").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Copyright").Value.ToString()#>
+RootNamespace: (<#=DteInfo.CurrentProject.Properties.Item("RootNamespace").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("RootNamespace").Value.ToString()#>
+Product: (<#=DteInfo.CurrentProject.Properties.Item("Product").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Product").Value.ToString()#>
+AssemblyGuid: (<#=DteInfo.CurrentProject.Properties.Item("AssemblyGuid").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("AssemblyGuid").Value.ToString()#>
+AssemblyVersion: (<#=DteInfo.CurrentProject.Properties.Item("AssemblyVersion").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("AssemblyVersion").Value.ToString()#>
+Description: (<#=DteInfo.CurrentProject.Properties.Item("Description").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Description").Value.ToString()#>
+Company: (<#=DteInfo.CurrentProject.Properties.Item("Company").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Company").Value.ToString()#>
+AssemblyFileVersion: (<#=DteInfo.CurrentProject.Properties.Item("AssemblyFileVersion").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("AssemblyFileVersion").Value.ToString()#>
+LocalPath: (<#=DteInfo.CurrentProject.Properties.Item("LocalPath").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("LocalPath").Value.ToString()#>
+<#
+foreach (EnvDTE.Property prop in DteInfo.CurrentProject.Properties)
+{
+#>
+Property: <#=prop.Name#>[<#=prop.NumIndices.ToString()#>]
+<#
+}
+#>
+
+	
+@{
+
+# Script module or binary module file associated with this manifest.
+ModuleToProcess = '<#=ModuleBaseName#>.psm1'
+
+# Version number of this module.
+ModuleVersion = '0.3'
+
+# ID used to uniquely identify this module
+GUID = '<#=ModuleId.ToString("N")#>'
+
+# Author of this module
+Author = '<#=Author#>'
+
+# Company or vendor of this module
+CompanyName = '<#=CompanyName#>'
+
+# Copyright statement for this module
+Copyright = '<#=Copyright#>'
+
+# Description of the functionality provided by this module
+Description = '<#=Description#>'
+
+# Minimum version of the Windows PowerShell engine required by this module
+PowerShellVersion = '<#=PowerShellVersion.ToString()#>'
+
+# Name of the Windows PowerShell host required by this module
+# PowerShellHostName = ''
+
+# Minimum version of the Windows PowerShell host required by this module
+# PowerShellHostVersion = ''
+
+# Minimum version of Microsoft .NET Framework required by this module
+DotNetFrameworkVersion = '<#=DotNetFrameworkVersion.ToString()#>'
+
+# Minimum version of the common language runtime (CLR) required by this module
+CLRVersion = '<#=CLRVersion.ToString()#>'
+
+# Processor architecture (None, X86, Amd64) required by this module
+# ProcessorArchitecture = ''
+
+# Modules that must be imported into the global environment prior to importing this module
+# RequiredModules = @()
+
+# Assemblies that must be loaded prior to importing this module
+# RequiredAssemblies = @()
+
+# Script files (.ps1) that are run in the caller's environment prior to importing this module.
+# ScriptsToProcess = @()
+
+# Type files (.ps1xml) to be loaded when importing this module
+# TypesToProcess = @()
+
+# Format files (.ps1xml) to be loaded when importing this module
+# FormatsToProcess = @()
+
+# Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
+# NestedModules = @()
+
+# Functions to export from this module
+FunctionsToExport = @( '<#=String.Join("', '", DteInfo.GetProjectFunctionFiles().Select(fi => Path.GetFileNameWithoutExtension(fi.Name)).ToArray())#>' )
+	
+# Cmdlets to export from this module
+CmdletsToExport = '*'
+
+# Variables to export from this module
+VariablesToExport = '*'
+
+# Aliases to export from this module
+AliasesToExport = '*'
+
+# List of all modules packaged with this module
+# ModuleList = @()
+
+# List of all files packaged with this module
+FileList = @('<#=String.Join("', '", DteInfo.GetCodeProjectFiles().Concat(DteInfo.GetNonCodeProjectFiles()).Select(fi => fi.Name).ToArray())#>')
+
+# Private data to pass to the module specified in RootModule/ModuleToProcess
+# PrivateData = ''
+
+# HelpInfo URI of this module
+# HelpInfoURI = ''
+
+# Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
+# DefaultCommandPrefix = ''
+
+}

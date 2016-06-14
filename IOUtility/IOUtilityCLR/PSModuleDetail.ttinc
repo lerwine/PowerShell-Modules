@@ -1,0 +1,150 @@
+﻿<#
+DteInfo = new DteInfoManager(this, Host as IServiceProvider, Host.TemplateFile);
+// https://msdn.microsoft.com/en-us/library/bb126408.aspx
+// this: https://msdn.microsoft.com/en-us/library/microsoft.visualstudio.texttemplating.texttransformation.aspx
+// Host: https://msdn.microsoft.com/en-us/library/microsoft.visualstudio.texttemplating.vshost.itexttemplating.aspx
+// Host: https://msdn.microsoft.com/en-us/library/envdte.project.aspx
+#>
+<#+
+const string ModuleBaseName = "Erwine.Leonard.T.IOUtility";
+static readonly Guid ModuleId = new Guid("bd4390dc-a8ad-4bce-8d69-f53ccf8e4163");
+const string Author = "Leonard T. Erwine";
+const string CompanyName = "Leonard T. Erwine";
+string Copyright = String.Format("(c) {0} {1}. All rights reserved.", DateTime.Now.Year, Author);
+const string Description = "Utility functions to manage filesystem and stream IO.";
+static readonly Version PowerShellVersion = new Version(4, 0);
+static readonly Version DotNetFrameworkVersion = new Version(4, 0);
+static readonly Version CLRVersion = new Version(4, 0);
+
+DteInfoManager DteInfo = null;
+public class DteInfoManager
+{
+	public EnvDTE.DTE DTE { get; private set; }
+	public EnvDTE.Solution Solution { get; private set; }
+	public EnvDTE.ProjectItem TemplateItem { get; private set; }
+	public EnvDTE.Project CurrentProject { get; private set; }
+	Guid _fileKind = new Guid(EnvDTE.Constants.vsProjectItemKindPhysicalFile);
+	public string TemplateFolder { get; private set; }
+	public string FunctionFolder { get; private set; }
+
+	public DteInfoManager(TextTransformation tt, IServiceProvider serviceProvider, string templateFile)
+	{
+		TemplateFolder = Path.GetDirectoryName(templateFile);
+		FunctionFolder = Path.Combine(TemplateFolder, "Functions");
+		DTE = (EnvDTE.DTE)(serviceProvider.GetService(typeof(EnvDTE.DTE)));
+		Solution = DTE.Solution;
+		TemplateItem = Solution.FindProjectItem(templateFile);
+		CurrentProject = TemplateItem.ContainingProject;
+	}
+	
+	public IEnumerable<FileInfo> GetProjectItemFiles(EnvDTE.ProjectItem pi, bool functionFolder = false)
+	{
+		string folder = (functionFolder) ? FunctionFolder : TemplateFolder;
+		for (int i = 0; i < pi.FileCount; i++)
+		{
+			FileInfo fileInfo = new FileInfo(pi.FileNames[(short)(i + 1)]);
+			if (String.Compare(fileInfo.Directory.FullName, folder, true) == 0)
+				yield return fileInfo;
+		}
+	}
+
+	public IEnumerable<FileInfo> GetProjectFiles(Func<EnvDTE.ProjectItem, FileInfo, bool> predicate = null, bool functionFolder = false)
+	{
+		IEnumerable<EnvDTE.ProjectItem> items = CurrentProject.ProjectItems.OfType<EnvDTE.ProjectItem>().Where(pi => _fileKind.Equals(new Guid(pi.Kind)));
+
+		if (predicate == null)
+			return items.SelectMany(pi => GetProjectItemFiles(pi, functionFolder));
+		
+		return items.SelectMany(pi => GetProjectItemFiles(pi, functionFolder).Where(fi => predicate(pi, fi)));
+	}
+	
+	public IEnumerable<FileInfo> GetProjectFunctionFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, FileInfo fi) => String.Compare(fi.Extension, ".ps1", true) == 0, true); }
+
+	public IEnumerable<FileInfo> GetCodeProjectFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, FileInfo fi) => pi.FileCodeModel != null); }
+
+	public IEnumerable<FileInfo> GetNonCodeProjectFiles()
+	{
+		return GetProjectFiles((EnvDTE.ProjectItem pi, FileInfo fi) =>
+		{
+			if (pi.FileCodeModel != null)
+				return false;
+
+			switch (fi.Extension.ToLower())
+			{
+				case ".cd":
+				case ".tt":
+				case ".ttinc":
+				case ".md":
+					return false;
+			}
+
+			return true;
+		});
+	}
+}
+
+void GetTypeDetail(Type type)
+{
+	WriteLine(type.FullName);
+	PushIndent("    ");
+	WriteLine(String.Format("Assembly: {0}; Location = {1}", type.Assembly.FullName, type.Assembly.Location));
+	GetTypeInheritance(type);
+	GetProperties(type);
+	GetMethods(type);
+	PopIndent();
+}
+void GetTypeInheritance(Type type)
+{
+    for (Type t = type.BaseType; t != null && t.BaseType != null; t = t.BaseType)
+		WriteLine(String.Format("Inherits {0}", t.FullName));
+    foreach (Type t in type.GetInterfaces())
+		WriteLine(String.Format("Implements {0}", t.FullName));
+}
+void GetProperties(Type type)
+{
+    foreach (System.Reflection.PropertyInfo propertyInfo in type.GetProperties())
+    {
+        WriteLine(propertyInfo.Name);
+		PushIndent("    ");
+        WriteLine(String.Format("Type: {0}", propertyInfo.PropertyType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(propertyInfo.PropertyType);
+		PopIndent();
+        WriteLine(String.Format("IsSpecialName: {0}", propertyInfo.IsSpecialName.ToString()));
+        WriteLine(String.Format("DeclaringType: {0}", propertyInfo.DeclaringType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(propertyInfo.DeclaringType);
+		PopIndent();
+        WriteLine(String.Format("CanRead: {0}", propertyInfo.CanRead.ToString()));
+        System.Reflection.MethodInfo methodInfo = propertyInfo.GetGetMethod();
+        if (methodInfo != null)
+            WriteLine(String.Format("GetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
+        methodInfo = propertyInfo.GetSetMethod();
+        WriteLine(String.Format("CanWrite: {0}", propertyInfo.CanWrite.ToString()));
+        if (methodInfo != null)
+            WriteLine(String.Format("SetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
+		PopIndent();
+    }
+}
+void GetMethods(Type type)
+{
+    StringBuilder sb = new StringBuilder();
+    foreach (System.Reflection.MethodInfo methodInfo in type.GetMethods())
+    {
+        WriteLine(String.Format("{0} {1}({2});", methodInfo.ReturnType.Name, methodInfo.Name, String.Join(", ", methodInfo.GetParameters().Select(p => p.ToString()).ToArray())));
+		PushIndent("    ");
+        WriteLine(String.Format("ReturnType: {0}", methodInfo.ReturnType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(methodInfo.ReturnType);
+		PopIndent();
+        WriteLine(String.Format("IsSpecialName: {0}", methodInfo.IsSpecialName.ToString()));
+        WriteLine(String.Format("DeclaringType: {0}", methodInfo.DeclaringType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(methodInfo.DeclaringType);
+		PopIndent();
+        WriteLine(String.Format("IsPublic: {0}", methodInfo.IsPublic.ToString()));
+        WriteLine(String.Format("IsStatic: {0}", methodInfo.IsStatic.ToString()));
+		PopIndent();
+    }
+}
+#>

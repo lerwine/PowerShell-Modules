@@ -11,78 +11,147 @@ namespace PSModuleInstallUtil
 {
     public class ModuleManifest
     {
-        private FileInfo _manifestFile;
-        Hashtable _moduleManifest = new Hashtable();
-        private string _moduleDescription = null;
-        private Version _moduleVersion = null;
-        private string _rootModuleValue = null;
-        private string _moduleName = null;
-        private string _installType = null;
-        private FileInfo _rootModuleFile = null;
-        private bool? _isInstalled = null;
-        private string _statusText = null;
-        private bool? _canInstall = null;
-        private bool? _canUpdate = null;
+        public string FullManifestPath { get; private set; }
+        public string ModuleName { get; private set; }
+        public string ModuleDescription { get { return Description; } }
+        public string InstallRoot { get; private set; }
+        public string RootModule { get; private set; }
+        public Version ModuleVersion { get; private set; }
+        public Guid? GUID { get; private set; }
+        public Guid? ExpectedGuid { get; private set; }
+        public string Author { get; private set; }
+        public string CompanyName { get; private set; }
+        public string Copyright { get; private set; }
+        public string Description { get; private set; }
+        public Version PowerShellVersion { get; private set; }
+        public Version DotNetFrameworkVersion { get; private set; }
+        public Version CLRVersion { get; private set; }
+        public ReadOnlyCollection<string> RequiredModules { get; private set; }
+        public ReadOnlyCollection<string> RequiredAssemblies { get; private set; }
+        public ReadOnlyCollection<string> ScriptsToProcess { get; private set; }
+        public ReadOnlyCollection<string> FormatsToProcess { get; private set; }
+        public ReadOnlyCollection<string> TypesToProcess { get; private set; }
+        public ReadOnlyCollection<string> NestedModules { get; private set; }
+        public ReadOnlyCollection<string> FunctionsToExport { get; private set; }
+        public ReadOnlyCollection<string> CmdletsToExport { get; private set; }
+        public ReadOnlyCollection<string> VariablesToExport { get; private set; }
+        public ReadOnlyCollection<string> AliasesToExport { get; private set; }
+        public ReadOnlyCollection<string> ModuleList { get; private set; }
+        public ReadOnlyCollection<string> FileList { get; private set; }
+        public ReadOnlyCollection<ErrorRecord> Errors { get; private set; }
+        public bool ManifestExists { get; private set; }
+        public bool IsInstalled { get; private set; }
+        public bool DirectoryExists { get; private set; }
+        public bool CanInstall { get; private set; }
+        public bool CanUpdate { get; private set; }
 
-        public static IEnumerable<object> AsBaseEnumerable(IEnumerable obj, int level)
+        public ModuleManifest(string directoryPath, string moduleName, Guid? expectedGuid)
         {
-            if (level < 1)
+            if (directoryPath == null)
+                throw new ArgumentNullException("directoryPath");
+
+            if (directoryPath.Trim() == "")
+                throw new ArgumentException("Path cannot be empty.", "directoryPath");
+
+            InstallRoot = Path.GetFullPath(directoryPath);
+            if (String.IsNullOrEmpty(InstallRoot))
+                throw new ArgumentException("Invalid path.", "directoryPath");
+            ModuleName = Path.GetFileName(moduleName);
+            if (ModuleName != moduleName || moduleName.Trim() == ".psd1")
+                throw new ArgumentException("Invalid module name.", "moduleName");
+            if (ModuleName.EndsWith(".psd1"))
+                ModuleName = ModuleName.Substring(0, ModuleName.Length - 4);
+            FullManifestPath = Path.Combine(InstallRoot, ModuleName + ".psd1");
+            ExpectedGuid = expectedGuid;
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            ManifestExists = File.Exists(FullManifestPath);
+            DirectoryExists = Directory.Exists(InstallRoot);
+            RootModule = "";
+            ModuleVersion = null;
+            GUID = null;
+            Author = "";
+            CompanyName = "";
+            Copyright = "";
+            Description = "";
+            PowerShellVersion = null;
+            DotNetFrameworkVersion = null;
+            CLRVersion = null;
+            RequiredModules = new ReadOnlyCollection<string>(new string[0]);
+            RequiredAssemblies = new ReadOnlyCollection<string>(new string[0]);
+            ScriptsToProcess = new ReadOnlyCollection<string>(new string[0]);
+            TypesToProcess = new ReadOnlyCollection<string>(new string[0]);
+            FormatsToProcess = new ReadOnlyCollection<string>(new string[0]);
+            NestedModules = new ReadOnlyCollection<string>(new string[0]);
+            FunctionsToExport = new ReadOnlyCollection<string>(new string[0]);
+            CmdletsToExport = new ReadOnlyCollection<string>(new string[0]);
+            VariablesToExport = new ReadOnlyCollection<string>(new string[0]);
+            AliasesToExport = new ReadOnlyCollection<string>(new string[0]);
+            ModuleList = new ReadOnlyCollection<string>(new string[0]);
+            FileList = new ReadOnlyCollection<string>(new string[0]);
+            Errors = new ReadOnlyCollection<ErrorRecord>(new ErrorRecord[0]);
+
+            if (!ManifestExists)
             {
-                foreach (object o in obj)
-                    yield return (o != null && o is PSObject) ? (o as PSObject).BaseObject : o;
+                RootModule = ModuleName + ".psm1";
+                IsInstalled = false;
+                CanInstall = Directory.Exists(InstallRoot);
+                CanUpdate = false;
+                return;
             }
+
+            Hashtable hashtable;
+            using (StreamReader reader = new StreamReader(FullManifestPath))
+            {
+                using (PowerShell ps = PowerShell.Create(RunspaceMode.NewRunspace))
+                {
+                    ps.AddScript(reader.ReadToEnd(), true);
+                    Collection<PSObject> mm = ps.Invoke();
+                    if (ps.HadErrors)
+                        Errors = new ReadOnlyCollection<ErrorRecord>(ps.Streams.Error.ToArray());
+                    hashtable = mm.Where(o => o != null).Select(o => o.BaseObject).OfType<Hashtable>().FirstOrDefault();
+                }
+            }
+
+            if (hashtable == null)
+            {
+                IsInstalled = false;
+                RootModule = ModuleName + ".psm1";
+                CanInstall = Directory.Exists(InstallRoot);
+                CanUpdate = false;
+                return;
+            }
+
+            if (hashtable.ContainsKey("RootModule"))
+                RootModule = PSObjectHelper.AsTrimmedString(hashtable, "RootModule", "");
             else
-            {
-                foreach (object o in obj)
-                    yield return EnumeratedRawValue((o != null && o is PSObject) ? (o as PSObject).BaseObject : o, level - 1);
-            }
-        }
-
-        public static IEnumerable<object> AsObjectEnumerable(IEnumerable obj)
-        {
-            foreach (object o in obj)
-                yield return o;
-        }
-
-        public static List<object> EnumeratedRawValue(object obj) { return EnumeratedRawValue(obj, 3); }
-        
-        public static List<object> EnumeratedRawValue(object obj, int level)
-        {
-            if ((obj = (obj != null && obj is PSObject) ? (obj as PSObject).BaseObject : obj) == null)
-                return new List<object>();
-
-            if (obj is string)
-                return new List<object>(new object[] { obj });
-
-            if (obj is object[] || obj is Collection<object> || obj is List<object> || obj is PSObject[] || obj is Collection<PSObject> || obj is List<PSObject> || obj is Hashtable[] || obj is Collection<Hashtable> || obj is List<Hashtable>)
-                return new List<object>(AsBaseEnumerable(obj as IEnumerable, level - 1));
-
-            if (obj is Hashtable)
-            {
-                if (level < 1)
-                    return new List<object>(new object[] { obj });
-                Hashtable hashTable = obj as Hashtable;
-                Hashtable result = new Hashtable();
-                foreach (object k in result.Keys)
-                    result.Add(k, EnumeratedRawValue(hashTable[k], level - 1));
-                return new List<object>(new object[] { result });
-            }
-
-            if (obj is IEnumerable)
-                return new List<object>(AsObjectEnumerable(obj as IEnumerable));
-
-            return new List<object>(new object[] { obj });
-        }
-
-        public List<object> GetModuleRawValues(string key)
-        {
-            return EnumeratedRawValue((this._moduleManifest.ContainsKey(key)) ? this._moduleManifest[key] : null);
-        }
-
-        public object FirstOrDefault(string key)
-        {
-            List<object> values = this.GetModuleRawValues(key);
-            return (values.Count == 0) ? null : values[0];
+                RootModule = PSObjectHelper.AsTrimmedString(hashtable, "ModuleToProcess", "");
+            ModuleVersion = PSObjectHelper.AsVersion(hashtable, "ModuleVersion");
+            GUID = PSObjectHelper.AsGuid(hashtable, "GUID");
+            Author = PSObjectHelper.AsTrimmedString(hashtable, "Author");
+            CompanyName = PSObjectHelper.AsTrimmedString(hashtable, "CompanyName");
+            Copyright = PSObjectHelper.AsTrimmedString(hashtable, "Copyright");
+            Description = PSObjectHelper.AsTrimmedString(hashtable, "Description");
+            PowerShellVersion = PSObjectHelper.AsVersion(hashtable, "PowerShellVersion");
+            DotNetFrameworkVersion = PSObjectHelper.AsVersion(hashtable, "DotNetFrameworkVersion");
+            CLRVersion = PSObjectHelper.AsVersion(hashtable, "CLRVersion");
+            RequiredModules = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "RequiredModules"));
+            RequiredAssemblies = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "RequiredAssemblies"));
+            ScriptsToProcess = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "ScriptsToProcess"));
+            TypesToProcess = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "TypesToProcess"));
+            FormatsToProcess = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "FormatsToProcess"));
+            NestedModules = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "NestedModules"));
+            FunctionsToExport = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "FunctionsToExport"));
+            CmdletsToExport = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "CmdletsToExport"));
+            VariablesToExport = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "VariablesToExport"));
+            AliasesToExport = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "AliasesToExport"));
+            ModuleList = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "ModuleList"));
+            FileList = new ReadOnlyCollection<string>(PSObjectHelper.AsTrimmedStringList(hashtable, "FileList"));
+            IsInstalled = RootModule != "" && Errors.Count == 0 && File.Exists(Path.Combine(InstallRoot, RootModule));
+            CanUpdate = IsInstalled && ExpectedGuid.HasValue && GUID.HasValue && ExpectedGuid.Value.Equals(GUID.Value);
         }
 
         public static IEnumerable<string> GetPSModulePaths()
@@ -102,6 +171,35 @@ namespace PSModuleInstallUtil
                         yield return s;
                 }
             }
+        }
+        
+        private static IEnumerable<char> _NormalizePathSeparators(string path)
+        {
+            bool previousIsSeparator = false;
+            bool nonSeparatorEmitted = false;
+            foreach (char c in path.ToCharArray())
+            {
+                if (c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar)
+                    previousIsSeparator = true;
+                else
+                {
+                    nonSeparatorEmitted = true;
+                    if (previousIsSeparator)
+                        yield return Path.DirectorySeparatorChar;
+                    previousIsSeparator = false;
+                    yield return c;
+                }
+            }
+            if (previousIsSeparator && !nonSeparatorEmitted)
+                yield return Path.DirectorySeparatorChar;
+        }
+
+        public static string ResolvePath(string path)
+        {
+            if (String.IsNullOrEmpty(path))
+                return "";
+
+            return Path.GetFullPath(new String(_NormalizePathSeparators(path).ToArray()));
         }
 
         public static bool IsSystemPath(string path)
@@ -127,8 +225,8 @@ namespace PSModuleInstallUtil
             if (String.IsNullOrEmpty(target) || String.IsNullOrEmpty(parent))
                 return false;
 
-            target = Path.GetFullPath(target);
-            parent = Path.GetFullPath(parent);
+            target = ResolvePath(target);
+            parent = ResolvePath(parent);
             if (String.Compare(target, parent, true) == 0)
                 return true;
 
@@ -137,339 +235,6 @@ namespace PSModuleInstallUtil
 
             return target.Length > parent.Length && String.Compare(target.Substring(0, parent.Length), parent, true) == 0;
         }
-
-        public string ModuleDescription
-        {
-            get
-            {
-                string value = this._moduleDescription;
-                if (value == null)
-                {
-                    value = (this.FirstOrDefault("Description") as string) ?? "";
-                    this._moduleDescription = value;
-                }
-
-                return value;
-            }
-        }
-
-        public Version ModuleVersion
-        {
-            get
-            {
-                Version value = this._moduleVersion;
-                if (value == null)
-                {
-                    object obj = this.FirstOrDefault("ModuleVersion");
-                    if (obj != null)
-                    {
-                        if (obj is Version)
-                            value = (Version)obj;
-                        else if (obj is string)
-                        {
-                            try
-                            {
-                                value = new Version(obj as string);
-                            }
-                            catch { }
-                        }
-                    }
-                    if (value == null)
-                        value = new Version();
-                    this._moduleVersion = value;
-                }
-
-                return value;
-            }
-        }
         
-        public string RootModuleValue
-        {
-            get
-            {
-                string rootModule = this._rootModuleValue;
-                if (rootModule == null)
-                {
-                    if ((rootModule = this.FirstOrDefault("RootModule") as string) == null && (rootModule = this.FirstOrDefault("ModuleToProcess") as string) == null) 
-                        rootModule = "";
-                    this._rootModuleValue = rootModule;
-                }
-
-                return rootModule;
-            }
-        }
-        
-        public string ModuleName
-        {
-            get
-            {
-                string moduleName = this._moduleName;
-                if (moduleName == null)
-                {
-                    moduleName = Path.GetFileNameWithoutExtension(this._manifestFile.Name);
-                    this._moduleName = moduleName;
-                }
-
-                return moduleName;
-            }
-        }
-
-        public string InstallType
-        {
-            get
-            {
-                string installType = this._installType;
-                if (installType == null)
-                {
-                    if (IsSystemPath(this._manifestFile.FullName))
-                        installType = "System";
-                    else if (IsAllUsersPath(this._manifestFile.FullName))
-                        installType = "All Users";
-                    else if (IsCurrentUserPath(this._manifestFile.FullName))
-                        installType = "Current User";
-                    else
-                        installType = "Other";
-
-                    this._installType = installType;
-                }
-
-                return installType;
-            }
-        }
-
-        public string InstallRoot { get { return (this._manifestFile.Directory.Parent == null) ? this._manifestFile.Directory.FullName : this._manifestFile.Directory.Parent.FullName; } }
-
-        public FileInfo RootModuleFile
-        {
-            get
-            {
-                FileInfo rootModuleFile = this._rootModuleFile;
-                if (rootModuleFile == null)
-                {
-                    string rootModuleValue = this.RootModuleValue;
-                    if (rootModuleValue == "")
-                    {
-                        rootModuleFile = new FileInfo(Path.Combine(this._manifestFile.DirectoryName, this.ModuleName + ".dll"));
-                        if (!rootModuleFile.Exists)
-                            rootModuleFile = new FileInfo(Path.Combine(this._manifestFile.DirectoryName, this.ModuleName + ".psm1"));
-                    }
-                    else
-                        rootModuleFile = new FileInfo(Path.Combine(this._manifestFile.DirectoryName, rootModuleValue));
-                    this._rootModuleFile = rootModuleFile;
-                }
-
-                return rootModuleFile;
-            }
-        }
-        
-        public bool IsInstalled
-        {
-            get
-            {
-                bool? isInstalled = this._isInstalled;
-                if (isInstalled.HasValue)
-                    return isInstalled.Value;
-
-                bool c, u, i;
-                this.UpdateStatus(out c, out u, out i);
-                return i;
-            }
-        }
-        
-        public bool CanInstall
-        {
-            get
-            {
-                bool? canInstall = this._canInstall;
-                if (canInstall.HasValue)
-                    return canInstall.Value;
-
-                bool c, u, i;
-                this.UpdateStatus(out c, out u, out i);
-                return c;
-            }
-        }
-
-        public bool CanUpdate
-        {
-            get
-            {
-                bool? canUpdate = this._canUpdate;
-                if (canUpdate.HasValue)
-                    return canUpdate.Value;
-
-                bool c, u, i;
-                this.UpdateStatus(out c, out u, out i);
-                return u;
-            }
-        }
-
-        private string UpdateStatus(out bool canInstall, out bool canUpdate, out bool isInstalled)
-        {
-            string statusText;
-            if (this._manifestFile.Exists && this.RootModuleValue != "" && this.RootModuleFile.Exists)
-            {
-                canInstall = true;
-                isInstalled = true;
-                canUpdate = true;
-                statusText = String.Format("Version {0} installed.", this.ModuleVersion);
-            }
-            else
-            {
-                isInstalled = false;
-                if (Directory.Exists(this._manifestFile.FullName) || Directory.Exists(this.RootModuleFile.FullName))
-                {
-                    canInstall = false;
-                    canUpdate = false;
-                    statusText = "Cannot install (subdir conflict)";
-                }
-                else if (this._manifestFile.Exists || this.RootModuleFile.Exists)
-                {
-                    canInstall = false;
-                    canUpdate = true;
-                    statusText = "Partial install";
-                }
-                else if (this._manifestFile.Directory.Exists)
-                {
-                    canInstall = true;
-                    canUpdate = false;
-                    statusText = "Directory already exists";
-                }
-                else
-                {
-                    canUpdate = false;
-                    canInstall = CanInstallat(this._manifestFile.DirectoryName, out statusText);
-                    if (canInstall)
-                        statusText = "Not installed";
-                }
-            }
-            this._canInstall = canInstall;
-            this._isInstalled = isInstalled;
-            this._statusText = statusText;
-            this._canUpdate = canUpdate;
-            return statusText;
-        }
-
-        public string StatusText
-        {
-            get
-            {
-                string statusText = this._statusText;
-                if (statusText != null)
-                    return statusText;
-
-                bool c, u, i;
-                return this.UpdateStatus(out c, out u, out i);
-            }
-        }
-
-        public static bool CanInstallat(string directoryName, out string statusText)
-        {
-            if (String.IsNullOrEmpty(directoryName))
-            {
-                statusText = "Empty directory name.";
-                return false;
-            }
-
-            if (Directory.Exists(directoryName))
-            {
-                statusText = "Can install.";
-                return true;
-            }
-
-            if (File.Exists(directoryName))
-            {
-                statusText = "Path naming conflict";
-                return false;
-            }
-
-            directoryName = Path.GetDirectoryName(directoryName);
-            if (String.IsNullOrEmpty(directoryName))
-            {
-                statusText = "Path not found.";
-                return false;
-            }
-
-            return CanInstallat(directoryName, out statusText);
-        }
-
-        public ModuleManifest(string manifestPath)
-        {
-            if (manifestPath == null)
-                throw new ArgumentNullException("manifestPath");
-
-            manifestPath = manifestPath.Trim();
-            if (manifestPath == "")
-                throw new ArgumentException("Manifest Path cannot be empty.", "manifestPath");
-
-            this._manifestFile = new FileInfo(manifestPath);
-            this.Refresh();
-        }
-
-        public ModuleManifest(string installRoot, string moduleName)
-        {
-            if (installRoot == null)
-                throw new ArgumentNullException("installRoot");
-
-            if (moduleName == null)
-                throw new ArgumentNullException("moduleName");
-
-            installRoot = installRoot.Trim();
-            if (installRoot == "")
-                throw new ArgumentException("Install Root Path cannot be empty.", "installRoot");
-
-            moduleName = moduleName.Trim();
-            if (moduleName == "")
-                throw new ArgumentException("Module Name cannot be empty.", "moduleName");
-
-            string location = Path.Combine(installRoot, moduleName);
-            string manifestPath = Path.Combine(location, moduleName + ".psd1");
-            if (moduleName.ToLower().EndsWith(".psd1"))
-            {
-                string loc = Path.Combine(installRoot, moduleName.Substring(0, moduleName.Length - 5));
-                if (Directory.Exists(loc) || !Directory.Exists(location))
-                {
-                    location = loc;
-                    manifestPath = Path.Combine(location, moduleName + ".psd1");
-                }
-                if (!File.Exists(manifestPath))
-                    manifestPath = Path.Combine(location, moduleName);
-            }
-
-            this._manifestFile = new FileInfo(manifestPath);
-            this.Refresh();
-        }
-
-        public void Refresh()
-        {
-            this._manifestFile.Refresh();
-            this._moduleDescription = null;
-            this._moduleVersion = null;
-            this._rootModuleValue = null;
-            this._rootModuleFile = null;
-            this._statusText = null;
-            this._canInstall = null;
-            this._isInstalled = null;
-            this._canUpdate = null;
-            this._moduleManifest.Clear();
-
-            if (!this._manifestFile.Exists)
-                return;
-
-            try
-            {
-                ScriptBlock sb = ScriptBlock.Create(File.ReadAllText(this._manifestFile.FullName).Trim());
-                Collection<PSObject> result = sb.Invoke();
-                foreach (PSObject obj in result)
-                {
-                    if (obj != null && obj.BaseObject != null && obj.BaseObject is Hashtable)
-                    {
-                        this._moduleManifest = obj.BaseObject as Hashtable;
-                        break;
-                    }
-                }
-            }
-            catch { }
-        }
     }
 }
