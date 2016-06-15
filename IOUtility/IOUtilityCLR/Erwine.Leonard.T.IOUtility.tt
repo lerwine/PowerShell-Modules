@@ -17,34 +17,13 @@
 <#
 GenerationEnvironment.Clear();
 #>
-Title: (<#=DteInfo.CurrentProject.Properties.Item("Title").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Title").Value.ToString()#>
-FileName: (<#=DteInfo.CurrentProject.Properties.Item("FileName").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("FileName").Value.ToString()#>
-Copyright: (<#=DteInfo.CurrentProject.Properties.Item("Copyright").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Copyright").Value.ToString()#>
-RootNamespace: (<#=DteInfo.CurrentProject.Properties.Item("RootNamespace").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("RootNamespace").Value.ToString()#>
-Product: (<#=DteInfo.CurrentProject.Properties.Item("Product").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Product").Value.ToString()#>
-AssemblyGuid: (<#=DteInfo.CurrentProject.Properties.Item("AssemblyGuid").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("AssemblyGuid").Value.ToString()#>
-AssemblyVersion: (<#=DteInfo.CurrentProject.Properties.Item("AssemblyVersion").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("AssemblyVersion").Value.ToString()#>
-Description: (<#=DteInfo.CurrentProject.Properties.Item("Description").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Description").Value.ToString()#>
-Company: (<#=DteInfo.CurrentProject.Properties.Item("Company").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("Company").Value.ToString()#>
-AssemblyFileVersion: (<#=DteInfo.CurrentProject.Properties.Item("AssemblyFileVersion").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("AssemblyFileVersion").Value.ToString()#>
-LocalPath: (<#=DteInfo.CurrentProject.Properties.Item("LocalPath").Value.GetType().FullName#>) <#=DteInfo.CurrentProject.Properties.Item("LocalPath").Value.ToString()#>
-<#
-foreach (EnvDTE.Property prop in DteInfo.CurrentProject.Properties)
-{
-#>
-Property: <#=prop.Name#>[<#=prop.NumIndices.ToString()#>]
-<#
-}
-#>
-
-	
 @{
 
 # Script module or binary module file associated with this manifest.
 ModuleToProcess = '<#=ModuleBaseName#>.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.3'
+ModuleVersion = '<#=ModuleVersion.ToString()#>'
 
 # ID used to uniquely identify this module
 GUID = '<#=ModuleId.ToString("N")#>'
@@ -53,13 +32,13 @@ GUID = '<#=ModuleId.ToString("N")#>'
 Author = '<#=Author#>'
 
 # Company or vendor of this module
-CompanyName = '<#=CompanyName#>'
+CompanyName = '<#=DteInfo.Company#>'
 
 # Copyright statement for this module
-Copyright = '<#=Copyright#>'
+Copyright = '<#=DteInfo.Copyright#>'
 
 # Description of the functionality provided by this module
-Description = '<#=Description#>'
+Description = '<#=DteInfo.ProjectDescription#>'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '<#=PowerShellVersion.ToString()#>'

@@ -6,8 +6,44 @@ DteInfo = new DteInfoManager(this, Host as IServiceProvider, Host.TemplateFile);
 // Host: https://msdn.microsoft.com/en-us/library/envdte.project.aspx
 #>
 <#+
+	private Guid? _moduleId = null;
+
+	public Guid ModuleId
+	{
+		get
+		{
+			if (!_moduleId.HasValue)
+				_moduleId = new Guid(DteInfo.AssemblyGuid);
+			return _moduleId.Value;
+		}
+	}
+	private Version _moduleVersion = null;
+
+	public Version ModuleVersion
+	{
+		get
+		{
+			if (_moduleVersion != null)
+				return _moduleVersion;
+			string s = DteInfo.AssemblyVersion;
+			if (String.IsNullOrEmpty(s))
+				_moduleVersion = new Version(0, 1);
+			else
+			{
+				_moduleVersion = new Version(s);
+				if (_moduleVersion.Revision == 0)
+				{
+					if (_moduleVersion.Build == 0)
+						_moduleVersion = new Version(_moduleVersion.Major, _moduleVersion.Minor);
+					else
+						_moduleVersion = new Version(_moduleVersion.Major, _moduleVersion.Minor, _moduleVersion.Build);
+				}
+			}
+
+			return _moduleVersion;
+		}
+	}
 const string ModuleBaseName = "Erwine.Leonard.T.IOUtility";
-static readonly Guid ModuleId = new Guid("bd4390dc-a8ad-4bce-8d69-f53ccf8e4163");
 const string Author = "Leonard T. Erwine";
 const string CompanyName = "Leonard T. Erwine";
 string Copyright = String.Format("(c) {0} {1}. All rights reserved.", DateTime.Now.Year, Author);
@@ -37,6 +73,28 @@ public class DteInfoManager
 		CurrentProject = TemplateItem.ContainingProject;
 	}
 	
+	public T GetProjectProperty<T>(string key, T defaultValue = default(T))
+	{
+		try { return (T)(CurrentProject.Properties.Item(key).Value); }
+		catch { return defaultValue; }
+	}
+
+	public string ProjectTitle { get { return GetProjectProperty<string>("Title"); } }
+	public string ProjectFileName { get { return GetProjectProperty<string>("FileName"); } }
+	public string Copyright { get { return GetProjectProperty<string>("Copyright"); } }
+	public string RootNamespace { get { return GetProjectProperty<string>("RootNamespace"); } }
+	public string Product { get { return GetProjectProperty<string>("Product"); } }
+	public string ProjectOutputFileName { get { return GetProjectProperty<string>("OutputFileName"); } }
+	public string AssemblyGuid { get { return GetProjectProperty<string>("AssemblyGuid"); } }
+	public string AssemblyVersion { get { return GetProjectProperty<string>("AssemblyVersion"); } }
+	public string ProjectDescription { get { return GetProjectProperty<string>("Description"); } }
+	public string ProjectFullPath { get { return GetProjectProperty<string>("FullPath"); } }
+	public string Company { get { return GetProjectProperty<string>("Company"); } }
+	public string AssemblyFileVersion { get { return GetProjectProperty<string>("AssemblyFileVersion"); } }
+	public string AssemblyName { get { return GetProjectProperty<string>("AssemblyName"); } }
+	public string LocalPath { get { return GetProjectProperty<string>("LocalPath"); } }
+	public string DefaultNamespace { get { return GetProjectProperty<string>("DefaultNamespace"); } }
+
 	public IEnumerable<FileInfo> GetProjectItemFiles(EnvDTE.ProjectItem pi, bool functionFolder = false)
 	{
 		string folder = (functionFolder) ? FunctionFolder : TemplateFolder;
