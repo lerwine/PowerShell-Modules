@@ -1,0 +1,330 @@
+﻿<#
+/* Following assemblies are required:
+ *     System.Core
+ *     System.Xml
+ *     EnvDTE
+ *     System.Management.Automation
+ * The following namespaces are required:
+ *     System
+ *     System.Collections.Generic
+ *     System.Linq
+ *     System.Management.Automation
+ *     System.Management.Automation.Runspaces
+ *     System.Text
+ *     System.Xml
+ *     Microsoft.VisualStudio.TextTemplating
+ */
+
+if (GenerationEnvironment.ToString().Trim().Length == 0)
+	GenerationEnvironment.Clear();
+InitializeMembers(Host as IServiceProvider, Host.TemplateFile);
+#>
+<#+
+static string TemplateFolder { get { return _templateFolder; } }
+static EnvDTE.DTE DTE { get { return _dte; } }
+static EnvDTE.Solution Solution { get { return _solution; } }
+static EnvDTE.ProjectItem TemplateItem { get { return _templateItem; } }
+static EnvDTE.Project CurrentProject { get { return _currentProject; } }
+static ProjectInfoObject ProjectInfo { get { return _projectInfo; } }
+static readonly ModuleInfoObject ModuleInfo = new ModuleInfoObject();
+
+private static string _templateFolder;
+private static EnvDTE.DTE _dte;
+private static EnvDTE.Solution _solution;
+private static EnvDTE.ProjectItem _templateItem;
+private static EnvDTE.Project _currentProject;
+private static ProjectInfoObject _projectInfo;
+void InitializeMembers(IServiceProvider serviceProvider, string templateFile)
+{
+	_templateFolder = System.IO.Path.GetDirectoryName(templateFile);
+	_dte = (EnvDTE.DTE)(serviceProvider.GetService(typeof(EnvDTE.DTE)));
+	_solution = DTE.Solution;
+	_templateItem = Solution.FindProjectItem(templateFile);
+	_currentProject = TemplateItem.ContainingProject;
+	_projectInfo = new ProjectInfoObject(CurrentProject);
+	ModuleInfo.IgnoreExtensions(".cd", ".tt", ".ttinc", ".md");
+}
+class ProjectInfoObject
+{
+	internal string Title { get { return _title; } }
+	internal string FileName { get { return _fileName; } }
+	internal string Copyright { get { return _copyright; } }
+	internal string RootNamespace { get { return _rootNamespace; } }
+	internal string Product { get { return _product; } }
+	internal string OutputFileName { get { return _outputFileName; } }
+	internal Guid? AssemblyGuid { get { return _assemblyGuid; } }
+	internal Version AssemblyVersion { get { return _assemblyVersion; } }
+	internal string Description { get { return _description; } }
+	internal string FullPath { get { return _fullPath; } }
+	internal string Company { get { return _company; } }
+	internal Version AssemblyFileVersion { get { return _assemblyFileVersion; } }
+	internal string AssemblyName { get { return _assemblyName; } }
+	internal string LocalPath { get { return _localPath; } }
+	internal string DefaultNamespace { get { return _defaultNamespace; } }
+	internal string TargetFrameworkName { get { return _targetFrameworkName; } }
+	internal Guid? TargetFrameworkVersion { get { return _targetFrameworkVersion; } }
+	internal Guid FileKind { get { return _fileKind; } }
+
+	private string _title;
+	private string _fileName;
+	private string _copyright;
+	private string _rootNamespace;
+	private string _product;
+	private string _outputFileName;
+	private Guid? _assemblyGuid;
+	private Version _assemblyVersion;
+	private string _description;
+	private string _fullPath;
+	private string _company;
+	private Version _assemblyFileVersion;
+	private string _assemblyName;
+	private string _localPath;
+	private string _defaultNamespace;
+	private string _targetFrameworkName;
+	private Guid? _targetFrameworkVersion;
+	private Guid _fileKind;
+
+	internal ProjectInfoObject(EnvDTE.Project project)
+	{
+		_title = GetProjectProperty<string>(project, "Title") ?? "";
+		_fileName = GetProjectProperty<string>(project, "FileName") ?? "";
+		_copyright = GetProjectProperty<string>(project, "Copyright") ?? "";
+		_rootNamespace = GetProjectProperty<string>(project, "RootNamespace") ?? "";
+		_product = GetProjectProperty<string>(project, "Product") ?? "";
+		_outputFileName = GetProjectProperty<string>(project, "OutputFileName") ?? "";
+		_assemblyGuid = new Guid(GetProjectProperty<string>(project, "AssemblyGuid"));
+		_assemblyVersion = GetProjectPropertyVersion(project, "AssemblyVersion");
+		_description = GetProjectProperty<string>(project, "Description") ?? "";
+		_fullPath = GetProjectProperty<string>(project, "FullPath") ?? "";
+		_company = GetProjectProperty<string>(project, "Company") ?? "";
+		_assemblyFileVersion = GetProjectPropertyVersion(project, "AssemblyFileVersion");
+		_assemblyName = GetProjectProperty<string>(project, "AssemblyName") ?? "";
+		_localPath = GetProjectProperty<string>(project, "LocalPath") ?? "";
+		_defaultNamespace = GetProjectProperty<string>(project, "DefaultNamespace") ?? "";
+		System.Text.RegularExpressions.Regex keyValueRegex = new System.Text.RegularExpressions.Regex(@"(^|,)(?<k>[^=,]*)(=(?<v>[^,]*))?");
+		Dictionary<string, string> d = new Dictionary<string, string>();
+		string s = GetProjectProperty<string>(project, "TargetFrameworkMoniker") ?? "";
+		int index = 0;
+		foreach (System.Text.RegularExpressions.Match m in keyValueRegex.Matches(s.Trim()))
+		{
+			if (m.Groups["v"].Success) {
+				if (d.ContainsKey("k:" + m.Groups["k"].Value))
+					d["k:" + m.Groups["k"].Value] = m.Groups["v"].Value;
+				else
+					d.Add("k:" + m.Groups["k"].Value, m.Groups["v"].Value);
+			} else {
+				d.Add("i:" + index.ToString(), m.Groups["k"].Value);
+				index++;
+			}
+		}
+		_targetFrameworkName = (d.ContainsKey("i:0")) ? d["i:0"] : "";
+		_targetFrameworkVersion = (d["k:Version"].StartsWith("v")) ? d["k:Version"].Substring(1) : d["k:Version"];
+		_fileKind = new Guid(EnvDTE.Constants.vsProjectItemKindPhysicalFile);
+	}
+	internal T GetProjectProperty<T>(EnvDTE.Project project, string key, T defaultValue = default(T))
+	{
+		try { return (T)(project.Properties.Item(key).Value); }
+		catch { return defaultValue; }
+	}
+	public Version GetProjectPropertyVersion(EnvDTE.Project project, string key)
+	{
+		string s = GetProjectProperty<string>(project, key);
+		Version v;
+		if (String.IsNullOrEmpty(s) || !Version.TryParse(s.Trim(), out v))
+			return null;
+
+		if (v.Revision != 0)
+			return v;
+
+		if (v.Build == 0)
+			return new Version(_moduleVersion.Major, _moduleVersion.Minor);
+
+		return new Version(_moduleVersion.Major, _moduleVersion.Minor, _moduleVersion.Build);
+	}
+}
+class ModuleInfoObject
+{
+	private string string _baseName;
+	internal string BaseName
+	{
+		get { return _baseName ?? ""; }
+		set
+		{
+			if (_baseName != null)
+				throw new InvalidOperationException("Module Base Name cannot be changed, once it is initialized.");
+			_baseName = value;
+		}
+	}
+	private string _author;
+	internal string Author
+	{
+		get { return _author ?? ""; }
+		set
+		{
+			if (_author != null)
+				throw new InvalidOperationException("Module Author cannot be changed, once it is initialized.");
+			_author = value;
+		}
+	}
+	private string string Author;
+	private Version _powerShellVersion = null;
+	internal Version PowerShellVersion
+	{
+		get { return _powerShellVersion ?? new Version(4, 0); }
+		set
+		{
+			if (_powerShellVersion != null)
+				throw new InvalidOperationException("PowerShell version cannot be changed, once it is initialized.");
+			_powerShellVersion = value;
+		}
+	}
+	private System.Collections.ObjectModel.Collection<string> _innerIgnoreExtensions = new System.Collections.ObjectModel.Collection<string>();
+	private System.Collections.ObjectModel.ReadOnlyCollection<string> _extensionsToIgnore;
+	internal System.Collections.ObjectModel.ReadOnlyCollection<string> ExtensionsToIgnore { get { return _extensionsToIgnore; } }
+	internal ModuleInfoObject()
+	{
+		_extensionsToIgnore = new System.Collections.ObjectModel.ReadOnlyCollection<string>(_innerIgnoreExtensions);
+		_fileNamesToIgnore = new System.Collections.ObjectModel.ReadOnlyCollection<string>(_innerIgnoreFileNames);
+	}
+	internal void IgnoreExtensions(params string[] list) { IgnoreExtensions(list as IEnumerable<string>); }
+	internal void IgnoreExtensions(IEnumerable<string> collection)
+	{
+		if (collection == null)
+			return;
+
+		foreach (string e in collection)
+		{
+			if (e == null)
+				continue;
+
+			string ext = e.Trim();
+			if (ext.Length == 0)
+				continue;
+
+			if (!ext.StartsWith("."))
+				ext = "." + ext;
+			ext = ext.ToLower();
+			if (!_innerIgnoreExtensions.Contains(ext))
+				_innerIgnoreExtensions.Add(ext);
+		}
+	}
+	private System.Collections.ObjectModel.Collection<string> _innerIgnoreFileNames = new System.Collections.ObjectModel.Collection<string>();
+	private System.Collections.ObjectModel.ReadOnlyCollection<string> _fileNamesToIgnore;
+	internal System.Collections.ObjectModel.ReadOnlyCollection<string> FileNamesToIgnore { get { return _fileNamesToIgnore; } }
+	internal void IgnoreFileNames(params string[] list) { IgnoreFileNames(list as IEnumerable<string>); }
+	internal void IgnoreFileNames(IEnumerable<string> collection)
+	{
+		if (collection == null)
+			return;
+
+		foreach (string f in collection)
+		{
+			if (f == null)
+				continue;
+
+			string path = f.Trim();
+			if (path.Length == 0)
+				continue;
+
+			fileName = System.IO.Path.GetFileName(path);
+			while (fileName != null && fileName.Length == 0)
+			{
+				path = System.IO.Path.GetDirectoryName(path);
+				if (String.IsNullOrEmpty(path))
+					break;
+				fileName = System.IO.Path.GetFileName(path);
+			}
+			if (String.IsNullOrEmpty(fileName))
+				continue;
+			fileName = fileName.ToLower()
+			if (!_innerIgnoreFileNames.Contains(fileName))
+				_innerIgnoreFileNames.Add(fileName);
+		}
+	}
+}
+IEnumerable<FileInfo> GetProjectItemFiles(EnvDTE.ProjectItem pi)
+{
+	for (int i = 0; i < pi.FileCount; i++)
+		yield return new System.IO.FileInfo(pi.FileNames[(short)(i + 1)]);
+}
+IEnumerable<FileInfo> GetProjectFiles(Func<EnvDTE.ProjectItem, System.IO.FileInfo, bool> predicate = null)
+{
+	IEnumerable<EnvDTE.ProjectItem> items = CurrentProject.ProjectItems.OfType<EnvDTE.ProjectItem>().Where(pi => ProjectInfoObject.FileKind.Equals(new Guid(pi.Kind)));
+
+	if (predicate == null)
+		return items.SelectMany(pi => GetProjectItemFiles(pi)).Where(fi => !ModuleInfo.FileNamesToIgnore.Contains(fi => fi.Name.ToLower()) && 
+			!ModuleInfo.ExtensionsToIgnore.Contains(fi => fi.Extension.ToLower()));
+		
+	return items.SelectMany(pi => GetProjectItemFiles(pi).Where(fi => predicate(pi, fi))).Where(fi => !ModuleInfo.FileNamesToIgnore.Contains(fi => fi.Name.ToLower()) && 
+		!ModuleInfo.ExtensionsToIgnore.Contains(fi => fi.Extension.ToLower()));
+}
+IEnumerable<FileInfo> GetCodeProjectFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, System.IO.FileInfo fi) => pi.FileCodeModel != null); }
+public IEnumerable<FileInfo> GetNonCodeProjectFiles() { return GetProjectFiles((EnvDTE.ProjectItem pi, System.IO.FileInfo fi) => pi.FileCodeModel == null); }
+
+void GetTypeDetail(Type type)
+{
+	WriteLine(type.FullName);
+	PushIndent("    ");
+	WriteLine(String.Format("Assembly: {0}; Location = {1}", type.Assembly.FullName, type.Assembly.Location));
+	GetTypeInheritance(type);
+	GetProperties(type);
+	GetMethods(type);
+	PopIndent();
+}
+void GetTypeInheritance(Type type)
+{
+    for (Type t = type.BaseType; t != null && t.BaseType != null; t = t.BaseType)
+		WriteLine(String.Format("Inherits {0}", t.FullName));
+    foreach (Type t in type.GetInterfaces())
+		WriteLine(String.Format("Implements {0}", t.FullName));
+}
+void GetProperties(Type type)
+{
+    foreach (System.Reflection.PropertyInfo propertyInfo in type.GetProperties())
+    {
+        WriteLine(propertyInfo.Name);
+		PushIndent("    ");
+        WriteLine(String.Format("Type: {0}", propertyInfo.PropertyType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(propertyInfo.PropertyType);
+		PopIndent();
+        WriteLine(String.Format("IsSpecialName: {0}", propertyInfo.IsSpecialName.ToString()));
+        WriteLine(String.Format("DeclaringType: {0}", propertyInfo.DeclaringType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(propertyInfo.DeclaringType);
+		PopIndent();
+        WriteLine(String.Format("CanRead: {0}", propertyInfo.CanRead.ToString()));
+        System.Reflection.MethodInfo methodInfo = propertyInfo.GetGetMethod();
+        if (methodInfo != null)
+            WriteLine(String.Format("GetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
+        methodInfo = propertyInfo.GetSetMethod();
+        WriteLine(String.Format("CanWrite: {0}", propertyInfo.CanWrite.ToString()));
+        if (methodInfo != null)
+            WriteLine(String.Format("SetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
+		PopIndent();
+    }
+}
+void GetMethods(Type type)
+{
+    StringBuilder sb = new StringBuilder();
+    foreach (System.Reflection.MethodInfo methodInfo in type.GetMethods())
+    {
+		if (methodInfo.IsSpecialName)
+			continue;
+        WriteLine(String.Format("{0} {1}({2});", methodInfo.ReturnType.Name, methodInfo.Name, String.Join(", ", methodInfo.GetParameters().Select(p => p.ToString()).ToArray())));
+		PushIndent("    ");
+        WriteLine(String.Format("ReturnType: {0}", methodInfo.ReturnType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(methodInfo.ReturnType);
+		PopIndent();
+        WriteLine(String.Format("IsSpecialName: {0}", methodInfo.IsSpecialName.ToString()));
+        WriteLine(String.Format("DeclaringType: {0}", methodInfo.DeclaringType.FullName));
+		PushIndent("    ");
+		GetTypeInheritance(methodInfo.DeclaringType);
+		PopIndent();
+        WriteLine(String.Format("IsPublic: {0}", methodInfo.IsPublic.ToString()));
+        WriteLine(String.Format("IsStatic: {0}", methodInfo.IsStatic.ToString()));
+		PopIndent();
+    }
+}
+#>

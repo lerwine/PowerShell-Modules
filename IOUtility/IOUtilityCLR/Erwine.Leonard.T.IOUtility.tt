@@ -8,6 +8,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Xml" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="System.Management.Automation" #>
@@ -15,12 +16,26 @@
 <#@ output extension=".psd1" #>
 <#@ include file="PSModuleDetail.ttinc" #>
 <#
-GenerationEnvironment.Clear();
+/*
+GetTypeDetail(typeof(EnvDTE.Project));
+GetTypeDetail(typeof(EnvDTE.Properties));
+foreach (EnvDTE.Property i in DteInfo.CurrentProject.Properties) {
+	Write(i.Name);
+}	try {
+		object o = i.Value;
+		if (o == null)
+			WriteLine(" is null");
+		else
+			WriteLine(" [" + o.GetType().FullName + "] = " + o.ToString());
+	}
+	catch (Exception e) { WriteLine(" threw " + e.Message); }
+
+*/
 #>
 @{
 
 # Script module or binary module file associated with this manifest.
-ModuleToProcess = '<#=ModuleBaseName#>.psm1'
+ModuleToProcess = '<#=ModuleInfo.BaseName#>.psm1'
 
 # Version number of this module.
 ModuleVersion = '<#=ModuleVersion.ToString()#>'
@@ -29,7 +44,7 @@ ModuleVersion = '<#=ModuleVersion.ToString()#>'
 GUID = '<#=ModuleId.ToString("N")#>'
 
 # Author of this module
-Author = '<#=Author#>'
+Author = '<#=ModuleInfo.Author#>'
 
 # Company or vendor of this module
 CompanyName = '<#=DteInfo.Company#>'
@@ -50,10 +65,10 @@ PowerShellVersion = '<#=PowerShellVersion.ToString()#>'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-DotNetFrameworkVersion = '<#=DotNetFrameworkVersion.ToString()#>'
+DotNetFrameworkVersion = '<#=DteInfo.TargetFrameworkVersion#>'
 
 # Minimum version of the common language runtime (CLR) required by this module
-CLRVersion = '<#=CLRVersion.ToString()#>'
+CLRVersion = '<#=DteInfo.TargetFrameworkVersion#>'
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''

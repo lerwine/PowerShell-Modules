@@ -71,6 +71,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Common.ttinc" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
