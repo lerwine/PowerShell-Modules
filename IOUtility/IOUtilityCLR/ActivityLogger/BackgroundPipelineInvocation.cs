@@ -7,11 +7,8 @@ using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
 
-namespace IOUtilityCLR
+namespace ActivityLogger
 {
-    /// <summary>
-    /// Represents the invocation of a background PowerShell pipeline.
-    /// </summary>
     public class BackgroundPipelineInvocation : IDisposable
     {
         private bool _isDisposed = false;
@@ -21,10 +18,6 @@ namespace IOUtilityCLR
         PowerShell _powerShell;
         IAsyncResult _asyncResult;
         private bool _isCompleted = false;
-
-        /// <summary>
-        /// True if the invocation has finished; otherwise, false.
-        /// </summary>
         public bool IsCompleted
         {
             get
@@ -38,65 +31,17 @@ namespace IOUtilityCLR
                 return _isCompleted;
             }
         }
-
-        /// <summary>
-        /// User state object associated with invocation.
-        /// </summary>
         public object State { get; private set; }
-
-        /// <summary>
-        /// Values to be shared between host process and the invoked powershell instance.
-        /// </summary>
         public Hashtable SynchronizedData { get; private set; }
-
-        /// <summary>
-        /// True if the background PowerShell instance was stopped before completion; otherwise, false.
-        /// </summary>
         public bool StopInvoked { get; private set; }
-
-        /// <summary>
-        /// Output objects returned as a result of the invocation.
-        /// </summary>
         public Collection<PSObject> Output { get; private set; }
-
-        /// <summary>
-        /// Error records which were generated during the invocation.
-        /// </summary>
         public Collection<ErrorRecord> Errors { get; private set; }
-
-        /// <summary>
-        /// Warning records which were generated during the invocation.
-        /// </summary>
         public Collection<WarningRecord> Warnings { get; private set; }
-        
-        /// <summary>
-        /// Informational records which were generated during the invocation.
-        /// </summary>
         public Collection<InformationRecord> Information { get; private set; }
-        
-        /// <summary>
-        /// Verbose records which were generated during the invocation.
-        /// </summary>
         public Collection<VerboseRecord> Verbose { get; private set; }
-
-        /// <summary>
-        /// Debug records which were generated during the invocation.
-        /// </summary>
         public Collection<DebugRecord> Debug { get; private set; }
-        
-        /// <summary>
-        /// Invoke PowerShell scripts in the background.
-        /// </summary>
-        /// <param name="host">PowerShell host to use.</param>
-        /// <param name="parameters">Parameters which represent the behavior and scripts for the background process.</param>
-        public BackgroundPipelineInvocation(PSHost host, BackgroundPipelineParameters parameters) : this(host, parameters, null) { }
 
-        /// <summary>
-        /// Invoke PowerShell scripts in the background.
-        /// </summary>
-        /// <param name="host">PowerShell host to use.</param>
-        /// <param name="parameters">Parameters which represent the behavior and scripts for the background process.</param>
-        /// <param name="state">User state to associate with the results.</param>
+        public BackgroundPipelineInvocation(PSHost host, BackgroundPipelineParameters parameters) : this(host, parameters, null) { }
         public BackgroundPipelineInvocation(PSHost host, BackgroundPipelineParameters parameters, object state)
         {
             if (host == null)
@@ -147,33 +92,14 @@ namespace IOUtilityCLR
             }
         }
 
-
-        /// <summary>
-        /// This gets invoked after the runspace is created and before it is opened.
-        /// </summary>
-        /// <param name="host">PowerShell host associated with runspace.</param>
-        /// <param name="runspace">Runspace about to be opened.</param>
-        /// <param name="parameters">Parameters that define the behavior of the invocation</param>
         protected virtual void BeforeOpenRunspace(PSHost host, Runspace runspace, BackgroundPipelineParameters parameters)
         {
             runspace.ApartmentState = parameters.ApartmentState;
             runspace.ThreadOptions = parameters.ThreadOptions;
         }
 
-        /// <summary>
-        /// This gets invoked after the runspace is opened, and before any scripts are added to the pipeline.
-        /// </summary>
-        /// <param name="host">PowerShell host associated with runspace.</param>
-        /// <param name="runspace">Runspace about to be opened.</param>
-        /// <param name="scripts">List of scripts to be added in order.</param>
         protected virtual void BeforeAddPipelineScripts(PSHost host, Runspace runspace, List<ScriptBlock> scripts) { }
 
-        /// <summary>
-        /// This gets invoked after scripts have been added to the pipeline.
-        /// </summary>
-        /// <param name="host">PowerShell host associated with runspace.</param>
-        /// <param name="runspace">Runspace about to be opened.</param>
-        /// <param name="powerShell">PowerShell object to be invoked.</param>
         protected virtual void AfterScriptsAdded(PSHost host, Runspace runspace, PowerShell powerShell) { }
 
         private void Progress_DataAdding(object sender, DataAddingEventArgs e)
@@ -183,16 +109,8 @@ namespace IOUtilityCLR
                 OnProgressChanged(progress);
         }
 
-        /// <summary>
-        /// This gets called when a script in the pipline writes to the progress stream.
-        /// </summary>
-        /// <param name="progress">Progress object which was written to the progress stream.</param>
         protected virtual void OnProgressChanged(ProgressRecord progress) { }
 
-        /// <summary>
-        /// Waits for invocation to complete and gets pipeline output.
-        /// </summary>
-        /// <returns>Collection of objects which represent the output of the executed pipeline.</returns>
         public Collection<PSObject> GetResult()
         {
             lock (_syncRoot)
@@ -204,9 +122,6 @@ namespace IOUtilityCLR
             return Output;
         }
 
-        /// <summary>
-        /// Stops the execution of the pipeline.
-        /// </summary>
         public void Stop()
         {
             lock (_syncRoot)
@@ -234,21 +149,10 @@ namespace IOUtilityCLR
             OnEndInvoked();
         }
 
-        /// <summary>
-        /// This gets called when the results of the pipeline execution are obtained.
-        /// </summary>
         protected virtual void OnEndInvoked() { }
 
-        /// <summary>
-        /// Reads progress records from the progress stream.
-        /// </summary>
-        /// <returns>Progress records that were written since the last time this method was called.</returns>
         public Collection<ProgressRecord> ReadProgress() { return _powerShell.Streams.Progress.ReadAll(); }
 
-        /// <summary>
-        /// Reads error records from the error stream.
-        /// </summary>
-        /// <returns>Error records that were written since the last time this method was called.</returns>
         public Collection<ErrorRecord> ReadErrors()
         {
             lock (_syncRoot)
@@ -260,10 +164,6 @@ namespace IOUtilityCLR
             }
         }
 
-        /// <summary>
-        /// Reads warning records from the warnings stream.
-        /// </summary>
-        /// <returns>Warning records that were written since the last time this method was called.</returns>
         public Collection<WarningRecord> ReadWarnings()
         {
             lock (_syncRoot)
@@ -275,10 +175,6 @@ namespace IOUtilityCLR
             }
         }
 
-        /// <summary>
-        /// Reads informational records from the information stream
-        /// </summary>
-        /// <returns>Information records that were written since the last time this method was called.</returns>
         public Collection<InformationRecord> ReadInformation()
         {
             lock (_syncRoot)
@@ -290,10 +186,6 @@ namespace IOUtilityCLR
             }
         }
 
-        /// <summary>
-        /// Reads verbose records from the information stream
-        /// </summary>
-        /// <returns>Verbose records that were written since the last time this method was called.</returns>
         public Collection<VerboseRecord> ReadVerbose()
         {
             lock (_syncRoot)
@@ -305,10 +197,6 @@ namespace IOUtilityCLR
             }
         }
 
-        /// <summary>
-        /// Reads debug records from the information stream
-        /// </summary>
-        /// <returns>Debug records that were written since the last time this method was called.</returns>
         public Collection<DebugRecord> ReadDebug()
         {
             lock (_syncRoot)
@@ -332,15 +220,8 @@ namespace IOUtilityCLR
 
         #region IDisposable Support
 
-        /// <summary>
-        /// Disposes the current invocation object.
-        /// </summary>
         public void Dispose() { Dispose(true); }
 
-        /// <summary>
-        /// This gets called when the invocation object is about to be disposed.
-        /// </summary>
-        /// <param name="disposing">True if being disposed through the <see cref="BackgroundPipelineInvocation.Dispose()"/> method; otherwise, false.</param>
         protected virtual void Dispose(bool disposing)
         {
             object syncRoot = _syncRoot;

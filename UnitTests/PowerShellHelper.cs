@@ -7,12 +7,81 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace UnitTests
 {
     public static class PowerShellHelper
-    {   
+    {
+        public static Dictionary<string, object> GetDefaultVariables()
+        {
+            throw new NotImplementedException();
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, InitialSessionState iss, ApartmentState apartmentState, PSThreadOptions threadOptions, Dictionary<string, object> variables, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            if (iss == null)
+            {
+                iss = InitialSessionState.CreateDefault();
+                iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
+            }
+            // this.TestContext;
+            using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
+            {
+                runspace.ApartmentState = apartmentState;
+                runspace.ThreadOptions = threadOptions;
+                runspace.Open();
+                if (variables == null)
+                    variables = GetDefaultVariables();
+                foreach (string name in variables.Keys)
+                    runspace.SessionStateProxy.SetVariable(name, variables[name]);
+
+                using (PowerShell powershell = initialScript.GetPowerShell())
+                {
+                    powershell.Runspace = runspace;
+                    if (additionalScripts != null)
+                    {
+                        foreach (ScriptBlock sb in additionalScripts)
+                        {
+                            if (sb != null)
+                                powershell.AddScript(sb.ToString());
+                        }
+                    }
+
+                    return PSInvocationResult.Create(runspace, powershell);
+                }
+            }
+        }
+
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, InitialSessionState iss, ApartmentState apartmentState, PSThreadOptions threadOptions, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, iss, apartmentState, threadOptions, null, initialScript, additionalScripts);
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, InitialSessionState iss, Dictionary<string, object> variables, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, iss, ApartmentState.STA, PSThreadOptions.ReuseThread, variables, initialScript, additionalScripts);
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, InitialSessionState iss, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, iss, null, initialScript, additionalScripts);
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, ApartmentState apartmentState, PSThreadOptions threadOptions, Dictionary<string, object> variables, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, null, apartmentState, threadOptions, variables, initialScript, additionalScripts);
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, ApartmentState apartmentState, PSThreadOptions threadOptions, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, apartmentState, threadOptions, null, initialScript, additionalScripts);
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, Dictionary<string, object> variables, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, null, variables, initialScript, additionalScripts);
+        }
+        public static PSInvocationResult InvokeRunspace(TestContext testContext, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
+        {
+            return InvokeRunspace(testContext, null, null, initialScript, additionalScripts);
+        }
+
         public static void TestLoadModule(TestContext testContext, string moduleName, string relativeModulePath, string moduleExtension, params string[] additionalModules)
         {
             InitialSessionState iss = InitialSessionState.CreateDefault();
@@ -33,11 +102,11 @@ for ($i = 1; $i -lt $args.Count; $i++) {
 }
 Import-Module $args[0] -PassThru;
 ");
-                    ps.AddArgument(modulePath);
+                    PowerShell ps2 = ps.AddArgument(modulePath);
                     if (additionalModules != null && additionalModules.Length > 0)
                     {
                         foreach (string m in additionalModules)
-                            ps.AddArgument(m);
+                            powershell.AddArgument(m);
                     }
 
                     Collection<PSObject> result = powershell.Invoke();
@@ -85,6 +154,17 @@ Import-Module $args[0] -PassThru;
             if (errorRecord.Exception != null)
                 testContext.WriteLine(errorRecord.Exception.ToString());
             testContext.WriteLine("");
+        }
+
+        public class PSInvocationResult
+        {
+            public static Collection<PSObject> Output { get; private set; }
+
+            internal static PSInvocationResult Create(Runspace runspace, PowerShell powershell)
+            {
+                Output = powershell.Invoke();
+                throw new NotImplementedException();
+            }
         }
     }
 }

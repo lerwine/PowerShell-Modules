@@ -6,6 +6,8 @@ using System.Management.Automation.Runspaces;
 using System.Management.Automation;
 using System.IO;
 using System.Collections.ObjectModel;
+using IOUtilityCLR;
+using System.Threading;
 
 namespace UnitTests
 {
@@ -69,6 +71,27 @@ namespace UnitTests
         public void ImportIOUtilityTestMethod()
         {
             PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1");
+        }
+
+        [TestMethod]
+        public void PSInvocationBuilderTestMethod()
+        {
+            PSInvocationBuilder target = new PSInvocationBuilder();
+            Assert.AreEqual<ApartmentState>(ApartmentState.STA, target.ApartmentState);
+            Assert.AreEqual<PSThreadOptions>(PSThreadOptions.ReuseThread, target.ThreadOptions);
+            Assert.IsNull(target.InitialSessionState);
+            Assert.IsNull(target.Input);
+            Assert.IsNull(target.Settings);
+            target.AddScript("$MyVar = 5");
+            target.Variables.Add("MyVar", 23);
+            PSInvocationResult result = target.GetResult();
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Variables.ContainsKey("MyVar"));
+            Assert.IsNotNull(result.Variables["MyVar"]);
+            object obj = (result.Variables["MyVar"] is PSObject) ? (result.Variables["MyVar"] as PSObject).BaseObject : result.Variables["MyVar"];
+            Assert.IsNotNull(obj);
+            Assert.IsTrue(obj is int);
+            Assert.AreEqual<int>(5, (int)obj);
         }
     }
 }

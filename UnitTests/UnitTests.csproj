@@ -86,6 +86,12 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IOUtility\IOUtilityCLR\IOUtilityCLR.csproj">
+      <Project>{f32b9a73-7059-4cc3-b376-d6bab4ab76fb}</Project>
+      <Name>IOUtilityCLR</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
