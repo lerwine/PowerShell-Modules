@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WpfCLR
+namespace System.Collections.ObjectModel
 {
 	public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 	{
