@@ -44,6 +44,63 @@ namespace WpfCLR
 		public Collection<VerboseRecord> VerboseRecords { get { return _verboseRecords; } }
 		public Collection<DebugRecord> DebugRecords { get { return _debugRecords; } }
 		
+		public static void AssertValidXaml(string value, out XmlDocument xmlDocument)
+		{
+			if (value == null)
+				throw new ArgumentNullException("value");
+			
+			string xml = value.Trim();
+			
+			if (xml.Length == 0)
+				throw new ArgumentException("XML Markup is empty.", "value");
+			
+			XmlDocument doc = new XmlDocument();
+			
+			try { doc.LoadXml(xml); }
+			catch (Exception exception) { throw new ArgumentException("Invalid XML markup", "value", exception); }
+			
+			if (doc.DocumentElement == null)
+				throw new ArgumentException("XML document is empty", "value");
+			
+			if (doc.DocumentElement.NamespaceURI != XmlNamespaceURI_Presentation)
+				throw new ArgumentException("XML markup does not represent a WPF document.", "value");
+			
+			if (doc.DocumentElement.LocalName != "Window")
+				throw new ArgumentException("XAML markup does not represent a window.", "value");
+			
+			xmlDocument = doc;
+		}
+		
+		public static bool TryValidateXaml(string value, out Exception exception, out XmlDocument xmlDocument)
+		{
+			try 
+			{
+				AssertValidXaml(value, out xmlDocument);
+				exception = null;
+				return true;
+			}
+			catch (Exception exc)
+			{
+				xmlDocument = null;
+				exception = exc;
+				return false;
+			}
+		}
+		
+		public static bool TryValidateXaml(string value, out string message)
+		{
+			Exception exception;
+			XmlDocument xmlDocument;
+			if (TryValidateXaml(value, out exception, out xmlDocument))
+			{
+				message = "Markup is valid.";
+				return true;
+			}
+			
+			message = exception.Message;
+			return false;
+		}
+		
 		public string WindowXaml
 		{
 			get { return _xml; }
