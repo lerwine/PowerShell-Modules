@@ -1,6 +1,12 @@
 Function Initialize-CurrentModule {
     [CmdletBinding()]
     Param()
+	
+	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
+	if (($Local:BaseName + ".dll") | Test-Path -PathType Leaf) {
+		if ((Add-Type -AssemblyName ($Local:BaseName + ".dll") -PassThru) -ne $null) { return }
+	}
+	
     $Local:Splat = @{
         TypeName = 'System.CodeDom.Compiler.CompilerParameters';
         ArgumentList = (,@(
@@ -8,6 +14,7 @@ Function Initialize-CurrentModule {
             [System.Xml.XmlDocument].Assembly.Location,
             [System.Management.Automation.ScriptBlock].Assembly.Location,
             (Add-Type -AssemblyName 'PresentationFramework' -ErrorAction Stop -PassThru)[0].Assembly.Location,
+            (Add-Type -AssemblyName 'PresentationCore' -ErrorAction Stop -PassThru)[0].Assembly.Location,
             (Add-Type -AssemblyName 'WindowsBase' -ErrorAction Stop -PassThru)[0].Assembly.Location
         ));
     };
@@ -18,28 +25,32 @@ Function Initialize-CurrentModule {
                 [bool]$Local:b = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
                 $Local:Splat.Property = @{
                     IncludeDebugInformation = $Local:b;
-                    CompilerOptions = '/define:DEBUG';
+                    CompilerOptions = '/pdb:"{0}.pdb" /define:DEBUG' -f $Local:BaseName;
                 }
             } catch { }
         }
         if ($PSVersionTable.CLRVersion.Major -lt 3 -or ($PSVersionTable.CLRVersion.Major -eq 3 -and $PSVersionTable.CLRVersion.Minor -lt 5)) {
             if ($Local:Splat.Property -eq $null) {
-                $Local:Splat.Property = @{ CompilerOptions = '/define:PSLEGACY;PSLEGACY2' }
+                $Local:Splat.Property = @{ CompilerOptions = '/pdb:"{0}.pdb" /define:PSLEGACY;PSLEGACY2' -f $Local:BaseName }
             } else {
                 $Local:Splat.Property.CompilerOptions += ';PSLEGACY;PSLEGACY2';
             }
         } else {
             if ($PSVersionTable.CLRVersion.Major -lt 3) {
                 if ($Local:Splat.Property -eq $null) {
-                    $Local:Splat.Property = @{ CompilerOptions = '/define:PSLEGACY;PSLEGACY3' }
+                    $Local:Splat.Property = @{ CompilerOptions = '/pdb:"{0}.pdb" /define:PSLEGACY;PSLEGACY3' -f $Local:BaseName }
                 } else {
                     $Local:Splat.Property.CompilerOptions += ';PSLEGACY;PSLEGACY3';
                 }
             }
         }
-        
     }
     
+	if ($Local:Splat.Property -eq $null) {
+		$Local:Splat.Property = @{ CompilerOptions = '/doc:"{0}.xml" /out:"{0}.dll"' -f $Local:BaseName }
+	} else {
+		$Local:Splat.Property.CompilerOptions += (' /doc:"{0}.xml" /out:"{0}.dll"' -f $Local:BaseName);
+	}
     Add-Type -Path (('ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs',
 		'WpfWindow.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat);
 }
@@ -138,7 +149,6 @@ Function New-WpfWindow {
 			WpfCLR.WpfWindow. New WPF window proxy object.
 	#>
     [CmdletBinding()]
-	[OutputType([WpfCLR.WpfWindow])]
     Param(
 		# Window XAML markup.
 		[ValidateScript({ $_ | Assert-ValidXamlMarkup })]
@@ -183,7 +193,6 @@ Function Show-WpfWindow {
 			WpfCLR.WpfWindow. Window that was displayed.
 	#>
     [CmdletBinding(DefaultParameterSetName = 'New')]
-	[OutputType([WpfCLR.WpfWindow])]
     Param(
 		# Window proxy object.
 		[Parameter(Mandatory = $true, ParameterSetName = 'Existing')]

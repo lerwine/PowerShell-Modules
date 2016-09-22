@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
+using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,9 @@ using System.Xml;
 
 namespace WpfCLR
 {
+    /// <summary>
+    /// Internal class which manages the creation and invocation of the WPF window.
+    /// </summary>
     internal class WindowProcessInternal : IDisposable
     {
 		private object _syncRoot = new object();
@@ -23,14 +27,30 @@ namespace WpfCLR
 		private Window _mainWindow = null;
 		private ManualResetEvent _windowClosedEvent = new ManualResetEvent(false);
 		private bool? _dialogResult = null;
+		private Exception _fault = null;
 		
 		#region Methods
 		
-		internal WindowProcessInternal(WpfWindow windowObj, XmlDocument windowXaml, PSHost host)
+		internal WindowProcessInternal(WpfWindow windowObj, XmlDocument windowXaml, bool showAsDialog, PSHost host)
 		{
+			#region Auto-detect named elements
+			
+			XmlNamespaceManager nsmgr = new XmlNamespaceManager(windowXaml.NameTable);
+			nsmgr.AddNamespace("p", WpfWindow.XmlNamespaceURI_Presentation);
+			nsmgr.AddNamespace("x", WpfWindow.XmlNamespaceURI_Xaml);
+			
+			foreach (XmlAttribute xmlAttribute in _windowXaml.SelectNodes("//@x:Name", nsmgr))
+			{
+				if (!_namedElements.ContainsKey(xmlAttribute.Value))
+					_namedElements.Add(xmlAttribute.Value, xmlAttribute.OwnerElement);
+			}
+			
+			#endregion
+			
 			_windowObj = windowObj;
 			_windowXaml = windowXaml;
 			_thisObj = new ThisObj(host, windowObj, _namedElements, new GetMainWindowHandler(GetMainWindow));
+			
 			if (host == null)
 				_runspace = RunspaceFactory.CreateRunspace();
 			else
@@ -53,7 +73,7 @@ namespace WpfCLR
 					_powerShell.AddCommand("Add-Type").AddParameter("Path", this.GetType().Assembly.Location);
 					if (_windowObj.BeforeWindowCreated != null)
 						_powerShell.AddScript(_windowObj.BeforeWindowCreated.ToString());
-					Command command = _powerShell.AddCommand("Invoke-Command");
+					PowerShell command = _powerShell.AddCommand("Invoke-Command");
 					command.AddParameter("ScriptBlock", ScriptBlock.Create(@"$this.Output += @($input);
 $Args[0].CreateMainWindow();"));
 					command.AddParameter("ArgumentList", this);
@@ -120,44 +140,51 @@ if ($this.MainWindow -ne $null) { $Args[0].ShowMainWindow($Args[1]) }"));
 		
 		private bool? Finalize(Collection<PSObject> output)
 		{
-			if (output != null)
-			{
-				foreach (PSObject obj in output)
-					_windowObj.Output.Add(obj);
-			}
+			_windowObj.AddOutput(output);
 			
-			if (_powerShell == null)
-				return _windowObj.DialogResult;	
-			
-			foreach (ErrorRecord obj in powerShell.Streams.Error.ReadAll())
-				_windowObj.ErrorRecords.Add(obj);
-			foreach (WarningRecord obj in powerShell.Streams.Warning.ReadAll())
-				_windowObj.WarningRecords.Add(obj);
-			foreach (VerboseRecord obj in powerShell.Streams.Verbose.ReadAll())
-				_windowObj.VerboseRecords.Add(obj);
-			foreach (DebugRecord obj in powerShell.Streams.Debug.ReadAll())
-				_windowObj.DebugRecords.Add(obj);
+			if (_powerShell != null)
+			_windowObj.AddOutput(_powerShell.Streams);
+		
+			return _windowObj.DialogResult;	
 		}
 		
+        /// <summary>
+        /// This gets invoked by an internally-generated script at a point when the main window is to be created.
+        /// </summary>
 		public void CreateMainWindow()
 		{
-			using (XmlNodeReader xmlNodeReader = new XmlNodeReader(_windowXaml))
-				_mainWindow = (Window)(System.Windows.Markup.XamlReader.Load(xmlNodeReader));
-			
-			XmlNamespaceManager nsmgr = new XmlNamespaceManager(_windowXaml.NameTable);
-			nsmgr.AddNamespace("p", WpfWindow.XmlNamespaceURI_Presentation);
-			nsmgr.AddNamespace("x", WpfWindow.XmlNamespaceURI_Xaml);
-			foreach (XmlAttribute xmlAttribute in _windowXaml.SelectNodes("//@x:Name", nsmgr))
+			try
 			{
-				if (_namedElements.ContainsKey(xmlAttribute.Value))
-					continue;
-				
+				using (XmlNodeReader xmlNodeReader = new XmlNodeReader(_windowXaml))
+					_mainWindow = (Window)(System.Windows.Markup.XamlReader.Load(xmlNodeReader));
+			}
+			catch (Exception exception)
+			{
+				_windowObj.AddError("Unexpected error while creating the main window", exception, "CreateMainWindow");
+				_namedElements.Clear();
+				return;
+			}
+			
+#if PSLEGACY2
+			string[] allKeys = (new List<string>(_namedElements.Keys)).ToArray();
+#else
+			string[] allKeys = _namedElements.Keys.ToArray();
+#endif
+			foreach (string name in allKeys)
+			{
 				object e;
-				try { e = _mainWindow.FindName(xmlAttribute.Value); } catch { e = null; }
-				_namedElements.Add(xmlAttribute.Value, e);
+				try { e = _mainWindow.FindName(name); } catch { e = null; }
+				if (e == null) {
+					_namedElements.Remove(name);
+				} else {
+					_namedElements[name] = e;
+				}
 			}
 		}
 		
+        /// <summary>
+        /// This gets invoked by an internally-generated script at a point when the main window is to be shown.
+        /// </summary>
 		public void ShowMainWindow(bool showAsDialog)
 		{
 			if (_mainWindow == null)
@@ -181,6 +208,9 @@ if ($this.MainWindow -ne $null) { $Args[0].ShowMainWindow($Args[1]) }"));
 		
 		#region IDisposable members
 		
+        /// <summary>
+        /// Disposes this object and the associated PowerShell instance.
+        /// </summary>
 		public void Dispose()
 		{
 			Dispose(true);

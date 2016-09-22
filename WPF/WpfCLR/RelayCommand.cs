@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+#if !PSLEGACY2
 using System.Linq;
+#endif
 using System.Text;
+#if !PSLEGACY2
 using System.Threading.Tasks;
+#endif
 using System.Windows.Input;
 
 namespace WpfCLR
 {
     /// <summary>
-    /// Command which is used to relay interacive events
+    /// Command which is used to relay interacive events.
     /// </summary>
-    /// <typeparam name="TArg">Type of argument to be passed to the command invocation handler</typeparam>
+    /// <typeparam name="TArg">Type of argument to be passed to the command invocation handler.</typeparam>
     public class RelayCommand<TArg> : ICommand, INotifyPropertyChanged
     {
         private bool _allowConcurrentInvocations = false;
@@ -30,7 +34,7 @@ namespace WpfCLR
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Determines whether multiple invocations of this command should be allowed to occur at the same time
+        /// Determines whether multiple invocations of this command should be allowed to occur at the same time.
         /// </summary>
         public bool AllowConcurrentInvocations
         {
@@ -51,7 +55,7 @@ namespace WpfCLR
         }
 
         /// <summary>
-        /// Controls whether the command may be invoked
+        /// Controls whether the command may be invoked.
         /// </summary>
         public bool IsEnabled
         {
@@ -71,7 +75,7 @@ namespace WpfCLR
         }
 
         /// <summary>
-        /// Gets the number of conncurent invocations of this command
+        /// Gets the number of conncurent invocations of this command.
         /// </summary>
         protected int ConcurrencyLevel
         {
@@ -94,7 +98,7 @@ namespace WpfCLR
         }
 
         /// <summary>
-        /// Determines whether the command is currently being invoked
+        /// Determines whether the command is currently being invoked.
         /// </summary>
         public bool IsBeingInvoked { get { return this.ConcurrencyLevel > 0; } }
 
@@ -119,11 +123,11 @@ namespace WpfCLR
         }
 
         /// <summary>
-        /// Create new relay command
+        /// Create new relay command.
         /// </summary>
         /// <param name="invocationhandler">Command invocation handler.</param>
         /// <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
-        /// <param name="isDisabled">Whether command is to be intially disabled</param>
+        /// <param name="isDisabled">Whether command is to be intially disabled.</param>
         public RelayCommand(RelayInvocationHandler<TArg> invocationhandler, bool allowConcurrentInvocations, bool isDisabled)
             : this(invocationhandler, allowConcurrentInvocations)
         {
@@ -141,6 +145,10 @@ namespace WpfCLR
                 this.CanExecuteChanged(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// This gets called when a property value has changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property that was changed.</param>
         protected void RaisePropertyChanged(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
@@ -149,7 +157,7 @@ namespace WpfCLR
         /// <summary>
         /// This gets called when the value of a property has changed.
         /// </summary>
-        /// <param name="args">Arguments to be passed to the PropertyChanged event</param>
+        /// <param name="args">Arguments to be passed to the PropertyChanged event.</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             if (this.PropertyChanged != null)
@@ -177,7 +185,7 @@ namespace WpfCLR
         }
 
         /// <summary>
-        /// Occurs when the command is being executed
+        /// Occurs when the command is being executed.
         /// </summary>
         /// <param name="parameter">Parameter which was passed by the interactive command.</param>
         protected virtual void OnExecute(TArg parameter)
@@ -187,7 +195,7 @@ namespace WpfCLR
         }
 
         /// <summary>
-        /// This is the method that gets called when the command is to be invoked
+        /// This is the method that gets called when the command is to be invoked.
         /// </summary>
         /// <param name="parameter">Parameter being passed by the interactive command.</param>
         public void Execute(object parameter)
@@ -213,8 +221,16 @@ namespace WpfCLR
         }
     }
 
+	/// <summary>
+	/// Handles relay command invocation events.
+	/// </summary>
+	/// <param name="arg">Argument being passed with the command.</param>
+    /// <typeparam name="TArg">Type of argument to be passed with the command.</typeparam>
     public delegate void RelayInvocationHandler<TArg>(TArg arg);
 
+    /// <summary>
+    /// Command which is used to relay interacive events.
+    /// </summary>
     public class RelayCommand : RelayCommand<object>
     {
         /// <summary>
@@ -224,7 +240,7 @@ namespace WpfCLR
         public RelayCommand(RelayInvocationHandler<object> invocationhandler) : base(invocationhandler) { }
 
         /// <summary>
-        /// Create new relay command
+        /// Create new relay command.
         /// </summary>
         /// <param name="invocationhandler">Command invocation handler.</param>
         /// <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
@@ -235,7 +251,7 @@ namespace WpfCLR
         /// </summary>
         /// <param name="invocationhandler">Command invocation handler.</param>
         /// <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
-        /// <param name="isEnabled">Whether command is to be intially enabled</param>
+        /// <param name="isDisabled">Whether command is to be intially disabled.</param>
         public RelayCommand(RelayInvocationHandler<object> invocationhandler, bool allowConcurrentInvocations, bool isDisabled)
             : base(invocationhandler, allowConcurrentInvocations, isDisabled) { }
     }
