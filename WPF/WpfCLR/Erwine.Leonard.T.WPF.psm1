@@ -3,10 +3,8 @@ Function Initialize-CurrentModule {
     Param()
 	
 	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
-	if (($Local:BaseName + ".dll") | Test-Path -PathType Leaf) {
-		if ((Add-Type -AssemblyName ($Local:BaseName + ".dll") -PassThru) -ne $null) { return }
-	}
 	
+    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
     $Local:Splat = @{
         TypeName = 'System.CodeDom.Compiler.CompilerParameters';
         ArgumentList = (,@(
@@ -17,42 +15,15 @@ Function Initialize-CurrentModule {
             (Add-Type -AssemblyName 'PresentationCore' -ErrorAction Stop -PassThru)[0].Assembly.Location,
             (Add-Type -AssemblyName 'WindowsBase' -ErrorAction Stop -PassThru)[0].Assembly.Location
         ));
+        Property = @{
+            IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
+        }
     };
-    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
-    if ($Local:ModuleManifest.PrivateData.CompilerOptions -ne $null) {
-        if ($Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation -ne $null) {
-            try {
-                [bool]$Local:b = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
-                $Local:Splat.Property = @{
-                    IncludeDebugInformation = $Local:b;
-                    CompilerOptions = '/pdb:"{0}.pdb" /define:DEBUG' -f $Local:BaseName;
-                }
-            } catch { }
-        }
-        if ($PSVersionTable.CLRVersion.Major -lt 3 -or ($PSVersionTable.CLRVersion.Major -eq 3 -and $PSVersionTable.CLRVersion.Minor -lt 5)) {
-            if ($Local:Splat.Property -eq $null) {
-                $Local:Splat.Property = @{ CompilerOptions = '/pdb:"{0}.pdb" /define:PSLEGACY;PSLEGACY2' -f $Local:BaseName }
-            } else {
-                $Local:Splat.Property.CompilerOptions += ';PSLEGACY;PSLEGACY2';
-            }
-        } else {
-            if ($PSVersionTable.CLRVersion.Major -lt 3) {
-                if ($Local:Splat.Property -eq $null) {
-                    $Local:Splat.Property = @{ CompilerOptions = '/pdb:"{0}.pdb" /define:PSLEGACY;PSLEGACY3' -f $Local:BaseName }
-                } else {
-                    $Local:Splat.Property.CompilerOptions += ';PSLEGACY;PSLEGACY3';
-                }
-            }
-        }
+    if ($Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters -ne '') {
+        $Local:Splat.Property.CompilerOptions = $Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters;
     }
     
-	if ($Local:Splat.Property -eq $null) {
-		$Local:Splat.Property = @{ CompilerOptions = '/doc:"{0}.xml" /out:"{0}.dll"' -f $Local:BaseName }
-	} else {
-		$Local:Splat.Property.CompilerOptions += (' /doc:"{0}.xml" /out:"{0}.dll"' -f $Local:BaseName);
-	}
-    Add-Type -Path (('ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs',
-		'WpfWindow.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat);
+    Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat);
 }
 
 Initialize-CurrentModule

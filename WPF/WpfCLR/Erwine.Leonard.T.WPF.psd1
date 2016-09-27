@@ -1,7 +1,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-ModuleToProcess = 'Erwine.Leonard.T.WPF.psm1'
+RootModule = 'Erwine.Leonard.T.WPF.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.1'
@@ -22,7 +22,7 @@ Copyright = '(c) 2016 Leonard T. Erwine. All rights reserved.'
 Description = 'Display WPF windows.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '2.0'
+# PowerShellVersion = ''
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -31,10 +31,10 @@ PowerShellVersion = '2.0'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-DotNetFrameworkVersion = '2.0'
+# DotNetFrameworkVersion = ''
 
 # Minimum version of the common language runtime (CLR) required by this module
-CLRVersion = '2.0'
+# CLRVersion = ''
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''
@@ -43,7 +43,7 @@ CLRVersion = '2.0'
 # RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-# RequiredAssemblies = @()
+RequiredAssemblies = @('PresentationFramework', 'PresentationCore', 'WindowsBase')
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
 # ScriptsToProcess = @()
@@ -79,6 +79,7 @@ FileList = @('ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowPr
 PrivateData = @{
 	CompilerOptions = @{
 		IncludeDebugInformation = $true;
+        CustomTypeSourceFiles = 'ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs', 'WpfWindow.cs';
 	};
 }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Erwine.Leonard.T.WPF</name>
+        <name>app9dnwa</name>
     </assembly>
     <members>
         <member name="T:System.Collections.ObjectModel.ReadOnlyDictionary`2">
