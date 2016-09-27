@@ -58,7 +58,7 @@ RequiredAssemblies = @('PresentationFramework', 'PresentationCore', 'WindowsBase
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = @( 'Assert-ValidXamlMarkup', 'Test-XamlMarkup', 'New-XamlWindowSource', 'New-WpfWindow', 'Show-WpfWindow' )
+FunctionsToExport = @( 'Get-WpfModuleAssemblyPath', 'Assert-ValidXamlMarkup', 'Test-XamlMarkup', 'New-XamlWindowSource', 'New-WpfWindow', 'Show-WpfWindow' )
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'

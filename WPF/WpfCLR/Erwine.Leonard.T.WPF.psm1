@@ -22,11 +22,25 @@ Function Initialize-CurrentModule {
     if ($Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters -ne '') {
         $Local:Splat.Property.CompilerOptions = $Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters;
     }
-    
-    Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat);
+
+    $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
 }
 
 Initialize-CurrentModule
+
+Function Get-WpfModuleAssemblyPath {
+	<#
+		.SYNOPSIS
+			Get module CLR type path.
+ 
+		.DESCRIPTION
+			Get path to custom CLR type assembly for module.
+	#>
+    [CmdletBinding()]
+    Param()
+
+    return $Script:AssemblyPath;
+}
 
 Function Assert-ValidXamlMarkup {
 	<#
@@ -135,7 +149,7 @@ Function New-WpfWindow {
         [ScriptBlock]$AfterWindowClosed,
 
 		# Data to be made available to script blocks, which is also returned in the WpfWindow proxy object in the 'SynchronizedData' property.
-        [Hashtable]$InstanceData
+        [Hashtable]$SynchronizedData
 	)
     
 	$WpfWindow = New-Object -TypeName 'WpfCLR.WpfWindow';
@@ -143,9 +157,9 @@ Function New-WpfWindow {
 	if ($PSBoundParameters.ContainsKey('BeforeWindowCreated')) { $WpfWindow.BeforeWindowCreated = $BeforeWindowCreated }
 	if ($PSBoundParameters.ContainsKey('BeforeWindowShown')) { $WpfWindow.BeforeWindowShown = $BeforeWindowShown }
 	if ($PSBoundParameters.ContainsKey('AfterWindowClosed')) { $WpfWindow.AfterWindowClosed = $AfterWindowClosed }
-	if ($PSBoundParameters.ContainsKey('InstanceData')) {
-		foreach ($key in $InstanceData.Keys) {
-			$WpfWindow.SynchronizedData[$key] = $InstanceData[$key];
+	if ($PSBoundParameters.ContainsKey('SynchronizedData')) {
+		foreach ($key in $SynchronizedData.Keys) {
+			$WpfWindow.SynchronizedData[$key] = $SynchronizedData[$key];
 		}
 	}
 	
@@ -188,7 +202,7 @@ Function Show-WpfWindow {
 
 		# Data to be made available to script blocks, which is also returned in the WpfWindow proxy object in the 'SynchronizedData' property.
 		[Parameter(ParameterSetName = 'New')]
-        [Hashtable]$InstanceData,
+        [Hashtable]$SynchronizedData,
 		
 		# Indicates that no child windows will be displayed, and this will be system modal.
 		[Parameter(ParameterSetName = 'New')]
@@ -201,9 +215,9 @@ Function Show-WpfWindow {
 		if ($PSBoundParameters.ContainsKey('BeforeWindowCreated')) { $WpfWindow.BeforeWindowCreated = $BeforeWindowCreated }
 		if ($PSBoundParameters.ContainsKey('BeforeWindowShown')) { $WpfWindow.BeforeWindowShown = $BeforeWindowShown }
 		if ($PSBoundParameters.ContainsKey('AfterWindowClosed')) { $WpfWindow.AfterWindowClosed = $AfterWindowClosed }
-		if ($PSBoundParameters.ContainsKey('InstanceData')) {
-			foreach ($key in $InstanceData.Keys) {
-				$WpfWindow.SynchronizedData[$key] = $InstanceData[$key];
+		if ($PSBoundParameters.ContainsKey('SynchronizedData')) {
+			foreach ($key in $SynchronizedData.Keys) {
+				$WpfWindow.SynchronizedData[$key] = $SynchronizedData[$key];
 			}
 		}
 	}
