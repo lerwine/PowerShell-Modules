@@ -39,7 +39,7 @@ namespace WpfCLR
 			nsmgr.AddNamespace("p", WpfWindow.XmlNamespaceURI_Presentation);
 			nsmgr.AddNamespace("x", WpfWindow.XmlNamespaceURI_Xaml);
 			
-			foreach (XmlAttribute xmlAttribute in _windowXaml.SelectNodes("//@x:Name", nsmgr))
+			foreach (XmlAttribute xmlAttribute in windowXaml.SelectNodes("//@x:Name", nsmgr))
 			{
 				if (!_namedElements.ContainsKey(xmlAttribute.Value))
 					_namedElements.Add(xmlAttribute.Value, xmlAttribute.OwnerElement);

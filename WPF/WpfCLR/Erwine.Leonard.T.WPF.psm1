@@ -136,7 +136,7 @@ Function New-WpfWindow {
     [CmdletBinding()]
     Param(
 		# Window XAML markup.
-		[ValidateScript({ $_ | Assert-ValidXamlMarkup })]
+		[ValidateScript({ try { $_ | Assert-ValidXamlMarkup; $true } catch { throw } })]
         [string]$WindowXaml,
 
 		# ScriptBlock to invoke before window is created.
@@ -185,7 +185,7 @@ Function Show-WpfWindow {
 
 		# Window XAML markup.
 		[Parameter(Mandatory = $true, ParameterSetName = 'New')]
-		[ValidateScript({ $_ | Assert-ValidXamlMarkup })]
+		[ValidateScript({ try { $_ | Assert-ValidXamlMarkup; $true } catch { throw } })]
         [string]$WindowXaml,
 
 		# ScriptBlock to invoke before window is created.

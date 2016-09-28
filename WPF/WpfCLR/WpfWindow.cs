@@ -64,36 +64,6 @@ namespace WpfCLR
 		public bool? DialogResult { get { return _dialogResult; } set { _dialogResult = value; } }
 		
         /// <summary>
-        /// Collection of <seealso cref="PSObject" /> values which represent the output from the <see cref="BeforeWindowCreated" />, <see cref="BeforeWindowShown" /> and
-		/// <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
-        /// </summary>
-		public Collection<PSObject> Output { get { return _output; } }
-		
-        /// <summary>
-        /// Collection of <seealso cref="ErrorRecord" /> objects which represent the errors encountered while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
-		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
-        /// </summary>
-		public Collection<ErrorRecord> ErrorRecords { get { return _errorRecords; } }
-		
-        /// <summary>
-        /// Collection of <seealso cref="WarningRecord" /> objects which represent the warning messages emitted while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
-		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
-        /// </summary>
-		public Collection<WarningRecord> WarningRecords { get { return _warningRecords; } }
-		
-        /// <summary>
-        /// Collection of <seealso cref="VerboseRecord" /> objects which represent the verbose messages emitted while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
-		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
-        /// </summary>
-		public Collection<VerboseRecord> VerboseRecords { get { return _verboseRecords; } }
-		
-        /// <summary>
-        /// Collection of <seealso cref="DebugRecord" /> objects which represent the debug messages emitted while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
-		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
-        /// </summary>
-		public Collection<DebugRecord> DebugRecords { get { return _debugRecords; } }
-		
-        /// <summary>
         /// Text which contains the XAML markup that is used to create the WPF window.
         /// </summary>
 		public string WindowXaml
@@ -129,10 +99,47 @@ namespace WpfCLR
 				
 				if (xmlDocument.DocumentElement.LocalName != "Window")
 					throw new ArgumentException("XAML markup does not represent a window.", "value");
+				
 				_xml = value;
 				_windowXaml = xmlDocument;
 			}
 		}
+		
+		#region Output Collections
+		
+        /// <summary>
+        /// Collection of <seealso cref="PSObject" /> values which represent the output from the <see cref="BeforeWindowCreated" />, <see cref="BeforeWindowShown" /> and
+		/// <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
+        /// </summary>
+		public Collection<PSObject> Output { get { return _output; } }
+		
+        /// <summary>
+        /// Collection of <seealso cref="ErrorRecord" /> objects which represent the errors encountered while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
+		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
+        /// </summary>
+		public Collection<ErrorRecord> ErrorRecords { get { return _errorRecords; } }
+		
+        /// <summary>
+        /// Collection of <seealso cref="WarningRecord" /> objects which represent the warning messages emitted while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
+		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
+        /// </summary>
+		public Collection<WarningRecord> WarningRecords { get { return _warningRecords; } }
+		
+        /// <summary>
+        /// Collection of <seealso cref="VerboseRecord" /> objects which represent the verbose messages emitted while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
+		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
+        /// </summary>
+		public Collection<VerboseRecord> VerboseRecords { get { return _verboseRecords; } }
+		
+        /// <summary>
+        /// Collection of <seealso cref="DebugRecord" /> objects which represent the debug messages emitted while showing the window as well as executing the <see cref="BeforeWindowCreated" />,
+		/// <see cref="BeforeWindowShown" /> and <see cref="AfterWindowClosed" /> <seealso cref="ScriptBlock" /> parameters.
+        /// </summary>
+		public Collection<DebugRecord> DebugRecords { get { return _debugRecords; } }
+		
+		#endregion
+		
+		#region Handler Script Blocks
 		
         /// <summary>
         /// Script which gets executed before the XAML window is created.
@@ -189,6 +196,8 @@ namespace WpfCLR
 				_afterWindowClosed = value;
 			}
 		}
+		
+		#endregion
 		
 		#endregion
 		
@@ -605,6 +614,8 @@ namespace WpfCLR
 		
 		#endregion
 		
+		#region Validation Overrides
+		
         /// <summary>
         /// Asserts that a string value contains valid XML markup that represents a WPF window.
         /// </summary>
@@ -684,6 +695,8 @@ namespace WpfCLR
 			return false;
 		}
 		
+		#endregion
+		
         /// <summary>
         /// Displays WPF window as a dialog (modal).
         /// </summary>
@@ -693,6 +706,9 @@ namespace WpfCLR
 		{
 			if (_openWindowProcess != null)
 				throw new InvalidOperationException("Window is already open.");
+			
+			if (_windowXaml == null)
+				throw new InvalidOperationException("No window XAML has been defined.");
 			
 			using (WindowProcessInternal openWindowProcess  = new WindowProcessInternal(this, _windowXaml, true, host))
 			{
@@ -713,6 +729,9 @@ namespace WpfCLR
 		{
 			if (_openWindowProcess != null)
 				throw new InvalidOperationException("Window is already open.");
+			
+			if (_windowXaml == null)
+				throw new InvalidOperationException("No window XAML has been defined.");
 			
 			using (WindowProcessInternal openWindowProcess  = new WindowProcessInternal(this, _windowXaml, false, host))
 			{
