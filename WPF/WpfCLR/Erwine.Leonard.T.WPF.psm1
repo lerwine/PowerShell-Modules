@@ -48,22 +48,44 @@ Function Assert-ValidXamlMarkup {
 			Asserts validity of XAML markup.
  
 		.DESCRIPTION
-			Throws an error if the XML Markup is not valid.
+			Writes an error if the XML Markup is not valid.
 	#>
     [CmdletBinding()]
     Param(
 		# XAML markup.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [string]$Xml,
+		[ValidateScript({ $_ -is [string] -or $_ -is [System.Xml.XmlDocument] })]
+        [object]$Xml,
 		
-		# Whether to return the parsed XAML.
+		# Whether to return the XAML parse results upon success.
 		[switch]$PassThru
     )
     
     Process {
-		$XmlDocument = $null;
-		[WpfCLR.WpfWindow]::AssertValidXaml($Xml, [ref]$XmlDocument);
-		if ($PassThru -and $XmlDocument -ne $null) { $XmlDocument | Write-Output }
+		$XamlLoadResult = $null;
+		$success = $false;
+		if ($Xml -is [string]) {
+			$success = [WpfCLR.XamlUtility]::TryParseXaml($Xml, [ref]$XamlLoadResult);
+		} else {
+			$success = [WpfCLR.XamlUtility]::TryLoadXaml($Xml, [ref]$XamlLoadResult);
+		}
+		if ($success) {
+			if ($PassThru) { $XamlLoadResult | Write-Output; }
+		} else {
+			if ($XamlLoadResult -ne $null) {
+				if ($XamlLoadResult.Error -ne $null) {
+					if ($XamlLoadResult.Error.Message -ne $null -and $XamlLoadResult.Error.Message.Trim().Length > 0) {
+						Write-Error -Exception $XamlLoadResult.Error -Category ParserError -ErrorId 'Assert.ValidXamlMarkup.Failure' -Message $XamlLoadResult.Error.Message -TargetObject $XamlLoadResult;
+					} else {
+						Write-Error -Exception $XamlLoadResult.Error -Category ParserError -ErrorId 'Assert.ValidXamlMarkup.Failure' -Message 'Markup is invalid.' -TargetObject $XamlLoadResult;
+					}
+				} else {
+					Write-Error -Message 'Markup is invalid.'-Category ParserError -ErrorId 'Assert.ValidXamlMarkup.Failure' -TargetObject $XamlLoadResult;
+				}
+			} else {
+				Write-Error -Message 'Markup is invalid.'-Category ParserError -ErrorId 'Assert.ValidXamlMarkup.Failure';
+			}
+		}
 	}
 }
 
@@ -76,34 +98,40 @@ Function Test-XamlMarkup {
 			Returns boolean value (or message) to indicate whether the XML Markup is valid.
         
 		.OUTPUTS
-			System.Boolean. (If -not $ReturnErrorMessage) True if markup is valid; otherwise False.
-			System.String. (If $ReturnErrorMessage) Null if markup is valid; otherwise error message text.
+			System.Boolean. (If -not $ReturnResultObject) True if markup is valid; otherwise False.
+			WpfCLR.XamlLoadResult. (If $ReturnResultObject) Object which contains markup parse result.
 	#>
     [CmdletBinding(DefaultParameterSetName = 'ReturnBoolean')]
-	[OutputType([bool], ParameterSetName = 'ReturnBoolean')]
-	[OutputType([string], ParameterSetName = 'ReturnMessage')]
     Param(
 		# XAML markup.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ReturnBoolean')]
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ReturnMessage')]
-        [string]$Xml,
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ReturnObject')]
+		[ValidateScript({ $_ -is [string] -or $_ -is [System.Xml.XmlDocument] })]
+        [object]$Xml,
 		
-		# Whether to return the error message instead of a boolean value.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ReturnMessage')]
-		[switch]$ReturnErrorMessage
+		# Whether to return the result object, which includes any error information, instead of a boolean value.
+        [Parameter(Mandatory = $true, ParameterSetName = 'ReturnObject')]
+		[switch]$ReturnResultObject
     )
     
     Process {
-		$Message = '';
-		if ([WpfCLR.WpfWindow]::TryValidateXaml($Xml, [ref]$Message)) {
-			if (-not $ReturnErrorMessage) { $true }
+		$XamlLoadResult = $null;
+		$success = $false;
+		if ($Xml -is [string]) {
+			$success = [WpfCLR.XamlUtility]::TryParseXaml($Xml, [ref]$XamlLoadResult);
 		} else {
-			if ($ReturnErrorMessage) { $Message } else { $false }
+			$success = [WpfCLR.XamlUtility]::TryLoadXaml($Xml, [ref]$XamlLoadResult);
+		}
+		
+		if ($ReturnResultObject) {
+			if ($XamlLoadResult -ne $null) { $XamlLoadResult | Write-Output }
+		} else {
+			$success | Write-Output;
 		}
 	}
 }
 
-Function New-XamlWindowSource {
+Function New-XamlMarkup {
 	<#
 		.SYNOPSIS
 			Create empty markup for new window.
@@ -114,12 +142,175 @@ Function New-XamlWindowSource {
 		.OUTPUTS
 			System.Xml.XmlDocument. XAML markup for a new window.
 	#>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'ImplicitNs')]
 	[OutputType([System.Xml.XmlDocument])]
-    Param()
+    Param(
+		[Parameter(ParameterSetName = 'ImplicitNs')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'ExplicitNs')]
+		[string]$ElementName = 'Window',
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'ExplicitNs')]
+		[string]$NamespaceURI
+	)
     
-	[Xml]$XmlDocument = [WpfCLR.WpfWindow]::Xaml_EmptyWindow;
+	$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+	
+	if (-not $PSBoundParameters.ContainsKey('NamespaceURI')) { $NamespaceURI = [WpfCLR.XamlUtility]::XmlNamespaceURI_Presentation }
+	$XmlDocument.AppendChild($XmlDocument.CreateElement($ElementName, $NamespaceURI));
+	
+	if ($NamespaceURI -ne [WpfCLR.XamlUtility]::XmlNamespaceURI_Xaml) {
+		$XmlDocument.DocumentElement.Attributes.Append($XmlDocument.CreateAttribute("x", [WpfCLR.XamlUtility]::XmlNamespaceURI_Xml)).Value = XmlNamespaceURI_Xaml;
+	}
+	
 	$XmlDocument | Write-Output;
+}
+
+Function Get-XamlMarkupProperty {
+    [CmdletBinding()]
+	[OutputType([System.Xml.XmlNode])]
+    Param(
+		[Parameter(Mandatory = $true)]
+		[System.Xml.XmlElement]$Parent,
+		
+		[Parameter(Mandatory = $true)]
+		[string]$Name,
+		
+		[string]$NamespaceURI,
+		
+		[switch]$ForceElement
+	)
+    
+	$XmlAttribute = $null;
+	$XmlElement = $null;
+	$XmlNamespaceManager = $null;
+	$Value = $null;
+	if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
+		$XmlNamespaceManager = New-Object -TypeName 'System.Xml.XmlNamespaceManager' -ArgumentList $Parent.OwnerDocument.NameTable;
+		$XmlNamespaceManager.AddNamespace('ns', $NamespaceURI);
+		$Result = $Parent.SelectSingleNode(('ns:{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+	} else {
+		$XmlNamespaceManager = New-Object -TypeName 'System.Xml.XmlNamespaceManager' -ArgumentList $Parent.OwnerDocument.NameTable;
+		$XmlNamespaceManager.AddNamespace('ns', $Parent.NamespaceURI);
+		$Result = $Parent.SelectSingleNode(('ns:{0}.{1}' -f $Parent.LocalName, [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+	}
+	
+	if ($Result -eq $null) {
+		if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
+			$Result = $Parent.SelectSingleNode(('@ns:{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+		} else {
+			$Result = $Parent.SelectSingleNode(('@{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)));
+		}
+		if ($ForceElement -and $Result -ne $null) {
+			$Value = $Result.Value;
+			$Parent.Attributes.Remove($Result) | Out-Null;
+			$Result = $null;
+		}
+	}
+	
+	if ($Result -ne $null) {
+		$Result | Write-Output;
+	} else {
+		if ($ForceElement){
+			if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
+				$Parent.AppendChild($Parent.OwnerDocument.CreateElement($Parent.OwnerDocument.GetPrefixOfNamespace($NamespaceURI), [System.Xml.XmlConvert]::EncodeLocalName($Name), $NamespaceURI)) | Write-Output;
+			} else {
+				$Parent.AppendChild($Parent.OwnerDocument.CreateElement(('{0}.{1}' -f $Parent.LocalName, [System.Xml.XmlConvert]::EncodeLocalName($Name)), $Parent.NamespaceURI)) | Write-Output;
+			}
+		}
+	}
+}
+
+Function Set-XamlMarkupProperty {
+    [CmdletBinding()]
+	[OutputType([System.Xml.XmlNode])]
+    Param(
+		[Parameter(Mandatory = $true)]
+		[System.Xml.XmlElement]$Parent,
+		
+		[Parameter(Mandatory = $true)]
+		[string]$Name,
+		
+		[string]$NamespaceURI,
+		
+		[string]$Value
+	)
+    
+	$XmlAttribute = $null;
+	$XmlElement = $null;
+	$XmlNamespaceManager = $null;
+	
+	if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
+		$XmlNamespaceManager = New-Object -TypeName 'System.Xml.XmlNamespaceManager' -ArgumentList $Parent.OwnerDocument.NameTable;
+		$XmlNamespaceManager.AddNamespace('ns', $NamespaceURI);
+		$Result = $Parent.SelectSingleNode(('ns:{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+	} else {
+		$XmlNamespaceManager = New-Object -TypeName 'System.Xml.XmlNamespaceManager' -ArgumentList $Parent.OwnerDocument.NameTable;
+		$XmlNamespaceManager.AddNamespace('ns', $Parent.NamespaceURI);
+		$Result = $Parent.SelectSingleNode(('ns:{0}.{1}' -f $Parent.LocalName, [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+	}
+	
+	if ($Result -ne $null) {
+		$Parent.RemoveChild($Result) | Out-Null;
+		if (-not $PSBoundParameters.ContainsKey('Value')) { return }
+	} else {
+		if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
+			$Result = $Parent.SelectSingleNode(('@ns:{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+		} else {
+			$Result = $Parent.SelectSingleNode(('@{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)));
+		}
+		
+		if (-not $PSBoundParameters.ContainsKey('Value'))
+		{
+			if ($Result -ne $null) { $Parent.Attributes.Remove($Result) | Out-Null }
+			return;
+		}
+	}
+	
+	if ($Result -eq $null) {
+		if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
+			$Result = $Parent.Attributes.Append($Parent.OwnerDocument.CreateAttribute($Parent.OwnerDocument.GetPrefixOfNamespace($NamespaceURI), [System.Xml.XmlConvert]::EncodeLocalName($Name), $NamespaceURI));
+		} else {
+			$Result = $Parent.Attributes.Append($Parent.OwnerDocument.CreateAttribute([System.Xml.XmlConvert]::EncodeLocalName($Name)));
+		}
+	}
+	
+	$Result.Value = $Value;
+}
+
+Function Get-XamlMarkupContent {
+    [CmdletBinding()]
+	[OutputType([System.Xml.XmlNode])]
+    Param(
+		[Parameter(Mandatory = $true)]
+		[System.Xml.XmlElement]$Parent,
+		
+		[Parameter(Mandatory = $true)]
+		[string]$Name,
+		
+		[string]$NamespaceURI
+	)
+    
+	if (-not $PSBoundParameters.ContainsKey('NamespaceURI')) { $NamespaceURI = $Parent.NamespaceURI }
+	$XmlNamespaceManager = New-Object -TypeName 'System.Xml.XmlNamespaceManager' -ArgumentList $Parent.OwnerDocument.NameTable;
+	$XmlNamespaceManager.AddNamespace('ns', $NamespaceURI);
+	$Parent.SelectNodes(('ns:{0}' -f [System.Xml.XmlConvert]::EncodeLocalName($Name)), $XmlNamespaceManager);
+}
+
+Function Append-XamlMarkupContent {
+    [CmdletBinding()]
+	[OutputType([System.Xml.XmlNode])]
+    Param(
+		[Parameter(Mandatory = $true)]
+		[System.Xml.XmlElement]$Parent,
+		
+		[Parameter(Mandatory = $true)]
+		[string]$Name,
+		
+		[string]$NamespaceURI
+	)
+    
+	if (-not $PSBoundParameters.ContainsKey('NamespaceURI')) { $NamespaceURI = $Parent.NamespaceURI }
+	$Parent.AppendChild($Parent.OwnerDocument.CreateElement([System.Xml.XmlConvert]::EncodeLocalName($Name), $NamespaceURI)) | Write-Output;
 }
 
 Function New-WpfWindow {
@@ -137,7 +328,7 @@ Function New-WpfWindow {
     Param(
 		# Window XAML markup.
 		[ValidateScript({ try { $_ | Assert-ValidXamlMarkup; $true } catch { throw } })]
-        [string]$WindowXaml,
+        [object]$WindowXaml,
 
 		# ScriptBlock to invoke before window is created.
         [ScriptBlock]$BeforeWindowCreated,
@@ -153,7 +344,13 @@ Function New-WpfWindow {
 	)
     
 	$WpfWindow = New-Object -TypeName 'WpfCLR.WpfWindow';
-	if ($PSBoundParameters.ContainsKey('WindowXaml')) { $WpfWindow.WindowXaml = $WindowXaml }
+	if ($PSBoundParameters.ContainsKey('WindowXaml')) {
+		if ($WindowXaml -is [string]) {
+			$WpfWindow.WindowXaml = $WindowXaml.DocumentElement.OuterXml;
+		} else {
+			$WpfWindow.WindowXaml = $WindowXaml;
+		}
+	}
 	if ($PSBoundParameters.ContainsKey('BeforeWindowCreated')) { $WpfWindow.BeforeWindowCreated = $BeforeWindowCreated }
 	if ($PSBoundParameters.ContainsKey('BeforeWindowShown')) { $WpfWindow.BeforeWindowShown = $BeforeWindowShown }
 	if ($PSBoundParameters.ContainsKey('AfterWindowClosed')) { $WpfWindow.AfterWindowClosed = $AfterWindowClosed }
@@ -186,7 +383,7 @@ Function Show-WpfWindow {
 		# Window XAML markup.
 		[Parameter(Mandatory = $true, ParameterSetName = 'New')]
 		[ValidateScript({ try { $_ | Assert-ValidXamlMarkup; $true } catch { throw } })]
-        [string]$WindowXaml,
+        [object]$WindowXaml,
 
 		# ScriptBlock to invoke before window is created.
 		[Parameter(ParameterSetName = 'New')]
@@ -211,7 +408,11 @@ Function Show-WpfWindow {
     $WpfWindow = $WindowProxy;
 	if (-not $PSBoundParameters.ContainsKey('WindowProxy')) {
 		$WpfWindow = New-Object -TypeName 'WpfCLR.WpfWindow';
-		$WpfWindow.WindowXaml = $WindowXaml;
+		if ($WindowXaml -is [string]) {
+			$WpfWindow.WindowXaml = $WindowXaml.DocumentElement.OuterXml;
+		} else {
+			$WpfWindow.WindowXaml = $WindowXaml;
+		}
 		if ($PSBoundParameters.ContainsKey('BeforeWindowCreated')) { $WpfWindow.BeforeWindowCreated = $BeforeWindowCreated }
 		if ($PSBoundParameters.ContainsKey('BeforeWindowShown')) { $WpfWindow.BeforeWindowShown = $BeforeWindowShown }
 		if ($PSBoundParameters.ContainsKey('AfterWindowClosed')) { $WpfWindow.AfterWindowClosed = $AfterWindowClosed }

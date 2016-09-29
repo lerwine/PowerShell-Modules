@@ -19,22 +19,6 @@ namespace WpfCLR
     {
 		#region Fields
 		
-        /// <summary>
-        /// Namespace for WPF markup.
-        /// </summary>
-		public const string XmlNamespaceURI_Presentation = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-		
-        /// <summary>
-        /// Namespace for XAML markup.
-        /// </summary>
-		public const string XmlNamespaceURI_Xaml = "http://schemas.microsoft.com/winfx/2006/xaml";
-		
-        /// <summary>
-        /// XAML markup for an empty WPF window.
-        /// </summary>
-		public const string Xaml_EmptyWindow = @"<Window xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
-</Window>";
-
 		private WindowProcessInternal _openWindowProcess = null;
 		private string _xml = "";
 		private XmlDocument _windowXaml;

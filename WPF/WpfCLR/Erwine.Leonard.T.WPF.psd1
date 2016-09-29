@@ -73,13 +73,13 @@ AliasesToExport = '*'
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs', 'WpfWindow.cs')
+FileList = @('ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs', 'WpfWindow.cs', 'XamlLoadResult.cs', 'XamlUtility.cs')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess
 PrivateData = @{
 	CompilerOptions = @{
 		IncludeDebugInformation = $true;
-        CustomTypeSourceFiles = 'ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs', 'WpfWindow.cs';
+        CustomTypeSourceFiles = 'ReadOnlyDictionary.cs', 'RelayCommand.cs', 'ThisObj.cs', 'WindowProcessInternal.cs', 'WpfWindow.cs', 'XamlLoadResult.cs', 'XamlUtility.cs';
 	};
 }
 
