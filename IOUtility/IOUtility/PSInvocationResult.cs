@@ -50,7 +50,7 @@ namespace IOUtilityCLR
         /// </summary>
         public Hashtable SynchronizedData { get; private set; }
 
-        internal PSInvocationResult(Collection<PSObject> collection, Runspace runspace, PSDataStreams streams, string[] variableNames, bool wasStopped, Hashtable synchronizedData)
+        public PSInvocationResult(Collection<PSObject> collection, Runspace runspace, PSDataStreams streams, string[] variableNames, bool wasStopped, Hashtable synchronizedData)
         {
             Output = collection;
             Variables = new Dictionary<string, object>();

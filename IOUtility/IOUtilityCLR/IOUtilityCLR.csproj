@@ -51,6 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -61,7 +62,9 @@
     </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSAsyncInvocationResult.cs" />
     <Compile Include="PSInvocationBuilder.cs" />
+    <Compile Include="PSInvocationBuilderBase.cs" />
     <Compile Include="PSInvocationResult.cs" />
     <Compile Include="PsWpfInvocation.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
@@ -82,36 +86,20 @@
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
+    <Compile Include="WindowProxy.cs" />
+    <Compile Include="XamlDialogAsyncResult.cs" />
+    <Compile Include="XamlDialogResult.cs" />
     <Compile Include="XamlWindow.cs" />
+    <Compile Include="XamlWindowBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
-    <None Include="Erwine.Leonard.T.IOUtility.psd1">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Erwine.Leonard.T.IOUtility.tt</DependentUpon>
-    </None>
-    <None Include="Erwine.Leonard.T.IOUtility.psm1" />
     <None Include="PowerShellXamlWindow.ps1" />
-    <None Include="PSModuleDetail.ttinc" />
     <None Include="README.md" />
-    <None Include="Setup.ps1">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Setup.tt</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Erwine.Leonard.T.IOUtility.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Erwine.Leonard.T.IOUtility.psd1</LastGenOutput>
-    </Content>
     <Content Include="KnownMimeTypes.xml" />
     <Content Include="ModuleDefinition.xml" />
-    <Content Include="Setup.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Setup.ps1</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

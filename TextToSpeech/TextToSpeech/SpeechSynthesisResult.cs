@@ -1,37 +1,39 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Management.Automation;
 using System.Speech.Synthesis;
 using System.Text;
 
 namespace Erwine.Leonard.T.TextToSpeech
 {
-    public abstract class SpeechSynthesisResult
+    public class SpeechSynthesisResult
     {
-        public TimeSpan AudioPosition { get; internal set; }
-        public bool Cancelled { get; internal set; }
-        public int CharacterCount { get; internal set; }
-        public int CharacterPosition { get; internal set; }
-        public Exception Error { get; internal set; }
-        public int Index { get; internal set; }
-        public string LastBookmark { get; internal set; }
-        public string Phoneme { get; internal set; }
-        public object Prompt { get; internal set; }
-        public SynthesizerState State { get; internal set; }
-        public string Text { get; internal set; }
-        public int Viseme { get; internal set; }
-        public VoiceInfo Voice { get; internal set; }
-    }
+        public bool Cancelled { get; private set; }
+        public bool Failed { get; private set; }
+        public Hashtable SynchronizedData { get; private set; }
+        public Collection<DebugRecord> DebugMessages { get; private set; }
+        public Collection<ErrorRecord> Errors { get; private set; }
+        public Collection<InformationRecord> InformationMessages { get; private set; }
+        public Collection<PSObject> Output { get; private set; }
+        public Collection<VerboseRecord> VerboseMessages { get; private set; }
+        public Collection<WarningRecord> Warnings { get; private set; }
 
-    public class SpeechSynthesisResult<TPrompt> : SpeechSynthesisResult
-    {
-        public new TPrompt Prompt { get; internal set; }
-    }
-
-    public class SpeechSynthesisResult<TPrompt, TNext> : SpeechSynthesisResult<TPrompt>
-    {
-        public TimeSpan Duration { get; internal set; }
-        public SynthesizerEmphasis Emphasis { get; internal set; }
-        public TNext Next { get; internal set; }
+        public SpeechSynthesisResult(Collection<PSObject> output, Collection<ErrorRecord> errors, Collection<WarningRecord> warnings,
+            Collection<InformationRecord> informationMessages, Collection<VerboseRecord> verboseMessages, Collection<DebugRecord> debugMessages, bool cancelled,
+            bool failed, Hashtable synchronizedData)
+        {
+            Output = output;
+            Errors = errors;
+            Warnings = warnings;
+            InformationMessages = informationMessages;
+            VerboseMessages = verboseMessages;
+            DebugMessages = debugMessages;
+            Cancelled = cancelled;
+            Failed = failed;
+            SynchronizedData = synchronizedData;
+        }
     }
 }

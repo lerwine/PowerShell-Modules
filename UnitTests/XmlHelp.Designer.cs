@@ -59,5 +59,23 @@ namespace UnitTests {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;speak version=&quot;1.0&quot; xmlns=&quot;http://www.w3.org/2001/10/synthesis&quot; xml:lang=&quot;en-US&quot;&gt;
+        ///  &lt;prosody rate=&quot;fast&quot;&gt;
+        ///    &lt;mark name=&quot;1.1 Identifying Components of Motherboards&quot; /&gt;
+        ///    &lt;voice name=&quot;Microsoft David Desktop&quot;&gt;
+        ///      1.1 Identifying Components of Motherboards
+        ///    &lt;/voice&gt;
+        ///    &lt;voice name=&quot;Microsoft Zira Desktop&quot;&gt;
+        ///      The spine of the computer is the motherboard, otherwise known as the system board or mainboard.
+        ///      This is the printed circuit board (&lt;sa [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ExampleSSML {
+            get {
+                return ResourceManager.GetString("ExampleSSML", resourceCulture);
+            }
+        }
     }
 }

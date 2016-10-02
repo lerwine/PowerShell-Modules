@@ -1,0 +1,38 @@
+﻿<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+  <prosody rate="fast">
+  <voice gender="male" age="30">
+    1.1 Identifying Components of Motherboards
+  </voice>
+  <voice gender="female" age="30">
+    The spine of the computer is the motherboard, otherwise known as the system board or mainboard.
+    This is the printed circuit board (<say-as interpret-as="characters">PCB</say-as>), which is a conductive series of pathways laminated to a nonconductive substrate that lines the bottom of
+    the computer and is often of a uniform color, such as olive, brown, or blue.
+    It is the most important component in the computer because it connects all of the other components together.
+    Figure <say-as interpret-as="cardinal">1.1</say-as> shows a typical PC system board, as seen from above. All other components are attached to this circuit board.
+    On the system board, you will find the central processing unit (CPU), underlying circuitry, expansion slots, video components, random access memory (RAM) slots,
+    and a variety of other chips. We will be discussing each of these components throughout this book.
+  </voice>
+  <voice gender="male" age="30">
+    System Board Form Factors
+  </voice>
+  <voice gender="female" age="30">
+    System boards are classified by their form factor (design), such as <say-as interpret-as="characters">ATX</say-as>, micro <say-as interpret-as="characters">ATX</say-as>,
+    and <say-as interpret-as="characters">ITX</say-as>. Exercise care and vigilance when acquiring a motherboard and case separately. Some cases are less accommodating than
+    others, and they might not be physically compatible with the motherboard you choose.
+  </voice>
+  <voice gender="male" age="30">
+    Advanced Technology Extended
+  </voice>
+  <voice gender="female" age="30">
+    Intel developed the Advanced Technology Extended (<say-as interpret-as="characters">ATX</say-as>) motherboard in the mid-1990s to improve upon the classic
+    <say-as interpret-as="characters">AT</say-as>-style motherboard architecture that had ruled the <say-as interpret-as="characters">PC</say-as> world for many years.
+    The <say-as interpret-as="characters">ATX</say-as> motherboard has the processor and memory slots at right angles to the expansion cards.
+    This arrangement puts the processor and memory in line with the fan output of the power supply, allowing the processor to run cooler.
+    And because those components are not in line with the expansion cards, you can install full-length expansion cards—adapters that extend the full length of the
+    inside of a standard computer case—in an <say-as interpret-as="characters">ATX</say-as> motherboard machine.
+    <say-as interpret-as="characters">ATX</say-as> (and its derivatives) is the primary motherboard in use today. Standard <say-as interpret-as="characters">ATX</say-as>
+    motherboards measure 12<sub alias="inches">&quot;</sub> × <say-as interpret-as="cardinal">9.6</say-as><sub alias="inches">&quot;</sub>
+    (305<sub alias=" millimeters">mm</sub> × 244<sub alias=" millimeters">mm</sub>).
+  </voice>
+  </prosody>
+</speak>

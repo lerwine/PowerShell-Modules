@@ -14,7 +14,6 @@ namespace IOUtilityCLR
     /// </summary>
     public class BackgroundPipelineInvocation : IDisposable
     {
-        private bool _isDisposed = false;
         private object _syncRoot = new object();
         PSHost _host;
         Runspace _runspace;
@@ -345,29 +344,25 @@ namespace IOUtilityCLR
         {
             object syncRoot = _syncRoot;
             if (syncRoot == null)
-            {
-                if (disposing)
-                    throw new ObjectDisposedException(GetType().FullName);
                 return;
-            }
             lock (syncRoot)
             {
-                if (_syncRoot != null)
+                if (_syncRoot == null)
+                    return;
+
+                _syncRoot = null;
+                if (_powerShell != null)
                 {
-                    _syncRoot = null;
-                    if (_powerShell != null)
+                    try
                     {
-                        try
-                        {
-                            if (_asyncResult != null && !_asyncResult.IsCompleted)
-                                _powerShell.Stop();
-                        }
-                        catch { }
-                        try { _powerShell.Dispose(); } catch { }
+                        if (_asyncResult != null && !_asyncResult.IsCompleted)
+                            _powerShell.Stop();
                     }
-                    if (_runspace != null)
-                        try { _runspace.Dispose(); } catch { }
+                    catch { }
+                    try { _powerShell.Dispose(); } catch { }
                 }
+                if (_runspace != null)
+                    try { _runspace.Dispose(); } catch { }
             }
         }
 

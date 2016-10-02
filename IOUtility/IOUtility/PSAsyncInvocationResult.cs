@@ -11,7 +11,8 @@ namespace IOUtilityCLR
     /// <summary>
     /// Represents an asynchronous wait for results from a PowerShell pipeline invocation.
     /// </summary>
-    public class PSAsyncInvocationResult : IDisposable
+    public abstract class PSAsyncInvocationResult<TResult> : IDisposable
+        where TResult : PSInvocationResult
     {
         private object _syncRoot = new object();
         private Hashtable _synchronizedData;
@@ -21,7 +22,7 @@ namespace IOUtilityCLR
         private string[] _variableNames;
         private bool _isCompleted = false;
         private bool _stopInvoked = false;
-        private PSInvocationResult _result = null;
+        private TResult _result = null;
 
         /// <summary>
         /// True if the PowerShell pipeline invocation has completed; otherwise, false.
@@ -39,7 +40,7 @@ namespace IOUtilityCLR
         /// Waits for the invocation to complete, and returns the result.
         /// </summary>
         /// <returns>Object which represents the results of the invocation.</returns>
-        public PSInvocationResult GetResult()
+        public TResult GetResult()
         {
             CheckEndInvoke(true);
             return _result;
@@ -54,7 +55,7 @@ namespace IOUtilityCLR
                     _isCompleted = true;
                     try
                     {
-                        _result = new PSInvocationResult(new Collection<PSObject>(_powershell.EndInvoke(_asyncResult)), _runspace, _powershell.Streams, _variableNames, _stopInvoked, _synchronizedData);
+                        _result = CreateResult(new Collection<PSObject>(_powershell.EndInvoke(_asyncResult)), _runspace, _powershell.Streams, _variableNames, _stopInvoked, _synchronizedData);
                     }
                     catch
                     {
@@ -71,6 +72,8 @@ namespace IOUtilityCLR
             }
         }
 
+        protected abstract TResult CreateResult(Collection<PSObject> collection, Runspace runspace, PSDataStreams streams, string[] variableNames, bool stopInvoked, Hashtable synchronizedData);
+
         /// <summary>
         /// Create a new object to represent an asynchronous wait for results from a PowerShell pipeline invocation.
         /// </summary>
@@ -86,42 +89,6 @@ namespace IOUtilityCLR
             _powershell = powershell;
             _variableNames = variableNames;
             _synchronizedData = synchronizedData;
-        }
-
-        private static PSAsyncInvocationResult Create(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, IEnumerable<string> variableNames, Func<PowerShell, IAsyncResult> invoke, Hashtable synchronizedData)
-        {
-            string[] names = variableNames.Where(s => !String.IsNullOrEmpty(s)).ToArray();
-            Runspace runspace = createRunspace();
-            try
-            {
-                PowerShell powershell = createPowerShell(runspace);
-                try { return new PSAsyncInvocationResult(invoke(powershell), runspace, powershell, names, synchronizedData); }
-                catch
-                {
-                    powershell.Dispose();
-                    throw;
-                }
-            }
-            catch
-            {
-                runspace.Dispose();
-                throw;
-            }
-        }
-
-        internal static PSAsyncInvocationResult Create(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, IEnumerable<string> variableNames, Hashtable synchronizedData)
-        {
-            return Create(createRunspace, createPowerShell, variableNames, ps => ps.BeginInvoke(), synchronizedData);
-        }
-
-        internal static PSAsyncInvocationResult Create<T>(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, PSDataCollection<T> input, PSInvocationSettings settings, IEnumerable<string> variableNames, Hashtable synchronizedData)
-        {
-            return Create(createRunspace, createPowerShell, variableNames, ps => ps.BeginInvoke<T>(input, settings, null, null), synchronizedData);
-        }
-
-        internal static PSAsyncInvocationResult Create<T>(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, PSDataCollection<T> input, IEnumerable<string> variableNames, Hashtable synchronizedData)
-        {
-            return Create(createRunspace, createPowerShell, variableNames, ps => ps.BeginInvoke<T>(input), synchronizedData);
         }
 
         /// <summary>
@@ -244,5 +211,57 @@ namespace IOUtilityCLR
         public void Dispose() { Dispose(true); }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Represents an asynchronous wait for results from a PowerShell pipeline invocation.
+    /// </summary>
+    public class PSAsyncInvocationResult : PSAsyncInvocationResult<PSInvocationResult>
+    {
+        public PSAsyncInvocationResult(IAsyncResult asyncResult, Runspace runspace, PowerShell powershell, string[] variableNames, Hashtable synchronizedData) 
+            : base(asyncResult, runspace, powershell, variableNames, synchronizedData)
+        {
+        }
+
+        private static PSAsyncInvocationResult Create(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, IEnumerable<string> variableNames, Func<PowerShell, IAsyncResult> invoke, Hashtable synchronizedData)
+        {
+            string[] names = variableNames.Where(s => !String.IsNullOrEmpty(s)).ToArray();
+            Runspace runspace = createRunspace();
+            try
+            {
+                PowerShell powershell = createPowerShell(runspace);
+                try { return new PSAsyncInvocationResult(invoke(powershell), runspace, powershell, names, synchronizedData); }
+                catch
+                {
+                    powershell.Dispose();
+                    throw;
+                }
+            }
+            catch
+            {
+                runspace.Dispose();
+                throw;
+            }
+        }
+
+        internal static PSAsyncInvocationResult Create(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, IEnumerable<string> variableNames, Hashtable synchronizedData)
+        {
+            return Create(createRunspace, createPowerShell, variableNames, ps => ps.BeginInvoke(), synchronizedData);
+        }
+
+        internal static PSAsyncInvocationResult Create<T>(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, PSDataCollection<T> input, PSInvocationSettings settings, IEnumerable<string> variableNames, Hashtable synchronizedData)
+        {
+            return Create(createRunspace, createPowerShell, variableNames, ps => ps.BeginInvoke<T>(input, settings, null, null), synchronizedData);
+        }
+
+        internal static PSAsyncInvocationResult Create<T>(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, PSDataCollection<T> input, IEnumerable<string> variableNames, Hashtable synchronizedData)
+        {
+            return Create(createRunspace, createPowerShell, variableNames, ps => ps.BeginInvoke<T>(input), synchronizedData);
+        }
+
+        protected override PSInvocationResult CreateResult(Collection<PSObject> collection, Runspace runspace, PSDataStreams streams, string[] variableNames, bool stopInvoked, Hashtable synchronizedData)
+        {
+            return new PSInvocationResult(collection, runspace, streams, variableNames, stopInvoked, synchronizedData);
+        }
     }
 }

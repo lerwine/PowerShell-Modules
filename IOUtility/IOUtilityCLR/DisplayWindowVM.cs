@@ -7,16 +7,36 @@ using System.Windows;
 
 namespace IOUtilityCLR
 {
+    /// <summary>
+    /// View model for displayed window.
+    /// </summary>
     public class DisplayWindowVM : DependencyObject
     {
+        /// <summary>
+        /// Default text for window title.
+        /// </summary>
         public const string DISPLAYWINDOW_TITLE_DEFAULT = "Window";
+
+        /// <summary>
+        /// Default window width.
+        /// </summary>
         public const double DISPLAYWINDOW_WIDTH_DEFAULT = 800.0;
+
+        /// <summary>
+        /// Default window height.
+        /// </summary>
         public const double DISPLAYWINDOW_HEIGHT_DEFAULT = 600.0;
         
+        /// <summary>
+        /// Defines dependency property for the window title.
+        /// </summary>
         public static readonly DependencyProperty WindowTitleProperty = DependencyProperty.Register("WindowTitle", typeof(string), typeof(DisplayWindowVM),
             new PropertyMetadata(DISPLAYWINDOW_TITLE_DEFAULT,
             new PropertyChangedCallback(WindowTitle_PropertyChanged), new CoerceValueCallback(WindowTitle_CoerceValue)));
 
+        /// <summary>
+        /// Window title
+        /// </summary>
         public string WindowTitle
         {
             get { return this.GetValue(DisplayWindowVM.WindowTitleProperty) as string; }
@@ -33,8 +53,18 @@ namespace IOUtilityCLR
             return (d as DisplayWindowVM).CoerceWindowTitle(baseValue as string);
         }
 
+        /// <summary>
+        /// This gets called when the window title text has changed.
+        /// </summary>
+        /// <param name="oldTitle">Previous window title.</param>
+        /// <param name="newTitle">New window title.</param>
         protected virtual void OnWindowTitleChanged(string oldTitle, string newTitle) { }
 
+        /// <summary>
+        /// This gets called when new window title text is being coerced.
+        /// </summary>
+        /// <param name="baseValue">Text being coerced.</param>
+        /// <returns>Coerced window title text.</returns>
         protected virtual string CoerceWindowTitle(string baseValue)
         {
             string s = (baseValue ?? "").Trim();
