@@ -127,7 +127,9 @@ namespace IOUtilityCLR
             if (InitialSessionState == null)
             {
                 iss = InitialSessionState.CreateDefault();
+#if !PSLEGACY
                 iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
+#endif
             }
             Runspace runspace = RunspaceFactory.CreateRunspace(iss);
             runspace.ApartmentState = ApartmentState;
@@ -153,7 +155,11 @@ namespace IOUtilityCLR
         /// <returns>PowerShell object created and initialized.</returns>
         protected PowerShell CreatePowerShell(Runspace runspace)
         {
+#if PSLEGACY
+            PowerShell powershell = PowerShell.Create();
+#else
             PowerShell powershell = PowerShell.Create(RunspaceMode.NewRunspace);
+#endif
             powershell.Runspace = runspace;
             BeforeAddPipelineItems(powershell, runspace);
             foreach (PipelineItem item in Pipeline)
@@ -169,7 +175,7 @@ namespace IOUtilityCLR
 
         protected virtual void AfterAddPipelineItems(PowerShell powershell, Runspace runspace) { }
 
-        #region Nested classes
+#region Nested classes
 
         /// <summary>
         /// Base class for items to be added to the pipeline.
@@ -406,10 +412,13 @@ namespace IOUtilityCLR
             /// Adds the statement to the PowerShell pipeline.
             /// </summary>
             /// <param name="powershell">PowerShell to add statement to.</param>
+#if PSLEGACY
+            public override void AddToPowerShell(PowerShell powershell) { }
+#else
             public override void AddToPowerShell(PowerShell powershell) { powershell.AddStatement(); }
+#endif
         }
 
         #endregion
-
     }
 }

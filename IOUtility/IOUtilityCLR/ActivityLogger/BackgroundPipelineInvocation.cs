@@ -37,7 +37,6 @@ namespace ActivityLogger
         public Collection<PSObject> Output { get; private set; }
         public Collection<ErrorRecord> Errors { get; private set; }
         public Collection<WarningRecord> Warnings { get; private set; }
-        public Collection<InformationRecord> Information { get; private set; }
         public Collection<VerboseRecord> Verbose { get; private set; }
         public Collection<DebugRecord> Debug { get; private set; }
 
@@ -56,7 +55,6 @@ namespace ActivityLogger
             Output = new Collection<PSObject>();
             Errors = new Collection<ErrorRecord>();
             Warnings = new Collection<WarningRecord>();
-            Information = new Collection<InformationRecord>();
             Verbose = new Collection<VerboseRecord>();
             Debug = new Collection<DebugRecord>();
             _host = host;
@@ -68,7 +66,11 @@ namespace ActivityLogger
                 foreach (string key in parameters.Variables.Keys)
                     _runspace.SessionStateProxy.SetVariable(key, parameters.Variables[key]);
                 _runspace.SessionStateProxy.SetVariable("SynchronizedData", SynchronizedData);
+#if PSLEGACY2
+                _powerShell.Streams.Progress.DataAdded += Progress_DataAdded;
+#else
                 _powerShell.Streams.Progress.DataAdding += Progress_DataAdding;
+#endif
                 BeforeAddPipelineScripts(host, _runspace, scripts);
                 _powerShell = scripts[0].GetPowerShell();
                 try
@@ -102,9 +104,15 @@ namespace ActivityLogger
 
         protected virtual void AfterScriptsAdded(PSHost host, Runspace runspace, PowerShell powerShell) { }
 
+#if PSLEGACY2
+        private void Progress_DataAdded(object sender, DataAddedEventArgs e)
+        {
+            ProgressRecord progress = _powerShell.Streams.Progress[e.Index];
+#else
         private void Progress_DataAdding(object sender, DataAddingEventArgs e)
         {
             ProgressRecord progress = e.ItemAdded as ProgressRecord;
+#endif
             if (progress != null)
                 OnProgressChanged(progress);
         }
@@ -143,7 +151,6 @@ namespace ActivityLogger
             ReadAll<PSObject>(Output, _powerShell.EndInvoke(_asyncResult));
             ReadAll<ErrorRecord>(Errors, _powerShell.Streams.Error);
             ReadAll<WarningRecord>(Warnings, _powerShell.Streams.Warning);
-            ReadAll<InformationRecord>(Information, _powerShell.Streams.Information);
             ReadAll<VerboseRecord>(Verbose, _powerShell.Streams.Verbose);
             ReadAll<DebugRecord>(Debug, _powerShell.Streams.Debug);
             OnEndInvoked();
@@ -174,18 +181,7 @@ namespace ActivityLogger
                 return ReadAll<WarningRecord>(Warnings, _powerShell.Streams.Warning);
             }
         }
-
-        public Collection<InformationRecord> ReadInformation()
-        {
-            lock (_syncRoot)
-            {
-                if (_isCompleted)
-                    return new Collection<InformationRecord>();
-
-                return ReadAll<InformationRecord>(Information, _powerShell.Streams.Information);
-            }
-        }
-
+        
         public Collection<VerboseRecord> ReadVerbose()
         {
             lock (_syncRoot)
@@ -218,7 +214,7 @@ namespace ActivityLogger
             return items;
         }
 
-        #region IDisposable Support
+#region IDisposable Support
 
         public void Dispose() { Dispose(true); }
 
@@ -252,6 +248,6 @@ namespace ActivityLogger
             }
         }
 
-        #endregion
+#endregion
     }
 }

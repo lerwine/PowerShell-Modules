@@ -32,15 +32,40 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugPS2' ">
+    <OutputPath>bin\DebugPS2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleasePS2' ">
+    <OutputPath>bin\ReleasePS2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugPS3' ">
+    <OutputPath>bin\DebugPS3\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleasePS3' ">
+    <OutputPath>bin\ReleasePS3\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="about_Erwine.Leonard.T.XmlUtility.help.txt" />
+    <Content Include="Setup.bat" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.XmlUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.XmlUtility.psm1" />
+    <Compile Include="Erwine.Leonard.T.XmlUtility.XML" />
     <Compile Include="GetWsdl.ps1" />
+    <Compile Include="LinqEmul.cs" />
+    <Compile Include="LoadableBinaryResource.cs" />
+    <Compile Include="LoadableResource.cs" />
+    <Compile Include="LoadableTextResource.cs" />
+    <Compile Include="LoadableXmlResource.cs" />
+    <Compile Include="LoadableXmlSchemaResource.cs" />
+    <Compile Include="LoadableXsdResource.cs" />
     <Compile Include="README.md" />
+    <Compile Include="ResourceLoadError.cs" />
     <Compile Include="SerializationManager.cs" />
+    <Compile Include="Setup.ps1" />
+    <Compile Include="WebResourceLoadError.cs" />
+    <Compile Include="XmlResourceLoadError.cs" />
     <Compile Include="XmlUtility.cs" />
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />

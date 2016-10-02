@@ -105,8 +105,8 @@ namespace PSTTS
         private object _syncRoot = new object();
         private SynthesizerState _lastKnownState;
         ManualResetEvent _mre = new ManualResetEvent(false);
-        private LinkedList<SpeechWaitEvent> _events = new LinkedList<SpeechWaitEvent>();
-        public SpeechWaitEvent Wait()
+        private LinkedList<ISpeechWaitEvent> _events = new LinkedList<ISpeechWaitEvent>();
+        public ISpeechWaitEvent Wait()
         {
             Task task;
             lock (_syncRoot)
@@ -124,7 +124,7 @@ namespace PSTTS
             {
                 if (_events.First == null)
                     return SpeechWaitEvent.None;
-                SpeechWaitEvent result = _events.First.Value;
+                ISpeechWaitEvent result = _events.First.Value;
                 _events.RemoveFirst();
                 return result;
             }

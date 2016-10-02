@@ -2,13 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading;
+#if !PSLEGACY
 using System.Threading.Tasks;
+#endif
 
 namespace ActivityLogger
 {

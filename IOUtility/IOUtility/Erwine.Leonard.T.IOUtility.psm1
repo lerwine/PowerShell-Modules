@@ -1,7 +1,34 @@
-Add-Type -AssemblyName 'System.Windows.Forms' -ErrorAction Stop;
-Add-Type -Path (('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'ScriptRegexReplaceHandler.cs',
-        'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
-	-ReferencedAssemblies 'System.Management.Automation', 'System.Web.Services', 'System.Windows.Forms', 'System.Xml';
+Function Initialize-CurrentModule {
+    [CmdletBinding()]
+    Param()
+	
+	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
+	
+    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
+    $Local:Splat = @{
+        TypeName = 'System.CodeDom.Compiler.CompilerParameters';
+        ArgumentList = (,@(
+    		[System.Text.RegularExpressions.Regex].Assembly.Location,
+            [System.Xml.XmlDocument].Assembly.Location,
+            [System.Management.Automation.ScriptBlock].Assembly.Location,
+            (Add-Type -AssemblyName 'System.Windows.Forms' -ErrorAction Stop -PassThru)[0].Assembly.Location,
+            (Add-Type -AssemblyName 'PresentationFramework' -ErrorAction Stop -PassThru)[0].Assembly.Location,
+            (Add-Type -AssemblyName 'System.Web.Services' -ErrorAction Stop -PassThru)[0].Assembly.Location,
+            (Add-Type -AssemblyName 'WindowsBase' -ErrorAction Stop -PassThru)[0].Assembly.Location
+        ));
+        Property = @{
+            IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
+        }
+    };
+    if ($Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters -ne '') {
+        $Local:Splat.Property.CompilerOptions = $Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters;
+    }
+
+    $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
+}
+
+Initialize-CurrentModule;
+
 $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
     Whitespace = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
     UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);

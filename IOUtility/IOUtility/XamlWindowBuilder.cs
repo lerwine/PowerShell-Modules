@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading;
+#if !PSLEGACY
 using System.Threading.Tasks;
+#endif
 using System.Xml;
+#if !PSLEGACY
 using System.Xml.Linq;
+#endif
 
 namespace IOUtilityCLR
 {
@@ -17,7 +23,7 @@ namespace IOUtilityCLR
     /// </summary>
     public class XamlWindowBuilder : PSInvocationBuilderBase<XamlDialogResult, XamlDialogAsyncResult>
     {
-        #region Constants
+#region Constants
 
         /// <summary>
         /// Default XML namespace.
@@ -44,9 +50,9 @@ namespace IOUtilityCLR
         /// </summary>
         public const string WINDOW_ELEMENTNAME = "Window";
 
-        #endregion
+#endregion
 
-        #region Fields
+#region Fields
 
         private PSInvocationBuilder _invocation = new PSInvocationBuilder();
         private object _syncRoot = new object();
@@ -59,9 +65,9 @@ namespace IOUtilityCLR
         private XmlDocument _xaml;
         private XmlNamespaceManager _namespaceManager = null;
 #endif
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
         
         /// <summary>
         /// Specifies pipeline which is to be invoked before the WPF window is created.
@@ -261,9 +267,9 @@ namespace IOUtilityCLR
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
 #if USEXLINQ
         private void Xaml_Changed(object sender, XObjectChangeEventArgs e) { _xmlChanged = true; }
@@ -385,9 +391,9 @@ namespace IOUtilityCLR
             return XamlDialogAsyncResult.Create(CreateRunspace, CreatePowerShell, Variables.Keys, SynchronizedData);
         }
         
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
 #if USEXLINQ
         /// <summary>
@@ -423,6 +429,6 @@ namespace IOUtilityCLR
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

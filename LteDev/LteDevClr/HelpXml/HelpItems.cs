@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Text;
+#if !PSLEGACY
 using System.Threading.Tasks;
+#endif
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -60,12 +64,21 @@ namespace LteDevClr.HelpXml
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement(HelpItems.RootElementName, HelpItems.NamespaceURI);
+            writer.WriteStartElement(RootElementName, NamespaceURI);
             try
             {
-                writer.WriteAttributeString(HelpItems.AttributeName, HelpItems.AttributeValue);
-                foreach (Command command in this.Commands.Where(c => c != null).ToArray())
+                writer.WriteAttributeString(AttributeName, AttributeValue);
+#if PSLEGACY
+                foreach (Command command in Commands.ToArray())
+                {
+                    if (command != null)
+#else
+                foreach (Command command in Commands.Where(c => c != null).ToArray())
+#endif
                     command.WriteXml(writer);
+#if PSLEGACY
+                }
+#endif
             }
             catch
             {

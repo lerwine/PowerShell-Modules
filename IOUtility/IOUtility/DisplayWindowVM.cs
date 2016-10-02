@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Text;
+#if !PSLEGACY
 using System.Threading.Tasks;
+#endif
 using System.Windows;
 
 namespace IOUtilityCLR

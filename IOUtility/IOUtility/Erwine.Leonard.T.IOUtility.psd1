@@ -22,7 +22,7 @@ Copyright = '(c) 2016 Leonard T. Erwine. All rights reserved.'
 Description = 'Utility functions to manage filesystem, console, and stream IO.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '2.0'
+# PowerShellVersion = ''
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -31,10 +31,10 @@ PowerShellVersion = '2.0'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-DotNetFrameworkVersion = '2.0'
+# DotNetFrameworkVersion = ''
 
 # Minimum version of the common language runtime (CLR) required by this module
-CLRVersion = '2.0'
+# CLRVersion = ''
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''
@@ -81,7 +81,14 @@ FileList = @('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'Li
 	'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess
-# PrivateData = ''
+PrivateData = @{
+	CompilerOptions = @{
+		IncludeDebugInformation = $true;
+        CustomTypeSourceFiles = 'DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs',
+			'SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs',
+			'WindowOwner.cs';
+	};
+}
 
 # HelpInfo URI of this module
 # HelpInfoURI = ''

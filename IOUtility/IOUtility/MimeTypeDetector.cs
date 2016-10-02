@@ -1,10 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Net.Mime;
 using System.Text;
+#if !PSLEGACY
 using System.Threading.Tasks;
+#endif
 
 namespace IOUtilityCLR
 {
@@ -18,13 +22,26 @@ namespace IOUtilityCLR
             RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey("MIME");
             if (registryKey == null || (registryKey = registryKey.OpenSubKey("Database")) == null || (registryKey = registryKey.OpenSubKey("Content Type")) == null)
                 return;
-            
+#if PSLEGACY2
+            foreach (Tuple<RegistryKey, string> mapping in LinqEmul.Select<string, RegistryKey, Tuple<RegistryKey, string>>(registryKey.GetSubKeyNames(), registryKey, InitializeFromRegistry_Selector))
+            {
+                if (mapping.Item2 != null && mapping.Item2.Trim().Length > 0)
+                    AddMimeExtensionMapping(mapping.Item2, mapping.Item1.Name);
+            }
+#else
             foreach (var mapping in registryKey.GetSubKeyNames().Select(n =>
             {
                 RegistryKey r = registryKey.OpenSubKey(n);
                 return new { Key = r, Ext = r.GetValue("Extension") as string };
             }).Where(a => !String.IsNullOrEmpty(a.Ext)))
                 AddMimeExtensionMapping(mapping.Ext, mapping.Key.Name);
+#endif
+        }
+
+        private static Tuple<RegistryKey, string> InitializeFromRegistry_Selector(string n, RegistryKey registryKey)
+        {
+            RegistryKey r = registryKey.OpenSubKey(n);
+            return new Tuple<RegistryKey, string>(r, r.GetValue("Extension") as string);
         }
 
         public static bool IsExtensionMapped(string extension)

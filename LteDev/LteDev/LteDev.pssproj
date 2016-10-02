@@ -32,6 +32,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugPS2' ">
+    <OutputPath>bin\DebugPS2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleasePS2' ">
+    <OutputPath>bin\ReleasePS2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugPS3' ">
+    <OutputPath>bin\DebugPS3\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleasePS3' ">
+    <OutputPath>bin\ReleasePS3\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="Schema\PSMaml\base.xsd" />
     <Content Include="Schema\PSMaml\baseConditional.xsd" />
@@ -69,7 +81,6 @@
     <Content Include="Schema\PSMaml\inlineCommon.xsd" />
     <Content Include="Schema\PSMaml\inlineSoftware.xsd" />
     <Content Include="Schema\PSMaml\inlineUi.xsd" />
-    <Content Include="Install.bat" />
     <Content Include="Schema\PSMaml\ITPro.xsd" />
     <Content Include="Schema\PSMaml\Maml.rld" />
     <Content Include="Schema\PSMaml\Maml.tbr" />
@@ -89,16 +100,15 @@
     <Content Include="Schema\PSMaml\structureTaskExecution.xsd" />
     <Content Include="Schema\PSMaml\task.xsd" />
     <Content Include="Schema\PSMaml\troubleshooting.xsd" />
-    <Content Include="Uninstall.bat" />
+    <Content Include="Setup.bat" />
     <Content Include="about_Erwine.Leonard.T.LteDev.help.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Install.ps1" />
     <Compile Include="Erwine.Leonard.T.LteDev.psd1" />
     <Compile Include="Erwine.Leonard.T.LteDev.psm1" />
     <Compile Include="README.md" />
     <Compile Include="Schema\helpItems.xsd" />
-    <Compile Include="Uninstall.ps1" />
+    <Compile Include="Setup.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Schema\" />

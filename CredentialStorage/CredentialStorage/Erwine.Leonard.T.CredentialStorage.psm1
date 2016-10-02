@@ -1,9 +1,32 @@
 if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
 if ((Get-Module -Name 'Erwine.Leonard.T.XmlUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.XmlUtility' -ErrorAction Stop }
-Add-Type -Path (('CredentialComponentCollection.cs', 'CredentialFolder.cs', 'CredentialItem.cs', 'CredentialStorageComponent.cs', 'CredentialStorageContainer.cs',
-	'CredentialStorageDocument.cs', 'ICredentialComponent.cs', 'ICredentialContainer.cs', 'ICredentialContent.cs', 'ICredentialSite.cs',
-    'INestedCredentialContainer.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
-	-ReferencedAssemblies 'System', 'System.Management.Automation', 'System.Xml';
+
+Function Initialize-CurrentModule {
+    [CmdletBinding()]
+    Param()
+	
+	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
+	
+    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
+    $Local:Splat = @{
+        TypeName = 'System.CodeDom.Compiler.CompilerParameters';
+        ArgumentList = (,@(
+    		[System.Text.RegularExpressions.Regex].Assembly.Location,
+            [System.Xml.XmlDocument].Assembly.Location,
+            [System.Management.Automation.ScriptBlock].Assembly.Location
+        ));
+        Property = @{
+            IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
+        }
+    };
+    if ($Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters -ne '') {
+        $Local:Splat.Property.CompilerOptions = $Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters;
+    }
+
+    $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
+}
+
+Initialize-CurrentModule
 
 $Script:CredentialsNamespace = 'urn:Erwine.Leonard.T:PowerShell:CredentialStorage';
 $Script:RootElementName = 'CredentialStorage';

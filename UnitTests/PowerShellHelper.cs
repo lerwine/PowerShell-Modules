@@ -18,6 +18,7 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
         public static PSInvocationResult InvokeRunspace(TestContext testContext, InitialSessionState iss, ApartmentState apartmentState, PSThreadOptions threadOptions, Dictionary<string, object> variables, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
         {
             if (iss == null)

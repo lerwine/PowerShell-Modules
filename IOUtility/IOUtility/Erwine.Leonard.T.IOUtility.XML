@@ -1,0 +1,1095 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Erwine.Leonard.T.IOUtility</name>
+    </assembly>
+    <members>
+        <member name="T:IOUtilityCLR.BackgroundPipelineInvocation">
+            <summary>
+            Represents the invocation of a background PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.IsCompleted">
+            <summary>
+            True if the invocation has finished; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.State">
+            <summary>
+            User state object associated with invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.SynchronizedData">
+            <summary>
+            Values to be shared between host process and the invoked powershell instance.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.StopInvoked">
+            <summary>
+            True if the background PowerShell instance was stopped before completion; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.Output">
+            <summary>
+            Output objects returned as a result of the invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.Errors">
+            <summary>
+            Error records which were generated during the invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.Warnings">
+            <summary>
+            Warning records which were generated during the invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.Verbose">
+            <summary>
+            Verbose records which were generated during the invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineInvocation.Debug">
+            <summary>
+            Debug records which were generated during the invocation.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.#ctor(System.Management.Automation.Host.PSHost,IOUtilityCLR.BackgroundPipelineParameters)">
+            <summary>
+            Invoke PowerShell scripts in the background.
+            </summary>
+            <param name="host">PowerShell host to use.</param>
+            <param name="parameters">Parameters which represent the behavior and scripts for the background process.</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.#ctor(System.Management.Automation.Host.PSHost,IOUtilityCLR.BackgroundPipelineParameters,System.Object)">
+            <summary>
+            Invoke PowerShell scripts in the background.
+            </summary>
+            <param name="host">PowerShell host to use.</param>
+            <param name="parameters">Parameters which represent the behavior and scripts for the background process.</param>
+            <param name="state">User state to associate with the results.</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.BeforeOpenRunspace(System.Management.Automation.Host.PSHost,System.Management.Automation.Runspaces.Runspace,IOUtilityCLR.BackgroundPipelineParameters)">
+            <summary>
+            This gets invoked after the runspace is created and before it is opened.
+            </summary>
+            <param name="host">PowerShell host associated with runspace.</param>
+            <param name="runspace">Runspace about to be opened.</param>
+            <param name="parameters">Parameters that define the behavior of the invocation</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.BeforeAddPipelineScripts(System.Management.Automation.Host.PSHost,System.Management.Automation.Runspaces.Runspace,System.Collections.Generic.List{System.Management.Automation.ScriptBlock})">
+            <summary>
+            This gets invoked after the runspace is opened, and before any scripts are added to the pipeline.
+            </summary>
+            <param name="host">PowerShell host associated with runspace.</param>
+            <param name="runspace">Runspace about to be opened.</param>
+            <param name="scripts">List of scripts to be added in order.</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.AfterScriptsAdded(System.Management.Automation.Host.PSHost,System.Management.Automation.Runspaces.Runspace,System.Management.Automation.PowerShell)">
+            <summary>
+            This gets invoked after scripts have been added to the pipeline.
+            </summary>
+            <param name="host">PowerShell host associated with runspace.</param>
+            <param name="runspace">Runspace about to be opened.</param>
+            <param name="powerShell">PowerShell object to be invoked.</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.OnProgressChanged(System.Management.Automation.ProgressRecord)">
+            <summary>
+            This gets called when a script in the pipline writes to the progress stream.
+            </summary>
+            <param name="progress">Progress object which was written to the progress stream.</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.GetResult">
+            <summary>
+            Waits for invocation to complete and gets pipeline output.
+            </summary>
+            <returns>Collection of objects which represent the output of the executed pipeline.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.Stop">
+            <summary>
+            Stops the execution of the pipeline.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.OnEndInvoked">
+            <summary>
+            This gets called when the results of the pipeline execution are obtained.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.ReadProgress">
+            <summary>
+            Reads progress records from the progress stream.
+            </summary>
+            <returns>Progress records that were written since the last time this method was called.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.ReadErrors">
+            <summary>
+            Reads error records from the error stream.
+            </summary>
+            <returns>Error records that were written since the last time this method was called.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.ReadWarnings">
+            <summary>
+            Reads warning records from the warnings stream.
+            </summary>
+            <returns>Warning records that were written since the last time this method was called.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.ReadVerbose">
+            <summary>
+            Reads verbose records from the information stream
+            </summary>
+            <returns>Verbose records that were written since the last time this method was called.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.ReadDebug">
+            <summary>
+            Reads debug records from the information stream
+            </summary>
+            <returns>Debug records that were written since the last time this method was called.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.Dispose">
+            <summary>
+            Disposes the current invocation object.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineInvocation.Dispose(System.Boolean)">
+            <summary>
+            This gets called when the invocation object is about to be disposed.
+            </summary>
+            <param name="disposing">True if being disposed through the <see cref="M:IOUtilityCLR.BackgroundPipelineInvocation.Dispose"/> method; otherwise, false.</param>
+        </member>
+        <member name="T:IOUtilityCLR.BackgroundPipelineParameters">
+            <summary>
+            Object which defines a PowerShell pipeline to be invoked.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineParameters.SynchronizedData">
+            <summary>
+            Values to be shared between host process and the invoked powershell instance.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineParameters.ApartmentState">
+            <summary>
+            Sets apartment state for thread which is executing the PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineParameters.ThreadOptions">
+            <summary>
+            Sets thread options for invoking the PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineParameters.Variables">
+            <summary>
+            Variables to be defined in the pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.BackgroundPipelineParameters.PipelineScripts">
+            <summary>
+            Script blocks to be executed in the background PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineParameters.#ctor(System.Threading.ApartmentState,System.Management.Automation.Runspaces.PSThreadOptions)">
+            <summary>
+            Create new object to represent a background PowerShell pipeline invocation.
+            </summary>
+            <param name="apartmentState">Apartment state for thread which is executing the PowerShell pipeline.</param>
+            <param name="threadOptions">Thread options for invoking the PowerShell pipeline.</param>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineParameters.#ctor">
+            <summary>
+            Create new object to represent a background PowerShell pipeline invocation running on a single, re-used thread.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.BackgroundPipelineParameters.Clone">
+            <summary>
+            Creates a cloned copy of this object.
+            </summary>
+            <returns>Object with values cloned, except for <see cref="P:IOUtilityCLR.BackgroundPipelineParameters.SynchronizedData"/>, in which the same instance is copied.</returns>
+        </member>
+        <member name="T:IOUtilityCLR.DisplayWindowVM">
+            <summary>
+            View model for displayed window.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.DisplayWindowVM.DISPLAYWINDOW_TITLE_DEFAULT">
+            <summary>
+            Default text for window title.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.DisplayWindowVM.DISPLAYWINDOW_WIDTH_DEFAULT">
+            <summary>
+            Default window width.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.DisplayWindowVM.DISPLAYWINDOW_HEIGHT_DEFAULT">
+            <summary>
+            Default window height.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.DisplayWindowVM.WindowTitleProperty">
+            <summary>
+            Defines dependency property for the window title.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.DisplayWindowVM.WindowTitle">
+            <summary>
+            Window title
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.DisplayWindowVM.OnWindowTitleChanged(System.String,System.String)">
+            <summary>
+            This gets called when the window title text has changed.
+            </summary>
+            <param name="oldTitle">Previous window title.</param>
+            <param name="newTitle">New window title.</param>
+        </member>
+        <member name="M:IOUtilityCLR.DisplayWindowVM.CoerceWindowTitle(System.String)">
+            <summary>
+            This gets called when new window title text is being coerced.
+            </summary>
+            <param name="baseValue">Text being coerced.</param>
+            <returns>Coerced window title text.</returns>
+        </member>
+        <member name="T:IOUtilityCLR.PSAsyncInvocationResult`1">
+            <summary>
+            Represents an asynchronous wait for results from a PowerShell pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSAsyncInvocationResult`1.IsCompleted">
+            <summary>
+            True if the PowerShell pipeline invocation has completed; otherwise, false.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.GetResult">
+            <summary>
+            Waits for the invocation to complete, and returns the result.
+            </summary>
+            <returns>Object which represents the results of the invocation.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.#ctor(System.IAsyncResult,System.Management.Automation.Runspaces.Runspace,System.Management.Automation.PowerShell,System.String[],System.Collections.Hashtable)">
+            <summary>
+            Create a new object to represent an asynchronous wait for results from a PowerShell pipeline invocation.
+            </summary>
+            <param name="asyncResult">Object representing background invocation.</param>
+            <param name="runspace">Runspace of background invocation.</param>
+            <param name="powershell">Powershell containing pipeline being invoked.</param>
+            <param name="variableNames">Name of variables to check when invocation is completed.</param>
+            <param name="synchronizedData">Data that is being syncrhonized with the background pipeline invocation.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.GetErrors">
+            <summary>
+            Gets any errors that have been produced by the executing PowerShell pipeline.
+            </summary>
+            <returns>Error records, if any, that have been produced.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.GetWarnings">
+            <summary>
+            Gets any warnings that have been produced by the executing PowerShell pipeline.
+            </summary>
+            <returns>Warning records, if any, that have been produced.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.GetProgress">
+            <summary>
+            Gets any progress notifications that have been produced by the executing PowerShell pipeline.
+            </summary>
+            <returns>Progress records, if any, that have been produced.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.GetVerboseMessages">
+            <summary>
+            Gets any verbose messages that have been produced by the executing PowerShell pipeline.
+            </summary>
+            <returns>Verbose messages, if any, that have been produced.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.GetDebugMessages">
+            <summary>
+            Gets any debug messages that have been produced by the executing PowerShell pipeline.
+            </summary>
+            <returns>Debug messages, if any, that have been produced.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.Dispose(System.Boolean)">
+            <summary>
+            Disposes all PowerShell objects used.
+            </summary>
+            <param name="disposing">True if being disposed through the <see cref="M:IOUtilityCLR.PSAsyncInvocationResult`1.Dispose"/> command.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSAsyncInvocationResult`1.Dispose">
+            <summary>
+            Disposes all PowerShell objects used.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.PSAsyncInvocationResult">
+            <summary>
+            Represents an asynchronous wait for results from a PowerShell pipeline invocation.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilder">
+            <summary>
+            Class which is used to build a PowerShell script pipeline, along with settings for the invocation.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilder.#ctor">
+            <summary>
+            Creates new PowerShell command pipeline builder.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilder.GetResult">
+            <summary>
+            Creates and invokes the pipeline, returning the results.
+            </summary>
+            <returns>An object which represents the results of the invocation.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilder.GetResultAsync">
+            <summary>
+            Creates and invokes the pipeline asyncrhonously.
+            </summary>
+            <returns>An object which represents the executing pipeline.</returns>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilder`1">
+            <summary>
+            Class which is used to build a PowerShell script pipeline, along with settings for the invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilder`1.Input">
+            <summary>
+            Explicitly typed nput data for the first command of the pipeline.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilder`1.GetResultAsync">
+            <summary>
+            Creates and invokes the pipeline asyncrhonously.
+            </summary>
+            <returns>An object which represents the executing pipeline.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddArgument(System.Object)">
+            <summary>
+            Adds an argument for a positional parameter of a command without specifying the parameter name.
+            </summary>
+            <param name="value">The value of the argument to be added to the last command of the pipeline.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddCommand(System.String)">
+            <summary>
+            Adds a command to the end of the pipeline of the PowerShell object by specifying the command name.
+            </summary>
+            <param name="cmdlet">The name of the command to be added to the end of the pipeline. Do not include spaces immediately before or after the cmdlet name.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddCommand(System.String,System.Boolean)">
+            <summary>
+            Adds a cmdlet to the end of the pipeline of the PowerShell object, and specifies whether the cmdlet should be run within a new local scope.
+            </summary>
+            <param name="cmdlet">The name of the command to be added to the end of the pipeline. Do not include spaces immediately before or after the cmdlet name.</param>
+            <param name="useLocalScope">true to run the cmdlet within a new local scope; otherwise, false.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddParameter(System.String)">
+            <summary>
+            Adds a switch parameter to the last command added to the pipeline.
+            </summary>
+            <param name="parameterName">The name of the switch parameter to be added.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddParameter(System.String,System.Object)">
+            <summary>
+            Adds a parameter and value to the last command added to the pipeline.
+            </summary>
+            <param name="parameterName">The name of the parameter to be added.</param>
+            <param name="value">The value of the parameter to be added.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddParameters(System.Collections.IDictionary)">
+            <summary>
+            Adds a set of parameters to the last command of the pipeline. The parameter names and values are taken from the keys and values of the dictionary.
+            </summary>
+            <param name="parameters">A dictionary of the parameters to be added.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddParameters(System.Collections.IList)">
+            <summary>
+            Adds a set of parameters to the last command of the pipeline. The parameter values are taken from the values in a list. 
+            </summary>
+            <param name="parameters">A list of the parameters to be added.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddScript(System.String)">
+            <summary>
+            Adds a script to the end of the pipeline of the PowerShell object.
+            </summary>
+            <param name="script">The script to be added at the end of the pipeline. This parameter takes a piece of code that is treated as a script when the pipeline is invoked.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddScript(System.String,System.Boolean)">
+            <summary>
+            Adds a script to the end of the pipeline of the PowerShell object, and indicates whether the script should be run in local scope.
+            </summary>
+            <param name="script">The script to be added at the end of the pipeline. This parameter takes a piece of code that is treated as a script when the pipeline is invoked.</param>
+            <param name="useLocalScope">A <see cref="T:System.Boolean"/> value that indicates whether the script should be run in local scope. Be aware that when local scope is used, variables will be defined in a new scope so they will not be available when the script is complete.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.AddStatement">
+            <summary>
+            Adds an additional statement to the end of the pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.Settings">
+            <summary>
+            A PSInvocationSettings object that defines how Windows PowerShell handles the invocation of the pipeline, such as whether the commands are added to the session history.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.Input">
+            <summary>
+            Input data for the first command of the pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.InitialSessionState">
+            <summary>
+            Initial session state to use when creating the runspace.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ApartmentState">
+            <summary>
+            Specifies the apartment state to use for the thread which invokes the pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ThreadOptions">
+            <summary>
+            Indicates how threads are handled when the pipeline is invoked.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.SynchronizedData">
+            <summary>
+            Synchronized data that can be shared between the calling process and the pipeline being executed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.Variables">
+            <summary>
+            Dictionary of variables and values to be set in the runspace.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.CreateRunspace">
+            <summary>
+            Creates runspace object.
+            </summary>
+            <returns>Runspace object initialized and opened.</returns>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.Pipeline">
+            <summary>
+            List of objects that are to be added to the PowerShell pipeline and invoked.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.CreatePowerShell(System.Management.Automation.Runspaces.Runspace)">
+            <summary>
+            Creates PowerShell object
+            </summary>
+            <param name="runspace">Runspace to be used.</param>
+            <returns>PowerShell object created and initialized.</returns>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilderBase`2.PipelineItem">
+            <summary>
+            Base class for items to be added to the pipeline.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.PipelineItem.AddToPowerShell(System.Management.Automation.PowerShell)">
+            <summary>
+            Adds an item to the PowerShell pipeline.
+            </summary>
+            <param name="powershell">PowerShell to add item to.</param>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilderBase`2.ArgumentPipelineItem">
+            <summary>
+            Represents an argument to be added to a PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ArgumentPipelineItem.Value">
+            <summary>
+            Value of argument to be aded
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ArgumentPipelineItem.#ctor(System.Object)">
+            <summary>
+            Create new object to represent an argument that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="value">Value of argument.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ArgumentPipelineItem.AddToPowerShell(System.Management.Automation.PowerShell)">
+            <summary>
+            Adds the argument to the PowerShell pipeline.
+            </summary>
+            <param name="powershell">PowerShell to add item to.</param>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilderBase`2.CommandPipelineItem">
+            <summary>
+            Represents a command to be added to a PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.CommandPipelineItem.Cmdlet">
+            <summary>
+            Name of command
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.CommandPipelineItem.UseLocalScope">
+            <summary>
+            Whether to use local scope.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.CommandPipelineItem.#ctor(System.String)">
+            <summary>
+            Create new object to represent a command that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="cmdlet">Name of cmdlet</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.CommandPipelineItem.#ctor(System.String,System.Boolean)">
+            <summary>
+            Create new object to represent a command that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="cmdlet">Name of cmdlet</param>
+            <param name="useLocalScope">Whether to use local scope.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.CommandPipelineItem.AddToPowerShell(System.Management.Automation.PowerShell)">
+            <summary>
+            Adds the command to the PowerShell pipeline.
+            </summary>
+            <param name="powershell">PowerShell to add command to.</param>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem">
+            <summary>
+            Represents a parameter to be added to a PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.IsSwitch">
+            <summary>
+            Indicates whether parameter is a switch.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.ParameterName">
+            <summary>
+            Name of parameter.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.Value">
+            <summary>
+            Value of named parameter.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.ParameterSet">
+            <summary>
+            Dictionary for parameter set.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.Parameters">
+            <summary>
+            List of parameter values.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.#ctor(System.String)">
+            <summary>
+            Create new object to represent a switch parameter that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="parameterName">Name of switch parameter.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.#ctor(System.String,System.Object)">
+            <summary>
+            Create new object to represent a parameter that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="parameterName">Name of parameter.</param>
+            <param name="value">Value of parameter.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.#ctor(System.Collections.IDictionary)">
+            <summary>
+            Create new object to represent a parameter set that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="parameters">Parameter set</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.#ctor(System.Collections.IList)">
+            <summary>
+            Create new object to represent a parameter list that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="parameters">List of parameters.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ParameterPipelineItem.AddToPowerShell(System.Management.Automation.PowerShell)">
+            <summary>
+            Adds the parameter(s) to the PowerShell pipeline.
+            </summary>
+            <param name="powershell">PowerShell to add parameters to.</param>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilderBase`2.ScriptPipelineItem">
+            <summary>
+            Represents a script to be added to a PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ScriptPipelineItem.Script">
+            <summary>
+            Script to be added to pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationBuilderBase`2.ScriptPipelineItem.UseLocalScope">
+            <summary>
+            Whether to use local scope.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ScriptPipelineItem.#ctor(System.String)">
+            <summary>
+            Create new object to represent a script that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="script">Script to be added.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ScriptPipelineItem.#ctor(System.String,System.Boolean)">
+            <summary>
+            Create new object to represent a script that is to be added to a PowerShell pipeline.
+            </summary>
+            <param name="script">Script to be added.</param>
+            <param name="useLocalScope">Whether to use local scope.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.ScriptPipelineItem.AddToPowerShell(System.Management.Automation.PowerShell)">
+            <summary>
+            Adds the script to the PowerShell pipeline.
+            </summary>
+            <param name="powershell">PowerShell to add script to.</param>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationBuilderBase`2.StatementPipelineItem">
+            <summary>
+            Represents a statement to be added to a PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationBuilderBase`2.StatementPipelineItem.AddToPowerShell(System.Management.Automation.PowerShell)">
+            <summary>
+            Adds the statement to the PowerShell pipeline.
+            </summary>
+            <param name="powershell">PowerShell to add statement to.</param>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationResult">
+            <summary>
+            Represents the results of invoking a PowerShell pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.Output">
+            <summary>
+            Output from pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.Variables">
+            <summary>
+            Values of variables after pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.Errors">
+            <summary>
+            Error records that were produced during the pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.Warnings">
+            <summary>
+            Warning records that were produced during the pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.VerboseMessages">
+            <summary>
+            Verbose messages that were produced during the pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.DebugMessages">
+            <summary>
+            Debug messages that were produced during the pipeline invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.WasStopped">
+            <summary>
+            True if the pipeline invocation was stopped before completion; otherwise false.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationResult.SynchronizedData">
+            <summary>
+            Synchronized data that was shared between the calling process and the pipeline being executed.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.PsWpfInvocation">
+            <summary>
+            Rrepresents a WPF Window invocation
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PsWpfInvocation.CreateParameters(IOUtilityCLR.XamlWindow)">
+            <summary>
+            Converts XAML window parameters to invocation parameters
+            </summary>
+            <param name="xamlWindow">Object representing XAML window to be displayed.</param>
+            <returns></returns>
+        </member>
+        <member name="P:IOUtilityCLR.PsWpfInvocation.Xaml">
+            <summary>
+            XAML markup for window to be displayed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PsWpfInvocation.ResultState">
+            <summary>
+            Contains values which represent the result from the displayed window.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PsWpfInvocation.#ctor(System.Management.Automation.Host.PSHost,IOUtilityCLR.XamlWindow)">
+            <summary>
+            Display a XAML window.
+            </summary>
+            <param name="host">PowerShell host to use.</param>
+            <param name="xamlWindow">Object which represents the XAML window to be displayed as well as the functionality.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PsWpfInvocation.#ctor(System.Management.Automation.Host.PSHost,IOUtilityCLR.XamlWindow,System.Object)">
+            <summary>
+            Display a XAML window and track user state.
+            </summary>
+            <param name="host">PowerShell host to use.</param>
+            <param name="xamlWindow">Object which represents the XAML window to be displayed as well as the functionality.</param>
+            <param name="state">User state to associate with the results.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PsWpfInvocation.BeforeOpenRunspace(System.Management.Automation.Host.PSHost,System.Management.Automation.Runspaces.Runspace,IOUtilityCLR.BackgroundPipelineParameters)">
+            <summary>
+            This gets invoked after the runspace is created and before it is opened.
+            </summary>
+            <param name="host">PowerShell host associated with runspace.</param>
+            <param name="runspace">Runspace about to be opened.</param>
+            <param name="parameters">Parameters that define the behavior of the invocation</param>
+        </member>
+        <member name="T:IOUtilityCLR.XamlWindow">
+            <summary>
+            This represents the WPF window to be displayed.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.XML_XMLNAMESPACE">
+            <summary>
+            Default XML namespace.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.XAML_XMLNAMESPACE">
+            <summary>
+            XML namespace for XAML markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.PRESENTATION_XMLNAMESPACE">
+            <summary>
+            XML namespace for XAML Presentation node markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.MARKUP_COMPATIBILITY_XMLNAMESPACE">
+            <summary>
+            XML namespace for XAML compatibility node markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.WINDOW_ELEMENTNAME">
+            <summary>
+            Element name for XAML window markup.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.XmlChanged">
+            <summary>
+            True if the XAML markup has changed since the last time control names were detected; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.DoNotAutoDetectControlNames">
+            <summary>
+            True to supress auto-detecting control names; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.ControlNames">
+            <summary>
+            Names of controls represented by the associated XAML markup.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.SynchronizedData">
+            <summary>
+            Values to be shared between host process and the invoked powershell instance.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.Variables">
+            <summary>
+            Variables to be defined in the background PowerShell invocation.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.BeforeWindowCreated">
+            <summary>
+            Script block which is to be invoked before the WPF window is created.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.BeforeShowDialog">
+            <summary>
+            Script block which is to be invoked after the WPF window has been created, and before it is shown.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.AfterDialogClosed">
+            <summary>
+            Script block which gets called after the WPF window has been closed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.Xaml">
+            <summary>
+            XAML markup which represents the window that is to be displayed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.Title">
+            <summary>
+            Title for the displayed window.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.Width">
+            <summary>
+            Initial width of the displayed window.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.Height">
+            <summary>
+            Initial height of the displayed window.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.Content">
+            <summary>
+            Window XAML element.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindow.InnerXml">
+            <summary>
+            Inner XML for the Window XAML.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.#ctor">
+            <summary>
+            Create new object to represent a WPF window.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Create new objectd to represent a WPF window with specified markup.
+            </summary>
+            <param name="xaml"></param>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.#ctor(System.String,System.Double,System.Double)">
+            <summary>
+            Create new object to represent a WPF window.
+            </summary>
+            <param name="title">Title for window.</param>
+            <param name="width">Initial width of window.</param>
+            <param name="height">Initial height of window.</param>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.#ctor(System.String)">
+            <summary>
+            Create new object to represent a WPF window.
+            </summary>
+            <param name="title">Title for window.</param>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.#ctor(System.Double,System.Double)">
+            <summary>
+            Create new object to represent a WPF window.
+            </summary>
+            <param name="width">Initial width of window.</param>
+            <param name="height">Initial height of window.</param>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.DetectControlNames">
+            <summary>
+            Scan XAML markup for control names.
+            </summary>
+            <returns>Collection of control names.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindow.DetectControlNames(System.Boolean)">
+            <summary>
+            Scan XAML markup for control names.
+            </summary>
+            <param name="force">True to force re-scanning of control names; otherwise false to scan only if the document has changed or if it has never been scanned.</param>
+            <returns>Collection of control names.</returns>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.SCRIPTBLOCK_CREATEWINDOW">
+            <summary>
+            Script which gets invoked to create the WPF window from the XAML markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindow.SCRIPTBLOCK_SHOWDIALOG">
+            <summary>
+            Script which gets invoked to show the WPF window as a dialog window.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.XamlWindowBuilder">
+            <summary>
+            This represents the WPF window to be displayed.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindowBuilder.XML_XMLNAMESPACE">
+            <summary>
+            Default XML namespace.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindowBuilder.XAML_XMLNAMESPACE">
+            <summary>
+            XML namespace for XAML markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindowBuilder.PRESENTATION_XMLNAMESPACE">
+            <summary>
+            XML namespace for XAML Presentation node markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindowBuilder.MARKUP_COMPATIBILITY_XMLNAMESPACE">
+            <summary>
+            XML namespace for XAML compatibility node markup.
+            </summary>
+        </member>
+        <member name="F:IOUtilityCLR.XamlWindowBuilder.WINDOW_ELEMENTNAME">
+            <summary>
+            Element name for XAML window markup.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.BeforeWindowCreated">
+            <summary>
+            Specifies pipeline which is to be invoked before the WPF window is created.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.BeforeShowDialog">
+            <summary>
+            Specifies pipeline which is to be invoked after the WPF window has been created, and before it is shown.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.AfterDialogClosed">
+            <summary>
+            Specifies pipeline which gets called after the WPF window has been closed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.Title">
+            <summary>
+            Title for the displayed window.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.Width">
+            <summary>
+            Initial width of the displayed window.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.Height">
+            <summary>
+            Initial height of the displayed window.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.ApartmentState">
+            <summary>
+            Specifies the apartment state to use for the thread which invokes the pipeline.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.ThreadOptions">
+            <summary>
+            Indicates how threads are handled when the pipeline is invoked.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.NamespaceManager">
+            <summary>
+            Namespace manager used to look up XML nodes.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.Xaml">
+            <summary>
+            XAML markup which represents the window that is to be displayed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.WindowElement">
+            <summary>
+            Window XAML element.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.XamlWindowBuilder.InnerXml">
+            <summary>
+            Inner XML for the Window XAML.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.EnsureRootNamespace(System.Xml.XmlNode,System.String,System.String)">
+            <summary>
+            Ensures a namespace and prefix is defined at the root level.
+            </summary>
+            <param name="node">Node in document.</param>
+            <param name="namespaceUri">URI of namespace.</param>
+            <param name="defaultPrefix">Default prefix to use for element names.</param>
+            <returns></returns>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.Xaml_DocumentChanged(System.Object,System.Xml.XmlNodeChangedEventArgs)">
+            <summary>
+            This gets called whenever the XAML document has changed.
+            </summary>
+            <param name="sender">Object which initiated the event.</param>
+            <param name="e">Information about the change.</param>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.CreateWindowXaml">
+            <summary>
+            Create a new <see cref="T:System.Xml.XmlDocument"/> with a XAML window as teh content.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.ShowDialog">
+            <summary>
+            Creates and shows the window, waiting for the window to be closed.
+            </summary>
+            <returns>An object which represents the results of the invocation.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.Show">
+            <summary>
+            Creates and shows the window.
+            </summary>
+            <returns>An object which represents the results of the invocation.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.#ctor">
+            <summary>
+            Create new object to represent a WPF window.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.XamlWindowBuilder.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Create new objectd to represent a WPF window with specified markup.
+            </summary>
+            <param name="xaml">Markup for window or window content.</param>
+        </member>
+        <member name="T:System.Collections.ObjectModel.ReadOnlyDictionary`2">
+            <summary>
+            A read-only dictionary intended to be forward-compatible with later .NET versions.
+            </summary>
+            <typeparam name="TKey">Type of key used by the wrapped dictionary.</typeparam>
+            <typeparam name="TValue">Type of value associated with the keys in the wrapped dictionary.</typeparam>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.InnerDictionary">
+            <summary>
+            Gets the dictionary that is wrapped by this <see cref="T:System.Collections.ObjectModel.ReadOnlyDictionary`2" /> object.
+            </summary>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.ReadOnlyDictionary`2" /> class that is a wrapper around the specified dictionary.
+            </summary>
+            <param name="dictionary">The dictionary to wrap.</param>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Item(`0)">
+            <summary>
+            Gets the element that has the specified key.
+            </summary>
+            <param name="key">The key of the element to get.</param>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Keys">
+            <summary>
+            Gets a key collection that contains the keys of the dictionary.
+            </summary>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Values">
+            <summary>
+            Gets a collection that contains the values in the dictionary.
+            </summary>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.ContainsKey(`0)">
+            <summary>
+            Determines whether the dictionary contains an element that has the specified key.
+            </summary>
+            <param name="key">The key to locate in the dictionary.</param>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.TryGetValue(`0,`1@)">
+            <summary>
+            Retrieves the value that is associated with the specified key.
+            </summary>
+            <param name="key">The key whose value will be retrieved.</param>
+            <param name="value">When this method returns, the value associated with the specified key, if the key is found;
+            otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Count">
+            <summary>
+            Gets the number of items in the dictionary.
+            </summary>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <summary>
+            Copies the elements of the dictionary to an array, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional array that is the destination of the elements copied from the dictionary. The array must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:System.Collections.ObjectModel.ReadOnlyDictionary`2" />.
+            </summary>
+        </member>
+    </members>
+</doc>

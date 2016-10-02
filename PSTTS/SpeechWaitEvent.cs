@@ -3,17 +3,8 @@ using System.Speech.Synthesis;
 
 namespace PSTTS
 {
-    public abstract class SpeechWaitEvent<TEvent>
-        where TEvent : SpeechWaitEvent<TEvent>, ISpeechWaitEvent
+    public abstract class SpeechWaitEvent
     {
-        public static ISpeechWaitEvent None { get; internal set; }
-
-        public SpeechWaitEventType EventType { get; private set; }
-        public bool Cancelled { get; private set; }
-        public Exception Error { get; private set; }
-        public object UserState { get; private set; }
-
-        public SpeechWaitEvent() { }
 
         internal static ISpeechWaitEvent Create(VoiceChangeEventArgs args) { return new VoiceChangeEventInfo(args); }
 
@@ -30,5 +21,18 @@ namespace PSTTS
         internal static ISpeechWaitEvent Create(StateChangedEventArgs args) { return new StateChangedEventInfo(args); }
 
         internal static ISpeechWaitEvent Create(VisemeReachedEventArgs args) { return new VisemeReachedEventInfo(args); }
+        public static ISpeechWaitEvent None { get; internal set; }
+
+        public SpeechWaitEventType EventType { get; private set; }
+        public bool Cancelled { get; private set; }
+        public Exception Error { get; private set; }
+        public object UserState { get; private set; }
+    }
+
+    public abstract class SpeechWaitEvent<TEvent> : SpeechWaitEvent
+        where TEvent : SpeechWaitEvent<TEvent>, ISpeechWaitEvent
+    {
+
+        public SpeechWaitEvent() { }
     }
 }

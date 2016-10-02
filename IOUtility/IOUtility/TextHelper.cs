@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Text.RegularExpressions;
 
 namespace IOUtilityCLR
@@ -115,7 +117,12 @@ namespace IOUtilityCLR
                         patterns.Add(pattern);
                 }
             }
+
+#if PSLEGACY
+            if (otherChars != null && !LinqEmul.Any<char>(otherChars))
+#else
             if (otherChars != null && !otherChars.Any())
+#endif
             {
                 Regex regex;
                 if (patterns.Count == 1)

@@ -1,0 +1,718 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Erwine.Leonard.T.XmlUtility</name>
+    </assembly>
+    <members>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.Xml.XmlReader)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.Xml.XmlReader"/>.
+            </summary>
+            <param name="xmlReader">The <see cref="T:System.Xml.XmlReader"/> that contains the credential storage document to deserialize.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="xmlReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.Xml.XmlReader,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.Xml.XmlReader"/> and setting the specified source URI.
+            </summary>
+            <param name="xmlReader">The <see cref="T:System.Xml.XmlReader"/> that contains the credential storage document to deserialize.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="xmlReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.TextReader)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.TextReader"/>.
+            </summary>
+            <param name="textReader">The <see cref="T:System.IO.TextReader"/> that contains the credential storage document to deserialize.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.TextReader,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.TextReader"/> and setting the specified source URI.
+            </summary>
+            <param name="textReader">The <see cref="T:System.IO.TextReader"/> that contains the credential storage document to deserialize.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.TextReader,System.Xml.XmlReaderSettings)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.TextReader"/> and <see cref="T:System.Xml.XmlReaderSettings"/> objects.
+            </summary>
+            <param name="textReader">The <see cref="T:System.IO.TextReader"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.TextReader,System.Xml.XmlReaderSettings,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.TextReader"/> and <see cref="T:System.Xml.XmlReaderSettings"/> objects,
+            and setting the specified source URI.
+            </summary>
+            <param name="textReader">The <see cref="T:System.IO.TextReader"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.TextReader,System.Xml.XmlReaderSettings,System.String)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.TextReader"/> and <see cref="T:System.Xml.XmlReaderSettings"/> objects.
+            </summary>
+            <param name="textReader">The <see cref="T:System.IO.TextReader"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <param name="baseUri">The base URI for the entity or document being read. This value can be null.
+            <para>Security Note: The base URI is used to resolve the relative URI of the XML document. Do not use a base URI from an untrusted source.</para></param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.TextReader,System.Xml.XmlReaderSettings,System.String,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.TextReader"/>, <see cref="T:System.Xml.XmlReaderSettings"/>, and base URI,
+            and setting the specified source URI.
+            </summary>
+            <param name="textReader">The <see cref="T:System.IO.TextReader"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <param name="baseUri">The base URI for the entity or document being read. This value can be null.
+            <para>Security Note: The base URI is used to resolve the relative URI of the XML document. Do not use a base URI from an untrusted source.</para></param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textReader"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/> and setting the specified source URI.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Xml.XmlReaderSettings)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/> and <see cref="T:System.Xml.XmlReaderSettings"/> objects.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Xml.XmlReaderSettings,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/> and <see cref="T:System.Xml.XmlReaderSettings"/> objects,
+            and setting the specified source URI.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Xml.XmlReaderSettings,System.String)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, <see cref="T:System.Xml.XmlReaderSettings"/>, and base URI.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <param name="baseUri">The base URI for the entity or document being read. This value can be null.
+            <para>Security Note: The base URI is used to resolve the relative URI of the XML document. Do not use a base URI from an untrusted source.</para></param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Xml.XmlReaderSettings,System.String,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, <see cref="T:System.Xml.XmlReaderSettings"/>, and base URI,
+            and setting the specified source URI.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <param name="baseUri">The base URI for the entity or document being read. This value can be null.
+            <para>Security Note: The base URI is used to resolve the relative URI of the XML document. Do not use a base URI from an untrusted source.</para></param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified byte order mark detection option.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Boolean,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified byte order mark detection option.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified character encoding.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Text.Encoding,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified character encoding.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Text.Encoding,System.Boolean)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified character encoding
+            and byte order mark detection option.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Text.Encoding,System.Boolean,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified character encoding
+            and byte order mark detection option.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Text.Encoding,System.Boolean,System.Int32)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified character encoding, 
+            byte order mark detection option, and buffer size.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <param name="bufferSize">The minimum buffer size.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="bufferSize"/> is less than or equal to zero.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.IO.Stream,System.Text.Encoding,System.Boolean,System.Int32,System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained by the specified <see cref="T:System.IO.Stream"/>, with the specified character encoding, 
+            byte order mark detection option, and buffer size.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> that contains the credential storage document to deserialize.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <param name="bufferSize">The minimum buffer size.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> does not support reading.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="bufferSize"/> is less than or equal to zero.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.Uri)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="inputUri"/>.
+            </summary>
+            <param name="inputUri">The URI for the file containing the XML data.
+            The <see cref="T:System.Xml.XmlUrlResolver"/> class is used to convert the path to a canonical data representation.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="inputUri"/> is null.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="inputUri"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.Security.SecurityException">XML reader object does not have sufficient permissions to access the location of the XML data.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.Uri,System.Xml.XmlReaderSettings)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="inputUri"/>, with the specified <see cref="T:System.Xml.XmlReaderSettings"/>.
+            </summary>
+            <param name="inputUri">The URI for the file containing the XML data.
+            The <see cref="T:System.Xml.XmlUrlResolver"/> class is used to convert the path to a canonical data representation.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="inputUri"/> is null.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="inputUri"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.Security.SecurityException">XML reader object does not have sufficient permissions to access the location of the XML data.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.String)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="path"/>.
+            </summary>
+            <param name="path">The complete file path to be read.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.Security.SecurityException">XML reader object does not have sufficient permissions to access the location of the XML data.</exception>
+            <exception cref="T:System.UriFormatException">The path (URI) format is not correct.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.String,System.Xml.XmlReaderSettings)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="path"/>, with the specified <see cref="T:System.Xml.XmlReaderSettings"/>.
+            </summary>
+            <param name="path">The complete file path to be read.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlReaderSettings"/> object used to configure the <see cref="T:System.Xml.XmlReader"/> which is used to deserialize the object.
+            This value can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.Security.SecurityException">XML reader object does not have sufficient permissions to access the location of the XML data.</exception>
+            <exception cref="T:System.UriFormatException">The path (URI) format is not correct.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.String,System.Boolean)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="path"/>, with the specified byte order mark detection option.
+            </summary>
+            <param name="path">The complete file path to be read.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> is an empty string ("").</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.String,System.Text.Encoding)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="path"/>, with the specified byte order mark detection option.
+            </summary>
+            <param name="path">The complete file path to be read.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> is an empty string ("").</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.String,System.Text.Encoding,System.Boolean)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="path"/>, with the specified character encoding and 
+            byte order mark detection option.
+            </summary>
+            <param name="path">The complete file path to be read.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> is an empty string ("").</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.NotSupportedException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.String,System.Text.Encoding,System.Boolean,System.Int32)">
+            <summary>
+            Deserializes the credential storage document contained at the specified <paramref name="path"/>, with the specified character encoding, 
+            byte order mark detection option, and buffer size.
+            </summary>
+            <param name="path">The complete file path to be read.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="detectEncodingFromByteOrderMarks">Indicates whether to look for byte order marks at the beginning of the file.</param>
+            <param name="bufferSize">The minimum buffer size, in number of 16-bit characters.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> is an empty string ("").</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="bufferSize"/> is less than or equal to zero.</exception>
+            <exception cref="T:System.IO.FileNotFoundException">The file cannot be found.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.NotSupportedException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name,
+            or volume label.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during deserialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+            <returns>The <typeparamref name="T"/> being deserialized.</returns>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.TextWriter)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the XML document.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textWriter"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.TextWriter,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the XML document.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textWriter"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.TextWriter,System.Xml.XmlWriterSettings)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.TextWriter"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/> objects.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the XML document.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textWriter"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.TextWriter,System.Xml.XmlWriterSettings,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.TextWriter"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/> objects.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the XML document.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="textWriter"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Xml.XmlWriter)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.Xml.XmlWriter"/>.
+            </summary>
+            <param name="xmlWriter">The <see cref="T:System.Xml.XmlWriter"/> used to write the XML document.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="xmlWriter"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Xml.XmlWriter,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.Xml.XmlWriter"/>.
+            </summary>
+            <param name="xmlWriter">The <see cref="T:System.Xml.XmlWriter"/> used to write the XML document.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="xmlWriter"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Xml.XmlWriterSettings)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/> objects.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Xml.XmlWriterSettings,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/> objects.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/> and encoding,
+            with the default buffer size.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Text.Encoding,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/> and encoding,
+            with the default buffer size.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Text.Encoding,System.Int32)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/>, encoding,
+            and buffer size.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">Sets the buffer size.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="bufferSize"/> is negative.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.IO.Stream,System.Text.Encoding,System.Int32,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, using the specified <see cref="T:System.IO.Stream"/>, encoding,
+            and buffer size.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> used to write the XML document.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">Sets the buffer size.</param>
+            <param name="location">The URI representing the source location of the document's serialized data.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="stream"/> is not writable.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="bufferSize"/> is negative.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Text.StringBuilder)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+            <param name="output">The <see cref="T:System.Text.StringBuilder"/> to write the XML to.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="output"/> is null.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Text.StringBuilder,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+            <param name="output">The <see cref="T:System.Text.StringBuilder"/> to write the XML to.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="output"/> is null.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Text.StringBuilder,System.Xml.XmlWriterSettings)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <see cref="T:System.Text.StringBuilder"/>,
+            using the specified <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="output">The <see cref="T:System.Text.StringBuilder"/> to write the XML to.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="output"/> is null.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Text.StringBuilder,System.Xml.XmlWriterSettings,System.Uri)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <see cref="T:System.Text.StringBuilder"/>,
+            using the specified <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="output">The <see cref="T:System.Text.StringBuilder"/> to write the XML to.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="output"/> is null.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.String)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <paramref name="path"/>.
+            </summary>
+            <param name="path">The complete file path to write to.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+            <exception cref="T:System.UnauthorizedAccessException">Access is denied.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or
+            volume label syntax.</exception>
+            <exception cref="T:System.IO.PathTooLongException">The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
+            For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+            <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.String,System.Xml.XmlWriterSettings)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <paramref name="path"/>,
+            using the specified <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="path">The complete file path to write to.</param>
+            <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+            <exception cref="T:System.UnauthorizedAccessException">Access is denied.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or
+            volume label syntax.</exception>
+            <exception cref="T:System.IO.PathTooLongException">The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
+            For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+            <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.String,System.Boolean)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <paramref name="path"/>,
+            using the default encoding and buffer size. If the file exists, it can be either overwritten or appended to. If the file does not
+            exist, this constructor creates a new file.
+            </summary>
+            <param name="path">The complete file path to write to.</param>
+            <param name="append">Determines whether data is to be appended to the file. If the file exists and append is false, the file is overwritten.
+            If the file exists and append is true, the data is appended to the file. Otherwise, a new file is created.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+            <exception cref="T:System.UnauthorizedAccessException">Access is denied.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or
+            volume label syntax.</exception>
+            <exception cref="T:System.IO.PathTooLongException">The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
+            For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+            <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.String,System.Boolean,System.Text.Encoding)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <paramref name="path"/>,
+            using the specified encoding and default buffer size. If the file exists, it can be either overwritten or appended to. If the file
+            does not exist, this constructor creates a new file.
+            </summary>
+            <param name="path">The complete file path to write to.</param>
+            <param name="append">Determines whether data is to be appended to the file. If the file exists and append is false, the file is overwritten.
+            If the file exists and append is true, the data is appended to the file. Otherwise, a new file is created.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> is empty.
+            <para>-or-</para>
+            <para><paramref name="path"/> contains the name of a system device (com1, com2, etc).</para></exception>
+            <exception cref="T:System.UnauthorizedAccessException">Access is denied.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or
+            volume label syntax.</exception>
+            <exception cref="T:System.IO.PathTooLongException">The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
+            For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+            <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.String,System.Boolean,System.Text.Encoding,System.Int32)">
+            <summary>
+            Serializes the current <typeparamref name="T"/> as XML, to the specified <paramref name="path"/>,
+            using the specified encoding and buffer size. If the file exists, it can be either overwritten or appended to. If the file does
+            not exist, this constructor creates a new file.
+            </summary>
+            <param name="path">The complete file path to write to.</param>
+            <param name="append">Determines whether data is to be appended to the file. If the file exists and append is false, the file is overwritten.
+            If the file exists and append is true, the data is appended to the file. Otherwise, a new file is created.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">Sets the buffer size.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/> or <paramref name="encoding"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> is empty.
+            <para>-or-</para>
+            <para><paramref name="path"/> contains the name of a system device (com1, com2, etc).</para></exception>
+            <exception cref="T:System.UnauthorizedAccessException">Access is denied.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified <paramref name="path"/> is invalid, such as being on an unmapped drive.</exception>
+            <exception cref="T:System.IO.IOException"><paramref name="path"/> includes an incorrect or invalid syntax for file name, directory name, or
+            volume label syntax.</exception>
+            <exception cref="T:System.IO.PathTooLongException">The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
+            For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+            <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+            <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
+            using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+    </members>
+</doc>

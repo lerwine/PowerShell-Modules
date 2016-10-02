@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Xml.Schema;
 
 namespace XmlUtilityCLR
@@ -22,7 +24,11 @@ namespace XmlUtilityCLR
 
             foreach (XmlSchemaSet item in list)
             {
-                if (list == null || this.Any(i => Object.ReferenceEquals(i, item)))
+#if PSLEGACY
+                if (list == null || LinqEmul.AnyObjectReferenceEquals<XmlSchemaSet,XmlSchemaSet>(this, item))
+#else
+                    if (list == null || this.Any(i => Object.ReferenceEquals(i, item)))
+#endif
                     continue;
 
                 base.InsertItem(this.Count, item);
@@ -44,7 +50,11 @@ namespace XmlUtilityCLR
                 if (index > this.Count)
                     throw new ArgumentOutOfRangeException("index", "Index cannot be greater than Count.");
 
+#if PSLEGACY
+                int oldIndex = LinqEmul.Count(LinqEmul.SkipWhileNotObjectReferenceEquals<XmlSchemaSet, XmlSchemaSet>(this, item));
+#else
                 int oldIndex = this.SkipWhile(i => !Object.ReferenceEquals(i, item)).Count();
+#endif
                 if (oldIndex < this.Count)
                 {
                     base.RemoveItem(oldIndex);
@@ -84,7 +94,11 @@ namespace XmlUtilityCLR
                 if (Object.ReferenceEquals(item, this[index]))
                     return;
 
+#if PSLEGACY
+                int oldIndex = LinqEmul.Count(LinqEmul.SkipWhileNotObjectReferenceEquals<XmlSchemaSet, XmlSchemaSet>(this, item));
+#else
                 int oldIndex = this.SkipWhile(i => !Object.ReferenceEquals(i, item)).Count();
+#endif
                 if (oldIndex < this.Count)
                     base.SetItem(oldIndex, this[index]);
                 else if (this._validationEventHandler != null)

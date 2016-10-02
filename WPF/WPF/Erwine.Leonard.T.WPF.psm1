@@ -13,7 +13,8 @@ Function Initialize-CurrentModule {
             [System.Management.Automation.ScriptBlock].Assembly.Location,
             (Add-Type -AssemblyName 'PresentationFramework' -ErrorAction Stop -PassThru)[0].Assembly.Location,
             (Add-Type -AssemblyName 'PresentationCore' -ErrorAction Stop -PassThru)[0].Assembly.Location,
-            (Add-Type -AssemblyName 'WindowsBase' -ErrorAction Stop -PassThru)[0].Assembly.Location
+            (Add-Type -AssemblyName 'WindowsBase' -ErrorAction Stop -PassThru)[0].Assembly.Location,
+            (Add-Type -AssemblyName 'System.Xaml' -ErrorAction Stop -PassThru)[0].Assembly.Location
         ));
         Property = @{
             IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
@@ -26,7 +27,7 @@ Function Initialize-CurrentModule {
     $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
 }
 
-Initialize-CurrentModule
+Initialize-CurrentModule;
 
 Function Get-WpfModuleAssemblyPath {
 	<#

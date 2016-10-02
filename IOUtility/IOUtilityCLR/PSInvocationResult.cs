@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
@@ -30,10 +32,6 @@ namespace IOUtilityCLR
         /// </summary>
         public Collection<WarningRecord> Warnings { get; private set; }
         /// <summary>
-        /// Informational messages that were produced during the pipeline invocation.
-        /// </summary>
-        public Collection<InformationRecord> InformationMessages { get; private set; }
-        /// <summary>
         /// Verbose messages that were produced during the pipeline invocation.
         /// </summary>
         public Collection<VerboseRecord> VerboseMessages { get; private set; }
@@ -58,7 +56,6 @@ namespace IOUtilityCLR
                 Variables.Add(name, runspace.SessionStateProxy.GetVariable(name));
             Errors = new Collection<ErrorRecord>(streams.Error.ReadAll());
             Warnings = new Collection<WarningRecord>(streams.Warning.ReadAll());
-            InformationMessages = new Collection<InformationRecord>(streams.Information.ReadAll());
             VerboseMessages = new Collection<VerboseRecord>(streams.Verbose.ReadAll());
             DebugMessages = new Collection<DebugRecord>(streams.Debug.ReadAll());
             WasStopped = wasStopped;
@@ -67,7 +64,11 @@ namespace IOUtilityCLR
         
         private static PSInvocationResult Create(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, IEnumerable<string> variableNames, Func<PowerShell, Collection<PSObject>> invoke, Hashtable synchronizedData)
         {
+#if PSLEGACY
+            string[] names = LinqEmul.ToArray<string>(LinqEmul.Where(variableNames, LinqEmul.StringNotNullOrEmpty));
+#else
             string[] names = variableNames.Where(s => !String.IsNullOrEmpty(s)).ToArray();
+#endif
             using (Runspace runspace = createRunspace())
             {
                 using (PowerShell powershell = createPowerShell(runspace))

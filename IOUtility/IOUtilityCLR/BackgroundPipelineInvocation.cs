@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
@@ -69,11 +71,6 @@ namespace IOUtilityCLR
         public Collection<WarningRecord> Warnings { get; private set; }
         
         /// <summary>
-        /// Informational records which were generated during the invocation.
-        /// </summary>
-        public Collection<InformationRecord> Information { get; private set; }
-        
-        /// <summary>
         /// Verbose records which were generated during the invocation.
         /// </summary>
         public Collection<VerboseRecord> Verbose { get; private set; }
@@ -102,7 +99,12 @@ namespace IOUtilityCLR
                 throw new ArgumentNullException("host");
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
+
+#if PSLEGACY
+            List<ScriptBlock> scripts = new List<ScriptBlock>(LinqEmul.Where<ScriptBlock>(parameters.PipelineScripts, new Func<ScriptBlock, bool>(LinqEmul.ObjectIsNotNullPredicate<ScriptBlock>)));
+#else
             List<ScriptBlock> scripts = parameters.PipelineScripts.Where(s => s != null).ToList();
+#endif
             if (scripts.Count == 0)
                 throw new ArgumentException("No scripts to execute.");
             SynchronizedData = parameters.SynchronizedData;
@@ -110,7 +112,6 @@ namespace IOUtilityCLR
             Output = new Collection<PSObject>();
             Errors = new Collection<ErrorRecord>();
             Warnings = new Collection<WarningRecord>();
-            Information = new Collection<InformationRecord>();
             Verbose = new Collection<VerboseRecord>();
             Debug = new Collection<DebugRecord>();
             _host = host;
@@ -122,7 +123,11 @@ namespace IOUtilityCLR
                 foreach (string key in parameters.Variables.Keys)
                     _runspace.SessionStateProxy.SetVariable(key, parameters.Variables[key]);
                 _runspace.SessionStateProxy.SetVariable("SynchronizedData", SynchronizedData);
+#if PSLEGACY
+                _powerShell.Streams.Progress.DataAdded += Progress_DataAdded;
+#else
                 _powerShell.Streams.Progress.DataAdding += Progress_DataAdding;
+#endif
                 BeforeAddPipelineScripts(host, _runspace, scripts);
                 _powerShell = scripts[0].GetPowerShell();
                 try
@@ -175,12 +180,21 @@ namespace IOUtilityCLR
         /// <param name="powerShell">PowerShell object to be invoked.</param>
         protected virtual void AfterScriptsAdded(PSHost host, Runspace runspace, PowerShell powerShell) { }
 
+#if PSLEGACY
+        private void Progress_DataAdded(object sender, DataAddedEventArgs e)
+        {
+            ProgressRecord progress = _powerShell.Streams.Progress[e.Index] as ProgressRecord;
+            if (progress != null)
+                OnProgressChanged(progress);
+        }
+#else
         private void Progress_DataAdding(object sender, DataAddingEventArgs e)
         {
             ProgressRecord progress = e.ItemAdded as ProgressRecord;
             if (progress != null)
                 OnProgressChanged(progress);
         }
+#endif
 
         /// <summary>
         /// This gets called when a script in the pipline writes to the progress stream.
@@ -227,7 +241,6 @@ namespace IOUtilityCLR
             ReadAll<PSObject>(Output, _powerShell.EndInvoke(_asyncResult));
             ReadAll<ErrorRecord>(Errors, _powerShell.Streams.Error);
             ReadAll<WarningRecord>(Warnings, _powerShell.Streams.Warning);
-            ReadAll<InformationRecord>(Information, _powerShell.Streams.Information);
             ReadAll<VerboseRecord>(Verbose, _powerShell.Streams.Verbose);
             ReadAll<DebugRecord>(Debug, _powerShell.Streams.Debug);
             OnEndInvoked();
@@ -275,21 +288,6 @@ namespace IOUtilityCLR
         }
 
         /// <summary>
-        /// Reads informational records from the information stream
-        /// </summary>
-        /// <returns>Information records that were written since the last time this method was called.</returns>
-        public Collection<InformationRecord> ReadInformation()
-        {
-            lock (_syncRoot)
-            {
-                if (_isCompleted)
-                    return new Collection<InformationRecord>();
-
-                return ReadAll<InformationRecord>(Information, _powerShell.Streams.Information);
-            }
-        }
-
-        /// <summary>
         /// Reads verbose records from the information stream
         /// </summary>
         /// <returns>Verbose records that were written since the last time this method was called.</returns>
@@ -329,7 +327,7 @@ namespace IOUtilityCLR
             return items;
         }
 
-        #region IDisposable Support
+#region IDisposable Support
 
         /// <summary>
         /// Disposes the current invocation object.
@@ -366,6 +364,6 @@ namespace IOUtilityCLR
             }
         }
 
-        #endregion
+#endregion
     }
 }

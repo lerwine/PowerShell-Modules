@@ -41,7 +41,6 @@
     <Compile Include="Erwine.Leonard.T.WPF.psm1" />
     <Compile Include="Setup.ps1" />
     <Compile Include="Test.ps1" />
-    <Compile Include="WPF.tests.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

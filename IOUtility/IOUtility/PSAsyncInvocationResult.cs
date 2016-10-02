@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
@@ -135,22 +137,6 @@ namespace IOUtilityCLR
 
             return new Collection<ProgressRecord>();
         }
-
-        /// <summary>
-        /// Gets any informational messages that have been produced by the executing PowerShell pipeline.
-        /// </summary>
-        /// <returns>Informational messages, if any, that have been produced.</returns>
-        public Collection<InformationRecord> GetInformationMessages()
-        {
-            lock (_syncRoot)
-            {
-                if (!_isCompleted)
-                    return new Collection<InformationRecord>(_powershell.Streams.Information.ReadAll());
-            }
-
-            return new Collection<InformationRecord>();
-        }
-
         /// <summary>
         /// Gets any verbose messages that have been produced by the executing PowerShell pipeline.
         /// </summary>
@@ -225,7 +211,11 @@ namespace IOUtilityCLR
 
         private static PSAsyncInvocationResult Create(Func<Runspace> createRunspace, Func<Runspace, PowerShell> createPowerShell, IEnumerable<string> variableNames, Func<PowerShell, IAsyncResult> invoke, Hashtable synchronizedData)
         {
+#if PSLEGACY
+            string[] names = LinqEmul.ToArray<string>(LinqEmul.Where(variableNames, LinqEmul.StringNotNullOrEmpty));
+#else
             string[] names = variableNames.Where(s => !String.IsNullOrEmpty(s)).ToArray();
+#endif
             Runspace runspace = createRunspace();
             try
             {

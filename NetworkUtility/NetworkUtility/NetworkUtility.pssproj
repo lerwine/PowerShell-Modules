@@ -31,11 +31,25 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugPS2' ">
+    <OutputPath>bin\DebugPS2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleasePS2' ">
+    <OutputPath>bin\ReleasePS2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DebugPS3' ">
+    <OutputPath>bin\DebugPS3\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleasePS3' ">
+    <OutputPath>bin\ReleasePS3\</OutputPath>
+  </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.NetworkUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.NetworkUtility.psm1" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Erwine.Leonard.T.NetworkUtility.XML" />
+    <Compile Include="FormEncoder.cs" />
+    <Compile Include="MimeUtility.cs" />
     <Compile Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

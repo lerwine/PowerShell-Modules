@@ -1,5 +1,29 @@
-Add-Type -Path (('SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'SerializationManager.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) `
-	-ReferencedAssemblies 'System.Management.Automation', 'System.Xml';
+Function Initialize-CurrentModule {
+    [CmdletBinding()]
+    Param()
+	
+	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
+	
+    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
+    $Local:Splat = @{
+        TypeName = 'System.CodeDom.Compiler.CompilerParameters';
+        ArgumentList = (,@(
+    		[System.Text.RegularExpressions.Regex].Assembly.Location,
+            [System.Xml.XmlDocument].Assembly.Location,
+            [System.Management.Automation.ScriptBlock].Assembly.Location
+        ));
+        Property = @{
+            IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
+        }
+    };
+    if ($Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters -ne '') {
+        $Local:Splat.Property.CompilerOptions = $Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters;
+    }
+
+    $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
+}
+
+Initialize-CurrentModule;
 
 Function New-XmlReaderSettings {
 	<#
