@@ -19,7 +19,7 @@ CompanyName = 'Leonard T. Erwine'
 Copyright = '(c) 2016 Leonard T. Erwine. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Utility functions to manage filesystem and stream IO.'
+Description = 'Utility functions to manage filesystem, console, and stream IO.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '2.0'

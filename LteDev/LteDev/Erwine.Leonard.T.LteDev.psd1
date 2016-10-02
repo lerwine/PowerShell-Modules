@@ -4,7 +4,7 @@
 RootModule = 'Erwine.Leonard.T.LteDev.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.0.0'
+ModuleVersion = '0.1'
 
 # ID used to uniquely identify this module
 GUID = '390f1061-cbf5-477a-b08d-cc66f40f1621'

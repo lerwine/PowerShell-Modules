@@ -8,6 +8,11 @@
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
     <Name>NetworkUtility</Name>
+    <Author>Leonard T. Erwine</Author>
+    <CompanyName>Leonard T. Erwine</CompanyName>
+    <Copyright>(c) 2016 Leonard T. Erwine. All rights reserved.</Copyright>
+    <Description />
+    <Guid>f11ddef6-e803-45e7-b49a-68876b352e39</Guid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\WpfCLR.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,14 +51,15 @@
     <Compile Include="XamlLoadResult.cs" />
     <Compile Include="XamlUtility.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Erwine.Leonard.T.WPF.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Erwine.Leonard.T.WPF.psd1" />
-    <None Include="Erwine.Leonard.T.WPF.psm1" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>pushd
+cd "$(ProjectDir)"
+xcopy "*.cs" "..\XmlUtility" /Y
+cd $(TargetDir)
+xcopy "*.xml" "..\..\..\XmlUtility" /Y
+popd</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
