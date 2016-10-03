@@ -27,15 +27,20 @@ namespace XmlUtilityCLR
         {
             using (StringReader stringReader = new StringReader(String.Join("\r\n", Source)))
             {
+#if PSLEGACY
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.CheckCharacters = CheckCharacters;
+                settings.Schemas = Schemas;
+                settings.ValidationType = ValidationType;
+#else
                 XmlReaderSettings settings = new XmlReaderSettings
                 {
                     CheckCharacters = CheckCharacters,
                     Schemas = Schemas,
-#if !PSLEGACY
                     DtdProcessing = DtdProcessing,
-#endif
                     ValidationType = ValidationType
                 };
+#endif
                 settings.ValidationEventHandler += Xml_ValidationEventHandler;
                 using (XmlReader xmlReader = XmlReader.Create(stringReader, settings))
                     return Read(xmlReader);

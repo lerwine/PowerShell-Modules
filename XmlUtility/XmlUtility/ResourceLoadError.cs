@@ -9,9 +9,29 @@ namespace XmlUtilityCLR
 {
     public class ResourceLoadError
     {
+#if PSLEGACY
+        private bool _isWarning = false;
+        private string _message = null;
+        private string _details = null;
+#endif
+
+#if PSLEGACY
+        public virtual bool IsWarning { get { return _isWarning; } private set { _isWarning = value; } }
+#else
         public virtual bool IsWarning { get; private set; }
+#endif
+
+#if PSLEGACY
+        public string Message { get { return _message; } private set { _message = value; } }
+#else
         public string Message { get; private set; }
+#endif
+
+#if PSLEGACY
+        public string Details { get { return _details; } private set { _details = value; } }
+#else
         public string Details { get; private set; }
+#endif
 
         public static IEnumerable<string> GetMessages(string message, Exception exception)
         {
@@ -49,7 +69,13 @@ namespace XmlUtilityCLR
             }
         }
 
+#if PSLEGACY
+        public ResourceLoadError(string message) : this(message, false) { }
+
+        public ResourceLoadError(string message, bool isWarning)
+#else
         public ResourceLoadError(string message, bool isWarning = false)
+#endif
         {
             if (message == null)
                 throw new ArgumentNullException("message");

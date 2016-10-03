@@ -13,11 +13,22 @@ namespace ActivityLogger
     {
         private bool _isDisposed = false;
         private object _syncRoot = new object();
-        PSHost _host;
-        Runspace _runspace;
-        PowerShell _powerShell;
-        IAsyncResult _asyncResult;
+        private PSHost _host;
+        private Runspace _runspace;
+        private PowerShell _powerShell;
+        private IAsyncResult _asyncResult;
         private bool _isCompleted = false;
+#if PSLEGACY
+        private object _state = null;
+        private Hashtable _synchronizedData = null;
+        private bool _stopInvoked = false;
+        private Collection<PSObject> _output = null;
+        private Collection<ErrorRecord> _errors = null;
+        private Collection<WarningRecord> _warnings = null;
+        private Collection<VerboseRecord> _verbose = null;
+        private Collection<DebugRecord> _debug = null;
+#endif
+
         public bool IsCompleted
         {
             get
@@ -31,14 +42,54 @@ namespace ActivityLogger
                 return _isCompleted;
             }
         }
+
+#if PSLEGACY
+        public object State { get { return _state; } private set { _state = value; } }
+#else
         public object State { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Hashtable SynchronizedData { get { return _synchronizedData; } private set { _synchronizedData = value; } }
+#else
         public Hashtable SynchronizedData { get; private set; }
+#endif
+
+#if PSLEGACY
+        public bool StopInvoked { get { return _stopInvoked; } private set { _stopInvoked = value; } }
+#else
         public bool StopInvoked { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Collection<PSObject> Output { get { return _output; } private set { _output = value; } }
+#else
         public Collection<PSObject> Output { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Collection<ErrorRecord> Errors { get { return _errors; } private set { _errors = value; } }
+#else
         public Collection<ErrorRecord> Errors { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Collection<WarningRecord> Warnings { get { return _warnings; } private set { _warnings = value; } }
+#else
         public Collection<WarningRecord> Warnings { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Collection<VerboseRecord> Verbose { get { return _verbose; } private set { _verbose = value; } }
+#else
         public Collection<VerboseRecord> Verbose { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Collection<DebugRecord> Debug { get { return _debug; } private set { _debug = value; } }
+#else
         public Collection<DebugRecord> Debug { get; private set; }
+#endif
 
         public BackgroundPipelineInvocation(PSHost host, BackgroundPipelineParameters parameters) : this(host, parameters, null) { }
         public BackgroundPipelineInvocation(PSHost host, BackgroundPipelineParameters parameters, object state)
@@ -47,7 +98,16 @@ namespace ActivityLogger
                 throw new ArgumentNullException("host");
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
+#if PSLEGACY2
+            List<ScriptBlock> scripts = new List<ScriptBlock>();
+            foreach (ScriptBlock sb in parameters.PipelineScripts)
+            {
+                if (sb != null)
+                    scripts.Add(sb);
+            }
+#else
             List<ScriptBlock> scripts = parameters.PipelineScripts.Where(s => s != null).ToList();
+#endif
             if (scripts.Count == 0)
                 throw new ArgumentException("No scripts to execute.");
             SynchronizedData = parameters.SynchronizedData;

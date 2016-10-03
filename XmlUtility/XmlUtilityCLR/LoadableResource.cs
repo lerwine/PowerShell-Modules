@@ -9,16 +9,74 @@ namespace XmlUtilityCLR
 {
     public abstract class LoadableResource
     {
+#if PSLEGACY
+        private Uri _sourceUri = null;
+        private string _sourcePath = null;
+        private bool _isLocal = false;
+        private string _fileName = null;
+        private ReadOnlyCollection<ResourceLoadError> _errors = null;
+        private Collection<ResourceLoadError> _innerErrors = null;
+        private bool _success = false;
+        private Encoding _encoding = null;
+        private string _mediaType = null;
+
+#endif
+
+#if PSLEGACY
+        public Uri SourceUri { get { return _sourceUri; } private set { _sourceUri = value; } }
+#else
         public Uri SourceUri { get; private set; }
+#endif
+
+#if PSLEGACY
+        public string SourcePath { get { return _sourcePath; } private set { _sourcePath = value; } }
+#else
         public string SourcePath { get; private set; }
+#endif
+
+#if PSLEGACY
+        public bool IsLocal { get { return _isLocal; } private set { _isLocal = value; } }
+#else
         public bool IsLocal { get; private set; }
+#endif
+
         public abstract object RawValue { get; }
+
+#if PSLEGACY
+        public string FileName { get { return _fileName; } protected set { _fileName = value; } }
+#else
         public string FileName { get; protected set; }
+#endif
+
+#if PSLEGACY
+        public ReadOnlyCollection<ResourceLoadError> Errors { get { return _errors; } private set { _errors = value; } }
+#else
         public ReadOnlyCollection<ResourceLoadError> Errors { get; private set; }
+#endif
+
+#if PSLEGACY
+        protected Collection<ResourceLoadError> InnerErrors { get { return _innerErrors; } private set { _innerErrors = value; } }
+#else
         protected Collection<ResourceLoadError> InnerErrors { get; private set; }
+#endif
+
+#if PSLEGACY
+        public bool Success { get { return _success; } private set { _success = value; } }
+#else
         public bool Success { get; private set; }
+#endif
+
+#if PSLEGACY
+        public Encoding Encoding { get { return _encoding; } protected set { _encoding = value; } }
+#else
         public Encoding Encoding { get; protected set; }
+#endif
+
+#if PSLEGACY
+        public string MediaType { get { return _mediaType; } protected set { _mediaType = value; } }
+#else
         public string MediaType { get; protected set; }
+#endif
 
         protected abstract bool LoadFromWeb();
         protected abstract void LoadFromLocal();
@@ -100,8 +158,23 @@ namespace XmlUtilityCLR
     }
     public abstract class LoadableResource<TSource, TTarget> : LoadableResource
     {
+#if PSLEGACY
+        private TSource _source = default(TSource);
+        private TTarget _target = default(TTarget);
+#endif
+
+#if PSLEGACY
+        public TSource Source { get { return _source; } protected set { _source = value; } }
+#else
         public TSource Source { get; private set; }
+#endif
+
+#if PSLEGACY
+        public TTarget Target { get { return _target; } protected set { _target = value; } }
+#else
         public TTarget Target { get; private set; }
+#endif
+
         protected LoadableResource(Uri uri) : base(uri) { }
 
         public override object RawValue { get { return Source; } }

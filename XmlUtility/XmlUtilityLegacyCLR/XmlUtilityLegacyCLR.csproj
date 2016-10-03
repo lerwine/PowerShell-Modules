@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BB8270DC-E151-4FF2-8D15-675EF026A32A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XmlUtilityCLR</RootNamespace>
+    <AssemblyName>XmlUtilityLegacyCLR</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PSLEGACY;PSLEGACY2</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>ISO-2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Assembly\V2\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\XmlUtilityCLR\LinqEmul.cs">
+      <Link>LinqEmul.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\LoadableBinaryResource.cs">
+      <Link>LoadableBinaryResource.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\LoadableResource.cs">
+      <Link>LoadableResource.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\LoadableTextResource.cs">
+      <Link>LoadableTextResource.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\LoadableXmlResource.cs">
+      <Link>LoadableXmlResource.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\LoadableXmlSchemaResource.cs">
+      <Link>LoadableXmlSchemaResource.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\LoadableXsdResource.cs">
+      <Link>LoadableXsdResource.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\ResourceLoadError.cs">
+      <Link>ResourceLoadError.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\SchemaSetCollection.cs">
+      <Link>SchemaSetCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\SchemaValidationError.cs">
+      <Link>SchemaValidationError.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\SchemaValidationHandler.cs">
+      <Link>SchemaValidationHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\SerializationManager.cs">
+      <Link>SerializationManager.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\WebResourceLoadError.cs">
+      <Link>WebResourceLoadError.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\XmlResourceLoadError.cs">
+      <Link>XmlResourceLoadError.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlUtilityCLR\XmlUtility.cs">
+      <Link>XmlUtility.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

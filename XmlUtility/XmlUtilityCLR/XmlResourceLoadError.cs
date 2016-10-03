@@ -14,11 +14,38 @@ namespace XmlUtilityCLR
 {
     public class XmlResourceLoadError : ResourceLoadError
     {
+#if PSLEGACY
+        private XmlSeverityType _severity = default(XmlSeverityType);
+        private int _lineNumber = 0;
+        private int _linePosition = 0;
+        private string _sourceUri = null;
+
+#endif
         public override bool IsWarning { get { return Severity == XmlSeverityType.Warning; } }
+
+#if PSLEGACY
+        public XmlSeverityType Severity { get { return _severity; } private set { _severity = value; } }
+#else
         public XmlSeverityType Severity { get; private set; }
+#endif
+
+#if PSLEGACY
+        public int LineNumber { get { return _lineNumber; } private set { _lineNumber = value; } }
+#else
         public int LineNumber { get; private set; }
+#endif
+
+#if PSLEGACY
+        public int LinePosition { get { return _linePosition; } private set { _linePosition = value; } }
+#else
         public int LinePosition { get; private set; }
+#endif
+
+#if PSLEGACY
+        public string SourceUri { get { return _sourceUri; } private set { _sourceUri = value; } }
+#else
         public string SourceUri { get; private set; }
+#endif
 
         public static XmlResourceLoadError Create(ValidationEventArgs args)
         {
