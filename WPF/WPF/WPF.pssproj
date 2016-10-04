@@ -13,7 +13,7 @@
     <Copyright>(c) 2016 Leonard T. Erwine. All rights reserved.</Copyright>
     <Description>Display WPF windows.</Description>
     <Guid>2e161262-30cb-4efc-afdd-b4d8d5529fc6</Guid>
-    <Version>0.1.0.0</Version>
+    <Version>1.0.0.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

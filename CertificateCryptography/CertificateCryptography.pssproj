@@ -12,7 +12,7 @@
     <CompanyName>Leonard T. Erwine</CompanyName>
     <Copyright>(c) 2015 Leonard T. Erwine. All rights reserved.</Copyright>
     <Description>Encrypt and decrypt using PKI technology.</Description>
-    <Version>0.1.0.0</Version>
+    <Version>1.0.0.0</Version>
     <Guid>2f1be0d9-d0b2-42b7-a477-791e8b2a2f17</Guid>
     <ClrVersion />
     <PowerShellHostVersion />
@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.CertificateCryptography.psd1" />
     <Compile Include="Erwine.Leonard.T.CertificateCryptography.psm1" />
+    <Compile Include="ExampleCompiledCustomType.ps1" />
     <Compile Include="Install.ps1" />
     <Compile Include="README.md" />
     <Compile Include="Uninstall.ps1" />

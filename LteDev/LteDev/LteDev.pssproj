@@ -12,7 +12,7 @@
     <CompanyName>Leonard T. Erwine</CompanyName>
     <Copyright>(c) 2015 Leonard T. Erwine. All rights reserved.</Copyright>
     <Description>PowerShell Dev utility functions.</Description>
-    <Version>0.1.0.0</Version>
+    <Version>1.0.0.0</Version>
     <Guid>390f1061-cbf5-477a-b08d-cc66f40f1621</Guid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
