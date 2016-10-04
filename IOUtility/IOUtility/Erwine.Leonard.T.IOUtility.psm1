@@ -5,23 +5,18 @@ Function Initialize-CurrentModule {
 	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
 	
     $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
+    $Local:Assemblies = @($Local:ModuleManifest.PrivateData.CompilerOptions.AssemblyReferences | ForEach-Object {
+        (Add-Type -AssemblyName $_)[0].Assembly.Location
+    });
     $Local:Splat = @{
         TypeName = 'System.CodeDom.Compiler.CompilerParameters';
-        ArgumentList = (,@(
-    		[System.Text.RegularExpressions.Regex].Assembly.Location,
-            [System.Xml.XmlDocument].Assembly.Location,
-            [System.Management.Automation.ScriptBlock].Assembly.Location,
-            (Add-Type -AssemblyName 'System.Windows.Forms' -ErrorAction Stop -PassThru)[0].Assembly.Location,
-            (Add-Type -AssemblyName 'PresentationFramework' -ErrorAction Stop -PassThru)[0].Assembly.Location,
-            (Add-Type -AssemblyName 'System.Web.Services' -ErrorAction Stop -PassThru)[0].Assembly.Location,
-            (Add-Type -AssemblyName 'WindowsBase' -ErrorAction Stop -PassThru)[0].Assembly.Location
-        ));
+        ArgumentList = (,$Local:Assemblies);
         Property = @{
             IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
         }
     };
-    if ($Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters -ne '') {
-        $Local:Splat.Property.CompilerOptions = $Local:ModuleManifest.PrivateData.CompilerOptions.CompilerParameters;
+    if ($Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols -ne '') {
+        $Local:Splat.Property.CompilerOptions = '/define:' + $Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols;
     }
 
     $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;

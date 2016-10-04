@@ -77,16 +77,15 @@ AliasesToExport = '*'
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'SchemaSetCollection.cs',
-	'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs')
+FileList = @('DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'ScriptRegexReplaceHandler.cs',
+    'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess
 PrivateData = @{
 	CompilerOptions = @{
 		IncludeDebugInformation = $true;
-        CustomTypeSourceFiles = 'DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs',
-			'SchemaSetCollection.cs', 'SchemaValidationError.cs', 'SchemaValidationHandler.cs', 'ScriptRegexReplaceHandler.cs', 'StreamHelper.cs', 'TextHelper.cs',
-			'WindowOwner.cs';
+        CustomTypeSourceFiles = 'DecodeRegexReplaceHandler.cs', 'EncodeRegexReplaceHandler.cs', 'LinqEmul.cs', 'RegexReplaceHandler.cs', 'RegularExpressions.cs', 'ScriptRegexReplaceHandler.cs',
+    'StreamHelper.cs', 'TextHelper.cs', 'WindowOwner.cs';
 	};
 }
 
