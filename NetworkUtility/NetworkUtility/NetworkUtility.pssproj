@@ -44,6 +44,7 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="about.xslt" />
     <Content Include="ManifestData.xml" />
     <Content Include="ManifestData.xslt" />
     <Content Include="Setup.bat" />

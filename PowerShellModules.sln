@@ -70,6 +70,7 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "LteDev", "LteDev\LteDev\Lte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XmlUtility", "XmlUtility", "{1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}"
 	ProjectSection(SolutionItems) = preProject
+		WPF\WPF\about.xslt = WPF\WPF\about.xslt
 		XmlUtility\README.md = XmlUtility\README.md
 	EndProjectSection
 EndProject

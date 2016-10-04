@@ -45,6 +45,7 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="about.xslt" />
     <Content Include="Setup.bat" />
     <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt" />
   </ItemGroup>

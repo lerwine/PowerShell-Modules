@@ -45,6 +45,7 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="about.xslt" />
     <Content Include="ManifestData.xml" />
     <Content Include="ManifestData.xslt" />
     <Content Include="Schema\PSMaml\base.xsd" />
@@ -103,7 +104,6 @@
     <Content Include="Schema\PSMaml\task.xsd" />
     <Content Include="Schema\PSMaml\troubleshooting.xsd" />
     <Content Include="Setup.bat" />
-    <Content Include="about_Erwine.Leonard.T.LteDev.help.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.LteDev.psm1" />

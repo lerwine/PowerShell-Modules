@@ -231,15 +231,15 @@ Description = ']]></xsl:text>
 # Functions to export from this module
 ]]></xsl:text>
     <xsl:choose>
-      <xsl:when test="count(FunctionsToExport/Name)=0">
+      <xsl:when test="count(FunctionsToExport/Function/@Name)=0">
         <xsl:text><![CDATA[# FunctionsToExport = @()]]></xsl:text>
       </xsl:when>
-      <xsl:when test="count(FunctionsToExport/Name)=1 and normalize-space(string(FunctionsToExport/Name))='*'">
+      <xsl:when test="count(FunctionsToExport/Function/@Name)=1 and normalize-space(string(FunctionsToExport/Function/@Name))='*'">
         <xsl:text><![CDATA[FunctionsToExport = '*']]></xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text><![CDATA[FunctionsToExport = @(]]></xsl:text>
-        <xsl:apply-templates select="FunctionsToExport/Name" />
+        <xsl:apply-templates select="FunctionsToExport/Function/@Name" />
         <xsl:text><![CDATA[)]]></xsl:text>
       </xsl:otherwise>
     </xsl:choose>

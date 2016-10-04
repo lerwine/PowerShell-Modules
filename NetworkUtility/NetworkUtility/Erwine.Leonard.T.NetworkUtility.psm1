@@ -7,9 +7,20 @@ $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Pr
 };
 
 Function Test-ContentType {
+	<#
+		.SYNOPSIS
+			Check validity of content type.
+ 
+		.DESCRIPTION
+			Returns boolean value to indicate whether the content type is a recognized content type.
+        
+		.OUTPUTS
+			System.Boolean. True if content type is a valid and recognized content type; otherwise False.
+	#>
     [CmdletBinding(DefaultParameterSetName = 'Validate')]
     [OutputType([bool])]
     Param(
+		# Content type to test
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Validate')]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String_String')]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String_ContentType')]
@@ -17,26 +28,31 @@ Function Test-ContentType {
         [AllowEmptyString()]
         [string[]]$InputString,
         
+		# Content type to test
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ContentType_String')]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ContentType_ContentType')]
         [AllowNull()]
         [System.Net.Mime.ContentType[]]$InputObject,
         
+		# Expected content type
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'String_String')]
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'ContentType_String')]
         [ValidateScript({ Test-ContentType -InputString $_ })]
         [string]$Expected,
 
+		# Expected content type
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'String_ContentType')]
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'ContentType_ContentType')]
         [System.Net.Mime.ContentType]$ContentType,
         
+		# Only check the media type, and not the char set
         [Parameter(ParameterSetName = 'String_String')]
         [Parameter(ParameterSetName = 'String_ContentType')]
         [Parameter(ParameterSetName = 'ContentType_String')]
         [Parameter(ParameterSetName = 'ContentType_ContentType')]
         [switch]$MediaTypeOnly,
         
+		# Indicates whether an empty content type should be considered valid.
         [Parameter(ParameterSetName = 'Validate')]
         [switch]$AllowEmpty
     )
@@ -101,35 +117,57 @@ Function Test-ContentType {
 }
 
 Function New-WebRequest {
+	<#
+		.SYNOPSIS
+			Create new web request object.
+ 
+		.DESCRIPTION
+			Create object which describes a web request.
+        
+		.OUTPUTS
+			System.Net.WebRequest. A web request object.
+	#>
     [CmdletBinding(DefaultParameterSetName = 'PSCredential')]
     [OutputType([System.Net.WebRequest])]
     Param(
+		# URI of web request
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [System.Uri]$Uri,
-
+		
+		# Request cache policy
         [System.Net.Cache.RequestCacheLevel]$CachePolicy,
-
+		
+		# Request method
         [string]$Method,
-
+		
+		# Connection group
         [string]$ConnectionGroupName,
-
+		
+		# Request headers
         [Hashtable]$Headers,
-
+		
+		# Indicates whether to pre-authenticate
         [bool]$PreAuthenticate,
 
+		# Web request timeout, in milliseconds
         [ValidateRange(0, 2147483647)]
         [int]$Timeout,
 
+		# Level of authentication
         [System.Net.Security.AuthenticationLevel]$AuthenticationLevel,
 
+		# Type of impersonation
         [System.Security.Principal.TokenImpersonationLevel]$ImpersonationLevel,
 
+		# Credential to use for authentication
         [Parameter(ParameterSetName = 'PSCredential')]
         [System.Management.Automation.PSCredential]$PSCredential,
-
+		
+		# Credential to use for authentication
         [Parameter(Mandatory = $true, ParameterSetName = 'ICredentials')]
         [System.Net.ICredentials]$Credentials,
 
+		# Indicates whether to use default credentials
         [Parameter(Mandatory = $true, ParameterSetName = 'UseDefaultCredentials')]
         [switch]$UseDefaultCredentials
     )
@@ -168,21 +206,37 @@ Function New-WebRequest {
 }
 
 Function Read-FormUrlEncoded {
+	<#
+		.SYNOPSIS
+			Parse form-url-encoded data.
+ 
+		.DESCRIPTION
+			Reads url-encoded form data.
+        
+		.OUTPUTS
+			System.Management.Automation.PSObject. Data read from encoded data.
+			Hashtable. Data read from encoded data.
+	#>
     [CmdletBinding(DefaultParameterSetName = 'InputString')]
     Param(
+		# String containing url-encoded form data.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'InputString')]
         [AllowEmptyString()]
         [string]$InputString,
         
+		# Text reader containing url-encoded form data.
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'TextReader')]
         [System.IO.TextReader]$Reader,
         
+		# Stream containing url-encoded form data.
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Stream')]
         [System.IO.Stream]$Stream,
 
+		# Default encoding to use
         [Parameter(Position = 1, ParameterSetName = 'Stream')]
         [System.Text.Encoding]$Encoding,
         
+		# Indicates whether return a Hashtable or a custom PSObject
         [switch]$Hashtable
 	)
 

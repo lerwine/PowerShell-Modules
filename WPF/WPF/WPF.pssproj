@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="about_Erwine.Leonard.T.WPF.help.txt" />
+    <Content Include="about.xslt" />
     <Content Include="ManifestData.xml" />
     <Content Include="ManifestData.xslt" />
     <Content Include="Setup.bat" />

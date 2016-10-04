@@ -58,8 +58,8 @@ if ($PSVersionTable.CLRVersion.Major -lt 4) {
     }
 }
 
-$FilesToCopy = @(('{0}.psm1' -f $ModuleName), ('{0}.xml' -f $ModuleName), ('about_{0}.help.txt' -f $ModuleName));
-$SourceFiles = @($ManifestProperties.ManifestData.FileList.Name | ForEach-Object { $_.InnerText });
+$FilesToCopy = @(('{0}.psm1' -f $ModuleName), ('{0}.xml' -f $ModuleName));
+$SourceFiles = @($ManifestProperties.ManifestData.FileList.Function | ForEach-Object { $_.Name });
 if ($SourceFiles.Count -gt 0) {
 	$FilesToCopy += $SourceFiles;
 
@@ -96,17 +96,24 @@ foreach ($f in $FilesToCopy) {
     Copy-Item -Path $SourcePath -Destination $DirectoryInfo.FullName;
 }
 
-$TargetPath = [System.IO.Path]::Combine($DirectoryInfo.FullName, ('{0}.psd1' -f $ModuleName));
+$TargetPath = [System.IO.Path]::Combine($DirectoryInfo.FullName, ('about_{0}.help.txt' -f $ModuleName));
 ('Creating {0}' -f $Targetpath) | Write-Host;
 $XslTransform = New-Object -TypeName 'System.Xml.Xsl.XslTransform';
-$XslTransform.Load([System.IO.Path]::Combine($PSScriptRoot, 'ManifestData.xslt'));
+$XslTransform.Load([System.IO.Path]::Combine($PSScriptRoot, 'about.xslt'));
 $XmlWriterSettings = New-Object -TypeName 'System.Xml.XmlWriterSettings' -Property @{
     ConformanceLevel = [System.Xml.ConformanceLevel]::Auto;
     CheckCharacters = $false;
     Indent = $true;
 };
 $XmlWriter = [System.Xml.XmlWriter]::Create($TargetPath, $XmlWriterSettings);
-$XslTransform.Transform($ManifestProperties, $XsltArgumentList, $XmlWriter, $null);
+$XslTransform.Transform($ManifestProperties, $null, $XmlWriter, $null);
 $XmlWriter.Close();
 
+$TargetPath = [System.IO.Path]::Combine($DirectoryInfo.FullName, ('{0}.psd1' -f $ModuleName));
+('Creating {0}' -f $Targetpath) | Write-Host;
+$XslTransform = New-Object -TypeName 'System.Xml.Xsl.XslTransform';
+$XslTransform.Load([System.IO.Path]::Combine($PSScriptRoot, 'ManifestData.xslt'));
+$XmlWriter = [System.Xml.XmlWriter]::Create($TargetPath, $XmlWriterSettings);
+$XslTransform.Transform($ManifestProperties, $XsltArgumentList, $XmlWriter, $null);
+$XmlWriter.Close();
 'Finished.' | Write-Host;
