@@ -1,8 +1,73 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>_9qm6w_p</name>
+        <name>Erwine.Leonard.T.IOUtility</name>
     </assembly>
     <members>
+        <member name="T:System.Collections.ObjectModel.ReadOnlyDictionary`2">
+            <summary>
+            A read-only dictionary intended to be forward-compatible with later .NET versions.
+            </summary>
+            <typeparam name="TKey">Type of key used by the wrapped dictionary.</typeparam>
+            <typeparam name="TValue">Type of value associated with the keys in the wrapped dictionary.</typeparam>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.InnerDictionary">
+            <summary>
+            Gets the dictionary that is wrapped by this <see cref="T:System.Collections.ObjectModel.ReadOnlyDictionary`2" /> object.
+            </summary>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.ReadOnlyDictionary`2" /> class that is a wrapper around the specified dictionary.
+            </summary>
+            <param name="dictionary">The dictionary to wrap.</param>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Item(`0)">
+            <summary>
+            Gets the element that has the specified key.
+            </summary>
+            <param name="key">The key of the element to get.</param>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Keys">
+            <summary>
+            Gets a key collection that contains the keys of the dictionary.
+            </summary>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Values">
+            <summary>
+            Gets a collection that contains the values in the dictionary.
+            </summary>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.ContainsKey(`0)">
+            <summary>
+            Determines whether the dictionary contains an element that has the specified key.
+            </summary>
+            <param name="key">The key to locate in the dictionary.</param>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.TryGetValue(`0,`1@)">
+            <summary>
+            Retrieves the value that is associated with the specified key.
+            </summary>
+            <param name="key">The key whose value will be retrieved.</param>
+            <param name="value">When this method returns, the value associated with the specified key, if the key is found;
+            otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+        </member>
+        <member name="P:System.Collections.ObjectModel.ReadOnlyDictionary`2.Count">
+            <summary>
+            Gets the number of items in the dictionary.
+            </summary>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <summary>
+            Copies the elements of the dictionary to an array, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional array that is the destination of the elements copied from the dictionary. The array must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:System.Collections.ObjectModel.ReadOnlyDictionary`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:System.Collections.ObjectModel.ReadOnlyDictionary`2" />.
+            </summary>
+        </member>
     </members>
 </doc>

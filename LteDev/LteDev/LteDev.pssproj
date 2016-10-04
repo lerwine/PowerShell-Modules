@@ -45,6 +45,8 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="ManifestData.xml" />
+    <Content Include="ManifestData.xslt" />
     <Content Include="Schema\PSMaml\base.xsd" />
     <Content Include="Schema\PSMaml\baseConditional.xsd" />
     <Content Include="Schema\PSMaml\block.xsd" />
@@ -104,7 +106,6 @@
     <Content Include="about_Erwine.Leonard.T.LteDev.help.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Erwine.Leonard.T.LteDev.psd1" />
     <Compile Include="Erwine.Leonard.T.LteDev.psm1" />
     <Compile Include="README.md" />
     <Compile Include="Schema\helpItems.xsd" />

@@ -58,7 +58,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityCLR", "Networ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LteDev", "LteDev", "{F5D07E3B-5C87-4C20-A129-C3FF471C23A2}"
 	ProjectSection(SolutionItems) = preProject
-		CertificateCryptography\about_Erwine.Leonard.T.CertificateCryptography.help.txt = CertificateCryptography\about_Erwine.Leonard.T.CertificateCryptography.help.txt
 		LteDev\README.md = LteDev\README.md
 		LteDev\Untitled1.ps1 = LteDev\Untitled1.ps1
 	EndProjectSection

@@ -34,13 +34,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="about_Erwine.Leonard.T.WPF.help.txt" />
+    <Content Include="ManifestData.xml" />
+    <Content Include="ManifestData.xslt" />
     <Content Include="Setup.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Erwine.Leonard.T.WPF.psd1" />
     <Compile Include="Erwine.Leonard.T.WPF.psm1" />
+    <Compile Include="Erwine.Leonard.T.WPF.xml" />
+    <Compile Include="ReadOnlyDictionary.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Setup.ps1" />
     <Compile Include="Test.ps1" />
+    <Compile Include="ThisObj.cs" />
+    <Compile Include="WindowProcessInternal.cs" />
+    <Compile Include="WpfWindow.cs" />
+    <Compile Include="XamlLoadResult.cs" />
+    <Compile Include="XamlUtility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

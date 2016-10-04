@@ -65,12 +65,5 @@
       <FileName>TextHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="IOUtilityCLR.MimeTypeDetector" Collapsed="true">
-    <Position X="14" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AACEIIAAAAEIAQAAAIAAAAABIAAAAAACAAABABQAAiA=</HashCode>
-      <FileName>MimeTypeDetector.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

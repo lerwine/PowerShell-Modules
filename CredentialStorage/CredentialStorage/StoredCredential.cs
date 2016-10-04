@@ -6,16 +6,10 @@ using System.Xml.Serialization;
 
 namespace CredentialStorageCLR
 {
-    /// <summary>
-    /// Credentials
-    /// </summary>
     [XmlRoot(ElementName = StoredCredential.ElementName, Namespace = StoredCredential.NamespaceURI)]
     [Serializable]
     public class StoredCredential : CredentialComponent
     {
-        /// <summary>
-        /// Local element name
-        /// </summary>
         public const string ElementName = "Credential";
 
         private Guid? _id = null;
@@ -24,9 +18,6 @@ namespace CredentialStorageCLR
         private string _password = "";
         private string _location = "";
 
-        /// <summary>
-        /// Unique identifier
-        /// </summary>
         [XmlAttribute]
         public Guid Id
         {
@@ -40,9 +31,6 @@ namespace CredentialStorageCLR
             set { this._id = value; }
         }
 
-        /// <summary>
-        /// Display text
-        /// </summary>
         [XmlAttribute]
         public string DisplayText
         {
@@ -50,9 +38,6 @@ namespace CredentialStorageCLR
             set { this._displayText = value ?? ""; }
         }
 
-        /// <summary>
-        /// User name
-        /// </summary>
         [XmlElement("UserName", Namespace = StoredCredential.NamespaceURI)]
         public string UserName
         {
@@ -60,9 +45,6 @@ namespace CredentialStorageCLR
             set { this._userName = value ?? ""; }
         }
 
-        /// <summary>
-        /// Encrypted Password
-        /// </summary>
         [XmlElement("Password", Namespace = StoredCredential.NamespaceURI)]
         public string Password
         {
@@ -70,9 +52,6 @@ namespace CredentialStorageCLR
             set { this._password = value ?? ""; }
         }
 
-        /// <summary>
-        /// Uri or path to associated resource
-        /// </summary>
         [XmlElement("Location", Namespace = StoredCredential.NamespaceURI)]
         public string Location
         {
@@ -80,10 +59,6 @@ namespace CredentialStorageCLR
             set { this._location = value ?? ""; }
         }
 
-        /// <summary>
-        /// Create clone of current node.
-        /// </summary>
-        /// <returns>Clone of current node.</returns>
         protected override CredentialComponent Clone()
         {
             StoredCredential clone = new StoredCredential();
