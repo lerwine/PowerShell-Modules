@@ -13,6 +13,7 @@
     <Copyright>(c) 2016 Leonard T. Erwine. All rights reserved.</Copyright>
     <Description />
     <Guid>f11ddef6-e803-45e7-b49a-68876b352e39</Guid>
+    <Version>1.1.0.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

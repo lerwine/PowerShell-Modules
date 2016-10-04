@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LteDevClr.TypeBrowser.AssemblyDataItem" Collapsed="true">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\AssemblyDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.GenericMethodArgument" Collapsed="true">
+    <Position X="7.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\GenericMethodArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.GenericArgumentDataItem" Collapsed="true">
+    <Position X="6.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAABAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\GenericParameterDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.GenericParameterDataItem&lt;TDeclaringMemberInfo&gt;" Collapsed="true">
+    <Position X="6.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\GenericParameterDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.GenericTypeArgument" Collapsed="true">
+    <Position X="5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\GenericTypeArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.ConstructedTypeDefinition">
+    <Position X="2.75" Y="8.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAABAAgIAAAQIAAAAAAAAIAAAAIAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\ConstructedTypeDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.MemberInfoDataItem">
+    <Position X="5" Y="0.5" Width="1.75" />
+    <Members>
+      <Field Name="_representedMember" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAADAAAAAAAAIAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\MemberInfoDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.MemberInfoDataItem&lt;TMemberInfo&gt;">
+    <Position X="4.5" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\MemberInfoDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.MethodDefinitionItem" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\MethodDefinitionItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.MethodInfoDataItem" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\MethodInfoDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.TypeDefinition" Collapsed="true">
+    <Position X="9.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeBrowser\TypeDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDevClr.TypeBrowser.TypeInfoDataItem">
+    <Position X="6" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAQABABAAAggAAAAAQAEAAAAAAQAAAAAA=</HashCode>
+      <FileName>TypeBrowser\TypeInfoDataItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

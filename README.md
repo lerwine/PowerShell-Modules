@@ -14,8 +14,14 @@ Contents
 ### CertificateCryptography
 Encrypt and decrypt using PKI technology.
 
+### CredentialStorage
+Provides secure credential storage and retrieval.
+
 ### CryptographyScripts
 Powershell scripts to support encrypting and decrypting data.
+
+### GDIPlus
+Binary Module to support graphic file manipulation.
 
 ### IOUtility
 Utility functions to manage filesystem, console, and stream IO.

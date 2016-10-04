@@ -12,7 +12,7 @@
     <CompanyName>Leonard T. Erwine</CompanyName>
     <Copyright>(c) 2016 Leonard T. Erwine. All rights reserved.</Copyright>
     <Description>Utility functions to manage filesystem, console, and stream IO.</Description>
-    <Version>1.0.0.0</Version>
+    <Version>1.1.0.0</Version>
     <Guid>bd4390dc-a8ad-4bce-8d69-f53ccf8e4163</Guid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -50,12 +50,21 @@
     <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundPipelineInvocation.cs" />
+    <Compile Include="BackgroundPipelineParameters.cs" />
     <Compile Include="DecodeRegexReplaceHandler.cs" />
+    <Compile Include="DisplayWindowVM.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="Erwine.Leonard.T.IOUtility.XML" />
     <Compile Include="LinqEmul.cs" />
     <Compile Include="ManifestData.xml" />
     <Compile Include="ManifestData.xslt" />
+    <Compile Include="PSAsyncInvocationResult.cs" />
+    <Compile Include="PSInvocationBuilder.cs" />
+    <Compile Include="PSInvocationBuilderBase.cs" />
+    <Compile Include="PSInvocationResult.cs" />
+    <Compile Include="PsWpfInvocation.cs" />
+    <Compile Include="PSXamlInvocationSettings.cs" />
     <Compile Include="README.md" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
@@ -66,6 +75,11 @@
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
+    <Compile Include="WindowProxy.cs" />
+    <Compile Include="XamlDialogAsyncResult.cs" />
+    <Compile Include="XamlDialogResult.cs" />
+    <Compile Include="XamlWindow.cs" />
+    <Compile Include="XamlWindowBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
