@@ -48,62 +48,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\BackgroundPipelineInvocation.cs">
-      <Link>ActivityLogger\BackgroundPipelineInvocation.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\BackgroundPipelineParameters.cs">
-      <Link>ActivityLogger\BackgroundPipelineParameters.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\DisplayWindowVM.cs">
-      <Link>ActivityLogger\DisplayWindowVM.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\ListingWindowVM.cs">
-      <Link>ActivityLogger\ListingWindowVM.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\PsWpfInvocation.cs">
-      <Link>ActivityLogger\PsWpfInvocation.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\WindowOwner.cs">
-      <Link>ActivityLogger\WindowOwner.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\ActivityLogger\XamlWindow.cs">
-      <Link>ActivityLogger\XamlWindow.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\BackgroundPipelineInvocation.cs">
-      <Link>BackgroundPipelineInvocation.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\BackgroundPipelineParameters.cs">
-      <Link>BackgroundPipelineParameters.cs</Link>
-    </Compile>
     <Compile Include="..\IOUtilityCLR\DecodeRegexReplaceHandler.cs">
       <Link>DecodeRegexReplaceHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\DisplayWindowVM.cs">
-      <Link>DisplayWindowVM.cs</Link>
     </Compile>
     <Compile Include="..\IOUtilityCLR\EncodeRegexReplaceHandler.cs">
       <Link>EncodeRegexReplaceHandler.cs</Link>
     </Compile>
     <Compile Include="..\IOUtilityCLR\LinqEmul.cs">
       <Link>LinqEmul.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\MimeTypeDetector.cs">
-      <Link>MimeTypeDetector.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\PSAsyncInvocationResult.cs">
-      <Link>PSAsyncInvocationResult.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\PSInvocationBuilder.cs">
-      <Link>PSInvocationBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\PSInvocationBuilderBase.cs">
-      <Link>PSInvocationBuilderBase.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\PSInvocationResult.cs">
-      <Link>PSInvocationResult.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\PsWpfInvocation.cs">
-      <Link>PsWpfInvocation.cs</Link>
     </Compile>
     <Compile Include="..\IOUtilityCLR\ReadOnlyDictionary.cs">
       <Link>ReadOnlyDictionary.cs</Link>
@@ -125,21 +77,6 @@
     </Compile>
     <Compile Include="..\IOUtilityCLR\WindowOwner.cs">
       <Link>WindowOwner.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\WindowProxy.cs">
-      <Link>WindowProxy.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\XamlDialogAsyncResult.cs">
-      <Link>XamlDialogAsyncResult.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\XamlDialogResult.cs">
-      <Link>XamlDialogResult.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\XamlWindow.cs">
-      <Link>XamlWindow.cs</Link>
-    </Compile>
-    <Compile Include="..\IOUtilityCLR\XamlWindowBuilder.cs">
-      <Link>XamlWindowBuilder.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

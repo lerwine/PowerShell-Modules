@@ -49,20 +49,12 @@
     <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundPipelineInvocation.cs" />
-    <Compile Include="BackgroundPipelineParameters.cs" />
     <Compile Include="DecodeRegexReplaceHandler.cs" />
-    <Compile Include="DisplayWindowVM.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="Erwine.Leonard.T.IOUtility.XML" />
     <Compile Include="LinqEmul.cs" />
-    <Compile Include="MimeTypeDetector.cs" />
-    <Compile Include="PSAsyncInvocationResult.cs" />
-    <Compile Include="PSInvocationBuilder.cs" />
-    <Compile Include="PSInvocationBuilderBase.cs" />
-    <Compile Include="PSInvocationResult.cs" />
-    <Compile Include="PsWpfInvocation.cs" />
-    <Compile Include="PSXamlInvocationSettings.cs" />
+    <Compile Include="ManifestData.xml" />
+    <Compile Include="ManifestData.xslt" />
     <Compile Include="README.md" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
@@ -74,16 +66,6 @@
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
-    <Compile Include="WindowProxy.cs" />
-    <Compile Include="XamlDialogAsyncResult.cs" />
-    <Compile Include="XamlDialogResult.cs" />
-    <Compile Include="XamlWindow.cs" />
-    <Compile Include="XamlWindowBuilder.cs" />
-    <Compile Include="_setup\ModuleManifest.cs" />
-    <Compile Include="_setup\NotificationForm.cs" />
-    <Compile Include="_setup\NotificationForm.Designer.cs" />
-    <Compile Include="_setup\SetupForm.cs" />
-    <Compile Include="_setup\SetupForm.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="_setup\" />

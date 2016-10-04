@@ -44,27 +44,6 @@
     <Compile Include="..\XmlUtilityCLR\LinqEmul.cs">
       <Link>LinqEmul.cs</Link>
     </Compile>
-    <Compile Include="..\XmlUtilityCLR\LoadableBinaryResource.cs">
-      <Link>LoadableBinaryResource.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\LoadableResource.cs">
-      <Link>LoadableResource.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\LoadableTextResource.cs">
-      <Link>LoadableTextResource.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\LoadableXmlResource.cs">
-      <Link>LoadableXmlResource.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\LoadableXmlSchemaResource.cs">
-      <Link>LoadableXmlSchemaResource.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\LoadableXsdResource.cs">
-      <Link>LoadableXsdResource.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\ResourceLoadError.cs">
-      <Link>ResourceLoadError.cs</Link>
-    </Compile>
     <Compile Include="..\XmlUtilityCLR\SchemaSetCollection.cs">
       <Link>SchemaSetCollection.cs</Link>
     </Compile>
@@ -76,12 +55,6 @@
     </Compile>
     <Compile Include="..\XmlUtilityCLR\SerializationManager.cs">
       <Link>SerializationManager.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\WebResourceLoadError.cs">
-      <Link>WebResourceLoadError.cs</Link>
-    </Compile>
-    <Compile Include="..\XmlUtilityCLR\XmlResourceLoadError.cs">
-      <Link>XmlResourceLoadError.cs</Link>
     </Compile>
     <Compile Include="..\XmlUtilityCLR\XmlUtility.cs">
       <Link>XmlUtility.cs</Link>

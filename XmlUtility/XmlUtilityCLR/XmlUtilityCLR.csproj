@@ -86,16 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LinqEmul.cs" />
-    <Compile Include="LoadableBinaryResource.cs" />
-    <Compile Include="LoadableResource.cs" />
-    <Compile Include="LoadableTextResource.cs" />
-    <Compile Include="LoadableXmlResource.cs" />
-    <Compile Include="LoadableXmlSchemaResource.cs" />
-    <Compile Include="LoadableXsdResource.cs" />
-    <Compile Include="ResourceLoadError.cs" />
     <Compile Include="SerializationManager.cs" />
-    <Compile Include="WebResourceLoadError.cs" />
-    <Compile Include="XmlResourceLoadError.cs" />
     <Compile Include="XmlUtility.cs" />
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />
