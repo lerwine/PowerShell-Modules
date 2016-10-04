@@ -14,14 +14,11 @@ Contents
 ### CertificateCryptography
 Encrypt and decrypt using PKI technology.
 
-### CredentialStorage
-Provides secure credential storage and retrieval.
-
 ### CryptographyScripts
 Powershell scripts to support encrypting and decrypting data.
 
-### GDIPlus
-Binary Module to support graphic file manipulation.
+### IOUtility
+Utility functions to manage filesystem, console, and stream IO.
 
 ### LteDev
 PowerShell development utility functions.
@@ -29,14 +26,20 @@ PowerShell development utility functions.
 ### LteUtils
 System and web admin utility functions.
 
-### UserFileUtils
-Utility functions to manage files in user folders.
+### NetworkUtility
+Utility functions for network access.
 
 ### WindowsForms
 Script Module to support windows forms in Powershell.
 
 ### WinForms
-Not completed: Binary Module to support creating GUI components.
+Module providing GUI components.
+
+### WPF
+Display WPF windows.
+
+### XmlUtility
+Provides advanced XML functionality.
 
 Contributing
 ------------

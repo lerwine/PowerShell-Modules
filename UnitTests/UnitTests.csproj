@@ -94,11 +94,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CertificateCryptographyUnitTest.cs" />
-    <Compile Include="CredentialStorageUnitTest.cs" />
-    <Compile Include="GDIPlusUnitTest.cs" />
     <Compile Include="IOUtilityUnitTest.cs" />
     <Compile Include="LteDevUnitTest.cs" />
-    <Compile Include="LteUtilsUnitTest.cs" />
     <Compile Include="NetworkUtilityUnitTest.cs" />
     <Compile Include="PowerShellHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
