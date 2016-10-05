@@ -58,10 +58,10 @@ if ($PSVersionTable.CLRVersion.Major -lt 4) {
     }
 }
 
-$FilesToCopy = @(('{0}.psm1' -f $ModuleName), ('{0}.xml' -f $ModuleName));
-$SourceFiles = @($ManifestProperties.ManifestData.FileList.Function | ForEach-Object { $_.Name });
+$FilesToCopy = @(('{0}.psm1' -f $ModuleName)) + @($ManifestProperties.ManifestData.FileList.Name | ForEach-Object { $_.InnerText });
+$SourceFiles = @($ManifestProperties.ManifestData.FileList.Name | Where-Object { $_.Compile -eq 'true' } | ForEach-Object { $_.InnerText });
 if ($SourceFiles.Count -gt 0) {
-	$FilesToCopy += $SourceFiles;
+	$FilesToCopy += ('{0}.xml' -f $ModuleName);
 
 	if ($ManifestProperties.ManifestData.CompilerOptions.IncludeDebugInformation -eq 'true') {
 		$CompilerParametersSplat.Property.CompilerOptions += ' /pdb:"{0}.pdb"' -f $BasePathAndName;
@@ -93,7 +93,7 @@ if (-not $DirectoryInfo.Exists) {
 foreach ($f in $FilesToCopy) {
     $SourcePath = [System.IO.Path]::Combine($PSScriptRoot, $f);
     $f | Write-Host;
-    Copy-Item -Path $SourcePath -Destination $DirectoryInfo.FullName;
+    Copy-Item -Path $SourcePath -Destination $DirectoryInfo.FullName -Force;
 }
 
 $TargetPath = [System.IO.Path]::Combine($DirectoryInfo.FullName, ('about_{0}.help.txt' -f $ModuleName));
