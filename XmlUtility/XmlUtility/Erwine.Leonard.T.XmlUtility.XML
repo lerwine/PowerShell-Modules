@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Erwine.Leonard.T.XmlUtility</name>
+        <name>dxmtbdpm</name>
     </assembly>
     <members>
         <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.Xml.XmlReader)">
