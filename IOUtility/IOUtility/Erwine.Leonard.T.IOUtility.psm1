@@ -6,7 +6,7 @@ Function Initialize-CurrentModule {
 	
     $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
     $Local:Assemblies = @($Local:ModuleManifest.PrivateData.CompilerOptions.AssemblyReferences | ForEach-Object {
-        (Add-Type -AssemblyName $_)[0].Assembly.Location
+        (Add-Type -AssemblyName $_ -PassThru)[0].Assembly.Location
     });
     $Local:Splat = @{
         TypeName = 'System.CodeDom.Compiler.CompilerParameters';
