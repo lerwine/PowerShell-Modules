@@ -93,7 +93,7 @@ if (-not $DirectoryInfo.Exists) {
 foreach ($f in $FilesToCopy) {
     $SourcePath = [System.IO.Path]::Combine($PSScriptRoot, $f);
     $f | Write-Host;
-    Copy-Item -Path $SourcePath -Destination $DirectoryInfo.FullName;
+    Copy-Item -Path $SourcePath -Destination $DirectoryInfo.FullName -Force;
 }
 
 $TargetPath = [System.IO.Path]::Combine($DirectoryInfo.FullName, ('about_{0}.help.txt' -f $ModuleName));
