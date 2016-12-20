@@ -6,6 +6,567 @@ $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Pr
     UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
 };
 
+Function New-SqlConnection {
+    <#
+        .SYNOPSIS
+			Get SQL database connection.
+         
+        .DESCRIPTION
+			Returns an object which represents a connection to a SQL Server database.
+        
+        .OUTPUTS
+			System.Data.SqlClient.SqlConnection. An object which represents a connection to a SQL Server database.
+        
+        .LINK
+            New-SqlCommand
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlconnection.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Data.SqlClient.SqlConnection])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The connection used to open the SQL Server database.
+        [string]$ConnectionString,
+        
+        # Indicates that the connection should not be actually opened.
+        [switch]$DoNotOpen
+    )
+
+    $SqlConnection = New-Object -TypeName '' -ArgumentList $ConnectionString
+    if ($DoNotOpen) {
+        $SqlConnection | Write-Output;
+    } else {
+        try {
+            $SqlConnection.Open();
+            $SqlConnection | Write-Output;
+        } catch {
+            $SqlConnection.Dispose();
+            throw;
+        }
+    }
+}
+
+Function New-SqlCommand {
+    <#
+        .SYNOPSIS
+			Create new SQL command.
+         
+        .DESCRIPTION
+			Creates and returns a SqlCommand object associated with the SqlConnection.
+        
+        .OUTPUTS
+			System.Data.SqlClient.SqlConnection. An object which represents a connection to a SQL Server database.
+        
+        .LINK
+            New-SqlConnection
+        
+        .LINK
+            New-SqlParameter
+        
+        .LINK
+            Read-SqlCommand
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlconnection.createcommand.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Optional')]
+    [OutputType([System.Data.SqlClient.SqlCommand])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The SqlConnection to be used by the new SqlCommand.
+        [System.Data.SqlClient.SqlConnection]$SqlConnection,
+        
+        [Parameter(Position = 1, ParameterSetName = 'Optional')]
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'CommandType')]
+        # The Transact-SQL statement, table name or stored procedure to execute at the data source.
+        [string]$CommandText,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'CommandType')]
+        # Indicates how the CommandText parameter is to be interpreted.
+        [System.Data.CommandType]$CommandType = [System.Data.CommandType]::Text
+    )
+
+    $SqlCommand = $ConnectionString.CreateCommand();
+    if ($PSBoundParameters.ContainsKey('CommandText')) {
+        try {
+            $SqlCommand.CommandText = $CommandText;
+            $SqlCommand.CommandType = $CommandType;
+            $SqlCommand | Write-Output;
+        } catch {
+            $SqlCommand.Dispose();
+            throw;
+        }
+    } else {
+        $SqlCommand | Write-Output;
+    }
+}
+
+Function New-SqlParameter {
+    <#
+        .SYNOPSIS
+			Create new SQL command.
+         
+        .DESCRIPTION
+			Creates and returns a SqlCommand object associated with the SqlConnection.
+        
+        .OUTPUTS
+			System.Data.SqlClient.SqlCommand. A SqlCommand object associated with the SqlConnection.
+        
+        .LINK
+            New-SqlCommand
+        
+        .LINK
+            Read-SqlCommand
+        
+        .LINK
+            New-SqlConnection
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlparameter.aspx
+
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.createparameter.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'NotNull')]
+    [OutputType([System.Data.SqlClient.SqlParameter])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The command to which the parameter is to be added.
+        [System.Data.SqlClient.SqlCommand]$SqlCommand,
+        
+        [Parameter(Mandatory = $true, Position = 1)]
+        [Alias('ParameterName')]
+        # The name of the SqlParameter.
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'NotNull')]
+        [Alias('ParameterName')]
+        [AllowEmptyString()]
+        # The value of the parameter.
+        [object]$Value,
+        
+        [Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'NotNull')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Null')]
+        # The type of the parameter.
+        [System.Data.SqlDbType]$DbType,
+        
+        # Indicates whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
+        [System.Data.ParameterDirection]$Direction = [System.Data.ParameterDirection]::Input,
+        
+        # Name of the source column mapped to the DataSet and used for loading or returning the Value.
+        [string]$SourceColumn,
+        
+        # Maximum size, in bytes, of the data within the column.
+        [int]$Size,
+        
+        # Maximum number of digits used to represent the Value property.
+        [byte]$Precision,
+        
+        # Number of decimal places to which Value is resolved.
+        [byte]$Scale,
+        
+        [Parameter(ParameterSetName = 'NotNull')]
+        # Indicates whether the parameter accepts null values.
+        [switch]$IsNullable,
+        
+        [Parameter(ParameterSetName = 'Null')]
+        # Indicates that the parameter is to contain a null value.
+        [switch]$NullValue,
+        
+        # Do not actually add the parameter to the SqlCommand.
+        [switch]$DoNotAdd
+    )
+
+    $SqlParameter = $SqlCommand.CreateParameter();
+    $SqlParameter.ParameterName = $Name;
+    $SqlParameter.SqlDbType = $DbType;
+    $SqlParameter.Direction = $Direction;
+    $SqlParameter.IsNullable = $IsNullable.IsPresent -or $NullValue.IsPresent;
+    if ($PSBoundParameters.ContainsKey('SourceColumn')) { $SqlParameter.SourceColumn = $SourceColumn }
+    if ($PSBoundParameters.ContainsKey('Size')) { $SqlParameter.Size = $Size }
+    if ($PSBoundParameters.ContainsKey('Precision')) { $SqlParameter.Precision = $Precision }
+    if ($PSBoundParameters.ContainsKey('Scale')) { $SqlParameter.Scale = $Scale }
+    if ($NullValue) {
+        $SqlParameter.Value = [System.DBNull]::Value;
+    } else {
+        $SqlParameter.Value = $Value;
+    }
+    if ($DoNotAdd) {
+        $SqlParameter | Write-Output;
+    } else {
+        $SqlCommand.Parameters.Add($SqlParameter) | Write-Output;
+    }
+}
+
+Function Read-SqlData {
+    <#
+        .SYNOPSIS
+			Get data from an SQL data reader.
+         
+        .DESCRIPTION
+			Returns data from the SqlDataReader.
+        
+        .OUTPUTS
+			System.Management.Automation.PSObject[]. The data read from the SqlDataReader.
+        
+        .LINK
+            Read-SqlCommand
+        
+        .LINK
+            New-SqlCommand
+        
+        .LINK
+            New-SqlParameter
+        
+        .LINK
+            New-SqlConnection
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqldatareader.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The SQL Data Reader to be read from.
+        [System.Data.SqlClient.SqlDataReader]$SqlDataReader
+    )
+    
+    if ($SqlDataReader.HasRows) {
+        while ($SqlDataReader.Read()) {
+            $Properties = @{};
+            for ($i = 0; $i -lt $SqlDataReader.FieldCount; $i++) {
+                $name = $SqlDatReader.GetName($i);
+                if ($SqlDataReader.IsDBNull($i)) {
+                    $Properties[$name] = $null;
+                } else {
+                    $Properties[$name] = $SqlDataReader.Getvalue($i);
+                }
+            }
+        }
+    }
+    New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
+}
+
+Function Read-SqlCommand {
+    <#
+        .SYNOPSIS
+			Get data from an SQL command.
+         
+        .DESCRIPTION
+			Sends the CommandText to the Connection and builds a SqlDataReader, returning the result set.
+        
+        .OUTPUTS
+			System.Management.Automation.PSObject[]. The data read from the SqlDataReader.
+        
+        .LINK
+            Read-SqlData
+        
+        .LINK
+            New-SqlCommand
+        
+        .LINK
+            New-SqlParameter
+        
+        .LINK
+            New-SqlConnection
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.executereader.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqldatareader.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'CommandText')]
+    [OutputType([System.Management.Automation.PSObject[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'SqlCommand')]
+        # The command to be executed.
+        [System.Data.SqlClient.SqlCommand]$SqlCommand,
+        
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'CommandText')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'CommandType')]
+        # The connection for the SQL command.
+        [System.Data.SqlClient.SqlConnection]$SqlConnection,
+        
+        [Parameter(Position = 1, ParameterSetName = 'CommandText')]
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'CommandType')]
+        # The Transact-SQL statement, table name or stored procedure to execute at the data source.
+        [string]$CommandText,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'CommandType')]
+        # Indicates how the CommandText parameter is to be interpreted.
+        [System.Data.CommandType]$CommandType
+    )
+    
+    if ($PSCmdlet.ParameterSetName -eq 'SqlCommand') {
+        $SqlDataReader = $SqlCommand.ExecuteReader();
+        try {
+            Read-SqlData -SqlDataReader $SqlDataReader;
+        } catch {
+            throw;
+        } finally {
+            $SqlDataReader.Dispose();
+        }
+    } else {
+        if ($PSCmdlet.ParameterSetName -eq 'CommandType') {
+            $SqlCommand = New-SqlCommand -SqlConnection $SqlConnection -CommandText $CommandText -CommandType $CommandType;
+        } else {
+            $SqlCommand = New-SqlCommand -SqlConnection $SqlConnection -CommandText $CommandText;
+        }
+        try {
+            Read-SqlCommand -SqlCommand $SqlCommand;
+        } catch {
+            throw;
+        } finally {
+            $SqlCommand.Dispose();
+        }
+    }
+}
+
+Function Get-SqlTableInfo {
+    <#
+        .SYNOPSIS
+			Get information about tables.
+         
+        .DESCRIPTION
+			Returns a list of objects that can be queried in the current environment. This means any table or view, except synonym objects.
+        
+        .OUTPUTS
+			System.Management.Automation.PSObject[]. Information about data tables and views.
+        
+        .LINK
+            Get-SqlTableColumnInfo
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/ms186250.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Data.SqlClient.SqlConnection]$SqlConnection,
+        
+        # Table/View name to filter by.
+        [string]$Name,
+        
+        [Alias('Owner')]
+        # Name of the schema (owner) to filter by.
+        [string]$Schema,
+        
+        [Alias('Database')]
+        # Name of the object qualifier to filter by.
+        [string]$Qualifier,
+        
+        [ValidateSet('TABLE', 'SYSTEMTABLE', 'VIEW')]
+        # Table types to be returned.
+        [string[]]$Type
+    )
+    
+    $SqlCommand = New-SqlCommand -SqlConnection $SqlConnection -CommandText = 'sp_tables' -CommandType StoredProcedure;
+    try {
+        if ($PSBoundParameters.ContainsKey('Name')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'table_name' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Name -Size 384 | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Schema')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'table_owner' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Schema -Size 384 | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Qualifier')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'table_qualifier' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Qualifier | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Type')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'table_type' -DbType ([System.Data.SqlDbType]::NVarChar) -Value (($Type | Select-Object -Unique) -join ', ') -Size 100 | Out-Null;
+        }
+        Read-SqlCommand -SqlCommand $SqlCommand;
+    } catch {
+        throw;
+    } finally {
+        $SqlCommand.Dispose();
+    }
+}
+
+Function Get-SqlTableColumnInfo {
+    <#
+        .SYNOPSIS
+			Get table or view column information.
+         
+        .DESCRIPTION
+			Returns column information for the specified objects that can be queried in the current environment.
+        
+        .OUTPUTS
+			System.Management.Automation.PSObject[]. Table and/or View columns.
+        
+        .LINK
+            Get-SqlTableInfo
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/ms176077.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The SQL connection representing the environment to use.
+        [System.Data.SqlClient.SqlConnection]$SqlConnection,
+        
+        # Name of the object that is used to return catalog information.
+        [string]$TableName,
+        
+        [Alias('Owner')]
+        # Name of the schema (owner) to filter by.
+        [string]$Schema,
+        
+        [Alias('Database')]
+        # Name of the object qualifier to filter by.
+        [string]$Qualifier,
+        
+        [Alias('Column')]
+        # Name of a single column to return.
+        [string]$Name
+    )
+    
+    $SqlCommand = New-SqlCommand -SqlConnection $SqlConnection -CommandText = 'sp_columns' -CommandType StoredProcedure;
+    New-SqlParameter -SqlCommand $SqlCommand -Name 'table_name' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $TableName -Size 384 | Out-Null;
+    try {
+        if ($PSBoundParameters.ContainsKey('Schema')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'table_owner' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Schema -Size 384 | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Qualifier')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'table_qualifier' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Qualifier | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Name')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'column_name' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Name -Size 384 | Out-Null;
+        }
+        Read-SqlCommand -SqlCommand $SqlCommand;
+    } catch {
+        throw;
+    } finally {
+        $SqlCommand.Dispose();
+    }
+    
+}
+
+Function Get-SqlStoredProcedureInfo {
+    <#
+        .SYNOPSIS
+			Get information about stored procedures.
+         
+        .DESCRIPTION
+			Returns a list of stored procedures in the current environment.
+        
+        .OUTPUTS
+			System.Management.Automation.PSObject[]. Information about stored procedures.
+        
+        .LINK
+            Get-SqlStoredProcedureColumnInfo
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/ms190504.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Data.SqlClient.SqlConnection]$SqlConnection,
+        
+        # Name of the stored procedure to filter by.
+        [string]$Name,
+        
+        [Alias('Owner')]
+        # Name of the schema (owner) to filter by.
+        [string]$Schema,
+        
+        [Alias('Database')]
+        # Name of the procedure qualifier.
+        [string]$Qualifier
+    )
+    
+    $SqlCommand = New-SqlCommand -SqlConnection $SqlConnection -CommandText = 'sp_stored_procedures' -CommandType StoredProcedure;
+    try {
+        if ($PSBoundParameters.ContainsKey('Name')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'sp_name' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Name -Size 390 | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Schema')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'sp_owner' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Schema -Size 384 | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Qualifier')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'sp_qualifier' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Qualifier | Out-Null;
+        }
+        Read-SqlCommand -SqlCommand $SqlCommand;
+    } catch {
+        throw;
+    } finally {
+        $SqlCommand.Dispose();
+    }
+    
+}
+
+Function Get-SqlStoredProcedureColumnInfo {
+    <#
+        .SYNOPSIS
+			Get stored procedure column information.
+         
+        .DESCRIPTION
+			Returns column information for a single stored procedure or user-defined function in the current environment.
+        
+        .OUTPUTS
+			System.Management.Automation.PSObject[]. Stored procedure columns.
+        
+        .LINK
+            Get-SqlStoredProcedureInfo
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/ms182705.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        # The SQL connection representing the environment to use.
+        [System.Data.SqlClient.SqlConnection]$SqlConnection,
+        
+        # Name of the procedure used to return catalog information.
+        [string]$StoredProcedure,
+        
+        [Alias('Owner')]
+        # Name of the schema (owner) to filter by.
+        [string]$Schema,
+        
+        [Alias('Database')]
+        # Name of the owner of the procedure to filter by.
+        [string]$Qualifier,
+        
+        [Alias('Column')]
+        # Name of a single column to return.
+        [string]$Name
+    )
+    
+    $SqlCommand = New-SqlCommand -SqlConnection $SqlConnection -CommandText = 'sp_sproc_columns' -CommandType StoredProcedure;
+    New-SqlParameter -SqlCommand $SqlCommand -Name 'procedure_name' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $StoredProcedure -Size 390 | Out-Null;
+    try {
+        if ($PSBoundParameters.ContainsKey('Schema')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'procedure_owner' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Schema -Size 384 | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Qualifier')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'procedure_qualifier' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Qualifier | Out-Null;
+        }
+        if ($PSBoundParameters.ContainsKey('Name')) {
+            New-SqlParameter -SqlCommand $SqlCommand -Name 'column_name' -DbType ([System.Data.SqlDbType]::NVarChar) -Value $Name -Size 384 | Out-Null;
+        }
+        Read-SqlCommand -SqlCommand $SqlCommand;
+    } catch {
+        throw;
+    } finally {
+        $SqlCommand.Dispose();
+    }
+    
+}
+
 Function Test-ContentType {
 	<#
 		.SYNOPSIS
@@ -16,44 +577,50 @@ Function Test-ContentType {
         
 		.OUTPUTS
 			System.Boolean. True if content type is a valid and recognized content type; otherwise False.
+        
+        .LINK
+            Get-WebResponse
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.mime.contenttype.aspx
 	#>
     [CmdletBinding(DefaultParameterSetName = 'Validate')]
     [OutputType([bool])]
     Param(
-		# Content type to test
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Validate')]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String_String')]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String_ContentType')]
         [AllowNull()]
         [AllowEmptyString()]
+        # MIME protocol Content Type strings to be tested.
         [string[]]$InputString,
         
-		# Content type to test
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ContentType_String')]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ContentType_ContentType')]
         [AllowNull()]
+        # MIME protocol Content-Type headers to be tested.
         [System.Net.Mime.ContentType[]]$InputObject,
         
-		# Expected content type
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'String_String')]
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'ContentType_String')]
         [ValidateScript({ Test-ContentType -InputString $_ })]
+        # Content type that is expected.
         [string]$Expected,
 
-		# Expected content type
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'String_ContentType')]
         [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'ContentType_ContentType')]
+        # MIME protocol Content-Type header to be tested.
         [System.Net.Mime.ContentType]$ContentType,
         
-		# Only check the media type, and not the char set
         [Parameter(ParameterSetName = 'String_String')]
         [Parameter(ParameterSetName = 'String_ContentType')]
         [Parameter(ParameterSetName = 'ContentType_String')]
         [Parameter(ParameterSetName = 'ContentType_ContentType')]
+        # Only the media type is to be validated.
         [switch]$MediaTypeOnly,
         
-		# Indicates whether an empty content type should be considered valid.
         [Parameter(ParameterSetName = 'Validate')]
+        # Allow empty media types.
         [switch]$AllowEmpty
     )
 
@@ -120,55 +687,70 @@ Function New-WebRequest {
 	<#
 		.SYNOPSIS
 			Create new web request object.
- 
-		.DESCRIPTION
-			Create object which describes a web request.
+         
+        .DESCRIPTION
+			Creates an object which represents a request to a Uniform Resource Identifier (URI).
         
-		.OUTPUTS
-			System.Net.WebRequest. A web request object.
+        .OUTPUTS
+			System.Boolean. Indicates whether the content type matched the specified criteria.
+        
+        .LINK
+            Get-WebResponse
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webrequest.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.httpwebrequest.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.filewebrequest.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.ftpwebrequest.aspx
 	#>
     [CmdletBinding(DefaultParameterSetName = 'PSCredential')]
     [OutputType([System.Net.WebRequest])]
     Param(
-		# URI of web request
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # URI of the Internet resource associated with the request.
         [System.Uri]$Uri,
-		
-		# Request cache policy
+
+        # Default cache policy for the request.
         [System.Net.Cache.RequestCacheLevel]$CachePolicy,
-		
-		# Request method
+
+        # Protocol method to use in the request.
         [string]$Method,
-		
-		# Connection group
+
+        # Name of the connection group for the request.
         [string]$ConnectionGroupName,
-		
-		# Request headers
+
+        # Header name/value pairs to be associated with the request
         [Hashtable]$Headers,
-		
-		# Indicates whether to pre-authenticate
+
+        # Indicates whether to pre-authenticate the request.
         [bool]$PreAuthenticate,
 
-		# Web request timeout, in milliseconds
         [ValidateRange(0, 2147483647)]
+        # Length of time, in milliseconds, before the request times out.
         [int]$Timeout,
 
-		# Level of authentication
+        # Indicates the level of authentication and impersonation used for the request.
         [System.Net.Security.AuthenticationLevel]$AuthenticationLevel,
 
-		# Type of impersonation
+        # Impersonation level for the request.
         [System.Security.Principal.TokenImpersonationLevel]$ImpersonationLevel,
 
-		# Credential to use for authentication
         [Parameter(ParameterSetName = 'PSCredential')]
+        # Credentials used for authenticating the request with the Internet resource.
         [System.Management.Automation.PSCredential]$PSCredential,
-		
-		# Credential to use for authentication
+
         [Parameter(Mandatory = $true, ParameterSetName = 'ICredentials')]
+        # Network credentials used for authenticating the request with the Internet resource.
         [System.Net.ICredentials]$Credentials,
 
-		# Indicates whether to use default credentials
         [Parameter(Mandatory = $true, ParameterSetName = 'UseDefaultCredentials')]
+        # Send default credentials with the request.
         [switch]$UseDefaultCredentials
     )
 
@@ -206,34 +788,52 @@ Function New-WebRequest {
 }
 
 Function Read-FormUrlEncoded {
-	<#
-		.SYNOPSIS
-			Parse form-url-encoded data.
- 
-		.DESCRIPTION
-			Reads url-encoded form data.
+    <#
+        .SYNOPSIS
+			Read Url-Encoded form data.
+         
+        .DESCRIPTION
+			Reads application/x-www-form-urlencoded data.
         
-		.OUTPUTS
-			System.Management.Automation.PSObject. Data read from encoded data.
-			Hashtable. Data read from encoded data.
-	#>
+        .OUTPUTS
+			System.Collections.Specialized.NameValueCollection. Key/Value pairs representing decoded data.
+        
+        .LINK
+            Write-FormUrlEncoded
+            
+        .LINK
+            Get-WebResponse
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webresponse.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.textreader.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.collections.specialized.namevaluecollection.aspx
+    #>
     [CmdletBinding(DefaultParameterSetName = 'InputString')]
+    [OutputType([System.Collections.Specialized.NameValueCollection])]
     Param(
-		# String containing url-encoded form data.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'InputString')]
         [AllowEmptyString()]
+        # String containing URL-Encoded form data.
         [string]$InputString,
         
-		# Text reader containing url-encoded form data.
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'TextReader')]
+		# Text reader containing url-encoded form data.
         [System.IO.TextReader]$Reader,
         
-		# Stream containing url-encoded form data.
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Stream')]
+		# Stream containing url-encoded form data.
         [System.IO.Stream]$Stream,
 
-		# Default encoding to use
         [Parameter(Position = 1, ParameterSetName = 'Stream')]
+		# Default encoding to use
         [System.Text.Encoding]$Encoding,
         
 		# Indicates whether return a Hashtable or a custom PSObject
@@ -306,32 +906,69 @@ Function Read-FormUrlEncoded {
 }
 
 Function New-TextWriter {
+    <#
+        .SYNOPSIS
+			Create text writer.
+         
+        .DESCRIPTION
+			Create object to write text data.
+        
+        .OUTPUTS
+			System.IO.TextWriter. Writer object to write text data.
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.textwriter.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.streamwriter.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.stringwriter.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.web.httpwriter.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.web.ui.htmltextwriter.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.collections.specialized.namevaluecollection.aspx
+    #>
     [CmdletBinding(DefaultParameterSetName = 'StringWriter')]
+    [OutputType([System.IO.TextWriter])]
     Param(
         [Parameter(Position = 0, ParameterSetName = 'StringWriter')]
+        # Create text writer which writes text to a string builder.
         [System.Text.StringBuilder]$StringBuilder,
         
         [Parameter(Position = 1, ParameterSetName = 'StringWriter')]
+        # Format provider to use with string builder.
         [System.IFormatProvider]$FormatProvider,
         
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Stream')]
+        # Stream which text writer will write to.
         [System.IO.Stream]$Stream,
         
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Path')]
+        # Path which text writer will write to.
         [string]$Path,
         
         [Parameter(Position = 1, ParameterSetName = 'Stream')]
         [Parameter(Position = 1, ParameterSetName = 'Path')]
+        # Character encoding to use when writing text.
         [System.Text.Encoding]$Encoding = [System.Text.Encoding]::UTF8,
         
         [Parameter(Position = 2, ParameterSetName = 'Stream')]
         [Parameter(Position = 2, ParameterSetName = 'Path')]
+        # The write buffer size, in bytes.
         [int]$BufferSize = 32767,
 
         [Parameter(Position = 3, ParameterSetName = 'Stream')]
+        # Leave stream open after stream writer is disposed.
         [switch]$LeaveOpen,
 
         [Parameter(Position = 3, ParameterSetName = 'Path')]
+        # Append text to file.
         [switch]$Append
     )
 
@@ -387,9 +1024,184 @@ Function New-TextWriter {
 }
 
 Function Write-FormUrlEncoded {
+    <#
+        .SYNOPSIS
+			Write Url-Encoded form data.
+         
+        .DESCRIPTION
+			Writes application/x-www-form-urlencoded data.
+        
+        .OUTPUTS
+			System.Collections.Specialized.NameValueCollection. Key/Value pairs representing decoded data.
+        
+        .LINK
+            Read-FormUrlEncoded
+            
+        .LINK
+            New-WebRequest
+            
+        .LINK
+            Get-WebResponse
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.collections.specialized.namevaluecollection.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webrequest.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.textreader.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+    #>
     [CmdletBinding(DefaultParameterSetName = 'KeyValue_OutString')]
+    [OutputType([string], ParameterSetName = 'KeyValue_OutString')]
+    [OutputType([string], ParameterSetName = 'Nvc_OutString')]
+    [OutputType([string], ParameterSetName = 'Hashtable_OutString')]
     Param(
-    )
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Nvc_OutString')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Nvc_Stream')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Nvc_TextWriter')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Nvc_WebRequest')]
+        [AllowEmptyCollection()]
+        # Key/Value pairs to be encoded.
+        [System.Collections.Specialized.NameValueCollection]$NameValueCollection,
+        
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Hashtable_OutString')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Hashtable_Stream')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Hashtable_TextWriter')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Hashtable_WebRequest')]
+        [AllowEmptyCollection()]
+        # Key/Value pairs to be encoded.
+        [Hashtable]$Data,
+		
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_OutString')]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_Stream')]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_TextWriter')]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_WebRequest')]
+		[AllowEmptyString()]
+        # Key to encoded and written.
+        [object]$Key,
+		
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_OutString')]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_Stream')]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_TextWriter')]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'KeyValue_WebRequest')]
+		[AllowNull()]
+		[AllowEmptyString()]
+        # Value to encoded and written.
+        [object]$Value,
+        
+        [Parameter(ParameterSetName = 'Hashtable_Stream')]
+        [Parameter(ParameterSetName = 'KeyValue_Stream')]
+        [Parameter(ParameterSetName = 'Hashtable_WebRequest')]
+        [Parameter(ParameterSetName = 'KeyValue_WebRequest')]
+        # Character encoding to use.
+        [System.Text.Encoding]$Encoding,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Hashtable_TextWriter')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'KeyValue_TextWriter')]
+        # Text writer to write encoded data to.
+        [System.IO.TextWriter]$Writer,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Hashtable_WebRequest')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'KeyValue_WebRequest')]
+        [Alias('Request')]
+        # Web Request to write encoded data to. This will also set the content type and length.
+        [System.Net.WebRequest]$WebRequest,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Hashtable_Stream')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'KeyValue_Stream')]
+        # Stream to write encoded data to.
+        [System.IO.Stream]$Stream,
+        
+        [Parameter(ParameterSetName = 'KeyValue_OutString')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Nvc_OutString')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Hashtable_OutString')]
+        # Return encoded data as a string.
+        [switch]$ToString
+	)
+
+    Begin {
+        if (-not $PSBoundParameters.ContainsKey('NameValueCollection')) {
+            $NameValueCollection = New-Object -TypeName 'System.Collections.Specialized.NameValueCollection';
+        }
+        $AllItems =  @();
+        ($InputType, $OutpuType) = $PSCmdlet.ParameterSetName.Split('_');
+    }
+
+	Process {
+		if ($InputType -eq 'Hashtable') {
+            foreach ($Key in $Data.Keys) {
+                $Value = $Data[$Key];
+                if ($Key -is [string]) {
+                    $k = $Key;
+                } else {
+                    $k = $Key.ToString();
+                }
+                if ($Value -ne $null) {
+                    $NameValueCollection.Add($k, $null);
+                } else {
+                    $Value = @($Value);
+                    if ($Value.Count -eq 0) {
+                        $NameValueCollection.Add($k, '');
+                    } else {
+                        $Value | ForEach-Object {
+                            if ($_ -eq $null -or $_ -is [string]) {
+                                $NameValueCollection.Add($k, $_);
+                            } else {
+                                $NameValueCollection.Add($k, $_.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if ($InputType -eq 'KeyValue') {
+                if ($Key -is [string]) {
+                    $k = $Key;
+                } else {
+                    $k = $Key.ToString();
+                }
+                if ($Value -eq $null) {
+                    $NameValueCollection.Add($k, $null);
+                } else {
+                    $v = @($Value);
+                    if ($v.Count -eq 0) {
+                        $NameValueCollection.Add($k, '');
+                    } else {
+                        $v | ForEach-Object {
+                            if ($_ -eq $null -or $_ -is [string]) {
+                                $NameValueCollection.Add($k, $_);
+                            } else {
+                                $NameValueCollection.Add($k, $_.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+		}
+	}
+
+    End {
+        switch ($OutpuType) {
+            'Stream' {
+                [NetworkUtilityCLR.FormEncoder]::Encode($NameValueCollection, $Stream, $false, $Encoding);
+                break;
+            }
+            'WebRequest' {
+                [NetworkUtilityCLR.FormEncoder]::Encode($NameValueCollection, $WebRequest, $false, $Encoding);
+            }
+            'TextWriter' {
+                [NetworkUtilityCLR.FormEncoder]::Encode($NameValueCollection, $Writer, $false);
+            }
+            default { # OutString
+                [NetworkUtilityCLR.FormEncoder]::Encode($NameValueCollection, $false) | Write-Output;
+                break;
+            }
+        }
+    }
 }
 
 Function Write-FormUrlEncoded2 {
@@ -689,24 +1501,60 @@ Function Write-XmlData {
 }
 
 Function Initialize-WebRequestPostXml {
+    <#
+        .SYNOPSIS
+			Initialze web request for posting xml data.
+         
+        .DESCRIPTION
+			Initializes a System.Net.WebRequest object for an XML POST request.
+        
+        .OUTPUTS
+			System.Net.WebResponse. If GetResponse is used, the response to the request.
+        
+        .OUTPUTS
+			System.Net.WebRequest. If PassThru is used, then the WebRequest that was passed to command is returned.
+        
+        .LINK
+            New-WebRequest
+            
+        .LINK
+            Get-WebResponse
+            
+        .LINK
+            Write-FormUrlEncoded
+            
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webresponse.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webrequest.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.xml.xmlnode.aspx
+    #>
     [CmdletBinding(DefaultParameterSetName = 'GetRequest')]
     [OutputType([System.Net.WebRequest], ParameterSetName = 'GetRequest')]
     [OutputType([System.Management.Automation.PSObject], ParameterSetName = 'GetResponse')]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [Alias('Request')]
+        # Web request to be initialized.
         [System.Net.WebRequest]$WebRequest,
         
         [Parameter(Mandatory = $true)]
+        # XML data to send.
         [System.Xml.XmlNode]$XmlData,
         
         [Parameter(Mandatory = $true, ParameterSetName = 'GetRequest')]
+        # Returns System.Net.WebRequest that was initialized.
         [switch]$PassThru,
         
         [Parameter(ParameterSetName = 'GetResponse')]
+        # Whether to allow redirection.
         [bool]$AllowRedirect,
         
         [Parameter(Mandatory = $true, ParameterSetName = 'GetResponse')]
+        # Get response after initializing.
         [switch]$GetResponse
     )
     
@@ -750,13 +1598,40 @@ Function Initialize-WebRequestPostXml {
 }
 
 Function Get-WebResponse {
+    <#
+        .SYNOPSIS
+			Get response for a web request.
+         
+        .DESCRIPTION
+			returns a response to an Internet request.
+        
+        .OUTPUTS
+			System.Net.WebResponse. A WebResponse containing the response to the Internet request.
+        
+        .LINK
+            New-WebRequest
+            
+        .LINK
+            Initialize-WebRequestPostXml
+            
+        .LINK
+            Write-FormUrlEncoded
+            
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webresponse.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.webrequest.getresponse.aspx
+    #>
     [CmdletBinding()]
     [OutputType([System.Management.Automation.PSObject])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [Alias('Request')]
+        # Object representing an internet request.
         [System.Net.WebRequest]$WebRequest,
         
+        # Whether to allow redirection.
         [bool]$AllowRedirect
     )
     
@@ -887,24 +1762,43 @@ Function Get-WebResponse {
 }
 
 Function Test-SoapEnvelope {
+    <#
+        .SYNOPSIS
+			Validate a soap envelope.
+         
+        .DESCRIPTION
+			Returns true if the object represents a valid soap envelope; otherwise false, if it does not.
+        
+        .OUTPUTS
+			System.Boolean. true if the object represents a valid soap envelope; otherwise false, if it does not.
+        
+        .LINK
+            New-SoapEnvelope
+            
+        .LINK
+            Initialize-WebRequestPostXml
+    #>
     [CmdletBinding(DefaultParameterSetName = 'XmlNamespaceManager')]
     [OutputType([bool])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObject')]
+        # Object containing an XmlDocument property which contains the SOAP envelope XML.
         [System.Management.Automation.PSObject]$SoapEnvelope,
         
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
+        # Xml document to be tested whether it represents a valid a SOAP envelope.
         [System.Xml.XmlDocument]$XmlDocument,
         
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
         [Parameter(Mandatory = $true, ParameterSetName = 'XmlNamespaceManager')]
+        # Namespace manager to use when validating the SOAP envelope.
         [System.Xml.XmlNamespaceManager]$XmlNamespaceManager
     )
     
     Process {
         switch ($PSCmdlet.ParameterSetName) {
             'PSObject' {
-                if ($SoapEnvelope.XmlDocument -eq $null) { $false } else { $SoapEnvelope | Test-SoapEnvelope }
+                if ($SoapEnvelope.XmlDocument -eq $null) { $false } else { $SoapEnvelope.XmlDocument | Test-SoapEnvelope }
                 break;
             }
             'Properties' {
@@ -934,6 +1828,19 @@ Function Test-SoapEnvelope {
 }
 
 Function Get-SoapXmlNamespacePrefix {
+    <#
+        .SYNOPSIS
+			Get XML name prefix for a SOAP namespace.
+         
+        .DESCRIPTION
+			Returns the XML name prefix for a SOAP namespace.
+        
+        .OUTPUTS
+			System.String. Name prefix of a SOAP namespace.
+        
+        .LINK
+            New-SoapEnvelope
+    #>
     [CmdletBinding(DefaultParameterSetname = 'PropertiesSoap')]
     [OutputType([System.Xml.XmlDocument])]
     Param(
@@ -941,36 +1848,42 @@ Function Get-SoapXmlNamespacePrefix {
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObjectSchema')]
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObjectInstance')]
         [ValidateScript({ $_ | Test-SoapEnvelope })]
+        # Object containing an XmlDocument property which contains the SOAP envelope XML.
         [System.Management.Automation.PSObject]$SoapEnvelope,
         
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'PropertiesSoap')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'PropertiesSchema')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'PropertiesInstance')]
         [ValidateScript({ Test-SoapEnvelope -XmlDocument $_ })]
+        # XmlDocument which contains the SOAP envelope XML.
         [System.Xml.XmlDocument]$XmlDocument,
         
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
         [ValidateScript({ Test-SoapEnvelope -XmlNamespaceManager $_ })]
+        # Namespace manager to use with the SOAP envelope.
         [System.Xml.XmlNamespaceManager]$XmlNamespaceManager,
         
         [Parameter(ParameterSetname = 'PropertiesSoap')]
         [Parameter(Mandatory = $true, ParameterSetname = 'PSObjectSoap')]
+        # Get prefix associated with the "http://www.w3.org/2003/05/soap-envelope" namespace.
         [switch]$Soap,
         
         [Parameter(Mandatory = $true, ParameterSetname = 'PSObjectSchema')]
         [Parameter(Mandatory = $true, ParameterSetname = 'PropertiesSchema')]
+        # Get prefix associated with the "http://www.w3.org/2001/XMLSchema" namespace.
         [switch]$Schema,
         
         [Parameter(Mandatory = $true, ParameterSetname = 'PSObjectInstance')]
         [Parameter(Mandatory = $true, ParameterSetname = 'PropertiesInstance')]
+        # Get prefix associated with the "http://www.w3.org/2001/XMLSchema-instance" namespace.
         [switch]$SchemaInstance
     )
     
     Process {
         switch ($PSCmdlet.ParameterSetName) {
-            'PSObjectSoap' { $SoapEnvelope | Get-SoapBodyElement -Soap; break; }
-            'PSObjectSchema' { $SoapEnvelope | Get-SoapBodyElement -Schema; break; }
-            'PSObjectInstance' { $SoapEnvelope | Get-SoapBodyElement -SchemaInstance; break; }
+            'PSObjectSoap' { $SoapEnvelope | Get-SoapXmlNamespacePrefix -Soap; break; }
+            'PSObjectSchema' { $SoapEnvelope | Get-SoapXmlNamespacePrefix -Schema; break; }
+            'PSObjectInstance' { $SoapEnvelope | Get-SoapXmlNamespacePrefix -SchemaInstance; break; }
             'PropertiesSoap' { $XmlNamespaceManager.LookupNamespace('http://www.w3.org/2003/05/soap-envelope'); break; }
             'PropertiesSchema' { $XmlNamespaceManager.LookupNamespace('http://www.w3.org/2001/XMLSchema'); break; }
             default { $XmlNamespaceManager.LookupNamespace('http://www.w3.org/2001/XMLSchema-instance'); break; }
@@ -979,23 +1892,46 @@ Function Get-SoapXmlNamespacePrefix {
 }
 
 Function Add-SoapBodyElement {
+    <#
+        .SYNOPSIS
+			Add body to SOAP envelope.
+         
+        .DESCRIPTION
+			Returns the XML name prefix for a SOAP namespace.
+        
+        .OUTPUTS
+			System.Xml.XmlElement[]. Elements imported into the SOAP body.
+        
+        .LINK
+            New-SoapEnvelope
+        
+        .LINK
+            Get-SoapBodyElement
+        
+        .LINK
+            Get-SoapXmlNamespacePrefix
+    #>
     [CmdletBinding(DefaultParameterSetName = 'Properties')]
     [OutputType([System.Xml.XmlElement[]])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObject')]
         [ValidateScript({ $_ | Test-SoapEnvelope })]
+        # Object containing an XmlDocument property which contains the SOAP envelope XML.
         [System.Management.Automation.PSObject]$SoapEnvelope,
         
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
         [ValidateScript({ Test-SoapEnvelope -XmlDocument $_ })]
+        # XmlDocument which contains the SOAP envelope XML.
         [System.Xml.XmlDocument]$XmlDocument,
         
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
         [ValidateScript({ Test-SoapEnvelope -XmlNamespaceManager $_ })]
+        # Namespace manager to use with the SOAP envelope.
         [System.Xml.XmlNamespaceManager]$XmlNamespaceManager,
         
         [Parameter(Mandatory = $true, Position = 1, ValueFromPipeline = $true, ParameterSetname = 'PSObject')]
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Properties')]
+        # Elements to add to the SOAP body.
         [System.Xml.XmlElement[]]$Body
     )
     
@@ -1015,19 +1951,38 @@ Function Add-SoapBodyElement {
 }
 
 Function Get-SoapBodyElement {
+    <#
+        .SYNOPSIS
+			Get elements contained within the SOAP body.
+         
+        .DESCRIPTION
+			Returns the elements contained within the SOAP body.
+        
+        .OUTPUTS
+			System.Xml.XmlElement[]. Elements contained within the SOAP body.
+        
+        .LINK
+            New-SoapEnvelope
+        
+        .LINK
+            Add-SoapBodyElement
+    #>
     [CmdletBinding(DefaultParameterSetName = 'Properties')]
     [OutputType([System.Xml.XmlElement[]])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObject')]
         [ValidateScript({ $_ | Test-SoapEnvelope })]
+        # Object containing an XmlDocument property which contains the SOAP envelope XML.
         [System.Management.Automation.PSObject]$SoapEnvelope,
         
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
         [ValidateScript({ Test-SoapEnvelope -XmlDocument $_ })]
+        # XmlDocument which contains the SOAP envelope XML.
         [System.Xml.XmlDocument]$XmlDocument,
         
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Properties')]
         [ValidateScript({ Test-SoapEnvelope -XmlNamespaceManager $_ })]
+        # Namespace manager to use with the SOAP envelope.
         [System.Xml.XmlNamespaceManager]$XmlNamespaceManager
     )
     
@@ -1043,10 +1998,27 @@ Function Get-SoapBodyElement {
 }
 
 Function New-SoapEnvelope {
+    <#
+        .SYNOPSIS
+			Create new SOAP envelope object.
+         
+        .DESCRIPTION
+			Creates an XmlDocument which represents a SOAP envelope.
+        
+        .OUTPUTS
+			System.Xml.XmlDocument. Object which represents a SOAP envelope.
+        
+        .LINK
+            Get-SoapBodyElement
+        
+        .LINK
+            Add-SoapBodyElement
+    #>
     [CmdletBinding()]
     [OutputType([System.Xml.XmlDocument])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # Elements to include in the SOAP body.
         [System.Xml.XmlElement[]]$Body
     )
     
