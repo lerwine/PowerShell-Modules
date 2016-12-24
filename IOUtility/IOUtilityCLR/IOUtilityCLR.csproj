@@ -109,17 +109,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityLogger\BackgroundPipelineInvocation.cs" />
-    <Compile Include="ActivityLogger\BackgroundPipelineParameters.cs" />
-    <Compile Include="ActivityLogger\DisplayWindowVM.cs" />
-    <Compile Include="ActivityLogger\ListingWindowVM.cs" />
-    <Compile Include="ActivityLogger\PsWpfInvocation.cs" />
-    <Compile Include="ActivityLogger\WindowOwner.cs" />
-    <Compile Include="ActivityLogger\XamlWindow.cs" />
     <Compile Include="BackgroundPipelineInvocation.cs" />
     <Compile Include="BackgroundPipelineParameters.cs" />
     <Compile Include="DecodeRegexReplaceHandler.cs" />
-    <Compile Include="DisplayWindowVM.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="LinqEmul.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,7 +119,6 @@
     <Compile Include="PSInvocationBuilder.cs" />
     <Compile Include="PSInvocationBuilderBase.cs" />
     <Compile Include="PSInvocationResult.cs" />
-    <Compile Include="PsWpfInvocation.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
     <Compile Include="RegularExpressions.cs" />
@@ -137,9 +128,7 @@
     <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ActivityLogger\ActivityLogger.ps1" />
     <None Include="ClassDiagram1.cd" />
-    <None Include="PowerShellXamlWindow.ps1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

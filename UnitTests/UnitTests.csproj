@@ -71,6 +71,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,6 +95,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CertificateCryptographyUnitTest.cs" />
+    <Compile Include="CredentialStorageTest.cs" />
     <Compile Include="IOUtilityUnitTest.cs" />
     <Compile Include="LteDevUnitTest.cs" />
     <Compile Include="NetworkUtilityUnitTest.cs" />
@@ -121,6 +123,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CredentialStorage\CredentialStorageLibrary\CredentialStorageLibrary.csproj">
+      <Project>{a8f9b8a8-0a75-493f-810a-fc8c10afe72a}</Project>
+      <Name>CredentialStorageLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IOUtility\IOUtilityCLR\IOUtilityCLR.csproj">
       <Project>{f32b9a73-7059-4cc3-b376-d6bab4ab76fb}</Project>
       <Name>IOUtilityCLR</Name>

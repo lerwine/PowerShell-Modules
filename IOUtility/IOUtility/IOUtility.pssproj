@@ -53,7 +53,6 @@
     <Compile Include="BackgroundPipelineInvocation.cs" />
     <Compile Include="BackgroundPipelineParameters.cs" />
     <Compile Include="DecodeRegexReplaceHandler.cs" />
-    <Compile Include="DisplayWindowVM.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="Erwine.Leonard.T.IOUtility.XML" />
     <Compile Include="LinqEmul.cs" />
@@ -76,10 +75,6 @@
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
     <Compile Include="WindowProxy.cs" />
-    <Compile Include="XamlDialogAsyncResult.cs" />
-    <Compile Include="XamlDialogResult.cs" />
-    <Compile Include="XamlWindow.cs" />
-    <Compile Include="XamlWindowBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
