@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		PSModule.testsettings = PSModule.testsettings
 		README.md = README.md
+		Setup.bat = Setup.bat
+		Setup.ps1 = Setup.ps1
 	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "CertificateCryptography", "CertificateCryptography\CertificateCryptography.pssproj", "{A8B997E3-8FB4-45FE-926C-12948D7B284D}"
