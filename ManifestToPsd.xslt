@@ -1,4 +1,4 @@
-<xsl:stylesheet exclude-result-prefixes="msxsl" version="1.0" xmlns:msxsl="urn:schemas-microsoft.com:xslt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+﻿<xsl:stylesheet exclude-result-prefixes="msxsl" version="1.0" xmlns:msxsl="urn:schemas-microsoft.com:xslt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="text" />
   <xsl:param name="PowerShellVersion" />
   <xsl:param name="CLRVersion" />
@@ -202,7 +202,7 @@ Description = ']]></xsl:text>
 
 # Format files (.ps1xml) to be loaded when importing this module
 ]]></xsl:text>
-    <xsl:choose>
+      <xsl:choose>
       <xsl:when test="count(FormatsToProcess/Name)=0">
         <xsl:text><![CDATA[# FormatsToProcess = @()]]></xsl:text>
       </xsl:when>
@@ -338,7 +338,7 @@ PrivateData = @{]]></xsl:text>
           <xsl:value-of select="CompilerOptions/@IncludeDebugInformation" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text><![CDATA[;
+        <xsl:text><![CDATA[;
 		ConditionalCompilationSymbols = ']]></xsl:text>
       <xsl:choose>
         <xsl:when test="normalize-space(string(CompilerOptions/@IncludeDebugInformation))='true'">

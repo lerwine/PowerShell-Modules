@@ -33,17 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="about.xslt" />
-    <Content Include="ManifestData.xml" />
-    <Content Include="ManifestData.xslt" />
-    <Content Include="Setup.bat" />
+    <Content Include="SetupManifestData.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.WPF.psm1" />
     <Compile Include="Erwine.Leonard.T.WPF.xml" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="Setup.ps1" />
     <Compile Include="Test.ps1" />
     <Compile Include="ThisObj.cs" />
     <Compile Include="WindowProcessInternal.cs" />

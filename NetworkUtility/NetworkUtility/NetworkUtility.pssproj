@@ -45,10 +45,7 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="about.xslt" />
-    <Content Include="ManifestData.xml" />
-    <Content Include="ManifestData.xslt" />
-    <Content Include="Setup.bat" />
+    <Content Include="SetupManifestData.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.NetworkUtility.psm1" />
@@ -56,7 +53,6 @@
     <Compile Include="FormEncoder.cs" />
     <Compile Include="MimeUtility.cs" />
     <Compile Include="README.md" />
-    <Compile Include="Setup.ps1" />
     <Compile Include="SoapExample.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

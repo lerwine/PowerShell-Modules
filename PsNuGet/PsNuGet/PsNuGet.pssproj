@@ -27,8 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="ManifestData.xml" />
-    <Content Include="ManifestData.xslt" />
+    <Content Include="SetupManifestData.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.PsNuGet.psd1" />

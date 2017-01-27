@@ -45,19 +45,13 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="about.xslt" />
-    <Content Include="Setup.bat" />
-    <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="BackgroundPipelineInvocation.cs" />
     <Compile Include="BackgroundPipelineParameters.cs" />
     <Compile Include="DecodeRegexReplaceHandler.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="Erwine.Leonard.T.IOUtility.XML" />
     <Compile Include="LinqEmul.cs" />
-    <Compile Include="ManifestData.xml" />
-    <Compile Include="ManifestData.xslt" />
+    <Compile Include="SetupManifestData.xml" />
     <Compile Include="PSAsyncInvocationResult.cs" />
     <Compile Include="PSInvocationBuilder.cs" />
     <Compile Include="PSInvocationBuilderBase.cs" />
@@ -69,7 +63,6 @@
     <Compile Include="RegexReplaceHandler.cs" />
     <Compile Include="RegularExpressions.cs" />
     <Compile Include="ScriptRegexReplaceHandler.cs" />
-    <Compile Include="Setup.ps1" />
     <Compile Include="Erwine.Leonard.T.IOUtility.psm1" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
