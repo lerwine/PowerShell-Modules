@@ -99,6 +99,11 @@
     <Compile Include="FunctionDelegateContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSAttachedEventInstance.cs" />
+    <Compile Include="PSInvocationParams.cs" />
+    <Compile Include="PSInvocationResult.cs" />
+    <Compile Include="PSInvocation\Context.cs" />
+    <Compile Include="PSInvocation\EventScriptHandler.cs" />
+    <Compile Include="PSInvocation\InvocationResult.cs" />
     <Compile Include="PsWpfWindowContext.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RelayCommand.cs" />
