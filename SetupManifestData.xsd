@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="urn:Erwine.Leonard.T:PowerShellModules:SetupManifestData.xsd" elementFormDefault="qualified"
+           xmlns="urn:Erwine.Leonard.T:PowerShellModules:SetupManifestData.xsd" xmlns:m="urn:Erwine.Leonard.T:PowerShellModules:SetupManifestData.xsd"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ManifestData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="PowerShellHost">
+          <xs:complexType>
+            <xs:attribute name="Name" type="xs:string" use="required" />
+            <xs:attribute name="Version" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="LongDescription" type="xs:string" />
+        <xs:element name="RequiredModules" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="RequiredAssemblies" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="ScriptsToProcess" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="TypesToProcess" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="FormatsToProcess" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="NestedModules" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="FunctionsToExport" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="Function">
+                <xs:complexType mixed="true">
+                  <xs:attribute name="Name" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CmdletsToExport" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="VariablesToExport" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="AliasesToExport" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="ModuleList" minOccurs="0" maxOccurs="1" type="m:nameList" />
+        <xs:element name="FileList" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="Name">
+                <xs:complexType mixed="true">
+                  <xs:attribute name="Compile" type="xs:boolean" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CompilerOptions" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="AssemblyReference" type="xs:string" />
+            </xs:sequence>
+            <xs:attribute name="IncludeDebugInformation" type="xs:boolean" />
+            <xs:attribute name="ConditionalCompilationSymbols" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PrivateDataCode" type="xs:string" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
+      <xs:attribute name="Name" type="xs:string" use="required" />
+      <xs:attribute name="Version" type="xs:string" use="required" />
+      <xs:attribute name="Guid" type="xs:string" use="required" />
+      <xs:attribute name="Author" type="xs:string" use="required" />
+      <xs:attribute name="CompanyName" type="xs:string" use="required" />
+      <xs:attribute name="Copyright" type="xs:string" use="required" />
+      <xs:attribute name="Description" type="xs:string" use="required" />
+      <xs:attribute name="PowerShellVersion" type="xs:string" />
+      <xs:attribute name="CLRVersion" type="xs:string" />
+      <xs:attribute name="DotNetFrameworkVersion" type="xs:string" />
+      <xs:attribute name="ProcessorArchitecture" type="xs:string" />
+      <xs:attribute name="DefaultCommandPrefix" type="xs:string" />
+      <xs:attribute name="HelpInfoURI" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="nameList">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="Name" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
