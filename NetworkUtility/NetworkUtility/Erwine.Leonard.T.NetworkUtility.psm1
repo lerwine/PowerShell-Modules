@@ -6,6 +6,685 @@ $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Pr
     UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
 };
 
+Function New-IPAddress {
+    <#
+        .SYNOPSIS
+			Create IP address object.
+         
+        .DESCRIPTION
+			Returns an object which represents an IP address.
+        
+        .OUTPUTS
+			System.Net.IPAddress. An object which represents an IP address.
+        
+        .LINK
+            Test-IPAddressIsLoopback
+        
+        .LINK
+            ConvertTo-IPv6
+        
+        .LINK
+            ConvertTo-IPv4
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.ipaddress.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Bytes')]
+    [OutputType([System.Net.IPAddress])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'NewAddress')]
+        # The long value of the IP address.
+        [long]$NewAddress,
+        
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Parse')]
+        # A string that contains an IP address in dotted-quad notation for IPv4 and in colon-hexadecimal notation for IPv6. 
+        [string]$IpString,
+        
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Bytes')]
+        # The byte array value of the IP address.
+        [byte[]]$Bytes,
+        
+        [Parameter(Position = 1, ParameterSetName = 'Bytes')]
+        # The long value of the scope identifier.
+        [long]$Scopeid
+    )
+
+    Process {
+        switch ($PSCmdlet.ParameterSetName) {
+            'NewAdress' { New-Object -TypeName 'System.Net.IPAddress' -ArgumentList $NewAddress; break; }
+            'IpString' { [System.Net.IPAddress]::Parse($IpString); break; }
+            default {
+                if ($PSBoundParameters.ContainsKey('Scopeid')) {
+                    New-Object -TypeName 'System.Net.IPAddress' -ArgumentList (,$Bytes, $Scopeid);
+                } else {
+                    New-Object -TypeName 'System.Net.IPAddress' -ArgumentList (,$Bytes);
+                }
+                break;
+            }
+        }
+    }
+}
+
+Function Test-IPAddressIsLoopback {
+    <#
+        .SYNOPSIS
+			Determines whether IP address is the loopback address.
+         
+        .DESCRIPTION
+			Returns true if the IP address is the loopback address, otherwise returns false.
+        
+        .OUTPUTS
+			System.Boolean. True if the IP address is the loopback address, otherwise returns false.
+        
+        .LINK
+            New-IPAddress
+        
+        .LINK
+            ConvertTo-IPv6
+        
+        .LINK
+            ConvertTo-IPv4
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.ipaddress.isloopback.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([bool])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The IP address to test.
+        [System.Net.IPAddress]$Address
+    )
+
+    Process { [System.Net.IPAddress]::IsLoopback($Address) }
+}
+
+Function ConvertTo-IPv6 {
+    <#
+        .SYNOPSIS
+			Convert IP address to IPv6.
+         
+        .DESCRIPTION
+			Maps the IPAddress object to an IPv6 address.
+        
+        .OUTPUTS
+			System.Net.IPAddress. IP address converted to IPv6.
+        
+        .LINK
+            New-IPAddress
+        
+        .LINK
+            ConvertTo-IPv4
+        
+        .LINK
+            Test-IPAddressIsLoopback
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.ipaddress.maptoipv6.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.IPAddress])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The IP address to be converted.
+        [System.Net.IPAddress]$IPAddress
+    )
+
+    Process { $IPAddress.MapToIPv6() }
+}
+
+Function ConvertTo-IPv4 {
+    <#
+        .SYNOPSIS
+			Convert IP address to IPv4.
+         
+        .DESCRIPTION
+			Maps the IPAddress object to an IPv4 address.
+        
+        .OUTPUTS
+			System.Net.IPAddress. IP address converted to IPv4.
+        
+        .LINK
+            New-IPAddress
+        
+        .LINK
+            ConvertTo-IPv6
+        
+        .LINK
+            Test-IPAddressIsLoopback
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.ipaddress.maptoipv6.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.IPAddress])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # The IP address to be converted.
+        [System.Net.IPAddress]$IPAddress
+    )
+
+    Process { $IPAddress.MapToIPv4() }
+}
+
+Function Resolve-DnsHost {
+    <#
+        .SYNOPSIS
+			Resolve DNS host.
+         
+        .DESCRIPTION
+			Resolves a DNS host name or IP address to an IPHostEntry instance.
+        
+        .OUTPUTS
+			System.Net.IPHostEntry. An IPHostEntry instance that contains address information about the host specified in hostName.
+        
+        .LINK
+            Get-DnsHostEntry
+        
+        .LINK
+            Get-DnsHostAddresses
+        
+        .LINK
+            New-IPAddress
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.dns.resolve.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.IPHostEntry])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Name')]
+        [Alias('HostName', 'Host', 'HostNameOrAddress', 'ComputerName')]
+        # A DNS-style host name or IP address
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Address')]
+        [System.Net.IPAddress]$Address
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'Name') {
+            [System.Net.Dns]::Resolve($Name);
+        } else {
+            [System.Net.Dns]::Resolve($Address);
+        }
+    }
+}
+
+Function Get-DnsHostEntry {
+    <#
+        .SYNOPSIS
+			Resolve DNS host.
+         
+        .DESCRIPTION
+			Resolves a DNS host name or IP address to an IPHostEntry instance.
+        
+        .OUTPUTS
+			System.Net.IPHostEntry. An IPHostEntry instance that contains address information about the host specified in hostName.
+        
+        .LINK
+            Get-DnsHostAddresses
+        
+        .LINK
+            New-IPAddress
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.dns.gethostentry.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Net.IPHostEntry])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Name')]
+        [Alias('HostName', 'Host', 'HostNameOrAddress', 'ComputerName')]
+        # The host name or IP address to resolve.
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Address')]
+        # An IP address to resolve.
+        [System.Net.IPAddress]$Address
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'Name') {
+            [System.Net.Dns]::GetHostEntry($Name);
+        } else {
+            [System.Net.Dns]::GetHostEntry($Address);
+        }
+    }
+}
+
+Function Get-DnsHostAddresses {
+    <#
+        .SYNOPSIS
+			Get IP addresses for host.
+         
+        .DESCRIPTION
+			Returns the Internet Protocol (IP) addresses for the specified host.
+        
+        .OUTPUTS
+			System.Net.IPAddress[]. An array of type IPAddress that holds the IP addresses for the host that is specified by the hostNameOrAddress parameter.
+        
+        .LINK
+            Get-DnsHostEntry
+        
+        .LINK
+            New-IPAddress
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.dns.gethostentry.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.IPAddress[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [Alias('HostName', 'Host', 'Name', 'Address', 'ComputerName')]
+        # The host name or IP address to resolve.
+        [string]$HostNameOrAddress
+    )
+
+    Process { [System.Net.Dns]::GetHostAddresses($HostNameOrAddress) }
+}
+
+Function Get-NetworkInterfaces {
+    <#
+        .SYNOPSIS
+			Get network interfaces.
+         
+        .DESCRIPTION
+			Returns objects that describe the network interfaces on the local computer.
+        
+        .OUTPUTS
+			System.Net.NetworkInformation.NetworkInterface[]. A NetworkInterface array that contains objects that describe the available network interfaces, or an empty array if no interfaces are detected.
+        
+        .LINK
+            Get-NetworkInterfaceIPProperties
+        
+        .LINK
+            Get-NetworkInterfacePhysicalAddress
+        
+        .LINK
+            Test-NetworkInterfaceSupports
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.networkinterface.getallnetworkinterfaces.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.NetworkInformation.NetworkInterface[]])]
+    Param()
+
+    [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces();
+}
+
+Function Get-NetworkInterfaceIPProperties {
+    <#
+        .SYNOPSIS
+			Get network interfaces.
+         
+        .DESCRIPTION
+			Returns objects that describe the network interfaces on the local computer.
+        
+        .OUTPUTS
+			System.Net.NetworkInformation.NetworkInterface[]. A NetworkInterface array that contains objects that describe the available network interfaces, or an empty array if no interfaces are detected.
+        
+        .LINK
+            Get-NetworkInterfaces
+        
+        .LINK
+            Get-NetworkInterfacePhysicalAddress
+        
+        .LINK
+            Test-NetworkInterfaceSupports
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.networkinterface.getipproperties.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.NetworkInformation.IPInterfaceProperties])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # A Network interface.
+        [System.Net.NetworkInformation.NetworkInterface]$NetworkInterface
+    )
+
+    Process { $NetworkInterface.GetIPProperties() }
+}
+
+Function Get-NetworkInterfaceIPStatistics {
+    [CmdletBinding()]
+    [OutputType([System.Net.NetworkInformation.IPInterfaceStatistics])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [System.Net.NetworkInformation.NetworkInterface]$NetworkInterface
+    )
+
+    Process { $NetworkInterface.GetIPStatistics() }
+}
+
+Function Get-NetworkInterfacePhysicalAddress {
+    <#
+        .SYNOPSIS
+			Get network physical address.
+         
+        .DESCRIPTION
+			Returns the Media Access Control (MAC) or physical address for this adapter.
+        
+        .OUTPUTS
+			System.Net.NetworkInformation.PhysicalAddress. A PhysicalAddress object that contains the physical address.
+        
+        .LINK
+            Get-NetworkInterfaces
+        
+        .LINK
+            Get-NetworkInterfaceIPProperties
+        
+        .LINK
+            Test-NetworkInterfaceSupports
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.networkinterface.getphysicaladdress.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.NetworkInformation.PhysicalAddress])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # A Network interface.
+        [System.Net.NetworkInformation.NetworkInterface]$NetworkInterface
+    )
+
+    Process { $NetworkInterface.GetPhysicalAddress() }
+}
+
+Function Test-NetworkInterfaceSupports {
+    <#
+        .SYNOPSIS
+			Test whether the interface supports the specified protocol.
+         
+        .DESCRIPTION
+			Returns a Boolean value that indicates whether the interface supports the specified protocol.
+        
+        .OUTPUTS
+			System.Boolean. True if the specified protocol is supported; otherwise, false.
+        
+        .LINK
+            Get-NetworkInterfaces
+        
+        .LINK
+            Get-NetworkInterfaceIPProperties
+        
+        .LINK
+            Get-NetworkInterfacePhysicalAddress
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.networkinterface.supports.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'IPv4')]
+    [OutputType([System.Net.NetworkInformation.PhysicalAddress])]
+    Param(
+        
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        # A Network interface to test.
+        [System.Net.NetworkInformation.NetworkInterface]$NetworkInterface,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'IPv4')]
+        # Tests whether network supports IPv4.
+        [switch]$IPv4,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'IPv6')]
+        # Tests whether network supports IPv6.
+        [switch]$IPv6
+    )
+
+    Process {
+        if ($IPv4) {
+            $NetworkInterface.Supports([System.Net.NetworkInformation.NetworkInterfaceComponent]::IPv4);
+        } else {
+            $NetworkInterface.Supports([System.Net.NetworkInformation.NetworkInterfaceComponent]::IPv6);
+        }
+    }
+}
+
+Function New-PingOptions {
+    <#
+        .SYNOPSIS
+			Create Ping options object.
+         
+        .DESCRIPTION
+			Returns an object which is used to control how Ping data packets are transmitted.
+        
+        .OUTPUTS
+			System.Net.NetworkInformation.PingOptions. An object which is used to control how Ping data packets are transmitted.
+        
+        .LINK
+            Send-Ping
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.pingoptions.aspx
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Net.NetworkInformation.PingOptions])]
+    Param(
+        [Parameter(Position = 0, ValueFromPipelineByPropertyName = $true)]
+        # An Int32 value greater than zero that specifies the number of times that the Ping data packets can be forwarded.
+        [int]$Ttl,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        # True to prevent data sent to the remote host from being fragmented; otherwise, false
+        [switch]$DontFragment
+    )
+    
+    Process {
+        if ($PSBoundParameters.ContainsKey('Ttl')) {
+            New-Object -TypeName 'System.Net.NetworkInformation.PingOptions' -ArgumentList $Ttl, $DontFragment;
+        } else {
+            $PingOptions = New-Object -TypeName 'System.Net.NetworkInformation.PingOptions';
+            $PingOptions.DontFragment = $DontFragment;
+            $PingOptions | Write-Output;
+        }
+    }
+}
+
+Function Send-Ping {
+    <#
+        .SYNOPSIS
+			Send ICMP Ping to host.
+         
+        .DESCRIPTION
+			Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified host, and receive a corresponding ICMP echo reply message from that host.
+        
+        .OUTPUTS
+			System.Net.NetworkInformation.PingReply. ICMP echo reply message from host.
+        
+        .LINK
+            New-PingOptions
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.ping.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.pingreply.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'HostNameOptionParam')]
+    [OutputType([System.Net.NetworkInformation.PingReply])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Name')]
+        [Alias('HostName', 'Host', 'HostNameOrAddress', 'ComputerName')]
+        # A String that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.
+        [string]$Name,
+
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Address')]
+        # IP address that is the destination for the ICMP echo message.
+        [System.Net.IPAddress]$Address,
+
+        [ValidateRange(1, 2147483647)]
+        # Number of ICMP pings to send.
+        [int]$Count = 3,
+        
+        [ValidateRange(0, 2147483647)]
+        # An Int32 value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message
+        [int]$Timeout = 5000,
+        
+        # A Byte array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.
+        [byte[]]$Buffer,
+
+        # A PingOptions object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.
+        [System.Net.NetworkInformation.PingOptions]$Options,
+        
+        # Ping object to use
+        [System.Net.NetworkInformation.Ping]$Pinger
+    )
+    
+    Begin {
+        if ($PSBoundParameters.ContainsKey('Pinger')) {
+            $Ping = $Pinger;
+        } else {
+            $Ping = New-Object -TypeName 'System.Net.NetworkInformation.Ping';
+        }
+        if ($PSBoundParameters.ContainsKey('Options') -and -not $PSBoundParameters.ContainsKey('Buffer')) {
+            $Buffer = [System.Text.Encoding]::ASCII.GetBytes('1234567890ABCDEFGHIJKLMNOPQRSTUV');
+        }
+    }
+    
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'Name') {
+            if ($PSBoundParameters.ContainsKey('Options')) {
+                for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Name, $Timeout, $Buffer, $Options) }
+            } else {
+                if ($PSBoundParameters.ContainsKey('Buffer')) {
+                    for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Name, $Timeout, $Buffer) }
+                } else {
+                    if ($PSBoundParameters.ContainsKey('Timeout')) {
+                        for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Name, $Timeout) }
+                    } else {
+                        for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Name) }
+                    }
+                }
+            }
+        } else {
+            if ($PSBoundParameters.ContainsKey('Options')) {
+                for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Address, $Timeout, $Buffer, $Options) }
+            } else {
+                if ($PSBoundParameters.ContainsKey('Buffer')) {
+                    for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Address, $Timeout, $Buffer) }
+                } else {
+                    if ($PSBoundParameters.ContainsKey('Timeout')) {
+                        for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Address, $Timeout) }
+                    } else {
+                        for ($i = 0; $i -lt $Count; $i++) { $Ping.Send($Address) }
+                    }
+                }
+            }
+        }
+    }
+    
+    End { if (-not $PSBoundParameters.ContainsKey('Pinger')) { $Ping.Dispose() } }
+}
+
+Function Trace-Route {
+    <#
+        .SYNOPSIS
+			Trace route to host.
+         
+        .DESCRIPTION
+			Attempts to send an Internet Control Message Protocol (ICMP) echo messages to computers in the route to the specified host, and receives corresponding ICMP echo reply messages from the hosts.
+        
+        .OUTPUTS
+			System.Net.NetworkInformation.PingReply[]. ICMP echo reply messages from hosts.
+        
+        .LINK
+            New-PingOptions
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.ping.aspx
+        
+        .LINK
+            https://msdn.microsoft.com/en-us/library/system.net.networkinformation.pingreply.aspx
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'HostName')]
+    [OutputType([System.Net.NetworkInformation.PingReply[]])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Name')]
+        [Alias('HostName', 'Host', 'HostNameOrAddress', 'ComputerName')]
+        # A String that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.
+        [string]$Name,
+
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Address')]
+        # IP address that is the destination for the ICMP echo message.
+        [System.Net.IPAddress]$Address,
+
+        # An Int32 value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message
+        [ValidateRange(0, 2147483647)]
+        [int]$Timeout = 5000,
+        
+        # Maximum number of forwards in the trace.
+        [ValidateRange(1, 2147483647)]
+        [int]$MaxTtl = 128,
+        
+        # Ping object to use
+        [System.Net.NetworkInformation.Ping]$Pinger
+    )
+    
+    Begin {
+        if ($PSBoundParameters.ContainsKey('Pinger')) {
+            $Ping = $Pinger;
+        } else {
+            $Ping = New-Object -TypeName 'System.Net.NetworkInformation.Ping';
+        }
+    }
+    
+    Process {
+        if ($PSBoundParameters.ContainsKey('Name')) {
+            $Splat = @{ Name = $Name; Count = 1; };
+        } else {
+            $Splat = @{ Address = $Address; Count = 1; };
+        }
+        $Splat.Options = New-PingOptions -Ttl 1 -DontFragment;
+        if ($PSBoundParameters.ContainsKey('Timeout')) { $Splat.Timeout = $Timeout }
+        $Splat.Pinger = $Ping;
+        while ($Splat.Options.Ttl -le $MaxTtl) {
+            $PingReply = Send-Ping @splat;
+            if ($PingReply.Status -eq [System.Net.NetworkInformation.IPStatus]::Success) {
+                $PingReply | Write-Output;
+                break;
+            }
+            $Splat.Options.Ttl++;
+            if ($PingReply.Address -ne $null) {
+                if ($PSBoundParameters.ContainsKey('Timeout')) {
+                    Send-Ping -Address $PingReply.Address -Count 1 -Options $Splat.Options -Timeout $Timeout -Pinger $Ping;
+                } else {
+                    Send-Ping -Address $PingReply.Address -Count 1 -Options $Splat.Options -Pinger $Ping;
+                }
+            } else {
+                $PingReply | Write-Output;
+            }
+            if ($PingReply.Status -ne [System.Net.NetworkInformation.IPStatus]::TtlExpired -and $PingReply.Status -ne [System.Net.NetworkInformation.IPStatus]::TimedOut) { break; }
+        }
+    }
+    
+    End { if (-not $PSBoundParameters.ContainsKey('Pinger')) { $Ping.Dispose() } }
+}
+
+Function Get-TraceRouteStatus {
+    [CmdletBinding()]
+    [OutputType([System.Net.NetworkInformation.IPStatus])]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [System.Net.NetworkInformation.PingReply[]]$PingReply
+    )
+
+    Begin {
+        $LastTtl = $null;
+        $LastStatus = [System.Net.NetworkInformation.IPStatus]::TtlExpired;
+    }
+
+    Process {
+        if ($LastTtl -ne $null -and $PingReply.Options.Ttl -le $LastTtl) { $LastStatus | Write-Output }
+        $LastTtl = $PingReply.Options.Ttl;
+        $LastStatus = $PingReply.Status;
+    }
+
+    End { $LastStatus | Write-Output }
+}
+
 Function New-SqlConnection {
     <#
         .SYNOPSIS
@@ -109,13 +788,13 @@ Function New-SqlCommand {
 Function New-SqlParameter {
     <#
         .SYNOPSIS
-			Create new SQL command.
+			Create new SQL parameter.
          
         .DESCRIPTION
-			Creates and returns a SqlCommand object associated with the SqlConnection.
+			Creates and returns a SqlParameter object for use with an SqlCommand.
         
         .OUTPUTS
-			System.Data.SqlClient.SqlCommand. A SqlCommand object associated with the SqlConnection.
+			System.Data.SqlClient.SqlParameter. A SqlParameter object for use with an SqlCommand.
         
         .LINK
             New-SqlCommand
@@ -332,7 +1011,7 @@ Function Read-SqlCommand {
 Function Get-SqlTableInfo {
     <#
         .SYNOPSIS
-			Get information about tables.
+			Get information about database tables.
          
         .DESCRIPTION
 			Returns a list of objects that can be queried in the current environment. This means any table or view, except synonym objects.
@@ -1669,7 +2348,7 @@ Function Get-WebResponse {
     }
     
     Process {
-        if ($PSBoundParameters.ContainsKey('AllowRedirect')) { $WebRequest.AllowRedirect = $AllowRedirect }
+        if ($PSBoundParameters.ContainsKey('AllowRedirect')) { $WebRequest.AllowAutoRedirect = $AllowRedirect }
         $Response = @{
             Request = $WebRequest;
             ErrorStatus = [System.Net.WebExceptionStatus]::UnknownError;
@@ -1692,7 +2371,10 @@ Function Get-WebResponse {
             } else {
                 $Response['StatusDescription'] = $Response['Response'].StatusDescription;
             }
-            
+            if ($Response['Response'] -ne $null -and $Response['Response'].ContentType -ne $null -and $Response['Response'].ContentType.Trim().Length -gt 0) {
+                try { $Response['ContentType'] = New-Object -TypeName 'System.Net.Mime.ContentType' -ArgumentList $Response['Response'].ContentType }
+                catch { }
+            }
         } catch [System.Net.WebException] {
             $Response['ErrorStatus'] = $_.Exception.Status;
             $Response['Response'] = $_.Exception.Response;
@@ -1842,7 +2524,7 @@ Function Get-SoapXmlNamespacePrefix {
             New-SoapEnvelope
     #>
     [CmdletBinding(DefaultParameterSetname = 'PropertiesSoap')]
-    [OutputType([System.Xml.XmlDocument])]
+    [OutputType([string])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObjectSoap')]
         [Parameter(Mandatory = $true, Position = 0, ParameterSetname = 'PSObjectSchema')]
