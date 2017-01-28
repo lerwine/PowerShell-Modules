@@ -14,8 +14,7 @@ namespace WpfCLR
 	/// </summary>
     public class ThisObj
     {
-		#region Fields
-		
+        #region Fields
 		private WpfWindow _windowObj;
 		private GetMainWindowHandler _getMainWindow;
 		private ReadOnlyDictionary<string, object> _namedElements = null;

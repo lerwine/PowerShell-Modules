@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="urn:Erwine.Leonard.T:PowerShellModules:Setup:CommonTypes.xsd" elementFormDefault="qualified"
+    xmlns:c="urn:Erwine.Leonard.T:PowerShellModules:Setup:CommonTypes.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="NonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\s*\S.*" />
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Identifier">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^[_a-zA-Z][\d_a-zA-Z]*$" />
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="GenericTypeName">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^[_a-zA-Z][\d_a-zA-Z]*(\.[_a-zA-Z][\d_a-zA-Z]*)*(((?'Open'\[)([_a-zA-Z][\d_a-zA-Z]*([,.][_a-zA-Z][\d_a-zA-Z]*)*)?)+((?'Close-Open'\])([_a-zA-Z][\d_a-zA-Z]*(\.[_a-zA-Z][\d_a-zA-Z]*)*)?)+)*(?(Open)(?!))$" />
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BasicTypeName">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^[_a-zA-Z][\d_a-zA-Z]*(\.[_a-zA-Z][\d_a-zA-Z]*)$" />
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
