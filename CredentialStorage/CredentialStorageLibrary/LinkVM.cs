@@ -41,14 +41,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (Guid)(GetValue(IdProperty));
-                return Dispatcher.Invoke(() => Id);
+                return (Guid)(Dispatcher.Invoke(new Func<Guid>(() => Id)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(IdPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => Id = value);
+                    Dispatcher.Invoke(new Action(() => Id = value));
             }
         }
 
@@ -75,14 +75,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(DisplayUriTextProperty));
-                return Dispatcher.Invoke(() => DisplayUriText);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => DisplayUriText)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DisplayUriTextPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DisplayUriText = value);
+                    Dispatcher.Invoke(new Action(() => DisplayUriText = value));
             }
         }
 
@@ -102,7 +102,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Scheme_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Scheme_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Scheme_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Scheme_CoerceValue(baseValue)));
 
@@ -115,14 +115,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(SchemeProperty));
-                return Dispatcher.Invoke(() => Scheme);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Scheme)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SchemeProperty, value);
                 else
-                    Dispatcher.Invoke(() => Scheme = value);
+                    Dispatcher.Invoke(new Action(() => Scheme = value));
             }
         }
 
@@ -163,7 +163,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).IncludeCredentialsInUri_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).IncludeCredentialsInUri_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).IncludeCredentialsInUri_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).IncludeCredentialsInUri_CoerceValue(baseValue)));
 
@@ -176,14 +176,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (bool)(GetValue(IncludeCredentialsInUriProperty));
-                return Dispatcher.Invoke(() => IncludeCredentialsInUri);
+                return (bool)(Dispatcher.Invoke(new Func<bool>(() => IncludeCredentialsInUri)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(IncludeCredentialsInUriProperty, value);
                 else
-                    Dispatcher.Invoke(() => IncludeCredentialsInUri = value);
+                    Dispatcher.Invoke(new Action(() => IncludeCredentialsInUri = value));
             }
         }
 
@@ -224,7 +224,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Host_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Host_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Host_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Host_CoerceValue(baseValue)));
 
@@ -237,14 +237,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(HostProperty));
-                return Dispatcher.Invoke(() => Host);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Host)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(HostProperty, value);
                 else
-                    Dispatcher.Invoke(() => Host = value);
+                    Dispatcher.Invoke(new Action(() => Host = value));
             }
         }
 
@@ -285,7 +285,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Port_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Port_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Port_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Port_CoerceValue(baseValue)));
 
@@ -298,14 +298,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (int)(GetValue(PortProperty));
-                return Dispatcher.Invoke(() => Port);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => Port)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(PortProperty, value);
                 else
-                    Dispatcher.Invoke(() => Port = value);
+                    Dispatcher.Invoke(new Action(() => Port = value));
             }
         }
 
@@ -346,7 +346,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Path_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Path_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Path_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Path_CoerceValue(baseValue)));
 
@@ -359,14 +359,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(PathProperty));
-                return Dispatcher.Invoke(() => Path);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Path)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(PathProperty, value);
                 else
-                    Dispatcher.Invoke(() => Path = value);
+                    Dispatcher.Invoke(new Action(() => Path = value));
             }
         }
 
@@ -407,7 +407,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Query_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Query_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Query_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Query_CoerceValue(baseValue)));
 
@@ -420,14 +420,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(QueryProperty));
-                return Dispatcher.Invoke(() => Query);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Query)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(QueryProperty, value);
                 else
-                    Dispatcher.Invoke(() => Query = value);
+                    Dispatcher.Invoke(new Action(() => Query = value));
             }
         }
 
@@ -468,7 +468,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Fragment_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Fragment_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Fragment_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Fragment_CoerceValue(baseValue)));
 
@@ -481,14 +481,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(FragmentProperty));
-                return Dispatcher.Invoke(() => Fragment);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Fragment)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(FragmentProperty, value);
                 else
-                    Dispatcher.Invoke(() => Fragment = value);
+                    Dispatcher.Invoke(new Action(() => Fragment = value));
             }
         }
 
@@ -529,7 +529,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).Parent_PropertyChanged((CredentialVM)(e.OldValue), (CredentialVM)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Parent_PropertyChanged((CredentialVM)(e.OldValue), (CredentialVM)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Parent_PropertyChanged((CredentialVM)(e.OldValue), (CredentialVM)(e.NewValue))));
                 }));
 
         /// <summary>
@@ -541,14 +541,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (CredentialVM)(GetValue(ParentProperty));
-                return Dispatcher.Invoke(() => Parent);
+                return (CredentialVM)(Dispatcher.Invoke(new Func<CredentialVM>(() => Parent)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(ParentProperty, value);
                 else
-                    Dispatcher.Invoke(() => Parent = value);
+                    Dispatcher.Invoke(new Action(() => Parent = value));
             }
         }
 
@@ -589,14 +589,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (ObservableCollection<BrowserConfigVM>)(GetValue(BrowserOptionsProperty));
-                return Dispatcher.Invoke(() => BrowserOptions);
+                return (ObservableCollection<BrowserConfigVM>)(Dispatcher.Invoke(new Func<ObservableCollection<BrowserConfigVM>>(() => BrowserOptions)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(BrowserOptionsPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => BrowserOptions = value);
+                    Dispatcher.Invoke(new Action(() => BrowserOptions = value));
             }
         }
 
@@ -616,7 +616,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as LinkVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).SelectedIndex_CoerceValue(baseValue)));
 
@@ -629,14 +629,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedIndexProperty));
-                return Dispatcher.Invoke(() => SelectedIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedIndex = value));
             }
         }
 
@@ -684,14 +684,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (BrowserConfigVM)(GetValue(SelectedBrowserConfigProperty));
-                return Dispatcher.Invoke(() => SelectedBrowserConfig);
+                return (BrowserConfigVM)(Dispatcher.Invoke(new Func<BrowserConfigVM>(() => SelectedBrowserConfig)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedBrowserConfigPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedBrowserConfig = value);
+                    Dispatcher.Invoke(new Action(() => SelectedBrowserConfig = value));
             }
         }
 

@@ -701,7 +701,6 @@ namespace WpfCLR
 				catch { throw; }
 				finally { _openWindowProcess = null; }
 			}
-				
 		}
 		
         /// <summary>

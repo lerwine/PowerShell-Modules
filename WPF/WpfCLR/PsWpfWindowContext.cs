@@ -18,7 +18,6 @@ namespace WpfCLR
         private Collection<PSObject> _output;
         private Collection<ErrorRecord> _errors;
         private Collection<WarningRecord> _warnings;
-        private Collection<InformationRecord> _information;
         private Collection<VerboseRecord> _verbose;
         private Collection<DebugRecord> _debug;
         private Window _mainWindow = null;
@@ -27,7 +26,6 @@ namespace WpfCLR
         public Collection<PSObject> Output { get { return _output; } }
         public Collection<ErrorRecord> Errors { get { return _errors; } }
         public Collection<WarningRecord> Warnings { get { return _warnings; } }
-        public Collection<InformationRecord> Uinformation { get { return _information; } }
         public Collection<VerboseRecord> Verbose { get { return _verbose; } }
         public Collection<DebugRecord> Debug { get { return _debug; } }
         public Window MainWindow { get { return _mainWindow; } }

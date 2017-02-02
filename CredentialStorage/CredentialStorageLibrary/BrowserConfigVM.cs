@@ -35,7 +35,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as BrowserConfigVM).Id_PropertyChanged((Guid)(e.OldValue), (Guid)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as BrowserConfigVM).Id_PropertyChanged((Guid)(e.OldValue), (Guid)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as BrowserConfigVM).Id_PropertyChanged((Guid)(e.OldValue), (Guid)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as BrowserConfigVM).Id_CoerceValue(baseValue)));
 
@@ -48,14 +48,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (Guid)(GetValue(IdProperty));
-                return Dispatcher.Invoke(() => Id);
+                return (Guid)(Dispatcher.Invoke(new Func<Guid>(() => Id)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(IdProperty, value);
                 else
-                    Dispatcher.Invoke(() => Id = value);
+                    Dispatcher.Invoke(new Action(() => Id = value));
             }
         }
 
@@ -96,7 +96,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as BrowserConfigVM).DisplayText_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as BrowserConfigVM).DisplayText_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as BrowserConfigVM).DisplayText_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as BrowserConfigVM).DisplayText_CoerceValue(baseValue)));
 
@@ -109,14 +109,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(DisplayTextProperty));
-                return Dispatcher.Invoke(() => DisplayText);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => DisplayText)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(DisplayTextProperty, value);
                 else
-                    Dispatcher.Invoke(() => DisplayText = value);
+                    Dispatcher.Invoke(new Action(() => DisplayText = value));
             }
         }
 

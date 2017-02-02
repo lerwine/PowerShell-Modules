@@ -41,14 +41,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (Guid)(GetValue(IdProperty));
-                return Dispatcher.Invoke(() => Id);
+                return (Guid)(Dispatcher.Invoke(new Func<Guid>(() => Id)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(IdPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => Id = value);
+                    Dispatcher.Invoke(new Action(() => Id = value));
             }
         }
 
@@ -68,7 +68,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as DomainVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as DomainVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as DomainVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as DomainVM).Title_CoerceValue(baseValue)));
 
@@ -81,14 +81,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(TitleProperty));
-                return Dispatcher.Invoke(() => Title);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Title)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(TitleProperty, value);
                 else
-                    Dispatcher.Invoke(() => Title = value);
+                    Dispatcher.Invoke(new Action(() => Title = value));
             }
         }
 
@@ -129,7 +129,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as DomainVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as DomainVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as DomainVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as DomainVM).Notes_CoerceValue(baseValue)));
 
@@ -142,14 +142,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (string)(GetValue(NotesProperty));
-                return Dispatcher.Invoke(() => Notes);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Notes)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(NotesProperty, value);
                 else
-                    Dispatcher.Invoke(() => Notes = value);
+                    Dispatcher.Invoke(new Action(() => Notes = value));
             }
         }
 
@@ -190,7 +190,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as DomainVM).Parent_PropertyChanged((MainWindowVM)(e.OldValue), (MainWindowVM)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as DomainVM).Parent_PropertyChanged((MainWindowVM)(e.OldValue), (MainWindowVM)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as DomainVM).Parent_PropertyChanged((MainWindowVM)(e.OldValue), (MainWindowVM)(e.NewValue))));
                 }));
 
         /// <summary>
@@ -202,14 +202,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (MainWindowVM)(GetValue(ParentProperty));
-                return Dispatcher.Invoke(() => Parent);
+                return (MainWindowVM)(Dispatcher.Invoke(new Func<MainWindowVM>(() => Parent)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(ParentProperty, value);
                 else
-                    Dispatcher.Invoke(() => Parent = value);
+                    Dispatcher.Invoke(new Action(() => Parent = value));
             }
         }
 

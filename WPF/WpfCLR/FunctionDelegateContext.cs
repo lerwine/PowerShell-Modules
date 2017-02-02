@@ -153,6 +153,7 @@ namespace WpfCLR
         /// <param name="host">PowerShell host to use.</param>
         public FunctionDelegateContext(ScriptBlock handler, object thisObject, PSHost host) : base(handler, thisObject, host) { }
 
+        /// <summary>
         /// Initialize new <see cref="FunctionDelegateContext{TArg, TResult}"/> object.
         /// </summary>
         /// <param name="handler"><seealso cref="ScriptBlock"/> which will handle the delegate invocation.</param>
@@ -216,6 +217,7 @@ namespace WpfCLR
         /// <param name="host">PowerShell host to use.</param>
         public FunctionDelegateContext(ScriptBlock handler, object thisObject, PSHost host) : base(handler, thisObject, host) { }
 
+        /// <summary>
         /// Initialize new <see cref="FunctionDelegateContext{TArg1, TArg2, TResult}"/> object.
         /// </summary>
         /// <param name="handler"><seealso cref="ScriptBlock"/> which will handle the delegate invocation.</param>
@@ -281,6 +283,7 @@ namespace WpfCLR
         /// <param name="host">PowerShell host to use.</param>
         public FunctionDelegateContext(ScriptBlock handler, object thisObject, PSHost host) : base(handler, thisObject, host) { }
 
+        /// <summary>
         /// Initialize new <see cref="FunctionDelegateContext{TArg1, TArg2, TArg3, TResult}"/> object.
         /// </summary>
         /// <param name="handler"><seealso cref="ScriptBlock"/> which will handle the delegate invocation.</param>

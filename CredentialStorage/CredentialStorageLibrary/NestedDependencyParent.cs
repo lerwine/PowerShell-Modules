@@ -32,14 +32,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (NestedDependencyObjectCollection<TImplemented, TItem>)(GetValue(ItemsProperty));
-                return Dispatcher.Invoke(() => Items);
+                return (NestedDependencyObjectCollection<TImplemented, TItem>)(Dispatcher.Invoke(new Func<NestedDependencyObjectCollection<TImplemented, TItem>>(() => Items)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(ItemsPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => Items = value);
+                    Dispatcher.Invoke(new Action(() => Items = value));
             }
         }
 
@@ -59,7 +59,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as NestedDependencyParent<TImplemented, TItem>).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as NestedDependencyParent<TImplemented, TItem>).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as NestedDependencyParent<TImplemented, TItem>).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as NestedDependencyParent<TImplemented, TItem>).SelectedIndex_CoerceValue(baseValue)));
 
@@ -72,14 +72,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedIndexProperty));
-                return Dispatcher.Invoke(() => SelectedIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedIndex = value));
             }
         }
 
@@ -127,14 +127,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (TItem)(GetValue(SelectedItemProperty));
-                return Dispatcher.Invoke(() => SelectedItem);
+                return (TItem)(Dispatcher.Invoke(new Func<TItem>(() => SelectedItem)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedItemPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedItem = value);
+                    Dispatcher.Invoke(new Action(() => SelectedItem = value));
             }
         }
 
@@ -161,14 +161,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (TItem)(GetValue(EditingItemProperty));
-                return Dispatcher.Invoke(() => EditingItem);
+                return (TItem)(Dispatcher.Invoke(new Func<TItem>(() => EditingItem)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(EditingItemPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => EditingItem = value);
+                    Dispatcher.Invoke(new Action(() => EditingItem = value));
             }
         }
 
@@ -195,14 +195,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (Visibility)(GetValue(DeleteConfirmVisibilityProperty));
-                return Dispatcher.Invoke(() => DeleteConfirmVisibility);
+                return (Visibility)(Dispatcher.Invoke(new Func<Visibility>(() => DeleteConfirmVisibility)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DeleteConfirmVisibilityPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DeleteConfirmVisibility = value);
+                    Dispatcher.Invoke(new Action(() => DeleteConfirmVisibility = value));
             }
         }
 
@@ -229,14 +229,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (Visibility)(GetValue(EditControlsVisibilityProperty));
-                return Dispatcher.Invoke(() => EditControlsVisibility);
+                return (Visibility)(Dispatcher.Invoke(new Func<Visibility>(() => EditControlsVisibility)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(EditControlsVisibilityPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => EditControlsVisibility = value);
+                    Dispatcher.Invoke(new Action(() => EditControlsVisibility = value));
             }
         }
 

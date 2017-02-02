@@ -11,7 +11,10 @@ using System.Threading.Tasks;
 
 namespace WpfCLR.PSInvocation
 {
-    public class Context
+    /// <summary>
+    /// Context under which ScriptBlock will be executed.
+    /// </summary>
+    public class Context : IContext
     {
         private PSHost _host = null;
         private string _initialLocation = "";
@@ -20,6 +23,41 @@ namespace WpfCLR.PSInvocation
         private PSThreadOptions? _threadOptions = null;
         private object[] _variableKeys = null;
         private PSObject _this = new PSObject();
+        private List<IEventScriptHandler> _eventHandlers = new List<IEventScriptHandler>();
+        private List<EventResult> _eventHandlerResults = new List<EventResult>();
+        private object _syncRoot = new object();
+
+        public void AddEventHandler(IEventScriptHandler handler)
+        {
+            lock (_syncRoot)
+            {
+                if (!_eventHandlers.Contains(handler))
+                {
+                    _eventHandlers.Add(handler);
+                    handler.EventHandlerInvoked += Handler_EventHandlerInvoked;
+                }
+            }
+        }
+
+        public void RemoveEventHandler(IEventScriptHandler handler)
+        {
+            lock (_syncRoot)
+            {
+                if (_eventHandlers.Contains(handler))
+                {
+                    handler.EventHandlerInvoked -= Handler_EventHandlerInvoked;
+                    _eventHandlers.Remove(handler);
+                }
+            }
+        }
+
+        private void Handler_EventHandlerInvoked(object sender, EventHandlerInvokedArgs e)
+        {
+            IEventScriptHandler handler = sender as IEventScriptHandler;
+
+            lock (_syncRoot)
+                _eventHandlerResults.Add(new EventResult((handler == null) ? null : handler.Name, e));
+        }
 
         public PSHost Host
         {
@@ -32,6 +70,10 @@ namespace WpfCLR.PSInvocation
             }
         }
 
+        /// <summary>
+        /// Path representing initial location to be represented by the current Context.
+        /// </summary>
+        /// <remarks>If an invoked script changes the location, this variable will not be updated.</remarks>
         public string InitialLocation
         {
             get { return _initialLocation; }
@@ -76,8 +118,22 @@ namespace WpfCLR.PSInvocation
             }
         }
 
-        public RunspaceConfiguration Configuration { get; private set; }
+        public RunspaceConfiguration Configuration { get; set; }
+
+        /// <summary>
+        /// Other variables to define when invoking a script.
+        /// </summary>
+        /// <remarks>After a script is executed, the values in this property will not be updated. Instead, the values of these variables wil be represnted in the resulting InvocationResult object.</remarks>
         public Hashtable Variables { get; private set; }
+
+        /// <summary>
+        /// Data which is synchronized with all invocations and event handlers.
+        /// </summary>
+        public Hashtable SynchronizedData { get; private set; }
+
+        /// <summary>
+        /// The object which will serve as the "this" variable during script execution.
+        /// </summary>
         public PSObject This
         {
             get { return _this; }
@@ -89,12 +145,20 @@ namespace WpfCLR.PSInvocation
             }
         }
 
+        /// <summary>
+        /// Initialize new Context object.
+        /// </summary>
         public Context()
         {
-            Configuration = RunspaceConfiguration.Create();
             Variables = new Hashtable();
+            SynchronizedData = Hashtable.Synchronized(new Hashtable());
         }
 
+        /// <summary>
+        /// Asynchronously executes a script using the current Context.
+        /// </summary>
+        /// <param name="script">Script to execute.</param>
+        /// <returns>An InvocationResult object representing the results of the execution.</returns>
         public InvocationResult GetResult(string script)
         {
             if (script == null)
@@ -116,16 +180,17 @@ namespace WpfCLR.PSInvocation
                         runspace.ThreadOptions = ThreadOptions.Value;
                     runspace.Open();
 
-                    foreach (string key in _variableKeys)
+                    foreach (object key in _variableKeys)
                     {
-                        if (Variables[key] != null && (!(key is string) || String.Compare(key as string, "this", true) != 0))
-                            runspace.SessionStateProxy.SetVariable(key, Variables[key]);
+                        string s = (key is string) ? key as string : key.ToString();
+                        if (Variables[key] != null && String.Compare(s, "this", true) != 0 && String.Compare(s, "SynchronizedData", true) != 0)
+                            runspace.SessionStateProxy.SetVariable(s, Variables[key]);
                     }
                     runspace.SessionStateProxy.SetVariable("this", This);
-
+                    runspace.SessionStateProxy.SetVariable("SynchronizedData", SynchronizedData);
                     if (InitialLocation.Length > 0)
                         runspace.SessionStateProxy.Path.SetLocation(InitialLocation);
-                    
+
                     using (PowerShell powerShell = PowerShell.Create())
                     {
                         powerShell.Runspace = runspace;
@@ -136,6 +201,11 @@ namespace WpfCLR.PSInvocation
             finally { _variableKeys = null; }
         }
 
+        /// <summary>
+        /// Asynchronously invokes a ScriptBlock using the current Context.
+        /// </summary>
+        /// <param name="script">ScriptBlock to execute.</param>
+        /// <returns>An InvocationResult object representing the results of the execution.</returns>
         public InvocationResult GetResult(ScriptBlock script)
         {
             if (script == null)

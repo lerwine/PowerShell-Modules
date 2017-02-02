@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 #endif
 using System.Windows.Input;
 
-namespace WpfCLR
+namespace CredentialStorageLibrary.Command
 {
     /// <summary>
     /// Command which is used to relay interacive events.

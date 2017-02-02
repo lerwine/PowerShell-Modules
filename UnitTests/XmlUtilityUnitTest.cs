@@ -69,7 +69,6 @@ namespace UnitTests
         public void ImportXmlUtilityTestMethod()
         {
             InitialSessionState iss = InitialSessionState.CreateDefault();
-            iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
             // this.TestContext;
             using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
             {

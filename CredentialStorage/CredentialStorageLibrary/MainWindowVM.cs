@@ -41,14 +41,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (MainWindow)(GetValue(MainWindowProperty));
-                return Dispatcher.Invoke(() => MainWindow);
+                return (MainWindow)(Dispatcher.Invoke(new Func<MainWindow>(() => MainWindow)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(MainWindowPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => MainWindow = value);
+                    Dispatcher.Invoke(new Action(() => MainWindow = value));
             }
         }
 
@@ -90,7 +90,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as MainWindowVM).SelectedTabIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as MainWindowVM).SelectedTabIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as MainWindowVM).SelectedTabIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as MainWindowVM).SelectedTabIndex_CoerceValue(baseValue)));
 
@@ -104,14 +104,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedTabIndexProperty));
-                return Dispatcher.Invoke(() => SelectedTabIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedTabIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedTabIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedTabIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedTabIndex = value));
             }
         }
 
@@ -165,14 +165,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (ObservableCollection<BrowserConfigVM>)(GetValue(BrowserConfigCollectionProperty));
-                return Dispatcher.Invoke(() => BrowserConfigCollection);
+                return (ObservableCollection<BrowserConfigVM>)(Dispatcher.Invoke(new Func<ObservableCollection<BrowserConfigVM>>(() => BrowserConfigCollection)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(BrowserConfigCollectionPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => BrowserConfigCollection = value);
+                    Dispatcher.Invoke(new Action(() => BrowserConfigCollection = value));
             }
         }
         
@@ -197,7 +197,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as MainWindowVM).SelectedBrowserConfigIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as MainWindowVM).SelectedBrowserConfigIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as MainWindowVM).SelectedBrowserConfigIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as MainWindowVM).SelectedBrowserConfigIndex_CoerceValue(baseValue)));
 
@@ -210,14 +210,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedBrowserConfigIndexProperty));
-                return Dispatcher.Invoke(() => SelectedBrowserConfigIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedBrowserConfigIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedBrowserConfigIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedBrowserConfigIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedBrowserConfigIndex = value));
             }
         }
 
@@ -265,14 +265,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (BrowserConfigVM)(GetValue(SelectedBrowserConfigProperty));
-                return Dispatcher.Invoke(() => SelectedBrowserConfig);
+                return (BrowserConfigVM)(Dispatcher.Invoke(new Func<BrowserConfigVM>(() => SelectedBrowserConfig)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedBrowserConfigPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedBrowserConfig = value);
+                    Dispatcher.Invoke(new Action(() => SelectedBrowserConfig = value));
             }
         }
 
@@ -292,7 +292,7 @@ namespace CredentialStorageLibrary
                     if (d.CheckAccess())
                         (d as MainWindowVM).DefaultBrowserConfigIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as MainWindowVM).DefaultBrowserConfigIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as MainWindowVM).DefaultBrowserConfigIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as MainWindowVM).DefaultBrowserConfigIndex_CoerceValue(baseValue)));
 
@@ -305,14 +305,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (int)(GetValue(DefaultBrowserConfigIndexProperty));
-                return Dispatcher.Invoke(() => DefaultBrowserConfigIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => DefaultBrowserConfigIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(DefaultBrowserConfigIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => DefaultBrowserConfigIndex = value);
+                    Dispatcher.Invoke(new Action(() => DefaultBrowserConfigIndex = value));
             }
         }
 
@@ -360,14 +360,14 @@ namespace CredentialStorageLibrary
             {
                 if (CheckAccess())
                     return (BrowserConfigVM)(GetValue(DefaultBrowserConfigProperty));
-                return Dispatcher.Invoke(() => DefaultBrowserConfig);
+                return (BrowserConfigVM)(Dispatcher.Invoke(new Func<BrowserConfigVM>(() => DefaultBrowserConfig)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DefaultBrowserConfigPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DefaultBrowserConfig = value);
+                    Dispatcher.Invoke(new Action(() => DefaultBrowserConfig = value));
             }
         }
 

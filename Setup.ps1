@@ -26,6 +26,10 @@ Function Install-Module {
 
 		[switch]$System
 	)
+
+    
+
+    
 	$InstallTargetRoot = $null;
 	if ($System) {
 		$InstallTargetRoot = $PSHome | Join-Path -ChildPath 'Modules';

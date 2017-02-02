@@ -5,9 +5,10 @@ using System.Management.Automation;
 
 namespace WpfCLR.PSInvocation
 {
-    public class InvocationResult
+    public class InvocationResult : IInvocationResult
     {
-        public InvocationResult(string script, Context context, PowerShell powerShell, object[] variableKeys)
+        public InvocationResult(string script, IContext context, PowerShell powerShell, object[] variableKeys) : this(script, context, powerShell, variableKeys, new object[0]) { }
+        public InvocationResult(string script, IContext context, PowerShell powerShell, object[] variableKeys, params object[] arguments)
         {
             ErrorRecord error = null;
             try
@@ -44,10 +45,9 @@ namespace WpfCLR.PSInvocation
             if (Output == null)
                 Output = new Collection<PSObject>();
             Variables = new Hashtable();
-            foreach (string key in variableKeys)
-                Variables[key] = powerShell.Runspace.SessionStateProxy.GetVariable(key);
+            foreach (object key in variableKeys)
+                Variables[key] = powerShell.Runspace.SessionStateProxy.GetVariable((key is string) ? key as string : key.ToString());
         }
-
         public Hashtable Variables { get; private set; }
         public Collection<DebugRecord> Debug { get; private set; }
         public Collection<ErrorRecord> Errors { get; private set; }

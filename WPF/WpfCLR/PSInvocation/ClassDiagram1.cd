@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WpfCLR.PSInvocation.Context">
+    <Position X="11.25" Y="3.25" Width="2" />
+    <Members>
+      <Field Name="_apartmentState" Hidden="true" />
+      <Field Name="_host" Hidden="true" />
+      <Field Name="_initialLocation" Hidden="true" />
+      <Field Name="_this" Hidden="true" />
+      <Field Name="_threadOptions" Hidden="true" />
+      <Field Name="_useLocalScope" Hidden="true" />
+      <Field Name="_variableKeys" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAEAJgAAgAAAAAICAACAICAAAgEREBIAAAAw=</HashCode>
+      <FileName>PSInvocation\Context.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WpfCLR.PSInvocation.EventScriptHandler&lt;TEventArgs&gt;">
+    <Position X="7.5" Y="3.25" Width="2.5" />
+    <Members>
+      <Field Name="_apartmentState" Hidden="true" />
+      <Field Name="_configuration" Hidden="true" />
+      <Field Name="_host" Hidden="true" />
+      <Field Name="_initialLocation" Hidden="true" />
+      <Field Name="_this" Hidden="true" />
+      <Field Name="_threadOptions" Hidden="true" />
+      <Field Name="_useLocalScope" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAEoAACAEAJAAAgAAAAAAAAAiAACgAAgAUgBIAIgAw=</HashCode>
+      <FileName>PSInvocation\EventScriptHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_parentContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="WpfCLR.PSInvocation.InvocationResult" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAIAAgYAAAAAIAAAAAAAAAAAIAAQAAAAAAAA=</HashCode>
+      <FileName>PSInvocation\InvocationResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WpfCLR.PSInvocation.EventHandlerInvokedArgs&lt;TEventArgs&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAIAAgYAAAAQIEAAAAAAAAAAIAAQAAAAIAAA=</HashCode>
+      <FileName>PSInvocation\EventHandlerInvokedArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="WpfCLR.PSInvocation.IContext" Collapsed="true">
+    <Position X="14.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAJAAAgAAAAAAAAAAAACAAAgAQAAAAAAAg=</HashCode>
+      <FileName>PSInvocation\IContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WpfCLR.PSInvocation.IEventHandlerInvokedArgs">
+    <Position X="2.25" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>PSInvocation\IEventHandlerInvokedArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WpfCLR.PSInvocation.IInvocationResult">
+    <Position X="2.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAIAAgYAAAAAIAAAAAAAAAAAIAAQAAAAAAAA=</HashCode>
+      <FileName>PSInvocation\IInvocationResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

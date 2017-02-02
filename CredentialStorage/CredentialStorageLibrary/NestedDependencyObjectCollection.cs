@@ -21,6 +21,8 @@ namespace CredentialStorageLibrary
             if (parent == null)
                 throw new ArgumentNullException("parent");
 
+            _parent = parent;
+
             TItem[] items = InnerCollection.ToArray();
             foreach (TItem item in items)
             {

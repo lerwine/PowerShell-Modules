@@ -125,12 +125,7 @@ namespace IOUtilityCLR
         {
             InitialSessionState iss = InitialSessionState;
             if (InitialSessionState == null)
-            {
                 iss = InitialSessionState.CreateDefault();
-#if !PSLEGACY
-                iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
-#endif
-            }
             Runspace runspace = RunspaceFactory.CreateRunspace(iss);
             runspace.ApartmentState = ApartmentState;
             runspace.ThreadOptions = ThreadOptions;
