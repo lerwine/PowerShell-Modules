@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace IOUtilityCLR
+﻿namespace IOUtilityCLR
 {
     public class PSInvocationEventResult
     {
-        public string Name { get; private set; }
-        public PSInvocationEventHandlerInvokedArgs Args { get; private set; }
+        private string _name;
+        private PSInvocationEventHandlerInvokedArgs _args;
+        public string Name { get { return _name; } }
+        public PSInvocationEventHandlerInvokedArgs Args { get { return _args; } }
         public PSInvocationEventResult(string name, PSInvocationEventHandlerInvokedArgs args)
         {
-            Name = name;
-            Args = args;
+            _name = name;
+            _args = args;
         }
     }
 }

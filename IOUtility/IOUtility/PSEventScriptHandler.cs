@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !PSLEGACY2
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
@@ -17,6 +19,8 @@ namespace IOUtilityCLR
         where TEventArgs : EventArgs
     {
         PSInvocationContext _parentContext;
+		private ScriptBlock _handlerScript;
+		private string _name;
         private PSHost _host = null;
         private string _initialLocation = "";
         private bool? _useLocalScope = null;
@@ -24,6 +28,7 @@ namespace IOUtilityCLR
         private PSThreadOptions? _threadOptions = null;
         private PSObject _this = new PSObject();
         private RunspaceConfiguration _configuration = null;
+		private Hashtable _variables = new Hashtable();
 
         private event EventHandler<PSInvocationEventHandlerInvokedArgs> _eventHandlerInvoked;
 
@@ -38,9 +43,9 @@ namespace IOUtilityCLR
         /// <summary>
         /// ScriptBlock which gets invoked when the event is raised.
         /// </summary>
-        public ScriptBlock HandlerScript { get; private set; }
+        public ScriptBlock HandlerScript { get { return _handlerScript; } }
 
-        public string Name { get; private set; }
+        public string Name { get { return _name; } }
 
         public PSHost Host
         {
@@ -125,7 +130,7 @@ namespace IOUtilityCLR
         /// <summary>
         /// Other variables to define when invoking a script.
         /// </summary>
-        public Hashtable Variables { get; private set; }
+        public Hashtable Variables { get { return _variables; } }
 
         /// <summary>
         /// Data which is synchronized with the parent context.
@@ -149,16 +154,18 @@ namespace IOUtilityCLR
             if (parentContext == null)
                 throw new ArgumentNullException("parentContext");
 
-            Name = name;
-            HandlerScript = handlerScript;
+            _name = name;
+            _handlerScript = handlerScript;
             _parentContext = parentContext;
-            Configuration = RunspaceConfiguration.Create();
-            Variables = new Hashtable();
         }
 
         public void EventHandler(object sender, TEventArgs e)
         {
+#if PSLEGACY2
+			object[] variableKeys = LinqEmul.ToArray<object>(LinqEmul.Cast<object>(Variables.Keys));
+#else
             object[] variableKeys = Variables.Keys.Cast<object>().ToArray();
+#endif
             Dictionary<object, object> variables = new Dictionary<object, object>();
             IDictionaryEnumerator enumerator = Variables.GetEnumerator();
             try
