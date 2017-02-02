@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !PSLEGACY2
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
@@ -17,6 +19,8 @@ namespace IOUtilityCLR
         where TEventArgs : EventArgs
     {
         PSInvocationContext _parentContext;
+		private ScriptBlock _handlerScript;
+		private string _name;
         private PSHost _host = null;
         private string _initialLocation = "";
         private bool? _useLocalScope = null;
@@ -24,6 +28,7 @@ namespace IOUtilityCLR
         private PSThreadOptions? _threadOptions = null;
         private PSObject _this = new PSObject();
         private RunspaceConfiguration _configuration = null;
+		private Hashtable _variables = new Hashtable();
 
         private event EventHandler<PSInvocationEventHandlerInvokedArgs> _eventHandlerInvoked;
 
@@ -33,24 +38,15 @@ namespace IOUtilityCLR
             remove { _eventHandlerInvoked -= value; }
         }
 
-        /// <summary>
-        /// This gets raised after <see cref="EventHandler(object, TEventArgs)"/> is invoked and <see cref="HandlerScript"/> handles the event.
-        /// </summary>
         public event EventHandler<PSInvocationEventHandlerInvokedArgs<TEventArgs>> EventHandlerInvoked;
 
         /// <summary>
-        /// <seealso cref="ScriptBlock"/> which gets invoked when <see cref="EventHandler(object, TEventArgs)"/> is invoked.
+        /// ScriptBlock which gets invoked when the event is raised.
         /// </summary>
-        public ScriptBlock HandlerScript { get; private set; }
+        public ScriptBlock HandlerScript { get { return _handlerScript; } }
 
-        /// <summary>
-        /// Arbitrary name to associate with events handled by this object.
-        /// </summary>
-        public string Name { get; private set; }
+        public string Name { get { return _name; } }
 
-        /// <summary>
-        /// PowerShell host to use when invoking <see cref="HandlerScript"/>.
-        /// </summary>
         public PSHost Host
         {
             get
@@ -79,9 +75,6 @@ namespace IOUtilityCLR
             set { _initialLocation = (value == null) ? "" : value; }
         }
 
-        /// <summary>
-        /// Whether or not to use the local scope when invoking <see cref="HandlerScript"/>.
-        /// </summary>
         public bool? UseLocalScope
         {
             get
@@ -95,9 +88,6 @@ namespace IOUtilityCLR
             set { _useLocalScope = value; }
         }
 
-        /// <summary>
-        /// Specifies the apartment state to use when invoking <see cref="HandlerScript"/>.
-        /// </summary>
         public ApartmentState? ApartmentState
         {
             get
@@ -111,9 +101,6 @@ namespace IOUtilityCLR
             set { _apartmentState = value; }
         }
 
-        /// <summary>
-        /// PowerShell threading options for invoking <see cref="HandlerScript"/>.
-        /// </summary>
         public PSThreadOptions? ThreadOptions
         {
             get
@@ -127,9 +114,6 @@ namespace IOUtilityCLR
             set { _threadOptions = value; }
         }
 
-        /// <summary>
-        /// Runspace configuration to use when invoking <see cref="HandlerScript"/>.
-        /// </summary>
         public RunspaceConfiguration Configuration
         {
             get
@@ -146,7 +130,7 @@ namespace IOUtilityCLR
         /// <summary>
         /// Other variables to define when invoking a script.
         /// </summary>
-        public Hashtable Variables { get; private set; }
+        public Hashtable Variables { get { return _variables; } }
 
         /// <summary>
         /// Data which is synchronized with the parent context.
@@ -154,7 +138,7 @@ namespace IOUtilityCLR
         public Hashtable SynchronizedData { get { return _parentContext.SynchronizedData; } }
 
         /// <summary>
-        /// The object which will serve as the &quot;$this&quot; variable during script execution.
+        /// The object which will serve as the "this" variable during script execution.
         /// </summary>
         public PSObject This
         {
@@ -162,12 +146,6 @@ namespace IOUtilityCLR
             set { _this = (value == null) ? new PSObject() : value; }
         }
 
-        /// <summary>
-        /// Initialize new <see cref="PSEventScriptHandler{TEventArgs}"/> object for handling <seealso cref="EventHandler{TEventArgs}"/> events.
-        /// </summary>
-        /// <param name="name">Arbitrary name to associate with events handled by this object.</param>
-        /// <param name="handlerScript"><seealso cref="ScriptBlock"/> which handles <seealso cref="EventHandler{TEventArgs}"/> events.</param>
-        /// <param name="parentContext">Parent <seealso cref="PSInvocationContext"/> object.</param>
         public PSEventScriptHandler(string name, ScriptBlock handlerScript, PSInvocationContext parentContext)
         {
             if (handlerScript == null)
@@ -176,21 +154,18 @@ namespace IOUtilityCLR
             if (parentContext == null)
                 throw new ArgumentNullException("parentContext");
 
-            Name = name;
-            HandlerScript = handlerScript;
+            _name = name;
+            _handlerScript = handlerScript;
             _parentContext = parentContext;
-            Configuration = RunspaceConfiguration.Create();
-            Variables = new Hashtable();
         }
 
-        /// <summary>
-        /// Method which is intended for handling source <seealso cref="EventHandler{TEventArgs}"/> events.
-        /// </summary>
-        /// <param name="sender">Object which raised the event.</param>
-        /// <param name="e">Information about the event.</param>
         public void EventHandler(object sender, TEventArgs e)
         {
+#if PSLEGACY2
+			object[] variableKeys = LinqEmul.ToArray<object>(LinqEmul.Cast<object>(Variables.Keys));
+#else
             object[] variableKeys = Variables.Keys.Cast<object>().ToArray();
+#endif
             Dictionary<object, object> variables = new Dictionary<object, object>();
             IDictionaryEnumerator enumerator = Variables.GetEnumerator();
             try
@@ -240,12 +215,6 @@ namespace IOUtilityCLR
             }
         }
 
-        /// <summary>
-        /// Raises the <see cref="EventHandlerInvoked"/> event.
-        /// </summary>
-        /// <param name="sender">Object which is the source of the original event.</param>
-        /// <param name="args">Information about the original event.</param>
-        /// <param name="invocationResult">Results of handling the event.</param>
         protected void RaiseEventHandlerInvoked(object sender, TEventArgs args, PSInvocationResult invocationResult)
         {
             PSInvocationEventHandlerInvokedArgs<TEventArgs> e = new PSInvocationEventHandlerInvokedArgs<TEventArgs>(sender, args, invocationResult);
@@ -267,10 +236,6 @@ namespace IOUtilityCLR
             }
         }
 
-        /// <summary>
-        /// This gets invoked after <see cref="HandlerScript"/> has handled the event.
-        /// </summary>
-        /// <param name="e"></param>
         protected virtual void OnEventHandlerInvoked(PSInvocationEventHandlerInvokedArgs<TEventArgs> e) { }
     }
 }
