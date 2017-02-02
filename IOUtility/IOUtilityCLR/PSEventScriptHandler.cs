@@ -33,15 +33,24 @@ namespace IOUtilityCLR
             remove { _eventHandlerInvoked -= value; }
         }
 
+        /// <summary>
+        /// This gets raised after <see cref="EventHandler(object, TEventArgs)"/> is invoked and <see cref="HandlerScript"/> handles the event.
+        /// </summary>
         public event EventHandler<PSInvocationEventHandlerInvokedArgs<TEventArgs>> EventHandlerInvoked;
 
         /// <summary>
-        /// ScriptBlock which gets invoked when the event is raised.
+        /// <seealso cref="ScriptBlock"/> which gets invoked when <see cref="EventHandler(object, TEventArgs)"/> is invoked.
         /// </summary>
         public ScriptBlock HandlerScript { get; private set; }
 
+        /// <summary>
+        /// Arbitrary name to associate with events handled by this object.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// PowerShell host to use when invoking <see cref="HandlerScript"/>.
+        /// </summary>
         public PSHost Host
         {
             get
@@ -70,6 +79,9 @@ namespace IOUtilityCLR
             set { _initialLocation = (value == null) ? "" : value; }
         }
 
+        /// <summary>
+        /// Whether or not to use the local scope when invoking <see cref="HandlerScript"/>.
+        /// </summary>
         public bool? UseLocalScope
         {
             get
@@ -83,6 +95,9 @@ namespace IOUtilityCLR
             set { _useLocalScope = value; }
         }
 
+        /// <summary>
+        /// Specifies the apartment state to use when invoking <see cref="HandlerScript"/>.
+        /// </summary>
         public ApartmentState? ApartmentState
         {
             get
@@ -96,6 +111,9 @@ namespace IOUtilityCLR
             set { _apartmentState = value; }
         }
 
+        /// <summary>
+        /// PowerShell threading options for invoking <see cref="HandlerScript"/>.
+        /// </summary>
         public PSThreadOptions? ThreadOptions
         {
             get
@@ -109,6 +127,9 @@ namespace IOUtilityCLR
             set { _threadOptions = value; }
         }
 
+        /// <summary>
+        /// Runspace configuration to use when invoking <see cref="HandlerScript"/>.
+        /// </summary>
         public RunspaceConfiguration Configuration
         {
             get
@@ -133,7 +154,7 @@ namespace IOUtilityCLR
         public Hashtable SynchronizedData { get { return _parentContext.SynchronizedData; } }
 
         /// <summary>
-        /// The object which will serve as the "this" variable during script execution.
+        /// The object which will serve as the &quot;$this&quot; variable during script execution.
         /// </summary>
         public PSObject This
         {
@@ -141,6 +162,12 @@ namespace IOUtilityCLR
             set { _this = (value == null) ? new PSObject() : value; }
         }
 
+        /// <summary>
+        /// Initialize new <see cref="PSEventScriptHandler{TEventArgs}"/> object for handling <seealso cref="EventHandler{TEventArgs}"/> events.
+        /// </summary>
+        /// <param name="name">Arbitrary name to associate with events handled by this object.</param>
+        /// <param name="handlerScript"><seealso cref="ScriptBlock"/> which handles <seealso cref="EventHandler{TEventArgs}"/> events.</param>
+        /// <param name="parentContext">Parent <seealso cref="PSInvocationContext"/> object.</param>
         public PSEventScriptHandler(string name, ScriptBlock handlerScript, PSInvocationContext parentContext)
         {
             if (handlerScript == null)
@@ -156,6 +183,11 @@ namespace IOUtilityCLR
             Variables = new Hashtable();
         }
 
+        /// <summary>
+        /// Method which is intended for handling source <seealso cref="EventHandler{TEventArgs}"/> events.
+        /// </summary>
+        /// <param name="sender">Object which raised the event.</param>
+        /// <param name="e">Information about the event.</param>
         public void EventHandler(object sender, TEventArgs e)
         {
             object[] variableKeys = Variables.Keys.Cast<object>().ToArray();
@@ -208,6 +240,12 @@ namespace IOUtilityCLR
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="EventHandlerInvoked"/> event.
+        /// </summary>
+        /// <param name="sender">Object which is the source of the original event.</param>
+        /// <param name="args">Information about the original event.</param>
+        /// <param name="invocationResult">Results of handling the event.</param>
         protected void RaiseEventHandlerInvoked(object sender, TEventArgs args, PSInvocationResult invocationResult)
         {
             PSInvocationEventHandlerInvokedArgs<TEventArgs> e = new PSInvocationEventHandlerInvokedArgs<TEventArgs>(sender, args, invocationResult);
@@ -229,6 +267,10 @@ namespace IOUtilityCLR
             }
         }
 
+        /// <summary>
+        /// This gets invoked after <see cref="HandlerScript"/> has handled the event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnEventHandlerInvoked(PSInvocationEventHandlerInvokedArgs<TEventArgs> e) { }
     }
 }
