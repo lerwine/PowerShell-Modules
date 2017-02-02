@@ -678,6 +678,83 @@
             Synchronized data that was shared between the calling process and the pipeline being executed.
             </summary>
         </member>
+        <member name="T:IOUtilityCLR.PSInvocation.PSEventScriptHandler`1">
+            <summary>
+            A specialized context for invoking a <seealso cref="T:System.Management.Automation.ScriptBlock"/> which will handle an event.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSEventScriptHandler`1.HandlerScript">
+            <summary>
+            ScriptBlock which gets invoked when the event is raised.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSEventScriptHandler`1.InitialLocation">
+            <summary>
+            Path representing initial location to be represented by the current Context.
+            </summary>
+            <remarks>If an invoked script changes the location, this variable will not be updated.</remarks>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSEventScriptHandler`1.Variables">
+            <summary>
+            Other variables to define when invoking a script.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSEventScriptHandler`1.SynchronizedData">
+            <summary>
+            Data which is synchronized with the parent context.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSEventScriptHandler`1.This">
+            <summary>
+            The object which will serve as the "this" variable during script execution.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocation.PSInvocationContext">
+            <summary>
+            Context under which ScriptBlock will be executed.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSInvocationContext.InitialLocation">
+            <summary>
+            Path representing initial location to be represented by the current Context.
+            </summary>
+            <remarks>If an invoked script changes the location, this variable will not be updated.</remarks>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSInvocationContext.Variables">
+            <summary>
+            Other variables to define when invoking a script.
+            </summary>
+            <remarks>After a script is executed, the values in this property will not be updated. Instead, the values of these variables wil be represnted in the resulting InvocationResult object.</remarks>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSInvocationContext.SynchronizedData">
+            <summary>
+            Data which is synchronized with all invocations and event handlers.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocation.PSInvocationContext.This">
+            <summary>
+            The object which will serve as the "this" variable during script execution.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocation.PSInvocationContext.#ctor">
+            <summary>
+            Initialize new Context object.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocation.PSInvocationContext.GetResult(System.String)">
+            <summary>
+            Asynchronously executes a script using the current Context.
+            </summary>
+            <param name="script">Script to execute.</param>
+            <returns>An InvocationResult object representing the results of the execution.</returns>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocation.PSInvocationContext.GetResult(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Asynchronously invokes a ScriptBlock using the current Context.
+            </summary>
+            <param name="script">ScriptBlock to execute.</param>
+            <returns>An InvocationResult object representing the results of the execution.</returns>
+        </member>
         <member name="T:IOUtilityCLR.RegexReplaceHandler">
             <summary>
             Base class for replacing text based upon regular expression matches.

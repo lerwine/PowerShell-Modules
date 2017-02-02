@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Management.Automation;
+using System.Text;
 
-namespace WpfCLR.PSInvocation
+namespace IOUtilityCLR.PSInvocation
 {
-    public abstract class EventHandlerInvokedArgs : EventArgs
+    public abstract class PSInvocationEventHandlerInvokedArgs : EventArgs
     {
-        protected EventHandlerInvokedArgs(object sender, EventArgs eventArgs, InvocationResult invocationResult)
+        protected PSInvocationEventHandlerInvokedArgs(object sender, EventArgs eventArgs, PSInvocationResult invocationResult)
         {
             Sender = sender;
             EventArgs = eventArgs;
@@ -31,10 +34,10 @@ namespace WpfCLR.PSInvocation
         public Collection<VerboseRecord> Verbose { get; private set; }
         public Collection<DebugRecord> Debug { get; private set; }
     }
-    public class EventHandlerInvokedArgs<TEventArgs> : EventHandlerInvokedArgs
+    public class PSInvocationEventHandlerInvokedArgs<TEventArgs> : PSInvocationEventHandlerInvokedArgs
         where TEventArgs : EventArgs
     {
-        public EventHandlerInvokedArgs(object sender, TEventArgs eventArgs, InvocationResult invocationResult)
+        public PSInvocationEventHandlerInvokedArgs(object sender, TEventArgs eventArgs, PSInvocationResult invocationResult)
             : base(sender, eventArgs, invocationResult) { }
         public new TEventArgs EventArgs { get; private set; }
     }

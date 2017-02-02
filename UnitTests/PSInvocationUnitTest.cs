@@ -2,7 +2,7 @@
 using System.Management.Automation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Management.Automation.Language;
-using WpfCLR.PSInvocation;
+using IOUtilityCLR.PSInvocation;
 
 namespace UnitTests
 {
@@ -22,11 +22,11 @@ namespace UnitTests
         [TestMethod]
         public void PSInvocationContextTestMethod()
         {
-            Context context = new Context();
+            PSInvocationContext context = new PSInvocationContext();
             TestThisObj thisObj = new TestThisObj();
             context.This = PSObject.AsPSObject(thisObj);
             context.Variables.Add("TestVar", 5);
-            InvocationResult result = context.GetResult(PSInvocationResources.PsInvocaion1);
+            PSInvocationResult result = context.GetResult(PSInvocationResources.PsInvocaion1);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.HadErrors);
             Assert.AreEqual(1, result.Output.Count);

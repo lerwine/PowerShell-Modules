@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Management.Automation;
+using System.Text;
 
-namespace WpfCLR.PSInvocation
+namespace IOUtilityCLR.PSInvocation
 {
-    public class InvocationResult : IInvocationResult
+    public class PSInvocationResult
     {
-        public InvocationResult(string script, IContext context, PowerShell powerShell, object[] variableKeys) : this(script, context, powerShell, variableKeys, new object[0]) { }
-        public InvocationResult(string script, IContext context, PowerShell powerShell, object[] variableKeys, params object[] arguments)
+        public PSInvocationResult(string script, IPSInvocationContext context, PowerShell powerShell, object[] variableKeys) : this(script, context, powerShell, variableKeys, new object[0]) { }
+        public PSInvocationResult(string script, IPSInvocationContext context, PowerShell powerShell, object[] variableKeys, params object[] arguments)
         {
             ErrorRecord error = null;
             try
@@ -54,7 +57,7 @@ namespace WpfCLR.PSInvocation
         public bool HadErrors { get; private set; }
         public Collection<PSObject> Output { get; private set; }
         public bool RanToCompletion { get; private set; }
-        public Collection<VerboseRecord> Verbose { get; private set; }
+        public System.Collections.ObjectModel.Collection<VerboseRecord> Verbose { get; private set; }
         public Collection<WarningRecord> Warnings { get; private set; }
     }
 }

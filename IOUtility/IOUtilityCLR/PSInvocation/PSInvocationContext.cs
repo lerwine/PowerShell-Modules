@@ -7,14 +7,13 @@ using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace WpfCLR.PSInvocation
+namespace IOUtilityCLR.PSInvocation
 {
     /// <summary>
     /// Context under which ScriptBlock will be executed.
     /// </summary>
-    public class Context : IContext
+    public class PSInvocationContext : IPSInvocationContext
     {
         private PSHost _host = null;
         private string _initialLocation = "";
@@ -23,11 +22,11 @@ namespace WpfCLR.PSInvocation
         private PSThreadOptions? _threadOptions = null;
         private object[] _variableKeys = null;
         private PSObject _this = new PSObject();
-        private List<IEventScriptHandler> _eventHandlers = new List<IEventScriptHandler>();
-        private List<EventResult> _eventHandlerResults = new List<EventResult>();
+        private List<IPSEventScriptHandler> _eventHandlers = new List<IPSEventScriptHandler>();
+        private List<PSInvocationEventResult> _eventHandlerResults = new List<PSInvocationEventResult>();
         private object _syncRoot = new object();
 
-        public void AddEventHandler(IEventScriptHandler handler)
+        public void AddEventHandler(IPSEventScriptHandler handler)
         {
             lock (_syncRoot)
             {
@@ -39,7 +38,7 @@ namespace WpfCLR.PSInvocation
             }
         }
 
-        public void RemoveEventHandler(IEventScriptHandler handler)
+        public void RemoveEventHandler(IPSEventScriptHandler handler)
         {
             lock (_syncRoot)
             {
@@ -51,12 +50,12 @@ namespace WpfCLR.PSInvocation
             }
         }
 
-        private void Handler_EventHandlerInvoked(object sender, EventHandlerInvokedArgs e)
+        private void Handler_EventHandlerInvoked(object sender, PSInvocationEventHandlerInvokedArgs e)
         {
-            IEventScriptHandler handler = sender as IEventScriptHandler;
+            IPSEventScriptHandler handler = sender as IPSEventScriptHandler;
 
             lock (_syncRoot)
-                _eventHandlerResults.Add(new EventResult((handler == null) ? null : handler.Name, e));
+                _eventHandlerResults.Add(new PSInvocationEventResult((handler == null) ? null : handler.Name, e));
         }
 
         public PSHost Host
@@ -148,7 +147,7 @@ namespace WpfCLR.PSInvocation
         /// <summary>
         /// Initialize new Context object.
         /// </summary>
-        public Context()
+        public PSInvocationContext()
         {
             Variables = new Hashtable();
             SynchronizedData = Hashtable.Synchronized(new Hashtable());
@@ -159,7 +158,7 @@ namespace WpfCLR.PSInvocation
         /// </summary>
         /// <param name="script">Script to execute.</param>
         /// <returns>An InvocationResult object representing the results of the execution.</returns>
-        public InvocationResult GetResult(string script)
+        public PSInvocationResult GetResult(string script)
         {
             if (script == null)
                 throw new ArgumentNullException("script");
@@ -194,7 +193,7 @@ namespace WpfCLR.PSInvocation
                     using (PowerShell powerShell = PowerShell.Create())
                     {
                         powerShell.Runspace = runspace;
-                        return new InvocationResult(script, this, powerShell, _variableKeys);
+                        return new PSInvocationResult(script, this, powerShell, _variableKeys);
                     }
                 }
             }
@@ -206,7 +205,7 @@ namespace WpfCLR.PSInvocation
         /// </summary>
         /// <param name="script">ScriptBlock to execute.</param>
         /// <returns>An InvocationResult object representing the results of the execution.</returns>
-        public InvocationResult GetResult(ScriptBlock script)
+        public PSInvocationResult GetResult(ScriptBlock script)
         {
             if (script == null)
                 throw new ArgumentNullException("script");

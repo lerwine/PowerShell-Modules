@@ -119,6 +119,13 @@
     <Compile Include="PSInvocationBuilder.cs" />
     <Compile Include="PSInvocationBuilderBase.cs" />
     <Compile Include="PSInvocationResult.cs" />
+    <Compile Include="PSInvocation\IPSEventScriptHandler.cs" />
+    <Compile Include="PSInvocation\IPSInvocationContext.cs" />
+    <Compile Include="PSInvocation\PSEventScriptHandler.cs" />
+    <Compile Include="PSInvocation\PSInvocationContext.cs" />
+    <Compile Include="PSInvocation\PSInvocationEventHandlerInvokedArgs.cs" />
+    <Compile Include="PSInvocation\PSInvocationEventResult.cs" />
+    <Compile Include="PSInvocation\PSInvocationResult.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
     <Compile Include="RegularExpressions.cs" />

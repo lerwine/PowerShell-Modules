@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
-using System.Linq;
+using System.Text;
 using System.Threading;
-using System.Windows;
-using System.Collections.Generic;
 
-namespace WpfCLR.PSInvocation
+namespace IOUtilityCLR.PSInvocation
 {
     /// <summary>
     /// A specialized context for invoking a <seealso cref="ScriptBlock"/> which will handle an event.
     /// </summary>
-    public class EventScriptHandler<TEventArgs> : IEventScriptHandler
+    public class PSEventScriptHandler<TEventArgs> : IPSEventScriptHandler
         where TEventArgs : EventArgs
     {
-        Context _parentContext;
+        PSInvocationContext _parentContext;
         private PSHost _host = null;
         private string _initialLocation = "";
         private bool? _useLocalScope = null;
@@ -25,15 +25,15 @@ namespace WpfCLR.PSInvocation
         private PSObject _this = new PSObject();
         private RunspaceConfiguration _configuration = null;
 
-        private event EventHandler<EventHandlerInvokedArgs> _eventHandlerInvoked;
+        private event EventHandler<PSInvocationEventHandlerInvokedArgs> _eventHandlerInvoked;
 
-        event EventHandler<EventHandlerInvokedArgs> IEventScriptHandler.EventHandlerInvoked
+        event EventHandler<PSInvocationEventHandlerInvokedArgs> IPSEventScriptHandler.EventHandlerInvoked
         {
             add { _eventHandlerInvoked += value; }
             remove { _eventHandlerInvoked -= value; }
         }
 
-        public event EventHandler<EventHandlerInvokedArgs<TEventArgs>> EventHandlerInvoked;
+        public event EventHandler<PSInvocationEventHandlerInvokedArgs<TEventArgs>> EventHandlerInvoked;
 
         /// <summary>
         /// ScriptBlock which gets invoked when the event is raised.
@@ -141,7 +141,7 @@ namespace WpfCLR.PSInvocation
             set { _this = (value == null) ? new PSObject() : value; }
         }
 
-        public EventScriptHandler(string name, ScriptBlock handlerScript, Context parentContext)
+        public PSEventScriptHandler(string name, ScriptBlock handlerScript, PSInvocationContext parentContext)
         {
             if (handlerScript == null)
                 throw new ArgumentNullException("handlerScript");
@@ -203,32 +203,32 @@ namespace WpfCLR.PSInvocation
                 using (PowerShell powerShell = PowerShell.Create())
                 {
                     powerShell.Runspace = runspace;
-                    RaiseEventHandlerInvoked(sender, e, new InvocationResult(HandlerScript.ToString(), this, powerShell, variableKeys, sender, e));
+                    RaiseEventHandlerInvoked(sender, e, new PSInvocationResult(HandlerScript.ToString(), this, powerShell, variableKeys, sender, e));
                 }
             }
         }
 
-        protected void RaiseEventHandlerInvoked(object sender, TEventArgs args, InvocationResult invocationResult)
+        protected void RaiseEventHandlerInvoked(object sender, TEventArgs args, PSInvocationResult invocationResult)
         {
-            EventHandlerInvokedArgs<TEventArgs> e = new EventHandlerInvokedArgs<TEventArgs>(sender, args, invocationResult);
+            PSInvocationEventHandlerInvokedArgs<TEventArgs> e = new PSInvocationEventHandlerInvokedArgs<TEventArgs>(sender, args, invocationResult);
             try { OnEventHandlerInvoked(e); }
             finally
             {
                 try
                 {
-                    EventHandler<EventHandlerInvokedArgs<TEventArgs>> eventHandlerInvoked = EventHandlerInvoked;
+                    EventHandler<PSInvocationEventHandlerInvokedArgs<TEventArgs>> eventHandlerInvoked = EventHandlerInvoked;
                     if (eventHandlerInvoked != null)
                         eventHandlerInvoked(this, e);
                 }
                 finally
                 {
-                    EventHandler<EventHandlerInvokedArgs> eventHandlerInvoked = _eventHandlerInvoked;
+                    EventHandler<PSInvocationEventHandlerInvokedArgs> eventHandlerInvoked = _eventHandlerInvoked;
                     if (eventHandlerInvoked != null)
                         eventHandlerInvoked(this, e);
                 }
             }
         }
 
-        protected virtual void OnEventHandlerInvoked(EventHandlerInvokedArgs<TEventArgs> e) { }
+        protected virtual void OnEventHandlerInvoked(PSInvocationEventHandlerInvokedArgs<TEventArgs> e) { }
     }
 }

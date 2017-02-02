@@ -101,14 +101,6 @@
     <Compile Include="PSAttachedEventInstance.cs" />
     <Compile Include="PSInvocationParams.cs" />
     <Compile Include="PSInvocationResult.cs" />
-    <Compile Include="PSInvocation\Context.cs" />
-    <Compile Include="PSInvocation\EventHandlerInvokedArgs.cs" />
-    <Compile Include="PSInvocation\EventResult.cs" />
-    <Compile Include="PSInvocation\EventScriptHandler.cs" />
-    <Compile Include="PSInvocation\IContext.cs" />
-    <Compile Include="PSInvocation\IEventScriptHandler.cs" />
-    <Compile Include="PSInvocation\IInvocationResult.cs" />
-    <Compile Include="PSInvocation\InvocationResult.cs" />
     <Compile Include="PsWpfWindowContext.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -117,9 +109,6 @@
     <Compile Include="WpfWindow.cs" />
     <Compile Include="XamlLoadResult.cs" />
     <Compile Include="XamlUtility.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="PSInvocation\ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
