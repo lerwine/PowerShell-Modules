@@ -45,19 +45,18 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BackgroundPipelineInvocation.cs" />
-    <Compile Include="BackgroundPipelineParameters.cs" />
     <Compile Include="DecodeRegexReplaceHandler.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="Erwine.Leonard.T.IOUtility.XML" />
+    <Compile Include="IPSEventScriptHandler.cs" />
+    <Compile Include="IPSInvocationContext.cs" />
     <Compile Include="LinqEmul.cs" />
-    <Compile Include="SetupManifestData.xml" />
-    <Compile Include="PSAsyncInvocationResult.cs" />
-    <Compile Include="PSInvocationBuilder.cs" />
-    <Compile Include="PSInvocationBuilderBase.cs" />
+    <Compile Include="PSEventScriptHandler.cs" />
+    <Compile Include="PSInvocationContext.cs" />
+    <Compile Include="PSInvocationEventHandlerInvokedArgs.cs" />
+    <Compile Include="PSInvocationEventResult.cs" />
     <Compile Include="PSInvocationResult.cs" />
-    <Compile Include="PsWpfInvocation.cs" />
-    <Compile Include="PSXamlInvocationSettings.cs" />
+    <Compile Include="SetupManifestData.xml" />
     <Compile Include="README.md" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RegexReplaceHandler.cs" />
@@ -67,7 +66,6 @@
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
-    <Compile Include="WindowProxy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

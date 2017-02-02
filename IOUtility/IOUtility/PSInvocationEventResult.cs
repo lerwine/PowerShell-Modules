@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IOUtilityCLR.PSInvocation
+namespace IOUtilityCLR
 {
     public class PSInvocationEventResult
     {

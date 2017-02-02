@@ -6,7 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 
-namespace IOUtilityCLR.PSInvocation
+namespace IOUtilityCLR
 {
     public abstract class PSInvocationEventHandlerInvokedArgs : EventArgs
     {

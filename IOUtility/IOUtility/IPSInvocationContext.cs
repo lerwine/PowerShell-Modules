@@ -8,7 +8,7 @@ using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading;
 
-namespace IOUtilityCLR.PSInvocation
+namespace IOUtilityCLR
 {
     public interface IPSInvocationContext
     {

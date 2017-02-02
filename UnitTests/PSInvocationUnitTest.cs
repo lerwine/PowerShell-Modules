@@ -2,7 +2,7 @@
 using System.Management.Automation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Management.Automation.Language;
-using IOUtilityCLR.PSInvocation;
+using IOUtilityCLR;
 
 namespace UnitTests
 {
