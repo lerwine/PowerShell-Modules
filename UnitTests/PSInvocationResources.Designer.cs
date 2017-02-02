@@ -63,11 +63,21 @@ namespace UnitTests {
         /// <summary>
         ///   Looks up a localized string similar to &quot;Test&quot; | Write-Output;
         ///$SynchronizedData[&apos;C&apos;] = $args.Count;
-        ///$TestVar = 7;.
+        ///$TestVar = 7;
+        ///$this.Value = 12;.
         /// </summary>
-        internal static string PsInvocaion1 {
+        internal static string PsInvocation1 {
             get {
-                return ResourceManager.GetString("PsInvocaion1", resourceCulture);
+                return ResourceManager.GetString("PsInvocation1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string PSInvocationEventHandler {
+            get {
+                return ResourceManager.GetString("PSInvocationEventHandler", resourceCulture);
             }
         }
     }

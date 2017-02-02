@@ -178,7 +178,7 @@ namespace IOUtilityCLR
             string initialLocation = InitialLocation;
 
             using (Runspace runspace = (host == null) ?
-                ((configuration == null) ? RunspaceFactory.CreateRunspace() : RunspaceFactory.CreateRunspace(host)) :
+                ((configuration == null) ? RunspaceFactory.CreateRunspace() : RunspaceFactory.CreateRunspace(configuration)) :
                 ((configuration == null) ? RunspaceFactory.CreateRunspace(host) : RunspaceFactory.CreateRunspace(host, configuration)))
             {
                 if (apartmentState.HasValue)

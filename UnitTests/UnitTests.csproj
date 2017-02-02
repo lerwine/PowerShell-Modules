@@ -148,7 +148,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PsInvocaion1.ps1" />
+    <None Include="Resources\PsInvocation1.ps1" />
+    <None Include="Resources\PSInvocationEventHandler.ps1" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

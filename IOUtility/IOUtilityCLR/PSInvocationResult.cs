@@ -20,6 +20,11 @@ namespace IOUtilityCLR
                     powerShell.AddScript(script, context.UseLocalScope.Value);
                 else
                     powerShell.AddScript(script);
+                if (arguments != null && arguments.Length > 0)
+                {
+                    foreach (object a in arguments)
+                        powerShell.AddArgument(a);
+                }
                 Output = powerShell.Invoke();
                 HadErrors = powerShell.HadErrors;
                 RanToCompletion = true;

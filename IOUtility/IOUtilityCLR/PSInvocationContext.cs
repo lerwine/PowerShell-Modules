@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Host;
@@ -22,8 +23,8 @@ namespace IOUtilityCLR
         private PSThreadOptions? _threadOptions = null;
         private object[] _variableKeys = null;
         private PSObject _this = new PSObject();
-        private List<IPSEventScriptHandler> _eventHandlers = new List<IPSEventScriptHandler>();
-        private List<PSInvocationEventResult> _eventHandlerResults = new List<PSInvocationEventResult>();
+        private Collection<IPSEventScriptHandler> _eventHandlers = new Collection<IPSEventScriptHandler>();
+        private Collection<PSInvocationEventResult> _eventHandlerResults = new Collection<PSInvocationEventResult>();
         private object _syncRoot = new object();
 
         public void AddEventHandler(IPSEventScriptHandler handler)
@@ -144,6 +145,7 @@ namespace IOUtilityCLR
             }
         }
 
+        public Collection<PSInvocationEventResult> EventHandlerResults { get { return _eventHandlerResults; } }
         /// <summary>
         /// Initialize new Context object.
         /// </summary>
@@ -170,7 +172,7 @@ namespace IOUtilityCLR
             try
             {
                 using (Runspace runspace = (Host == null) ?
-                    ((Configuration == null) ? RunspaceFactory.CreateRunspace() : RunspaceFactory.CreateRunspace(Host)) :
+                    ((Configuration == null) ? RunspaceFactory.CreateRunspace() : RunspaceFactory.CreateRunspace(Configuration)) :
                     ((Configuration == null) ? RunspaceFactory.CreateRunspace(Host) : RunspaceFactory.CreateRunspace(Host, Configuration)))
                 {
                     if (ApartmentState.HasValue)
