@@ -138,9 +138,7 @@ namespace Erwine.Leonard.T.TextToSpeech.Commands
         private Collection<ErrorRecord> _errors = new Collection<ErrorRecord>();
 
         private Collection<WarningRecord> _warnings = new Collection<WarningRecord>();
-
-        private Collection<InformationRecord> _informationMessages = new Collection<InformationRecord>();
-
+        
         private Collection<VerboseRecord> _verboseMessages = new Collection<VerboseRecord>();
 
         private Collection<DebugRecord> _debugMessages = new Collection<DebugRecord>();
@@ -182,7 +180,7 @@ namespace Erwine.Leonard.T.TextToSpeech.Commands
             }
 
             enumerateCollection = false;
-            return new SpeechSynthesisResult(_output, _errors, _warnings, _informationMessages, _verboseMessages, _debugMessages, _cancelRaised, failed, _invocationState.SynchronizedData);
+            return new SpeechSynthesisResult(_output, _errors, _warnings, _verboseMessages, _debugMessages, _cancelRaised, failed, _invocationState.SynchronizedData);
         }
 
         private void InvokeScript(ScriptBlock scriptBlock, Dictionary<string, object> variables)
@@ -203,7 +201,6 @@ namespace Erwine.Leonard.T.TextToSpeech.Commands
                         AddRange<PSObject>(_output, powershell.Invoke());
                         AddRange<ErrorRecord>(_errors, powershell.Streams.Error.ReadAll());
                         AddRange<WarningRecord>(_warnings, powershell.Streams.Warning.ReadAll());
-                        AddRange<InformationRecord>(_informationMessages, powershell.Streams.Information.ReadAll());
                         AddRange<VerboseRecord>(_verboseMessages, powershell.Streams.Verbose.ReadAll());
                         AddRange<DebugRecord>(_debugMessages, powershell.Streams.Debug.ReadAll());
                     }

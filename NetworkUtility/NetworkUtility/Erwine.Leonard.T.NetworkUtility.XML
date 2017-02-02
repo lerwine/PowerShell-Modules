@@ -4,5 +4,105 @@
         <name>Erwine.Leonard.T.NetworkUtility</name>
     </assembly>
     <members>
+        <member name="T:NetworkUtilityCLR.FormEncoder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NetworkUtilityCLR.FormEncoder.UrlEncodedItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Decode(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Decode(System.IO.TextReader)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Decode(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Decode(System.Net.WebResponse)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.IsUrlFormEncoded(System.Net.WebResponse)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Encode(System.String,System.String,System.IO.TextWriter,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Encode(System.Collections.Specialized.NameValueCollection,System.IO.TextWriter,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Encode(System.Collections.Specialized.NameValueCollection,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Encode(System.Collections.Specialized.NameValueCollection,System.IO.Stream,System.Boolean,System.Text.Encoding)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.FormEncoder.Encode(System.Collections.Specialized.NameValueCollection,System.Net.WebRequest,System.Boolean,System.Text.Encoding)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:NetworkUtilityCLR.MimeUtility">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NetworkUtilityCLR.MimeUtility.MediaType_FormUrlEncoded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NetworkUtilityCLR.MimeUtility.UrlEncodedItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.MimeUtility.IsUrlFormEncoded(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.MimeUtility.IsUrlFormEncoded(System.Net.WebResponse)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.MimeUtility.GetEncoding(System.Net.Mime.ContentType,System.Text.Encoding)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.MimeUtility.GetEncoding(System.String,System.Text.Encoding)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NetworkUtilityCLR.MimeUtility.GetEncoding(System.Net.WebResponse,System.Text.Encoding)">
+            <summary>
+            
+            </summary>
+        </member>
     </members>
 </doc>

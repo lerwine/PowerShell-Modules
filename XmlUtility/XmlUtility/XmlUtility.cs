@@ -4,6 +4,9 @@ using System.Text;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class XmlUtility
     {
     }

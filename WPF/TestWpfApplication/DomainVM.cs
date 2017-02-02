@@ -26,7 +26,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as DomainVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as DomainVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as DomainVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as DomainVM).Title_CoerceValue(baseValue)));
 
@@ -39,14 +39,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(TitleProperty));
-                return Dispatcher.Invoke(() => Title);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Title)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(TitleProperty, value);
                 else
-                    Dispatcher.Invoke(() => Title = value);
+                    Dispatcher.Invoke(new Action(() => Title = value));
             }
         }
 
@@ -87,7 +87,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as DomainVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as DomainVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as DomainVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as DomainVM).Notes_CoerceValue(baseValue)));
 
@@ -100,14 +100,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(NotesProperty));
-                return Dispatcher.Invoke(() => Notes);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Notes)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(NotesProperty, value);
                 else
-                    Dispatcher.Invoke(() => Notes = value);
+                    Dispatcher.Invoke(new Action(() => Notes = value));
             }
         }
 
@@ -155,14 +155,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (ObservableCollection<GroupVM>)(GetValue(GroupCollectionProperty));
-                return Dispatcher.Invoke(() => GroupCollection);
+                return (ObservableCollection<GroupVM>)(Dispatcher.Invoke(new Func<ObservableCollection<GroupVM>>(() => GroupCollection)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(GroupCollectionPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => GroupCollection = value);
+                    Dispatcher.Invoke(new Action(() => GroupCollection = value));
             }
         }
 
@@ -182,7 +182,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as DomainVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as DomainVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as DomainVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as DomainVM).SelectedIndex_CoerceValue(baseValue)));
 
@@ -195,14 +195,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedIndexProperty));
-                return Dispatcher.Invoke(() => SelectedIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedIndex = value));
             }
         }
 
@@ -267,14 +267,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (GroupVM)(GetValue(SelectedGroupProperty));
-                return Dispatcher.Invoke(() => SelectedGroup);
+                return (GroupVM)(Dispatcher.Invoke(new Func<GroupVM>(() => SelectedGroup)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedGroupPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedGroup = value);
+                    Dispatcher.Invoke(new Action(() => SelectedGroup = value));
             }
         }
 
@@ -312,6 +312,74 @@ namespace TestWpfApplication
             GroupVM vm;
             if (newValue != null && (vm = d as GroupVM) != null)
                 vm.SetBrowsersCollection(newValue._browsers);
+        }
+
+        #endregion
+
+        #region DeleteGroupVisibility Property Members
+
+        public const string PropertyName_DeleteGroupVisibility = "DeleteGroupVisibility";
+
+        private static readonly DependencyPropertyKey DeleteGroupVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_DeleteGroupVisibility, typeof(Visibility), typeof(DomainVM),
+                new PropertyMetadata(Visibility.Collapsed));
+
+        /// <summary>
+        /// Identifies the <seealso cref="DeleteGroupVisibility"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty DeleteGroupVisibilityProperty = DeleteGroupVisibilityPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Controls whether delete group box is visible
+        /// </summary>
+        public Visibility DeleteGroupVisibility
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (Visibility)(GetValue(DeleteGroupVisibilityProperty));
+                return (Visibility)(Dispatcher.Invoke(new Func<Visibility>(() => DeleteGroupVisibility)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(DeleteGroupVisibilityPropertyKey, value);
+                else
+                    Dispatcher.Invoke(new Action(() => DeleteGroupVisibility = value));
+            }
+        }
+
+        #endregion
+
+        #region DeleteGroupConfirmMessage Property Members
+
+        public const string PropertyName_DeleteGroupConfirmMessage = "DeleteGroupConfirmMessage";
+
+        private static readonly DependencyPropertyKey DeleteGroupConfirmMessagePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_DeleteGroupConfirmMessage, typeof(string), typeof(DomainVM),
+                new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <seealso cref="DeleteGroupConfirmMessage"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty DeleteGroupConfirmMessageProperty = DeleteGroupConfirmMessagePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Message to display for confirming group delete.
+        /// </summary>
+        public string DeleteGroupConfirmMessage
+        {
+            get
+            {
+                if (CheckAccess())
+                    return (string)(GetValue(DeleteGroupConfirmMessageProperty));
+                return (string)(Dispatcher.Invoke(new Func<string>(() => DeleteGroupConfirmMessage)));
+            }
+            private set
+            {
+                if (CheckAccess())
+                    SetValue(DeleteGroupConfirmMessagePropertyKey, value);
+                else
+                    Dispatcher.Invoke(new Action(() => DeleteGroupConfirmMessage = value));
+            }
         }
 
         #endregion
@@ -365,74 +433,6 @@ namespace TestWpfApplication
                 DeleteGroupConfirmMessage = "This group contains 1 credential.";
             else
                 DeleteGroupConfirmMessage = String.Format("This group contains {1} credentials.", credentialCount);
-        }
-
-        #endregion
-
-        #region DeleteGroupVisibility Property Members
-
-        public const string PropertyName_DeleteGroupVisibility = "DeleteGroupVisibility";
-
-        private static readonly DependencyPropertyKey DeleteGroupVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_DeleteGroupVisibility, typeof(Visibility), typeof(DomainVM),
-                new PropertyMetadata(Visibility.Collapsed));
-
-        /// <summary>
-        /// Identifies the <seealso cref="DeleteGroupVisibility"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty DeleteGroupVisibilityProperty = DeleteGroupVisibilityPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Controls whether delete group box is visible
-        /// </summary>
-        public Visibility DeleteGroupVisibility
-        {
-            get
-            {
-                if (CheckAccess())
-                    return (Visibility)(GetValue(DeleteGroupVisibilityProperty));
-                return Dispatcher.Invoke(() => DeleteGroupVisibility);
-            }
-            private set
-            {
-                if (CheckAccess())
-                    SetValue(DeleteGroupVisibilityPropertyKey, value);
-                else
-                    Dispatcher.Invoke(() => DeleteGroupVisibility = value);
-            }
-        }
-
-        #endregion
-
-        #region DeleteGroupConfirmMessage Property Members
-
-        public const string PropertyName_DeleteGroupConfirmMessage = "DeleteGroupConfirmMessage";
-
-        private static readonly DependencyPropertyKey DeleteGroupConfirmMessagePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_DeleteGroupConfirmMessage, typeof(string), typeof(DomainVM),
-                new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <seealso cref="DeleteGroupConfirmMessage"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty DeleteGroupConfirmMessageProperty = DeleteGroupConfirmMessagePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Message to display for confirming group delete.
-        /// </summary>
-        public string DeleteGroupConfirmMessage
-        {
-            get
-            {
-                if (CheckAccess())
-                    return (string)(GetValue(DeleteGroupConfirmMessageProperty));
-                return Dispatcher.Invoke(() => DeleteGroupConfirmMessage);
-            }
-            private set
-            {
-                if (CheckAccess())
-                    SetValue(DeleteGroupConfirmMessagePropertyKey, value);
-                else
-                    Dispatcher.Invoke(() => DeleteGroupConfirmMessage = value);
-            }
         }
 
         #endregion

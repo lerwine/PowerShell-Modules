@@ -14,7 +14,7 @@ namespace FileSystemIndexLib
 
         public new Guid? ParentId { get { return (_isRoot) ? null : base.ParentId as Guid?; } }
 
-        public new Guid VolumeId { get { return _volumeId; } }
+        public Guid VolumeId { get { return _volumeId; } }
 
         public static DirectoryRecord Load(SqlCeConnection dbConnection, Guid id)
         {
@@ -150,5 +150,15 @@ namespace FileSystemIndexLib
         protected override string GetInsertQueryPlaceHolders() { return String.Format("{0}, @{1}", base.GetInsertQueryPlaceHolders(), ColName_VolumeId); }
 
         protected override string GetUpdateQueryFieldAndPlaceHolders() { return String.Format("{0}, [{1}] = @{1}", base.GetInsertQueryPlaceHolders(), ColName_VolumeId); }
+
+        protected override void RestorePropertyValues(BaseRecord originalValuesObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override BaseRecord CreateClone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

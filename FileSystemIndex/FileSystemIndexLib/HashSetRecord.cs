@@ -147,5 +147,15 @@ namespace FileSystemIndexLib
         protected override string GetInsertQueryPlaceHolders() { return String.Format("@{0}, @{1}, @{2}", ColName_IsValidated, ColName_Length, ColName_Sha256); }
 
         protected override string GetUpdateQueryFieldAndPlaceHolders() { return String.Format("[{0}] = @{0}, [{1}] = @{1}, [{2}] = @{2}", ColName_IsValidated, ColName_Length, ColName_Sha256); }
+
+        protected override void RestorePropertyValues(BaseRecord originalValuesObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override BaseRecord CreateClone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

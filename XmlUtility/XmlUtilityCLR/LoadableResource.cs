@@ -7,6 +7,9 @@ using System.Text;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class LoadableResource
     {
 #if PSLEGACY
@@ -25,61 +28,102 @@ namespace XmlUtilityCLR
 #if PSLEGACY
         public Uri SourceUri { get { return _sourceUri; } private set { _sourceUri = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public Uri SourceUri { get; private set; }
 #endif
 
 #if PSLEGACY
         public string SourcePath { get { return _sourcePath; } private set { _sourcePath = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public string SourcePath { get; private set; }
 #endif
 
 #if PSLEGACY
         public bool IsLocal { get { return _isLocal; } private set { _isLocal = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsLocal { get; private set; }
 #endif
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract object RawValue { get; }
 
 #if PSLEGACY
         public string FileName { get { return _fileName; } protected set { _fileName = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public string FileName { get; protected set; }
 #endif
 
 #if PSLEGACY
         public ReadOnlyCollection<ResourceLoadError> Errors { get { return _errors; } private set { _errors = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public ReadOnlyCollection<ResourceLoadError> Errors { get; private set; }
 #endif
 
 #if PSLEGACY
         protected Collection<ResourceLoadError> InnerErrors { get { return _innerErrors; } private set { _innerErrors = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         protected Collection<ResourceLoadError> InnerErrors { get; private set; }
 #endif
 
 #if PSLEGACY
         public bool Success { get { return _success; } private set { _success = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Success { get; private set; }
 #endif
 
 #if PSLEGACY
         public Encoding Encoding { get { return _encoding; } protected set { _encoding = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public Encoding Encoding { get; protected set; }
 #endif
 
 #if PSLEGACY
         public string MediaType { get { return _mediaType; } protected set { _mediaType = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public string MediaType { get; protected set; }
 #endif
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract bool LoadFromWeb();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract void LoadFromLocal();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static string ParseFileName(Uri uri, out string sourcePath)
         {
             sourcePath = Path.GetFullPath(uri.LocalPath);
@@ -98,6 +142,9 @@ namespace XmlUtilityCLR
             return fileName ?? "";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected LoadableResource(Uri uri)
         {
             if (uri == null)
@@ -139,23 +186,36 @@ namespace XmlUtilityCLR
             throw new NotSupportedException(String.Format("The {0} URL scheme is not supported.", uri.Scheme));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void OnLoadError(Exception exception)
         {
             if (exception != null)
                 InnerErrors.Add(ResourceLoadError.Create(exception));
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void OnSuccess()
         {
             OnLoadComplete();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void OnLoadComplete()
         {
             if (String.IsNullOrEmpty(MediaType))
                 MediaType = MediaTypeNames.Application.Octet;
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class LoadableResource<TSource, TTarget> : LoadableResource
     {
 #if PSLEGACY
@@ -166,19 +226,34 @@ namespace XmlUtilityCLR
 #if PSLEGACY
         public TSource Source { get { return _source; } protected set { _source = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public TSource Source { get; private set; }
 #endif
 
 #if PSLEGACY
         public TTarget Target { get { return _target; } protected set { _target = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public TTarget Target { get; private set; }
 #endif
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected LoadableResource(Uri uri) : base(uri) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override object RawValue { get { return Source; } }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void LoadFromLocal()
         {
             try
@@ -192,10 +267,19 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract TSource LoadSourceFromLocal();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract TSource GetDefaultSourceValue();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override bool LoadFromWeb()
         {
             try
@@ -258,6 +342,9 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void OnInitializeWebRequest(WebRequest webRequest)
         {
             webRequest.Credentials = CredentialCache.DefaultNetworkCredentials;
@@ -268,13 +355,22 @@ namespace XmlUtilityCLR
                 OnInitializeFtpWebRequest(webRequest as FtpWebRequest);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void OnInitializeHttpWebRequest(HttpWebRequest webRequest)
         {
             webRequest.AllowAutoRedirect = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void OnInitializeFtpWebRequest(FtpWebRequest webRequest) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual bool OnValidateWebResponse(WebResponse webResponse)
         {
             if (webResponse is HttpWebResponse)
@@ -283,6 +379,9 @@ namespace XmlUtilityCLR
             return OnValidateFtpWebResponse(webResponse as FtpWebResponse);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual bool OnValidateHttpWebResponse(HttpWebResponse webResponse)
         {
             if (webResponse == null)
@@ -321,6 +420,9 @@ namespace XmlUtilityCLR
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual bool OnValidateFtpWebResponse(FtpWebResponse webResponse)
         {
             if (webResponse == null)
@@ -353,14 +455,23 @@ namespace XmlUtilityCLR
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract TSource Load(Stream stream, bool isValid);
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void OnLoadComplete()
         {
             base.OnLoadComplete();
             Target = CreateTarget();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract TTarget CreateTarget();
     }
 }

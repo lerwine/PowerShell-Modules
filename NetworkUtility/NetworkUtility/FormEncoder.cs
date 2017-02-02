@@ -8,10 +8,19 @@ using System.Text.RegularExpressions;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class FormEncoder
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly Regex UrlEncodedItem = new Regex(@"(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?", RegexOptions.Compiled);
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static NameValueCollection Decode(string formUrlEncodedText)
         {
             NameValueCollection nameValueCollection = new NameValueCollection();
@@ -29,7 +38,10 @@ namespace NetworkUtilityCLR
             
             return nameValueCollection;
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static NameValueCollection Decode(TextReader textReader)
         {
             if (textReader == null)
@@ -37,7 +49,10 @@ namespace NetworkUtilityCLR
             
             return Decode(textReader.ReadToEnd());
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static NameValueCollection Decode(Stream stream, Encoding encoding)
         {
             if (stream == null)
@@ -46,7 +61,10 @@ namespace NetworkUtilityCLR
             using (StreamReader streamReader = (encoding == null) ? new StreamReader(stream, true) : new StreamReader(stream, encoding))
                 return Decode(streamReader);
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static NameValueCollection Decode(WebResponse webResponse)
         {
             if (webResponse.ContentLength < 1)
@@ -59,11 +77,17 @@ namespace NetworkUtilityCLR
                 return Decode(stream, MimeUtility.GetEncoding(webResponse, Encoding.UTF8));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static bool IsUrlFormEncoded(WebResponse webResponse)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Encode(string key, string value, TextWriter textWriter, bool isNotFirst)
         {
             if (key == null)
@@ -78,7 +102,10 @@ namespace NetworkUtilityCLR
             if (value != null)
                 textWriter.Write("={0}", Uri.EscapeDataString(key));
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Encode(NameValueCollection collection, TextWriter textWriter, bool emptyAsNull)
         {
             if (collection == null)
@@ -98,7 +125,10 @@ namespace NetworkUtilityCLR
                     Encode(allKeys[i], ((values[v] == "" && emptyAsNull) ? null : values[v]), textWriter, (i > 0 && v > 0));
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static string Encode(NameValueCollection collection, bool emptyAsNull)
         {
             if (collection == null)
@@ -110,7 +140,10 @@ namespace NetworkUtilityCLR
                 return stringWriter.ToString();
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Encode(NameValueCollection collection, Stream stream, bool emptyAsNull, Encoding encoding)
         {
             if (collection == null)
@@ -128,7 +161,10 @@ namespace NetworkUtilityCLR
                 streamWriter.Flush();
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Encode(NameValueCollection collection, WebRequest webRequest, bool emptyAsNull, Encoding encoding)
         {
             if (collection == null)

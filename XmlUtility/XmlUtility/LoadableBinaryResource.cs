@@ -4,14 +4,29 @@ using System.IO;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class LoadableBinaryResource<TTarget> : LoadableResource<byte[], TTarget>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected LoadableBinaryResource(Uri uri) : base(uri) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract override TTarget CreateTarget();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override byte[] GetDefaultSourceValue() { return new byte[0]; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override byte[] Load(Stream stream, bool isValid)
         {
             List<byte> source = new List<byte>();
@@ -30,13 +45,25 @@ namespace XmlUtilityCLR
             return source.ToArray();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override byte[] LoadSourceFromLocal() { return File.ReadAllBytes(SourcePath); }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class LoadableBinaryResource : LoadableBinaryResource<byte[]>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public LoadableBinaryResource(Uri uri) : base(uri) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override byte[] CreateTarget() { return Source; }
     }
 }

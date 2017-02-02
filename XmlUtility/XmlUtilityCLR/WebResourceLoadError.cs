@@ -2,8 +2,14 @@
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class WebResourceLoadError : ResourceLoadError
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public WebResourceLoadError(WebException exception)
             : base(exception)
         {
@@ -18,6 +24,9 @@ namespace XmlUtilityCLR
 #if PSLEGACY
         public WebExceptionStatus Status { get { return _status; } private set { _status = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public WebExceptionStatus Status { get; private set; }
 #endif
     }

@@ -29,10 +29,7 @@ namespace PowerShellUnitTestHelper
         public static PSInvocationResult InvokeRunspace(TestContext testContext, InitialSessionState iss, ApartmentState apartmentState, PSThreadOptions threadOptions, Dictionary<string, object> variables, ScriptBlock initialScript, params ScriptBlock[] additionalScripts)
         {
             if (iss == null)
-            {
                 iss = InitialSessionState.CreateDefault();
-                iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
-            }
             // this.TestContext;
             using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
             {
@@ -93,7 +90,6 @@ namespace PowerShellUnitTestHelper
         public static void TestLoadModule(TestContext testContext, string moduleName, string relativeModulePath, string moduleExtension, params string[] additionalModules)
         {
             InitialSessionState iss = InitialSessionState.CreateDefault();
-            iss.ExecutionPolicy = Microsoft.PowerShell.ExecutionPolicy.Bypass;
             // this.TestContext;
             using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
             {

@@ -26,7 +26,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as MainWindowVM).TabIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as MainWindowVM).TabIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as MainWindowVM).TabIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as MainWindowVM).TabIndex_CoerceValue(baseValue)));
 
@@ -39,14 +39,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (int)(GetValue(TabIndexProperty));
-                return Dispatcher.Invoke(() => TabIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => TabIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(TabIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => TabIndex = value);
+                    Dispatcher.Invoke(new Action(() => TabIndex = value));
             }
         }
 
@@ -104,14 +104,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (ObservableCollection<DomainVM>)(GetValue(DomainCollectionProperty));
-                return Dispatcher.Invoke(() => DomainCollection);
+                return (ObservableCollection<DomainVM>)(Dispatcher.Invoke(new Func<ObservableCollection<DomainVM>>(() => DomainCollection)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DomainCollectionPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DomainCollection = value);
+                    Dispatcher.Invoke(new Action(() => DomainCollection = value));
             }
         }
 
@@ -131,7 +131,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as MainWindowVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as MainWindowVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as MainWindowVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as MainWindowVM).SelectedIndex_CoerceValue(baseValue)));
 
@@ -144,14 +144,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedIndexProperty));
-                return Dispatcher.Invoke(() => SelectedIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedIndex = value));
             }
         }
 
@@ -216,14 +216,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (DomainVM)(GetValue(SelectedDomainProperty));
-                return Dispatcher.Invoke(() => SelectedDomain);
+                return (DomainVM)(Dispatcher.Invoke(new Func<DomainVM>(() => SelectedDomain)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedDomainPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedDomain = value);
+                    Dispatcher.Invoke(new Action(() => SelectedDomain = value));
             }
         }
 
@@ -394,14 +394,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (Visibility)(GetValue(DeleteDomainVisibilityProperty));
-                return Dispatcher.Invoke(() => DeleteDomainVisibility);
+                return (Visibility)(Dispatcher.Invoke(new Func<Visibility>(() => DeleteDomainVisibility)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DeleteDomainVisibilityPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DeleteDomainVisibility = value);
+                    Dispatcher.Invoke(new Action(() => DeleteDomainVisibility = value));
             }
         }
 
@@ -428,14 +428,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(DeleteDomainConfirmMessageProperty));
-                return Dispatcher.Invoke(() => DeleteDomainConfirmMessage);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => DeleteDomainConfirmMessage)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DeleteDomainConfirmMessagePropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DeleteDomainConfirmMessage = value);
+                    Dispatcher.Invoke(new Action(() => DeleteDomainConfirmMessage = value));
             }
         }
 
@@ -507,14 +507,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (ObservableCollection<BrowserVM>)(GetValue(BrowsersProperty));
-                return Dispatcher.Invoke(() => Browsers);
+                return (ObservableCollection<BrowserVM>)(Dispatcher.Invoke(new Func<ObservableCollection<BrowserVM>>(() => Browsers)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(BrowsersPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => Browsers = value);
+                    Dispatcher.Invoke(new Action(() => Browsers = value));
             }
         }
 
@@ -541,14 +541,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (BrowserVM)(GetValue(PreferredDefaultBrowserProperty));
-                return Dispatcher.Invoke(() => PreferredDefaultBrowser);
+                return (BrowserVM)(Dispatcher.Invoke(new Func<BrowserVM>(() => PreferredDefaultBrowser)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(PreferredDefaultBrowserPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => PreferredDefaultBrowser = value);
+                    Dispatcher.Invoke(new Action(() => PreferredDefaultBrowser = value));
             }
         }
 

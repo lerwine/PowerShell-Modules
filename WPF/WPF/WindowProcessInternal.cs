@@ -27,8 +27,6 @@ namespace WpfCLR
 		private XmlDocument _windowXaml;
 		private Window _mainWindow = null;
 		private ManualResetEvent _windowClosedEvent = new ManualResetEvent(false);
-		private bool? _dialogResult = null;
-		private Exception _fault = null;
 		
 		#region Methods
 		

@@ -7,6 +7,9 @@ using System.Xml.Schema;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ResourceLoadError
     {
 #if PSLEGACY
@@ -18,20 +21,32 @@ namespace XmlUtilityCLR
 #if PSLEGACY
         public virtual bool IsWarning { get { return _isWarning; } private set { _isWarning = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsWarning { get; private set; }
 #endif
 
 #if PSLEGACY
         public string Message { get { return _message; } private set { _message = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public string Message { get; private set; }
 #endif
 
 #if PSLEGACY
         public string Details { get { return _details; } private set { _details = value; } }
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public string Details { get; private set; }
 #endif
+        /// <summary>
+        /// 
+        /// </summary>
 
         public static IEnumerable<string> GetMessages(string message, Exception exception)
         {
@@ -74,6 +89,9 @@ namespace XmlUtilityCLR
 
         public ResourceLoadError(string message, bool isWarning)
 #else
+        /// <summary>
+        /// 
+        /// </summary>
         public ResourceLoadError(string message, bool isWarning = false)
 #endif
         {
@@ -86,14 +104,23 @@ namespace XmlUtilityCLR
             IsWarning = isWarning;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static ResourceLoadError Create(ValidationEventArgs args)
         {
             // TODO: Implement Create method
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ResourceLoadError(Exception exception) : this((exception == null) ? null : exception.Message, exception) { }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ResourceLoadError(string message, Exception exception)
         {
 #if PSLEGACY
@@ -117,6 +144,9 @@ namespace XmlUtilityCLR
             Details = String.Join("\r\n", list.ToArray());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static ResourceLoadError Create(Exception exception)
         {
             if (exception == null)

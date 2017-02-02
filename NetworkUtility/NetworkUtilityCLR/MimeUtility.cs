@@ -6,11 +6,24 @@ using System.Text.RegularExpressions;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class MimeUtility
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string MediaType_FormUrlEncoded = "application/x-www-form-urlencoded";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly Regex UrlEncodedItem = new Regex(@"(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?", RegexOptions.Compiled);
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static bool IsUrlFormEncoded(string contentType)
         {
             if (String.IsNullOrEmpty(contentType))
@@ -19,7 +32,10 @@ namespace NetworkUtilityCLR
             ContentType ct = new ContentType(contentType);
             return ct.MediaType == MimeUtility.MediaType_FormUrlEncoded;
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static bool IsUrlFormEncoded(WebResponse webResponse)
         {
             if (webResponse == null)
@@ -27,7 +43,10 @@ namespace NetworkUtilityCLR
                 
             return IsUrlFormEncoded(webResponse.ContentType);
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static Encoding GetEncoding(ContentType contentType, Encoding defaultEncoding)
         {
             if (contentType == null || String.IsNullOrEmpty(contentType.CharSet))
@@ -43,7 +62,10 @@ namespace NetworkUtilityCLR
                 return defaultEncoding;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static Encoding GetEncoding(string contentType, Encoding defaultEncoding)
         {
             if (String.IsNullOrEmpty(contentType))
@@ -58,7 +80,10 @@ namespace NetworkUtilityCLR
                 return defaultEncoding;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static Encoding GetEncoding(WebResponse webResponse, Encoding defaultEncoding)
         {
             if (webResponse == null || webResponse.ContentType == null)

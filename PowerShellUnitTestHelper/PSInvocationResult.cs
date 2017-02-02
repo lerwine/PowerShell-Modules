@@ -12,7 +12,6 @@ namespace PowerShellUnitTestHelper
         public Collection<ErrorRecord> ErrorStream { get; private set; }
         public bool HadErrors { get; private set; }
         public string HistoryString { get; private set; }
-        public Collection<InformationRecord> InformationStream { get; private set; }
         public Collection<PSObject> Output { get; private set; }
         public Collection<ProgressRecord> ProgressStream { get; private set; }
         public Collection<VerboseRecord> VerboseStream { get; private set; }
@@ -29,7 +28,6 @@ namespace PowerShellUnitTestHelper
                 result.HistoryString = powershell.HistoryString;
                 result.DebugStream = powershell.Streams.Debug.ReadAll();
                 result.ErrorStream = powershell.Streams.Error.ReadAll();
-                result.InformationStream = powershell.Streams.Information.ReadAll();
                 result.ProgressStream = powershell.Streams.Progress.ReadAll();
                 result.VerboseStream = powershell.Streams.Verbose.ReadAll();
                 result.WarningStream = powershell.Streams.Warning.ReadAll();
@@ -43,8 +41,6 @@ namespace PowerShellUnitTestHelper
                 result.DebugStream = new Collection<DebugRecord>();
             if (result.ErrorStream == null)
                 result.ErrorStream = new Collection<ErrorRecord>();
-            if (result.InformationStream == null)
-                result.InformationStream = new Collection<InformationRecord>();
             if (result.ProgressStream == null)
                 result.ProgressStream = new Collection<ProgressRecord>();
             if (result.VerboseStream == null)

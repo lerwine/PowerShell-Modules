@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace FileSystemIndexLib
 {
-    public abstract class BaseRecord : INotifyPropertyChanged, INotifyPropertyChanging, ICloneable, IDataErrorInfo, IEditableObject, INotifyDataErrorInfo, IChangeTracking
+    public abstract class BaseRecord : INotifyPropertyChanged, INotifyPropertyChanging, ICloneable, IDataErrorInfo, IEditableObject, IChangeTracking
     {
         #region Constant column name values
 
@@ -32,7 +32,6 @@ namespace FileSystemIndexLib
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         #endregion
 
@@ -55,9 +54,7 @@ namespace FileSystemIndexLib
         #region Explicit properties
 
         string IDataErrorInfo.Error { get { return GetErrorMessage(); } }
-
-        bool INotifyDataErrorInfo.HasErrors { get { return HasErrors(); } }
-
+        
         bool IChangeTracking.IsChanged { get { return IsChanged(); } }
 
         string IDataErrorInfo.this[string columnName] { get { return GetErrorMessage(columnName); } }
@@ -77,9 +74,7 @@ namespace FileSystemIndexLib
         {
             throw new NotImplementedException();
         }
-
-        IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName) { return GetErrors(propertyName); }
-
+        
         public string GetErrorMessage(string columnName)
         {
             throw new NotImplementedException();

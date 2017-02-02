@@ -50,7 +50,7 @@ namespace PSDBLib
 
         public string Database
         {
-            get { }
+            get { return this[Keyword_Database] as string; }
         }
     }
 }

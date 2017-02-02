@@ -3,14 +3,23 @@ using System.Xml.Schema;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SchemaValidationHandler
     {
         private object _syncRoot = new object();
         private Collection<SchemaValidationError> _errors = new Collection<SchemaValidationError>();
         private SchemaSetCollection _schemaSets = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Collection<SchemaValidationError> Errors { get { return this._errors; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SchemaSetCollection SchemaSets
         {
             get
@@ -25,6 +34,9 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SchemaValidationHandler() { }
         
         private void ValidationEventHandler(object sender, ValidationEventArgs e)

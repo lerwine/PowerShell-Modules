@@ -26,7 +26,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as LinkVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Title_CoerceValue(baseValue)));
 
@@ -39,14 +39,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(TitleProperty));
-                return Dispatcher.Invoke(() => Title);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Title)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(TitleProperty, value);
                 else
-                    Dispatcher.Invoke(() => Title = value);
+                    Dispatcher.Invoke(new Action(() => Title = value));
             }
         }
 
@@ -87,7 +87,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as LinkVM).Url_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Url_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Url_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Url_CoerceValue(baseValue)));
 
@@ -100,14 +100,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(UrlProperty));
-                return Dispatcher.Invoke(() => Url);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Url)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(UrlProperty, value);
                 else
-                    Dispatcher.Invoke(() => Url = value);
+                    Dispatcher.Invoke(new Action(() => Url = value));
             }
         }
 
@@ -148,7 +148,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as LinkVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).Notes_CoerceValue(baseValue)));
 
@@ -161,14 +161,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(NotesProperty));
-                return Dispatcher.Invoke(() => Notes);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Notes)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(NotesProperty, value);
                 else
-                    Dispatcher.Invoke(() => Notes = value);
+                    Dispatcher.Invoke(new Action(() => Notes = value));
             }
         }
 
@@ -218,14 +218,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (ReadOnlyObservableCollection<BrowserVM>)(GetValue(BrowsersProperty));
-                return Dispatcher.Invoke(() => Browsers);
+                return (ReadOnlyObservableCollection<BrowserVM>)(Dispatcher.Invoke(new Func<ReadOnlyObservableCollection<BrowserVM>>(() => Browsers)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(BrowsersPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => Browsers = value);
+                    Dispatcher.Invoke(new Action(() => Browsers = value));
             }
         }
 
@@ -245,7 +245,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as LinkVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as LinkVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as LinkVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as LinkVM).SelectedIndex_CoerceValue(baseValue)));
 
@@ -258,14 +258,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedIndexProperty));
-                return Dispatcher.Invoke(() => SelectedIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedIndex = value));
             }
         }
 
@@ -319,14 +319,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (BrowserVM)(GetValue(SelectedBrowserProperty));
-                return Dispatcher.Invoke(() => SelectedBrowser);
+                return (BrowserVM)(Dispatcher.Invoke(new Func<BrowserVM>(() => SelectedBrowser)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedBrowserPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedBrowser = value);
+                    Dispatcher.Invoke(new Action(() => SelectedBrowser = value));
             }
         }
 

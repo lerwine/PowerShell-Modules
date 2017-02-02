@@ -4,6 +4,491 @@
         <name>Erwine.Leonard.T.XmlUtility</name>
     </assembly>
     <members>
+        <member name="T:XmlUtilityCLR.LoadableBinaryResource`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource`1.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource`1.CreateTarget">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource`1.GetDefaultSourceValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource`1.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource`1.LoadSourceFromLocal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableBinaryResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableBinaryResource.CreateTarget">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.SourceUri">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.SourcePath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.IsLocal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.RawValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.FileName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.Errors">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.InnerErrors">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.Success">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.Encoding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource.MediaType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.LoadFromWeb">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.LoadFromLocal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.ParseFileName(System.Uri,System.String@)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.OnLoadError(System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.OnSuccess">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource.OnLoadComplete">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableResource`2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource`2.Source">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource`2.Target">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableResource`2.RawValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.LoadFromLocal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.LoadSourceFromLocal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.GetDefaultSourceValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.LoadFromWeb">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnInitializeWebRequest(System.Net.WebRequest)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnInitializeHttpWebRequest(System.Net.HttpWebRequest)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnInitializeFtpWebRequest(System.Net.FtpWebRequest)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnValidateWebResponse(System.Net.WebResponse)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnValidateHttpWebResponse(System.Net.HttpWebResponse)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnValidateFtpWebResponse(System.Net.FtpWebResponse)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.OnLoadComplete">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableResource`2.CreateTarget">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableTextResource`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:XmlUtilityCLR.LoadableTextResource`1.NewLineRegex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource`1.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource`1.CreateTarget">
+            <summary>
+            
+            </summary>v
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource`1.GetDefaultSourceValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource`1.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource`1.Load(System.IO.StreamReader,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource`1.LoadSourceFromLocal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableTextResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableTextResource.CreateTarget">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableXmlResource`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlResource`1.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableXmlResource`1.CheckCharacters">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableXmlResource`1.DtdProcessing">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableXmlResource`1.Schemas">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.LoadableXmlResource`1.ValidationType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlResource`1.CreateTarget">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlResource`1.Xml_ValidationEventHandler(System.Object,System.Xml.Schema.ValidationEventArgs)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlResource`1.Read(System.Xml.XmlReader)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableXmlResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlResource.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlResource.Read(System.Xml.XmlReader)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableXmlSchemaResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlSchemaResource.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXmlSchemaResource.Read(System.Xml.XmlReader)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.LoadableXsdResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXsdResource.#ctor(System.Uri)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.LoadableXsdResource.Read(System.Xml.XmlReader)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.ResourceLoadError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.ResourceLoadError.IsWarning">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.ResourceLoadError.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.ResourceLoadError.Details">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.ResourceLoadError.GetMessages(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.ResourceLoadError.#ctor(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.ResourceLoadError.Create(System.Xml.Schema.ValidationEventArgs)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.ResourceLoadError.#ctor(System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.ResourceLoadError.#ctor(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.ResourceLoadError.Create(System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.SerializationManager`1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.Location">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.LocalPath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.OriginalString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.BaseURI">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.ReaderSettings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.DetectEncodingFromByteOrderMarks">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.Encoding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.BufferSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.WriterSettings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.Append">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.CheckCharacters">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SerializationManager`1.ConformanceLevel">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:XmlUtilityCLR.SerializationManager`1.Load(System.Xml.XmlReader)">
             <summary>
             Deserializes the credential storage document contained by the specified <see cref="T:System.Xml.XmlReader"/>.
@@ -591,6 +1076,7 @@
             Serializes the current <typeparamref name="T"/> as XML, to the specified <see cref="T:System.Text.StringBuilder"/>.
             </summary>
             <param name="output">The <see cref="T:System.Text.StringBuilder"/> to write the XML to.</param>
+            <param name="location">Location to save to.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="output"/> is null.</exception>
         </member>
         <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.Text.StringBuilder,System.Xml.XmlWriterSettings)">
@@ -609,6 +1095,7 @@
             </summary>
             <param name="output">The <see cref="T:System.Text.StringBuilder"/> to write the XML to.</param>
             <param name="settings">The <see cref="T:System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+            <param name="location">Location to save to.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="output"/> is null.</exception>
         </member>
         <member name="M:XmlUtilityCLR.SerializationManager`1.Save(System.String)">
@@ -713,6 +1200,191 @@
             <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
             <exception cref="T:System.InvalidOperationException">An error occurred during serialization. The original exception is available
             using the <see cref="P:System.Exception.InnerException"/> property.</exception>
+        </member>
+        <member name="T:XmlUtilityCLR.WebResourceLoadError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.WebResourceLoadError.#ctor(System.Net.WebException)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.WebResourceLoadError.Status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.XmlResourceLoadError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.XmlResourceLoadError.IsWarning">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.XmlResourceLoadError.Severity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.XmlResourceLoadError.LineNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.XmlResourceLoadError.LinePosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.XmlResourceLoadError.SourceUri">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.XmlResourceLoadError.Create(System.Xml.Schema.ValidationEventArgs)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.XmlResourceLoadError.#ctor(System.String,System.Xml.Schema.XmlSchemaException,System.Xml.Schema.XmlSeverityType)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.XmlResourceLoadError.#ctor(System.Xml.XmlException,System.Xml.Schema.XmlSeverityType)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.XmlUtility">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.SchemaSetCollection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaSetCollection.#ctor(System.Xml.Schema.ValidationEventHandler)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaSetCollection.#ctor(System.Xml.Schema.ValidationEventHandler,System.Collections.Generic.IList{System.Xml.Schema.XmlSchemaSet})">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaSetCollection.InsertItem(System.Int32,System.Xml.Schema.XmlSchemaSet)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaSetCollection.RemoveItem(System.Int32)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaSetCollection.SetItem(System.Int32,System.Xml.Schema.XmlSchemaSet)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaSetCollection.ClearItems">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.SchemaValidationError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.ToString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.GetHashCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SchemaValidationError.Sender">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SchemaValidationError.Exception">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SchemaValidationError.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SchemaValidationError.Severity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.#ctor(System.Object,System.Xml.Schema.ValidationEventArgs)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.#ctor(System.Object,System.String,System.Xml.Schema.XmlSeverityType,System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.#ctor(System.Object,System.String,System.Xml.Schema.XmlSeverityType)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.#ctor(System.Object,System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.#ctor(System.Object,System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationError.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:XmlUtilityCLR.SchemaValidationHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SchemaValidationHandler.Errors">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:XmlUtilityCLR.SchemaValidationHandler.SchemaSets">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:XmlUtilityCLR.SchemaValidationHandler.#ctor">
+            <summary>
+            
+            </summary>
         </member>
     </members>
 </doc>

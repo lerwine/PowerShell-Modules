@@ -181,5 +181,15 @@ namespace FileSystemIndexLib
             return String.Format("[{0}] = @{0}, [{1}] = @{1}, [{2}] = @{2}, [{3}] = @{3}, [{4}] = @{4}, [{5}] = @{5}, [{6}] = @{6}, [{7}] = @{7}, [{8}] = @{8}", ColName_SerialNumber, ColName_MaxComponentLen, ColName_FileSystemFlags,
                 ColName_Name, ColName_RootPath, ColName_RootPathLC, ColName_FileSystemName, ColName_CaseSensitive, ColName_ReadOnly);
         }
+
+        protected override void RestorePropertyValues(BaseRecord originalValuesObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override BaseRecord CreateClone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

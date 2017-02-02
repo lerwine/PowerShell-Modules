@@ -22,8 +22,6 @@ namespace Erwine.Leonard.T.TypeBrowserTest
             private set { SimpleClass._privateField = value; }
         }
         
-        public static event EventHandler<UnhandledExceptionEventArgs> ExampleStaticEventHandler;
-
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern int MessageBox(IntPtr h, string m, string c, int type);
         

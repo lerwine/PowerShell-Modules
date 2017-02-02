@@ -165,5 +165,15 @@ namespace FileSystemIndexLib
         protected override string GetInsertQueryPlaceHolders() { return String.Format("{0}, @{1}, @{2}, @{3}", base.GetInsertQueryPlaceHolders(), ColName_HashSetId, ColName_CreationTime, ColName_LastWriteTime); }
 
         protected override string GetUpdateQueryFieldAndPlaceHolders() { return String.Format("{0}, [{1}] = @{1}, [{2}] = @{2}, [{3}] = @{3}", base.GetUpdateQueryFieldAndPlaceHolders(), ColName_HashSetId, ColName_CreationTime, ColName_LastWriteTime); }
+
+        protected override void RestorePropertyValues(BaseRecord originalValuesObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override BaseRecord CreateClone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

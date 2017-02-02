@@ -8,13 +8,22 @@ using System.Xml.Schema;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SchemaSetCollection : Collection<XmlSchemaSet>
     {
         private object _syncRoot = new object();
         private ValidationEventHandler _validationEventHandler;
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         public SchemaSetCollection(ValidationEventHandler validationEventHandler) : this(validationEventHandler, new XmlSchemaSet[0]) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SchemaSetCollection(ValidationEventHandler validationEventHandler, IList<XmlSchemaSet> list)
         {
             this._validationEventHandler = validationEventHandler;
@@ -36,7 +45,10 @@ namespace XmlUtilityCLR
                     item.ValidationEventHandler += this._validationEventHandler;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void InsertItem(int index, XmlSchemaSet item)
         {
             if (item == null)
@@ -67,6 +79,9 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void RemoveItem(int index)
         {
             lock (this._syncRoot)
@@ -78,6 +93,9 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void SetItem(int index, XmlSchemaSet item)
         {
             if (item == null)
@@ -110,6 +128,9 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void ClearItems()
         {
             lock (this._syncRoot)

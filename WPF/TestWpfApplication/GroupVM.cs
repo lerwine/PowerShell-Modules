@@ -25,7 +25,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as GroupVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as GroupVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as GroupVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as GroupVM).Title_CoerceValue(baseValue)));
 
@@ -38,14 +38,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(TitleProperty));
-                return Dispatcher.Invoke(() => Title);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Title)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(TitleProperty, value);
                 else
-                    Dispatcher.Invoke(() => Title = value);
+                    Dispatcher.Invoke(new Action(() => Title = value));
             }
         }
 
@@ -86,7 +86,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as GroupVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as GroupVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as GroupVM).Notes_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as GroupVM).Notes_CoerceValue(baseValue)));
 
@@ -99,14 +99,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(NotesProperty));
-                return Dispatcher.Invoke(() => Notes);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Notes)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(NotesProperty, value);
                 else
-                    Dispatcher.Invoke(() => Notes = value);
+                    Dispatcher.Invoke(new Action(() => Notes = value));
             }
         }
 
@@ -154,14 +154,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (ObservableCollection<CredentialVM>)(GetValue(CredentialCollectionProperty));
-                return Dispatcher.Invoke(() => CredentialCollection);
+                return (ObservableCollection<CredentialVM>)(Dispatcher.Invoke(new Func<ObservableCollection<CredentialVM>>(() => CredentialCollection)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(CredentialCollectionPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => CredentialCollection = value);
+                    Dispatcher.Invoke(new Action(() => CredentialCollection = value));
             }
         }
 
@@ -181,7 +181,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as GroupVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as GroupVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as GroupVM).SelectedIndex_PropertyChanged((int)(e.OldValue), (int)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as GroupVM).SelectedIndex_CoerceValue(baseValue)));
 
@@ -194,14 +194,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (int)(GetValue(SelectedIndexProperty));
-                return Dispatcher.Invoke(() => SelectedIndex);
+                return (int)(Dispatcher.Invoke(new Func<int>(() => SelectedIndex)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(SelectedIndexProperty, value);
                 else
-                    Dispatcher.Invoke(() => SelectedIndex = value);
+                    Dispatcher.Invoke(new Action(() => SelectedIndex = value));
             }
         }
 
@@ -266,14 +266,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (CredentialVM)(GetValue(SelectedCredentialProperty));
-                return Dispatcher.Invoke(() => SelectedCredential);
+                return (CredentialVM)(Dispatcher.Invoke(new Func<CredentialVM>(() => SelectedCredential)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(SelectedCredentialPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => SelectedCredential = value);
+                    Dispatcher.Invoke(new Action(() => SelectedCredential = value));
             }
         }
 
@@ -384,14 +384,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (Visibility)(GetValue(DeleteCredentialVisibilityProperty));
-                return Dispatcher.Invoke(() => DeleteCredentialVisibility);
+                return (Visibility)(Dispatcher.Invoke(new Func<Visibility>(() => DeleteCredentialVisibility)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(DeleteCredentialVisibilityPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => DeleteCredentialVisibility = value);
+                    Dispatcher.Invoke(new Action(() => DeleteCredentialVisibility = value));
             }
         }
 

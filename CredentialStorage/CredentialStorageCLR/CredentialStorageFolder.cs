@@ -6,15 +6,24 @@ using System.Xml.Serialization;
 
 namespace CredentialStorageCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(ElementName = CredentialStorageFolder.ElementName, Namespace = CredentialStorageFolder.NamespaceURI)]
     [Serializable]
     public class CredentialStorageFolder : CredentialContainer, ICredentialContentItem
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ElementName = "Folder";
 
         private string _displayText = "";
         private Guid? _id = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute]
         public string DisplayText
         {
@@ -22,6 +31,9 @@ namespace CredentialStorageCLR
             set { this._displayText = value ?? ""; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute]
         public Guid Id
         {
@@ -37,6 +49,9 @@ namespace CredentialStorageCLR
 
         bool ICredentialContentItem.IsFolder { get { return true; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override CredentialContainer CreateCloneTemplate()
         {
             CredentialStorageFolder clone = new CredentialStorageFolder();

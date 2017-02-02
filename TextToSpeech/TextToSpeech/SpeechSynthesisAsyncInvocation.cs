@@ -150,8 +150,6 @@ namespace Erwine.Leonard.T.TextToSpeech
 
         private Collection<WarningRecord> _warnings = new Collection<WarningRecord>();
 
-        private Collection<InformationRecord> _informationMessages = new Collection<InformationRecord>();
-
         private Collection<VerboseRecord> _verboseMessages = new Collection<VerboseRecord>();
 
         private Collection<DebugRecord> _debugMessages = new Collection<DebugRecord>();
@@ -406,14 +404,14 @@ namespace Erwine.Leonard.T.TextToSpeech
                             case PSSpeechSynthesizerState.Failed:
                             case PSSpeechSynthesizerState.Stopped:
                             case PSSpeechSynthesizerState.Success:
-                                _waitTask = Task<SpeechSynthesisAsyncResult>.FromResult(new SpeechSynthesisAsyncResult(_output, _errors, _warnings, _informationMessages, _verboseMessages, _debugMessages, State == PSSpeechSynthesizerState.Stopped, State == PSSpeechSynthesizerState.Failed, SynchronizedData, UserState));
+                                _waitTask = Task<SpeechSynthesisAsyncResult>.FromResult(new SpeechSynthesisAsyncResult(_output, _errors, _warnings, _verboseMessages, _debugMessages, State == PSSpeechSynthesizerState.Stopped, State == PSSpeechSynthesizerState.Failed, SynchronizedData, UserState));
                                 break;
                             default:
                                 _waitTask = Task<SpeechSynthesisAsyncResult>.Factory.StartNew(() =>
                                 {
                                     while (State != PSSpeechSynthesizerState.Failed && State != PSSpeechSynthesizerState.Stopped && State != PSSpeechSynthesizerState.Success)
                                         Thread.Sleep(100);
-                                    return new SpeechSynthesisAsyncResult(_output, _errors, _warnings, _informationMessages, _verboseMessages, _debugMessages, State == PSSpeechSynthesizerState.Stopped, State == PSSpeechSynthesizerState.Failed, SynchronizedData, UserState);
+                                    return new SpeechSynthesisAsyncResult(_output, _errors, _warnings, _verboseMessages, _debugMessages, State == PSSpeechSynthesizerState.Stopped, State == PSSpeechSynthesizerState.Failed, SynchronizedData, UserState);
                                 });
                                 break;
                         }
@@ -462,7 +460,6 @@ namespace Erwine.Leonard.T.TextToSpeech
                         AddRange<PSObject>(_output, powershell.Invoke());
                         AddRange<ErrorRecord>(_errors, powershell.Streams.Error.ReadAll());
                         AddRange<WarningRecord>(_warnings, powershell.Streams.Warning.ReadAll());
-                        AddRange<InformationRecord>(_informationMessages, powershell.Streams.Information.ReadAll());
                         AddRange<VerboseRecord>(_verboseMessages, powershell.Streams.Verbose.ReadAll());
                         AddRange<DebugRecord>(_debugMessages, powershell.Streams.Debug.ReadAll());
                     }

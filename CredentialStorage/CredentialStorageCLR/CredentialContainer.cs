@@ -5,10 +5,16 @@ using System.Text;
 using System.Xml.Serialization;
 namespace CredentialStorageCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class CredentialContainer : CredentialComponent
     {
         private System.Collections.Generic.List<ICredentialContentItem> _contents = new List<ICredentialContentItem>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlArrayItem(ElementName = CredentialStorageFolder.ElementName, IsNullable = false, Namespace = CredentialStorageFolder.NamespaceURI)]
         [XmlArrayItem(ElementName = CredentialDomain.ElementName, IsNullable = false, Namespace = CredentialDomain.NamespaceURI)]
         public List<ICredentialContentItem> Contents
@@ -17,6 +23,10 @@ namespace CredentialStorageCLR
             set { this._contents = value ?? new List<ICredentialContentItem>(); }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override CredentialComponent Clone()
         {
             CredentialContainer container = this.CreateCloneTemplate();
@@ -24,6 +34,10 @@ namespace CredentialStorageCLR
             return container;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
         protected virtual void CopyFrom(CredentialContainer other)
         {
             if (other == null)
@@ -45,6 +59,10 @@ namespace CredentialStorageCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected abstract CredentialContainer CreateCloneTemplate();
     }
 }

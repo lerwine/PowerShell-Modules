@@ -13,16 +13,39 @@ using System.Xml.Schema;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class LoadableXmlResource<TTarget> : LoadableTextResource<TTarget>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public LoadableXmlResource(Uri uri) : base(uri) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool CheckCharacters { get { return false; } }
 #if !PSLEGACY
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DtdProcessing DtdProcessing { get { return DtdProcessing.Ignore; } }
 #endif
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual XmlSchemaSet Schemas { get { return null; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ValidationType ValidationType { get { return ValidationType.None; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override TTarget CreateTarget()
         {
             using (StringReader stringReader = new StringReader(String.Join("\r\n", Source)))
@@ -47,18 +70,33 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected void Xml_ValidationEventHandler(object sender, ValidationEventArgs e)
         {
             InnerErrors.Add(ResourceLoadError.Create(e));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract TTarget Read(XmlReader xmlReader);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class LoadableXmlResource : LoadableXmlResource<XmlDocument>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public LoadableXmlResource(Uri uri) : base(uri) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override XmlDocument Read(XmlReader xmlReader)
         {
             throw new NotImplementedException();

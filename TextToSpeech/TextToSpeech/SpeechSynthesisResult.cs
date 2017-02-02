@@ -16,19 +16,17 @@ namespace Erwine.Leonard.T.TextToSpeech
         public Hashtable SynchronizedData { get; private set; }
         public Collection<DebugRecord> DebugMessages { get; private set; }
         public Collection<ErrorRecord> Errors { get; private set; }
-        public Collection<InformationRecord> InformationMessages { get; private set; }
         public Collection<PSObject> Output { get; private set; }
         public Collection<VerboseRecord> VerboseMessages { get; private set; }
         public Collection<WarningRecord> Warnings { get; private set; }
 
         public SpeechSynthesisResult(Collection<PSObject> output, Collection<ErrorRecord> errors, Collection<WarningRecord> warnings,
-            Collection<InformationRecord> informationMessages, Collection<VerboseRecord> verboseMessages, Collection<DebugRecord> debugMessages, bool cancelled,
+            Collection<VerboseRecord> verboseMessages, Collection<DebugRecord> debugMessages, bool cancelled,
             bool failed, Hashtable synchronizedData)
         {
             Output = output;
             Errors = errors;
             Warnings = warnings;
-            InformationMessages = informationMessages;
             VerboseMessages = verboseMessages;
             DebugMessages = debugMessages;
             Cancelled = cancelled;

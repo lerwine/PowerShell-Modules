@@ -26,7 +26,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as CredentialVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as CredentialVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as CredentialVM).Title_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as CredentialVM).Title_CoerceValue(baseValue)));
 
@@ -39,14 +39,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(TitleProperty));
-                return Dispatcher.Invoke(() => Title);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Title)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(TitleProperty, value);
                 else
-                    Dispatcher.Invoke(() => Title = value);
+                    Dispatcher.Invoke(new Action(() => Title = value));
             }
         }
 
@@ -87,7 +87,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as CredentialVM).Login_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as CredentialVM).Login_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as CredentialVM).Login_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as CredentialVM).Login_CoerceValue(baseValue)));
 
@@ -100,14 +100,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(LoginProperty));
-                return Dispatcher.Invoke(() => Login);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => Login)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(LoginProperty, value);
                 else
-                    Dispatcher.Invoke(() => Login = value);
+                    Dispatcher.Invoke(new Action(() => Login = value));
             }
         }
 
@@ -148,7 +148,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as CredentialVM).EncryptedPassword_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as CredentialVM).EncryptedPassword_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as CredentialVM).EncryptedPassword_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as CredentialVM).EncryptedPassword_CoerceValue(baseValue)));
 
@@ -161,14 +161,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(EncryptedPasswordProperty));
-                return Dispatcher.Invoke(() => EncryptedPassword);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => EncryptedPassword)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(EncryptedPasswordProperty, value);
                 else
-                    Dispatcher.Invoke(() => EncryptedPassword = value);
+                    Dispatcher.Invoke(new Action(() => EncryptedPassword = value));
             }
         }
 
@@ -209,7 +209,7 @@ namespace TestWpfApplication
                     if (d.CheckAccess())
                         (d as CredentialVM).EncryptedPin_PropertyChanged((string)(e.OldValue), (string)(e.NewValue));
                     else
-                        d.Dispatcher.Invoke(() => (d as CredentialVM).EncryptedPin_PropertyChanged((string)(e.OldValue), (string)(e.NewValue)));
+                        d.Dispatcher.Invoke(new Action(() => (d as CredentialVM).EncryptedPin_PropertyChanged((string)(e.OldValue), (string)(e.NewValue))));
                 },
                 (DependencyObject d, object baseValue) => (d as CredentialVM).EncryptedPin_CoerceValue(baseValue)));
 
@@ -222,14 +222,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (string)(GetValue(EncryptedPinProperty));
-                return Dispatcher.Invoke(() => EncryptedPin);
+                return (string)(Dispatcher.Invoke(new Func<string>(() => EncryptedPin)));
             }
             set
             {
                 if (CheckAccess())
                     SetValue(EncryptedPinProperty, value);
                 else
-                    Dispatcher.Invoke(() => EncryptedPin = value);
+                    Dispatcher.Invoke(new Action(() => EncryptedPin = value));
             }
         }
 
@@ -277,14 +277,14 @@ namespace TestWpfApplication
             {
                 if (CheckAccess())
                     return (ObservableCollection<LinkVM>)(GetValue(LinksProperty));
-                return Dispatcher.Invoke(() => Links);
+                return (ObservableCollection<LinkVM>)(Dispatcher.Invoke(new Func<ObservableCollection<LinkVM>>(() => Links)));
             }
             private set
             {
                 if (CheckAccess())
                     SetValue(LinksPropertyKey, value);
                 else
-                    Dispatcher.Invoke(() => Links = value);
+                    Dispatcher.Invoke(new Action(() => Links = value));
             }
         }
 

@@ -6,10 +6,16 @@ using System.Xml.Serialization;
 
 namespace CredentialStorageCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlRoot(ElementName = StoredCredential.ElementName, Namespace = StoredCredential.NamespaceURI)]
     [Serializable]
     public class StoredCredential : CredentialComponent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ElementName = "Credential";
 
         private Guid? _id = null;
@@ -18,6 +24,9 @@ namespace CredentialStorageCLR
         private string _password = "";
         private string _location = "";
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute]
         public Guid Id
         {
@@ -31,6 +40,9 @@ namespace CredentialStorageCLR
             set { this._id = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute]
         public string DisplayText
         {
@@ -38,6 +50,9 @@ namespace CredentialStorageCLR
             set { this._displayText = value ?? ""; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement("UserName", Namespace = StoredCredential.NamespaceURI)]
         public string UserName
         {
@@ -45,6 +60,9 @@ namespace CredentialStorageCLR
             set { this._userName = value ?? ""; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement("Password", Namespace = StoredCredential.NamespaceURI)]
         public string Password
         {
@@ -52,6 +70,9 @@ namespace CredentialStorageCLR
             set { this._password = value ?? ""; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlElement("Location", Namespace = StoredCredential.NamespaceURI)]
         public string Location
         {
@@ -59,6 +80,9 @@ namespace CredentialStorageCLR
             set { this._location = value ?? ""; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override CredentialComponent Clone()
         {
             StoredCredential clone = new StoredCredential();

@@ -642,7 +642,7 @@ namespace WpfCLR
         /// <param name="value">The XML to be parsed.</param>
         /// <param name="exception">Exception that was thrown while trying to validate the document.</param>
         /// <param name="xmlDocument">The parsed XML document object or null if an exception occurred.</param>
-		/// <returns>True if the XML is valid; otherwise false. This invokes <seealso cref="AssertValidXaml(string,XmlDocument)" /> to validate the XML.</returns>
+		/// <returns>True if the XML is valid; otherwise false. This invokes <seealso cref="AssertValidXaml(string, out XmlDocument)"/> to validate the XML.</returns>
 		public static bool TryValidateXaml(string value, out Exception exception, out XmlDocument xmlDocument)
 		{
 			try 

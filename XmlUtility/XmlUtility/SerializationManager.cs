@@ -6,6 +6,9 @@ using System.Xml.Serialization;
 
 namespace XmlUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SerializationManager<T>
         where T : class, new()
     {
@@ -21,8 +24,14 @@ namespace XmlUtilityCLR
         private bool? _checkCharacters = null;
         private ConformanceLevel? _conformanceLevel = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Uri Location { get { return this._location; } private set { this._location = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string LocalPath
         {
             get
@@ -32,6 +41,9 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string OriginalString
         {
             get
@@ -41,8 +53,14 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string BaseURI { get { return this._baseURI; } private set { this._baseURI = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public XmlReaderSettings ReaderSettings
         {
             get { return this._readerSettings; }
@@ -57,12 +75,24 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? DetectEncodingFromByteOrderMarks { get { return this._detectEncodingFromByteOrderMarks; } private set { this._detectEncodingFromByteOrderMarks = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Encoding Encoding { get { return this._encoding; } private set { this._encoding = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int? BufferSize { get { return this._bufferSize; } private set { this._bufferSize = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public XmlWriterSettings WriterSettings
         {
             get { return this._writerSettings; }
@@ -78,10 +108,19 @@ namespace XmlUtilityCLR
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Append { get { return this._append; } private set { this._append = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? CheckCharacters { get { return this._checkCharacters; } private set { this._checkCharacters = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ConformanceLevel? ConformanceLevel { get { return this._conformanceLevel; } private set { this._conformanceLevel = value; } }
 
         #region Load
@@ -1109,6 +1148,7 @@ namespace XmlUtilityCLR
         /// Serializes the current <typeparamref name="T"/> as XML, to the specified <see cref="System.Text.StringBuilder"/>.
         /// </summary>
         /// <param name="output">The <see cref="System.Text.StringBuilder"/> to write the XML to.</param>
+        /// <param name="location">Location to save to.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="output"/> is null.</exception>
         public void Save(StringBuilder output, Uri location)
         {
@@ -1149,6 +1189,7 @@ namespace XmlUtilityCLR
         /// </summary>
         /// <param name="output">The <see cref="System.Text.StringBuilder"/> to write the XML to.</param>
         /// <param name="settings">The <see cref="System.Xml.XmlWriterSettings"/> object used to configure the XML writer.</param>
+        /// <param name="location">Location to save to.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="output"/> is null.</exception>
         public void Save(StringBuilder output, XmlWriterSettings settings, Uri location)
         {
