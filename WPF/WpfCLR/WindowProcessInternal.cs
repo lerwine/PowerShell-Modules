@@ -23,14 +23,14 @@ namespace WpfCLR
 		private PowerShell _powerShell = null;
 		private Dictionary<string, object> _namedElements = new Dictionary<string, object>();
 		private ThisObj _thisObj;
-		private WpfWindow _windowObj;
+		private WpfWindow_obsolete _windowObj;
 		private XmlDocument _windowXaml;
 		private Window _mainWindow = null;
 		private ManualResetEvent _windowClosedEvent = new ManualResetEvent(false);
 		
 		#region Methods
 		
-		internal WindowProcessInternal(WpfWindow windowObj, XmlDocument windowXaml, bool showAsDialog, PSHost host)
+		internal WindowProcessInternal(WpfWindow_obsolete windowObj, XmlDocument windowXaml, bool showAsDialog, PSHost host)
 		{
 			#region Auto-detect named elements
 			

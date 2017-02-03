@@ -102,6 +102,12 @@
     <Compile Include="XamlLoadResult.cs" />
     <Compile Include="XamlUtility.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IOUtility\IOUtilityCLR\IOUtilityCLR.csproj">
+      <Project>{f32b9a73-7059-4cc3-b376-d6bab4ab76fb}</Project>
+      <Name>IOUtilityCLR</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>pushd
