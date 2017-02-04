@@ -105,7 +105,7 @@ namespace Erwine.Leonard.T.Setup
 				if (String.IsNullOrEmpty(name))
 					return _moduleInfo.Guid.ToString("n");
 				try { return Path.GetFileNameWithoutExtension(name); } catch { return name; }
-            }
+			}
 		}
 		
 		public string Author
