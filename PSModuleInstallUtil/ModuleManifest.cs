@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
-using System.Text;
 
 namespace PSModuleInstallUtil
 {
@@ -15,6 +14,20 @@ namespace PSModuleInstallUtil
         private Hashtable _manifestData;
         
         public FileInfo ManifestFileInfo { get; private set; }
+
+        public string DisplayName
+        {
+            get
+            {
+                string name = Name;
+                if (name != null && (name = name.Trim()).Length > 0)
+                    return name;
+                name = RootModule;
+                if (String.IsNullOrEmpty(name))
+                    return Guid.ToString("n");
+                try { return Path.GetFileNameWithoutExtension(name); } catch { return name; }
+            }
+        }
 
         /// <summary>
         /// Name of module

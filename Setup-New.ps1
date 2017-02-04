@@ -1,29 +1,28 @@
-﻿$Path = 'E:\Visual Studio 2015\Projects\PowerShell-Modules\master\PsNuGet\PsNuGet\Erwine.Leonard.T.PsNuGet.psd1';
+﻿cls
+$Path = 'E:\Visual Studio 2015\Projects\PowerShell-Modules\master\PsNuGet\PsNuGet\Erwine.Leonard.T.PsNuGet.psd1';
 $Script:InstallerDefaults = @{
 	DefautModuleNamePrefix = 'Erwine.Leonard.T.';
 	Author = 'Leonard T. Erwine';
 	CompanyName = 'Leonard T. Erwine';
 };
 
-if ($PSVersionTable.PSVersion.Major -lt 3) { $Script:$PSScriptRoot = $MyInvocation.InvocationName}
-$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
-	
-$Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
-$Local:Assemblies = @($Local:ModuleManifest.PrivateData.CompilerOptions.AssemblyReferences | ForEach-Object {
-	(Add-Type -AssemblyName $_ -PassThru)[0].Assembly.Location
-});
-$Local:Splat = @{
+if ($PSVersionTable.PSVersion.Major -lt 3) { $Script:PSScriptRoot = $MyInvocation.InvocationName | Split-Path -Parent }
+$NewCompilerParametersSplat = @{
 	TypeName = 'System.CodeDom.Compiler.CompilerParameters';
-	ArgumentList = (,$Local:Assemblies);
+	ArgumentList = (,@(([System.Management.Automation.PSObject].Assembly.Location) | ForEach-Object {
+		(Add-Type -AssemblyName $_ -PassThru)[0].Assembly.Location
+	}));
 	Property = @{
 		IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
 	}
 };
-if ($Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols -ne '') {
-	$Local:Splat.Property.CompilerOptions = '/define:' + $Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols;
+if ($PSVersionTable.PSVersion.Major -gt 5) {
+	$NewCompilerParametersSplat.Property.CompilerOptions = '/define:DEBUG;TRACE';
+} else {
+	$NewCompilerParametersSplat.Property.CompilerOptions = '/define:DEBUG;TRACE;PSV' + $PSVersionTable.PSVersion.Major.ToString();
 }
 
-$Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
+Add-Type -Path (('ModuleManifest.cs') | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @NewCompilerParametersSplat);
 
 Function Get-RootModule {
 	[CmdletBinding(DefaultParameterSetName = 'Path')]
@@ -39,23 +38,38 @@ Function Get-RootModule {
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'ModuleInfo')]
 		[System.Management.Automation.PSModuleInfo]$ModuleInfo
 	)
+	
+	Begin { Write-Debug -Message ('Begin Get-RootModule: ParameterSetName = {0}' -f $PSCmdlet.DefaultParameterSetName); }
 
 	Process {
+		
 		$DirectoryPath = '';
 		if ($ModuleInfo -ne $null) {
+				
+			Write-Verbose -Message ('Get-RootModule: ModuleInfo.Name = {0}' -f $ModuleInfo.Name);
 			if ($ModuleInfo.Path -eq $null -or $ModuleInfo.Path.Trim().Length -eq 0) {
 				Write-Error -Message 'Module manifest does not specify a path.' -Category ObjectNotFound -TargetObject $ModuleInfo;
 			} else {
+				Write-Debug -Message ('Get-RootModule: Getting parent path for "{0}"' -f $ModuleInfo.Path);
 				$DirectoryPath = $ModuleInfo.Path | Split-Path -Parent;
-				if ($ModuleInfo.RootModule -eq $null -or $ModuleInfo.RootModule.Trim().Length -eq 0) {
+				
+				$RootModule = $ModuleInfo.RootModule;
+				if ($ModuleInfo.RootModule -eq $null -or $ModuleInfo.RootModule.Trim().Length -eq 0) { $RootModule = $ModuleInfo.ModuleBase }
+				if ($RootModule -eq $null -or $RootModule.Trim().Length -eq 0) {
+					Write-Verbose -Message ('Get-RootModule: Module "{0}" does not define a RootModule or ModuleBase' -f $ModuleInfo.Path);
 					if ($ModuleInfo.Name -eq $null -or $ModuleInfo.Name.Trim().Length -eq 0) {
 						$Name = [System.IO.Path]::GetFileNameWithoutExtension($ModuleInfo.Path);
 					} else {
-						$Name = $ModuleInfo.Name 
+						$Name = $ModuleInfo.Name; 
 					}
 				}
 			}
 		} else {
+			if ($PSBoundParameters.ContainsKey('Name')) {
+				Write-Debug -Message ('Process Get-RootModule: Path = {0}; Name = {1}' -f $Path, $Name);
+			} else {
+				Write-Debug -Message ('Process Get-RootModule: Path = {0}' -f $Path);
+			}
 			$DirectoryPath = $Path;
 			if (Test-Path -Path $DirectoryPath -PathType Leaf) {
 				$DirectoryPath = $DirectoryPath | Split-Path -Parent;
@@ -118,6 +132,8 @@ Function Get-RootModule {
 			}
 		}
 	}
+	
+	End { Write-Debug -Message ('End Get-RootModule: ParameterSetName = {0}' -f $PSCmdlet.DefaultParameterSetName); }
 }
 
 Function Open-ModuleManifest {
@@ -171,7 +187,32 @@ Function Open-ModuleManifest {
 						$ManifestPath = ($RootModule | Split-Path -Parent) | Join-Path -ChildPath ([System.IO.Path]::GetFileNameWithoutExtension($RootModule) + '.psd1');
 					}
 					$RootModule = $RootModule | Split-Path -Leaf;
-					$ModuleManifest = New-ModuleManifest -Path $ManifestPath -RootModule $RootModule -Author $Script:InstallerDefaults.Author -CompanyName $Script:InstallerDefaults.CompanyName -Copyright ('(c) {0:yyyy} {1}. All rights reserved.' -f [System.DateTime]::Now, $Script:InstallerDefaults.CompanyName) -Guid ([System.Guid]::NewGuid()) -ModuleVersion '1.0' -ErrorVariable 'ModuleLoadError' -PassThru;
+					$NewModuleManifestArgs = @{
+						Path = $ManifestPath;
+						Author = $Script:InstallerDefaults.Author;
+						CompanyName = $Script:InstallerDefaults.CompanyName;
+						Copyright = ('(c) {0:yyyy} {1}. All rights reserved.' -f [System.DateTime]::Now, $Script:InstallerDefaults.CompanyName);
+						Guid = ([System.Guid]::NewGuid());
+						ModuleVersion = '1.0';
+						ErrorVariable = 'ModuleLoadError';
+						Description = '';
+						NestedModules = @();
+						TypesToProcess = @();
+						FormatsToProcess = @();
+						RequiredAssemblies = @();
+						FileList = @();
+					}
+					if ($PSVersionTable.PSVersion.Major -lt 3) {
+						$NewModuleManifestArgs['ModuleToProcess'] = $RootModule;
+					} else {
+						$NewModuleManifestArgs['RootModule'] = $RootModule;
+					}
+					New-ModuleManifest @NewModuleManifestArgs;
+					$ModuleManifest = Test-ModuleManifest -Path $ManifestPath -ErrorVariable 'ModuleLoadError';
+					if ((Resolve-Path -Path $ModuleManifest.Path).Path -ine (Resolve-Path -Path $ManifestPath).Path) {
+						Write-Error -Message "Module not loaded from source location." -Category OpenError -TargetObject $Path -ErrorVariable 'ModuleLoadError';
+						$ModuleManifest = $null;
+					}
 				}
 			} else {
 				Write-Error -Message 'Module not loaded from source location.' -Category OpenError -TargetObject $Path -ErrorVariable 'ModuleLoadError';
@@ -180,7 +221,7 @@ Function Open-ModuleManifest {
 		if ($ModuleManifest -eq $null) {
 			if ($ModuleLoadError -eq $null -or $ModuleLoadError.Count -eq 0) { Write-Error -Message 'Module not loaded.' -Category OpenError -TargetObject $Path }
 		} else {
-			$ModuleManifest | Write-Output;
+			New-Object -TypeName 'PSModuleInstallUtil.ModuleManifest' -ArgumentList $ModuleManifest;
 		}
 	}
 }
@@ -340,36 +381,41 @@ Function Get-ModuleDirectory {
 			if (Test-IsModuleDirectory -Path $Path) {
 				$Path | Write-Output;
 			} else {
-				$MaxDepth--;
-				if ($MaxDepth -gt 0) {
-					$Paths = Get-ChildItem -Path $Path -Directory | ForEach-Object { $_.FullName };
+				if ($MaxDepth -gt 1) {
+					$ChildItems = @();
+					if ($PSVersionTable.Version.Major -lt 3) {
+						$ChildItems = @(Get-ChildItem -Path $Path | Where-Object { $_.PSIsContainer });
+					} else {
+						$ChildItems = @(Get-ChildItem -Path $Path -Directory);
+					}
+					$Paths = $ChildItems | ForEach-Object { $_.FullName };
 					if ($Paths -ne $null) {
 						if ($Installable) {
 							if ($PSBoundParameters.ContainsKey('ProgressId')) {
 								if ($PSBoundParameters.ContainsKey('ProgressParentId')) {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -ProgressId $ProgressId -ProgressParentId $ProgressParentId -Installable;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1)-ProgressActivity $ProgressActivity -ProgressId $ProgressId -ProgressParentId $ProgressParentId -Installable;
 								} else {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -ProgressId $ProgressId -Installable;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity -ProgressId $ProgressId -Installable;
 								}
 							} else {
 								if ($PSBoundParameters.ContainsKey('ProgressParentId')) {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -ProgressParentId $ProgressParentId -Installable;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity -ProgressParentId $ProgressParentId -Installable;
 								} else {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -Installable;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity -Installable;
 								}
 							}
 						} else {
 							if ($PSBoundParameters.ContainsKey('ProgressId')) {
 								if ($PSBoundParameters.ContainsKey('ProgressParentId')) {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -ProgressId $ProgressId -ProgressParentId $ProgressParentId;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity -ProgressId $ProgressId -ProgressParentId $ProgressParentId;
 								} else {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -ProgressId $ProgressId;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity -ProgressId $ProgressId;
 								}
 							} else {
 								if ($PSBoundParameters.ContainsKey('ProgressParentId')) {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity -ProgressParentId $ProgressParentId;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity -ProgressParentId $ProgressParentId;
 								} else {
-									$Paths | Get-ModuleDirectory -MaxDepth $MaxDepth -ProgressActivity $ProgressActivity;
+									$Paths | Get-ModuleDirectory -MaxDepth ($MaxDepth - 1) -ProgressActivity $ProgressActivity;
 								}
 							}
 						}
@@ -403,74 +449,81 @@ Function Open-PSProject {
 	[OutputType([System.Xml.XmlDocument])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_.EndsWith('.psroj')})]
 		[string]$Path,
 
 		[switch]$Create
 	)
 
 	Process {
-		$XmlPath = $Path;
-		$Exists = $false;
-		if (-not $Path.ToLower().EndsWith('.psproj')) {
-			$DirectoryPath = $Path;
-			if (Test-Path -Path $DirectoryPath -PathType Leaf) {
-				$DirectoryPath = $DirectoryPath | Split-Path -Parent;
-			} else {
-				$Exists = Test-Path -Path $DirectoryPath -PathType Container;
-				if (-not (Test-Path -Path $DirectoryPath -PathType Container)) {
-					$DirectoryPath = $DirectoryPath | Split-Path -Parent;
-					if (-not (Test-Path -Path $DirectoryPath -PathType Container)) { $DirectoryPath = $Path }
-				}
-			}
-			$Name = [System.IO.Path]::GetFileNameWithoutExtension($Path);
-			$ManifestPath = $null;
-			if (-not $Name.StartsWith($Script:InstallerDefaults.DefautModuleNamePrefix)) {
-				$ManifestPath = $DirectoryPath | Join-Path -ChildPath ($Script:InstallerDefaults.DefautModuleNamePrefix + $Name + '.psd1');
-				$Exists = Test-Path -Path $ManifestPath -PathType Leaf;
-			}
-			if (-not $Exists) {
-				$ManifestPath = $DirectoryPath | Join-Path -ChildPath ($Name + '.psd1');
-			}
-		}
-		$ModuleManifest = $null;
-		$ModuleLoadError = $null;
-		if ($Exists -or (Test-Path -Path $ManifestPath -PathType Leaf)) {
-			$ModuleManifest = Test-ModuleManifest -Path $ManifestPath -ErrorVariable 'ModuleLoadError';
-			if ((Resolve-Path -Path $ModuleManifest.Path).Path -ine (Resolve-Path -Path $ManifestPath).Path) {
-				Write-Error -Message "Module not loaded from source location." -Category OpenError -TargetObject $Path -ErrorVariable 'ModuleLoadError';
-				$ModuleManifest = $null;
-			}
+		$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+		if (Test-Path -Path $Path -PathType Leaf) {
+			$XmlDocument.Load($Path);
 		} else {
-			if ($Create) {
-				$RootModule = Get-RootModule -Path $Path -ErrorVariable 'ModuleLoadError';
-				if ($RootModule -ne $null) {
-					if ($RootModule.ToLower().EndsWith('.psd1')) {
-						$ManifestPath = $RootModule;
-					} else {
-						$ManifestPath = ($RootModule | Split-Path -Parent) | Join-Path -ChildPath ([System.IO.Path]::GetFileNameWithoutExtension($RootModule) + '.psd1');
-					}
-					$RootModule = $RootModule | Split-Path -Leaf;
-					$ModuleManifest = New-ModuleManifest -Path $ManifestPath -RootModule $RootModule -Author $Script:InstallerDefaults.Author -CompanyName $Script:InstallerDefaults.CompanyName -Copyright ('(c) {0:yyyy} {1}. All rights reserved.' -f [System.DateTime]::Now, $Script:InstallerDefaults.CompanyName) -Guid ([System.Guid]::NewGuid()) -ModuleVersion '1.0' -ErrorVariable 'ModuleLoadError' -PassThru;
-				}
-			} else {
-				Write-Error -Message 'Module not loaded from source location.' -Category OpenError -TargetObject $Path -ErrorVariable 'ModuleLoadError';
-			}
+			[Xml]$XmlDocument = @'
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid><!-- TODO: Need project Guid --></ProjectGuid>
+	<OutputType>Exe</OutputType>
+	<RootNamespace>MyApplication</RootNamespace>
+	<AssemblyName>MyApplication</AssemblyName>
+	<Name><!-- TODO: Need module Name --></Name>
+	<Author><!-- TODO: Need module Author --></Author>
+	<CompanyName><!-- TODO: Need module CompanyName --></CompanyName>
+	<Copyright><!-- TODO: Need module Copyright --></Copyright>
+	<Description><!-- TODO: Need module Description --></Description>
+	<Guid><!-- TODO: Need module Guid --></Guid>
+	<Version><!-- TODO: Need module Version --></Version>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE<!-- TODO: Need other constants here --></DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+	<Compile Include="Erwine.Leonard.T.WPF.psm1" />
+	<Compile Include="Erwine.Leonard.T.WPF.psd1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>
+'@;
 		}
-		if ($ModuleManifest -eq $null) {
-			if ($ModuleLoadError -eq $null -or $ModuleLoadError.Count -eq 0) { Write-Error -Message 'Module not loaded.' -Category OpenError -TargetObject $Path }
-		} else {
-			$ModuleManifest | Write-Output;
-		}
+		$XmlDocument | Write-Output;
 	}
 }
 
 Write-Progress -Activity 'Initializing' -Status 'Looking for installable modules' -Id 1;
-$ModuleDirectories = @(Get-ModuleDirectory -Path 'E:\Visual Studio 2015\Projects\PowerShell-Modules\master' -Installable -ProgressActivity 'Searching for module install folders.' -ProgressId 2 -ProgressParentId 1);
+$ModuleDirectories = @(Get-ModuleDirectory -Path $PSScriptRoot -Installable -ProgressActivity 'Searching for module install folders.' -ProgressId 2 -ProgressParentId 1);
 Write-Progress -Activity 'Searching for module install folders.' -Status 'Finished' -Id 2 -ParentId 1 -Completed;
-('{0} installable modules found' -f $ModuleDirectories.Count) | Write-Host;
-
+$FaultCount = 0;
+$ModuleList = @($ModuleDirectories | ForEach-Object {
+	$ModuleManifest = $null;
+	Write-Progress -Activity 'Verifying module manifests.' -Status 'Opening' -Id 2 -ParentId 1 -CurrentOperation $_;
+	$ModuleManifest = Open-ModuleManifest -Path $_ -ErrorAction SilentlyContinue;
+	if ($ModuleManifest -eq $null) {
+		Write-Progress -Activity 'Verifying module manifests.' -Status 'Creating' -Id 2 -ParentId 1 -CurrentOperation $_;
+		$ModuleManifest = Open-ModuleManifest -Path $_ -Create -ErrorAction Continue;
+	}
+	if ($ModuleManifest -eq $null) { $FaultCount++ } else { $ModuleManifest | Write-Output }
+});
+('{0} installable modules found' -f $ModuleList.Count) | Write-Host;
 Write-Progress -Activity 'Initializing' -Status 'Finished' -Id 1 -Completed;
-
+$ModuleList | ForEach-Object { '{0} {1}' -f $_.DisplayName, $_.ModuleInfo.ModuleType }
 <#
 $ParseErrors = $null;
 $Tokens = [System.Management.Automation.PSParser]::Tokenize([System.IO.File]::ReadAllText('E:\Visual Studio 2015\Projects\PowerShell-Modules\master\PsNuGet\PsNuGet\Erwine.Leonard.T.PsNuGet.psd1'), [ref]$ParseErrors);
