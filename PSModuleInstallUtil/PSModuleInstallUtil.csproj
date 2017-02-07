@@ -110,6 +110,7 @@
   <ItemGroup>
     <None Include="Common.ttinc" />
     <None Include="README.md" />
+    <None Include="Untitled3.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Setup.tt">

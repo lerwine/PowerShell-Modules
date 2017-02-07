@@ -1,4 +1,4 @@
-Function Install-AssemblyModule {
+﻿Function Install-AssemblyModule {
     <#
         .SYNOPSIS
             Compiles and installs assembly
@@ -37,7 +37,7 @@ Function Install-AssemblyModule {
         # Include debug information in the compiled executable.
         [switch]$IncludeDebugInformation
     )
-	
+    
     Begin { $SourceFiles = @() }
     Process { $SourceFiles += $Compile }
     End {
