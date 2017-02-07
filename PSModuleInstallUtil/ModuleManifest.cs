@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -28,6 +29,7 @@ namespace PSModuleInstallUtil
                 try { return Path.GetFileNameWithoutExtension(name); } catch { return name; }
             }
         }
+        FileDirectoryComponent _file;
 
         /// <summary>
         /// Name of module
