@@ -11,11 +11,12 @@ using System.Xml;
 
 namespace PSModuleInstallUtil
 {
-    public class PsProject
+    public class PsProject : INotifyPropertyChanged
     {
         public const string xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
         public const string ElementName_Project = "Project";
         public const string ElementName_PropertyGroup = "PropertyGroup";
+
         public const string ElementName_ProjectGuid = "ProjectGuid";
 
         public Guid ProjectGuid
@@ -223,11 +224,13 @@ namespace PSModuleInstallUtil
 
         public ConditionalPropertyGroup ReleasePropertyGroup { get { return _releasePropertyGroup; } }
 
-        public class ConditionalPropertyGroup
+        public sealed class ConditionalPropertyGroup : INotifyPropertyChanged
         {
             internal ConditionalPropertyGroup(XmlElement element) { _element = element; }
 
             private XmlElement _element;
+
+            public event PropertyChangedEventHandler PropertyChanged;
 
             public string[] DebugSymbols
             {
@@ -246,6 +249,13 @@ namespace PSModuleInstallUtil
                     return value;
                 }
                 set { SetElementString(_element, ElementName_Description, (value.HasValue) ? value.Value.ToString() : null); }
+            }
+
+            private void RaisePropertyChanged(string propertyName)
+            {
+                PropertyChangedEventHandler handler = PropertyChanged;
+                if (handler != null)
+                    handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -269,6 +279,8 @@ namespace PSModuleInstallUtil
         private ConditionalPropertyGroup _releasePropertyGroup;
         private XmlElement _contentItemGroup = null;
         private XmlElement _compileItemGroup = null;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         internal static string GetElementString(XmlElement parentElement, string elementName, string defaultValue)
         {
@@ -442,5 +454,19 @@ namespace PSModuleInstallUtil
                 return null;
             return new PsProject(xmlDocument, fileInfo);
         }
+
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChangedEventArgs args = new PropertyChangedEventArgs(propertyName);
+            try { OnPropertyChanged(args); }
+            finally
+            {
+                PropertyChangedEventHandler handler = PropertyChanged;
+                if (handler != null)
+                    handler.Invoke(this, args);
+            }
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) { }
     }
 }
