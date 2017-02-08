@@ -29,7 +29,6 @@ namespace PSModuleInstallUtil
                 try { return Path.GetFileNameWithoutExtension(name); } catch { return name; }
             }
         }
-        FileDirectoryComponent _file;
 
         /// <summary>
         /// Name of module
