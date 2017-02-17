@@ -15,7 +15,7 @@ namespace WpfCLR
     public class ThisObj
     {
         #region Fields
-		private WpfWindow _windowObj;
+		private WpfWindow_obsolete _windowObj;
 		private GetMainWindowHandler _getMainWindow;
 		private ReadOnlyDictionary<string, object> _namedElements = null;
 		private PSHost _host;
@@ -26,7 +26,7 @@ namespace WpfCLR
         /// <summary>
         /// Named elements (control) detected from XAML markup.
         /// </summary>
-		/// <remarks>When the <see cref="WpfWindow.BeforeWindowCreated"/> <see cref="ScriptBlock"/> is invoked, the values will be the corresponding elements in the XAML markup.</remarks>
+		/// <remarks>When the <see cref="WpfWindow_obsolete.BeforeWindowCreated"/> <see cref="ScriptBlock"/> is invoked, the values will be the corresponding elements in the XAML markup.</remarks>
 		public ReadOnlyDictionary<string, object> NamedElements { get { return _namedElements; } }
 		
         /// <summary>
@@ -36,7 +36,7 @@ namespace WpfCLR
 		public Window MainWindow { get { return _getMainWindow(); } }
 		
         /// <summary>
-        /// Data which will be synchronized with the <see cref="WpfWindow.SynchronizedData" /> property of the object responsible for creating the WPF window.
+        /// Data which will be synchronized with the <see cref="WpfWindow_obsolete.SynchronizedData" /> property of the object responsible for creating the WPF window.
         /// </summary>
 		public System.Collections.Hashtable SynchronizedData { get { return _windowObj.SynchronizedData; } }
 		
@@ -69,7 +69,7 @@ namespace WpfCLR
 		
 		#region Constructors
 		
-		internal ThisObj(PSHost host, WpfWindow windowObj, Dictionary<string, object> namedElements, GetMainWindowHandler getMainWindow)
+		internal ThisObj(PSHost host, WpfWindow_obsolete windowObj, Dictionary<string, object> namedElements, GetMainWindowHandler getMainWindow)
 		{
 			if (windowObj == null)
 				throw new ArgumentNullException("windowObj");
@@ -92,10 +92,10 @@ namespace WpfCLR
 		{
 			private ScriptBlock _scriptBlock;
 			private PSHost _host;
-			private WpfWindow _windowObj;
+			private WpfWindow_obsolete _windowObj;
 			private EventAttachment() { }
 			
-			public static EventAttachment AttachButtonClick(Button button, ScriptBlock scriptBlock, WpfWindow windowObj, PSHost host)
+			public static EventAttachment AttachButtonClick(Button button, ScriptBlock scriptBlock, WpfWindow_obsolete windowObj, PSHost host)
 			{
 				EventAttachment eventAttachment = new EventAttachment();
 				eventAttachment._scriptBlock = scriptBlock;

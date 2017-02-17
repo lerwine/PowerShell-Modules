@@ -1,0 +1,32 @@
+﻿namespace PSModuleInstallUtil.Module
+{
+    public enum ScriptNodeType
+    {
+        Document,
+        Inert,
+        Comment,
+        Attribute,
+        ScriptBlock,
+        Keyword,
+        LineContinuation,
+        LoopLabel,
+        NewLine,
+        Number,
+        Operator,
+        Position,
+        String,
+        Type,
+        Variable,
+        Unknown,
+        Command,
+        SubExpression,
+        Array,
+        GroupEnd,
+        Member,
+        Associative,
+        NestedExpression,
+        StatementSeparator,
+        CommandArgument,
+        CommandParameter
+    }
+}

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+  <Type>
+    <Name>System.Uri</Name>
+    <Members>
+      <ScriptMethod>
+        <Name>GetParentPathUrl</Name>
+        <Script>
+            $s = @();
+            $r = $false;
+            [Uri]$u = $args[0];
+            if ($u -ne $null) {
+                if (-not $u.IsAbsoluteUri) {
+                    $o = $u.OriginalString;
+                    $r = -not ($o.StartsWith('/') -or $o.StartsWith('\'));
+                    if ($r) { $o = 'http://tempuri.org/' + $o; } else { $o = 'http://tempuri.org' + $o; }
+                    $u = New-Object -TypeName 'System.Uri' -ArgumentList $o;
+                }
+                if ($s.Count -gt 2 -or ($s.Count -eq 2 -and -not $r)) {
+                    $s = ($u.Segments);
+                    $u = New-Object -TypeName 'System.Uri' -ArgumentList $u, '/';
+                    $u = New-Object -TypeName 'System.Uri' -ArgumentList $u, (-join $s[0..($s.Count - 2)]);
+                    if ($Uri.IsAbsoluteUri) {
+                        $u;
+                    } else {
+                        if ($r) { [System.Uri]($u.PathAndQuery.Substring(1)) } else { [System.Uri]($u.PathAndQuery) }
+                    }
+                }
+            }
+        </Script>
+      </ScriptMethod>      
+    </Members>
+  </Type>
+</Types>
