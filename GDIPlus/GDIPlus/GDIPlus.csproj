@@ -85,6 +85,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExifPropertyDetailAttribute.cs" />
+    <Compile Include="ExifPropertyTag.cs" />
+    <Compile Include="ExifPropertyType.cs" />
+    <Compile Include="ImageInfo.cs" />
+    <Compile Include="ImageType.cs" />
     <Compile Include="Collections\GenericAccessObservableCollection.cs" />
     <Compile Include="Collections\IExpandable.cs" />
     <Compile Include="Collections\IGenericAccessObservableCollection.cs" />
