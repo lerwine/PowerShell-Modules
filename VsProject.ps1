@@ -589,14 +589,6 @@ Function Get-VsProjectProperties {
                     $Properties['OutputPath'] = $Configuration;
                 }
             }
-        } else {
-            if ($PSBoundParameters.ContainsKey('OutputPath')) {
-                $Properties['OutputPath'] = $OutputPath;
-                $Properties['BaseOutputPath'] = $Script:ProjectDir;
-            } else {
-                $Properties['BaseOutputPath'] = $Script:ProjectDir | Split-Path -Parent;
-                $Properties['OutputPath'] = $Script:ProjectDir | Split-Path -Leaf;
-            }
         }
         New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
     } else {
@@ -717,15 +709,16 @@ Function Invoke-BuildVsProject {
     )
 
     $PreviousLocation = Get-Location;
-    Set-Location -Path ($SourceProject | Split-Path -Parent);
+    $ProjectDir = $SourceProject | Split-Path -Parent;
+    Set-Location -Path $ProjectDir;
     try {
         $CsProj = New-Object -TypeName 'System.Xml.XmlDocument';
         $CsProj.Load($SourceProject);
         $VsProjectProperties = $null;
         if ($PSBoundParameters.ContainsKey('Configuration')) {
-            $VsProjectProperties = Get-VsProjectProperties -ProjectFile $CsProj -Configuration $Configuration;
+            $VsProjectProperties = Get-VsProjectProperties -ProjectFile $CsProj -Configuration $Configuration -BaseOutputPath $ProjectDir;
         } else {
-            $VsProjectProperties = Get-VsProjectProperties -ProjectFile $CsProj;
+            $VsProjectProperties = Get-VsProjectProperties -ProjectFile $CsProj -BaseOutputPath $ProjectDir;
         }
         if (-not $PSBoundParameters.ContainsKey('OutputDir')) {
             if ($VsProjectProperties.BaseOutputPath -eq $null -or $VsProjectProperties.BaseOutputPath.Length -eq 0) {
