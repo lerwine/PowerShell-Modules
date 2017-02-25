@@ -67,7 +67,6 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("Installation")]
-        [Description("Tests loading module manifest")]
         public void ScriptDocumentParsingTestMethod()
         {
             TestModuleManifestCommand cmd = new TestModuleManifestCommand();

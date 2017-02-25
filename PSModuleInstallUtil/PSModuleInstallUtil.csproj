@@ -121,6 +121,7 @@
     <Compile Include="NotificationForm.Designer.cs">
       <DependentUpon>NotificationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PreProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSObjectHelper.cs" />
     <Compile Include="UriPathBuilder.cs" />

@@ -40,7 +40,13 @@
         return $Test + $Test;
     }
 };
+<#:if PSV2 :#>
+<#:=
+$Text = "#V2`n" + $ScriptBlock.ToString();
+#>
+<#:else:#>
 $Text = $ScriptBlock.ToString();
+<#:endif:#>
 $ParseErrors = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.PSParseError]';
 $Tokens = [System.Management.Automation.PSParser]::Tokenize($Text, [ref]$ParseErrors);
 $Tokens | Select-Object -Property @{Name = 'InnerContent'; Expression = { '"' + $_.Content + '"' } }, @{Name = 'InnerLength'; Expression = { $_.Content.Length } }, 'Type', @{Name = 'OuterContent'; Expression = { '"' + $Text.Substring($_.Start, $_.Length) + '"' } }, @{Name = 'OuterLength'; Expression = { $_.Length } } | Out-GridView;

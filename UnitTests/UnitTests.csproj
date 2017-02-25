@@ -108,6 +108,7 @@
     <Compile Include="ModuleManifestUnitTest.cs" />
     <Compile Include="NetworkUtilityUnitTest.cs" />
     <Compile Include="PowerShellHelper.cs" />
+    <Compile Include="PreProcessorUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSInvocationResources.Designer.cs">
       <AutoGen>True</AutoGen>

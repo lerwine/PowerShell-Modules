@@ -608,6 +608,71 @@ namespace PSModuleInstallUtil
         public const string FileExtension_ModuleManifest = ".psd1";
         public const string Xmlns_VsProject = "http://schemas.microsoft.com/developer/msbuild/2003";
 
+        public int IndexOfBeginHashtable(Collection<PSToken> tokens, int startRange)
+        {
+            for (int index = startRange; index < tokens.Count; index++)
+            {
+                if (tokens[index].Type == PSTokenType.GroupStart && tokens[index].Content == "@{")
+                    return index;
+
+                if (tokens[index].Type == PSTokenType.GroupEnd)
+                    break;
+            }
+
+            return -1;
+        }
+
+        private int IndexOfGroupEnd(Collection<PSToken> tokens, int startRange)
+        {
+            for (int index = startRange; index < tokens.Count; index++)
+            {
+                if (tokens[index].Type == PSTokenType.GroupStart)
+                    index = IndexOfGroupEnd(tokens, index + 1);
+
+                if (tokens[index].Type == PSTokenType.GroupEnd)
+                    return index;
+            }
+
+            return -1;
+        }
+
+        public int GetNextMemberIndex(Collection<PSToken> tokens, int startRange)
+        {
+            for (int index = startRange; index < tokens.Count; index++)
+            {
+                if (tokens[index].Type == PSTokenType.GroupEnd)
+                    break;
+
+                if (tokens[index].Type == PSTokenType.GroupStart)
+                    index = IndexOfGroupEnd(tokens, index + 1);
+
+                else if (tokens[index].Type == PSTokenType.Member && tokens[index - 1].Type != PSTokenType.Operator)
+                    return index;
+            }
+
+            return -1;
+        }
+
+        public int GetMemberEnd(Collection<PSToken> tokens, int startRange)
+        {
+            int nextMember = GetNextMemberIndex(tokens, startRange + 1);
+            for (int index = nextMember - 1; index > startRange; index--)
+            {
+                switch  (tokens[index].Type)
+                {
+                    case PSTokenType.LineContinuation:
+                        return index + 1;
+                    case PSTokenType.StatementSeparator:
+                        return index - 1;
+                    default:
+                        return index;
+                }
+            }
+
+            return startRange;
+        }
+
+
         public ModuleManifest(PSModuleInfo moduleInfo)
         {
             if (moduleInfo == null)
