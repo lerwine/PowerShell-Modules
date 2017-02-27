@@ -28,6 +28,7 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="Compile.ps1" />
     <Compile Include="Erwine.Leonard.T.GDIPlus.dll" />
     <Compile Include="Erwine.Leonard.T.GDIPlus.psd1" />
     <Compile Include="Install.bat" />

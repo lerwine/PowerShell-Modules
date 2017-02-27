@@ -93,6 +93,16 @@
     <Compile Include="Collections\Synchronized\SynchronizedList.cs" />
     <Compile Include="Collections\Synchronized\SynchronizedReadOnlyList.cs" />
     <Compile Include="Collections\Synchronized\TypedEnumeratorWrapper.cs" />
+    <Compile Include="ColorSpaceType.cs" />
+    <Compile Include="ExifPropertyDetailAttribute.cs" />
+    <Compile Include="ExifPropertyTag.cs" />
+    <Compile Include="ExifPropertyType.cs" />
+    <Compile Include="FileBase.cs" />
+    <Compile Include="FileItem.cs" />
+    <Compile Include="ImageDetail.cs" />
+    <Compile Include="FileExtensionMapAttribute.cs" />
+    <Compile Include="ImageInfo.cs" />
+    <Compile Include="FileType.cs" />
     <Compile Include="Palette\ColorCaches\BaseColorCache.cs" />
     <Compile Include="Palette\ColorCaches\Common\ColorModel.cs" />
     <Compile Include="Palette\ColorCaches\EuclideanDistance\EuclideanDistanceColorCache.cs" />
