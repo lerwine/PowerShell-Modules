@@ -242,6 +242,26 @@ namespace Erwine.Leonard.T.GDIPlus
 	  
 		#endregion
 		
+		#region ICollection<KeyValuePair<IExifKey, object>> Members
+		
+        public int Count { get { return _knownValues.Count + _rawValues.Count; } }
+
+        void ICollection<KeyValuePair<IExifKey, object>>.Add(KeyValuePair<IExifKey, object> item) { throw new NotSupportedException(); }
+
+        void ICollection<KeyValuePair<IExifKey, object>>.Clear() { throw new NotSupportedException(); }
+
+        bool ICollection<KeyValuePair<IExifKey, object>>.Contains(KeyValuePair<IExifKey, object> item) { return _innerDictionary.Contains(item); }
+
+        public void CopyTo(KeyValuePair<IExifKey, object>[] array, int arrayIndex) { _innerDictionary.CopyTo(array, arrayIndex); }
+
+        bool ICollection<KeyValuePair<IExifKey, object>>.Remove(KeyValuePair<IExifKey, object> item) { throw new NotSupportedException(); }
+
+        public IEnumerator<KeyValuePair<IExifKey, object>> GetEnumerator() { return _innerDictionary.GetEnumerator(); }
+
+        IEnumerator IEnumerable.GetEnumerator() { return _innerDictionary.GetEnumerator(); }
+
+		#endregion
+		
 		public void ProcessAllRawValues()
 		{
 			if (_rawValues.Count > 0)
