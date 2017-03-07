@@ -10,25 +10,47 @@ namespace Erwine.Leonard.T.GDIPlus
     {
 		private readonly ExifPropertyType _tagType;
 		private readonly ExifPropertyType? _altType;
-		private readonly int? _version2Value;
+		private readonly bool _isNullTerminatedString;
 		private int _count = 1;
 		private string _summary = "";
 		private string _remarks = "";
-		public ExifPropertyDetailAttribute(ExifPropertyType tagType) : this(null, tagType, null) { }
-		public ExifPropertyDetailAttribute(ExifPropertyType tagType, ExifPropertyType altType) : this(null, tagType, altType) { }
-		public ExifPropertyDetailAttribute(ExifPropertyType tagType, int version2Value) : this(version2Value, tagType, null) { }
-		public ExifPropertyDetailAttribute(ExifPropertyType tagType, ExifPropertyType altType, int version2Value) : this(version2Value, tagType, altType) { }
-		private ExifPropertyDetailAttribute(int? version2Value, ExifPropertyType tagType, ExifPropertyType? altType)
+		public ExifPropertyDetailAttribute(ExifPropertyType tagType) : this((tagType == ExifPropertyType.ASCII), tagType, null) { }
+		public ExifPropertyDetailAttribute(ExifPropertyType tagType, ExifPropertyType altType) : this((tagType == ExifPropertyType.ASCII), tagType, altType) { }
+		public ExifPropertyDetailAttribute(bool isNullTerminatedString) : this(isNullTerminatedString, ExifPropertyType.ASCII, null) { }
+		public ExifPropertyDetailAttribute(bool isNullTerminatedString, ExifPropertyType altType) : this(isNullTerminatedString, ExifPropertyType.ASCII, altType) { }
+		private ExifPropertyDetailAttribute(bool isNullTerminatedString, ExifPropertyType tagType, ExifPropertyType? altType)
 		{
 			_tagType = tagType;
 			_altType = altType;
-			_version2Value = version2Value;
+			_isNullTerminatedString = isNullTerminatedString;
+		}
+		private ExifPropertyDetailAttribute(ExifPropertyDetailAttribute copyFrom, ExifPropertyType tagType)
+			: this((tagType == ExifPropertyType.ASCII), tagType, null)
+		{
+			Count = copyFrom.Count;
+			Summary = copyFrom.Summary;
+			Remarks = copyFrom.Remarks;
+			if (tagType != copyFrom.TagType && !copyFrom.HasValue)
+				_altType = copyFrom.TagType;
+			else if (copyFrom.AltType.HasValue && copyFrom.AltType.Value != tagType)
+				_altType = copyFrom.AltType;
 		}
 		public ExifPropertyType TagType { get { return _tagType; } }
 		public ExifPropertyType? AltType { get { return _altType; } }
-		public int? Version2Value { get { return _version2Value; } }
+		public int IsNullTerminatedString { get { return _isNullTerminatedString; } }
 		public int Count { get { return _count; } set { _count = (value < 1) ? 1 : value; } }
 		public string Summary { get { return _summary; } set { _summary = (_summary == null) ? "" : value.Trim(); } }
 		public string Remarks { get { return _remarks; } set { _remarks = (_remarks == null) ? "" : value.Trim(); } }
+		public static ExifPropertyDetailAttribute GetExifPropertyDetail(ExifPropertyTag tag, ExifPropertyType tagType)
+		{
+			Type t = tag.GetType();
+			string n = Enum.GetName(t, tag);
+			ExifPropertyDetailAttribute attribute = t.GetField(n).GetCustomAttribute(typeof(ExifPropertyDetailAttribute), false).OfType<ExifPropertyDetailAttribute>().FirstOrDefault();
+			if (attribute == null)
+				return new ExifPropertyDetailAttribute((tagType == ExifPropertyType.ASCII), tagType, null);
+			if (attribute.TagType == tagType || tagType == ExifPropertyType.Unknown || tagType == ExifPropertyType.BestMatching)
+				return attribute;
+			return new ExifPropertyDetailAttribute(attribute, tagType);
+		}
     }
 }
