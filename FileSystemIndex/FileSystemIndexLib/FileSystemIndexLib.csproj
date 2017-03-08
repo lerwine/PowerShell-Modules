@@ -48,24 +48,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseRecord.cs" />
-    <Compile Include="DirectoryCrawlIterator.cs" />
-    <Compile Include="DirectoryRecord.cs" />
-    <Compile Include="FileInfoEx.cs" />
-    <Compile Include="FileRecord.cs" />
-    <Compile Include="FileSystemFeature.cs" />
-    <Compile Include="FsRecord.cs" />
-    <Compile Include="HashCodeEx.cs" />
-    <Compile Include="HashSetRecord.cs" />
-    <Compile Include="IterationItemType.cs" />
-    <Compile Include="IterationOptions.cs" />
-    <Compile Include="IterationState.cs" />
-    <Compile Include="VolumeInformation.cs" />
+    <Compile Include="ComponentPropertyDictionary.cs" />
+    <Compile Include="CrawlComponentCollection.cs" />
+    <Compile Include="CrawledComponent.cs" />
+    <Compile Include="DirectoryNode.cs" />
+    <Compile Include="FileNode.cs" />
+    <Compile Include="ICrawlComponentContainer.cs" />
+    <Compile Include="ICrawledComponent.cs" />
+    <Compile Include="INestedCrawlComponentContainer.cs" />
+    <Compile Include="ListDictionaryBase.cs" />
+    <Compile Include="NameAndExtension.cs" />
+    <Compile Include="NamedDictionaryBase.cs" />
+    <Compile Include="PropertyDictionary.cs" />
+    <Compile Include="Legacy\BaseRecord.cs" />
+    <Compile Include="Legacy\DirectoryCrawlIterator.cs" />
+    <Compile Include="Legacy\DirectoryRecord.cs" />
+    <Compile Include="Legacy\FileInfoEx.cs" />
+    <Compile Include="Legacy\FileRecord.cs" />
+    <Compile Include="Legacy\FileSystemFeature.cs" />
+    <Compile Include="Legacy\FsRecord.cs" />
+    <Compile Include="Legacy\HashCodeEx.cs" />
+    <Compile Include="Legacy\HashSetRecord.cs" />
+    <Compile Include="Legacy\IterationItemType.cs" />
+    <Compile Include="Legacy\IterationOptions.cs" />
+    <Compile Include="Legacy\IterationState.cs" />
+    <Compile Include="Legacy\VolumeInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VolumeRecord.cs" />
+    <Compile Include="Legacy\VolumeRecord.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
+    <None Include="Legacy\ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
