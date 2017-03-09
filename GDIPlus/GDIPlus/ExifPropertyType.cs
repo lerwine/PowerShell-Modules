@@ -9,12 +9,46 @@ namespace Erwine.Leonard.T.GDIPlus
     public enum ExifPropertyType
     {
 		Undefined,
-		BestMatching,
+        
+        /// <summary>
+        /// 8-bit value that can take any value depending upon the field definition.
+        /// </summary>
+        BestMatching,
+
+        /// <summary>
+        /// 8-bit unsigned integer
+        /// </summary>
 		Byte,
+
+        /// <summary>
+        /// 8-bit byte containing one 7-bit ASCII code.
+        /// </summary>
 		ASCII,
+
+        /// <summary>
+        /// Two consecutive 32-bit (4-byte) unsigned values, where the first value is the numerator, and teh second is the denominator.
+        /// </summary>
 		Rational,
-		Long,
+
+        /// <summary>
+        /// 32-bit (4-byte) unsigned integer.
+        /// </summary>
+        Long,
+
+        /// <summary>
+        /// 16-bit (2-byte) unsigned integer.
+        /// </summary>
 		Short,
-		SRational,
+
+        /// <summary>
+        /// 32-bit (4-byte) signed integer.
+        /// </summary>
+		SLong,
+
+        /// <summary>
+        /// Two consecutive 32-bit (4-byte) signed values, where the first value is the numerator, and teh second is the denominator.
+        /// </summary>
+        SRational,
+        Any
     }
 }

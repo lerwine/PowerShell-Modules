@@ -206,6 +206,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "V4", "V4", "{F4120606-01F6-
 		Assembly\V4\System.Management.Automation.dll = Assembly\V4\System.Management.Automation.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Speech", "Speech\Speech.csproj", "{8AE380F9-4A91-44DE-9E8F-E441E57FF641}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -1029,6 +1031,24 @@ Global
 		{EAC45BAF-738C-419F-882A-287AA6EA7F3B}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{EAC45BAF-738C-419F-882A-287AA6EA7F3B}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{EAC45BAF-738C-419F-882A-287AA6EA7F3B}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

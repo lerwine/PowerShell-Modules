@@ -94,9 +94,12 @@
     <Compile Include="Collections\Synchronized\SynchronizedReadOnlyList.cs" />
     <Compile Include="Collections\Synchronized\TypedEnumeratorWrapper.cs" />
     <Compile Include="ColorSpaceType.cs" />
-    <Compile Include="ExifPropertyDetailAttribute.cs" />
+    <Compile Include="ExifItemDisplayNameAttribute.cs" />
+    <Compile Include="ExifPropertyDescriptionAttribute.cs" />
+    <Compile Include="ExifPropertyTypeAttribute.cs" />
     <Compile Include="ExifPropertyTag.cs" />
     <Compile Include="ExifPropertyType.cs" />
+    <Compile Include="ExifValueTranslationAttribute.cs" />
     <Compile Include="FileBase.cs" />
     <Compile Include="FileItem.cs" />
     <Compile Include="ImageDetail.cs" />
