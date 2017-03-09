@@ -8,11 +8,11 @@ using System.Threading;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
-	public class CrawlComponentCollection<TKey> : IList<ICrawledComponent<TKey>> //, IList, INotifyCollectionChanged
-		where TKey : IComparable
+    public class CrawlComponentCollection<TKey> : IList<ICrawledComponent<TKey>> //, IList, INotifyCollectionChanged
+        where TKey : IComparable
     {
         private object _syncRoot = new object();
-		private IEqualityComparer<TKey> _keyComparer;
+        private IEqualityComparer<TKey> _keyComparer;
         private IList<ICrawledComponent<TKey>> _innerList = new List<ICrawledComponent<TKey>>();
         private ICrawlComponentContainer<TKey> _owner;
 
@@ -294,108 +294,103 @@ namespace Erwine.Leonard.T.GDIPlus
             return existingItems.ToArray();
         }
     }
-    public interface ICrawlComponentContainer<TKey> : /*IEquatable<ICrawlComponentContainer<TKey>>, IComparable<ICrawlComponentContainer<TKey>>, */INotifyPropertyChanging, INotifyPropertyChanged
-    {
-        CrawlComponentCollection<TKey> ItemCollection { get; }
-    }
-    public interface ICrawledComponent<TKey> : /*IEquatable<CrawledComponent<TKey>>, IEquatable<TKey>, IEquatable<IComparable<TKey>>, IComparable<TKey>, */INotifyPropertyChanging, INotifyPropertyChanged, ICloneable
-    {
-        TKey Key { get; set; }
-        ICrawlComponentContainer<TKey> Parent { get; set; }
-        ICrawledComponent<TKey> Clone(ICrawlComponentContainer<TKey> parent);
-        new ICrawledComponent<TKey> Clone();
-    }
-    public interface INestedCrawlComponentContainer<TKey> : ICrawlComponentContainer<TKey>, ICrawledComponent<TKey>
-    {
-        new INestedCrawlComponentContainer<TKey> Clone(ICrawlComponentContainer<TKey> directory);
-        new INestedCrawlComponentContainer<TKey> Clone();
-    }
-    public abstract class CrawledComponent<TKey> : ICrawledComponent<TKey>
-    {
-        private TKey _key;
-		private ICrawlComponentContainer<TKey> _parent;
-		private static IEqualityComparer<TKey> _keyComparer;
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected const string PropertyName_Key = "Key";
-		protected const string PropertyName_Parent = "Parent";
-		
-		public virtual TKey Key
-		{
-			get { return _key; }
-			set
-			{
-				if (_keyComparer.Equals(value, _key))
-					return;
-				RaisePropertyChanging(PropertyName_Key);
-				_key = value;
-				RaisePropertyChanged(PropertyName_Key);
-			}
-		}
-		
-		public ICrawlComponentContainer<TKey> Parent
-		{
-			get { return _parent; }
-			set
-			{
-                if (ReferenceEquals(value, _parent))
-                    return;
-				RaisePropertyChanging(PropertyName_Parent);
-				_parent = value;
-				RaisePropertyChanged(PropertyName_Parent);
-			}
-		}
-		
-		static CrawledComponent()
-		{
-			_keyComparer = EqualityComparer<TKey>.Default;
-		}
-		
-		protected CrawledComponent()
-		{
-			
-		}
-		
-		protected CrawledComponent(CrawledComponent<TKey> toClone, ICrawlComponentContainer<TKey> parent) : this((toClone == null) ? default(TKey) : toClone.Key, parent) { }
-		
-		protected CrawledComponent(TKey key, ICrawlComponentContainer<TKey> parent)
-		{
-		    _key = key;
-		    _parent = parent;
-		}
-		
-		protected void RaisePropertyChanging(string propertyName)
-		{
-			PropertyChangingEventArgs args = new PropertyChangingEventArgs(propertyName);
-			try { OnPropertyChanging(args); }
-			finally
-			{
-				PropertyChangingEventHandler propertyChanging = PropertyChanging;
-				if (propertyChanging != null)
-					propertyChanging(this, args);
-			}
-		}
-		
-		protected virtual void OnPropertyChanging(PropertyChangingEventArgs args) { }
-		
-		protected void RaisePropertyChanged(string propertyName)
-		{
-			PropertyChangedEventArgs args = new PropertyChangedEventArgs(propertyName);
-			try { OnPropertyChanged(args); }
-			finally
-			{
-				PropertyChangedEventHandler propertyChanged = PropertyChanged;
-				if (propertyChanged != null)
-					propertyChanged(this, args);
-			}
-		}
-		
-		protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) { }
-        protected abstract CrawledComponent<TKey> CreateClone(ICrawlComponentContainer<TKey> parent);
-        ICrawledComponent<TKey> ICrawledComponent<TKey>.Clone(ICrawlComponentContainer<TKey> parent) { return CreateClone(parent); }
-        ICrawledComponent<TKey> ICrawledComponent<TKey>.Clone() { return CreateClone(Parent); }
-        object ICloneable.Clone() { return CreateClone(Parent); }
-	}
+ //   public interface ICrawlComponentContainer<TKey> : /*IEquatable<ICrawlComponentContainer<TKey>>, IComparable<ICrawlComponentContainer<TKey>>, */INotifyPropertyChanging, INotifyPropertyChanged
+ //   {
+ //       CrawlComponentCollection<TKey> ItemCollection { get; }
+ //   }
+ //   public interface ICrawledComponent<TKey> : /*IEquatable<CrawledComponent<TKey>>, IEquatable<TKey>, IEquatable<IComparable<TKey>>, IComparable<TKey>, */INotifyPropertyChanging, INotifyPropertyChanged, ICloneable
+ //   {
+ //       TKey Key { get; set; }
+ //       ICrawlComponentContainer<TKey> Parent { get; set; }
+ //       ICrawledComponent<TKey> Clone(ICrawlComponentContainer<TKey> parent);
+ //       new ICrawledComponent<TKey> Clone();
+ //   }
+ //   public interface INestedCrawlComponentContainer<TKey> : ICrawlComponentContainer<TKey>, ICrawledComponent<TKey>
+ //   {
+ //       new INestedCrawlComponentContainer<TKey> Clone(ICrawlComponentContainer<TKey> directory);
+ //       new INestedCrawlComponentContainer<TKey> Clone();
+ //   }
+ //   public abstract class CrawledComponent<TKey> : ICrawledComponent<TKey>
+ //   {
+ //       private TKey _key;
+    //	private ICrawlComponentContainer<TKey> _parent;
+    //	private static IEqualityComparer<TKey> _keyComparer;
+        
+    //	public event PropertyChangingEventHandler PropertyChanging;
+    //	public event PropertyChangedEventHandler PropertyChanged;
+        
+    //	protected const string PropertyName_Key = "Key";
+    //	protected const string PropertyName_Parent = "Parent";
+        
+    //	public virtual TKey Key
+    //	{
+    //		get { return _key; }
+    //		set
+    //		{
+    //			if (_keyComparer.Equals(value, _key))
+    //				return;
+    //			RaisePropertyChanging(PropertyName_Key);
+    //			_key = value;
+    //			RaisePropertyChanged(PropertyName_Key);
+    //		}
+    //	}
+        
+    //	public ICrawlComponentContainer<TKey> Parent
+    //	{
+    //		get { return _parent; }
+    //		set
+    //		{
+ //               if (ReferenceEquals(value, _parent))
+ //                   return;
+    //			RaisePropertyChanging(PropertyName_Parent);
+    //			_parent = value;
+    //			RaisePropertyChanged(PropertyName_Parent);
+    //		}
+    //	}
+        
+    //	static CrawledComponent()
+    //	{
+    //		_keyComparer = EqualityComparer<TKey>.Default;
+    //	}
+        
+    //	protected CrawledComponent(CrawledComponent<TKey> toClone, ICrawlComponentContainer<TKey> parent) : this((toClone == null) ? default(TKey) : toClone.Key, parent) { }
+        
+    //	protected CrawledComponent(TKey key, ICrawlComponentContainer<TKey> parent)
+    //	{
+    //	    _key = key;
+    //	    _parent = parent;
+    //	}
+        
+    //	protected void RaisePropertyChanging(string propertyName)
+    //	{
+    //		PropertyChangingEventArgs args = new PropertyChangingEventArgs(propertyName);
+    //		try { OnPropertyChanging(args); }
+    //		finally
+    //		{
+    //			PropertyChangingEventHandler propertyChanging = PropertyChanging;
+    //			if (propertyChanging != null)
+    //				propertyChanging(this, args);
+    //		}
+    //	}
+        
+    //	protected virtual void OnPropertyChanging(PropertyChangingEventArgs args) { }
+        
+    //	protected void RaisePropertyChanged(string propertyName)
+    //	{
+    //		PropertyChangedEventArgs args = new PropertyChangedEventArgs(propertyName);
+    //		try { OnPropertyChanged(args); }
+    //		finally
+    //		{
+    //			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+    //			if (propertyChanged != null)
+    //				propertyChanged(this, args);
+    //		}
+    //	}
+        
+    //	protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) { }
+ //       protected abstract CrawledComponent<TKey> CreateClone(ICrawlComponentContainer<TKey> parent);
+ //       ICrawledComponent<TKey> ICrawledComponent<TKey>.Clone(ICrawlComponentContainer<TKey> parent) { return CreateClone(parent); }
+ //       ICrawledComponent<TKey> ICrawledComponent<TKey>.Clone() { return CreateClone(Parent); }
+ //       object ICloneable.Clone() { return CreateClone(Parent); }
+    //}
 }

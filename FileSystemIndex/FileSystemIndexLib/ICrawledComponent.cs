@@ -9,7 +9,7 @@ namespace Erwine.Leonard.T.GDIPlus
         TKey Key { get; set; }
         ICrawlComponentContainer<TKey> Parent { get; set; }
         ICrawledComponent<TKey> Clone(ICrawlComponentContainer<TKey> parent);
-		ComponentPropertyDictionary Properties { get; }
+		ComponentPropertyDictionary<TKey> Properties { get; }
         new ICrawledComponent<TKey> Clone();
     }
 }
