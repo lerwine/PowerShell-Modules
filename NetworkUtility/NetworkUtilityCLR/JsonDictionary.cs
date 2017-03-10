@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
 using System.Collections;
 
 namespace NetworkUtilityCLR
@@ -11,35 +12,45 @@ namespace NetworkUtilityCLR
         private IDictionary<string, JSonValue> _innerDictionary = new Dictionary<string, JSonValue>();
         public const string ElementName = "Dictionary";
         public override string GetElementName() { return ElementName; }
-        protected override object AsSerializedValue(JavaScriptSerializer serializer)
+        protected internal override object AsSerializedValue(JavaScriptSerializer serializer)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
-            foreach (string key in Keys)
-                result.Add(key, (obj[key] == null) ? null : obj[key].AsSerializedValue(serializer));
+            foreach (string key in _innerDictionary.Keys)
+                result.Add(key, (_innerDictionary[key] == null) ? null : _innerDictionary[key].AsSerializedValue(serializer));
             return result;
         }
-
-        public override Deserialize(IDictionary<string, object> dictionary, JavaScriptSerializer serializer)
+		
+		public JsonDictionary() { }
+		
+		public JsonDictionary(IDictionary<string, object> dictionary) { _Deserialize(dictionary); }
+		
+        public override void Deserialize(IDictionary<string, object> dictionary, JavaScriptSerializer serializer)
         {
-            if (dictionary == null)
-                return;
-            
-            if (type == typeof(JsonDictionary))
-            
-            if (type == typeof(ListItemCollection))
-            {
-                // Create the instance to deserialize into.
-                ListItemCollection list = new ListItemCollection();
-
-                // Deserialize the ListItemCollection's items.
-                ArrayList itemsList = (ArrayList)dictionary["List"];
-                for (int i=0; i<itemsList.Count; i++)
-                    list.Add(serializer.ConvertToType<ListItem>(itemsList[i]));
-
-                return list;
-            }
-            return null;
+			_innerDictionary.Clear();
+			_Deserialize(dictionary);
         }
+		
+		private void _Deserialize(IDictionary<string, object> dictionary)
+		{
+			if (dictionary == null)
+				return;
+			
+			foreach (string key in dictionary.Keys)
+			{
+				object o = dictionary[key];
+				if (o == null)
+					_innerDictionary.Add(key, null);
+				else if (o is JSonValue)
+					_innerDictionary.Add(key, o as JSonValue);
+				else if (o is string)
+					_innerDictionary.Add(key, new JsonText(o as string));
+				else if (o is ArrayList)
+					_innerDictionary.Add(key, new JsonArray(o as ArrayList));
+				else if (o is IDictionary<string, object>)
+					_innerDictionary.Add(key, new JsonDictionary(o as IDictionary<string, object>));
+			}
+		}
+		
         public ICollection<string> Keys { get { return _innerDictionary.Keys; } }
         public ICollection<JSonValue> Values { get { return _innerDictionary.Values; } }
         public int Count { get { return _innerDictionary.Count; } }
@@ -52,10 +63,10 @@ namespace NetworkUtilityCLR
         public bool ContainsKey(string key) { return _innerDictionary.ContainsKey(key); }
         bool ICollection<KeyValuePair<string,JSonValue>>.Contains(KeyValuePair<string,JSonValue> value) { return (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Contains(value); }
         public void Add(string key, JSonValue value) { _innerDictionary.Add(key, value); }
-        void ICollection<KeyValuePair<string,JSonValue>>.Add(string key, KeyValuePair<string,JSonValue> value) { (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Add(value);
+        void ICollection<KeyValuePair<string,JSonValue>>.Add(KeyValuePair<string,JSonValue> value) { (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Add(value); }
         public bool Remove(string key) { return _innerDictionary.Remove(key); }
         bool ICollection<KeyValuePair<string,JSonValue>>.Remove(KeyValuePair<string,JSonValue> value) { return (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Remove(value); }
-        public bool TryGetValue(string key, out JSonValue value) { _innerDictionary.TryGetValue(key, out value); }
+        public bool TryGetValue(string key, out JSonValue value) { return _innerDictionary.TryGetValue(key, out value); }
         public void Clear() { _innerDictionary.Clear(); }
         public void CopyTo(KeyValuePair<string,JSonValue>[] array, int arrayIndex) { _innerDictionary.CopyTo(array, arrayIndex); }
         public IEnumerator<KeyValuePair<string,JSonValue>> GetEnumerator() { return _innerDictionary.GetEnumerator(); }
