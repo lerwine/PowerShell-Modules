@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
 using System.Collections;
 
 namespace NetworkUtilityCLR
@@ -12,13 +13,40 @@ namespace NetworkUtilityCLR
         
         public const string ElementName = "Array";
         public override string GetElementName() { return ElementName; }
-        protected override object AsSerializedValue(JavaScriptSerializer serializer)
+        protected internal override object AsSerializedValue(JavaScriptSerializer serializer)
         {
             ArrayList result = new ArrayList();
-            foreach (JSonValue e in array)
+            foreach (JSonValue e in _innerList)
                 result.Add((e == null) ? null : e.AsSerializedValue(serializer));
             return result;
         }
+		public JsonArray() { }
+		public JsonArray(ArrayList array) { _Deserialize(array); }
+		protected override void OnDeserialize(object obj, JavaScriptSerializer serializer)
+		{
+			_innerList.Clear();
+			_Deserialize(obj as ArrayList);
+		}
+		private void _Deserialize(ArrayList array)
+		{
+			if (array == null)
+				return;
+			
+            foreach (object o in array)
+			{
+				if (o == null)
+					_innerList.Add(null);
+				else if (o is JSonValue)
+					_innerList.Add(o as JSonValue);
+				else if (o is string)
+					_innerList.Add(new JsonText(o as string));
+				else if (o is ArrayList)
+					_innerList.Add(new JsonArray(o as ArrayList));
+				else if (o is IDictionary<string, object>)
+					_innerList.Add(new JsonDictionary(o as IDictionary<string, object>));
+			}
+		}
+		
         public JSonValue this[int index]
         {
             get { return _innerList[index]; }
