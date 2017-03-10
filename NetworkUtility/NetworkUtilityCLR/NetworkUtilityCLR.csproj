@@ -90,11 +90,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormEncoder.cs" />
+    <Compile Include="JsonArray.cs" />
+    <Compile Include="JsonConverter.cs" />
+    <Compile Include="JsonDictionary.cs" />
+    <Compile Include="JsonText.cs" />
+    <Compile Include="JSonValue.cs" />
+    <Compile Include="MediaType.cs" />
+    <Compile Include="MediaTypeRegFile.cs" />
+    <Compile Include="MediaTypeRegHide.cs" />
+    <Compile Include="MediaTypeRegistry.cs" />
+    <Compile Include="MediaTypeRegistryBase.cs" />
+    <Compile Include="MediaTypeRegistryDB.cs" />
+    <Compile Include="MediaTypeRegName.cs" />
+    <Compile Include="MediaTypeRegNote.cs" />
+    <Compile Include="MediaTypeRegPeople.cs" />
+    <Compile Include="MediaTypeRegRawXml.cs" />
+    <Compile Include="MediaTypeRegRecord.cs" />
+    <Compile Include="MediaTypeRegXRef.cs" />
     <Compile Include="MimeUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MediaTypes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

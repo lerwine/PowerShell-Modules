@@ -1,20 +1,54 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Web.UI.WebControls;
 using System.Web.Script.Serialization;
-using System.Collections;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class JsonText : JSonValue
     {
-		public JsonText() { }
-		public JsonText(string value) { Value = value; }
+        private string _value = "";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public JsonText() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public JsonText(string value) { Value = value; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ElementName = "String";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string GetElementName() { return ElementName; }
-        public string Value { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value { get { return _value; } set { _value = (value == null) ? "" : value; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         protected internal override object AsSerializedValue(JavaScriptSerializer serializer) { return Value; }
-		protected override void OnDeserialize(object obj, JavaScriptSerializer serializer) { Value = obj as string; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="serializer"></param>
+        protected override void OnDeserialize(object obj, JavaScriptSerializer serializer) { Value = obj as string; }
     }
 }

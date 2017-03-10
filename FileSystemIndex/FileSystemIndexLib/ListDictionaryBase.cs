@@ -1,12 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Collections.ObjectModel;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
@@ -116,6 +113,7 @@ namespace Erwine.Leonard.T.GDIPlus
         bool ICollection<TValue>.IsReadOnly { get { return IsReadOnly; } }
         
         bool IList.IsReadOnly { get { return IsReadOnly; } }
+
         #endregion
 
         #endregion
@@ -578,6 +576,10 @@ namespace Erwine.Leonard.T.GDIPlus
             return true;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
         protected virtual void BaseRemoveAt(int index)
         {
             Monitor.Enter(_syncRoot);
@@ -611,6 +613,9 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region Clear
         
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual void BaseClear()
         {
             Monitor.Enter(_syncRoot);
@@ -626,6 +631,12 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region TryGet
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected virtual bool BaseTryGet(TKey key, out TValue[] value)
         {
             Monitor.Enter(_syncRoot);
@@ -642,6 +653,13 @@ namespace Erwine.Leonard.T.GDIPlus
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="subIndex"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected virtual bool BaseTryGet(TKey key, int subIndex, out TValue value)
         {
             if (subIndex < 0)
@@ -674,20 +692,56 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region Interface Implementation Members
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(TKey key) { return _keyMapping.ContainsKey(key); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool Remove(TKey key) { return BaseRemove(key); }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public void Clear() { BaseClear(); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool Contains(TValue value) { return _innerList.Contains(value); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public int IndexOf(TValue value) { return _innerList.IndexOf(value); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public void RemoveItem(TValue value) { BaseRemove(value); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
         public void RemoveAt(int index) { BaseRemoveAt(index); }
       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="index"></param>
         public void CopyTo(TValue[] array, int index) { _innerList.CopyTo(array, index); }
             
         /// <summary>
@@ -772,6 +826,9 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region Nested Classes
         
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal sealed class KeyCollection : ICollection<TKey>, IEnumerable<TKey>, ICollection
         {
             #region Fields
@@ -784,6 +841,9 @@ namespace Erwine.Leonard.T.GDIPlus
             
             #region Properties
             
+            /// <summary>
+            /// 
+            /// </summary>
             public int Count
             {
                 get
@@ -806,7 +866,9 @@ namespace Erwine.Leonard.T.GDIPlus
             #region Explicit Members
 
             bool ICollection<TKey>.IsReadOnly { get { return true; } }
+
             bool ICollection.IsSynchronized { get { return true; } }
+
             object ICollection.SyncRoot { get { return _owner.SyncRoot; } }
             
             #endregion
@@ -826,6 +888,10 @@ namespace Erwine.Leonard.T.GDIPlus
             
             #region Methods
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public IEnumerable<TKey> AsEnumerable()
             {
                 if (_assertedKeyValues.Count == 0)
@@ -836,8 +902,17 @@ namespace Erwine.Leonard.T.GDIPlus
                 return _owner.ExplicitKeys.Concat(_assertedKeyValues.Where(k => !_owner.ExplicitKeys.Contains(k, _equalityComparer)));
             }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="array"></param>
+            /// <param name="index"></param>
             public void CopyTo(TKey[] array, int index) { AsEnumerable().ToList().CopyTo(array, index); }
             
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public IEnumerator<TKey> GetEnumerator() { return AsEnumerable().GetEnumerator(); }
             
             internal bool Contains(TKey value) { return AsEnumerable().Contains(value, _equalityComparer); }
@@ -845,10 +920,13 @@ namespace Erwine.Leonard.T.GDIPlus
             #region Explicit Members
             
             bool ICollection<TKey>.Contains(TKey value) { return AsEnumerable().Contains(value, _equalityComparer); }
+
             void ICollection.CopyTo(Array array, int arrayIndex) { AsEnumerable().ToArray().CopyTo(array, arrayIndex); }
+
             IEnumerator IEnumerable.GetEnumerator() { return AsEnumerable().ToArray().GetEnumerator(); }
             
             void ICollection<TKey>.Add(TKey value) { throw new NotSupportedException(); }
+
             void ICollection<TKey>.Clear() { throw new NotSupportedException(); }
                  
             bool ICollection<TKey>.Remove(TKey value) { throw new NotSupportedException(); }

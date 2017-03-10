@@ -135,6 +135,11 @@ namespace FileSystemIndexLib
 
         public override bool Equals(object obj) { return Equals(obj as FileRecord); }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         protected override void OnLoad(SqlCeDataReader dataReader)
         {
             _hashSetId = dataReader.GetGuid(dataReader.GetOrdinal(ColName_HashSetId));

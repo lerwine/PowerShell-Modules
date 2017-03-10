@@ -1,20 +1,24 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Net.Mime;
-using System.Runtime.InteropServices;
+﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class MediaTypeRegRawXml : IXmlSerializable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract string ElementName { get; }
 		
         private XmlDocument _xmlDocument = null;
 		
+        /// <summary>
+        /// 
+        /// </summary>
         public XmlElement Content
         {
             get

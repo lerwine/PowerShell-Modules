@@ -1,18 +1,18 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Net.Mime;
-using System.Runtime.InteropServices;
-using System.Xml;
+﻿using System;
 using System.Xml.Serialization;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot(MediaTypeRegistry.ElementName_hide, Namespace = MediaTypeRegistry.XmlNamespace_Registry, IsNullable = true)]
     public class MediaTypeRegHide : MediaTypeRegRawXml
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override string ElementName { get { return MediaTypeRegistry.ElementName_hide; } }
     }
 }

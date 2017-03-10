@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
     public abstract class CrawledComponent<TKey> : ICrawledComponent<TKey>
         where TKey : IComparable
     {
@@ -14,8 +17,14 @@ namespace Erwine.Leonard.T.GDIPlus
         private static IEqualityComparer<TKey> _keyComparer;
         private ComponentPropertyDictionary<TKey> _propertyDictionary;
         
+        /// <summary>
+        /// 
+        /// </summary>
         protected const string PropertyName_Properties = "Properties";
         
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ComponentPropertyDictionary<TKey> Properties
         {
             get { return _propertyDictionary; }
@@ -40,10 +49,18 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <returns></returns>
         protected virtual ComponentPropertyDictionary<TKey> CoerceProperties(ComponentPropertyDictionary<TKey> properties) { return properties; }
         
         static CrawledComponent() { _keyComparer = EqualityComparer<TKey>.Default; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected CrawledComponent()
         {
             if ((_propertyDictionary = CoerceProperties(null)) == null)
@@ -51,14 +68,29 @@ namespace Erwine.Leonard.T.GDIPlus
             _propertyDictionary.Initialize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="toClone"></param>
+        /// <param name="parent"></param>
         protected CrawledComponent(CrawledComponent<TKey> toClone, ICrawlComponentContainer<TKey> parent) : this((toClone == null) ? default(TKey) : toClone.Key, parent) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="parent"></param>
         protected CrawledComponent(TKey key, ICrawlComponentContainer<TKey> parent)
         {
             _key = key;
             _parent = parent;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
         protected abstract CrawledComponent<TKey> CreateClone(ICrawlComponentContainer<TKey> parent);
         
         #region ICrawledComponent<TKey> Implementation
@@ -77,10 +109,25 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected virtual TKey CoerceKey(TKey value) { return value; }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected virtual void OnKeyChanging(TKey oldValue, TKey newValue) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected virtual void OnKeyChanged(TKey oldValue, TKey newValue) { }
         
         TKey ICrawledComponent<TKey>.Key
@@ -89,6 +136,9 @@ namespace Erwine.Leonard.T.GDIPlus
             set { Key = value; }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         protected ICrawlComponentContainer<TKey> Parent
         {
             get { return _parent; }
@@ -103,10 +153,25 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
         protected virtual ICrawlComponentContainer<TKey> CoerceParent(ICrawlComponentContainer<TKey> parent) { return parent; }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected void OnParentChanging(ICrawlComponentContainer<TKey> oldValue, ICrawlComponentContainer<TKey> newValue) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected void OnParentChanged(ICrawlComponentContainer<TKey> oldValue, ICrawlComponentContainer<TKey> newValue) { }
         
         ICrawlComponentContainer<TKey> ICrawledComponent<TKey>.Parent
@@ -116,6 +181,7 @@ namespace Erwine.Leonard.T.GDIPlus
         }
         
         ICrawledComponent<TKey> ICrawledComponent<TKey>.Clone(ICrawlComponentContainer<TKey> parent) { return CreateClone(parent); }
+
         ICrawledComponent<TKey> ICrawledComponent<TKey>.Clone() { return CreateClone(Parent); }
         
         #region ICloneable Implementation
@@ -126,8 +192,15 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region INotifyPropertyChanging Implementation
         
+        /// <summary>
+        /// 
+        /// </summary>
         public event PropertyChangingEventHandler PropertyChanging;
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected void RaisePropertyChanging(string propertyName)
         {
             PropertyChangingEventArgs args = new PropertyChangingEventArgs(propertyName);
@@ -144,6 +217,12 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected void RaisePropertyChanging(string propertyName, object oldValue, object newValue)
         {
             PropertyChangingEventArgs args = new PropertyChangingEventArgs(propertyName);
@@ -160,16 +239,33 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         protected virtual void OnPropertyChanging(PropertyChangingEventArgs args) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected virtual void OnPropertyChanging(PropertyChangingEventArgs args, object oldValue, object newValue) { }
         
         #endregion
         
         #region INotifyPropertyChanged Implementation
         
+        /// <summary>
+        /// 
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected void RaisePropertyChanged(string propertyName)
         {
             PropertyChangedEventArgs args = new PropertyChangedEventArgs(propertyName);
@@ -186,6 +282,12 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected void RaisePropertyChanged(string propertyName, object oldValue, object newValue)
         {
             PropertyChangedEventArgs args = new PropertyChangedEventArgs(propertyName);
@@ -202,8 +304,18 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args, object oldValue, object newValue) { }
         
         #endregion

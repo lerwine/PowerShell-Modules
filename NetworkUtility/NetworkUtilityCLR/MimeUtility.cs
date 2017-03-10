@@ -21,10 +21,12 @@ namespace NetworkUtilityCLR
         /// 
         /// </summary>
         public static readonly Regex UrlEncodedItem = new Regex(@"(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?", RegexOptions.Compiled);
-
+        
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="contentType"></param>
+        /// <returns></returns>
         public static bool IsUrlFormEncoded(string contentType)
         {
             if (String.IsNullOrEmpty(contentType))
@@ -37,6 +39,8 @@ namespace NetworkUtilityCLR
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="webResponse"></param>
+        /// <returns></returns>
         public static bool IsUrlFormEncoded(WebResponse webResponse)
         {
             if (webResponse == null)
@@ -48,6 +52,9 @@ namespace NetworkUtilityCLR
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="defaultEncoding"></param>
+        /// <returns></returns>
         public static Encoding GetEncoding(ContentType contentType, Encoding defaultEncoding)
         {
             if (contentType == null || String.IsNullOrEmpty(contentType.CharSet))
@@ -67,6 +74,9 @@ namespace NetworkUtilityCLR
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="defaultEncoding"></param>
+        /// <returns></returns>
         public static Encoding GetEncoding(string contentType, Encoding defaultEncoding)
         {
             if (String.IsNullOrEmpty(contentType))
@@ -85,13 +95,16 @@ namespace NetworkUtilityCLR
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="webResponse"></param>
+        /// <param name="defaultEncoding"></param>
+        /// <returns></returns>
         public static Encoding GetEncoding(WebResponse webResponse, Encoding defaultEncoding)
         {
             if (webResponse == null || webResponse.ContentType == null)
                 return defaultEncoding;
             return GetEncoding(webResponse.ContentType, defaultEncoding);
         }
-		
+        
         [DllImport(@"urlmon.dll", CharSet = CharSet.Auto)]
         private extern static System.UInt32 FindMimeFromData(
             System.UInt32 pBC,
@@ -104,6 +117,11 @@ namespace NetworkUtilityCLR
             System.UInt32 dwReserverd
         );
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public static ContentType ContentTypeFromName(string fileName)
         {
             try
@@ -121,6 +139,11 @@ namespace NetworkUtilityCLR
             return new ContentType(MediaTypeNames.Application.Octet);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         public static ContentType ContentTypeFromData(byte[] buffer)
         {
             try

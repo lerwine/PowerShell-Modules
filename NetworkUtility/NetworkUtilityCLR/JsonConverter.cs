@@ -7,13 +7,25 @@ using System.Collections;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class JsonConverter : JavaScriptConverter
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
             get { return new ReadOnlyCollection<Type>(new List<Type>(new Type[] { typeof(JsonText), typeof(JsonArray), typeof(JsonDictionary) })); }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             JSonValue value = obj as JSonValue;
@@ -23,6 +35,13 @@ namespace NetworkUtilityCLR
             return value.Serialize(serializer);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="type"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             if (dictionary == null)
@@ -30,25 +49,25 @@ namespace NetworkUtilityCLR
             
             if (type == typeof(JsonDictionary))
             {
-				JsonDictionary jsonDictionary = new JsonDictionary();
-				jsonDictionary.Deserialize(dictionary, serializer);
-				return jsonDictionary;
-			}
-			
+                JsonDictionary jsonDictionary = new JsonDictionary();
+                jsonDictionary.Deserialize(dictionary, serializer);
+                return jsonDictionary;
+            }
+            
             if (type == typeof(JsonArray))
             {
-				JsonArray jsonArray = new JsonArray();
-				jsonArray.Deserialize(dictionary, serializer);
-				return jsonArray;
-			}
-			
+                JsonArray jsonArray = new JsonArray();
+                jsonArray.Deserialize(dictionary, serializer);
+                return jsonArray;
+            }
+            
             if (type == typeof(JsonText))
             {
-				JsonText jsonText = new JsonText();
-				jsonText.Deserialize(dictionary, serializer);
-				return jsonText;
-			}
-			
+                JsonText jsonText = new JsonText();
+                jsonText.Deserialize(dictionary, serializer);
+                return jsonText;
+            }
+            
             if (type == typeof(ListItemCollection))
             {
                 // Create the instance to deserialize into.

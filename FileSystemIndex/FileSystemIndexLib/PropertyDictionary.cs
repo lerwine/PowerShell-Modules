@@ -1,41 +1,69 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Task;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
-	[Serializable()]
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable()]
     public class PropertyDictionary : NamedDictionaryBase<object>
     {
-		public PropertyDictionary() : base() { }
-		
-		public PropertyDictionary(bool caseSensitive) : base(caseSensitive) { }
-		
-		public PropertyDictionary(IEqualityComparer<string> nameComparer) : base(nameComparer) { }
-	}
-	
-	[Serializable()]
-    public class PropertyDictionary<TValue> : NamedDictionaryBase<string, TValue>
+        /// <summary>
+        /// 
+        /// </summary>
+        public PropertyDictionary() : base() { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="caseSensitive"></param>
+        public PropertyDictionary(bool caseSensitive) : base(caseSensitive) { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameComparer"></param>
+        public PropertyDictionary(IEqualityComparer<string> nameComparer) : base(nameComparer) { }
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
+    [Serializable()]
+    public class PropertyDictionary<TValue> : NamedDictionaryBase<TValue>
     {
-		public PropertyDictionary() : base() { }
-		
-		public PropertyDictionary(bool caseSensitive) : base(caseSensitive) { }
-		
-		public PropertyDictionary(IEqualityComparer<string> nameComparer) : base(nameComparer) { }
-		
-		public TValue this[string name]
-		{
-			get { return BaseGet(name); }
-			set { BaseSet(name, value); }
-		}
-		
-		public void Add(string name, TValue value) { BaseAdd(name, value); }
-		
-		public bool TryGetValue(string name, out TValue value) { return BaseTryGet(name, out value); }
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public PropertyDictionary() : base() { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="caseSensitive"></param>
+        public PropertyDictionary(bool caseSensitive) : base(caseSensitive) { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameComparer"></param>
+        public PropertyDictionary(IEqualityComparer<string> nameComparer) : base(nameComparer) { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void Add(string name, TValue value) { BaseAdd(name, value); }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryGetValue(string name, out TValue[] value) { return BaseTryGet(name, out value); }
+    }
 }

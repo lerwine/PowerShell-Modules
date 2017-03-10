@@ -127,6 +127,11 @@ namespace FileSystemIndexLib
 
         public override bool Equals(object obj) { return Equals(obj as VolumeRecord); }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         protected override void OnLoad(SqlCeDataReader dataReader)
         {
             _isRoot = dataReader.IsDBNull(dataReader.GetOrdinal(ColName_ParentId));

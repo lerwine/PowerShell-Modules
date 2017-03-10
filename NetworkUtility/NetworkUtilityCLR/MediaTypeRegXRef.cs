@@ -9,22 +9,42 @@ using System.Xml.Serialization;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot(MediaTypeRegistry.ElementName_xref, Namespace = MediaTypeRegistry.XmlNamespace_Registry, IsNullable = true)]
     public class MediaTypeRegXRef
     {
-		public const string AttributeName_type = "type";
-		public const string AttributeName_data = "data";
-		
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string AttributeName_type = "type";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string AttributeName_data = "data";
+        
         private string _type = null;
         private string _data = null;
         private string _content = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute(AttributeName_type)]
         public string Type { get { return _type; } set { _type = value; } }
-		
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlAttribute(AttributeName_data)]
         public string Data { get { return _data; } set { _data = value; } }
-		
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlText()]
         public string Content { get { return _content; } set { _content = value; } }
     }

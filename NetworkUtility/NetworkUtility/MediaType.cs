@@ -1,44 +1,116 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Collections.Specialized;
 using System.Net.Mime;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     [XmlRoot(ElementName_mediaType)]
     public class MediaType : IEquatable<MediaType>, IEquatable<string>, IComparable<MediaType>, IComparable<string>, IConvertible
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string AttributeName_topLevel = "topLevel";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string AttributeName_subType = "subType";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ElementName_mediaType = "mediaType";
+
+        /// <summary>
+        /// 
+        /// </summary>
 		public const string ElementName_parameters = "parameters";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Text = "text";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Image = "image";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Audio = "audio";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Video = "video";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Application = "application";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Multipart = "multipart";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TopLevelType_Message = "message";
         
+        /// <summary>
+        /// 
+        /// </summary>
 		public static readonly Regex SpecialCharsRegex = new Regex(@"\(\)\<\>@,;:\\""/\[\]\?\.=");
-		public static readonly Regex TokenRegex = new Regex(@"[^()<>@,;:\\""/\[\]?.=\s/p{C}]+");
-		public static readonly Regex LooseRegex = new Regex(@"^(?<topLevel>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)(/(?<subType>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+))?\s*;(?<parameters>.+)?$");
-		public static readonly Regex ContentTypeRegex = new Regex(@"^(?<topLevel>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)/(?<subType>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)\s*;(?<parameters>.+)?$");
-		public static readonly Regex MediaTypeRegex = new Regex(@"^(?<topLevel>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)/(?<subType>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)$");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly Regex TokenRegex = new Regex(@"[^()<>@,;:\\""/\[\]?.=\s/p{C}]+");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly Regex LooseRegex = new Regex(@"^(?<topLevel>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)(/(?<subType>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+))?\s*;(?<parameters>.+)?$");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly Regex ContentTypeRegex = new Regex(@"^(?<topLevel>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)/(?<subType>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)\s*;(?<parameters>.+)?$");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly Regex MediaTypeRegex = new Regex(@"^(?<topLevel>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)/(?<subType>[^()<>@,;:\\""/\[\]?.=\s/p{C}]+)$");
 		
         private string _topLevelType = "";
         private string _subType = "";
 		private StringDictionary _parameters = new StringDictionary();
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mediaTypeString"></param>
+        /// <returns></returns>
 		public static MediaType Parse(string mediaTypeString) { return new MediaType(mediaTypeString); }
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mediaTypeString"></param>
+        /// <param name="mediaType"></param>
+        /// <returns></returns>
 		public static bool TryParse(string mediaTypeString, out MediaType mediaType)
 		{
 			mediaType = null;
@@ -90,6 +162,11 @@ namespace NetworkUtilityCLR
 			return mediaType != null;
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mediaTypeString"></param>
+        /// <returns></returns>
 		public static bool Validate(string mediaTypeString)
 		{
 			if (String.IsNullOrEmpty(mediaTypeString))
@@ -105,8 +182,16 @@ namespace NetworkUtilityCLR
 			return true;
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
 		public static bool ValidateToken(string token) { return !String.IsNullOrEmpty(token) && token.Trim() == token && TokenRegex.IsMatch(token); }
 		
+        /// <summary>
+        /// 
+        /// </summary>
 		[XmlAttribute(AttributeName_topLevel)]
         public string TopLevelType
 		{
@@ -126,6 +211,9 @@ namespace NetworkUtilityCLR
 			}
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
 		[XmlAttribute(AttributeName_subType)]
         public string SubType
 		{
@@ -145,9 +233,16 @@ namespace NetworkUtilityCLR
 			}
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
 		[XmlArray(ElementName_parameters)]
         public StringDictionary Parameters { get { return _parameters; } set { _parameters = (value == null) ? new StringDictionary() : value; } }
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mediaTypeString"></param>
 		public MediaType(string mediaTypeString)
 		{
 			if (String.IsNullOrEmpty(mediaTypeString))
@@ -185,6 +280,10 @@ namespace NetworkUtilityCLR
 			}
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contentType"></param>
 		public MediaType(ContentType contentType)
 		{
 			if (contentType == null)
@@ -206,6 +305,11 @@ namespace NetworkUtilityCLR
 				_parameters.Add(key, contentType.Parameters[key]);
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="topLevelType"></param>
+        /// <param name="subType"></param>
 		public MediaType(string topLevelType, string subType)
 		{
 			if (!String.IsNullOrEmpty(topLevelType))
@@ -223,6 +327,12 @@ namespace NetworkUtilityCLR
 			_subType = subType;
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="topLevelType"></param>
+        /// <param name="subType"></param>
+        /// <param name="parameters"></param>
 		public MediaType(string topLevelType, string subType, StringDictionary parameters)
 			: this(topLevelType, subType)
 		{
@@ -233,25 +343,161 @@ namespace NetworkUtilityCLR
 				_parameters.Add(key, parameters[key]);
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
 		public static implicit operator MediaType(string name) { return new MediaType(name); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator ==(MediaType x, MediaType y) { return (x == null) ? y == null : y != null && x.Equals(y); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator ==(MediaType x, string y) { return (x == null) ? y == null : y != null && x.Equals(y); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator ==(string x, MediaType y) { return (x == null) ? y == null : y != null && y.Equals(x); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator !=(MediaType x, MediaType y) { return (x == null) ? y != null : y == null || !x.Equals(y); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator !=(MediaType x, string y) { return (x == null) ? y != null : y == null || !x.Equals(y); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator !=(string x, MediaType y) { return (x == null) ? y != null : y == null || !y.Equals(x); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator <(MediaType x, MediaType y) { return (x == null) ? (y != null) : (y != null && x.CompareTo(y) < 0) ; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator <(MediaType x, string y) { return (x == null) ? (y != null) : (y != null && x.CompareTo(y) < 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator <(string x, MediaType y) { return (x == null) ? (y != null) : (y != null && y.CompareTo(x) > 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator <=(MediaType x, MediaType y) { return x == null || (y != null && x.CompareTo(y) <= 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator <=(MediaType x, string y) { return x == null || (y != null && x.CompareTo(y) <= 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator <=(string x, MediaType y) { return x == null || (y != null && y.CompareTo(x) >= 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator >(MediaType x, MediaType y) { return x != null && (y == null || x.CompareTo(y) > 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator >(MediaType x, string y) { return x != null && (y == null || x.CompareTo(y) > 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator >(string x, MediaType y) { return y.CompareTo(x) < 0; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator >=(MediaType x, MediaType y) { return (x == null) ? (y == null) : (y == null || x.CompareTo(y) >= 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator >=(MediaType x, string y) { return (x == null) ? (y == null) : (y == null || x.CompareTo(y) >= 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
 		public static bool operator >=(string x, MediaType y) { return (x == null) ? (y == null) : (y == null || y.CompareTo(x) <= 0); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
 		public int CompareTo(MediaType other)
 		{
 			if (other == null)
@@ -265,6 +511,13 @@ namespace NetworkUtilityCLR
 				return String.Compare(_subType, other._subType, StringComparison.InvariantCulture);
 			return result;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="caseSenstitive"></param>
+        /// <returns></returns>
 		public int CompareTo(MediaType other, bool caseSenstitive)
 		{
 			if (other == null)
@@ -278,6 +531,13 @@ namespace NetworkUtilityCLR
 				return String.Compare(_subType, other._subType, false);
 			return result;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="comparisonType"></param>
+        /// <returns></returns>
 		public int CompareTo(MediaType other, StringComparison comparisonType)
 		{
 			if (other == null)
@@ -288,6 +548,12 @@ namespace NetworkUtilityCLR
 				return String.Compare(_subType, other._subType, comparisonType);
 			return result;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
 		public int CompareTo(string other)
 		{
 			if (other == null)
@@ -300,6 +566,12 @@ namespace NetworkUtilityCLR
 				return String.Compare(name, other, StringComparison.InvariantCulture);
 			return result;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
 		public int CompareTo(object other)
 		{
 			if (other != null && other is MediaType)
@@ -307,6 +579,12 @@ namespace NetworkUtilityCLR
 			
 			return CompareTo(other as string);
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
 		public bool Equals(MediaType other)
 		{
 			if (other == null)
@@ -314,6 +592,12 @@ namespace NetworkUtilityCLR
 
 			return String.Compare(_topLevelType, other._topLevelType, StringComparison.InvariantCultureIgnoreCase) == 0 && String.Compare(_subType, other._subType, StringComparison.InvariantCultureIgnoreCase) == 0;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
 		public bool Equals(string other)
 		{
 			if (other == null)
@@ -321,6 +605,12 @@ namespace NetworkUtilityCLR
 			
 			return other != null && String.Compare(ToString(), other, StringComparison.InvariantCultureIgnoreCase) == 0;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
 		public override bool Equals(object obj)
 		{
 			if (obj != null && obj is MediaType)
@@ -328,6 +618,11 @@ namespace NetworkUtilityCLR
 			
 			return Equals(obj as string);
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public ContentType ToContentType()
 		{
 			ContentType contentType = new ContentType(((_topLevelType.Length == 0) ? "undefined" : _topLevelType + "/") + ((_subType.Length == 0) ? "undefined" : _subType));
@@ -336,8 +631,16 @@ namespace NetworkUtilityCLR
 			return contentType;
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public override int GetHashCode() { return ToString().GetHashCode(); }
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 		public override string ToString()
 		{
 			if (_parameters.Count == 0)
@@ -354,6 +657,7 @@ namespace NetworkUtilityCLR
 		}
 		
 		string IConvertible.ToString(IFormatProvider provider) { return ToString(); }
+
 		object IConvertible.ToType(Type conversionType, IFormatProvider provider)
 		{
 			if (conversionType == null || conversionType.Equals(typeof(string)))
@@ -364,20 +668,35 @@ namespace NetworkUtilityCLR
 				return this;
 			return Convert.ChangeType(this, conversionType);
 		}
+
 		TypeCode IConvertible.GetTypeCode() { return TypeCode.String; }
+
 		bool IConvertible.ToBoolean(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		byte IConvertible.ToByte(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		char IConvertible.ToChar(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		DateTime IConvertible.ToDateTime(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		decimal IConvertible.ToDecimal(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		double IConvertible.ToDouble(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		short IConvertible.ToInt16(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		int IConvertible.ToInt32(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		long IConvertible.ToInt64(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		SByte IConvertible.ToSByte(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		float IConvertible.ToSingle(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		ushort IConvertible.ToUInt16(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		uint IConvertible.ToUInt32(IFormatProvider provider) { throw new NotSupportedException(); }
+
 		ulong IConvertible.ToUInt64(IFormatProvider provider) { throw new NotSupportedException(); }
     }
 }

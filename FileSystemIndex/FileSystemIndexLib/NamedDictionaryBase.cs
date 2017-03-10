@@ -9,15 +9,36 @@ using System.Threading;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
     [Serializable()]
     public class NamedDictionaryBase<TValue> : ListDictionaryBase<string, TValue>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public NamedDictionaryBase() : base() { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="caseSensitive"></param>
         public NamedDictionaryBase(bool caseSensitive) : this((caseSensitive) ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameComparer"></param>
         public NamedDictionaryBase(IEqualityComparer<string> nameComparer) : base(nameComparer) { }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected override int BaseAdd(string name, TValue value)
         {
             if (name == null)
@@ -26,14 +47,26 @@ namespace Erwine.Leonard.T.GDIPlus
             return base.BaseAdd(name, value);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         protected override void BaseInsert(int index, string name, TValue value)
         {
             if (name == null)
                 throw new ArgumentNullException("name");
             
-            return base.BaseInsert(index, name, value);
+            base.BaseInsert(index, name, value);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected override bool BaseRemove(string name, TValue value)
         {
             if (name == null)
@@ -42,6 +75,11 @@ namespace Erwine.Leonard.T.GDIPlus
             return base.BaseRemove(name, value);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         protected override bool BaseRemove(string name)
         {
             if (name == null)
@@ -50,6 +88,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return base.BaseRemove(name);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subIndex"></param>
+        /// <returns></returns>
         protected override bool BaseRemoveAt(string name, int subIndex)
         {
             if (name == null || subIndex < 0)
@@ -58,15 +102,28 @@ namespace Erwine.Leonard.T.GDIPlus
             return base.BaseRemoveAt(name, subIndex);
         }
         
-        protected override bool BaseTryGet(string name, out TValue value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        protected override bool BaseTryGet(string name, out TValue[] value)
         {
             if (name != null)
                 return base.BaseTryGet(name, out value);
 
-            value = default(TValue);
+            value = new TValue[0];
             return false;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subIndex"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected override bool BaseTryGet(string name, int subIndex, out TValue value)
         {
             if (name != null && subIndex > -1)
@@ -76,7 +133,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return false;
         }
         
-        protected override TValue BaseGet(string name)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        protected override TValue[] BaseGet(string name)
         {
             if (name == null)
                 throw new ArgumentNullException("name");
@@ -84,6 +146,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return base.BaseGet(name);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subIndex"></param>
+        /// <returns></returns>
         protected override TValue BaseGet(string name, int subIndex)
         {
             if (name == null)
@@ -92,20 +160,33 @@ namespace Erwine.Leonard.T.GDIPlus
             return base.BaseGet(name, subIndex);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected override int BaseSet(string name, TValue value)
         {
             if (name == null)
                 throw new ArgumentNullException("name");
             
-            return base.BaseGet(name, value);
+            return base.BaseSet(name, value);
         }
         
-        protected virtual int BaseSet(string name, int subIndex, TValue value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subIndex"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        protected override int BaseSet(string name, int subIndex, TValue value)
         {
             if (name == null)
                 throw new ArgumentNullException("name");
             
-            return base.BaseGet(name, subIndex, value);
+            return base.BaseSet(name, subIndex, value);
         }
     }
 }
