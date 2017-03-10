@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
 using System.Collections;
 
 namespace NetworkUtilityCLR
@@ -28,7 +29,26 @@ namespace NetworkUtilityCLR
                 throw new ArgumentNullException("dictionary");
             
             if (type == typeof(JsonDictionary))
-            
+            {
+				JsonDictionary jsonDictionary = new JsonDictionary();
+				jsonDictionary.Deserialize(dictionary, serializer);
+				return jsonDictionary;
+			}
+			
+            if (type == typeof(JsonArray))
+            {
+				JsonArray jsonArray = new JsonArray();
+				jsonArray.Deserialize(dictionary, serializer);
+				return jsonArray;
+			}
+			
+            if (type == typeof(JsonText))
+            {
+				JsonText jsonText = new JsonText();
+				jsonText.Deserialize(dictionary, serializer);
+				return jsonText;
+			}
+			
             if (type == typeof(ListItemCollection))
             {
                 // Create the instance to deserialize into.

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Net.Mime;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -89,11 +90,11 @@ namespace NetworkUtilityCLR
 			return mediaType != null;
 		}
 		
-		public static bool Validate(string mediaType)
+		public static bool Validate(string mediaTypeString)
 		{
-			if (String.IsNullOrEmpty(mediaType))
+			if (String.IsNullOrEmpty(mediaTypeString))
 				return false;
-			if (MediaTypeRegex.IsMatch(mediaType);
+			if (MediaTypeRegex.IsMatch(mediaTypeString))
 				return true;
 			
 			Match m = ContentTypeRegex.Match(mediaTypeString);
@@ -145,7 +146,7 @@ namespace NetworkUtilityCLR
 		}
 		
 		[XmlArray(ElementName_parameters)]
-        public StringDictionary Parameters { get { return _parameters; } set { _parameters = (value == null) ? StringDictionary() : value; } }
+        public StringDictionary Parameters { get { return _parameters; } set { _parameters = (value == null) ? new StringDictionary() : value; } }
 		
 		public MediaType(string mediaTypeString)
 		{
@@ -153,10 +154,8 @@ namespace NetworkUtilityCLR
 				return;
 	
 			Match m = MediaTypeRegex.Match(mediaTypeString);
-			ContentType contentType;
-			if (m.Success)
-				contentType = null;
-			else
+			ContentType contentType = null;
+			if (!m.Success)
 			{
 				m = ContentTypeRegex.Match(mediaTypeString);
 				bool success = m.Success;
@@ -211,7 +210,7 @@ namespace NetworkUtilityCLR
 		{
 			if (!String.IsNullOrEmpty(topLevelType))
 			{
-				if (!ValidateToken(topLevelType)
+				if (!ValidateToken(topLevelType))
 					throw new FormatException("Invalid top-level type token string.");
 				_topLevelType = topLevelType;
 			}
@@ -219,12 +218,12 @@ namespace NetworkUtilityCLR
 			if (String.IsNullOrEmpty(subType))
 				return;
 
-			if (!ValidateToken(subType)
+			if (!ValidateToken(subType))
 				throw new FormatException("Invalid sub-type token string.");
 			_subType = subType;
 		}
 		
-		public MediaType(string topLevelType, string subType, NameValueCollection parameters)
+		public MediaType(string topLevelType, string subType, StringDictionary parameters)
 			: this(topLevelType, subType)
 		{
 			if (parameters == null)
@@ -236,33 +235,21 @@ namespace NetworkUtilityCLR
 		
 		public static implicit operator MediaType(string name) { return new MediaType(name); }
 		public static bool operator ==(MediaType x, MediaType y) { return (x == null) ? y == null : y != null && x.Equals(y); }
-		public static bool operator ==(MediaType x, MediaType y) { return (x == null) ? y == null : y != null && x.Equals(y); }
-		public static bool operator ==(MediaType x, MediaType y) { return (x == null) ? y == null : y != null && y.Equals(x); }
 		public static bool operator ==(MediaType x, string y) { return (x == null) ? y == null : y != null && x.Equals(y); }
 		public static bool operator ==(string x, MediaType y) { return (x == null) ? y == null : y != null && y.Equals(x); }
 		public static bool operator !=(MediaType x, MediaType y) { return (x == null) ? y != null : y == null || !x.Equals(y); }
-		public static bool operator !=(MediaType x, MediaType y) { return (x == null) ? y != null : y == null || !x.Equals(y); }
-		public static bool operator !=(MediaType x, MediaType y) { return (x == null) ? y != null : y == null || !y.Equals(x); }
 		public static bool operator !=(MediaType x, string y) { return (x == null) ? y != null : y == null || !x.Equals(y); }
 		public static bool operator !=(string x, MediaType y) { return (x == null) ? y != null : y == null || !y.Equals(x); }
 		public static bool operator <(MediaType x, MediaType y) { return (x == null) ? (y != null) : (y != null && x.CompareTo(y) < 0) ; }
-		public static bool operator <(MediaType x, MediaType y) { return (x == null) ? (y != null) : (y != null && x.CompareTo(y) < 0); }
-		public static bool operator <(MediaType x, MediaType y) { return (x == null) ? (y != null) : (y != null && y.CompareTo(x) > 0); }
 		public static bool operator <(MediaType x, string y) { return (x == null) ? (y != null) : (y != null && x.CompareTo(y) < 0); }
 		public static bool operator <(string x, MediaType y) { return (x == null) ? (y != null) : (y != null && y.CompareTo(x) > 0); }
 		public static bool operator <=(MediaType x, MediaType y) { return x == null || (y != null && x.CompareTo(y) <= 0); }
-		public static bool operator <=(MediaType x, MediaType y) { return x == null || (y != null && x.CompareTo(y) <= 0); }
-		public static bool operator <=(MediaType x, MediaType y) { return x == null || (y != null && y.CompareTo(x) >= 0); }
 		public static bool operator <=(MediaType x, string y) { return x == null || (y != null && x.CompareTo(y) <= 0); }
-		public static bool operator <=(string x, MediaType y) { x == null || (y != null && y.CompareTo(x) >= 0); }
+		public static bool operator <=(string x, MediaType y) { return x == null || (y != null && y.CompareTo(x) >= 0); }
 		public static bool operator >(MediaType x, MediaType y) { return x != null && (y == null || x.CompareTo(y) > 0); }
-		public static bool operator >(MediaType x, MediaType y) { return x != null && (y == null || x.CompareTo(y) > 0); }
-		public static bool operator >(MediaType x, MediaType y) { return x != null && (y == null || y.CompareTo(x) < 0); }
 		public static bool operator >(MediaType x, string y) { return x != null && (y == null || x.CompareTo(y) > 0); }
 		public static bool operator >(string x, MediaType y) { return y.CompareTo(x) < 0; }
 		public static bool operator >=(MediaType x, MediaType y) { return (x == null) ? (y == null) : (y == null || x.CompareTo(y) >= 0); }
-		public static bool operator >=(MediaType x, MediaType y) { return (x == null) ? (y == null) : (y == null || x.CompareTo(y) >= 0); }
-		public static bool operator >=(MediaType x, MediaType y) { return (x == null) ? (y == null) : (y == null || y.CompareTo(x) <= 0); }
 		public static bool operator >=(MediaType x, string y) { return (x == null) ? (y == null) : (y == null || x.CompareTo(y) >= 0); }
 		public static bool operator >=(string x, MediaType y) { return (x == null) ? (y == null) : (y == null || y.CompareTo(x) <= 0); }
 		public int CompareTo(MediaType other)
@@ -336,20 +323,20 @@ namespace NetworkUtilityCLR
 		}
 		public override bool Equals(object obj)
 		{
-			if (other != null && other is MediaType)
-				return Equals((MediaType)other);
+			if (obj != null && obj is MediaType)
+				return Equals((MediaType)obj);
 			
-			return Equals(other as string);
+			return Equals(obj as string);
 		}
 		public ContentType ToContentType()
 		{
-			ContentType contentType = new ContentType((_topLevelType.Length == 0) ? "undefined" : _topLevelType + "/" + (_subType.Length == 0) ? "undefined" : _subType);
+			ContentType contentType = new ContentType(((_topLevelType.Length == 0) ? "undefined" : _topLevelType + "/") + ((_subType.Length == 0) ? "undefined" : _subType));
 			foreach (string key in _parameters.Keys)
 				contentType.Parameters.Add(key, _parameters[key]);
 			return contentType;
 		}
 		
-		public override GetHashCode() { return ToString().GetHashCode(); }
+		public override int GetHashCode() { return ToString().GetHashCode(); }
 		
 		public override string ToString()
 		{
@@ -375,7 +362,7 @@ namespace NetworkUtilityCLR
 				return ToContentType();
 			if (conversionType.Equals(typeof(MediaType)))
 				return this;
-			return Convert.ChangeType(conversionType, this);
+			return Convert.ChangeType(this, conversionType);
 		}
 		TypeCode IConvertible.GetTypeCode() { return TypeCode.String; }
 		bool IConvertible.ToBoolean(IFormatProvider provider) { throw new NotSupportedException(); }

@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
 using System.Collections;
 
 namespace NetworkUtilityCLR
 {
-    public absract class JSonValue
+    public abstract class JSonValue
     {
         public abstract string GetElementName();
         public Dictionary<string, object> Serialize(JavaScriptSerializer serializer)
@@ -21,6 +22,15 @@ namespace NetworkUtilityCLR
             result.Add(GetElementName(), value);
             return result;
         }
-        protected abstract object AsSerializedValue(JavaScriptSerializer serializer);
+		public virtual void Deserialize(IDictionary<string, object> dictionary, JavaScriptSerializer serializer)
+		{
+			string name = GetElementName();
+			if (dictionary != null && dictionary.ContainsKey(name))
+				OnDeserialize(dictionary[name], serializer);
+			else
+				OnDeserialize(null, serializer);
+		}
+        protected virtual void OnDeserialize(object obj, JavaScriptSerializer serializer) { }
+        protected internal abstract object AsSerializedValue(JavaScriptSerializer serializer);
     }
 }

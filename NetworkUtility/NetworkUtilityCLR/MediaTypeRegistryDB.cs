@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Mime;
 using System.Runtime.InteropServices;
@@ -10,7 +11,7 @@ namespace NetworkUtilityCLR
 {
     [Serializable]
     [XmlRoot(ElementName_registry, Namespace = XmlNamespace_Registry)]
-    public class MediaTypeRegistryDB : MediaTypeRegistryBase, IDictionary<string, MediaTypeRegistry>
+    public class MediaTypeRegistryDB : MediaTypeRegistryBase/*, IDictionary<string, MediaTypeRegistry>*/
     {
         public const string Registry_DefaultId = "media-types";
 		public const string ElementName_category = "category";
@@ -30,13 +31,14 @@ namespace NetworkUtilityCLR
         {
             get
 			{
-				if (_id.Length == 0)
-					_id = Registry_DefaultId;
+				if (base.ID.Length == 0)
+					base.ID = Registry_DefaultId;
+				return base.ID;
 			}
             set
 			{
 				string s = (value == null) ? "" : value.Trim();
-				_id = (s.Length == 0) ? Registry_DefaultId : s;
+				base.ID = (s.Length == 0) ? Registry_DefaultId : s;
 			}
         }
 		

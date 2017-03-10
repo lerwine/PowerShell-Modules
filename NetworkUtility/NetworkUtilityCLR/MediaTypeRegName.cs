@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Mime;
 using System.Runtime.InteropServices;
@@ -12,7 +13,7 @@ namespace NetworkUtilityCLR
     [XmlRoot(MediaTypeRegRecord.ElementName_name, Namespace = MediaTypeRegistry.XmlNamespace_Registry, IsNullable = true)]
     public class MediaTypeRegName : MediaTypeRegRawXml
     {
-        public override string ElementName { get { return MediaTypeRecord.ElementName_name; } }
+        public override string ElementName { get { return MediaTypeRegRecord.ElementName_name; } }
 		
         public string Value
         {
