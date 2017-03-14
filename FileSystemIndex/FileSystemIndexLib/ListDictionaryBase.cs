@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     /// <summary>
     /// Base object for a list-based dictionary that supports asserted key values.

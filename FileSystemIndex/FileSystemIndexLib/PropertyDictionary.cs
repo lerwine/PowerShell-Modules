@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     /// <summary>
     /// 

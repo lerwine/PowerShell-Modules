@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     /// <summary>
     /// 

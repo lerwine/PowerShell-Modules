@@ -9,7 +9,7 @@ using System.Threading;
 /// <summary>
 /// 
 /// </summary>
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     public class CrawlComponentCollection<TKey> : IList<ICrawledComponent<TKey>> //, IList, INotifyCollectionChanged
         where TKey : IComparable

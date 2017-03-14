@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     /// <summary>
     /// 

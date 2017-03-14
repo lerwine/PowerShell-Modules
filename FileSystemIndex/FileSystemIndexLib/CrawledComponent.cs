@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     /// <summary>
     /// 

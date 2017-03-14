@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Erwine.Leonard.T.GDIPlus
+namespace FileSystemIndexLib
 {
     /// <summary>
     /// 

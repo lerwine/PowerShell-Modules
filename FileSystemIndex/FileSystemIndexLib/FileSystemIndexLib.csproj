@@ -60,6 +60,10 @@
     <Compile Include="NameAndExtension.cs" />
     <Compile Include="NamedDictionaryBase.cs" />
     <Compile Include="PropertyDictionary.cs" />
+    <Compile Include="UnifiedFileDiff.cs" />
+    <Compile Include="UnifiedDiffLine.cs" />
+    <Compile Include="UnifiedDiffChunk.cs" />
+    <Compile Include="CommonSequenceSearcher.cs" />
     <Compile Include="Legacy\BaseRecord.cs" />
     <Compile Include="Legacy\DirectoryCrawlIterator.cs" />
     <Compile Include="Legacy\DirectoryRecord.cs" />
