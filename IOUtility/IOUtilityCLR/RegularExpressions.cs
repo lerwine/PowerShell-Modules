@@ -15,14 +15,14 @@ namespace IOUtilityCLR
         public static readonly Regex InvalidRelativePathChars;
         static RegularExpressions()
         {
-            RegularExpressions.InvalidFileNameChars = new Regex(String.Format(@"(_(?=0x[\dA-F]{4}_)|{0})",
+            RegularExpressions.InvalidFileNameChars = new Regex(String.Format(@"(_(?=0x[\dA-F]{{4}}_)|{0})",
                 TextHelper.GetRegexPattern(null, Path.GetInvalidFileNameChars(), false, false), RegexOptions.Compiled | RegexOptions.IgnoreCase));
             List<char> invalidChars = new List<char>(Path.GetInvalidPathChars());
             invalidChars.Add(Path.PathSeparator);
-            RegularExpressions.InvalidPathChars = new Regex(String.Format(@"(_(?=0x[\dA-F]{4}_)|{0})",
+            RegularExpressions.InvalidPathChars = new Regex(String.Format(@"(_(?=0x[\dA-F]{{4}}_)|{0})",
                 TextHelper.GetRegexPattern(null, invalidChars, false, false)), RegexOptions.Compiled | RegexOptions.IgnoreCase);
             invalidChars.Add(Path.VolumeSeparatorChar);
-            RegularExpressions.InvalidRelativePathChars = new Regex(String.Format(@"(^[{0}{1}]|_(?=0x[\dA-F]{4}_)|{2})", Regex.Escape(Path.DirectorySeparatorChar.ToString()),
+            RegularExpressions.InvalidRelativePathChars = new Regex(String.Format(@"(^[{0}{1}]|_(?=0x[\dA-F]{{4}}_)|{2})", Regex.Escape(Path.DirectorySeparatorChar.ToString()),
                 Regex.Escape(Path.AltDirectorySeparatorChar.ToString()), TextHelper.GetRegexPattern(null, Path.GetInvalidPathChars(), false, false)),
                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
