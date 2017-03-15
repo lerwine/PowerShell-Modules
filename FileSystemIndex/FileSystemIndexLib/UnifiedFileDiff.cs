@@ -7,6 +7,10 @@ using System.Management.Automation.Host;
 
 namespace FileSystemIndexLib
 {
+    public class UnifiedFileDiff : UnifiedFileDiff<StringDiffChunkNCS, StringDiffLineNCS, string>
+    {
+    }
+
 	public abstract class UnifiedFileDiff<TDiffChunk, TDiffLine, TValue>
 		where TDiffLine : UnifiedDiffLine<TValue>
 		where TDiffChunk : UnifiedDiffChunk<TDiffLine, TValue>

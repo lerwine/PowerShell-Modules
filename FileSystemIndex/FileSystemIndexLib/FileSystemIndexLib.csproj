@@ -64,6 +64,10 @@
     <Compile Include="UnifiedDiffLine.cs" />
     <Compile Include="UnifiedDiffChunk.cs" />
     <Compile Include="CommonSequenceSearcher.cs" />
+    <Compile Include="StringDiffChunk.cs" />
+    <Compile Include="StringDiffLine.cs" />
+    <Compile Include="StringDiffChunkNCS.cs" />
+    <Compile Include="StringDiffLineNCS.cs" />
     <Compile Include="Legacy\BaseRecord.cs" />
     <Compile Include="Legacy\DirectoryCrawlIterator.cs" />
     <Compile Include="Legacy\DirectoryRecord.cs" />

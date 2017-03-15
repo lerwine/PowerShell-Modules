@@ -1,12 +1,3 @@
-Function Initialize-CurrentModule {
-    [CmdletBinding()]
-    Param()
-	
-	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
-	
-    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
-}
-
 if (({
     $BasePath = $args[0] | Split-Path -Parent;
     $SourceFiles = @((Get-ChildItem -Path $BasePath -Filter '*.cs') | ForEach-Object { $_.FullName });
@@ -16,7 +7,37 @@ if (({
         CompilerOptions = '/define:TRACE;DEBUG';
     }) -ErrorAction Stop;
     $SourceFiles | Write-Output;
-}).Invoke($MyInvocation.MyCommand.Definition) -eq $null) { return }
+}).Invoke($MyInvocation.MyCommand.Definition).Count -eq 0) { return }
+
+Function Get-PathDiff {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        $OriginalPath,
+        
+        [Parameter(Mandatory = $true, Position = 1)]
+        $NewPath
+    )
+
+    if (($OriginalPath | Test-Path -PathType Container)) {
+        if (($NewPath | Test-Path -PathType Container)) {
+            $OriginalList = New-Object -TypeName 'System.Collections.Generic.List[System.String]';
+            Get-ChildItem -Path $OriginalPath | ForEach-Object { $OriginalList.Add($_.Name) };
+            $OriginalList.Sort([System.StringComparer]::InvariantCultureIgnoreCase);
+            $NewList = New-Object -TypeName 'System.Collections.Generic.List[System.String]';
+            Get-ChildItem -Path $NewPath | ForEach-Object { $NewList.Add($_.Name) };
+            $NewList.Sort([System.StringComparer]::InvariantCultureIgnoreCase);
+            $UnifiedFileDiff = New-Object -TypeName 'FileSystemIndexLib.UnifiedFileDiff';
+            $UnifiedFileDiff.OriginalFile = $OriginalPath;
+            $UnifiedFileDiff.NewFile = $NewPath;
+        } else {
+        }
+    } else {
+        if (($NewPath | Test-Path -PathType Container)) {
+        } else {
+        }
+    }
+}
 
 $CommonSequenceSearcher1 = New-Object -TypeName 'FileSystemIndexLib.CommonSequenceSearcher[string]' -ArgumentList (,[string[]]@('line1', 'line2', 'line3', 'line4', 'line5'));
 $CommonSequenceSearcher2 = New-Object -TypeName 'FileSystemIndexLib.CommonSequenceSearcher[string]' -ArgumentList (,[string[]]@('line1', 'line3', 'line4', 'line5' ));

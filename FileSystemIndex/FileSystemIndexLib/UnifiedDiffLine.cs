@@ -38,6 +38,8 @@ namespace FileSystemIndexLib
         
 		protected abstract string AsStringValue(T value);
         
+        protected virtual T CoerceValue(T value) { return value; }
+
         private static void WriteInsert(TextWriter writer, string text)
         {
             if (text != null)
