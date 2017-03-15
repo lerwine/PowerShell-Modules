@@ -1,3 +1,7 @@
+$Inv2 = $MyInvocation;
+
+$ModuleManifest -eq $null;
+
 Function Initialize-CurrentModule {
     [CmdletBinding()]
     Param()
@@ -21,7 +25,6 @@ Function Initialize-CurrentModule {
 
     $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
 }
-
 Initialize-CurrentModule;
 
 $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
@@ -129,7 +132,7 @@ Function ConvertTo-SafeFileName {
         .LINK
             ConvertFrom-SafeFileName
 	#>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'FileName')]
 	[OutputType([string])]
     Param(
 		# String to convert to file name
