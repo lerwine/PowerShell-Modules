@@ -7,8 +7,10 @@ using System.Management.Automation.Host;
 
 namespace FileSystemIndexLib
 {
-    public class StringDiffLine : UnifiedDiffLine<string>
+    public class StringDiffLine : DiffItem<string>
 	{
+		public StringDiffLine() : base(null, null) { }
+		
 		public StringDiffLine(string originalValue, string newValue) : base(originalValue, newValue) { }
 
 		protected override bool AreEqual(string originalValue, string newValue)
