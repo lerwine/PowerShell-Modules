@@ -4,44 +4,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Host;
+using System.Text.RegularExpressions;
 
 namespace FileSystemIndexLib
 {
     public class StringDiff : DiffChunkCollection<StringDiffChunkNCS, StringDiffLineNCS, string>
     {
+		public static readonly Regex LineSplitRegex = new Regex(@"\r\n?|\n", RegexOptions.Compiled);
 		/// <summary>
 		/// Splits a source string into invidual lines.
 		/// <summary>
 		/// <param name="source">Text to be split by lines.</param>
 		/// <returns>An enumeration of string values which were individual lines in <paramref name="source" />, or an empty enumeration if <paramref name="source" /> was null.</returns>
-		public static IEnumerable<string> SplitLines(string source)
+		public static Collection<string> SplitLines(string source)
 		{
+			Collection<string> result = new Collection<string>();
 			if (source == null)
-				yield break;
+				return result;
 			
-			int startIndex = 0;
-			int endIndex = 0;
-			while (endIndex < source.Length)
-			{
-				if (source[endIndex] == '\r')
-				{
-					yield return source.Substring(startIndex, endIndex - startIndex);
-					startIndex = endIndex + 1;
-					if (startIndex < source.Length && source[startIndex] == '\n')
-					{
-						startIndex++;
-						endIndex++;
-					}
-				}
-				else if (source[endIndex] == '\r')
-				{
-					yield return source.Substring(startIndex, endIndex - startIndex);
-					startIndex = endIndex + 1;
-				}
-				endIndex++;
-			}
-			if (startIndex < source.Length)
-				yield return source.Substring(startIndex);
+			foreach (string s in LineSplitRegex.Split(source))
+				result.Add(s);
+			return result;
 		}
 		
 		/// <summary>
