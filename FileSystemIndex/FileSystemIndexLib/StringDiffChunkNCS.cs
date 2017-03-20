@@ -13,7 +13,7 @@ namespace FileSystemIndexLib
 		
         public StringDiffChunkNCS(int originalStartLine, int newStartLine, IEnumerable<StringDiffLineNCS> lines) : base(originalStartLine, newStartLine, lines) { }
 
-        public StringDiffChunkNCS(int originalStartLine, int newStartLine, IEnumerable<string> originalValues, IEnumerable<string> newValues) : base(originalStartLine, newStartLine, originalValues, newValues) { }
+        public StringDiffChunkNCS(IEnumerable<string> originalValues, int originalStartLine, IEnumerable<string> newValues, int newStartLine) : base(originalValues, originalStartLine, newValues, newStartLine) { }
 
 		protected override StringDiffLineNCS CreateDiffItem(string originalValue, string newValue)
         {

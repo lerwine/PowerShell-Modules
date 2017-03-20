@@ -77,7 +77,7 @@ namespace FileSystemIndexLib
 			}
 		}
 		
-		protected DiffChunk(int originalStartLine, int newStartLine, IEnumerable<TValue> originalItems, IEnumerable<TValue> newItems)
+		protected DiffChunk(IEnumerable<TValue> originalItems, int originalStartLine, IEnumerable<TValue> newItems, int newStartLine)
 			: base(originalStartLine, newStartLine)
 		{
 			IList<TValue> originalList = (originalItems == null) ? new List<TValue>() : ((originalItems is IList<TValue>) ? originalItems as IList<TValue> : new List<TValue>(originalItems));
