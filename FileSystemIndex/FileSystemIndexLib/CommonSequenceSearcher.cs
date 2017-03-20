@@ -23,7 +23,7 @@ namespace FileSystemIndexLib
 				if (index < 0 || index >= _count)
 					throw new IndexOutOfRangeException();
 
-				return _innerList[_parentIndex + _count];
+				return _innerList[_parentIndex + index];
 			}
 		}
 

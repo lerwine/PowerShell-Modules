@@ -97,6 +97,15 @@ namespace FileSystemIndexLib
 		}
 		
 		public abstract void WriteUnifiedDiffTo(TextWriter writer);
+		
+		public string ToUnifiedDiff()
+		{
+			using (StringWriter stringWriter = new StringWriter())
+			{
+				WriteUnifiedDiffTo(stringWriter);
+				return stringWriter.ToString();
+			}
+		}
 	}
 	
 	public abstract class DiffChunkCollection<TDiffChunk, TDiffItem, TValue> : DiffChunkCollection
@@ -198,7 +207,7 @@ namespace FileSystemIndexLib
 			CommonSequenceSearcher<TValue> oSearcher = originalSearcher.Take(originalIndex);
 			CommonSequenceSearcher<TValue> nSearcher = newSearcher.Take(newIndex);
 			if (oSearcher.Count > 0 || nSearcher.Count > 0)
-				Initialize( oSearcher, nSearcher);
+				Initialize(oSearcher, nSearcher);
 			oSearcher = originalSearcher.Skip(newIndex + length);
 			nSearcher = newSearcher.Skip(newIndex + length);
 			if (oSearcher.Count > 0 || nSearcher.Count > 0)

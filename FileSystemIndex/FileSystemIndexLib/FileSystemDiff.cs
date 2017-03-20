@@ -50,6 +50,7 @@ namespace FileSystemIndexLib
 				
 				return source.OrderBy(f => f, Default);
 			}
+			
 			private static FileSystemComparer _default = null;
 			
 			public static FileSystemComparer Default
@@ -61,6 +62,7 @@ namespace FileSystemIndexLib
 					return _default;
 				}
 			}
+			
 			public static bool AreEqual(FileSystemInfo x, FileSystemInfo y)
 			{
 				if (x == null)
@@ -91,7 +93,9 @@ namespace FileSystemIndexLib
 				
 				return true;
 			}
+			
 			public bool Equals(FileSystemInfo x, FileSystemInfo y) { return AreEqual(x, y); }
+			
 			public int Compare(FileSystemInfo x, FileSystemInfo y)
 			{
 				if (x == null)
@@ -124,6 +128,7 @@ namespace FileSystemIndexLib
 				
 				return (x as FileInfo).Length.CompareTo((y as FileInfo).Length);
 			}
+			
 			public int GetHashCode(FileSystemInfo obj)
 			{
 				return ((obj == null) ? "" : ((obj is DirectoryInfo) ? "1" : "0") + obj.Name.ToLower()).GetHashCode();

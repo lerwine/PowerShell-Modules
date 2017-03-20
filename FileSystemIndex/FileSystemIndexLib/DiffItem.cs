@@ -26,7 +26,7 @@ namespace FileSystemIndexLib
             if (text != null)
             {
                 writer.Write("+");
-                writer.Write(text);
+                writer.WriteLine(text);
             }
         }
 
@@ -35,7 +35,7 @@ namespace FileSystemIndexLib
             if (text != null)
             {
                 writer.Write("-");
-                writer.Write(text);
+                writer.WriteLine(text);
             }
         }
 	}
@@ -69,7 +69,7 @@ namespace FileSystemIndexLib
         
         public override bool IsModified { get { return !(IsAbsentValue(_newValue) || IsAbsentValue(_originalValue) || AreEqual(_newValue, _originalValue)); } }
 
-        public override bool HasDifference { get { return (IsAbsentValue(_newValue)) ? IsAbsentValue(_originalValue) : (!IsAbsentValue(_originalValue) && AreEqual(_newValue, _originalValue)); } }
+        public override bool HasDifference { get { return (IsAbsentValue(_newValue)) ? !IsAbsentValue(_originalValue) : (IsAbsentValue(_originalValue) || !AreEqual(_newValue, _originalValue)); } }
 
         public override bool IsContext { get { return !(IsAbsentValue(_newValue) || IsAbsentValue(_originalValue)) && AreEqual(_newValue, _originalValue); } }
 
@@ -97,7 +97,7 @@ namespace FileSystemIndexLib
                 if (originalText == newText)
                 {
                     writer.Write(" ");
-                    writer.Write(newText);
+                    writer.WriteLine(newText);
                     return;
                 }
 
