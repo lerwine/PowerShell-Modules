@@ -48,11 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="CommonSequenceSearcher.cs" />
     <Compile Include="ComponentPropertyDictionary.cs" />
     <Compile Include="CrawlComponentCollection.cs" />
     <Compile Include="CrawledComponent.cs" />
+    <Compile Include="DiffChunk.cs" />
+    <Compile Include="DiffChunkCollection.cs" />
+    <Compile Include="DiffItem.cs" />
     <Compile Include="DirectoryNode.cs" />
     <Compile Include="FileNode.cs" />
+    <Compile Include="FileSystemDiff.cs" />
+    <Compile Include="FileSystemDiffChunk.cs" />
+    <Compile Include="FileSystemDiffLine.cs" />
     <Compile Include="ICrawlComponentContainer.cs" />
     <Compile Include="ICrawledComponent.cs" />
     <Compile Include="INestedCrawlComponentContainer.cs" />
@@ -60,13 +67,10 @@
     <Compile Include="NameAndExtension.cs" />
     <Compile Include="NamedDictionaryBase.cs" />
     <Compile Include="PropertyDictionary.cs" />
-    <Compile Include="UnifiedFileDiff.cs" />
-    <Compile Include="UnifiedDiffLine.cs" />
-    <Compile Include="UnifiedDiffChunk.cs" />
-    <Compile Include="CommonSequenceSearcher.cs" />
+    <Compile Include="StringDiff.cs" />
     <Compile Include="StringDiffChunk.cs" />
-    <Compile Include="StringDiffLine.cs" />
     <Compile Include="StringDiffChunkNCS.cs" />
+    <Compile Include="StringDiffLine.cs" />
     <Compile Include="StringDiffLineNCS.cs" />
     <Compile Include="Legacy\BaseRecord.cs" />
     <Compile Include="Legacy\DirectoryCrawlIterator.cs" />
