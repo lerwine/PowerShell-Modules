@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="CommonSequenceSearcher.cs" />
+    <Compile Include="CommonSequenceSearcher.cs" />
     <Compile Include="ComponentPropertyDictionary.cs" />
     <Compile Include="CrawlComponentCollection.cs" />
     <Compile Include="CrawledComponent.cs" />
@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Legacy\ClassDiagram1.cd" />
+    <None Include="Test.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
