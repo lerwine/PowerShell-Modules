@@ -32,8 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assembly\V4\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assembly\V4\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -54,6 +63,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ConvertTo-PromptBuilder.cs" />
+    <Compile Include="Commands\ConvertTo-Ssml.cs" />
+    <Compile Include="Commands\Get-TextToSpeechStatus.cs" />
+    <Compile Include="Commands\Import-SpokenText.cs" />
+    <Compile Include="Commands\Resume-TextToSpeech.cs" />
+    <Compile Include="Commands\Start-TextToSpeech.cs" />
+    <Compile Include="Commands\Stop-TextToSpeech.cs" />
+    <Compile Include="Commands\Suspend-TextToSpeech.cs" />
+    <Compile Include="Commands\TextToSpeechCmdlet.cs" />
+    <Compile Include="Commands\Wait-TextToSpeech.cs" />
     <Compile Include="GUI\XmlEditorWindow.xaml.cs">
       <DependentUpon>XmlEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -70,6 +89,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="TextToSpeechJob.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -100,6 +120,7 @@
       <Name>WpfCLR</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
