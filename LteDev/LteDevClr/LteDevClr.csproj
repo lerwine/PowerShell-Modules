@@ -112,23 +112,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\XmlUtility\Schemas\developer.xsd">
+      <Link>Resources\developer.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\XmlUtility\Schemas\developerCommand.xsd">
+      <Link>Resources\developerCommand.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\XmlUtility\Schemas\developerManaged.xsd">
+      <Link>Resources\developerManaged.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\XmlUtility\Schemas\Maml.xsd">
+      <Link>Resources\Maml.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Diff\ClassDiagram1.cd" />
     <None Include="README.md" />
-    <None Include="Resources\developer.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\developerCommand.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\developerManaged.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\helpItems.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\maml.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="TypeBrowser\ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
