@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !PSLEGACY2
+#if !PSLEGACY
 using System.Linq;
 #endif
 using System.Management.Automation;
@@ -161,7 +161,7 @@ namespace IOUtilityCLR
 
         public void EventHandler(object sender, TEventArgs e)
         {
-#if PSLEGACY2
+#if PSLEGACY
 			object[] variableKeys = LinqEmul.ToArray<object>(LinqEmul.Cast<object>(Variables.Keys));
 #else
             object[] variableKeys = Variables.Keys.Cast<object>().ToArray();

@@ -31,7 +31,7 @@ namespace IOUtilityCLR
 		private Hashtable _variables = new Hashtable();
         private RunspaceConfiguration _configuration = null;
 		private Hashtable _synchronizedData;
-		
+
         public void AddEventHandler(IPSEventScriptHandler handler)
         {
             lock (_syncRoot)
@@ -166,6 +166,7 @@ namespace IOUtilityCLR
         /// </summary>
         public PSInvocationContext()
         {
+            _variables = new Hashtable();
             _synchronizedData = Hashtable.Synchronized(new Hashtable());
         }
 
@@ -182,7 +183,7 @@ namespace IOUtilityCLR
             if (_variableKeys != null)
                 throw new InvalidOperationException();
 
-#if PSLEGACY2
+#if PSLEGACY
 			_variableKeys = LinqEmul.ToArray<object>(LinqEmul.Cast<object>(Variables.Keys));
 #else
             _variableKeys = Variables.Keys.Cast<object>().ToArray();

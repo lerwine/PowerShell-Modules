@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if !PSLEGACY2
+#if !PSLEGACY
 using System.Linq;
 #endif
 using System.Management.Automation;
@@ -37,7 +37,7 @@ namespace IOUtilityCLR
                         powerShell.AddArgument(a);
                 }
                 _output = powerShell.Invoke();
-#if !PSLEGACY2
+#if !PSLEGACY
                 _hadErrors = powerShell.HadErrors;
 #endif
                 _ranToCompletion = true;

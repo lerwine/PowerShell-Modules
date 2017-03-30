@@ -1,4 +1,4 @@
-﻿#if PSLEGACY2
+﻿#if PSLEGACY
 using System;
 using System.Collections.Generic;
 using System.Text;

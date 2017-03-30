@@ -1,62 +1,59 @@
-$Inv2 = $MyInvocation;
-
-$ModuleManifest -eq $null;
-
 Function Initialize-CurrentModule {
-    [CmdletBinding()]
-    Param()
+	[CmdletBinding()]
+	Param()
 	
 	$Local:BaseName = $PSScriptRoot | Join-Path -ChildPath $MyInvocation.MyCommand.Module.Name;
 	
-    $Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
-    $Local:Assemblies = @($Local:ModuleManifest.PrivateData.CompilerOptions.AssemblyReferences | ForEach-Object {
-        (Add-Type -AssemblyName $_ -PassThru)[0].Assembly.Location
-    });
-    $Local:Splat = @{
-        TypeName = 'System.CodeDom.Compiler.CompilerParameters';
-        ArgumentList = (,$Local:Assemblies);
-        Property = @{
-            IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
-        }
-    };
-    if ($Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols -ne '') {
-        $Local:Splat.Property.CompilerOptions = '/define:' + $Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols;
-    }
+	$Local:ModuleManifest = Test-ModuleManifest -Path ($PSScriptRoot | Join-Path -ChildPath ('{0}.psd1' -f $MyInvocation.MyCommand.Module.Name));
+	$Local:Assemblies = @($Local:ModuleManifest.PrivateData.CompilerOptions.AssemblyReferences | ForEach-Object {
+		(Add-Type -AssemblyName $_ -PassThru)[0].Assembly.Location
+	});
+	$Local:Splat = @{
+		TypeName = 'System.CodeDom.Compiler.CompilerParameters';
+		ArgumentList = (,$Local:Assemblies);
+		Property = @{
+			IncludeDebugInformation = $Local:ModuleManifest.PrivateData.CompilerOptions.IncludeDebugInformation;
+		}
+	};
+	if ($Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols -ne '') {
+		$Local:Splat.Property.CompilerOptions = '/define:' + $Local:ModuleManifest.PrivateData.CompilerOptions.ConditionalCompilationSymbols;
+	}
 
-    $Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
+	$Script:AssemblyPath = @(Add-Type -Path ($Local:ModuleManifest.PrivateData.CompilerOptions.CustomTypeSourceFiles | ForEach-Object { $PSScriptRoot | Join-Path -ChildPath $_ }) -CompilerParameters (New-Object @Local:Splat) -PassThru)[0].Assembly.Location;
 }
+
 Initialize-CurrentModule;
 
 $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
-    Whitespace = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
-    UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
+	Whitespace = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
+	UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
 };
 
 Function Get-SpecialFolderNames {
-    <#
-        .SYNOPSIS
+	<#
+		.SYNOPSIS
 			Get special folder names
-         
-        .DESCRIPTION
+		 
+		.DESCRIPTION
 			Returns a list of names that can be used to refer to actual spcial folder paths.
-        
-        .OUTPUTS
+		
+		.OUTPUTS
 			System.String[]. List of non-empty string values.
-        
-        .LINK
-            Get-SpecialFolder
-        
-        .LINK
-            https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
-    #>
+		
+		.LINK
+			Get-SpecialFolder
+		
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
+	#>
 	[CmdletBinding()]
 	[OutputType([string[]])]
-    Param()
-    if ($PSVersionTable.ClrVersion.Major -lt 4) {
-        [System.Enum]::GetNames([System.Environment+SpecialFolder]) + @('ProgramFilesX86', 'CommonProgramFilesX86', 'Windows');
-    } else {
-        [System.Enum]::GetNames([System.Environment+SpecialFolder])
-    }
+	Param()
+	if ($PSVersionTable.ClrVersion.Major -lt 4) {
+		[System.Enum]::GetNames([System.Environment+SpecialFolder]) + @('ProgramFilesX86', 'CommonProgramFilesX86', 'Windows');
+	} else {
+		[System.Enum]::GetNames([System.Environment+SpecialFolder])
+	}
 }
 
 Function Get-SpecialFolder {
@@ -66,8 +63,8 @@ Function Get-SpecialFolder {
  
 		.DESCRIPTION
 			Converts special folder enumerated value to string path
-        
-        .OUTPUTS
+		
+		.OUTPUTS
 			System.String. Path of special folder.
 
 		.EXAMPLE
@@ -75,12 +72,12 @@ Function Get-SpecialFolder {
 
 		.EXAMPLE
 			$MyDocumentsPath = Get-SpecialFolder [System.Environment+SpecialFolder]::MyDocuments;
-        
-        .LINK
-            Get-SpecialFolderNames
-        
-        .LINK
-            https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
+		
+		.LINK
+			Get-SpecialFolderNames
+		
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
 	#>
 	[CmdletBinding(DefaultParameterSetName = 'Enum')]
 	[OutputType([string])]
@@ -88,27 +85,27 @@ Function Get-SpecialFolder {
 		# Enumerated folder value.
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Enum')]
 		[System.Environment+SpecialFolder]$Folder,
-        
+		
 		# Name of special folder.
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String')]
-        [ValidateScript({(Get-SpecialFolderNames) -icontains $_})]
+		[ValidateScript({(Get-SpecialFolderNames) -icontains $_})]
 		[string]$Name
 	)
 	Process {
-        if ($PSBoundParameters.ContainsKey('Folder')) {
-            [System.Environment]::GetFolderPath($Folder);
-        } else {
-            if ($PSVersionTable.ClrVersion.Major -lt 4) {
-                switch ($Name) {
-                    'CommonProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'); break; }
-                    'ProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'); break; }
-                    'Windows' { [System.Environment]::GetEnvironmentVariable('SystemRoot'); break; }
-                    default { [System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true)); break; }
-                }
-            } else {
-                [System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true));
-            }
-        }
+		if ($PSBoundParameters.ContainsKey('Folder')) {
+			[System.Environment]::GetFolderPath($Folder);
+		} else {
+			if ($PSVersionTable.ClrVersion.Major -lt 4) {
+				switch ($Name) {
+					'CommonProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'); break; }
+					'ProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'); break; }
+					'Windows' { [System.Environment]::GetEnvironmentVariable('SystemRoot'); break; }
+					default { [System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true)); break; }
+				}
+			} else {
+				[System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true));
+			}
+		}
 	}
 }
 
@@ -119,7 +116,7 @@ Function ConvertTo-SafeFileName {
  
 		.DESCRIPTION
 			Encodes a string in a format which is compatible with a file name / path, and can be converted back to the original text.
-        
+		
 		.OUTPUTS
 			System.String. Text encoded as a valid file name / path.
 
@@ -128,31 +125,31 @@ Function ConvertTo-SafeFileName {
 
 		.EXAMPLE
 			'c:\my*path\User.string' | ConvertTo-SafeFileName -FullPath;
-        
-        .LINK
-            ConvertFrom-SafeFileName
+		
+		.LINK
+			ConvertFrom-SafeFileName
 	#>
-    [CmdletBinding(DefaultParameterSetName = 'FileName')]
+	[CmdletBinding()]
 	[OutputType([string])]
-    Param(
+	Param(
 		# String to convert to file name
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [string[]]$InputText,
-        
-        # Only allow file names. This is the default.
-        [Parameter(ParameterSetName = 'FileName')]
-        [switch]$FileName,
-        
-        # Only allow relative paths
-        [Parameter(Mandatory = $true, ParameterSetName = 'RelativePath')]
-        [switch]$RelativePath,
-        
-        # Allow full path specification
-        [Parameter(Mandatory = $true, ParameterSetName = 'FullPath')]
-        [switch]$FullPath
-    )
-    
-    Begin {
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[string[]]$InputText,
+		
+		# Only allow file names. This is the default.
+		[Parameter(ParameterSetName = 'FileName')]
+		[switch]$FileName,
+		
+		# Only allow relative paths
+		[Parameter(Mandatory = $true, ParameterSetName = 'RelativePath')]
+		[switch]$RelativePath,
+		
+		# Allow full path specification
+		[Parameter(Mandatory = $true, ParameterSetName = 'FullPath')]
+		[switch]$FullPath
+	)
+	
+	Begin {
 		switch ($PSCmdlet.ParameterSetName){
 			'RelativePath' {
 				$EncodeRegexReplaceHandler = New-Object -TypeName 'IOUtilityCLR.EncodeRegexReplaceHandler' -ArgumentList ([IOUtilityCLR.RegularExpressions]::InvalidRelativePathChars);
@@ -167,9 +164,9 @@ Function ConvertTo-SafeFileName {
 				break;
 			}
 		}
-    }
-    
-    Process { foreach ($Text in $InputText) { $EncodeRegexReplaceHandler.Replace($Text) } }
+	}
+	
+	Process { foreach ($Text in $InputText) { $EncodeRegexReplaceHandler.Replace($Text) } }
 }
 
 Function ConvertFrom-SafeFileName {
@@ -186,22 +183,22 @@ Function ConvertFrom-SafeFileName {
 		.EXAMPLE
 			'File_0x005F_Name' | ConvertFrom-SafeFileName;
 
-        .LINK
-        		ConvertTo-SafeFileName
+		.LINK
+				ConvertTo-SafeFileName
 	#>
-    [CmdletBinding()]
+	[CmdletBinding()]
 	[OutputType([string])]
-    Param(
+	Param(
 		# File name to decode
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [string[]]$InputText
-    )
-    
-    Begin {
-        $DecodeRegexReplaceHandler = New-Object -TypeName 'IOUtilityCLR.DecodeRegexReplaceHandler';
-    }
-    
-    Process { foreach ($Text in $InputText) { $DecodeRegexReplaceHandler.Replace($Text) } }
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[string[]]$InputText
+	)
+	
+	Begin {
+		$DecodeRegexReplaceHandler = New-Object -TypeName 'IOUtilityCLR.DecodeRegexReplaceHandler';
+	}
+	
+	Process { foreach ($Text in $InputText) { $DecodeRegexReplaceHandler.Replace($Text) } }
 }
 
 Function Get-AppDataPath {
