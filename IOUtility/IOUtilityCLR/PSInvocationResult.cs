@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY2
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Text;
 
@@ -10,6 +12,15 @@ namespace IOUtilityCLR
 {
     public class PSInvocationResult
     {
+        private Hashtable _variables;
+        private Collection<DebugRecord> _debug;
+        private Collection<ErrorRecord> _errors;
+        private bool _hadErrors;
+        private Collection<PSObject> _output;
+        private bool _ranToCompletion;
+        private Collection<VerboseRecord> _verbose;
+        private Collection<WarningRecord> _warnings;
+		
         public PSInvocationResult(string script, IPSInvocationContext context, PowerShell powerShell, object[] variableKeys) : this(script, context, powerShell, variableKeys, new object[0]) { }
         public PSInvocationResult(string script, IPSInvocationContext context, PowerShell powerShell, object[] variableKeys, params object[] arguments)
         {
@@ -25,44 +36,51 @@ namespace IOUtilityCLR
                     foreach (object a in arguments)
                         powerShell.AddArgument(a);
                 }
-                Output = powerShell.Invoke();
-                HadErrors = powerShell.HadErrors;
-                RanToCompletion = true;
+                _output = powerShell.Invoke();
+#if !PSLEGACY
+                _hadErrors = powerShell.HadErrors;
+#endif
+                _ranToCompletion = true;
             }
             catch (RuntimeException exception)
             {
                 error = exception.ErrorRecord;
-                HadErrors = true;
+                _hadErrors = true;
             }
             catch (ArgumentException exception)
             {
                 error = new ErrorRecord(exception, "UnexpectedInvalidArgument", ErrorCategory.InvalidArgument, script);
-                HadErrors = true;
+                _hadErrors = true;
             }
             catch (Exception exception)
             {
                 error = new ErrorRecord(exception, "UnexpectedError", ErrorCategory.NotSpecified, script);
-                HadErrors = true;
+                _hadErrors = true;
             }
-            Errors = powerShell.Streams.Error.ReadAll();
+            _errors = powerShell.Streams.Error.ReadAll();
             if (error != null)
-                Errors.Add(error);
-            Warnings = powerShell.Streams.Warning.ReadAll();
-            Verbose = powerShell.Streams.Verbose.ReadAll();
-            Debug = powerShell.Streams.Debug.ReadAll();
-            if (Output == null)
-                Output = new Collection<PSObject>();
-            Variables = new Hashtable();
+                _errors.Add(error);
+#if PSLEGACY
+			if (_errors.Count > 0)
+				_hadErrors = true;
+#endif
+            _warnings = powerShell.Streams.Warning.ReadAll();
+            _verbose = powerShell.Streams.Verbose.ReadAll();
+            _debug = powerShell.Streams.Debug.ReadAll();
+            if (_output == null)
+                _output = new Collection<PSObject>();
+            _variables = new Hashtable();
             foreach (object key in variableKeys)
-                Variables[key] = powerShell.Runspace.SessionStateProxy.GetVariable((key is string) ? key as string : key.ToString());
+                _variables[key] = powerShell.Runspace.SessionStateProxy.GetVariable((key is string) ? key as string : key.ToString());
         }
-        public Hashtable Variables { get; private set; }
-        public Collection<DebugRecord> Debug { get; private set; }
-        public Collection<ErrorRecord> Errors { get; private set; }
-        public bool HadErrors { get; private set; }
-        public Collection<PSObject> Output { get; private set; }
-        public bool RanToCompletion { get; private set; }
-        public System.Collections.ObjectModel.Collection<VerboseRecord> Verbose { get; private set; }
-        public Collection<WarningRecord> Warnings { get; private set; }
+		
+        public Hashtable Variables { get { return _variables; } }
+        public Collection<DebugRecord> Debug { get { return _debug; } }
+        public Collection<ErrorRecord> Errors { get { return _errors; } }
+        public bool HadErrors { get { return _hadErrors; } }
+        public Collection<PSObject> Output { get { return _output; } }
+        public bool RanToCompletion { get { return _ranToCompletion; } }
+        public Collection<VerboseRecord> Verbose { get { return _verbose; } }
+        public Collection<WarningRecord> Warnings { get { return _warnings; } }
     }
 }

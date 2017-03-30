@@ -20,6 +20,25 @@ namespace IOUtilityCLR
 			return list.ToArray();
 		}
 		
+		#region Cast
+		
+        private static IEnumerable<TResult> _Cast<TResult>(System.Collections.IEnumerator enumerator)
+        {
+            while (enumerator.MoveNext())
+				yield return (TResult)(enumerator.Current);
+        }
+
+        public static IEnumerable<TResult> Cast<TResult>(System.Collections.IEnumerable collection)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+			System.Collections.IEnumerator enumerator = collection.GetEnumerator();
+            return LinqEmul._Cast<TResult>(enumerator);
+        }
+
+		#endregion
+		
 		#region Any
 		
         private static bool _Any<T>(IEnumerable<T> collection, Func<T, bool> predicate)

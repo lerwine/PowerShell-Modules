@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace IOUtilityCLR
+﻿namespace IOUtilityCLR
 {
     /// <summary>
     /// Result information about a handled event.
@@ -13,12 +8,12 @@ namespace IOUtilityCLR
         /// <summary>
         /// Arbitrary name associated with <seealso cref="PSEventScriptHandler{TEventArgs}"/> which handled the event.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get { return _name; } }
 
         /// <summary>
         /// Result of handling the event.
         /// </summary>
-        public PSInvocationEventHandlerInvokedArgs Args { get; private set; }
+        public PSInvocationEventHandlerInvokedArgs Args { get { return _args; } }
 
         /// <summary>
         /// Initialize new <see cref="PSInvocationEventResult"/> object.
@@ -27,8 +22,8 @@ namespace IOUtilityCLR
         /// <param name="args">Result of handling the event.</param>
         public PSInvocationEventResult(string name, PSInvocationEventHandlerInvokedArgs args)
         {
-            Name = name;
-            Args = args;
+            _name = name;
+            _args = args;
         }
     }
 }

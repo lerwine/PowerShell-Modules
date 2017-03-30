@@ -119,9 +119,9 @@ namespace IOUtilityCLR
             }
 
 #if PSLEGACY
-            if (otherChars != null && !LinqEmul.Any<char>(otherChars))
+            if (otherChars != null && LinqEmul.Any<char>(otherChars))
 #else
-            if (otherChars != null && !otherChars.Any())
+            if (otherChars != null && otherChars.Any())
 #endif
             {
                 Regex regex;
@@ -164,7 +164,10 @@ namespace IOUtilityCLR
                 return String.Format("[^{0}]", String.Join("", patterns.ToArray()));
             }
 
-            if (patterns.Count < 2)
+            if (patterns.Count == 0)
+                return "";
+
+            if (patterns.Count == 1)
                 return patterns[0];
 
             if (noBrackets)
