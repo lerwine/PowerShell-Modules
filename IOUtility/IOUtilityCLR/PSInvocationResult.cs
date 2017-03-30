@@ -37,7 +37,7 @@ namespace IOUtilityCLR
                         powerShell.AddArgument(a);
                 }
                 _output = powerShell.Invoke();
-#if !PSLEGACY2
+#if !PSLEGACY
                 _hadErrors = powerShell.HadErrors;
 #endif
                 _ranToCompletion = true;
@@ -60,7 +60,7 @@ namespace IOUtilityCLR
             _errors = powerShell.Streams.Error.ReadAll();
             if (error != null)
                 _errors.Add(error);
-#if PSLEGACY2
+#if PSLEGACY
 			if (_errors.Count > 0)
 				_hadErrors = true;
 #endif

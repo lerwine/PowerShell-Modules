@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-#if !PSLEGACY2
+#if !PSLEGACY
 using System.Linq;
 #endif
 using System.Text.RegularExpressions;
@@ -118,7 +118,7 @@ namespace IOUtilityCLR
                 }
             }
 
-#if PSLEGACY2
+#if PSLEGACY
             if (otherChars != null && LinqEmul.Any<char>(otherChars))
 #else
             if (otherChars != null && otherChars.Any())
