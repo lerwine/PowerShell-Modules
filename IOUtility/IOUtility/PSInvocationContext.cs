@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !PSLEGACY2
 using System.Linq;
+#endif
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
@@ -26,6 +28,9 @@ namespace IOUtilityCLR
         private Collection<IPSEventScriptHandler> _eventHandlers = new Collection<IPSEventScriptHandler>();
         private Collection<PSInvocationEventResult> _eventHandlerResults = new Collection<PSInvocationEventResult>();
         private object _syncRoot = new object();
+		private Hashtable _variables = new Hashtable();
+        private RunspaceConfiguration _configuration = null;
+		private Hashtable _synchronizedData;
 
         public void AddEventHandler(IPSEventScriptHandler handler)
         {
@@ -118,18 +123,27 @@ namespace IOUtilityCLR
             }
         }
 
-        public RunspaceConfiguration Configuration { get; set; }
+        public RunspaceConfiguration Configuration
+		{
+			get { return _configuration; }
+			set
+            {
+                if (_variableKeys != null)
+                    throw new InvalidOperationException();
+                _configuration = value;
+            }
+		}
 
         /// <summary>
         /// Other variables to define when invoking a script.
         /// </summary>
         /// <remarks>After a script is executed, the values in this property will not be updated. Instead, the values of these variables wil be represnted in the resulting InvocationResult object.</remarks>
-        public Hashtable Variables { get; private set; }
+        public Hashtable Variables { get { return _variables; } }
 
         /// <summary>
         /// Data which is synchronized with all invocations and event handlers.
         /// </summary>
-        public Hashtable SynchronizedData { get; private set; }
+        public Hashtable SynchronizedData { get { return _synchronizedData; } }
 
         /// <summary>
         /// The object which will serve as the "this" variable during script execution.
@@ -146,13 +160,14 @@ namespace IOUtilityCLR
         }
 
         public Collection<PSInvocationEventResult> EventHandlerResults { get { return _eventHandlerResults; } }
+		
         /// <summary>
         /// Initialize new Context object.
         /// </summary>
         public PSInvocationContext()
         {
-            Variables = new Hashtable();
-            SynchronizedData = Hashtable.Synchronized(new Hashtable());
+            _variables = new Hashtable();
+            _synchronizedData = Hashtable.Synchronized(new Hashtable());
         }
 
         /// <summary>
@@ -168,12 +183,16 @@ namespace IOUtilityCLR
             if (_variableKeys != null)
                 throw new InvalidOperationException();
 
+#if PSLEGACY
+			_variableKeys = LinqEmul.ToArray<object>(LinqEmul.Cast<object>(Variables.Keys));
+#else
             _variableKeys = Variables.Keys.Cast<object>().ToArray();
+#endif
             try
             {
                 using (Runspace runspace = (Host == null) ?
-                    ((Configuration == null) ? RunspaceFactory.CreateRunspace() : RunspaceFactory.CreateRunspace(Configuration)) :
-                    ((Configuration == null) ? RunspaceFactory.CreateRunspace(Host) : RunspaceFactory.CreateRunspace(Host, Configuration)))
+                    ((_configuration == null) ? RunspaceFactory.CreateRunspace() : RunspaceFactory.CreateRunspace(_configuration)) :
+                    ((_configuration == null) ? RunspaceFactory.CreateRunspace(Host) : RunspaceFactory.CreateRunspace(Host, _configuration)))
                 {
                     if (ApartmentState.HasValue)
                         runspace.ApartmentState = ApartmentState.Value;
