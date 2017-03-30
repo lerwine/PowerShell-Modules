@@ -8,6 +8,25 @@
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
     <Name>PsNuGet</Name>
+    <Author>Leonard T. Erwine</Author>
+    <CompanyName>Leonard T. Erwine</CompanyName>
+    <Copyright>(c) 2016 Leonard T. Erwine. All rights reserved.</Copyright>
+    <Description>Utility methods to download content from NuGet</Description>
+    <Guid>9b04dc02-3745-43cb-9fe1-701423bfa859</Guid>
+    <FormatsToProcess />
+    <FunctionsToProcess>'Get-NugetApiUrl', 'Get-NugetPackageVersions', 'Get-NugetPackageInfo', 'Test-PackageContainsExecutable'</FunctionsToProcess>
+    <ModuleList />
+    <ModuleToProcess />
+    <NestedModules />
+    <TypesToProcess />
+    <ClrVersion />
+    <PowerShellHostVersion />
+    <PowerShellVersion />
+    <ProcessorArchitecture />
+    <RequiredModules />
+    <VariablesToExport>asdf</VariablesToExport>
+    <CmdletsToExport>asdf</CmdletsToExport>
+    <AliasesToExport>asdf</AliasesToExport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +52,13 @@
     <Compile Include="Erwine.Leonard.T.PsNuGet.psd1" />
     <Compile Include="Erwine.Leonard.T.PsNuGet.psm1" />
     <Compile Include="PsNuGet.tests.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PsNuGetCLR\PsNuGetCLR.csproj">
+      <Name>PsNuGetCLR</Name>
+      <Project>{eac45baf-738c-419f-882a-287aa6ea7f3b}</Project>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

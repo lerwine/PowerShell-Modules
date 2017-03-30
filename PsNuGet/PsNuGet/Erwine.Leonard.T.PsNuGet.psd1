@@ -78,7 +78,7 @@ VariablesToExport = '*'
 AliasesToExport = '*'
 
 # List of all modules packaged with this module
-# ModuleList = @()
+# ModuleList = @( @{ ModuleName = 'myDependentModule'; ModuleVersion = '2.0'; Guid = 'cfc45206-1e49-459d-a8ad-5b571ef94857' }, 'AnotherModule')
 
 # List of all files packaged with this module
 # FileList = @()
