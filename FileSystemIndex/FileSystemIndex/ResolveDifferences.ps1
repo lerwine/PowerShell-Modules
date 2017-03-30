@@ -1,21 +1,8 @@
 ﻿$Script:NotepadPlusPlusPath = 'C:\Program Files\Notepad++\notepad++.exe';
 
-Add-Type -TypeDefinition @'
-namespace DiffReportCLR
-{
-    using System;
-    using System.Diagnostics;
-    using System.Windows.Forms;
-    public class WindowOwner : IWin32Window
-    {
-        private IntPtr _handle;
-        public WindowOwner() : this(Process.GetCurrentProcess().MainWindowHandle) { }
-        public WindowOwner(IntPtr handle) { _handle = handle; }
-        public IntPtr Handle { get { return _handle; } }
-    }
-}
-'@ -ReferencedAssemblies ([System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms').Location) -ErrorAction Stop;
+Add-Type -Path (($MyInvocation.MyCommand.Definition | Split-Path -Parent) | Join-Path -ChildPath 'ResolveDifferences.cs') -ReferencedAssemblies ([System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms').Location) -ErrorAction Stop;
 
+<#
 Function Get-ComparisonItems {
     [CmdletBinding(DefaultParameterSetName = 'Any')]
     Param(
@@ -131,6 +118,28 @@ Function Get-ComparisonItems {
     }
 }
 
+Function New-DifferenceItem {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Change,
+
+        [System.DateTime]$LeftMod,
+
+        [System.DateTime]$RightMod
+    )
+
+    New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+        Diff = $DiffItem;
+        IsSelected = $IsSelected;
+        Index = $Index;
+        LItem = $LItem;
+        RItem = $RItem;
+    };
+}
+
 Function Get-DiffReport {
     [CmdletBinding(DefaultParameterSetName = 'Simple')]
     Param(
@@ -237,6 +246,8 @@ Function Copy-DirectoryContents {
     $LDirectory.GetDirectories() | ForEach-Object { Copy-DirectoryContents -LDirectory $_ -RDirectory ([System.IO.Path]::Combine($RDirectory.FullName, $_.Name)) }
 }
 
+#>
+
 Function Read-YesOrNo {
     Param(
         [Parameter(Mandatory = $true)]
@@ -271,97 +282,193 @@ Function Read-FolderLocation {
         $FolderBrowserDialog.SelectedPath = $SelectedPath;
     }
     $FolderBrowserDialog.ShowNewFolderButton = $false;
-    $DialogResult = $FolderBrowserDialog.ShowDialog((New-Object -TypeName 'DiffReportCLR.WindowOwner'));
+    $DialogResult = $FolderBrowserDialog.ShowDialog((New-Object -TypeName 'FileSystemIndexLib.WindowOwner'));
     if ($DialogResult -eq [System.Windows.Forms.DialogResult]::OK) {
         $FolderBrowserDialog.SelectedPath | Write-Output;
     }
     $FolderBrowserDialog.Dispose();
 }
 
+<#
+Function New-DifferenceItemSelection {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [PSObject]$DiffItem,
+        
+        [Parameter(Mandatory = $true)]
+        [bool]$IsSelected,
+        
+        [Parameter(Mandatory = $true)]
+        [int]$Index,
+
+        [System.IO.FileSystemInfo]$LItem,
+
+        [System.IO.FileSystemInfo]$RItem
+    )
+
+    New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+        Diff = $DiffItem;
+        IsSelected = $IsSelected;
+        Index = $Index;
+        LItem = $LItem;
+        RItem = $RItem;
+    };
+}
+
+Function Select-DifferenceItem {
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [PSObject]$DiffItem
+    )
+
+    Begin { $DiffCollection = @() }
+
+    Process { $DiffCollection += @($DiffItem) }
+
+    End {
+        $SelectedItems = @($DiffCollection | Out-GridView -Title 'Differences' -OutputMode Multiple);
+        $Index = 0;
+        $DiffCollection | ForEach-Object {
+            $Properties = @{ Diff = $_; IsSelected = ($SelectedItems -contains $_); Index = $Index };
+            $Index++;
+            if ($Properties['IsSelected']) {
+                if ($_.LeftMod.Length -eq 0 -and $_.RightMod.Length -eq 0) {
+                    $Properties['LItem'] = New-Object 'System.IO.DirectoryInfo' -ArgumentList ([System.IO.Path]::Combine($LPath, $_.Path));
+                    $Properties['RItem'] = New-Object 'System.IO.DirectoryInfo' -ArgumentList ([System.IO.Path]::Combine($RPath, $_.Path));
+                } else {
+                    $Properties['LItem'] = New-Object 'System.IO.FileInfo' -ArgumentList ([System.IO.Path]::Combine($LPath, $_.Path));
+                    $Properties['RItem'] = New-Object 'System.IO.FileInfo' -ArgumentList ([System.IO.Path]::Combine($RPath, $_.Path));
+                }
+            } else {
+                $Properties['LItem'] = $null;
+                $Properties['RItem'] = $null;
+            }
+        }
+        New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
+    }
+}
+
+Function Select-DifferenceAction {
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [PSObject]$SelectionItem
+    )
+
+    Begin {
+        $ChoiceOptions = @{
+            '>' = 'Copy from left';
+            '<' = 'Copy from right';
+            'E' = 'Edit Files';
+            'Del L' = 'Delete from left';
+            'Del R' = 'Delete from left';
+            'I' = 'Ignore';
+            'N' = 'Do Nothing';
+        };
+        $MessageLines = @();
+    }
+
+    Process {
+        if ($SelectionItem.IsSelected) {
+            $MessageLines = $MessageLines + @($SelectedItem.Diff.Change);
+            if ($SelectedItem.RItem.Exists) {
+                $ChoiceOptions.Remove('Del L');
+                if ($SelectedItem.LItem.Exists) {
+                    $MessageLines = $MessageLines + @(
+                        "`t$($SelectedItem.LItem.FullName) ($($SelectedItem.LItem.LastWriteTime.ToString()))",
+                        "`t=> $($SelectedItem.RItem.FullName) ($($SelectedItem.RItem.LastWriteTime.ToString()))"
+                    );
+                    $ChoiceOptions.Remove('Del R');
+                } else {
+                    $MessageLines = $MessageLines + @(
+                        "`t[$($SelectedItem.LItem.FullName)]",
+                        "`t=> $($SelectedItem.RItem.FullName) ($($SelectedItem.RItem.LastWriteTime.ToString()))"
+                    );
+                    $ChoiceOptions.Remove('E');
+                    $ChoiceOptions.Remove('>');
+                }
+            } else {
+                $MessageLines = $MessageLines + @(
+                    "`t$($SelectedItem.LItem.FullName) ($($SelectedItem.LItem.LastWriteTime.ToString()))",
+                    "`t=> [$($SelectedItem.RItem.FullName)]"
+                );
+                $ChoiceOptions.Remove('E');
+                $ChoiceOptions.Remove('<');
+            }
+        }
+    }
+
+    End {
+        $Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
+        $ChoiceOptions.Keys | ForEach-Object { $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList $_, $ChoiceOptions[$_])) }
+        $Index = $Host.UI.PromptForChoice('Select action', $Message, $Choices, $Choices.Count - 1);
+        if ($Index -gt 0 -and $Index -le $Choices.Count) { $Choices[$Index].Label | Write-Output }
+    }
+}
+
+#>
+
 $LPath = Read-FolderLocation -Description 'Select left side of comparison';
 while ($LPath -ne $null) {
     $RPath = Read-FolderLocation -Description 'Select right side of comparison' -SelectedPath ([System.IO.Path]::GetDirectoryName($LPath));
     if ($RPath -eq $null) { break }
-    Write-Progress -Activity 'Looking for changes' -Status 'Initializing' -PercentComplete 0 -CurrentOperation 'Reading directory contents';
-    $Items = @(Get-ComparisonItems -LPath $LPath -RPath $RPath);
-    [long]$TotalLength = 0;
-    $Items | ForEach-Object { $TotalLength += $_.Length }
-    $Differences = @($Items | Get-DiffReport -TotalLength $TotalLength -ShowProgress);
-    Write-Progress -Activity 'Looking for changes' -Status 'Completed' -PercentComplete 100 -Completed;
+    [FileSystemIndexLib.DiffResult[]]$Differences = @([FileSystemIndexLib.DiffResult]::GetResults(0, 0, "Searching folders", $Host.UI, $LPath, $RPath));
 
     if ($Differences.Count -eq 0) {
         'No changes detected.' | Write-Output;
     } else {
         while ($Differences.Count -gt 0) {
-            $SelectedItem = $Differences | Out-GridView -Title 'Differences' -PassThru;
-            if ($SelectedItem -eq $null) { break }
-            $LItem = $null;
-            $Ritem = $null;
-            if ($SelectedItem.LeftMod.Length -eq 0 -and $SelectedItem.RightMod.Length -eq 0) {
-                $LItem = New-Object 'System.IO.DirectoryInfo' -ArgumentList ([System.IO.Path]::Combine($LPath, $SelectedItem.Path));
-                $RItem = New-Object 'System.IO.DirectoryInfo' -ArgumentList ([System.IO.Path]::Combine($RPath, $SelectedItem.Path));
-            } else {
-                $LItem = New-Object 'System.IO.FileInfo' -ArgumentList ([System.IO.Path]::Combine($LPath, $SelectedItem.Path));
-                $RItem = New-Object 'System.IO.FileInfo' -ArgumentList ([System.IO.Path]::Combine($RPath, $SelectedItem.Path));
-            }
-            
-            $Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
-            $Message = $null;
-            if ($LItem.Exists) {
-                $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList '>', 'Copy from left'));
-                if ($Ritem.Exists) {
-                    $Message = "$($SelectedItem.Change)`r`n`r`n$($LItem.FullName) ($($LItem.LastWriteTime.ToString()))`r`n => $($RItem.FullName) ($($RItem.LastWriteTime.ToString()))";
-                    $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList '<', 'Copy from right'));
-                    $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'E', 'Edit Files'));
-                } else {
-                    $Message = "$($SelectedItem.Change)`r`n`r`n$($LItem.FullName) ($($LItem.LastWriteTime.ToString()))`r`n => $($RItem.FullName)?";
-                    $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'X', 'Delete from left'));
-                }
-            } else {
-                $Message = "$($SelectedItem.Change)`r`n`r`n$($LItem.FullName)?`r`n => $($RItem.FullName) ($($RItem.LastWriteTime.ToString()))";
-                $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList '<', 'Copy from right'));
-                $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'X', 'Delete from right'));
-            }
-            $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'I', 'Ignore'));
-            $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'N', 'Do nothing'));
-            $Index = $Host.UI.PromptForChoice('Select action', $Message, $Choices, $Choices.Count - 1);
-            while ($Index -ne $null -and $Index -ge 0 -and $Index -lt ($Choices.Count - 1)) {
-                $RemoveSelectedItem = $false;
-                switch ($Choices[$Index].Label) {
-                    '>' {
-                        if ($LItem -is [System.IO.FileInfo]) {
-                            if ((-not $Ritem.Exists) -or (Read-YesOrNo -Caption 'Confirm', "Are you sure you want to overwrite $($Ritem.FullName)?")) {
-                                [System.IO.File]::Copy($LItem.FullName, $RItem.FullName, $true);
-                                $RemoveSelectedItem = $true;
-                            }
+            [FileSystemIndexLib.DiffResult[]]$SelectedItems = @($Differences | Out-GridView -Title 'Differences' -OutputMode Multiple);
+            if ($SelectedItems.Length -eq 0) { break; }
+            [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = @([FileSystemIndexLib.DiffSelection]::Create($LPath, $RPath, $Differences, $SelectedItems));
+            $ChoiceText = [FileSystemIndexLib.DiffSelection]::GetUserChoice($Host.UI, $DiffSelectionItems);
+            while ($ChoiceText -ne [FileSystemIndexLib.DiffSelection]::ChoiceLabel_None) {
+                switch ($ChoiceText) {
+                    { $_ -eq [FileSystemIndexLib.DiffSelection]::ChoiceLabel_CopyLeft } {
+                        $OverWrite = @($DiffSelectionItems | Where-Object { $_.IsSelected -and $_.Left.Exists } | ForEach-Object { $_.Left.FullName });
+                        if ($OverWrite.Count -eq 0) {
+                            [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::CopyToLeft($DiffSelectionItems);
                         } else {
-                            Copy-DirectoryContents -LDirectory $LItem -RDirectory $RItem;
-                            $RemoveSelectedItem = $true;
+                            if ($OverWrite.Count -eq 1) {
+                                if (Read-YesOrNo -Caption 'Confirm' -Message "Are you sure you want to overwrite $($OverWrite[0])?") {
+                                    [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::CopyToLeft($DiffSelectionItems);
+                                }
+                            } else {
+                                if (Read-YesOrNo -Caption 'Confirm' -Message "The following will be overwritten:`r`n$($OverWrite -join "`r`n`t")`r`nAre you sure you want to overwrite?") {
+                                    [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::CopyToLeft($DiffSelectionItems);
+                                }
+                            }
                         }
                         break;
                     }
-                    '<' {
-                        if ($RItem -is [System.IO.FileInfo]) {
-                            if ((-not $LItem.Exists) -or (Read-YesOrNo -Caption 'Confirm', "Are you sure you want to overwrite $($LItem.FullName)?")) {
-                                [System.IO.File]::Copy($RItem.FullName, $LItem.FullName, $true);
-                                $RemoveSelectedItem = $true;
-                            }
+                    { $_ -eq [FileSystemIndexLib.DiffSelection]::ChoiceLabel_CopyRight } {
+                        $OverWrite = @($DiffSelectionItems | Where-Object { $_.IsSelected -and $_.Right.Exists } | ForEach-Object { $_.Right.FullName });
+                        if ($OverWrite.Count -eq 0) {
+                            [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::CopyToRight($DiffSelectionItems);
                         } else {
-                            Copy-DirectoryContents -LDirectory $Ritem -RDirectory $LItem;
-                            $RemoveSelectedItem = $true;
+                            if ($OverWrite.Count -eq 1) {
+                                if (Read-YesOrNo -Caption 'Confirm' -Message "Are you sure you want to overwrite $($OverWrite[0])?") {
+                                    [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::CopyToRight($DiffSelectionItems);
+                                }
+                            } else {
+                                if (Read-YesOrNo -Caption 'Confirm' -Message "The following will be overwritten:`r`n$($OverWrite -join "`r`n`t")`r`nAre you sure you want to overwrite?") {
+                                    [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::CopyToRight($DiffSelectionItems);
+                                }
+                            }
                         }
                         break;
                     }
-                    'E' {
+                    { $_ -eq [FileSystemIndexLib.DiffSelection]::ChoiceLabel_Edit } {
                         $XmlDocument = New-Object 'System.Xml.XmlDocument';
                         $SessionElement = $XmlDocument.AppendChild($XmlDocument.CreateElement('NotepadPlus')).AppendChild($XmlDocument.CreateElement('Session'));
                         $SessionElement.Attributes.Append($XmlDocument.CreateAttribute('activeView')).Value = '0';
                         $MainViewElement = $SessionElement.AppendChild($XmlDocument.CreateElement('mainView'));
                         $MainViewElement.Attributes.Append($XmlDocument.CreateAttribute('activeIndex')).Value = '0';
-                        $FileElement = $MainViewElement.AppendChild($XmlDocument.CreateElement('File'));
-                        $FileElement.Attributes.Append($XmlDocument.CreateAttribute('filename')).Value = $LItem.FullName;
-                        $FileElement = $MainViewElement.AppendChild($XmlDocument.CreateElement('File'));
-                        $FileElement.Attributes.Append($XmlDocument.CreateAttribute('filename')).Value = $Ritem.FullName;
+                        $DiffSelectionItems | Where-Object { $_.IsSelected } | ForEach-Object { 
+                            $FileElement = $MainViewElement.AppendChild($XmlDocument.CreateElement('File'));
+                            $FileElement.Attributes.Append($XmlDocument.CreateAttribute('filename')).Value = $_.Left.FullName;
+                            $FileElement = $MainViewElement.AppendChild($XmlDocument.CreateElement('File'));
+                            $FileElement.Attributes.Append($XmlDocument.CreateAttribute('filename')).Value = $_.Right.FullName;
+                        }
                         $subViewElement = $SessionElement.AppendChild($XmlDocument.CreateElement('subView'));
                         $subViewElement.Attributes.Append($XmlDocument.CreateAttribute('activeIndex')).Value = '0';
                         $subViewElement.IsEmpty = $true;
@@ -376,82 +483,34 @@ while ($LPath -ne $null) {
                         $XmlWriter.Close();
                         Start-Process -FilePath $Script:NotepadPlusPlusPath -ArgumentList ('-multiInst', '-nosession', '-openSession', $TempFileName) -LoadUserProfile -Wait
                         [System.IO.File]::Delete($TempFileName);
-                        $LItem.Refresh();
-                        $RItem.Refresh();
-                        $NewItem = Get-DiffReport -Left $LItem -Right $RItem -Path $SelectedItem.Path;
-                        if ($NewItem -eq $null) {
-                            $RemoveSelectedItem = $true;
-                        } else {
-                            $SelectedItem = $NewItem;
-                            $Differences = @($Differences | ForEach-Object {
-                                if ($_.Path -ne $SelectedItem.Path -or $_.Change -ne $SelectedItem.Change) {
-                                    $_ | Write-Output;
-                                } else {
-                                    $NewItem | Write-Output;
-                                }
-                            });
-                        }
+                        [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::Refresh($DiffSelectionItems, $LPath, $RPath);
                         break;
                     }
-                    'X' {
-                        if ($LItem.Exists) {
-                            if ($LItem -is [System.IO.File]) {
-                                if (Read-YesOrNo -Caption 'Confirm', "Are you sure you want to delete $($LItem.FullName)?") {
-                                    $LItem.Delete();
-                                    $RemoveSelectedItem = $true;
-                                }
-                            } else {
-                                if (Read-YesOrNo -Caption 'Confirm', "Are you sure you want to delete $($LItem.FullName) and all its contents?") {
-                                    $LItem.Delete($true);
-                                    $RemoveSelectedItem = $true;
-                                }
-                            }
+                    { $_ -eq [FileSystemIndexLib.DiffSelection]::ChoiceLabel_Delete } {
+                        $ToDelete = @($DiffSelectionItems | Where-Object { $_.IsSelected } | ForEach-Object { if ($_.Left.Exists) { $_.Left.FullName } else { $_.Right.FullName } });
+                        if ($ToDelete.Count -eq 0) {
+                            [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::Delete($DiffSelectionItems);
                         } else {
-                            if ($Ritem -is [System.IO.File]) {
-                                if (Read-YesOrNo -Caption 'Confirm', "Are you sure you want to delete $($Ritem.FullName)?") {
-                                    $LItem.Delete();
-                                    $RemoveSelectedItem = $true;
+                            if ($ToDelete.Count -eq 1) {
+                                if (Read-YesOrNo -Caption 'Confirm' -Message "Are you sure you want to delete $($ToDelete[0])?") {
+                                    [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::Delete($DiffSelectionItems);
                                 }
                             } else {
-                                if (Read-YesOrNo -Caption 'Confirm', "Are you sure you want to delete $($Ritem.FullName) and all its contents?") {
-                                    $LItem.Delete($true);
-                                    $RemoveSelectedItem = $true;
+                                if (Read-YesOrNo -Caption 'Confirm' -Message "The following will be deleted:`r`n$($ToDelete -join "`r`n`t")`r`nAre you sure you want to delete?") {
+                                    [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = [FileSystemIndexLib.DiffSelection]::Delete($DiffSelectionItems);
                                 }
                             }
                         }
                         break;
                     }
                     'I' {
-                        $RemoveSelectedItem = $true;
+                        [FileSystemIndexLib.DiffSelection[]]$DiffSelectionItems = @($DiffSelectionItems | Where-Object { -not $_.IsSelected });
                         break;
                     }
                 }
-                if ($RemoveSelectedItem) {
-                    $Differences = @($Differences | Where-Object {
-                        $_.Path -ne $SelectedItem.Path -or $_.Change -ne $SelectedItem.Change
-                    });
-                    break;
-                }
-                $Choices.Clear();
-                if ($LItem.Exists) {
-                    $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList '>', 'Copy from left'));
-                    if ($Ritem.Exists) {
-                        $Message = "$($SelectedItem.Change)`r`n`r`n$($LItem.FullName) ($($LItem.LastWriteTime.ToString()))`r`n  => $($RItem.FullName) ($($RItem.LastWriteTime.ToString()))";
-                        $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList '<', 'Copy from right'));
-                        $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'E', 'Edit Files'));
-                    } else {
-                        $Message = "$($SelectedItem.Change)`r`n`r`n$($LItem.FullName) ($($LItem.LastWriteTime.ToString()))`r`n  => $($RItem.FullName)?";
-                        $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'X', 'Delete from left'));
-                    }
-                } else {
-                    $Message = "$($SelectedItem.Change)`r`n`r`n$($LItem.FullName)?`r`n => $($RItem.FullName) ($($RItem.LastWriteTime.ToString()))";
-                    $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList '<', 'Copy from right'));
-                    $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'X', 'Delete from right'));
-                }
-                $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'I', 'Ignore'));
-                $Choices.Add((New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList 'N', 'Do nothing'));
-                $Index = $Host.UI.PromptForChoice('Select action', $Message, $Choices, $Choices.Count - 1);
+                $ChoiceText = [FileSystemIndexLib.DiffSelection]::GetUserChoice($Host.UI, $DiffSelectionItems);
             }
+            [FileSystemIndexLib.DiffResult[]]$Differences = @($DiffSelectionItems | ForEach-Object { $_.Diff });
         }
     }
     $LPath = Read-FolderLocation -Description 'Select left side of comparison';
