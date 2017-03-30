@@ -1,64 +1,166 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
 using System.Collections;
 
 namespace NetworkUtilityCLR
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class JsonDictionary : JSonValue, IDictionary<string, JSonValue>
     {
         private IDictionary<string, JSonValue> _innerDictionary = new Dictionary<string, JSonValue>();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ElementName = "Dictionary";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string GetElementName() { return ElementName; }
-        protected override object AsSerializedValue(JavaScriptSerializer serializer)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
+        protected internal override object AsSerializedValue(JavaScriptSerializer serializer)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
-            foreach (string key in Keys)
-                result.Add(key, (obj[key] == null) ? null : obj[key].AsSerializedValue(serializer));
+            foreach (string key in _innerDictionary.Keys)
+                result.Add(key, (_innerDictionary[key] == null) ? null : _innerDictionary[key].AsSerializedValue(serializer));
             return result;
         }
-
-        public override Deserialize(IDictionary<string, object> dictionary, JavaScriptSerializer serializer)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public JsonDictionary() { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dictionary"></param>
+        public JsonDictionary(IDictionary<string, object> dictionary) { _Deserialize(dictionary); }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="serializer"></param>
+        public override void Deserialize(IDictionary<string, object> dictionary, JavaScriptSerializer serializer)
+        {
+            _innerDictionary.Clear();
+            _Deserialize(dictionary);
+        }
+        
+        private void _Deserialize(IDictionary<string, object> dictionary)
         {
             if (dictionary == null)
                 return;
             
-            if (type == typeof(JsonDictionary))
-            
-            if (type == typeof(ListItemCollection))
+            foreach (string key in dictionary.Keys)
             {
-                // Create the instance to deserialize into.
-                ListItemCollection list = new ListItemCollection();
-
-                // Deserialize the ListItemCollection's items.
-                ArrayList itemsList = (ArrayList)dictionary["List"];
-                for (int i=0; i<itemsList.Count; i++)
-                    list.Add(serializer.ConvertToType<ListItem>(itemsList[i]));
-
-                return list;
+                object o = dictionary[key];
+                if (o == null)
+                    _innerDictionary.Add(key, null);
+                else if (o is JSonValue)
+                    _innerDictionary.Add(key, o as JSonValue);
+                else if (o is string)
+                    _innerDictionary.Add(key, new JsonText(o as string));
+                else if (o is ArrayList)
+                    _innerDictionary.Add(key, new JsonArray(o as ArrayList));
+                else if (o is IDictionary<string, object>)
+                    _innerDictionary.Add(key, new JsonDictionary(o as IDictionary<string, object>));
             }
-            return null;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public ICollection<string> Keys { get { return _innerDictionary.Keys; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ICollection<JSonValue> Values { get { return _innerDictionary.Values; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Count { get { return _innerDictionary.Count; } }
+
         bool ICollection<KeyValuePair<string,JSonValue>>.IsReadOnly { get { return false; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public JSonValue this[string key]
         {
             get { return _innerDictionary[key]; }
             set { _innerDictionary[key] = value; }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(string key) { return _innerDictionary.ContainsKey(key); }
+
+        
         bool ICollection<KeyValuePair<string,JSonValue>>.Contains(KeyValuePair<string,JSonValue> value) { return (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Contains(value); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(string key, JSonValue value) { _innerDictionary.Add(key, value); }
-        void ICollection<KeyValuePair<string,JSonValue>>.Add(string key, KeyValuePair<string,JSonValue> value) { (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Add(value);
+
+        void ICollection<KeyValuePair<string,JSonValue>>.Add(KeyValuePair<string,JSonValue> value) { (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Add(value); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool Remove(string key) { return _innerDictionary.Remove(key); }
+
         bool ICollection<KeyValuePair<string,JSonValue>>.Remove(KeyValuePair<string,JSonValue> value) { return (_innerDictionary as ICollection<KeyValuePair<string,JSonValue>>).Remove(value); }
-        public bool TryGetValue(string key, out JSonValue value) { _innerDictionary.TryGetValue(key, out value); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryGetValue(string key, out JSonValue value) { return _innerDictionary.TryGetValue(key, out value); }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Clear() { _innerDictionary.Clear(); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
         public void CopyTo(KeyValuePair<string,JSonValue>[] array, int arrayIndex) { _innerDictionary.CopyTo(array, arrayIndex); }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<KeyValuePair<string,JSonValue>> GetEnumerator() { return _innerDictionary.GetEnumerator(); }
+
         IEnumerator IEnumerable.GetEnumerator() { return (_innerDictionary as IEnumerable).GetEnumerator(); }
     }
 }
