@@ -74,6 +74,7 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Scripts", "Scripts\Scripts.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C415CD-E07B-4E0B-9087-A3A33F90CE73}"
 	ProjectSection(SolutionItems) = preProject
+		XmlUtility\Schemas\helpItems.xsd = XmlUtility\Schemas\helpItems.xsd
 		XmlUtility\Schemas\README.md = XmlUtility\Schemas\README.md
 		XmlUtility\Schemas\soap-encoding.xsd = XmlUtility\Schemas\soap-encoding.xsd
 		XmlUtility\Schemas\soap-envelope.xsd = XmlUtility\Schemas\soap-envelope.xsd

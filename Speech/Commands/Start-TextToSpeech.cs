@@ -20,28 +20,28 @@ namespace Speech.Commands
         public const string ParameterSetName_PromptBuilder = "PromptBuilder";
         public const string ParameterSetName_Prompt = "Prompt";
 
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "", ParameterSetName = ParameterSetName_Text)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Text)]
         [ValidateNotNull()]
         public string[] Text { get; set; }
 
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "", ParameterSetName = ParameterSetName_PromptBuilder)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_PromptBuilder)]
         [ValidateNotNull()]
         public PromptBuilder[] PromptBuilder { get; set; }
 
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "", ParameterSetName = ParameterSetName_Prompt)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Prompt)]
         [ValidateNotNull()]
         public Prompt[] Prompt { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "", ParameterSetName = ParameterSetName_Path)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Path)]
         [ValidateNotNullOrEmpty()]
         [SupportsWildcards()]
         public string[] InputPath { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "", ParameterSetName = ParameterSetName_LiteralPath)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_LiteralPath)]
         [ValidateNotNullOrEmpty()]
         public string LiteralPath { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "", ParameterSetName = ParameterSetName_Ssml)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Ssml)]
         [ValidateNotNull()]
         public XmlNode Ssml { get; set; }
 

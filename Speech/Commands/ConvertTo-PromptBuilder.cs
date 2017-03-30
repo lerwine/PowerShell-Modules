@@ -11,16 +11,16 @@ namespace Speech.Commands
         public const string ParameterSetName_NewPromptBuilder = "NewPromptBuilder";
         public const string ParameterSetName_ExistingPromptBuilder = "ExistingPromptBuilder";
 
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNull()]
         [AllowEmptyString()]
         public string[] InputText { get; set; }
 
-        [Parameter(HelpMessage = "PromptBuilder to append to.", Mandatory = true, ParameterSetName = ParameterSetName_ExistingPromptBuilder)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_ExistingPromptBuilder)]
         [ValidateNotNull()]
         public PromptBuilder PromptBuilder { get; set; }
 
-        [Parameter(HelpMessage = "Return PromptBuilder.", ParameterSetName = ParameterSetName_ExistingPromptBuilder)]
+        [Parameter(ParameterSetName = ParameterSetName_ExistingPromptBuilder)]
         public SwitchParameter PassThru { get; set; }
 
         private PromptBuilder _promptBuilder = null;

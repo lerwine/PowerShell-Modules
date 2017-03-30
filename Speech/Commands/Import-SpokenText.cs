@@ -17,20 +17,20 @@ namespace Speech.Commands
         public const string ParameterSetName_LiteralPath = "LiteralPath";
         public const string ParameterSetName_Ssml = "Ssml";
 
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "", ParameterSetName = ParameterSetName_Text)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Text)]
         [ValidateNotNull()]
         public string[] Text { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "", ParameterSetName = ParameterSetName_Path)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Path)]
         [ValidateNotNullOrEmpty()]
         [SupportsWildcards()]
         public string[] Path { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "", ParameterSetName = ParameterSetName_LiteralPath)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_LiteralPath)]
         [ValidateNotNullOrEmpty()]
         public string LiteralPath { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "", ParameterSetName = ParameterSetName_Ssml)]
+        [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Ssml)]
         [ValidateNotNull()]
         public XmlNode Ssml { get; set; }
 

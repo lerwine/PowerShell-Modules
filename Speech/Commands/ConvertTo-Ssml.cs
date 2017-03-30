@@ -9,7 +9,7 @@ namespace Speech.Commands
     [OutputType(typeof(XmlDocument))]
     public class ConvertTo_Ssml : TextToSpeechCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNull()]
         [AllowEmptyString()]
         public string[] InputText { get; set; }

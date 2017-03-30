@@ -124,6 +124,10 @@
       <Link>Resources\developerManaged.xsd</Link>
       <SubType>Designer</SubType>
     </None>
+    <None Include="..\..\XmlUtility\Schemas\helpItems.xsd">
+      <Link>Resources\helpItems.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="..\..\XmlUtility\Schemas\Maml.xsd">
       <Link>Resources\Maml.xsd</Link>
       <SubType>Designer</SubType>

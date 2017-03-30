@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<schema targetNamespace="http://msh" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified" xml:lang="en">
+  <!-- Schema documentation -->
+  <annotation>
+    <documentation>This schema represents the root document element for PowerShell help files.</documentation>
+  </annotation>
+  <import schemaLocation="maml.xsd" namespace="http://schemas.microsoft.com/maml/2004/10"/>
+  <import schemaLocation="developer.xsd" namespace="http://schemas.microsoft.com/maml/dev/2004/10"/>
+  <!-- element declarations -->
+  <element name="helpItems">
+    <annotation>
+      <documentation>Root document element for PowerShell help files.</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <any minOccurs="0" maxOccurs="unbounded" />
+      </sequence>
+      <attribute name="schema" use="required" fixed="maml" />
+    </complexType>
+  </element>
+</schema>
