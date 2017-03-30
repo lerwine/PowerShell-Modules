@@ -97,6 +97,15 @@ namespace FileSystemIndexLib
 		}
 		
 		public abstract void WriteUnifiedDiffTo(TextWriter writer);
+		
+		public string ToUnifiedDiff()
+		{
+			using (StringWriter stringWriter = new StringWriter())
+			{
+				WriteUnifiedDiffTo(stringWriter);
+				return stringWriter.ToString();
+			}
+		}
 	}
 	
 	public abstract class DiffChunkCollection<TDiffChunk, TDiffItem, TValue> : DiffChunkCollection
