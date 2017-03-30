@@ -8,7 +8,127 @@ $Script:InstallerDefaults = @{
 
 if ($PSVersionTable.PSVersion.Major -lt 3) { $Script:PSScriptRoot = $MyInvocation.InvocationName | Split-Path -Parent }
 
-Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'ModuleInstallInfo.cs') -ReferencedAssemblies ([System.Management.Automation.PSObject].Assembly.Location) -ErrorAction Stop;
+Function Install-AssemblyModule {
+    <#
+        .SYNOPSIS
+            Compiles and installs assembly
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [ValidateScript({ $_ | Test-Path -PathType Leaf })]
+        # Source code files to compile.
+        [string]$Compile,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ ($_ | Split-Path -Parent | Test-Path -PathType Container) -and $_.ToLower().EndsWith('.dll') })]
+        # Output path of assembly.
+        [string]$OutputAssembly,
+        
+        [ValidatePattern('^[a-zA-Z_][a-zA-Z_\d]*$')]
+        # Preprocessor symbols to define.
+        [string[]]$Define,
+        
+        [ValidateScript({ ($_ | Test-Path -PathType Leaf) -and $_.ToLower().EndsWith('.snk') })]
+        # Filename containing the cryptographic key for signing.
+        [string]$KeyFile,
+        
+        [ValidateScript({ $_ | Test-Path -PathType Leaf })]
+        # Assemblies referenced by the source code.
+        [string[]]$ReferencedAssemblies,
+        
+        [ValidateScript({ $_ | Test-Path -PathType Leaf })]
+        # .NET Framework resource files to include when compiling the assembly output.
+        [string[]]$EmbeddedResources,
+
+        # Create XML file from processed source code documentation comments.
+        [switch]$XmlDoc,
+		
+        # Include debug information in the compiled executable.
+        [switch]$IncludeDebugInformation,
+
+        # Include System.dll, System.Management.Automation.dll and, if applicable, System.Core.dll.
+        [switch]$IncludeSystemAssemblies,
+
+        # Define TRACE preprocessor symbol.
+        [switch]$DefineTrace
+    )
+    
+    Begin { $SourceFiles = @() }
+    Process { $SourceFiles += $Compile }
+    End {
+        $Local:TempPath = ($OutputAssembly | Split-Path -Parent) | Join-Path -ChildPath 'bin';
+        if (-not ($Local:TempPath | Test-Path -PathType Container)) { New-Item -Path $Local:TempPath -ItemType Directory | Out-Null }
+        $Local:Splat = @{
+            TypeName = 'System.CodeDom.Compiler.CompilerParameters';
+            Property = @{
+                IncludeDebugInformation = $IncludeDebugInformation.IsPresent;
+                TempFiles = New-Object -TypeName 'System.CodeDom.Compiler.TempFileCollection' -ArgumentList $Local:TempPath, $true;
+                CompilerOptions = @{
+                    define = @();
+                    target = 'library';
+                }
+                OutputAssembly = $OutputAssembly
+            }
+        };
+        try {
+            if ($PSBoundParameters.ContainsKey('ReferencedAssemblies')) { $Local:Splat['ArgumentList'] = @(,$ReferencedAssemblies); }
+			if ($IncludeSystemAssemblies) {
+				$Local:AssemblyPaths = @(((Add-Type -AssemblyName 'System.dll' -PassThru)[0], [System.Management.Automation.PSObject]) | ForEach-Object { $_.Assembly.Location });
+				if ($PSVersionTable.PSVersion.Major -gt 3) { $Local:AssemblyPaths += (Add-Type -AssemblyName 'System.Core.Dll' -PassThru)[0].Assembly.Location }
+				if ($Local:Splat['ArgumentList'] -eq $null) {
+					$Local:Splat['ArgumentList'] = @(,$Local:AssemblyPaths);
+				}
+				$Local:AssemblyPaths | ForEach-Object {
+					if ($Local:Splat['ArgumentList'][0] -inotcontains $_) {
+						$Local:Splat['ArgumentList'][0] += $_;
+					}
+				}
+			}
+            if ($PSBoundParameters.ContainsKey('Define')) {
+                $Local:Splat['Property']['CompilerOptions']['define'] = $Define;
+            }
+            $Local:VersionDefine = 'PSV' + $PSVersionTable.PSVersion.Major.ToString();
+            if ($PSVersionTable.PSVersion.Major -gt 5) { $Local:VersionDefine = 'PSV5' }
+
+            if ($Local:Splat['Property']['CompilerOptions']['define'] -cnotcontains $Local:VersionDefine) {
+                $Local:Splat['Property']['CompilerOptions']['define'] += $Local:VersionDefine
+            }
+
+            if ($IncludeDebugInformation) {
+                $Local:Splat['Property']['CompilerOptions']['pdb'] = '"' + (($OutputAssembly | Split-Path -Parent) | Join-Path -ChildPath ([System.IO.Path]::GetFileNameWithoutExtension($OutputAssembly) + '.pdb')) + '"';
+                $Local:Splat['Property']['CompilerOptions']['debug'] = $null;
+                if ($Local:Splat['Property']['CompilerOptions']['define'] -cnotcontains 'DEBUG') {
+                    $Local:Splat['Property']['CompilerOptions']['define'] += 'DEBUG'
+                }
+            }
+            if ($DefineTrace -and $Local:Splat['Property']['CompilerOptions']['define'] -cnotcontains 'TRACE') {
+                $Local:Splat['Property']['CompilerOptions']['define'] += 'TRACE'
+            }
+            if ($XmlDoc) { $Local:Splat['Property']['CompilerOptions']['doc'] = '"' + (($OutputAssembly | Split-Path -Parent) | Join-Path -ChildPath ([System.IO.Path]::GetFileNameWithoutExtension($OutputAssembly) + '.xml')) + '"' }
+            if ($Local:Splat['Property']['CompilerOptions']['define'].Count -eq 0) {
+                $Local:Splat['Property']['CompilerOptions'].Remove('define');
+            } else {
+                $Local:Splat['Property']['CompilerOptions']['define'] = $Local:Splat['Property']['CompilerOptions']['define'] -join ';';
+            }
+            $Local:Splat['Property']['CompilerOptions'] = ($Local:Splat['Property']['CompilerOptions'].Keys | ForEach-Object {
+                if ($Local:Splat['Property']['CompilerOptions'][$_] -eq $null) {
+                    '/' + $_;
+                } else {
+                    '/' + $_ + ':' + $Local:Splat['Property']['CompilerOptions'][$_];
+                }
+            }) -join ' ';
+            $CompilerParameters = New-Object @Local:Splat;
+            if ($PSBoundParameters.ContainsKey('EmbeddedResources')) {
+                $EmbeddedResources | ForEach-Object { $CompilerParameters.EmbeddedResources.Add($_) }
+            }
+            $OutputLocation = @(Add-Type -Path $SourceFiles -CompilerParameters $CompilerParameters -PassThru)[0].Assembly.Location;
+            if ($OutputAssembly -ne $OutputLocation) {
+                Copy-Item -Path $OutputLocation -Destination $OutputAssembly -Force | Out-Null;
+            }
+        } finally { $Local:Splat['Property']['TempFiles'].Dispose() }
+    }
+}
 
 Function Get-RootModule {
     [CmdletBinding(DefaultParameterSetName = 'Path')]
@@ -207,7 +327,7 @@ Function Open-ModuleManifest {
         if ($ModuleManifest -eq $null) {
             if ($ModuleLoadError -eq $null -or $ModuleLoadError.Count -eq 0) { Write-Error -Message 'Module not loaded.' -Category OpenError -TargetObject $Path }
         } else {
-            New-Object -TypeName 'Erwine.Leonard.T.Setup.ModuleInstallInfo' -ArgumentList $ModuleManifest, $false;
+            New-Object -TypeName 'PSModuleInstallUtil.ModuleManifest' -ArgumentList $ModuleManifest;
         }
     }
 }
@@ -435,68 +555,78 @@ Function Open-PSProject {
     [OutputType([System.Xml.XmlDocument])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [ValidateScript({ $_.EndsWith('.psroj')})]
         [string]$Path,
 
         [switch]$Create
     )
 
     Process {
-        $XmlPath = $Path;
-        $Exists = $false;
-        if (-not $Path.ToLower().EndsWith('.psproj')) {
-            $DirectoryPath = $Path;
-            if (Test-Path -Path $DirectoryPath -PathType Leaf) {
-                $DirectoryPath = $DirectoryPath | Split-Path -Parent;
-            } else {
-                $Exists = Test-Path -Path $DirectoryPath -PathType Container;
-                if (-not (Test-Path -Path $DirectoryPath -PathType Container)) {
-                    $DirectoryPath = $DirectoryPath | Split-Path -Parent;
-                    if (-not (Test-Path -Path $DirectoryPath -PathType Container)) { $DirectoryPath = $Path }
-                }
-            }
-            $Name = [System.IO.Path]::GetFileNameWithoutExtension($Path);
-            $ManifestPath = $null;
-            if (-not $Name.StartsWith($Script:InstallerDefaults.DefautModuleNamePrefix)) {
-                $ManifestPath = $DirectoryPath | Join-Path -ChildPath ($Script:InstallerDefaults.DefautModuleNamePrefix + $Name + '.psd1');
-                $Exists = Test-Path -Path $ManifestPath -PathType Leaf;
-            }
-            if (-not $Exists) {
-                $ManifestPath = $DirectoryPath | Join-Path -ChildPath ($Name + '.psd1');
-            }
-        }
-        $ModuleManifest = $null;
-        $ModuleLoadError = $null;
-        if ($Exists -or (Test-Path -Path $ManifestPath -PathType Leaf)) {
-            $ModuleManifest = Test-ModuleManifest -Path $ManifestPath -ErrorVariable 'ModuleLoadError';
-            if ((Resolve-Path -Path $ModuleManifest.Path).Path -ine (Resolve-Path -Path $ManifestPath).Path) {
-                Write-Error -Message "Module not loaded from source location." -Category OpenError -TargetObject $Path -ErrorVariable 'ModuleLoadError';
-                $ModuleManifest = $null;
-            }
+        $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
+        if (Test-Path -Path $Path -PathType Leaf) {
+            $XmlDocument.Load($Path);
         } else {
-            if ($Create) {
-                $RootModule = Get-RootModule -Path $Path -ErrorVariable 'ModuleLoadError';
-                if ($RootModule -ne $null) {
-                    if ($RootModule.ToLower().EndsWith('.psd1')) {
-                        $ManifestPath = $RootModule;
-                    } else {
-                        $ManifestPath = ($RootModule | Split-Path -Parent) | Join-Path -ChildPath ([System.IO.Path]::GetFileNameWithoutExtension($RootModule) + '.psd1');
-                    }
-                    $RootModule = $RootModule | Split-Path -Leaf;
-                    $ModuleManifest = New-ModuleManifest -Path $ManifestPath -RootModule $RootModule -Author $Script:InstallerDefaults.Author -CompanyName $Script:InstallerDefaults.CompanyName -Copyright ('(c) {0:yyyy} {1}. All rights reserved.' -f [System.DateTime]::Now, $Script:InstallerDefaults.CompanyName) -Guid ([System.Guid]::NewGuid()) -ModuleVersion '1.0' -ErrorVariable 'ModuleLoadError' -PassThru;
-                }
-            } else {
-                Write-Error -Message 'Module not loaded from source location.' -Category OpenError -TargetObject $Path -ErrorVariable 'ModuleLoadError';
-            }
+            [Xml]$XmlDocument = @'
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid><!-- TODO: Need project Guid --></ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>
+    <Name><!-- TODO: Need module Name --></Name>
+    <Author><!-- TODO: Need module Author --></Author>
+    <CompanyName><!-- TODO: Need module CompanyName --></CompanyName>
+    <Copyright><!-- TODO: Need module Copyright --></Copyright>
+    <Description><!-- TODO: Need module Description --></Description>
+    <Guid><!-- TODO: Need module Guid --></Guid>
+    <Version><!-- TODO: Need module Version --></Version>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE<!-- TODO: Need other constants here --></DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Erwine.Leonard.T.WPF.psm1" />
+    <Compile Include="Erwine.Leonard.T.WPF.psd1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>
+'@;
         }
-        if ($ModuleManifest -eq $null) {
-            if ($ModuleLoadError -eq $null -or $ModuleLoadError.Count -eq 0) { Write-Error -Message 'Module not loaded.' -Category OpenError -TargetObject $Path }
-        } else {
-            $ModuleManifest | Write-Output;
-        }
+        $XmlDocument | Write-Output;
     }
 }
 
+$SetupDllPath = $PSScriptRoot | Join-Path -ChildPath 'Setup.dll';
+
+Write-Progress -Activity 'Initializing' -Status 'Loading setup modules' -Id 1;
+if (Test-Path -Path $SetupDllPath -PathType Leaf) {
+    Add-Type -AssemblyName $SetupDllPath -ErrorAction Stop;
+} else {
+	$ReferencedAssemblies = @(('System.Windows.Forms.dll', 'System.Drawing.dll', 'System.Xml.dll') | ForEach-Object { (Add-Type -AssemblyName $_ -PassThru)[0].Assembly.Location });
+	$SourcePath = $PSScriptRoot | Join-Path -ChildPath 'PSModuleInstallUtil';
+	$EmbeddedResources = @(('MainForm.resx', 'NotificationForm.resx') | ForEach-Object { $SourcePath | Join-Path -ChildPath $_ });
+	(('ModuleManifest.cs', 'MainForm.cs', 'MainForm.Designer.cs', 'NotificationForm.cs', 'NotificationForm.Designer.cs') | ForEach-Object { $SourcePath | Join-Path -ChildPath $_ }) | Install-AssemblyModule -OutputAssembly $SetupDllPath -ReferencedAssemblies $ReferencedAssemblies -IncludeSystemAssemblies -IncludeDebugInformation -DefineTrace -ErrorAction Stop;
+}
+
 Write-Progress -Activity 'Initializing' -Status 'Looking for installable modules' -Id 1;
+
 $ModuleDirectories = @(Get-ModuleDirectory -Path $PSScriptRoot -Installable -ProgressActivity 'Searching for module install folders.' -ProgressId 2 -ProgressParentId 1);
 Write-Progress -Activity 'Searching for module install folders.' -Status 'Finished' -Id 2 -ParentId 1 -Completed;
 $FaultCount = 0;

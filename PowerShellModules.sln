@@ -18,7 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		ManifestToAbout.xslt = ManifestToAbout.xslt
 		ManifestToPsd.xslt = ManifestToPsd.xslt
-		ModuleInstallInfo.cs = ModuleInstallInfo.cs
 		PSModule.testsettings = PSModule.testsettings
 		README.md = README.md
 		Setup-New.ps1 = Setup-New.ps1
@@ -26,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Setup.ps1 = Setup.ps1
 		SetupBindings.xsd = SetupBindings.xsd
 		SetupManifestData.xsd = SetupManifestData.xsd
+		VsProject.ps1 = VsProject.ps1
 	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "CertificateCryptography", "CertificateCryptography\CertificateCryptography.pssproj", "{A8B997E3-8FB4-45FE-926C-12948D7B284D}"
@@ -74,6 +74,7 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Scripts", "Scripts\Scripts.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C415CD-E07B-4E0B-9087-A3A33F90CE73}"
 	ProjectSection(SolutionItems) = preProject
+		XmlUtility\Schemas\helpItems.xsd = XmlUtility\Schemas\helpItems.xsd
 		XmlUtility\Schemas\README.md = XmlUtility\Schemas\README.md
 		XmlUtility\Schemas\soap-encoding.xsd = XmlUtility\Schemas\soap-encoding.xsd
 		XmlUtility\Schemas\soap-envelope.xsd = XmlUtility\Schemas\soap-envelope.xsd
@@ -205,6 +206,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "V4", "V4", "{F4120606-01F6-
 		Assembly\V4\Microsoft.PowerShell.Commands.Management.dll = Assembly\V4\Microsoft.PowerShell.Commands.Management.dll
 		Assembly\V4\System.Management.Automation.dll = Assembly\V4\System.Management.Automation.dll
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Speech", "Speech\Speech.csproj", "{8AE380F9-4A91-44DE-9E8F-E441E57FF641}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1029,6 +1032,24 @@ Global
 		{EAC45BAF-738C-419F-882A-287AA6EA7F3B}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{EAC45BAF-738C-419F-882A-287AA6EA7F3B}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{EAC45BAF-738C-419F-882A-287AA6EA7F3B}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

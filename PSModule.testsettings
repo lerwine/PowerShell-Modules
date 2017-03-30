@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <TestSettings name="PSModule" id="55f2306f-f15a-4d2e-b181-f361b0d458e8" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
+  <Deployment>
+    <DeploymentItem filename="UnitTests\Resources\ExampleManifest1.psd1" />
+    <DeploymentItem filename="UnitTests\Resources\MyNext.types.ps1xml" />
+    <DeploymentItem filename="UnitTests\Resources\TestManifest2.psd1" />
+    <DeploymentItem filename="UnitTests\Resources\MyFirst.types.ps1xml" />
+    <DeploymentItem filename="UnitTests\Resources\ScriptParseTest.ps1" />
+    <DeploymentItem filename="UnitTests\Resources\PSModuleInstallUtil.psd1" />
+    <DeploymentItem filename="UnitTests\Resources\PsInvocation1.ps1" />
+    <DeploymentItem filename="UnitTests\Resources\TestManifest5.psd1" />
+  </Deployment>
   <Execution>
     <TestTypeSpecific>
       <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
