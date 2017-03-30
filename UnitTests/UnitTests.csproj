@@ -72,6 +72,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.Common, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -97,10 +98,17 @@
   <ItemGroup>
     <Compile Include="CertificateCryptographyUnitTest.cs" />
     <Compile Include="CredentialStorageTest.cs" />
+    <Compile Include="InstallerTestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InstallerTestResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="IOUtilityUnitTest.cs" />
     <Compile Include="LteDevUnitTest.cs" />
+    <Compile Include="ModuleManifestUnitTest.cs" />
     <Compile Include="NetworkUtilityUnitTest.cs" />
     <Compile Include="PowerShellHelper.cs" />
+    <Compile Include="PreProcessorUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSInvocationResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -108,6 +116,7 @@
       <DependentUpon>PSInvocationResources.resx</DependentUpon>
     </Compile>
     <Compile Include="PSInvocationUnitTest.cs" />
+    <Compile Include="ScriptDocumentTest.cs" />
     <Compile Include="WindowsFormsUnitTest.cs" />
     <Compile Include="WinFormsUnitTest.cs" />
     <Compile Include="XmlHelp.Designer.cs">
@@ -118,6 +127,10 @@
     <Compile Include="XmlUtilityUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="InstallerTestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>InstallerTestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="PSInvocationResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PSInvocationResources.Designer.cs</LastGenOutput>
@@ -142,14 +155,41 @@
       <Project>{f32b9a73-7059-4cc3-b376-d6bab4ab76fb}</Project>
       <Name>IOUtilityCLR</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PSModuleInstallUtil\PSModuleInstallUtil.csproj">
+      <Project>{E9D28345-72EA-4A65-8015-96678EE45272}</Project>
+      <Name>PSModuleInstallUtil</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WPF\WpfCLR\WpfCLR.csproj">
       <Project>{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}</Project>
       <Name>WpfCLR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PsInvocation1.ps1" />
+    <Content Include="Resources\ExampleManifest1.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\MyFirst.types.ps1xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\MyNext.types.ps1xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\PsInvocation1.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\PSInvocationEventHandler.ps1" />
+    <Content Include="Resources\ScriptParseTest.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestManifest5.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\PSModuleInstallUtil.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestManifest2.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
