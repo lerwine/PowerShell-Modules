@@ -212,7 +212,7 @@
         <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Output">
             <summary>
             Output returned from event handler script.
-            </summary>
+            </summary>}
         </member>
         <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Variables">
             <summary>

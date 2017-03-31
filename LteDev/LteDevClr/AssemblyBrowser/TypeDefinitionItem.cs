@@ -17,13 +17,7 @@ namespace LteDevClr.AssemblyBrowser
 
         public Type Type { get { return this._type; } }
 
-        public string BaseName
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public string BaseName { get { return this._baseName; } }
 
         public string FullName
         {
@@ -45,7 +39,7 @@ namespace LteDevClr.AssemblyBrowser
             }
         }
 
-        public string Name { get; private set; }
+        public string Name { get { return this._name; } }
 
         public TypeDefinitionItem(Type type)
         {

@@ -59,7 +59,7 @@ namespace IOUtilityCLR
         /// <summary>
         /// True if event handling script ran to completion.
         /// </summary>
-        public bool RanToCompletion { get { return _ranToCompletion; } 
+        public bool RanToCompletion { get { return _ranToCompletion; } } 
 
         /// <summary>
         /// Output returned from event handler script.

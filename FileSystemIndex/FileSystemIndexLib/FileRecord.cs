@@ -127,6 +127,8 @@ namespace FileSystemIndexLib
 
         public override string ToString() { return String.Format("File: {0}", Name); }
 
+        public override int GetHashCode() { return Name.GetHashCode(); }
+
         public bool Equals(FileRecord other)
         {
             return other != null && (ReferenceEquals(this, other) || (Name == other.Name && _hashSetId == other._hashSetId && _creationTime == other._creationTime &&

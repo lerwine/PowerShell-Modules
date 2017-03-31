@@ -118,9 +118,9 @@ namespace LteDevClr {
         ///    &lt;annotation&gt;
         ///        &lt;documentation&gt;This schema describes MAML (Microsoft Assistance Markup Language). MAML is  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string maml {
+        internal static string Maml {
             get {
-                return ResourceManager.GetString("maml", resourceCulture);
+                return ResourceManager.GetString("Maml", resourceCulture);
             }
         }
     }

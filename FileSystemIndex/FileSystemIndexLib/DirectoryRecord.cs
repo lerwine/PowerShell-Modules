@@ -117,6 +117,9 @@ namespace FileSystemIndexLib
             _isRoot = !parentId.HasValue;
             _volumeId = volumeId;
         }
+
+        public override int GetHashCode() { return Name.GetHashCode(); }
+
         public override string ToString() { return String.Format("Directory: {0}", Name); }
 
         public bool Equals(DirectoryRecord other)

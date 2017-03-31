@@ -40,7 +40,7 @@ namespace IOUtilityCLR
             _verbose = invocationResult.Verbose;
             _debug = invocationResult.Debug;
         }
-
+		
         /// <summary>
         /// Object which raised the original event.
         /// </summary>
@@ -59,11 +59,11 @@ namespace IOUtilityCLR
         /// <summary>
         /// True if event handling script ran to completion.
         /// </summary>
-        public bool RanToCompletion { get { return _ranToCompletion; } }
+        public bool RanToCompletion { get { return _ranToCompletion; } } 
 
         /// <summary>
         /// Output returned from event handler script.
-        /// </summary>
+        /// </summary>}
         public Collection<PSObject> Output { get { return _output; } }
 
         /// <summary>

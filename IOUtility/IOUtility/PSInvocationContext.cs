@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if !PSLEGACY2
+#if !PSLEGACY
 using System.Linq;
 #endif
 using System.Management.Automation;

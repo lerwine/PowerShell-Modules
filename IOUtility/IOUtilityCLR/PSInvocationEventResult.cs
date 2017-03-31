@@ -5,6 +5,9 @@
     /// </summary>
     public class PSInvocationEventResult
     {
+        private string _name;
+        private PSInvocationEventHandlerInvokedArgs _args;
+
         /// <summary>
         /// Arbitrary name associated with <seealso cref="PSEventScriptHandler{TEventArgs}"/> which handled the event.
         /// </summary>
