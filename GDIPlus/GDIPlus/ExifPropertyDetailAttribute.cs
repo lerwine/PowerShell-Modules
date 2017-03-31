@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
@@ -6,8 +7,8 @@ namespace Erwine.Leonard.T.GDIPlus
 	/// Assigned details of EXIF image property tag information for <seealso cref="ExifPropertyTag" /> values.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public sealed class ExifPropertyDetailAttribute : Attribute
-    {
+	public sealed class ExifPropertyDetailAttribute : Attribute
+	{
 		private readonly ExifPropertyType _tagType;
 		private readonly ExifPropertyType? _altType;
 		private readonly bool _isNullTerminatedString;
@@ -30,14 +31,14 @@ namespace Erwine.Leonard.T.GDIPlus
 			Count = copyFrom.Count;
 			Summary = copyFrom.Summary;
 			Remarks = copyFrom.Remarks;
-			if (tagType != copyFrom.TagType && !copyFrom.HasValue)
+			if (tagType != copyFrom.TagType)
 				_altType = copyFrom.TagType;
 			else if (copyFrom.AltType.HasValue && copyFrom.AltType.Value != tagType)
 				_altType = copyFrom.AltType;
 		}
 		public ExifPropertyType TagType { get { return _tagType; } }
 		public ExifPropertyType? AltType { get { return _altType; } }
-		public int IsNullTerminatedString { get { return _isNullTerminatedString; } }
+		public bool IsNullTerminatedString { get { return _isNullTerminatedString; } }
 		public int Count { get { return _count; } set { _count = (value < 1) ? 1 : value; } }
 		public string Summary { get { return _summary; } set { _summary = (_summary == null) ? "" : value.Trim(); } }
 		public string Remarks { get { return _remarks; } set { _remarks = (_remarks == null) ? "" : value.Trim(); } }
@@ -45,12 +46,12 @@ namespace Erwine.Leonard.T.GDIPlus
 		{
 			Type t = tag.GetType();
 			string n = Enum.GetName(t, tag);
-			ExifPropertyDetailAttribute attribute = t.GetField(n).GetCustomAttribute(typeof(ExifPropertyDetailAttribute), false).OfType<ExifPropertyDetailAttribute>().FirstOrDefault();
+			ExifPropertyDetailAttribute attribute = t.GetField(n).GetCustomAttributes(typeof(ExifPropertyDetailAttribute), false).OfType<ExifPropertyDetailAttribute>().FirstOrDefault();
 			if (attribute == null)
 				return new ExifPropertyDetailAttribute((tagType == ExifPropertyType.ASCII), tagType, null);
 			if (attribute.TagType == tagType || tagType == ExifPropertyType.Unknown || tagType == ExifPropertyType.BestMatching)
 				return attribute;
 			return new ExifPropertyDetailAttribute(attribute, tagType);
 		}
-    }
+	}
 }

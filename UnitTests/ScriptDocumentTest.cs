@@ -3,7 +3,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PSModuleInstallUtil.Module;
 using Microsoft.PowerShell.Commands;
 using System.IO;
 using System.Management.Automation.Runspaces;

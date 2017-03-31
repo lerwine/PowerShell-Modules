@@ -40,9 +40,24 @@
             A specialized context for invoking a <seealso cref="T:System.Management.Automation.ScriptBlock"/> which will handle an event.
             </summary>
         </member>
+        <member name="E:IOUtilityCLR.PSEventScriptHandler`1.EventHandlerInvoked">
+            <summary>
+            This gets raised after <see cref="M:IOUtilityCLR.PSEventScriptHandler`1.EventHandler(System.Object,`0)"/> is invoked and <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/> handles the event.
+            </summary>
+        </member>
         <member name="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript">
             <summary>
-            ScriptBlock which gets invoked when the event is raised.
+            <seealso cref="T:System.Management.Automation.ScriptBlock"/> which gets invoked when <see cref="M:IOUtilityCLR.PSEventScriptHandler`1.EventHandler(System.Object,`0)"/> is invoked.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSEventScriptHandler`1.Name">
+            <summary>
+            Arbitrary name to associate with events handled by this object.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSEventScriptHandler`1.Host">
+            <summary>
+            PowerShell host to use when invoking <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/>.
             </summary>
         </member>
         <member name="P:IOUtilityCLR.PSEventScriptHandler`1.InitialLocation">
@@ -50,6 +65,26 @@
             Path representing initial location to be represented by the current Context.
             </summary>
             <remarks>If an invoked script changes the location, this variable will not be updated.</remarks>
+        </member>
+        <member name="P:IOUtilityCLR.PSEventScriptHandler`1.UseLocalScope">
+            <summary>
+            Whether or not to use the local scope when invoking <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSEventScriptHandler`1.ApartmentState">
+            <summary>
+            Specifies the apartment state to use when invoking <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSEventScriptHandler`1.ThreadOptions">
+            <summary>
+            PowerShell threading options for invoking <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSEventScriptHandler`1.Configuration">
+            <summary>
+            Runspace configuration to use when invoking <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
         </member>
         <member name="P:IOUtilityCLR.PSEventScriptHandler`1.Variables">
             <summary>
@@ -63,8 +98,37 @@
         </member>
         <member name="P:IOUtilityCLR.PSEventScriptHandler`1.This">
             <summary>
-            The object which will serve as the "this" variable during script execution.
+            The object which will serve as the &quot;$this&quot; variable during script execution.
             </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSEventScriptHandler`1.#ctor(System.String,System.Management.Automation.ScriptBlock,IOUtilityCLR.PSInvocationContext)">
+            <summary>
+            Initialize new <see cref="T:IOUtilityCLR.PSEventScriptHandler`1"/> object for handling <seealso cref="T:System.EventHandler`1"/> events.
+            </summary>
+            <param name="name">Arbitrary name to associate with events handled by this object.</param>
+            <param name="handlerScript"><seealso cref="T:System.Management.Automation.ScriptBlock"/> which handles <seealso cref="T:System.EventHandler`1"/> events.</param>
+            <param name="parentContext">Parent <seealso cref="T:IOUtilityCLR.PSInvocationContext"/> object.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSEventScriptHandler`1.EventHandler(System.Object,`0)">
+            <summary>
+            Method which is intended for handling source <seealso cref="T:System.EventHandler`1"/> events.
+            </summary>
+            <param name="sender">Object which raised the event.</param>
+            <param name="e">Information about the event.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSEventScriptHandler`1.RaiseEventHandlerInvoked(System.Object,`0,IOUtilityCLR.PSInvocationResult)">
+            <summary>
+            Raises the <see cref="E:IOUtilityCLR.PSEventScriptHandler`1.EventHandlerInvoked"/> event.
+            </summary>
+            <param name="sender">Object which is the source of the original event.</param>
+            <param name="args">Information about the original event.</param>
+            <param name="invocationResult">Results of handling the event.</param>
+        </member>
+        <member name="M:IOUtilityCLR.PSEventScriptHandler`1.OnEventHandlerInvoked(IOUtilityCLR.PSInvocationEventHandlerInvokedArgs{`0})">
+            <summary>
+            This gets invoked after <see cref="P:IOUtilityCLR.PSEventScriptHandler`1.HandlerScript"/> has handled the event.
+            </summary>
+            <param name="e"></param>
         </member>
         <member name="T:IOUtilityCLR.PSInvocationContext">
             <summary>
@@ -111,6 +175,110 @@
             </summary>
             <param name="script">ScriptBlock to execute.</param>
             <returns>An InvocationResult object representing the results of the execution.</returns>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs">
+            <summary>
+            Base abstract event information class for accessing base <seealso cref="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.EventArgs"/> object.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.#ctor(System.Object,System.EventArgs,IOUtilityCLR.PSInvocationResult)">
+            <summary>
+            Initialize new <see cref="T:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs"/> object.
+            </summary>
+            <param name="sender">Object which was the source of the event.</param>
+            <param name="eventArgs">Information about the event.</param>
+            <param name="invocationResult">Result from the event handler.</param>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Sender">
+            <summary>
+            Object which raised the original event.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.EventArgs">
+            <summary>
+            Information about the source event which was handled by the event handler script.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.HadErrors">
+            <summary>
+            True if errors were encountered while handling the event.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.RanToCompletion">
+            <summary>
+            True if event handling script ran to completion.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Output">
+            <summary>
+            Output returned from event handler script.
+            </summary>}
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Variables">
+            <summary>
+            Values of variables after event handler script completion.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Errors">
+            <summary>
+            Errors which occurred during event handler script execution.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Warnings">
+            <summary>
+            Warnings which occurred during event handler script execution.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Verbose">
+            <summary>
+            Verbose messages generated during event handler script execution.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs.Debug">
+            <summary>
+            Debug messages generated during event handler script execution.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs`1">
+            <summary>
+            Contains information about the result of a script-handled event.
+            </summary>
+            <typeparam name="TEventArgs">Type of arguments passed from the source event, to the event handler script.</typeparam>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs`1.#ctor(System.Object,`0,IOUtilityCLR.PSInvocationResult)">
+            <summary>
+            Initialize new <see cref="T:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs`1"/> object.
+            </summary>
+            <param name="sender">Object which was the source of the event.</param>
+            <param name="eventArgs">Information about the event.</param>
+            <param name="invocationResult">Result from the event handler.</param>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventHandlerInvokedArgs`1.EventArgs">
+            <summary>
+            Information about the source event which was handled by the event handler script.
+            </summary>
+        </member>
+        <member name="T:IOUtilityCLR.PSInvocationEventResult">
+            <summary>
+            Result information about a handled event.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventResult.Name">
+            <summary>
+            Arbitrary name associated with <seealso cref="T:IOUtilityCLR.PSEventScriptHandler`1"/> which handled the event.
+            </summary>
+        </member>
+        <member name="P:IOUtilityCLR.PSInvocationEventResult.Args">
+            <summary>
+            Result of handling the event.
+            </summary>
+        </member>
+        <member name="M:IOUtilityCLR.PSInvocationEventResult.#ctor(System.String,IOUtilityCLR.PSInvocationEventHandlerInvokedArgs)">
+            <summary>
+            Initialize new <see cref="T:IOUtilityCLR.PSInvocationEventResult"/> object.
+            </summary>
+            <param name="name">Arbitrary name associated with <seealso cref="T:IOUtilityCLR.PSEventScriptHandler`1"/> which handled the event.</param>
+            <param name="args">Result of handling the event.</param>
         </member>
         <member name="T:IOUtilityCLR.RegexReplaceHandler">
             <summary>

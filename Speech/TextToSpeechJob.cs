@@ -29,7 +29,7 @@ namespace Speech
         private Collection<object> _output = new Collection<object>();
         private Collection<object> _phoneticEventArgs = new Collection<object>();
         private Collection<Prompt> _prompts = new Collection<Prompt>();
-        private bool _isCancelled = false;
+        private bool _isCanceled = false;
         private bool _isCompleted = false;
 
         /// <summary>
@@ -61,6 +61,11 @@ namespace Speech
         /// True if speech generation is completed; otherwise, false.
         /// </summary>
         public bool IsCompleted { get { return _isCompleted; } }
+
+        /// <summary>
+        /// True if speech generation was canceled; otherwise, false.
+        /// </summary>
+        public bool IsCanceled { get { return _isCanceled; } }
 
         WaitHandle IAsyncResult.AsyncWaitHandle { get { return _speechCompletedEvent; } }
 
@@ -692,7 +697,7 @@ namespace Speech
             {
                 if (_isCompleted)
                     return;
-                _isCancelled = true;
+                _isCanceled = true;
                 _speechSynthesizer.SpeakAsyncCancelAll();
             }
         }

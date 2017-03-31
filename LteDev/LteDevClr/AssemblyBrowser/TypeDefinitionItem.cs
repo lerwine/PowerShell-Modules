@@ -15,58 +15,51 @@ namespace LteDevClr.AssemblyBrowser
         public Dictionary<string, TypeDefinitionItem> _genericTypes = null;
         public Dictionary<string, MethodDefinitionItem> _methods = null;
 
-        public Type Type { get { return this._type; } }
+        public Type Type { get { return _type; } }
 
-        public string BaseName
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public string BaseName { get { return _baseName; } }
 
         public string FullName
         {
             get
             {
-                if (this._fullName != null)
-                    return this._fullName;
+                if (_fullName != null)
+                    return _fullName;
 
-                if (this._type.IsGenericParameter)
-                    this._fullName = this.Name;
-                else {
-                    if (this._type.IsNested)
+                if (_type.IsGenericParameter)
+                    _fullName = Name;
+                else
+                {
+                    if (_type.IsNested)
                     {
-                        TypeDefinitionItem declaringType = AssemblyLookupCache.Lookup(this._type.DeclaringType);
-                        this._fullName = String.Format("{0}+{1}", declaringType.FullName, this.Name);
+                        TypeDefinitionItem declaringType = AssemblyLookupCache.Lookup(_type.DeclaringType);
+                        _fullName = String.Format("{0}+{1}", declaringType.FullName, Name);
                     }
                 }
                 throw new NotImplementedException();
             }
         }
 
-        public string Name { get; private set; }
+        public string Name { get { return _name; } }
 
         public TypeDefinitionItem(Type type)
         {
-            this._type = type;
+            _type = type;
         }
 
         public TypeDefinitionItem Get(Type type)
         {
-            if (!(type.IsNested && type.DeclaringType.Equals(this.Type)))
+            if (!(type.IsNested && type.DeclaringType.Equals(Type)))
                 return AssemblyLookupCache.Lookup(type);
-            
-            lock (this._nestedTypes)
-            {
-                if (this._nestedTypes.ContainsKey(type.AssemblyQualifiedName))
-                    return this._nestedTypes[type.AssemblyQualifiedName];
 
-                TypeDefinitionItem typeLookupCache = new TypeDefinitionItem(type);
-                this._nestedTypes[type.AssemblyQualifiedName] = typeLookupCache;
+            lock (_nestedTypes)
+                if (_nestedTypes.ContainsKey(type.AssemblyQualifiedName))
+                    return _nestedTypes[type.AssemblyQualifiedName];
 
-                return typeLookupCache;
-            }
+            TypeDefinitionItem typeLookupCache = new TypeDefinitionItem(type);
+            _nestedTypes[type.AssemblyQualifiedName] = typeLookupCache;
+
+            return typeLookupCache;
         }
     }
 }

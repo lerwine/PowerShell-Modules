@@ -211,7 +211,7 @@
             <summary>
             Named elements (control) detected from XAML markup.
             </summary>
-            <remarks>When the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated"/> <see cref="T:System.Management.Automation.ScriptBlock"/> is invoked, the values will be the corresponding elements in the XAML markup.</remarks>
+            <remarks>When the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated"/> <see cref="T:System.Management.Automation.ScriptBlock"/> is invoked, the values will be the corresponding elements in the XAML markup.</remarks>
         </member>
         <member name="P:WpfCLR.ThisObj.MainWindow">
             <summary>
@@ -221,7 +221,7 @@
         </member>
         <member name="P:WpfCLR.ThisObj.SynchronizedData">
             <summary>
-            Data which will be synchronized with the <see cref="P:WpfCLR.WpfWindow.SynchronizedData" /> property of the object responsible for creating the WPF window.
+            Data which will be synchronized with the <see cref="P:WpfCLR.WpfWindow_obsolete.SynchronizedData" /> property of the object responsible for creating the WPF window.
             </summary>
         </member>
         <member name="P:WpfCLR.ThisObj.Output">
@@ -283,57 +283,57 @@
             Disposes this object and the associated PowerShell instance.
             </summary>
         </member>
-        <member name="T:WpfCLR.WpfWindow">
+        <member name="T:WpfCLR.WpfWindow_obsolete">
             <summary>
             Proxy object for a WPF window.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.SynchronizedData">
+        <member name="P:WpfCLR.WpfWindow_obsolete.SynchronizedData">
             <summary>
-            Data which is provided to the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated" />, <see cref="P:WpfCLR.WpfWindow.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            Data which is provided to the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated" />, <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.DialogResult">
+        <member name="P:WpfCLR.WpfWindow_obsolete.DialogResult">
             <summary>
             A value that specifies whether the activity was accepted (true) or canceled (false) after the last time the window was shown.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.WindowXaml">
+        <member name="P:WpfCLR.WpfWindow_obsolete.WindowXaml">
             <summary>
             Text which contains the XAML markup that is used to create the WPF window.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.Output">
+        <member name="P:WpfCLR.WpfWindow_obsolete.Output">
             <summary>
-            Collection of <seealso cref="T:System.Management.Automation.PSObject" /> values which represent the output from the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated" />, <see cref="P:WpfCLR.WpfWindow.BeforeWindowShown" /> and
-            <see cref="P:WpfCLR.WpfWindow.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            Collection of <seealso cref="T:System.Management.Automation.PSObject" /> values which represent the output from the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated" />, <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown" /> and
+            <see cref="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.ErrorRecords">
+        <member name="P:WpfCLR.WpfWindow_obsolete.ErrorRecords">
             <summary>
-            Collection of <seealso cref="T:System.Management.Automation.ErrorRecord" /> objects which represent the errors encountered while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated" />,
-            <see cref="P:WpfCLR.WpfWindow.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            Collection of <seealso cref="T:System.Management.Automation.ErrorRecord" /> objects which represent the errors encountered while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.WarningRecords">
+        <member name="P:WpfCLR.WpfWindow_obsolete.WarningRecords">
             <summary>
-            Collection of <seealso cref="T:System.Management.Automation.WarningRecord" /> objects which represent the warning messages emitted while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated" />,
-            <see cref="P:WpfCLR.WpfWindow.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            Collection of <seealso cref="T:System.Management.Automation.WarningRecord" /> objects which represent the warning messages emitted while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.VerboseRecords">
+        <member name="P:WpfCLR.WpfWindow_obsolete.VerboseRecords">
             <summary>
-            Collection of <seealso cref="T:System.Management.Automation.VerboseRecord" /> objects which represent the verbose messages emitted while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated" />,
-            <see cref="P:WpfCLR.WpfWindow.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            Collection of <seealso cref="T:System.Management.Automation.VerboseRecord" /> objects which represent the verbose messages emitted while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.DebugRecords">
+        <member name="P:WpfCLR.WpfWindow_obsolete.DebugRecords">
             <summary>
-            Collection of <seealso cref="T:System.Management.Automation.DebugRecord" /> objects which represent the debug messages emitted while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow.BeforeWindowCreated" />,
-            <see cref="P:WpfCLR.WpfWindow.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            Collection of <seealso cref="T:System.Management.Automation.DebugRecord" /> objects which represent the debug messages emitted while showing the window as well as executing the <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
             </summary>
         </member>
-        <member name="P:WpfCLR.WpfWindow.BeforeWindowCreated">
+        <member name="P:WpfCLR.WpfWindow_obsolete.BeforeWindowCreated">
             <summary>
             Script which gets executed before the XAML window is created.
             </summary>
@@ -341,7 +341,7 @@
             When this script is invoked, the &quot;$this&quot; variable will be an instance of the <see cref="T:WpfCLR.ThisObj" /> object.
             </remarks>
         </member>
-        <member name="P:WpfCLR.WpfWindow.BeforeWindowShown">
+        <member name="P:WpfCLR.WpfWindow_obsolete.BeforeWindowShown">
             <summary>
             Script which gets executed after the XAML window is created, but before it is shown.
             </summary>
@@ -350,7 +350,7 @@
             If <code>$this.Window</code> is null, then that means there was an error while trying to create the window.
             </remarks>
         </member>
-        <member name="P:WpfCLR.WpfWindow.AfterWindowClosed">
+        <member name="P:WpfCLR.WpfWindow_obsolete.AfterWindowClosed">
             <summary>
             Script which gets executed after the XAML window has been displayed and has been closed.
             </summary>
@@ -359,28 +359,28 @@
             If <code>$this.Window</code> is null, then that means there was an error while trying to create the window, also indicating that no window was actually displayed.
             </remarks>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddOutput(System.Management.Automation.PSDataStreams)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddOutput(System.Management.Automation.PSDataStreams)">
             <summary>
-            Add output from a <seealso cref="T:System.Management.Automation.PSDataStreams" /> object to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords" />, <see cref="P:WpfCLR.WpfWindow.WarningRecords" />, <see cref="P:WpfCLR.WpfWindow.VerboseRecords" /> and
-            <see cref="P:WpfCLR.WpfWindow.DebugRecords" /> collections.
+            Add output from a <seealso cref="T:System.Management.Automation.PSDataStreams" /> object to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords" />, <see cref="P:WpfCLR.WpfWindow_obsolete.WarningRecords" />, <see cref="P:WpfCLR.WpfWindow_obsolete.VerboseRecords" /> and
+            <see cref="P:WpfCLR.WpfWindow_obsolete.DebugRecords" /> collections.
             </summary>
             <param name="dataStreams">Data streams object to be added.</param>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddOutput(System.Management.Automation.PSDataCollection{System.Management.Automation.PSObject})">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddOutput(System.Management.Automation.PSDataCollection{System.Management.Automation.PSObject})">
             <summary>
-            Add async output to the <see cref="P:WpfCLR.WpfWindow.Output" /> collections.
+            Add async output to the <see cref="P:WpfCLR.WpfWindow_obsolete.Output" /> collections.
             </summary>
             <param name="asyncOutput">Output object to be added.</param>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddOutput(System.Collections.Generic.IEnumerable{System.Management.Automation.PSObject})">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddOutput(System.Collections.Generic.IEnumerable{System.Management.Automation.PSObject})">
             <summary>
-            Add output to the <see cref="P:WpfCLR.WpfWindow.Output" /> collections.
+            Add output to the <see cref="P:WpfCLR.WpfWindow_obsolete.Output" /> collections.
             </summary>
             <param name="output">Output object to be added.</param>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
             <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
@@ -395,9 +395,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
             <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
@@ -411,9 +411,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception.</param>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
@@ -427,9 +427,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception.</param>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
@@ -442,9 +442,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
             <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
@@ -457,9 +457,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
             <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
@@ -471,9 +471,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.String,System.Exception,System.String)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
             <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
@@ -484,9 +484,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception.</param>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
@@ -498,9 +498,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception.</param>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
@@ -511,9 +511,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.String,System.Exception,System.String)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="message">The replacement error message for the exception.</param>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
@@ -523,9 +523,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
             <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
@@ -538,9 +538,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
             <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
@@ -552,9 +552,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
             <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
@@ -565,9 +565,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
             <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
@@ -577,9 +577,9 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AddError(System.Exception,System.String)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AddError(System.Exception,System.String)">
             <summary>
-            Adds an error record to the <see cref="P:WpfCLR.WpfWindow.ErrorRecords"/> collection.
+            Adds an error record to the <see cref="P:WpfCLR.WpfWindow_obsolete.ErrorRecords"/> collection.
             </summary>
             <param name="exception">The exception that is associated with this record. This cannot be null.</param>
             <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
@@ -588,7 +588,7 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.AssertValidXaml(System.String,System.Xml.XmlDocument@)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.AssertValidXaml(System.String,System.Xml.XmlDocument@)">
             <summary>
             Asserts that a string value contains valid XML markup that represents a WPF window.
             </summary>
@@ -599,16 +599,16 @@
             <exception cref="T:System.Xml.XmlException"><paramref name="value"/> does not contain valid XML.</exception>
             <exception cref="T:System.Collections.Generic.KeyNotFoundException">The root element of <paramref name="value"/> is not a WPF window.</exception>
         </member>
-        <member name="M:WpfCLR.WpfWindow.TryValidateXaml(System.String,System.Exception@,System.Xml.XmlDocument@)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.TryValidateXaml(System.String,System.Exception@,System.Xml.XmlDocument@)">
             <summary>
             Attempts to validate that a string value contains valid XML markup which represents a WPF window.
             </summary>
             <param name="value">The XML to be parsed.</param>
             <param name="exception">Exception that was thrown while trying to validate the document.</param>
             <param name="xmlDocument">The parsed XML document object or null if an exception occurred.</param>
-            <returns>True if the XML is valid; otherwise false. This invokes <seealso cref="M:WpfCLR.WpfWindow.AssertValidXaml(System.String,System.Xml.XmlDocument@)"/> to validate the XML.</returns>
+            <returns>True if the XML is valid; otherwise false. This invokes <seealso cref="M:WpfCLR.WpfWindow_obsolete.AssertValidXaml(System.String,System.Xml.XmlDocument@)"/> to validate the XML.</returns>
         </member>
-        <member name="M:WpfCLR.WpfWindow.TryValidateXaml(System.String,System.String@)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.TryValidateXaml(System.String,System.String@)">
             <summary>
             Attempts to validate that a string value contains valid XML markup which represents a WPF window.
             </summary>
@@ -616,14 +616,14 @@
             <param name="message">Message which represents the result of validation.</param>
             <returns>True if the XML is valid; otherwise false.</returns>
         </member>
-        <member name="M:WpfCLR.WpfWindow.ShowDialog(System.Management.Automation.Host.PSHost)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.ShowDialog(System.Management.Automation.Host.PSHost)">
             <summary>
             Displays WPF window as a dialog (modal).
             </summary>
             <param name="host">The PowerShell host to be used.</param>
             <returns>A value that specifies whether the activity was accepted (true) or canceled (false). The return value is the value of the DialogResult property before the window closes.</returns>
         </member>
-        <member name="M:WpfCLR.WpfWindow.Show(System.Management.Automation.Host.PSHost)">
+        <member name="M:WpfCLR.WpfWindow_obsolete.Show(System.Management.Automation.Host.PSHost)">
             <summary>
             Displays WPF window, permitting child windows to be created.
             </summary>

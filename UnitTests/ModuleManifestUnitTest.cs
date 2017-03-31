@@ -80,7 +80,7 @@ namespace UnitTests
                 }
             }
             Assert.AreEqual("Erwine.Leonard.T.PsNuGet.psm1", target.RootModule);
-            Assert.AreEqual("Erwine.Leonard.T.PsNuGet", target.Name);
+            Assert.AreEqual("Erwine.Leonard.T.PsNuGet", target.ModuleName);
         }
     }
 }

@@ -970,7 +970,7 @@ Not for public use.")]
 		/// Block of information about grids and guides.
 		/// </summary>
 		/// <remarks>Any.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Block of information about grids and guides.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Block of information about grids and guides.",
 			Remarks = "Any.")]
 		GridSize = 0x5011,
 
@@ -1028,7 +1028,7 @@ Not for public use.")]
 		/// Table of values that specify color transfer functions.
 		/// </summary>
 		/// <remarks>Any.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Table of values that specify color transfer functions.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Table of values that specify color transfer functions.",
 			Remarks = "Any.")]
 		ColorTransferFunction = 0x501A,
 
@@ -1144,7 +1144,7 @@ See also ExifPropertyType.ThumbnailRowsPerStrip and ExifPropertyType.ThumbnailSt
 		/// Thumbnail resolution in the width direction.
 		/// </summary>
 		/// <remarks>The resolution unit is given in <see cref="ThumbnailResolutionUnit" />.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Thumbnail resolution in the width direction.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Thumbnail resolution in the width direction.",
 			Remarks = "The resolution unit is given in ExifPropertyType.ThumbnailResolutionUnit.")]
 		ThumbnailResolutionX = 0x502D,
 
@@ -1152,7 +1152,7 @@ See also ExifPropertyType.ThumbnailRowsPerStrip and ExifPropertyType.ThumbnailSt
 		/// Thumbnail resolution in the height direction.
 		/// </summary>
 		/// <remarks>The resolution unit is given in <see cref="ThumbnailResolutionUnit" />.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Thumbnail resolution in the height direction.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Thumbnail resolution in the height direction.",
 			Remarks = "The resolution unit is given in ExifPropertyType.ThumbnailResolutionUnit.")]
 		ThumbnailResolutionY = 0x502E,
 
@@ -1449,7 +1449,7 @@ The GPS property items are defined in the EXIF specification. GDI+ uses this tag
 		/// </summary>
 		/// <remarks>Any.
 		/// <para>The OECF is the relationship between the camera optical input and the image values.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Optoelectronic conversion function (OECF) specified in ISO 14524.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Optoelectronic conversion function (OECF) specified in ISO 14524.",
 			Remarks = @"Any.
 The OECF is the relationship between the camera optical input and the image values.")]
 		ExifOECF = 0x8828,
@@ -1460,7 +1460,7 @@ The OECF is the relationship between the camera optical input and the image valu
 		/// <remarks>Default	0210.
 		/// <para>Nonexistence of this field is taken to mean nonconformance to the standard.
 		/// Conformance to the standard is indicated by recording 0210 as a 4-byte ASCII string. Because the type is <see cref="TypeUndefined" />, there is no NULL terminator.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Count = 4, Summary = "Version of the EXIF standard supported.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Count = 4, Summary = "Version of the EXIF standard supported.",
 			Remarks = @"Default	0210.
 Nonexistence of this field is taken to mean nonconformance to the standard.
 Conformance to the standard is indicated by recording 0210 as a 4-byte ASCII string. Because the type is ExifPropertyType.TypeUndefined, there is no NULL terminator.")]
@@ -1498,7 +1498,7 @@ The character string length is 20 bytes including the NULL terminator. When the 
 		/// For uncompressed data, the data arrangement is given in the <see cref="PhotometricInterp" /> tag.
 		/// However, because <see cref="PhotometricInterp" /> can only express the order of Y, Cb, and Cr, this tag is provided for cases when compressed data uses components
 		/// other than Y, Cb, and Cr and to support other sequences.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Count = 4, Summary = "Information specific to compressed data.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Count = 4, Summary = "Information specific to compressed data.",
 			Remarks = @"Default	4 5 6 0 (if RGB uncompressed) 1 2 3 0 (other cases) 0 - does not exist 1 - Y 2 - Cb 3 - Cr 4 - R 5 - G 6 - B Other - reserved.
 The channels of each component are arranged in order from the first component to the fourth.
 For uncompressed data, the data arrangement is given in the ExifPropertyType.PhotometricInterp tag.
@@ -1624,7 +1624,7 @@ This tag is recorded when an image is taken using a strobe light (flash). Bit 0 
 		/// </summary>
 		/// <remarks>Any.
 		/// <para>A tag used by manufacturers of EXIF writers to record information. The contents are up to the manufacturer.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Note tag.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Note tag.",
 			Remarks = @"Any.
 A tag used by manufacturers of EXIF writers to record information. The contents are up to the manufacturer.")]
 		ExifMakerNote = 0x927C,
@@ -1636,7 +1636,7 @@ A tag used by manufacturers of EXIF writers to record information. The contents 
 		/// The unused portion of the area is padded with null characters (0). ID codes are assigned by means of registration. Because the type is not ASCII, it is not necessary to use a NULL terminator.
 		/// <para>A tag used by EXIF users to write keywords or comments about the image besides those in <see cref="ImageDescription" />
 		/// and without the character-code limitations of the <see cref="ImageDescription" /> tag.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Comment tag.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Comment tag.",
 			Remarks = @"Any The character code used in the ExifPropertyType.ExifUserComment tag is identified based on an ID code in a fixed 8-byte area at the start of the tag data area.
 The unused portion of the area is padded with null characters (0). ID codes are assigned by means of registration. Because the type is not ASCII, it is not necessary to use a NULL terminator.
 A tag used by EXIF users to write keywords or comments about the image besides those in ExifPropertyType.ImageDescription and without the character-code limitations of the ExifPropertyType.ImageDescription tag.")]
@@ -1672,7 +1672,7 @@ A tag used by EXIF users to write keywords or comments about the image besides t
 		/// <remarks>Default	0100 0100 - FlashPix format version 1.0 Other - reserved.
 		/// <para>If the FPXR function supports FlashPix format version 1.0, this is indicated similarly to <see cref="ExifVer" /> by recording 0100 as a 4-byte ASCII string.
 		/// Because the type is <see cref="TypeUndefined" />, there is no NULL terminator.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Count = 4, Summary = "FlashPix format version supported by an FPXR file.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Count = 4, Summary = "FlashPix format version supported by an FPXR file.",
 			Remarks = @"Default	0100 0100 - FlashPix format version 1.0 Other - reserved.
 If the FPXR function supports FlashPix format version 1.0, this is indicated similarly to ExifPropertyType.ExifVer by recording 0100 as a 4-byte ASCII string.
 Because the type is ExifPropertyType.TypeUndefined, there is no NULL terminator.")]
@@ -1738,7 +1738,7 @@ The path is not recorded. When you use this tag, audio files must be recorded in
 		/// Camera or input device spatial frequency table and SFR values in the image width, image height, and diagonal direction, as specified in ISO 12233.
 		/// </summary>
 		/// <remarks>Any.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "Camera or input device spatial frequency table and SFR values in the image width, image height, and diagonal direction, as specified in ISO 12233.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "Camera or input device spatial frequency table and SFR values in the image width, image height, and diagonal direction, as specified in ISO 12233.",
 			Remarks = "Any.")]
 		ExifSpatialFR = 0xA20C,
 
@@ -1812,7 +1812,7 @@ The path is not recorded. When you use this tag, audio files must be recorded in
 		/// The image source.
 		/// </summary>
 		/// <remarks>If a DSC recorded the image, the value of this tag is 3.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "The image source.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "The image source.",
 			Remarks = "If a DSC recorded the image, the value of this tag is 3.")]
 		ExifFileSource = 0xA300,
 
@@ -1820,7 +1820,7 @@ The path is not recorded. When you use this tag, audio files must be recorded in
 		/// The type of scene.
 		/// </summary>
 		/// <remarks>If a DSC recorded the image, the value of this tag must be set to 1, indicating that the image was directly photographed.</remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "The type of scene.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "The type of scene.",
 			Remarks = "If a DSC recorded the image, the value of this tag must be set to 1, indicating that the image was directly photographed.")]
 		ExifSceneType = 0xA301,
 
@@ -1829,7 +1829,7 @@ The path is not recorded. When you use this tag, audio files must be recorded in
 		/// </summary>
 		/// <remarks>Any.
 		/// <para>It does not apply to all sensing methods.</para></remarks>
-		[ExifPropertyDetail(ExifPropertyType.Undefined, Summary = "The color filter array (CFA) geometric pattern of the image sensor when a one-chip color area sensor is used.",
+		[ExifPropertyDetail(ExifPropertyType.Unknown, Summary = "The color filter array (CFA) geometric pattern of the image sensor when a one-chip color area sensor is used.",
 			Remarks = @"Any.
 It does not apply to all sensing methods.")]
 		ExifCfaPattern = 0xA302,
