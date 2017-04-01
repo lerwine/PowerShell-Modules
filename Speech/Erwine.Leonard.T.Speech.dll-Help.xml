@@ -128,7 +128,7 @@
         <command:parameter globbing="false" pipelineInput="true (ByValue)" required="true" position="named" variableLength="false">
           <maml:name>InputText</maml:name>
           <maml:description>
-            <maml:para>Plain text to add to PromptBuilder object.</maml:para>
+            <maml:para>Plain text to convert to SSML Markup.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">string</command:parameterValue>
         </command:parameter>
@@ -138,7 +138,7 @@
       <command:parameter globbing="false" pipelineInput="true (ByValue)" position="named" required="true" variableLength="false">
         <maml:name>InputText</maml:name>
         <maml:description>
-          <maml:para>Plain text to add to PromptBuilder object.</maml:para>
+          <maml:para>Plain text to convert to SSML Markup.</maml:para>
         </maml:description>
       </command:parameter>
     </command:parameters>
@@ -463,6 +463,272 @@
         </dev:type>
         <maml:description>
           <maml:para>Returns imported text to speak.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>Resume-TextToSpeech</command:name>
+      <maml:description>
+        <maml:para>
+          <!--Add synopsis here-->
+        </maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para>(c) 2017 Leonard T. Erwine. All rights reserved.</maml:para>
+      </maml:copyright>
+      <command:verb>Resume</command:verb>
+      <command:noun>TextToSpeech</command:noun>
+      <dev:version>1.0</dev:version>
+    </command:details>
+    <maml:description>
+      <maml:para>
+        <!--Add detailed description here-->
+      </maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Resume-TextToSpeech</maml:name>
+        <command:parameter globbing="false" pipelineInput="true (ByValue)" required="true" position="0" variableLength="false">
+          <maml:name>Job</maml:name>
+          <maml:description>
+            <maml:para>Job to resume speaking.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Speech.TextToSpeechJob</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter globbing="false" pipelineInput="true (ByValue)" position="0" required="true" variableLength="false">
+        <maml:name>Job</maml:name>
+        <maml:description>
+          <maml:para>Job to resume speaking.</maml:para>
+        </maml:description>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Speech.TextToSpeechJob</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Job to resume speaking.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>Stop-TextToSpeech</command:name>
+      <maml:description>
+        <maml:para>
+          <!--Add synopsis here-->
+        </maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para>(c) 2017 Leonard T. Erwine. All rights reserved.</maml:para>
+      </maml:copyright>
+      <command:verb>Stop</command:verb>
+      <command:noun>TextToSpeech</command:noun>
+      <dev:version>1.0</dev:version>
+    </command:details>
+    <maml:description>
+      <maml:para>
+        <!--Add detailed description here-->
+      </maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Stop-TextToSpeech</maml:name>
+        <command:parameter globbing="false" pipelineInput="true (ByValue)" required="true" position="0" variableLength="false">
+          <maml:name>Job</maml:name>
+          <maml:description>
+            <maml:para>Job representing speech to be stopped.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Speech.TextToSpeechJob</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter globbing="false" pipelineInput="true (ByValue)" position="0" required="true" variableLength="false">
+        <maml:name>Job</maml:name>
+        <maml:description>
+          <maml:para>Job representing speech to be stopped.</maml:para>
+        </maml:description>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Speech.TextToSpeechJob</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Job representing speech to be stopped.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>Suspend-TextToSpeech</command:name>
+      <maml:description>
+        <maml:para>
+          <!--Add synopsis here-->
+        </maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para>(c) 2017 Leonard T. Erwine. All rights reserved.</maml:para>
+      </maml:copyright>
+      <command:verb>Suspend</command:verb>
+      <command:noun>TextToSpeech</command:noun>
+      <dev:version>1.0</dev:version>
+    </command:details>
+    <maml:description>
+      <maml:para>
+        <!--Add detailed description here-->
+      </maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Suspend-TextToSpeech</maml:name>
+        <command:parameter globbing="false" pipelineInput="true (ByValue)" required="true" position="0" variableLength="false">
+          <maml:name>Job</maml:name>
+          <maml:description>
+          <maml:para>Job representing speech to be paused.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Speech.TextToSpeechJob</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter globbing="false" pipelineInput="true (ByValue)" position="0" required="true" variableLength="false">
+        <maml:name>Job</maml:name>
+        <maml:description>
+          <maml:para>Job representing speech to be paused.</maml:para>
+        </maml:description>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Speech.TextToSpeechJob</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Job representing speech to be paused.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>Wait-TextToSpeech</command:name>
+      <maml:description>
+        <maml:para>
+          <!--Add synopsis here-->
+        </maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para>(c) 2017 Leonard T. Erwine. All rights reserved.</maml:para>
+      </maml:copyright>
+      <command:verb>Wait</command:verb>
+      <command:noun>TextToSpeech</command:noun>
+      <dev:version>1.0</dev:version>
+    </command:details>
+    <maml:description>
+      <maml:para>
+        <!--Add detailed description here-->
+      </maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Wait-TextToSpeech</maml:name>
+        <command:parameter globbing="false" pipelineInput="true (ByValue)" required="true" position="0" variableLength="false">
+          <maml:name>Job</maml:name>
+          <maml:description>
+            <maml:para>Job representing speech to wait for.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Speech.TextToSpeechJob</command:parameterValue>
+        </command:parameter>
+        <command:parameter globbing="false" pipelineInput="false" required="false" position="-1" variableLength="false">
+          <maml:name>MillisecondsTimeout</maml:name>
+          <maml:description>
+            <maml:para>Number of milliseconds to wait.</maml:para>
+          </maml:description>
+        </command:parameter>
+        <command:parameter globbing="false" pipelineInput="false" required="false" position="-1" variableLength="false">
+          <maml:name>Completed</maml:name>
+          <maml:description>
+            <maml:para>Wait for speech to be completed. This is the devault behavior.</maml:para>
+          </maml:description>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Wait-TextToSpeech</maml:name>
+        <command:parameter globbing="false" pipelineInput="true (ByValue)" required="true" position="0" variableLength="false">
+          <maml:name>Job</maml:name>
+          <maml:description>
+            <maml:para>Job representing speech to wait for.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Speech.TextToSpeechJob</command:parameterValue>
+        </command:parameter>
+        <command:parameter globbing="false" pipelineInput="false" required="false" position="-1" variableLength="false">
+          <maml:name>MillisecondsTimeout</maml:name>
+          <maml:description>
+            <maml:para>Number of milliseconds to wait.</maml:para>
+          </maml:description>
+        </command:parameter>
+        <command:parameter globbing="false" pipelineInput="false" required="true" position="-1" variableLength="false">
+          <maml:name>Progress</maml:name>
+          <maml:description>
+            <maml:para>Wait for a progress change.</maml:para>
+          </maml:description>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter globbing="false" pipelineInput="true (ByValue)" position="0" required="true" variableLength="false">
+        <maml:name>Job</maml:name>
+        <maml:description>
+          <maml:para>Job representing speech to wait for.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter globbing="false" pipelineInput="false" position="-1" required="false" variableLength="false">
+        <maml:name>MillisecondsTimeout</maml:name>
+        <maml:description>
+          <maml:para>Number of milliseconds to wait.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter globbing="false" pipelineInput="false" position="-1" required="false" variableLength="false">
+        <maml:name>Progress</maml:name>
+        <maml:description>
+          <maml:para>Wait for a progress change.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter globbing="false" pipelineInput="false" position="-1" required="false" variableLength="false">
+        <maml:name>Completed</maml:name>
+        <maml:description>
+          <maml:para>Wait for speech to be completed. This is the devault behavior.</maml:para>
+        </maml:description>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Speech.TextToSpeechJob</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Job representing speech to wait for.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Object</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>returns progress event objects, if any.</maml:para>
         </maml:description>
       </command:returnValue>
     </command:returnValues>

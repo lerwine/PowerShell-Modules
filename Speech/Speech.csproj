@@ -100,7 +100,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Resource Include="Speech.dll-help.xml" />
+    <Resource Include="Erwine.Leonard.T.Speech.dll-Help.xml" />
     <Content Include="Test.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
