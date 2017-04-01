@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using System.Collections.ObjectModel;
+using System.Management.Automation;
 
 namespace Speech.Commands
 {
@@ -22,24 +23,33 @@ namespace Speech.Commands
 
         public int MillisecondsTimeout { get { return (_milliSecondsTimeout.HasValue) ? _milliSecondsTimeout.Value : 0; } set { _milliSecondsTimeout = value; } }
 
+        public static bool TryWait(TextToSpeechJob job, int? milliSecondsTimeout, bool progress, out Collection<object> output)
+        {
+            bool hasEventData;
+            if (progress)
+            {
+                if (milliSecondsTimeout.HasValue)
+                    hasEventData = job.WaitSpeechProgress(milliSecondsTimeout.Value);
+                else
+                    hasEventData = job.WaitSpeechProgress();
+
+            }
+            else if (milliSecondsTimeout.HasValue)
+                hasEventData = job.WaitSpeechCompleted(milliSecondsTimeout.Value);
+            else
+                hasEventData = job.WaitSpeechCompleted();
+
+            output = (hasEventData) ? job.GetOutput() : null;
+
+            return hasEventData;
+        }
+
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
-            bool hasEventData;
-            if (Progress.IsPresent)
-            {
-                if (_milliSecondsTimeout.HasValue)
-                    hasEventData = Job.WaitSpeechProgress(_milliSecondsTimeout.Value);
-                else
-                    hasEventData = Job.WaitSpeechProgress();
-                
-            } else if (_milliSecondsTimeout.HasValue)
-                hasEventData = Job.WaitSpeechCompleted(_milliSecondsTimeout.Value);
-            else
-                hasEventData = Job.WaitSpeechCompleted();
-
-            if (hasEventData)
-                WriteObject(Job.GetOutput(), true);
+            Collection<object> output;
+            if (TryWait(Job, _milliSecondsTimeout, Progress.IsPresent, out output))
+                WriteObject(output, true);
         }
     }
 }

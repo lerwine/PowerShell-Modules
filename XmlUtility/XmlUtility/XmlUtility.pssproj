@@ -45,6 +45,7 @@
     <OutputPath>bin\ReleasePS3\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Erwine.Leonard.T.XmlUtility.psd1" />
     <Compile Include="Erwine.Leonard.T.XmlUtility.psm1" />
     <Compile Include="Erwine.Leonard.T.XmlUtility.XML" />
     <Compile Include="GetWsdl.ps1" />

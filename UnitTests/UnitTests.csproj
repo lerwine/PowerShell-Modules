@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="PSInvocationUnitTest.cs" />
     <Compile Include="ScriptDocumentTest.cs" />
+    <Compile Include="SpeechUnitTest.cs" />
     <Compile Include="WindowsFormsUnitTest.cs" />
     <Compile Include="WinFormsUnitTest.cs" />
     <Compile Include="XmlHelp.Designer.cs">
@@ -158,6 +159,10 @@
     <ProjectReference Include="..\PSModuleInstallUtil\PSModuleInstallUtil.csproj">
       <Project>{E9D28345-72EA-4A65-8015-96678EE45272}</Project>
       <Name>PSModuleInstallUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Speech\Speech.csproj">
+      <Project>{8ae380f9-4a91-44de-9e8f-e441e57ff641}</Project>
+      <Name>Speech</Name>
     </ProjectReference>
     <ProjectReference Include="..\WPF\WpfCLR\WpfCLR.csproj">
       <Project>{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}</Project>

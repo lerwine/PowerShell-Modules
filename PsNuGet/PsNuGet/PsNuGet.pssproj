@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.PsNuGet.psd1" />
     <Compile Include="Erwine.Leonard.T.PsNuGet.psm1" />
-    <Compile Include="PsNuGet.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PsNuGetCLR\PsNuGetCLR.csproj">

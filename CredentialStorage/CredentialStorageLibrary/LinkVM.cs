@@ -573,7 +573,7 @@ namespace CredentialStorageLibrary
         public const string PropertyName_BrowserOptions = "BrowserOptions";
 
         private static readonly DependencyPropertyKey BrowserOptionsPropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_BrowserOptions, typeof(ObservableCollection<BrowserConfigVM>), typeof(LinkVM),
-                new PropertyMetadata(0));
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <seealso cref="BrowserOptions"/> dependency property.
@@ -697,14 +697,28 @@ namespace CredentialStorageLibrary
 
         #endregion
 
+        public LinkVM()
+        {
+            BrowserOptions = new ObservableCollection<BrowserConfigVM>();
+        }
+
         public UriBuilder ToUriBuilder()
         {
-            throw new NotImplementedException();
+            UriBuilder uriBuilder = new UriBuilder();
+            uriBuilder.Scheme = Scheme;
+            uriBuilder.Host = Host;
+            if (Port != -1)
+                uriBuilder.Port = Port;
+            uriBuilder.Path = Path;
+            uriBuilder.Query = Query;
+            uriBuilder.Fragment = Fragment;
+            return uriBuilder;
         }
 
         public Uri ToUri()
         {
-            throw new NotImplementedException();
+            UriBuilder uriBuilder = ToUriBuilder();
+            return uriBuilder.Uri;
         }
 
         public void Load(XmlReader xmlReader)

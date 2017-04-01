@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using System.Collections.ObjectModel;
+using System.Management.Automation;
 
 namespace Speech.Commands
 {
@@ -13,6 +14,9 @@ namespace Speech.Commands
         {
             base.ProcessRecord();
             Job.AsyncCancel();
+            Collection<object> output;
+            if (Wait_TextToSpeech.TryWait(Job, null, false, out output))
+                WriteObject(output, true);
         }
     }
 }

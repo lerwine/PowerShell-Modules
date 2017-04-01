@@ -121,11 +121,11 @@ Import-Module $args[0] -PassThru;
                     Assert.AreEqual(moduleName, psModuleInfo.Name, "Mismatched module name");
                     Assert.AreEqual(moduleName + moduleExtension, psModuleInfo.RootModule, "Mismatched RootModule");
                     Assert.IsNotNull(psModuleInfo.PowerShellVersion, "PowerShell version not specified");
-                    Assert.AreEqual(psModuleInfo.PowerShellVersion, new Version(4, 0), "Invalid PowerShell version");
+                    Assert.AreEqual(new Version(4, 0), psModuleInfo.PowerShellVersion, "Invalid PowerShell version");
                     Assert.IsNotNull(psModuleInfo.ClrVersion, "CLR version not specified");
-                    Assert.AreEqual(psModuleInfo.ClrVersion, new Version(4, 0), "Invalid CLR version");
+                    Assert.AreEqual(new Version(4, 0), psModuleInfo.ClrVersion, "Invalid CLR version");
                     Assert.IsNotNull(psModuleInfo.DotNetFrameworkVersion, ".NET Framework version not specified");
-                    Assert.AreEqual(psModuleInfo.DotNetFrameworkVersion, new Version(4, 0), "Invalid .NET Framework version");
+                    Assert.AreEqual(new Version(4, 0), psModuleInfo.DotNetFrameworkVersion, "Invalid .NET Framework version");
                 }
             }
         }
@@ -149,7 +149,7 @@ Import-Module $args[0] -PassThru;
                 testContext.WriteLine("\tDetails: {0}", errorRecord.ErrorDetails.Message);
 
             if (errorRecord.Exception != null)
-                testContext.WriteLine(errorRecord.Exception.ToString());
+                testContext.WriteLine("\tException: {0}", errorRecord.Exception.ToString());
             testContext.WriteLine("");
         }
 

@@ -10,6 +10,7 @@
   <import schemaLocation="maml.xsd" namespace="http://schemas.microsoft.com/maml/2004/10"/>
   <import schemaLocation="developerManaged.xsd" namespace="http://schemas.microsoft.com/maml/dev/managed/2004/10"/>
   <import schemaLocation="developerCommand.xsd" namespace="http://schemas.microsoft.com/maml/dev/command/2004/10"/>
+  <import schemaLocation="developerDscResource.xsd" namespace="http://schemas.microsoft.com/maml/dev/dscResource/2004/10"/>
   <!-- ***************************************************************** -->
   <element name="remarks" type="maml:structureType">
     <annotation>

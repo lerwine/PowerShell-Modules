@@ -498,19 +498,26 @@ Function New-HelpItemsDocument {
 
 Function Assert-HelpItemsDocument {
 	[CmdletBinding()]
-	[OutputType([System.Xml.XmlDocument])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[ValidateScript({ $_.DocumentElement -ne $null -and $_.DocumentElement.LocalName -eq 'helpItems' -and $_.DocumentElement.NamespaceURI -eq 'http://msh' })]
-		[System.Xml.XmlDocument]$XmlDocument
+		[AllowNull()]
+		[System.Xml.XmlNode]$XmlNode
 	)
 	
 	Process {
-		if ($XmlDocument.DocumentElement -ne $null -and $XmlDocument.DocumentElement.LocalName -eq 'helpItems' -and $XmlDocument.
+		if ($XmlNode -eq $null) { throw 'Node is null'; }
+		$XmlElement = $XmlNode;
+		if ($XmlElement -is [System.Xml.XmlDocument]) {
+			$XmlElement = $XmlElement.DocumentElement;
+			if ($XmlElement -eq $null) { throw 'Document has no root element.'; }
+		} else {
+			if ($XmlElement -isnot [System.Xml.XmlElement]) { throw 'Node is not an XML element or document.' }
+		}
+
+		if ($XmlElement -eq $null -or $XmlElement.LocalName -ne 'helpItems' -or $XmlElement.NamespaceURI -ne 'http://msh') {
+			throw 'Node does not represent a helpItems document.';
+		}
 	}
-	$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
-	$XmlDocument.AppendChild($XmlDocument.CreateElement('helpItems', 'http://msh')).Attributes.Append('schema').Value = 'maml';
-	$XmlDocument | Write-Output;
 }
 
 Function Add-CommandNode {
@@ -529,59 +536,21 @@ Function Add-CommandNode {
 		[ValidateScript({ $_ -is [System.Management.Automation.CmdletInfo] -or $_ -is [System.Management.Automation.FunctionInfo] })]
 		[System.Management.Automation.CommandInfo]$CommandInfo,
 		
-		# Command object used to generate MAML xml
-		[Parameter(Position = 0, ValueFromPipeline = $true)]
-		[ValidateScript({ $_.DocumentElement -ne $null -and $_.DocumentElement.LocalName -eq 'helpItems' -and $_.DocumentElement.NamespaceURI -eq 'http://msh' })]
+		# Document to add command to
+		[ValidateScript({ $_ | Assert-HelpItemsDocument })]
 		[System.Xml.XmlDocument]$HelpItems
 	)
 	
 	Begin {
-		$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
-		$XmlDocument.LoadXml(@'
-<helpItems xmlns="http://msh" schema="maml" />
-'@);
-#<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
-#	xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" />
+		if (-not $PSBoundParameters.ContainsKey('HelpItems')) { $HelpItems = New-HelpItemsDocument }
 	}
 
 	Process {
-		$XmlElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement('command', 'command', 'http://schemas.microsoft.com/maml/dev/command/2004/10'));
-		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/2004/10';
-		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/dev/2004/10';
-		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'MSHelp', 'http://www.w3.org/2000/xmlns/')).Value = 'http://msdn.microsoft.com/mshelp';
-}
-
-Function Convert-CommandToMamlHelp {
-	<#
-		.SYNOPSIS
-			Get MAML help for Cmdlet or Function
- 
-		.DESCRIPTION
-			Generates MAML help XML from a System.Management.Automation.CommandInfo object.
-	#>
-	[CmdletBinding()]
-	[OutputType([System.Xml.XmlDocument])]
-	Param(
-		# Command object used to generate MAML xml
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[ValidateScript({ $_ -is [System.Management.Automation.CmdletInfo] -or $_ -is [System.Management.Automation.FunctionInfo] })]
-		[System.Management.Automation.CommandInfo]$CommandInfo
-	)
-	
-	Begin {
-		$XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
-		$XmlDocument.LoadXml(@'
-<helpItems xmlns="http://msh" schema="maml" />
-'@);
-#<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
-#	xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" />
-	}
-
-	Process {
-		$XmlElement = $XmlDocument.DocumentElement.AppendChild($XmlDocument.CreateElement('command', 'command', 'http://schemas.microsoft.com/maml/dev/command/2004/10'));
-		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/2004/10';
-		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/dev/2004/10';
-		$XmlElement.Attributes.Append($XmlDocument.CreateAttribute('xmlns', 'MSHelp', 'http://www.w3.org/2000/xmlns/')).Value = 'http://msdn.microsoft.com/mshelp';
+		$XmlElement = $HelpItems.DocumentElement.AppendChild($HelpItems.CreateElement('command', 'command', 'http://schemas.microsoft.com/maml/dev/command/2004/10'));
+		$XmlElement.Attributes.Append($HelpItems.CreateAttribute('xmlns', 'maml', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/2004/10';
+		$XmlElement.Attributes.Append($HelpItems.CreateAttribute('xmlns', 'dev', 'http://www.w3.org/2000/xmlns/')).Value = 'http://schemas.microsoft.com/maml/dev/2004/10';
+		$XmlElement.Attributes.Append($HelpItems.CreateAttribute('xmlns', 'MSHelp', 'http://www.w3.org/2000/xmlns/')).Value = 'http://msdn.microsoft.com/mshelp';
+		
 		if ($CommandInfo -is [System.Management.Automation.FunctionInfo]) {
 			# Boolean CmdletBinding
 			# System.String Description
@@ -716,5 +685,28 @@ Function Convert-CommandToMamlHelp {
             }
         }
 		#>
+		$XmlElement | Write-Output;
 	}
+}
+
+Function Convert-CommandToMamlHelp {
+	<#
+		.SYNOPSIS
+			Get MAML help for Cmdlet or Function
+ 
+		.DESCRIPTION
+			Generates MAML help XML from a System.Management.Automation.CommandInfo object.
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Xml.XmlDocument])]
+	Param(
+		# Command object used to generate MAML xml
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_ -is [System.Management.Automation.CmdletInfo] -or $_ -is [System.Management.Automation.FunctionInfo] })]
+		[System.Management.Automation.CommandInfo]$CommandInfo
+	)
+	
+	Begin { $HelpItems = New-HelpItemsDocument }
+
+	Process { Add-CommandNode -CommandInfo $CommandInfo -HelpItems $HelpItems }
 }

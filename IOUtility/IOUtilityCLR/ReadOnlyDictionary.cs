@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace System.Collections.ObjectModel
 {
-	/// <summary>
-	/// A read-only dictionary intended to be forward-compatible with later .NET versions.
-	/// </summary>
+#if PSLegacy
+    /// <summary>
+    /// A read-only dictionary intended to be forward-compatible with later .NET versions.
+    /// </summary>
     /// <typeparam name="TKey">Type of key used by the wrapped dictionary.</typeparam>
     /// <typeparam name="TValue">Type of value associated with the keys in the wrapped dictionary.</typeparam>
-	public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 	{
 		private const string ReadOnlyErrorMessage = "Dictionary is read-only";
 		
@@ -30,7 +31,7 @@ namespace System.Collections.ObjectModel
 			_innerDictionary = dictionary;
 		}
 		
-		#region IDictionary<TKey, TValue> members
+#region IDictionary<TKey, TValue> members
 		
 		/// <summary>
 		/// Gets the element that has the specified key.
@@ -72,9 +73,9 @@ namespace System.Collections.ObjectModel
 		/// otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
 		public bool TryGetValue(TKey key, out TValue value) { return _innerDictionary.TryGetValue(key, out value); }
 		
-		#endregion
+#endregion
 		
-		#region ICollection<KeyValuePair<TKey, TValue>> members
+#region ICollection<KeyValuePair<TKey, TValue>> members
 		
 		
 		/// <summary>
@@ -99,9 +100,9 @@ namespace System.Collections.ObjectModel
 		
 		bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) { throw new NotSupportedException(ReadOnlyErrorMessage); }
 		
-		#endregion
+#endregion
 		
-		#region IEnumerable members
+#region IEnumerable members
 		
 		/// <summary>
 		/// Returns an enumerator that iterates through the <see cref="ReadOnlyDictionary&lt;TKey,TValue&gt;" />.
@@ -110,6 +111,8 @@ namespace System.Collections.ObjectModel
 		
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return (_innerDictionary as System.Collections.IEnumerable).GetEnumerator(); }
 		
-		#endregion
+#endregion
 	}
+    
+ #endif
 }

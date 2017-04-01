@@ -24,18 +24,20 @@ namespace Speech
         private SynthesizerState _state = SynthesizerState.Paused;
         private SpeechSynthesizer _speechSynthesizer = new SpeechSynthesizer();
         private AutoResetEvent _speechProgressEvent = new AutoResetEvent(false);
-        private ManualResetEvent _speechCompletedEvent = new ManualResetEvent(true);
+        private ManualResetEvent _speechCompletedEvent = new ManualResetEvent(false);
         private Collection<object> _outputQueue = new Collection<object>();
         private Collection<object> _output = new Collection<object>();
         private Collection<object> _phoneticEventArgs = new Collection<object>();
+        private int _totalPromptCount = 0;
         private Collection<Prompt> _prompts = new Collection<Prompt>();
+        private bool _speechStarted = false;
         private bool _isCancelled = false;
         private bool _isCompleted = false;
 
         /// <summary>
         /// Path of generated WAV file or null if speech is generated to default audio device.
         /// </summary>
-        public string Path { get { return _path; } }
+        public string OutputPath { get { return _path; } }
 
         /// <summary>
         /// Rate of speech.
@@ -62,6 +64,21 @@ namespace Speech
         /// </summary>
         public bool IsCompleted { get { return _isCompleted; } }
 
+        /// <summary>
+        /// True if speech generation wass cancelled; otherwise, false.
+        /// </summary>
+        public bool IsCanceled { get { return _isCancelled; } }
+
+        /// <summary>
+        /// Index of current <seealso cref="Prompt"/>.
+        /// </summary>
+        public int CurrentPromptIndex { get { return _totalPromptCount - _prompts.Count; } }
+
+        /// <summary>
+        /// Total number of prompts.
+        /// </summary>
+        public int TotalPromptCount { get { return _totalPromptCount; } }
+
         WaitHandle IAsyncResult.AsyncWaitHandle { get { return _speechCompletedEvent; } }
 
         /// <summary>
@@ -69,57 +86,57 @@ namespace Speech
         /// </summary>
         public object AsyncState { get { return _asyncState; } }
 
-        bool IAsyncResult.CompletedSynchronously { get { return _prompts == null; } }
+        bool IAsyncResult.CompletedSynchronously { get { return _isCompleted && !_speechStarted; } }
 
         /// <summary>
         /// Initialize new <see cref="TextToSpeechJob"/>.
         /// </summary>
         /// <param name="prompts">Collection of <seealso cref="Prompt"/>s to be spoken.</param>
-        /// <param name="asPaused">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
+        /// <param name="noAutoStart">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
         /// <param name="rate">Initial rate of speech.</param>
         /// <param name="volume">Initial speech volume.</param>
         /// <param name="voice">Name of voice to select or null for default voice.</param>
-        /// <param name="path">Path of WAV file output or null to speak to default audio device.</param>
-        /// <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="path"/> is not specified.</param>
+        /// <param name="outputPath">Path of WAV file output or null to speak to default audio device.</param>
+        /// <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="outputPath"/> is not specified.</param>
         /// <param name="asyncState">User state object to associate with Text-To-Speech job.</param>
-        public TextToSpeechJob(Collection<Prompt> prompts, bool asPaused, int? rate, int? volume, string voice, string path, SpeechAudioFormatInfo formatInfo, object asyncState)
+        public TextToSpeechJob(Collection<Prompt> prompts, bool noAutoStart, int? rate, int? volume, string voice, string outputPath, SpeechAudioFormatInfo formatInfo, object asyncState)
         {
             if (!String.IsNullOrEmpty(voice))
                 _speechSynthesizer.SelectVoice(voice);
-            Initialize(prompts, asPaused, rate, volume, path, formatInfo, asyncState);
+            Initialize(prompts, noAutoStart, rate, volume, outputPath, formatInfo, asyncState);
         }
 
         /// <summary>
         /// Initialize new <see cref="TextToSpeechJob"/>.
         /// </summary>
         /// <param name="prompts">Collection of <seealso cref="Prompt"/>s to be spoken.</param>
-        /// <param name="asPaused">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
+        /// <param name="noAutoStart">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
         /// <param name="rate">Initial rate of speech.</param>
         /// <param name="volume">Initial speech volume.</param>
         /// <param name="gender">Gender of voice.</param>
-        /// <param name="path">Path of WAV file output or null to speak to default audio device.</param>
-        /// <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="path"/> is not specified.</param>
+        /// <param name="outputPath">Path of WAV file output or null to speak to default audio device.</param>
+        /// <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="outputPath"/> is not specified.</param>
         /// <param name="asyncState">User state object to associate with Text-To-Speech job.</param>
-        public TextToSpeechJob(Collection<Prompt> prompts, bool asPaused, int? rate, int? volume, VoiceGender gender, string path, SpeechAudioFormatInfo formatInfo, object asyncState)
+        public TextToSpeechJob(Collection<Prompt> prompts, bool noAutoStart, int? rate, int? volume, VoiceGender gender, string outputPath, SpeechAudioFormatInfo formatInfo, object asyncState)
         {
             if (gender != VoiceGender.NotSet)
                 _speechSynthesizer.SelectVoiceByHints(gender);
-            Initialize(prompts, asPaused, rate, volume, path, formatInfo, asyncState);
+            Initialize(prompts, noAutoStart, rate, volume, outputPath, formatInfo, asyncState);
         }
 
         /// <summary>
         /// Initialize new <see cref="TextToSpeechJob"/>.
         /// </summary>
         /// <param name="prompts">Collection of <seealso cref="Prompt"/>s to be spoken.</param>
-        /// <param name="asPaused">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
+        /// <param name="noAutoStart">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
         /// <param name="rate">Initial rate of speech.</param>
         /// <param name="volume">Initial speech volume.</param>
         /// <param name="gender">Gender of voice.</param>
         /// <param name="age">Age of voice.</param>
-        /// <param name="path">Path of WAV file output or null to speak to default audio device.</param>
-        /// <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="path"/> is not specified.</param>
+        /// <param name="outputPath">Path of WAV file output or null to speak to default audio device.</param>
+        /// <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="outputPath"/> is not specified.</param>
         /// <param name="asyncState">User state object to associate with Text-To-Speech job.</param>
-        public TextToSpeechJob(Collection<Prompt> prompts, bool asPaused, int? rate, int? volume, VoiceGender gender, VoiceAge age, string path, SpeechAudioFormatInfo formatInfo, object asyncState)
+        public TextToSpeechJob(Collection<Prompt> prompts, bool noAutoStart, int? rate, int? volume, VoiceGender gender, VoiceAge age, string outputPath, SpeechAudioFormatInfo formatInfo, object asyncState)
         {
             if (gender != VoiceGender.NotSet)
             {
@@ -128,17 +145,17 @@ namespace Speech
                 else
                     _speechSynthesizer.SelectVoiceByHints(gender);
             }
-            Initialize(prompts, asPaused, rate, volume, path, formatInfo, asyncState);
+            Initialize(prompts, noAutoStart, rate, volume, outputPath, formatInfo, asyncState);
         }
 
-        private void Initialize(Collection<Prompt> prompts, bool asPaused, int? rate, int? volume, string path, SpeechAudioFormatInfo formatInfo, object asyncState)
+        private void Initialize(Collection<Prompt> prompts, bool noAutoStart, int? rate, int? volume, string outputPath, SpeechAudioFormatInfo formatInfo, object asyncState)
         {
             _asyncState = asyncState;
             _formatInfo = formatInfo;
-            if (String.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(outputPath))
                 _path = null;
             else
-                _path = System.IO.Path.GetFullPath(path);
+                _path = Path.GetFullPath(outputPath);
             if (prompts != null)
             {
                 foreach (Prompt p in prompts)
@@ -147,6 +164,7 @@ namespace Speech
                         _prompts.Add(p);
                 }
             }
+            _totalPromptCount = _prompts.Count;
             if (rate.HasValue)
                 _speechSynthesizer.Rate = rate.Value;
             if (volume.HasValue)
@@ -154,9 +172,9 @@ namespace Speech
             _voice = _speechSynthesizer.Voice;
             _rate = _speechSynthesizer.Rate;
             _volume = _speechSynthesizer.Volume;
+
             if (_prompts.Count == 0)
             {
-                _prompts = null;
                 _speechSynthesizer.Dispose();
                 _state = SynthesizerState.Ready;
                 _speechSynthesizer = null;
@@ -164,7 +182,6 @@ namespace Speech
                 _isCompleted = true;
                 return;
             }
-
             _speechSynthesizer.BookmarkReached += SpeechSynthesizer_BookmarkReached;
             _speechSynthesizer.PhonemeReached += SpeechSynthesizer_PhonemeReached;
             _speechSynthesizer.SpeakCompleted += SpeechSynthesizer_SpeakCompleted;
@@ -173,21 +190,11 @@ namespace Speech
             _speechSynthesizer.StateChanged += SpeechSynthesizer_StateChanged;
             _speechSynthesizer.VisemeReached += SpeechSynthesizer_VisemeReached;
             _speechSynthesizer.VoiceChange += SpeechSynthesizer_VoiceChange;
-            if (asPaused)
-                return;
-            if (_path != null)
+            if (!noAutoStart)
             {
-                if (formatInfo != null)
-                    _speechSynthesizer.SetOutputToWaveFile(_path, formatInfo);
-                else
-                    _speechSynthesizer.SetOutputToWaveFile(_path);
+                _state = _speechSynthesizer.State;
+                _StartSpeech();
             }
-            else
-                _speechSynthesizer.SetOutputToDefaultAudioDevice();
-            _state = _speechSynthesizer.State;
-            foreach (Prompt p in _prompts)
-                _speechSynthesizer.SpeakAsync(p);
-            _prompts.Clear();
         }
 
         ~TextToSpeechJob() { Dispose(false); }
@@ -473,16 +480,20 @@ namespace Speech
             {
                 lock (_syncRoot)
                 {
-                    _lastStatusEvent = e;
-                    _outputQueue.Add(e);
-                    _state = SynthesizerState.Ready;
-                    _isCompleted = true;
-                    _speechProgressEvent.Set();
-                    _speechCompletedEvent.Set();
-                    if (_path != null)
-                        _speechSynthesizer.SetOutputToNull();
-                    _speechSynthesizer.Dispose();
-                    _speechSynthesizer = null;
+                    _prompts.Remove(e.Prompt);
+                    if (_prompts.Count == 0)
+                    {
+                        _lastStatusEvent = e;
+                        _outputQueue.Add(e);
+                        _state = SynthesizerState.Ready;
+                        _isCompleted = true;
+                        _speechProgressEvent.Set();
+                        _speechCompletedEvent.Set();
+                        if (_path != null)
+                            _speechSynthesizer.SetOutputToNull();
+                        _speechSynthesizer.Dispose();
+                        _speechSynthesizer = null;
+                    }
                 }
             }
             catch (Exception exception) { WriteError(exception, "SpeakCompleted", e); }
@@ -649,8 +660,29 @@ namespace Speech
                 }
             }
         }
-
+        
         //public void RemoveLexicon(Uri uri) { _speechSynthesizer.RemoveLexicon(uri); }
+
+        private void _StartSpeech()
+        {
+            _speechStarted = true;
+            if (_path != null)
+            {
+                if (_formatInfo != null)
+                    _speechSynthesizer.SetOutputToWaveFile(_path, _formatInfo);
+                else
+                    _speechSynthesizer.SetOutputToWaveFile(_path);
+            }
+            else
+                _speechSynthesizer.SetOutputToDefaultAudioDevice();
+
+            if (_prompts.Count > 0)
+            {
+                foreach (Prompt p in _prompts)
+                    _speechSynthesizer.SpeakAsync(p);
+                _state = SynthesizerState.Speaking;
+            }
+        }
 
         /// <summary>
         /// Resumes speech or starts speech if speech was initially paused.
@@ -661,24 +693,10 @@ namespace Speech
             {
                 if (_state == SynthesizerState.Paused)
                 {
-                    if (_path != null)
-                    {
-                        if (_formatInfo != null)
-                            _speechSynthesizer.SetOutputToWaveFile(_path, _formatInfo);
-                        else
-                            _speechSynthesizer.SetOutputToWaveFile(_path);
-                    }
-                    else
-                        _speechSynthesizer.SetOutputToDefaultAudioDevice();
-                    _state = SynthesizerState.Speaking;
-                    if (_prompts.Count > 0)
-                    {
-                        foreach (Prompt p in _prompts)
-                            _speechSynthesizer.SpeakAsync(p);
-                        _prompts.Clear();
-                    }
-                    else
+                    if (_speechStarted)
                         _speechSynthesizer.Resume();
+                    else
+                        _StartSpeech();
                 }
             }
         }
@@ -693,7 +711,18 @@ namespace Speech
                 if (_isCompleted)
                     return;
                 _isCancelled = true;
-                _speechSynthesizer.SpeakAsyncCancelAll();
+                if (_speechStarted)
+                {
+                    if (_state == SynthesizerState.Paused)
+                        _speechSynthesizer.Resume();
+                    _speechSynthesizer.SpeakAsyncCancelAll();
+                }
+                else
+                {
+                    _speechStarted = true;
+                    _isCompleted = true;
+                }
+                _prompts.Clear();
             }
         }
     }
