@@ -108,7 +108,7 @@ void EmitPsManifestAuthor(StringBuilder generationEnvironment, string comment = 
 void EmitPsManifestDescription(StringBuilder generationEnvironment, string comment = "Description of the functionality provided by this module.")
 {
 	EmitCommentLines(generationEnvironment, comment);
-	if (ProjectInfo.Description != null)
+	if (ProjectInfo.Description == null)
 		generationEnvironment.AppendLine("# Description = ''");
 	else
 	{
@@ -121,14 +121,187 @@ void EmitPsManifestDescription(StringBuilder generationEnvironment, string comme
 void EmitPsManifestPowerShellVersion(StringBuilder generationEnvironment, string comment = "Minimum version of the Windows PowerShell engine required by this module.")
 {
 	EmitCommentLines(generationEnvironment, comment);
-	if (ProjectInfo.Description != null)
-		generationEnvironment.AppendLine("# Description = ''");
+	if (ModuleConfig.PowerShellVersion == null)
+		generationEnvironment.AppendLine("# PowerShellVersion = ''");
 	else
 	{
-		generationEnvironment.Append("Description = ");
-		EmitManifestValueString(generationEnvironment, ProjectInfo.AssemblyGuid.Description);
+		generationEnvironment.Append("PowerShellVersion = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.PowerShellVersion);
 		generationEnvironment.AppendLine();
 	}
+}
+
+void EmitPsManifestPowerShellHostName(StringBuilder generationEnvironment, string comment = "Name of the Windows PowerShell host required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.PowerShellHostName == null)
+		generationEnvironment.AppendLine("# PowerShellHostName = ''");
+	else
+	{
+		generationEnvironment.Append("PowerShellHostName = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.PowerShellHostName);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestPowerShellHostVersion(StringBuilder generationEnvironment, string comment = "Minimum version of the Windows PowerShell host required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.PowerShellHostVersion == null)
+		generationEnvironment.AppendLine("# PowerShellHostVersion = ''");
+	else
+	{
+		generationEnvironment.Append("PowerShellHostVersion = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.PowerShellHostVersion);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestDotNetFrameworkVersion(StringBuilder generationEnvironment, string comment = "Minimum version of Microsoft .NET Framework required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.TargetFrameworkVersion == null)
+		generationEnvironment.AppendLine("# DotNetFrameworkVersion = ''");
+	else
+	{
+		generationEnvironment.Append("DotNetFrameworkVersion = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestCLRVersion(StringBuilder generationEnvironment, string comment = "Minimum version of the common language runtime (CLR) required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.TargetFrameworkVersion == null)
+		generationEnvironment.AppendLine("# DotNetFrameworkVersion = ''");
+	else
+	{
+		generationEnvironment.Append("DotNetFrameworkVersion = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestProcessorArchitecture(StringBuilder generationEnvironment, string comment = "Name of the Windows PowerShell host required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.ProcessorArchitecture == null)
+		generationEnvironment.AppendLine("# ProcessorArchitecture = ''");
+	else
+	{
+		generationEnvironment.Append("ProcessorArchitecture = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.ProcessorArchitecture);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestModuleReferences(StringBuilder generationEnvironment, List<ModuleReference> moduleReferences, string name)
+{
+	ModuleReference[] modules = (moduleReferences == null) ? new ModuleReference[0] : moduleReferences.Where(r => r != null && !String.IsNullOrEmpty(r.ModuleName)).ToArray();
+	if (modules.Length == 0)
+	{
+		generationEnvironment.Append("# ");
+		generationEnvironment.Append(name);
+		generationEnvironment.AppendLine(" = @()");
+		return;
+	}
+	generationEnvironment.Append(name);
+	generationEnvironment.Append(" = @(");
+	if (modules.Any(m => !String.IsNullOrEmpty(m.ModuleVersion) || !String.IsNullOrEmpty(m.Guid)))
+	{
+		generationEnvironment.AppendLine();
+		generationEnvironment.Append("    @{ ModuleName = ");
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+		if (!String.IsNullOrEmpty(modules[0].ModuleVersion))
+		{
+			generationEnvironment.Append("; ModuleVersion = ");
+			EmitManifestValueString(generationEnvironment, modules[0].ModuleVersion);
+		}
+		if (!String.IsNullOrEmpty(modules[0].Guid))
+		{
+			generationEnvironment.Append("; Guid = ");
+			EmitManifestValueString(generationEnvironment, modules[0].Guid);
+		}
+		generationEnvironment.Append(" }");
+		foreach (ModuleReference m in modules.Skip(1))
+		{
+			generationEnvironment.AppendLine(",");
+			generationEnvironment.Append("    @{ ModuleName = ");
+			EmitManifestValueString(generationEnvironment, m.ModuleName);
+			if (!String.IsNullOrEmpty(m.ModuleVersion))
+			{
+				generationEnvironment.Append("; ModuleVersion = ");
+				EmitManifestValueString(generationEnvironment, m.ModuleVersion);
+			}
+			if (!String.IsNullOrEmpty(m.Guid))
+			{
+				generationEnvironment.Append("; Guid = ");
+				EmitManifestValueString(generationEnvironment,m.Guid);
+			}
+			generationEnvironment.Append(" }");
+		}
+		generationEnvironment.AppendLine();
+	}
+	else if (modules.Length == 1)
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+	else
+	{
+		generationEnvironment.AppendLine();
+		generationEnvironment.Append("    ");
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+		foreach (ModuleReference m in modules.Skip(1))
+		{
+			generationEnvironment.AppendLine(",");
+			generationEnvironment.Append("    ");
+			EmitManifestValueString(generationEnvironment, m.ModuleName);
+		}
+	}
+	generationEnvironment.AppendLine(")");
+}
+
+void EmitPsManifestList(StringBuilder generationEnvironment, List<string> values, string name)
+{
+	string[] sArr = (values == null) ? new ModuleReference[0] : values.Where(s => !String.IsNullOrEmpty(s)).ToArray();
+	if (sArr.Length == 0)
+	{
+		generationEnvironment.Append("# ");
+		generationEnvironment.Append(name);
+		generationEnvironment.AppendLine(" = @()");
+		return;
+	}
+	generationEnvironment.Append(name);
+	
+	if (modules.Length == 1)
+	{
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+		generationEnvironment.AppendLine();
+		return;
+	}
+	
+	generationEnvironment.Append(" = @(");
+	generationEnvironment.AppendLine();
+	generationEnvironment.Append("    ");
+	EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+	foreach (ModuleReference m in modules.Skip(1))
+	{
+		generationEnvironment.AppendLine(",");
+		generationEnvironment.Append("    ");
+		EmitManifestValueString(generationEnvironment, m.ModuleName);
+	}
+	generationEnvironment.AppendLine(")");
+}
+
+void EmitPsManifestRequiredModules(StringBuilder generationEnvironment, string comment = "Modules that must be imported into the global environment prior to importing this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	EmitPsManifestModuleReferences(generationEnvironment, ModuleConfig.RequiredModules, "RequiredModules");
+}
+
+void EmitPsManifestRequiredAssemblies(StringBuilder generationEnvironment, string comment = "Assemblies that must be loaded prior to importing this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	EmitPsManifestList(generationEnvironment, ModuleConfig.RequiredAssemblies, "RequiredAssemblies");
 }
 
 [Serializable]
@@ -148,171 +321,78 @@ public class ModuleConfigInfo
 	public string PowerShellHostVersion { get; set; }
 
 	[XmlAttribute]
-	public string DotNetFrameworkVersion { get; set; }
-
-	[XmlAttribute]
-	public string CLRVersion { get; set; }
-
-	[XmlAttribute]
 	public string ProcessorArchitecture { get; set; }
+	
+	[XmlElement("RequiredModule")]
+	public List<ModuleReference> RequiredModules { get; set; }
+	
+	[XmlElement("RequiredAssembly")]
+	public List<string> RequiredAssemblies { get; set; }
+	
+	// Script files (.ps1) that are run in the caller's environment prior to importing this module.
+	[XmlElement("ScriptToProcess")]
+	public List<string> ScriptsToProcess { get; set; }
+	
+	// Type files (.ps1xml) to be loaded when importing this module
+	[XmlElement("TypeToProcess")]
+	public List<string> TypesToProcess { get; set; }
+
+	// Format files (.ps1xml) to be loaded when importing this module
+	[XmlElement("ScriptToProcess")]
+	public List<string> FormatsToProcess { get; set; }
+
+	// Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
+	[XmlElement("NestedModule")]
+	public List<string> NestedModules { get; set; }
+
+	// Functions to export from this module
+	[XmlElement("FunctionToExport")]
+	public List<string> FunctionsToExport { get; set; }
+
+	// Cmdlets to export from this module
+	[XmlElement("CmdletToExport")]
+	public List<string> CmdletsToExport { get; set; }
+
+	// Variables to export from this module
+	[XmlElement("VariableToExport")]
+	public List<string> VariablesToExport { get; set; }
+
+	// Aliases to export from this module
+	[XmlElement("AliasToExport")]
+	public List<string> AliasesToExport { get; set; }
+
+	// List of all modules packaged with this module
+	[XmlElement("Module")]
+	public List<ModuleReference> ModuleList { get; set; }
+
+	// List of all files packaged with this module
+	[XmlElement("File")]
+	public List<string> FileList { get; set; }
+	
+	// Private data to pass to the module specified in RootModule/ModuleToProcess
+	[XmlElement("PrivateData")]
+	public string PrivateData { get; set; }
+
+	// HelpInfo URI of this module
+	[XmlAttribute]
+	public string HelpInfoURI { get; set; }
+
+	// Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
+	[XmlAttribute]
+	public string DefaultCommandPrefix { get; set; }
 }
 
-/*
-
-# Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
-
-# Name of the Windows PowerShell host required by this module
-# PowerShellHostName = ''
-
-# Minimum version of the Windows PowerShell host required by this module
-# PowerShellHostVersion = ''
-
-# Minimum version of Microsoft .NET Framework required by this module
-# DotNetFrameworkVersion = ''
-
-# Minimum version of the common language runtime (CLR) required by this module
-# CLRVersion = ''
-
-# Processor architecture (None, X86, Amd64) required by this module
-# ProcessorArchitecture = ''
-
-# Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
-
-# Assemblies that must be loaded prior to importing this module
-# RequiredAssemblies = @()
-
-# Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
-
-# Type files (.ps1xml) to be loaded when importing this module
-# TypesToProcess = @()
-
-# Format files (.ps1xml) to be loaded when importing this module
-# FormatsToProcess = @()
-
-# Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-# NestedModules = @()
-
-# Functions to export from this module
-FunctionsToExport = '*'
-
-# Cmdlets to export from this module
-CmdletsToExport = '*'
-
-# Variables to export from this module
-VariablesToExport = '*'
-
-# Aliases to export from this module
-AliasesToExport = '*'
-
-# List of all modules packaged with this module
-# ModuleList = @()
-
-# List of all files packaged with this module
-# FileList = @()
-
-# Private data to pass to the module specified in RootModule/ModuleToProcess
-# PrivateData = ''
-
-# HelpInfo URI of this module
-# HelpInfoURI = ''
-
-# Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-# DefaultCommandPrefix = ''
-
-# TemplateItem.Properties:
-#     Extension = ".tt"
-#    FileName = "Erwine.Leonard.T.Speech.tt"
-#    CustomToolOutput = "Erwine.Leonard.T.Speech.psd1"
-#    DateModified = "4/11/2017 12:42:48 PM"
-#    IsLink = [System.Boolean] (False)
-#    BuildAction = [System.Int32] (2)#    SubType = ""
-#    CopyToOutputDirectory = [System.UInt32] (0)
-#    IsSharedDesignTimeBuildInput = [System.Boolean] (False)
-#    ItemType = "Content"
-#    IsCustomToolOutput = [System.Boolean] (False)
-#    HTMLTitle = ""
-#    CustomTool = "TextTemplatingFileGenerator"
-#    URL = "file:///E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\Erwine.Leonard.T.Speech.tt"
-#    Filesize = [System.UInt32] (4723)
-#    CustomToolNamespace = ""
-#    Author = ""
-#    FullPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\Erwine.Leonard.T.Speech.tt"
-#    IsDependentFile = [System.Boolean] (False)
-#    IsDesignTimeBuildInput = [System.Boolean] (False)
-#    DateCreated = "4/10/2017 9:08:33 PM"
-#    LocalPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\Erwine.Leonard.T.Speech.tt"
-#    ModifiedBy = ""
-#
-# CurrentProject.Properties:
-#    OutputTypeEx = [System.UInt32] (2)
-#    TargetFrameworkMoniker = ".NETFramework,Version=v4.0"
-#    ComVisible = [System.Boolean] (False)
-#    EnableSecurityDebugging = [System.Boolean] (True)
-#    OptionCompare = [System.Int32] (0)
-#    StartupObject = ""
-#    ManifestCertificateThumbprint = ""
-#    Trademark = ""
-#    Title = "Speech"
-#    AssemblyOriginatorKeyFileType = [System.UInt32] (1)
-#    FileName = "Speech.csproj"
-#    WebServer threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyOriginatorKeyMode = [System.Int32] (0)
-#    AssemblyKeyContainerName = ""
-#    ProjectType = [System.Int32] (0)
-#    ReferencePath = ""
-#    PreBuildEvent = ""
-#    Copyright = "Copyright © Leonard T. Erwine 2017. All rights reserved."
-#    ApplicationIcon = ""
-#    ExcludedPermissions = ""
-#    RunPostBuildEvent = [System.Int32] (1)
-#    DefaultTargetSchema = [System.Int32] (1)
-#    RootNamespace = "Speech"
-#    ManifestTimestampUrl = ""
-#    ManifestKeyFile = ""
-#    DebugSecurityZoneURL = ""
-#    Product = "Speech"
-#    PostBuildEvent = ""
-#    OptionStrict = [System.Int32] (0)
-#    DefaultHTMLPageLayout = [System.Int32] (1)
-#    DelaySign = [System.Boolean] (False)
-#    OutputType = [System.Int32] (2)
-#    NeutralResourcesLanguage = ""
-#    OptionExplicit = [System.Int32] (1)
-#    OutputFileName = "Erwine.Leonard.T.Speech.dll"
-#    ServerExtensionsVersion threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyGuid = "12c6248d-575e-4d2a-b90a-a7bf8fbcd904"
-#    GenerateManifests = [System.Boolean] (False)
-#    AssemblyVersion = "0.1.0.0"
-#    Win32ResourceFile = ""
-#    Description = "Provides Text-To-Speech Functionality"
-#    URL = "file:///E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\"
-#    DefaultClientScript = [System.Int32] (0)
-#    TargetFramework = [System.UInt32] (262144)
-#    SignManifests = [System.Boolean] (False)
-#    OfflineURL threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    WebServerVersion threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    Publish = [System.__ComObject] (System.__ComObject)
-#    AssemblyType = [System.Int32] (0)
-#    FullPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\"
-#    WebAccessMethod threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyKeyProviderName = ""
-#    TypeComplianceDiagnostics = [System.Boolean] (False)
-#    Company = "Leonard T. Erwine"
-#    ActiveFileSharePath threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyOriginatorKeyFile = ""
-#    ApplicationManifest = "DefaultManifest"
-#    AssemblyFileVersion = "0.1.0.0"
-#    AspnetVersion threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    FileSharePath threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyName = "Erwine.Leonard.T.Speech"
-#    LocalPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\"
-#    DefaultNamespace = "Speech"
-#    LinkRepair = [System.Boolean] (False)
-#    WPFProjectExtender.HostInBrowser = "false"
-#    TargetZone = ""
-#    SignAssembly = [System.Boolean] (False)
-*/
+[Serializable]
+[XmlRoot("RequiredModule")]
+public class ModuleReference
+{
+	[XmlAttribute]
+	public string ModuleName { get; set; }
+	
+	[XmlAttribute]
+	public string ModuleVersion { get; set; }
+	
+	[XmlAttribute]
+	public string Guid { get; set; }
+}
 #>
