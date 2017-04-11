@@ -1,4 +1,4 @@
-﻿$Script:NotepadPlusPlusPath = 'C:\Program Files\Notepad++\notepad++.exe';
+$Script:NotepadPlusPlusPath = 'C:\Program Files\Notepad++\notepad++.exe';
 
 Add-Type -Path (($MyInvocation.MyCommand.Definition | Split-Path -Parent) | Join-Path -ChildPath 'ResolveDifferences.cs') -ReferencedAssemblies ([System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms').Location) -ErrorAction Stop;
 
