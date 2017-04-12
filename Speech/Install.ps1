@@ -1,6 +1,11 @@
+# Name of module being installed.
 $Script:ModuleName = 'Erwine.Leonard.T.Speech';
+
+# Get installation source paths.
 $Script:InstallRoot = $MyInvocation.MyCommand.Definition | Split-Path -Parent;
 $Script:SourceManifestPath = $Script:InstallRoot | Join-Path -ChildPath "$Script:ModuleName.psd1";
+
+# Validate module manifest before installing.
 if (-not $Script:SourceManifestPath | Test-Path -PathType Leaf) {
     Write-Error -Message 'Module manifest file not found' -Category ObjectNotFound -TargetObject $Script:SourceManifestPath;
     return;
@@ -10,6 +15,7 @@ if ($Script:NewModuleManifest -eq $null) {
     Write-Error -Message 'Unable to load module manifest to be installed. Cannot continue.' -Category ReadError -TargetObject $Script:SourceManifestPath;
     return;
 }
+
 Function Get-SpecialFolderPath {
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
