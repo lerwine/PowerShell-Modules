@@ -38,9 +38,9 @@ $Script:AvailableModules = @(Get-Module -ListAvailable | ForEach-Object {
     $ManifestPath = [System.IO.Path]::GetFullPath($_.Path);
     $InstallLocation = $ManifestPath | Split-Path -Parent;
     New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
-        ManifestPath = $ManifestPath;
-        InstallLocation = $InstallLocation;
-        InstallRoot = $InstallLocation | Split-Path -Parent;
+        ManifestPath = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $ManifestPath;
+        InstallLocation = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $InstallLocation;
+        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($InstallLocation | Split-Path -Parent);
         ModuleInfo = $_;
     };
 });
@@ -48,7 +48,7 @@ $Script:AvailableModules = @(Get-Module -ListAvailable | ForEach-Object {
 $Script:TargetLocations = @($env:PSModulePath.Split([System.IO.Path]::PathSeparator) | ForEach-Object {
     $Path = [System.IO.Path]::GetFullPath($_);
     $Properties = @{
-        Directory = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $Path;
+        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $Path;
         IsInModulePath = $true;
     };
     if (($CurrentUserBasePaths | Where-Object { $Path.Length -ge $Path -and [String.Equals]::($Path, $_.Substring(0, $Path.Length), [StringComparison]::InvariantCultureIgnoreCase) }) -ne $null) {
@@ -64,34 +64,85 @@ $Script:TargetLocations = @($env:PSModulePath.Split([System.IO.Path]::PathSepara
 });
 if (($Script:TargetLocations | Where-Object { $_['Level'] -eq 2 }) -eq $null) {
     $Script:TargetLocations = $Script:TargetLocations + @(@{
-        Directory = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($CurrentUserBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules');
+        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($CurrentUserBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules');
         IsInModulePath = $false;
         Level = 2;
     });
 }
 if (($Script:TargetLocations | Where-Object { $_['Level'] -eq 1 }) -eq $null) {
     $Script:TargetLocations = $Script:TargetLocations + @(@{
-        Directory = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($AllUsersBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules');
+        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($AllUsersBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules');
         IsInModulePath = $false;
         Level = 1;
     });
 }
 if (($Script:TargetLocations | Where-Object { $_['Level'] -eq 1 }) -eq $null) {
     $Script:TargetLocations = $Script:TargetLocations + @(@{
-        Directory = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($PSHOME | Join-Path -ChildPath 'Modules');
+        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($PSHOME | Join-Path -ChildPath 'Modules');
         IsInModulePath = $false;
         Level = 0;
     });
 }
 $Script:TargetLocations | ForEach-Object {
     $Path = $_['Directory'].FullName;
-    $ExistingModules = @($Script:AvailableModules | Where-Object { $_.InstallRoot -ieq $Path });
+    $ExistingModules = @($Script:AvailableModules | Where-Object { $_.InstallRoot.FullName -ieq $Path });
     if ($ExistingModules.Count -eq 0) {
-        $_['ExistingModule'] = $null;
+        $_['InstallLocation'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($_['InstallRoot'].FullName | Join-Path $Script:ModuleName);
+        $_['ManifestPath'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList ($_['ManifestPath'].FullName | Join-Path "$Script:ModuleName.psd1");
+        if ($_['ManifestPath'].Exists) {
+            $_['ModuleInfo'] = Test-ModuleManifest -Path $_['ManifestPath'].FullName -ErrorAction Continue;
+        } else {
+            $_['ModuleInfo'] = $null;
+        }
     } else {
-        $_['ExistingModule'] = $ExistingModules[0];
+        $_['InstallLocation'] = $ExistingModules[0].InstallLocation;
+        $_['ManifestPath'] = $ExistingModules[0].ManifestPath;
+        $_['ModuleInfo'] = $ExistingModules[0].ModuleInfo;
     }
+    
+    if ($_['InstallLocation'].Level -eq 0) {
+        $_['Type'] = 'Administrators';
+    } else {
+        if ($_['InstallLocation'].Level -eq 1) {
+            $_['Type'] = 'All Users';
+        } else {
+            $_['Type'] = 'Current User';
+        }
+    }
+    
+    $_['OkayToInstall'] = $false;
+    if ($_['ModuleInfo'] -eq $null) {
+        if ($_['ManifestPath'].Exists) {
+            $_['Message'] = 'Unable to determine status of module at this location';
+        } else {
+            if ($_['ManifestPath'].FullName | Test-Path -PathType Container) {
+                $_['Message'] = 'A directory already exists at the path for the module manifest at this location.';
+            } else {
+                if ($_['InstallLocation'].FullName | Test-Path) {
+                    if ($_['InstallLocation'].FullName | Test-Path -PathType Leaf) {
+                        $_['Message'] = 'A file already exists where the module install folder would be.';
+                    } else {
+                        $_['Message'] = 'The target install folder already exists, but does not contain a module manifest.';
+                    }
+                } else {
+                    if ($_['InstallRoot'].FullName | Test-Path) {
+                        if ($_['InstallRoot'].FullName | Test-Path -PathType Leaf) {
+                            $_['Message'] = 'A file already exists where the module install root should be.';
+                        } else {
+                             $_['OkayToInstall'] = $true;
+                        }
+                    } else {
+                        $_['Message'] = 'A file already exists where the module install root does not exist.';
+                    }
+                }
+            }
+        }
+    } else {
+        # TODO: See if module manifest is for module being installed, and if it is an earlier version.
+        $_['OkayToInstall'] = $true;
+    }
+    New-Object -TypeName 'System.Management.Automation.PSObject' -Property $_;
 }
 
 $Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
-$Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]' -ArgumentList $Label, $Message;
+$ChoiceDescription = New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList $Label, $Message;
