@@ -1,0 +1,52 @@
+<ModuleConfig Author="Leonard T. Erwine" PowerShellVersion="4.0">
+  <Copyright>(c) 2017 Leonard T. Erwine. All rights reserved.</Copyright>
+  <Command Export="true" Verb="ConvertTo" Noun="PromptBuilder">
+    <Synopsis></Synopsis>
+    <Description></Description>
+    <!-- Globbing, PipelineInputByValue, PipelineInputByPropertyName, Required, Position and VariableLength are not required, and provide defaults for individual parameter sets -->
+    <!-- See https://msdn.microsoft.com/en-us/library/bb736339(v=vs.85).aspx -->
+    <Parameter Name="" Globbing="false" PipelineInputByValue="true" PipelineInputByPropertyName="false" Required="true" Position="named" VariableLength="false">
+      <Description></Description>
+       <!-- Required, Name can be .NET type, "SwitchParameter", or "", HelpUrl is optional -->
+      <Type Name="" HelpUrl="">
+        <Description></Description>
+        <DefaultValue></DefaultValue>
+        <PossibleValue>
+          <Value></Value>
+          <Description></Description>
+        <PossibleValue>
+      </Type>
+      <-- See https://msdn.microsoft.com/en-us/library/bb525442(v=vs.85).aspx or https://msdn.microsoft.com/en-us/library/bb736331(v=vs.85).aspx -->
+      <ParameterSet Name="" Globbing="false" PipelineInputByValue="true" PipelineInputByPropertyName="false" Required="true" Position="named" VariableLength="false">
+        <Description></Description>
+        <!-- No Name (taken from above) -->
+        <TypeDescription HelpUrl="">
+          <!-- Content is description (optional) -->
+        </TypeDescription>
+      </ParameterSet>
+    </Parameter>
+    <!-- See https://msdn.microsoft.com/en-us/library/bb736338(v=vs.85).aspx -->
+    <OutputType TypeName="" ParameterSetName="">
+        <Description></Description>
+        <TypeDescription HelpUrl="">
+          <!-- Content is description (optional) -->
+        </TypeDescription>
+    </OutputType>
+    <!-- See https://msdn.microsoft.com/en-us/library/bb736330(v=vs.85).aspx -->
+    <!-- Type: tip, note, caution, importan, warning, bestpractice, other, security, performance, configuration -->
+    <Note Title="" Type="note"></Note>
+    <!-- See https://msdn.microsoft.com/en-us/library/bb736335(v=vs.85).aspx -->
+    <Example Title="">
+      <Introduction></Introduction>
+      <!-- Language: NotSpecified, cpp, vb, vbs, js, cSharp, jSharp, jScript, cppSharp, vbSharp, xml, html, other, otherSharp -->
+      <Code Language="cSharp"></Code>
+      <Remarks></Remarks>
+    </Example>
+    <!-- See https://msdn.microsoft.com/en-us/library/bb736334(v=vs.85).aspx -->
+    <Navigation Link="" />
+  </Command>
+  <!-- Any type references above will get type descriptions -->
+  <Type Name="System.String" HelpUrl="https://msdn.microsoft.com/en-us/library/system.string.aspx">
+    <Description></Description>
+  </Type>
+</ModuleConfig>
