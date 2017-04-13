@@ -92,6 +92,12 @@
     <Compile Include="ComparisonStatus.cs" />
     <Compile Include="HelpXml\Command.cs" />
     <Compile Include="HelpXml\HelpItems.cs" />
+    <Compile Include="ModuleGeneration\CommandItem.cs" />
+    <Compile Include="ModuleGeneration\ModuleReference.cs" />
+    <Compile Include="ModuleGeneration\OutputTypeSpec.cs" />
+    <Compile Include="ModuleGeneration\ParameterSetSpec.cs" />
+    <Compile Include="ModuleGeneration\ParameterSpec.cs" />
+    <Compile Include="ModuleGeneration\RootModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyBrowser\TypeInfoDataItem.cs" />
     <Compile Include="AssemblyBrowser\TypeDefinitionItem.cs" />

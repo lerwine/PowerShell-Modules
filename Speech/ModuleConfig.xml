@@ -14,9 +14,9 @@
         <PossibleValue>
           <Value></Value>
           <Description></Description>
-        <PossibleValue>
+        </PossibleValue>
       </Type>
-      <-- See https://msdn.microsoft.com/en-us/library/bb525442(v=vs.85).aspx or https://msdn.microsoft.com/en-us/library/bb736331(v=vs.85).aspx -->
+      <!-- See https://msdn.microsoft.com/en-us/library/bb525442(v=vs.85).aspx or https://msdn.microsoft.com/en-us/library/bb736331(v=vs.85).aspx -->
       <ParameterSet Name="" Globbing="false" PipelineInputByValue="true" PipelineInputByPropertyName="false" Required="true" Position="named" VariableLength="false">
         <Description></Description>
         <!-- No Name (taken from above) -->

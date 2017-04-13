@@ -16,6 +16,144 @@ if ($Script:NewModuleManifest -eq $null) {
     return;
 }
 
+Add-Type -TypeDefinition @'
+namespace InstallCLR
+{
+    using System;
+    using System.IO;
+    using System.Collections.ObjectModel;
+    using System.Management.Automation;
+    public enum InstallType
+    {
+        Other,
+        Administrators,
+        AllUsers,
+        CurrentUser
+    }
+    public enum InstallAction
+    {
+        None,
+        Install,
+        Upgrade,
+        Replace,
+        Overwrite,
+        Uninstall
+    }
+    public class ModuleTargetInfo
+    {
+        public FileInfo ManifestFile { get; set; }
+        public DirectoryInfo InstallLocation { get { return ManifestFile.Directory; } }
+        public DirectoryInfo InstallRoot { get { return ManifestFile.Directory.Parent; } }
+        public PSModuleInfo ModuleInfo { get; set; }
+        public InstallAction Action { get; private set; }
+        public InstallType Type { get; set; }
+        public bool IsInModulePath { get; set; }
+        public string Message { get; private set; }
+        public ModuleTargetInfo() { }
+        public ModuleTargetInfo(PSModuleInfo targetModuleInfo)
+        {
+            if (targetModuleInfo == null)
+                return;
+            ModuleInfo = targetModuleInfo;
+            ManifestFile = new FileInfo(Path.Combine(targetModuleInfo.Path, targetModuleInfo.Name + ".psd1"));
+        }
+        public ModuleTargetInfo(string installLocation, string moduleName)
+        {
+            if (String.IsNullOrEmpty(installLocation))
+                return;
+            ManifestFile = new FileInfo(Path.Combine(installLocation, moduleName + ".psd1"));
+        }
+        public void Initialize(PSModuleInfo sourceModuleInfo)
+        {
+            if (sourceModuleInfo == null)
+                throw new ArgumentNullException("sourceModuleInfo");
+
+            if (ModuleInfo != null)
+            {
+                if (sourceModuleInfo.Guid.Equals(ModuleInfo.Guid))
+                {
+                    if (sourceModuleInfo.Version < ModuleInfo.Version)
+                    {
+                        Action = InstallAction.Upgrade;
+                        Message = String.Format("Version {0} is currently installed at this location.", ModuleInfo.Version);
+                        return;
+                    }
+                
+                    Action = InstallAction.Uninstall;
+
+                    if (sourceModuleInfo.Version == ModuleInfo.Version)
+                        Message = "Current Version is already installed at this location.";
+                    else
+                        Message = String.Format("Version {0} is currently installed at this location.", ModuleInfo.Version);
+                    return;
+                }
+            
+                Action = InstallAction.Replace;
+                Message = String.Format("{0}, version {1}  ({2}) is currently installed at this location.", ModuleInfo.Name, ModuleInfo.Version, ModuleInfo.Guid);
+                return;
+            }
+            
+            if (ManifestFile == null)
+            {
+                Action = InstallAction.None;
+                Message = "Installation location not defined.";
+                return;
+            }
+
+            if (ManifestFile.Exists)
+                Message = "Module manifest at installation location could not be parsed.";
+            else
+            {
+                if (Directory.Exists(ManifestFile.FullName))
+                    Message = "Directory exists where the manifest file would be.";
+                else if (ManifestFile.Directory.Exists)
+                    Message = "Installation location exists, but does not have an existing module manifest.";
+                else if (File.Exists(ManifestFile.Directory.FullName)
+                    Message = "File exists where installation location would be.";
+                else if (ManifestFile.Directory.Parent.Exists)
+                {
+                    Action = InstallAction.Install;
+                    Message = "OK";
+                    return;
+                }
+                else
+                {
+                    if (File.Exists(ManifestFile.Directory.Parent.FullName)
+                        Message = "A file exists where the install root should be.";
+                    else
+                        Message = "The selected install root does not exist.";
+                    Action = InstallAction.None;
+                    return;
+                }
+            }
+            Action = InstallAction.Overwrite;
+        }
+        public static Collection<ModuleTargetInfo> CreateFromManifests(IEnumerable<PSModuleInfo> modules, PSModuleInfo matchingModule)
+        {
+            Collection<ModuleTargetInfo> result = new Collection<ModuleTargetInfo>();
+            if (modules != null)
+            {
+                if (matchingModule == null)
+                {
+                    foreach (PSModuleInfo module in modules.Where(m => m != null))
+                        result.Add(new ModuleTargetInfo(module));
+                }
+                else
+                {
+                    foreach (PSModuleInfo module in modules.Where(m => m != null))
+                    {
+                        ModuleTargetInfo mti = new ModuleTargetInfo(module);
+                        if (String.Equals(mti.InstallLocation.Name, matchingModule.Name, StringComparison.InvariantCultureIgnoreCase))
+                            result.Add(mti);
+                    }
+                }
+            }
+            return result;
+        }
+    }
+}
+'@ -ReferencedAssemblies ([System.Int32].Assembly.Location, [System.Uri].Assembly.Location, [System.Xml.Serialization.XmlAttributeAttribute].Assembly.Location, [System.Management.Automation.PSObject].Assembly.Location);
+
 Function Get-SpecialFolderPath {
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -34,62 +172,61 @@ $AllUsersBasePaths = @(([System.Environment+SpecialFolder]::ProgramFiles,
     [System.Environment+SpecialFolder]::CommonProgramFiles,
     [System.Environment+SpecialFolder]::CommonProgramFilesX86,
     [System.Environment+SpecialFolder]::CommonPrograms,
-    [System.Environment+SpecialFolder]::Programs) | Get-SpecialFolderPath | Select-Object -Unique);
+    [System.Environment+SpecialFolder]::Programs) | Get-SpecialFolderPath | Where-Object { -not [System.String]::IsNullOrEmpty($_) } | Select-Object -Unique);
 $CurrentUserBasePaths = @(([System.Environment+SpecialFolder]::MyDocuments,
     [System.Environment+SpecialFolder]::ApplicationData,
     [System.Environment+SpecialFolder]::LocalApplicationData,
-    [System.Environment+SpecialFolder]::Personal) | Get-SpecialFolderPath | Select-Object -Unique);
+    [System.Environment+SpecialFolder]::Personal) | Get-SpecialFolderPath | Where-Object { -not [System.String]::IsNullOrEmpty($_) } | Select-Object -Unique);
 
-$Script:AvailableModules = @(Get-Module -ListAvailable | ForEach-Object {
-    $ManifestPath = [System.IO.Path]::GetFullPath($_.Path);
-    $InstallLocation = $ManifestPath | Split-Path -Parent;
-    New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
-        ManifestPath = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $ManifestPath;
-        InstallLocation = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $InstallLocation;
-        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($InstallLocation | Split-Path -Parent);
-        ModuleInfo = $_;
-    };
-});
+$Script:AvailableModules = [InstallCLR.ModuleTargetInfo]::CreateFromManifests((Get-Module -ListAvailable), $Script:NewModuleManifest);
 
-$Script:TargetLocations = @($env:PSModulePath.Split([System.IO.Path]::PathSeparator) | ForEach-Object {
+$Script:InstallOptions = @($env:PSModulePath.Split([System.IO.Path]::PathSeparator) | ForEach-Object {
     $Path = [System.IO.Path]::GetFullPath($_);
-    $Properties = @{
-        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $Path;
-        IsInModulePath = $true;
-    };
-    if (($CurrentUserBasePaths | Where-Object { $Path.Length -ge $Path -and [String.Equals]::($Path, $_.Substring(0, $Path.Length), [StringComparison]::InvariantCultureIgnoreCase) }) -ne $null) {
-        $Properties['Level'] = 2;
+    $matching = @($Script:AvailableModules | Where-Object { $_.IsContainedWithin($Path) });
+    if ($matching.Count -gt 0) {
+        $matching[0] | Write-Output;
     } else {
-        if (($AllUsersBasePaths | Where-Object { $Path.Length -ge $Path -and [String.Equals]::($Path, $_.Substring(0, $Path.Length), [StringComparison]::InvariantCultureIgnoreCase) }) -ne $null) {
-            $Properties['Level'] = 1;
+        (New-Object -TypeName 'InstallCLR.ModuleTargetInfo' -ArgumentList $Path, $Script:NewModuleManifest.Name) | Write-Output;
+    }
+} | ForEach-Object {
+    $_.IsInModulePath = $true;
+    $Path = $_.InstallLocation.FullName;
+    if (@($CurrentUserBasePaths | Where-Object { $Path.Length -gt $_.Length -and [System.String]::Equals($Path.Substring(0, $_.Length), $_, [System.StringComparison]::InvariantCultureIgnoreCase) }).Count -gt 0) {
+        $_.Type = [InstallCLR.InstallType]::CurrentUser;
+    } else {
+        if (@($AllUsersBasePaths | Where-Object { $Path.Length -gt $_.Length -and [System.String]::Equals($Path.Substring(0, $_.Length), $_, [System.StringComparison]::InvariantCultureIgnoreCase) }).Count -gt 0) {
+            $_.Type = [InstallCLR.InstallType]::AllUsers;
         } else {
-            $Properties['Level'] = 0;
+            $_.Type = [InstallCLR.InstallType]::Administrators;
         }
     }
-    $Properties | Write-Output;
 });
-if (($Script:TargetLocations | Where-Object { $_['Level'] -eq 2 }) -eq $null) {
-    $Script:TargetLocations = $Script:TargetLocations + @(@{
-        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($CurrentUserBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules');
-        IsInModulePath = $false;
-        Level = 2;
-    });
+if (($Script:InstallOptions | Where-Object { $_.Type -eq [InstallCLR.InstallType]::CurrentUser }) -eq $null) {
+    $m = New-Object -TypeName 'InstallCLR.ModuleTargetInfo' -ArgumentList ($CurrentUserBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules'), $Script:NewModuleManifest.Name;
+    $m.Type = [InstallCLR.InstallType]::CurrentUser;
+    $m.IsInModulePath = $false;
+    $Script:InstallOptions = $Script:InstallOptions + @($m);
+}
+if (($Script:TargetLocations | Where-Object { $_.Type -eq [InstallCLR.InstallType]::AllUsers }) -eq $null) {
+    $m = New-Object -TypeName 'InstallCLR.ModuleTargetInfo' -ArgumentList ($AllUsersBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules'), $Script:NewModuleManifest.Name;
+    $m.Type = [InstallCLR.InstallType]::AllUsers;
+    $m.IsInModulePath = $false;
+    $Script:InstallOptions = $Script:InstallOptions + @($m);
 }
 if (($Script:TargetLocations | Where-Object { $_['Level'] -eq 1 }) -eq $null) {
-    $Script:TargetLocations = $Script:TargetLocations + @(@{
-        InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($AllUsersBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules');
-        IsInModulePath = $false;
-        Level = 1;
-    });
-}
-if (($Script:TargetLocations | Where-Object { $_['Level'] -eq 1 }) -eq $null) {
+    $m = New-Object -TypeName 'InstallCLR.ModuleTargetInfo' -ArgumentList ($AllUsersBasePaths[0] | Join-Path -ChildPath 'WindowsPowerShell\Modules'), $Script:NewModuleManifest.Name;
+    $m.Type = [InstallCLR.InstallType]::AllUsers;
+    $m.IsInModulePath = $false;
+    $Script:InstallOptions = $Script:InstallOptions + @($m);
+
     $Script:TargetLocations = $Script:TargetLocations + @(@{
         InstallRoot = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList ($PSHOME | Join-Path -ChildPath 'Modules');
         IsInModulePath = $false;
         Level = 0;
     });
 }
-$Script:TargetLocations | ForEach-Object {
+
+$InstallOptions = @($Script:TargetLocations | ForEach-Object {
     $Path = $_['Directory'].FullName;
     $ExistingModules = @($Script:AvailableModules | Where-Object { $_.InstallRoot.FullName -ieq $Path });
     if ($ExistingModules.Count -eq 0) {
@@ -118,6 +255,7 @@ $Script:TargetLocations | ForEach-Object {
     
     $_['OkayToInstall'] = $false;
     if ($_['ModuleInfo'] -eq $null) {
+        $_['Action'] = 'Overwrite';
         if ($_['ManifestPath'].Exists) {
             $_['Message'] = 'Unable to determine status of module at this location';
         } else {
@@ -136,6 +274,8 @@ $Script:TargetLocations | ForEach-Object {
                             $_['Message'] = 'A file already exists where the module install root should be.';
                         } else {
                              $_['OkayToInstall'] = $true;
+                             $_['Action'] = 'Install';
+                             $_['Message'] = 'OK';
                         }
                     } else {
                         $_['Message'] = 'A file already exists where the module install root does not exist.';
@@ -144,11 +284,29 @@ $Script:TargetLocations | ForEach-Object {
             }
         }
     } else {
-        # TODO: See if module manifest is for module being installed, and if it is an earlier version.
-        $_['OkayToInstall'] = $true;
+        if ($_['ModuleInfo'].Guid.Equals($Script:NewModuleManifest.Guid)) {
+            if ($_['ModuleInfo'].Version -lt $Script:NewModuleManifest.Version) {
+                $_['Action'] = 'Upgrade';
+                $_['OkayToInstall'] = $true;
+                $_['Message'] = "Version $($_['ModuleInfo'].Version) is currently installed";
+            } else {
+                if ($_['ModuleInfo'].Version -eq $Script:NewModuleManifest.Version) {
+                    $_['Action'] = 'Repair';
+                    $_['OkayToInstall'] = $true;
+                    $_['Message'] = 'Already Installed';
+                } else {
+                    $_['Action'] = 'Downgrade';
+                    $_['Message'] = "Version $($_['ModuleInfo'].Version) is currently installed";
+                }
+            }
+        } else {
+            $_['Message'] = $_['Message'] = "$($_['ModuleInfo'].Name), version $($_['ModuleInfo'].Version) ($($_['ModuleInfo'].Guid)) is currently installed at this location.";
+            $_['Action'] = 'Replace';
+        }
     }
     New-Object -TypeName 'System.Management.Automation.PSObject' -Property $_;
-}
+});
 
-$Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
-$ChoiceDescription = New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList $Label, $Message;
+$InstallOptions | Select-Object -Property @{ Name="Path"; Expression = { $_.InstallLocation.FullName } }, 'Type', 'Action', 'Message' | Out-GridView -Title 'Select Installation Location' -OutputMode Single;
+#$Choices = New-Object -TypeName 'System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription]';
+#$ChoiceDescription = New-Object -TypeName 'System.Management.Automation.Host.ChoiceDescription' -ArgumentList $Label, $Message;

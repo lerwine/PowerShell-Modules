@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		ManifestToAbout.xslt = ManifestToAbout.xslt
 		ManifestToPsd.xslt = ManifestToPsd.xslt
+		ModuleConfig.xsd = ModuleConfig.xsd
 		PSModule.testsettings = PSModule.testsettings
 		PsModuleManifestGeneration.ttinc = PsModuleManifestGeneration.ttinc
 		README.md = README.md

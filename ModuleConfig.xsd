@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ModuleConfig">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Copyright" type="xs:string" />
+        <xs:element name="Command" type="CommandType" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Type" type="TypeRef" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="Author" type="xs:string" use="required" />
+      <xs:attribute name="PowerShellVersion" type="xs:decimal" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ParagraphHost" mixed="true">
+    <xs:choice>
+      <xs:element name="Para" type="xs:string" />
+      <xs:element name="DefinitionList">
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="Definition">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ParagraphHost">
+                    <xs:attribute name="Term" type="xs:string" use="required" />
+                    <xs:attribute name="Uri" type="xs:string" use="optional" />
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="List">
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="Item">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ParagraphHost">
+                    <xs:attribute name="Uri" type="xs:string" use="optional" />
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Quote" type="xs:string" />
+      <xs:element name="Table">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Head" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Cell" maxOccurs="unbounded" type="ParagraphHost" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Row" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Cell" maxOccurs="unbounded">
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Foot" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Cell" maxOccurs="unbounded">
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="TypeRef">
+    <xs:sequence>
+      <xs:element name="Description" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="HelpUrl" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="CommandType">
+    <xs:sequence>
+      <xs:element name="Synopsis" type="xs:string" />
+      <xs:element name="Description" minOccurs="0" />
+      <xs:element name="Parameter" type="ParameterType" />
+      <xs:element name="OutputType">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Description" />
+            <xs:element name="TypeDescription">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attribute name="HelpUrl" type="xs:string" use="required" />
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="TypeName" type="xs:string" use="required" />
+          <xs:attribute name="ParameterSetName" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Note">
+        <xs:complexType>
+          <xs:attribute name="Title" type="xs:string" use="required" />
+          <xs:attribute name="Type" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Example">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Introduction" />
+            <xs:element name="Code">
+              <xs:complexType>
+                <xs:attribute name="Language" type="xs:string" use="required" />
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Remarks" />
+          </xs:sequence>
+          <xs:attribute name="Title" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Navigation">
+        <xs:complexType>
+          <xs:attribute name="Link" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Export" type="xs:boolean" use="required" />
+    <xs:attribute name="Verb" type="xs:string" use="required" />
+    <xs:attribute name="Noun" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ParameterType">
+    <xs:sequence>
+      <xs:element name="Description" />
+      <xs:element name="Type">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Description" />
+            <xs:element name="DefaultValue" />
+            <xs:element name="PossibleValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Value" />
+                  <xs:element name="Description" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="Name" type="xs:string" use="required" />
+          <xs:attribute name="HelpUrl" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ParameterSet">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Description" />
+            <xs:element name="TypeDescription">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attribute name="HelpUrl" type="xs:string" use="required" />
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="Name" type="xs:string" use="required" />
+          <xs:attribute name="Globbing" type="xs:boolean" use="required" />
+          <xs:attribute name="PipelineInputByValue" type="xs:boolean" use="required" />
+          <xs:attribute name="PipelineInputByPropertyName" type="xs:boolean" use="required" />
+          <xs:attribute name="Required" type="xs:boolean" use="required" />
+          <xs:attribute name="Position" type="xs:string" use="required" />
+          <xs:attribute name="VariableLength" type="xs:boolean" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="Globbing" type="xs:boolean" use="required" />
+    <xs:attribute name="PipelineInputByValue" type="xs:boolean" use="required" />
+    <xs:attribute name="PipelineInputByPropertyName" type="xs:boolean" use="required" />
+    <xs:attribute name="Required" type="xs:boolean" use="required" />
+    <xs:attribute name="Position" type="xs:string" use="required" />
+    <xs:attribute name="VariableLength" type="xs:boolean" use="required" />
+  </xs:complexType>
+</xs:schema>

@@ -383,6 +383,66 @@ public class ModuleConfigInfo
 }
 
 [Serializable]
+public class CommandInfo
+{
+	[XmlAttribute]
+	public string Verb { get; set; }
+	
+	[XmlAttribute]
+	public string Noun { get; set; }
+	
+	public string Synopsis { get; set; }
+	
+	public string Description { get; set; }
+	
+	[XmlElement("Link")]
+	public List<string> Links { get; set; }
+	
+	[XmlElement("OutputType")]
+	public List<OutputTypeSpec> OutputTypes { get; set; }
+	
+	[XmlElement("Parameter")]
+	public List<ParameterSpec> Parameters { get; set; }
+}
+
+[Serializable]
+public class ParameterSpec
+{
+	[XmlAttribute]
+	public string Name { get; set; }
+	
+	[XmlAttribute]
+	public string TypeName { get; set; }
+	
+	[XmlAttribute]
+	public string ParameterSetName { get; set; }
+	
+	[XmlAttribute]
+	public bool Mandatory { get; set; }
+	
+	[XmlAttribute]
+	public bool ValueFromPipeline { get; set; }
+
+	[XmlAttribute]
+	public bool ValueFromPipelineByPropertyName { get; set; }
+
+	[XmlAttribute]
+	public int Position { get { return _position; } set { _position = (value < 0) ? -1 : value; } }
+
+	public int _position = -1;
+}
+
+[Serializable]
+public class OutputTypeSpec
+{
+	[XmlAttribute]
+	public string TypeName { get; set; }
+	
+	[XmlAttribute]
+	public string ParameterSetName { get; set; }
+}
+
+[Serializable]
 [XmlRoot("RequiredModule")]
 public class ModuleReference
 {
