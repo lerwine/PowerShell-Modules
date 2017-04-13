@@ -5,7 +5,7 @@
       <xs:sequence>
         <xs:element name="Copyright" type="xs:string" />
         <xs:element name="Command" type="CommandType" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="Type" type="TypeRef" minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Type" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Description" type="ParagraphHost" />
@@ -15,10 +15,15 @@
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:attribute name="Author" type="xs:string" use="required" />
-      <xs:attribute name="PowerShellVersion" type="xs:decimal" use="required" />
+      <xs:attribute name="Author" type="xs:string" />
+      <xs:attribute name="PowerShellVersion" type="xs:decimal" />
     </xs:complexType>
   </xs:element>
+  <xs:complexType name="TableRow">
+    <xs:sequence>
+      <xs:element name="Cell" maxOccurs="unbounded" type="ParagraphHost" />
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="ParagraphHost" mixed="true">
     <xs:choice>
       <xs:element name="Para" type="xs:string" />
@@ -57,29 +62,9 @@
       <xs:element name="Table">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="Head" minOccurs="0">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="Cell" maxOccurs="unbounded" type="ParagraphHost" />
-                </xs:sequence>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="Row" maxOccurs="unbounded">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="Cell" maxOccurs="unbounded">
-                  </xs:element>
-                </xs:sequence>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="Foot" minOccurs="0">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="Cell" maxOccurs="unbounded">
-                  </xs:element>
-                </xs:sequence>
-              </xs:complexType>
-            </xs:element>
+            <xs:element name="Head" minOccurs="0" type="TableRow" />
+            <xs:element name="Row" maxOccurs="unbounded" type="TableRow" />
+            <xs:element name="Foot" minOccurs="0" type="TableRow" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -89,7 +74,7 @@
     <xs:sequence>
       <xs:element name="Synopsis" type="xs:string" />
       <xs:element name="Description" minOccurs="0" type="ParagraphHost" />
-      <xs:element name="Parameter" minOccurs="0" type="ParameterType" />
+      <xs:element name="Parameter" minOccurs="0" type="ParameterDefinition" />
       <xs:element name="OutputType" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
@@ -104,7 +89,7 @@
               </xs:complexType>
             </xs:element>
           </xs:sequence>
-          <xs:attribute name="TypeName" type="xs:string" use="required" />
+          <xs:attribute name="Name" type="xs:string" use="required" />
           <xs:attribute name="ParameterSetName" type="xs:string" use="required" />
         </xs:complexType>
       </xs:element>
@@ -146,7 +131,7 @@
     <xs:attribute name="Verb" type="xs:string" use="required" />
     <xs:attribute name="Noun" type="xs:string" use="required" />
   </xs:complexType>
-  <xs:complexType name="ParameterType">
+  <xs:complexType name="ParameterDefinition">
     <xs:sequence>
       <xs:element name="Description" type="ParagraphHost" />
       <xs:element name="Type">
