@@ -52,6 +52,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("PSModuleInstallUtil")]
+        [Description("Tests ModuleManifest class in context of PowerShell invocation.")]
         public void ModuleManifestFromPsdTestMethod()
         {
             ModuleManifest target;

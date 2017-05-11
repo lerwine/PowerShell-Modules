@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Erwine.Leonard.T.LteDev.psd1" />
     <Compile Include="Erwine.Leonard.T.LteDev.psm1" />
+    <Compile Include="LteDevClr.dll" />
     <Compile Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

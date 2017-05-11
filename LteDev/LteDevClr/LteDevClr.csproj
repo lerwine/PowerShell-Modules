@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LteDevClr</RootNamespace>
     <AssemblyName>LteDevClr</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -40,6 +40,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePS2|AnyCPU'">
     <OutputPath>bin\ReleasePS2\</OutputPath>
@@ -49,6 +50,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPS3|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +60,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePS3|AnyCPU'">
     <OutputPath>bin\ReleasePS3\</OutputPath>
@@ -67,6 +70,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -90,14 +94,20 @@
     <Compile Include="AssemblyBrowser\MethodDefinitionItem.cs" />
     <Compile Include="ComparisonResult.cs" />
     <Compile Include="ComparisonStatus.cs" />
-    <Compile Include="HelpXml\Command.cs" />
-    <Compile Include="HelpXml\HelpItems.cs" />
+    <Compile Include="HelpXml\HelpSourceItem.cs" />
+    <Compile Include="HelpXml\SourceDocExtensions.cs" />
+    <Compile Include="ModuleGeneration\CommandDefinition.cs" />
     <Compile Include="ModuleGeneration\CommandItem.cs" />
+    <Compile Include="ModuleGeneration\ModuleConfig.cs" />
     <Compile Include="ModuleGeneration\ModuleReference.cs" />
     <Compile Include="ModuleGeneration\OutputTypeSpec.cs" />
+    <Compile Include="ModuleGeneration\ParagraphContent.cs" />
+    <Compile Include="ModuleGeneration\ParagraphHost.cs" />
     <Compile Include="ModuleGeneration\ParameterSetSpec.cs" />
     <Compile Include="ModuleGeneration\ParameterSpec.cs" />
     <Compile Include="ModuleGeneration\RootModule.cs" />
+    <Compile Include="ModuleGeneration\TableRow.cs" />
+    <Compile Include="ModuleGeneration\TypeDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssemblyBrowser\TypeInfoDataItem.cs" />
     <Compile Include="AssemblyBrowser\TypeDefinitionItem.cs" />
@@ -148,7 +158,13 @@
       <LastGenOutput>XmlSchemas.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(ProjectDir)..\LteDev" /Y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

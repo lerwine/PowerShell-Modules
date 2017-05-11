@@ -184,12 +184,12 @@ namespace LteDevClr.ModuleGeneration
             if (CmdletsToExport != null)
             {
                 foreach (CommandItem cmd in CmdletsToExport.Where(c => c != null))
-                    cmd.WriteCommand(writer);
+                    cmd.WriteCommand(this, writer);
             }
             if (FunctionsToExport != null)
             {
                 foreach (CommandItem cmd in FunctionsToExport.Where(c => c != null))
-                    cmd.WriteCommand(writer);
+                    cmd.WriteCommand(this, writer);
             }
             writer.WriteEndElement();
         }

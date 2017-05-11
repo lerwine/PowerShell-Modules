@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Speech</RootNamespace>
     <AssemblyName>Erwine.Leonard.T.Speech</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -38,6 +38,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Erwine.Leonard.T.Speech.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -72,12 +75,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="GUI\XmlEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Commands\ConvertTo-PromptBuilder.cs" />
     <Compile Include="Commands\ConvertTo-Ssml.cs" />
     <Compile Include="Commands\Get-TextToSpeechStatus.cs" />
@@ -88,9 +85,6 @@
     <Compile Include="Commands\Suspend-TextToSpeech.cs" />
     <Compile Include="Commands\TextToSpeechCmdlet.cs" />
     <Compile Include="Commands\Wait-TextToSpeech.cs" />
-    <Compile Include="GUI\XmlEditorWindow.xaml.cs">
-      <DependentUpon>XmlEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -105,6 +99,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="TextToSpeechJob.cs" />
+    <Compile Include="UI\BookmarkReachedVM.cs" />
+    <Compile Include="UI\PromptQueueVM.cs" />
+    <Compile Include="UI\SpeechProgressVM.cs" />
+    <Compile Include="UI\SpeechProgressWindow.xaml.cs">
+      <DependentUpon>SpeechProgressWindow.xaml</DependentUpon>
+    </Compile>
     <Resource Include="ModuleConfig.xml" />
     <Content Include="TexErwine.Leonard.T.Speech.dll-Help.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -114,21 +114,27 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Erwine.Leonard.T.Speech.psd1">
+    <Content Include="Erwine.Leonard.T.Speech2.psd1">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Erwine.Leonard.T.Speech.tt</DependentUpon>
-    </None>
-    <None Include="Install.bat" />
-    <None Include="Install.ps1" />
+      <DependentUpon>Erwine.Leonard.T.Speech2.tt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Install.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Install.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Erwine.Leonard.T.Speech.psd1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Content Include="Erwine.Leonard.T.Speech.tt">
+    <Content Include="Erwine.Leonard.T.Speech2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Erwine.Leonard.T.Speech.psd1</LastGenOutput>
+      <LastGenOutput>Erwine.Leonard.T.Speech2.psd1</LastGenOutput>
     </Content>
     <Content Include="Test.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -136,11 +142,12 @@
     <Content Include="Test.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="TexErwine.Leonard.T.Speech.dll-Help.ps1xml">
+    <Content Include="TexErwine.Leonard.T.Speech.dll-Help.ps1xml">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TexErwine.Leonard.T.Speech.dll-Help.tt</DependentUpon>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -149,10 +156,6 @@
     <ProjectReference Include="..\IOUtility\IOUtilityCLR\IOUtilityCLR.csproj">
       <Project>{f32b9a73-7059-4cc3-b376-d6bab4ab76fb}</Project>
       <Name>IOUtilityCLR</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WPF\WpfCLR\WpfCLR.csproj">
-      <Project>{2e161262-30cb-4efc-afdd-b4d8d5529fc6}</Project>
-      <Name>WpfCLR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +177,12 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\SpeechProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -113,7 +113,7 @@ void EmitPsManifestDescription(StringBuilder generationEnvironment, string comme
 	else
 	{
 		generationEnvironment.Append("Description = ");
-		EmitManifestValueString(generationEnvironment, ProjectInfo.AssemblyGuid.Description);
+		EmitManifestValueString(generationEnvironment, ProjectInfo.Description);
 		generationEnvironment.AppendLine();
 	}
 }
@@ -165,7 +165,7 @@ void EmitPsManifestDotNetFrameworkVersion(StringBuilder generationEnvironment, s
 	else
 	{
 		generationEnvironment.Append("DotNetFrameworkVersion = ");
-		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion);
+		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion.ToString());
 		generationEnvironment.AppendLine();
 	}
 }
@@ -178,7 +178,7 @@ void EmitPsManifestCLRVersion(StringBuilder generationEnvironment, string commen
 	else
 	{
 		generationEnvironment.Append("DotNetFrameworkVersion = ");
-		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion);
+		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion.ToString());
 		generationEnvironment.AppendLine();
 	}
 }
@@ -262,7 +262,7 @@ void EmitPsManifestModuleReferences(StringBuilder generationEnvironment, List<Mo
 
 void EmitPsManifestList(StringBuilder generationEnvironment, List<string> values, string name)
 {
-	string[] sArr = (values == null) ? new ModuleReference[0] : values.Where(s => !String.IsNullOrEmpty(s)).ToArray();
+	string[] sArr = (values == null) ? new string[0] : values.Where(s => !String.IsNullOrEmpty(s)).ToArray();
 	if (sArr.Length == 0)
 	{
 		generationEnvironment.Append("# ");
@@ -272,9 +272,9 @@ void EmitPsManifestList(StringBuilder generationEnvironment, List<string> values
 	}
 	generationEnvironment.Append(name);
 	
-	if (modules.Length == 1)
+	if (sArr.Length == 1)
 	{
-		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+		EmitManifestValueString(generationEnvironment, sArr[0]);
 		generationEnvironment.AppendLine();
 		return;
 	}
@@ -282,12 +282,12 @@ void EmitPsManifestList(StringBuilder generationEnvironment, List<string> values
 	generationEnvironment.Append(" = @(");
 	generationEnvironment.AppendLine();
 	generationEnvironment.Append("    ");
-	EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
-	foreach (ModuleReference m in modules.Skip(1))
+	EmitManifestValueString(generationEnvironment, sArr[0]);
+	foreach (string s in sArr.Skip(1))
 	{
 		generationEnvironment.AppendLine(",");
 		generationEnvironment.Append("    ");
-		EmitManifestValueString(generationEnvironment, m.ModuleName);
+		EmitManifestValueString(generationEnvironment, s);
 	}
 	generationEnvironment.AppendLine(")");
 }
@@ -338,7 +338,7 @@ public class ModuleConfigInfo
 	public List<string> TypesToProcess { get; set; }
 
 	// Format files (.ps1xml) to be loaded when importing this module
-	[XmlElement("ScriptToProcess")]
+	[XmlElement("FormatToProcess")]
 	public List<string> FormatsToProcess { get; set; }
 
 	// Modules to import as nested modules of the module specified in RootModule/ModuleToProcess

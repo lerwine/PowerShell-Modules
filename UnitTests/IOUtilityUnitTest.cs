@@ -71,6 +71,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("IOUtility")]
+        [Description("Tests loading the IOUtility PowerShell module.")]
         public void ImportIOUtilityTestMethod()
         {
             PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1");

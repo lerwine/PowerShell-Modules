@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		ManifestToAbout.xslt = ManifestToAbout.xslt
 		ManifestToPsd.xslt = ManifestToPsd.xslt
-		ModuleConfig.xsd = ModuleConfig.xsd
 		PSModule.testsettings = PSModule.testsettings
 		PsModuleManifestGeneration.ttinc = PsModuleManifestGeneration.ttinc
 		README.md = README.md
@@ -77,12 +76,58 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Scripts", "Scripts\Scripts.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C415CD-E07B-4E0B-9087-A3A33F90CE73}"
 	ProjectSection(SolutionItems) = preProject
+		XmlUtility\Schemas\developerCommand.xsd = XmlUtility\Schemas\developerCommand.xsd
+		XmlUtility\Schemas\developerDscResource.xsd = XmlUtility\Schemas\developerDscResource.xsd
+		XmlUtility\Schemas\developerManaged.xsd = XmlUtility\Schemas\developerManaged.xsd
+		XmlUtility\Schemas\developerManagedClass.xsd = XmlUtility\Schemas\developerManagedClass.xsd
+		XmlUtility\Schemas\developerManagedConstructor.xsd = XmlUtility\Schemas\developerManagedConstructor.xsd
+		XmlUtility\Schemas\developerManagedDelegate.xsd = XmlUtility\Schemas\developerManagedDelegate.xsd
+		XmlUtility\Schemas\developerManagedEnumeration.xsd = XmlUtility\Schemas\developerManagedEnumeration.xsd
+		XmlUtility\Schemas\developerManagedEvent.xsd = XmlUtility\Schemas\developerManagedEvent.xsd
+		XmlUtility\Schemas\developerManagedField.xsd = XmlUtility\Schemas\developerManagedField.xsd
+		XmlUtility\Schemas\developerManagedInterface.xsd = XmlUtility\Schemas\developerManagedInterface.xsd
+		XmlUtility\Schemas\developerManagedMethod.xsd = XmlUtility\Schemas\developerManagedMethod.xsd
+		XmlUtility\Schemas\developerManagedNamespace.xsd = XmlUtility\Schemas\developerManagedNamespace.xsd
+		XmlUtility\Schemas\developerManagedOperator.xsd = XmlUtility\Schemas\developerManagedOperator.xsd
+		XmlUtility\Schemas\developerManagedOverload.xsd = XmlUtility\Schemas\developerManagedOverload.xsd
+		XmlUtility\Schemas\developerManagedProperty.xsd = XmlUtility\Schemas\developerManagedProperty.xsd
+		XmlUtility\Schemas\developerManagedStructure.xsd = XmlUtility\Schemas\developerManagedStructure.xsd
+		XmlUtility\Schemas\developerReference.xsd = XmlUtility\Schemas\developerReference.xsd
+		XmlUtility\Schemas\developerStructure.xsd = XmlUtility\Schemas\developerStructure.xsd
+		XmlUtility\Schemas\developerXaml.xsd = XmlUtility\Schemas\developerXaml.xsd
+		XmlUtility\Schemas\endUser.xsd = XmlUtility\Schemas\endUser.xsd
+		XmlUtility\Schemas\faq.xsd = XmlUtility\Schemas\faq.xsd
+		XmlUtility\Schemas\glossary.xsd = XmlUtility\Schemas\glossary.xsd
 		XmlUtility\Schemas\helpItems.xsd = XmlUtility\Schemas\helpItems.xsd
+		XmlUtility\Schemas\hierarchy.xsd = XmlUtility\Schemas\hierarchy.xsd
+		XmlUtility\Schemas\inline.xsd = XmlUtility\Schemas\inline.xsd
+		XmlUtility\Schemas\inlineCommon.xsd = XmlUtility\Schemas\inlineCommon.xsd
+		XmlUtility\Schemas\inlineSoftware.xsd = XmlUtility\Schemas\inlineSoftware.xsd
+		XmlUtility\Schemas\inlineUi.xsd = XmlUtility\Schemas\inlineUi.xsd
+		XmlUtility\Schemas\ITPro.xsd = XmlUtility\Schemas\ITPro.xsd
+		XmlUtility\Schemas\Maml.rld = XmlUtility\Schemas\Maml.rld
+		XmlUtility\Schemas\Maml.tbr = XmlUtility\Schemas\Maml.tbr
+		XmlUtility\Schemas\Maml.xsd = XmlUtility\Schemas\Maml.xsd
+		XmlUtility\Schemas\Maml.xsx = XmlUtility\Schemas\Maml.xsx
+		XmlUtility\Schemas\Maml_HTML.xsl = XmlUtility\Schemas\Maml_HTML.xsl
+		XmlUtility\Schemas\Maml_HTML_Style.xsl = XmlUtility\Schemas\Maml_HTML_Style.xsl
+		XmlUtility\Schemas\ManagedDeveloper.xsd = XmlUtility\Schemas\ManagedDeveloper.xsd
+		XmlUtility\Schemas\ManagedDeveloperStructure.xsd = XmlUtility\Schemas\ManagedDeveloperStructure.xsd
+		XmlUtility\Schemas\ProviderHelp.xsd = XmlUtility\Schemas\ProviderHelp.xsd
 		XmlUtility\Schemas\README.md = XmlUtility\Schemas\README.md
+		XmlUtility\Schemas\shellExecute.xsd = XmlUtility\Schemas\shellExecute.xsd
 		XmlUtility\Schemas\soap-encoding.xsd = XmlUtility\Schemas\soap-encoding.xsd
 		XmlUtility\Schemas\soap-envelope.xsd = XmlUtility\Schemas\soap-envelope.xsd
 		XmlUtility\Schemas\soap11encoding.xsd = XmlUtility\Schemas\soap11encoding.xsd
 		XmlUtility\Schemas\soap11envelope.xsd = XmlUtility\Schemas\soap11envelope.xsd
+		XmlUtility\Schemas\structure.xsd = XmlUtility\Schemas\structure.xsd
+		XmlUtility\Schemas\structureGlossary.xsd = XmlUtility\Schemas\structureGlossary.xsd
+		XmlUtility\Schemas\structureList.xsd = XmlUtility\Schemas\structureList.xsd
+		XmlUtility\Schemas\structureProcedure.xsd = XmlUtility\Schemas\structureProcedure.xsd
+		XmlUtility\Schemas\structureTable.xsd = XmlUtility\Schemas\structureTable.xsd
+		XmlUtility\Schemas\structureTaskExecution.xsd = XmlUtility\Schemas\structureTaskExecution.xsd
+		XmlUtility\Schemas\task.xsd = XmlUtility\Schemas\task.xsd
+		XmlUtility\Schemas\troubleshooting.xsd = XmlUtility\Schemas\troubleshooting.xsd
 		XmlUtility\Schemas\TypeLibrary-array.xsd = XmlUtility\Schemas\TypeLibrary-array.xsd
 		XmlUtility\Schemas\TypeLibrary-binary.xsd = XmlUtility\Schemas\TypeLibrary-binary.xsd
 		XmlUtility\Schemas\TypeLibrary-list.xsd = XmlUtility\Schemas\TypeLibrary-list.xsd
@@ -96,6 +141,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C4
 		XmlUtility\Schemas\TypeLibrary-quantity.xsd = XmlUtility\Schemas\TypeLibrary-quantity.xsd
 		XmlUtility\Schemas\TypeLibrary-text.xsd = XmlUtility\Schemas\TypeLibrary-text.xsd
 		XmlUtility\Schemas\TypeLibrary.xsd = XmlUtility\Schemas\TypeLibrary.xsd
+		XmlUtility\Schemas\WindowsPhoneSynthesis-core.xsd = XmlUtility\Schemas\WindowsPhoneSynthesis-core.xsd
+		XmlUtility\Schemas\WindowsPhoneSynthesis.xsd = XmlUtility\Schemas\WindowsPhoneSynthesis.xsd
 		XmlUtility\Schemas\wsdl.xsd = XmlUtility\Schemas\wsdl.xsd
 		XmlUtility\Schemas\wsdl11html.xsd = XmlUtility\Schemas\wsdl11html.xsd
 		XmlUtility\Schemas\wsdl11mime.xsd = XmlUtility\Schemas\wsdl11mime.xsd
@@ -103,21 +150,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C4
 		XmlUtility\Schemas\xml.xsd = XmlUtility\Schemas\xml.xsd
 		XmlUtility\Schemas\XMLSchema-instance.xsd = XmlUtility\Schemas\XMLSchema-instance.xsd
 		XmlUtility\Schemas\XmlSchema.xsd = XmlUtility\Schemas\XmlSchema.xsd
+		XmlUtility\Schemas\Xslt.xsd = XmlUtility\Schemas\Xslt.xsd
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{4BE857E7-98B4-436E-A623-2F0941ABCA3E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfCLR", "WPF\WpfCLR\WpfCLR.csproj", "{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}"
-EndProject
-Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "WPF", "WPF\WPF\WPF.pssproj", "{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOUtilityLegacyCLR", "IOUtility\IOUtilityLegacyCLR\IOUtilityLegacyCLR.csproj", "{1A4EF800-90F7-413D-820E-497FEFCF86DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityLegacyCLR", "NetworkUtility\NetworkUtilityLegacyCLR\NetworkUtilityLegacyCLR.csproj", "{68BB6B97-CB36-463A-B854-C268C6E87D74}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfLegacyCLR", "WPF\WpfLegacyCLR\WpfLegacyCLR.csproj", "{B75A10F6-19B2-4104-9CFF-4977626936A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlUtilityLegacyCLR", "XmlUtility\XmlUtilityLegacyCLR\XmlUtilityLegacyCLR.csproj", "{BB8270DC-E151-4FF2-8D15-675EF026A32A}"
 EndProject
@@ -172,10 +212,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeech", "TextToSpeec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToSpeechCLR", "TextToSpeech\TextToSpeechCLR\TextToSpeechCLR.csproj", "{DE1E790E-3E0B-4F21-B859-E224719A4D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyTestWpfApplication", "WPF\LegacyTestWpfApplication\LegacyTestWpfApplication.csproj", "{1265300E-824C-486E-8A2E-2A030A41FC8B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfApplication", "WPF\TestWpfApplication\TestWpfApplication.csproj", "{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CredentialStorageLibrary", "CredentialStorage\CredentialStorageLibrary\CredentialStorageLibrary.csproj", "{A8F9B8A8-0A75-493F-810A-FC8C10AFE72A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CredentialStorageLibrary2", "CredentialStorage\CredentialStorageLibrary2\CredentialStorageLibrary2.csproj", "{1663B678-000D-498C-BDEC-0D25A69B8EEA}"
@@ -211,6 +247,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "V4", "V4", "{F4120606-01F6-
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Speech", "Speech\Speech.csproj", "{8AE380F9-4A91-44DE-9E8F-E441E57FF641}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -477,42 +515,6 @@ Global
 		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.ReleasePS3|Any CPU.Build.0 = ReleasePS3|Any CPU
 		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{4BE857E7-98B4-436E-A623-2F0941ABCA3E}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.DebugPS2|Any CPU.ActiveCfg = DebugPS2|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.DebugPS2|Any CPU.Build.0 = DebugPS2|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.DebugPS3|Any CPU.ActiveCfg = DebugPS3|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.DebugPS3|Any CPU.Build.0 = DebugPS3|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.ReleasePS2|Any CPU.ActiveCfg = ReleasePS2|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.ReleasePS2|Any CPU.Build.0 = ReleasePS2|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.ReleasePS3|Any CPU.ActiveCfg = ReleasePS3|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.ReleasePS3|Any CPU.Build.0 = ReleasePS3|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 		{1A4EF800-90F7-413D-820E-497FEFCF86DE}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{1A4EF800-90F7-413D-820E-497FEFCF86DE}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{1A4EF800-90F7-413D-820E-497FEFCF86DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -549,24 +551,6 @@ Global
 		{68BB6B97-CB36-463A-B854-C268C6E87D74}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{68BB6B97-CB36-463A-B854-C268C6E87D74}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{68BB6B97-CB36-463A-B854-C268C6E87D74}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{B75A10F6-19B2-4104-9CFF-4977626936A9}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -801,42 +785,6 @@ Global
 		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{DE1E790E-3E0B-4F21-B859-E224719A4D88}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{1265300E-824C-486E-8A2E-2A030A41FC8B}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 		{A8F9B8A8-0A75-493F-810A-FC8C10AFE72A}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F9B8A8-0A75-493F-810A-FC8C10AFE72A}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{A8F9B8A8-0A75-493F-810A-FC8C10AFE72A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1053,6 +1001,24 @@ Global
 		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{8AE380F9-4A91-44DE-9E8F-E441E57FF641}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1068,11 +1034,8 @@ Global
 		{2BB4AEF1-5684-44A0-ACEE-326E4C676659} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
 		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
 		{48C415CD-E07B-4E0B-9087-A3A33F90CE73} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
-		{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6} = {54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}
-		{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E} = {54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}
 		{1A4EF800-90F7-413D-820E-497FEFCF86DE} = {C774424F-FA1E-4E77-AC61-054B848FD993}
 		{68BB6B97-CB36-463A-B854-C268C6E87D74} = {9BC7C0D9-B0A0-4F34-93E7-29E3136CB622}
-		{B75A10F6-19B2-4104-9CFF-4977626936A9} = {54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}
 		{BB8270DC-E151-4FF2-8D15-675EF026A32A} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
 		{9C631468-D535-4E45-A71D-722B912C347E} = {70233A10-5051-4811-959E-2C05A59C3DAA}
 		{5AC8E2CB-C360-4945-8E00-94BB77A8B4F6} = {70233A10-5051-4811-959E-2C05A59C3DAA}
@@ -1086,8 +1049,6 @@ Global
 		{4F79ED7C-309E-4BE8-9402-C1A66F523892} = {19C9EF9C-EF70-4923-887A-CB8E5599408D}
 		{FBDB8BAA-CE13-42D4-9185-ECC50DD3B8C7} = {6FD09995-D6F7-459A-A572-E86E98280316}
 		{DE1E790E-3E0B-4F21-B859-E224719A4D88} = {6FD09995-D6F7-459A-A572-E86E98280316}
-		{1265300E-824C-486E-8A2E-2A030A41FC8B} = {54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}
-		{45C05EEA-D8C0-4928-B54E-FDB09EB167CB} = {54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}
 		{A8F9B8A8-0A75-493F-810A-FC8C10AFE72A} = {344DCE87-E7C0-4130-8473-5B6D1B434809}
 		{1663B678-000D-498C-BDEC-0D25A69B8EEA} = {344DCE87-E7C0-4130-8473-5B6D1B434809}
 		{7D83E8E2-646B-46C9-9EEE-7235C91011E3} = {1C8C5653-611F-4AFA-8C32-B64C96354998}

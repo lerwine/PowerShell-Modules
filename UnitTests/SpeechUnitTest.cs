@@ -8,12 +8,19 @@ using System.Speech.AudioFormat;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Management.Automation;
 
 namespace UnitTests
 {
     [TestClass]
     public class SpeechUnitTest
     {
+        public const string ModuleName = "Erwine.Leonard.T.Speech";
+#if DEBUG
+        public const string RelativeModulePath = @"Speech/bin/Debug";
+#else
+        public const string RelativeModulePath = @"Speech/bin/Release";
+#endif
         class SpeechPropertyState
         {
             private static int _originalSpeechRate;
@@ -38,6 +45,7 @@ namespace UnitTests
                     speechSynthesizer.SelectVoice(_originalVoice.Name);
             }
         }
+
         private static SpeechPropertyState _originalSpeechPropertyState;
         private static VoiceAge[] _allAges;
         private static VoiceGender[] _allGenders;
@@ -45,8 +53,8 @@ namespace UnitTests
         private static int _initialSpeechVolume;
         private static VoiceInfo _initialVoice;
         private static InstalledVoice[] _installedVoices;
-        private static ReadOnlyDictionary<VoiceAge, ReadOnlyDictionary<VoiceGender, VoiceInfo>> _voicesByAge;
-        private static ReadOnlyDictionary<VoiceGender, VoiceInfo> _voicesByGender;
+        private static Dictionary<VoiceAge, Dictionary<VoiceGender, VoiceInfo>> _voicesByAge;
+        private static Dictionary<VoiceGender, VoiceInfo> _voicesByGender;
         private TestContext _testContextInstance;
         private static string _wavOutputPath;
         private static string _xmlOutputPath;
@@ -60,7 +68,7 @@ namespace UnitTests
         ///</summary>
         public TestContext TestContext { get { return _testContextInstance; } set { _testContextInstance = value; } }
 
-        #region Additional test attributes
+#region Additional test attributes
         //
         // You can use the following additional attributes as you write your tests:
         //
@@ -77,20 +85,20 @@ namespace UnitTests
                 _initialSpeechVolume = speechSynthesizer.Volume;
                 _initialVoice = speechSynthesizer.Voice;
                 _installedVoices = speechSynthesizer.GetInstalledVoices().ToArray();
-                _voicesByGender = new ReadOnlyDictionary<VoiceGender, VoiceInfo>(_allGenders.Select(g =>
+                _voicesByGender = _allGenders.Select(g =>
                 {
                     speechSynthesizer.SelectVoiceByHints(g);
                     return new { Gender = g, Voice = speechSynthesizer.Voice };
-                }).ToDictionary(k => k.Gender, v => v.Voice));
-                _voicesByAge = new ReadOnlyDictionary<VoiceAge, ReadOnlyDictionary<VoiceGender, VoiceInfo>>(_allAges.Select(a => new
+                }).ToDictionary(k => k.Gender, v => v.Voice);
+                _voicesByAge = _allAges.Select(a => new
                 {
                     Age = a,
-                    ByGender = new ReadOnlyDictionary<VoiceGender, VoiceInfo>(_allGenders.Select(g =>
+                    ByGender = _allGenders.Select(g =>
                     {
                         speechSynthesizer.SelectVoiceByHints(g);
                         return new { Gender = g, Voice = speechSynthesizer.Voice };
-                    }).ToDictionary(k => k.Gender, v => v.Voice))
-                }).ToDictionary(k => k.Age, v => v.ByGender));
+                    }).ToDictionary(k => k.Gender, v => v.Voice)
+                }).ToDictionary(k => k.Age, v => v.ByGender);
                 if (speechSynthesizer.Voice.Id != _initialVoice.Id)
                     speechSynthesizer.SelectVoice(_initialVoice.Name);
             }
@@ -138,11 +146,11 @@ namespace UnitTests
             }
         }
 
-        #endregion
+#endregion
 
         [TestMethod]
         [TestCategory("SpeechSynthesis")]
-        [Description("Tests constructors which do not produce speech.")]
+        [Description("Tests TextToSpeechJob constructors which do not produce speech.")]
         public void TextToSpeechJobConstructorTestMethod1()
         {
             var baseConstructorArgs = (new[]
@@ -298,7 +306,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("SpeechSynthesis")]
-        [Description("Tests constructors which produce speech.")]
+        [Description("Tests TextToSpeechJob constructors which produce speech.")]
         public void TextToSpeechJobConstructorTestMethod2()
         {
             var baseConstructorArgs = (new[]
@@ -639,6 +647,17 @@ namespace UnitTests
                         Assert.AreEqual(_voicesByAge[a.age][a.gender].Name, target.Voice.Name);
                 }
             }
+        }
+
+        [TestMethod]
+        [TestCategory("SpeechSynthesis")]
+        [Description("Tests loading the Speech PowerShell module.")]
+        public void SpeechModuleLoadTestMethod()
+        {
+            string path = Path.GetFullPath(Path.Combine(TestContext.DeploymentDirectory, @"..\..\..\Speech\bin\Debug\Erwine.Leonard.T.Speech2.psd1"));
+            Assert.IsTrue(File.Exists(path));
+            PSModuleInfo module = PowerShellHelper.LoadPSModuleInfo(TestContext, path);
+            ModuleConformance.ModuleValidator.AssertPSModule(module);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#
 # Module manifest for module 'Erwine.Leonard.T.Speech'
 #
-# Generated on: 2017-04-11 12:42:48
+# Generated on: 2017-04-21 19:45:32
 #
 @{
 # Script module or binary module file associated with this manifest.
@@ -14,7 +14,7 @@ ModuleVersion = '0.1'
 GUID = '12c6248d-575e-4d2a-b90a-a7bf8fbcd904'
 
 # Author of this module.
-Author = 'Unknown'
+Author = 'Leonard T. Erwine'
 
 # Company or vendor of this module
 CompanyName = 'Leonard T. Erwine'
@@ -26,7 +26,7 @@ Copyright = 'Copyright © Leonard T. Erwine 2017. All rights reserved.'
 Description = 'Provides Text-To-Speech Functionality'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
+PowerShellVersion = '4.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -35,10 +35,10 @@ Description = 'Provides Text-To-Speech Functionality'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module
-# DotNetFrameworkVersion = ''
+DotNetFrameworkVersion = '4.0'
 
 # Minimum version of the common language runtime (CLR) required by this module
-# CLRVersion = ''
+CLRVersion = '4.0'
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''
@@ -65,7 +65,7 @@ Description = 'Provides Text-To-Speech Functionality'
 FunctionsToExport = '*'
 
 # Cmdlets to export from this module
-CmdletsToExport = '*'
+CmdletsToExport = @('ConvertTo-PromptBuilder', 'ConvertTo-Ssml', 'Get-TextToSpeechStatus', 'Import-SpokenText', 'Resume-TextToSpeech', 'Start-TextToSpeech', 'Stop-TextToSpeech', 'Suspend-TextToSpeech', 'Wait-TextToSpeech')
 
 # Variables to export from this module
 VariablesToExport = '*'
@@ -89,97 +89,3 @@ AliasesToExport = '*'
 # DefaultCommandPrefix = ''
 
 }
-
-# TemplateItem.Properties:
-#    Extension = ".tt"
-#    FileName = "Erwine.Leonard.T.Speech.tt"
-#    CustomToolOutput = "Erwine.Leonard.T.Speech.psd1"
-#    DateModified = "4/11/2017 12:42:48 PM"
-#    IsLink = [System.Boolean] (False)
-#    BuildAction = [System.Int32] (2)
-#    SubType = ""
-#    CopyToOutputDirectory = [System.UInt32] (0)
-#    IsSharedDesignTimeBuildInput = [System.Boolean] (False)
-#    ItemType = "Content"
-#    IsCustomToolOutput = [System.Boolean] (False)
-#    HTMLTitle = ""
-#    CustomTool = "TextTemplatingFileGenerator"
-#    URL = "file:///E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\Erwine.Leonard.T.Speech.tt"
-#    Filesize = [System.UInt32] (4723)
-#    CustomToolNamespace = ""
-#    Author = ""
-#    FullPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\Erwine.Leonard.T.Speech.tt"
-#    IsDependentFile = [System.Boolean] (False)
-#    IsDesignTimeBuildInput = [System.Boolean] (False)
-#    DateCreated = "4/10/2017 9:08:33 PM"
-#    LocalPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\Erwine.Leonard.T.Speech.tt"
-#    ModifiedBy = ""
-#
-# CurrentProject.Properties:
-#    OutputTypeEx = [System.UInt32] (2)
-#    TargetFrameworkMoniker = ".NETFramework,Version=v4.0"
-#    ComVisible = [System.Boolean] (False)
-#    EnableSecurityDebugging = [System.Boolean] (True)
-#    OptionCompare = [System.Int32] (0)
-#    StartupObject = ""
-#    ManifestCertificateThumbprint = ""
-#    Trademark = ""
-#    Title = "Speech"
-#    AssemblyOriginatorKeyFileType = [System.UInt32] (1)
-#    FileName = "Speech.csproj"
-#    WebServer threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyOriginatorKeyMode = [System.Int32] (0)
-#    AssemblyKeyContainerName = ""
-#    ProjectType = [System.Int32] (0)
-#    ReferencePath = ""
-#    PreBuildEvent = ""
-#    Copyright = "Copyright © Leonard T. Erwine 2017. All rights reserved."
-#    ApplicationIcon = ""
-#    ExcludedPermissions = ""
-#    RunPostBuildEvent = [System.Int32] (1)
-#    DefaultTargetSchema = [System.Int32] (1)
-#    RootNamespace = "Speech"
-#    ManifestTimestampUrl = ""
-#    ManifestKeyFile = ""
-#    DebugSecurityZoneURL = ""
-#    Product = "Speech"
-#    PostBuildEvent = ""
-#    OptionStrict = [System.Int32] (0)
-#    DefaultHTMLPageLayout = [System.Int32] (1)
-#    DelaySign = [System.Boolean] (False)
-#    OutputType = [System.Int32] (2)
-#    NeutralResourcesLanguage = ""
-#    OptionExplicit = [System.Int32] (1)
-#    OutputFileName = "Erwine.Leonard.T.Speech.dll"
-#    ServerExtensionsVersion threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyGuid = "12c6248d-575e-4d2a-b90a-a7bf8fbcd904"
-#    GenerateManifests = [System.Boolean] (False)
-#    AssemblyVersion = "0.1.0.0"
-#    Win32ResourceFile = ""
-#    Description = "Provides Text-To-Speech Functionality"
-#    URL = "file:///E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\"
-#    DefaultClientScript = [System.Int32] (0)
-#    TargetFramework = [System.UInt32] (262144)
-#    SignManifests = [System.Boolean] (False)
-#    OfflineURL threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    WebServerVersion threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    Publish = [System.__ComObject] (System.__ComObject)
-#    AssemblyType = [System.Int32] (0)
-#    FullPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\"
-#    WebAccessMethod threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyKeyProviderName = ""
-#    TypeComplianceDiagnostics = [System.Boolean] (False)
-#    Company = "Leonard T. Erwine"
-#    ActiveFileSharePath threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyOriginatorKeyFile = ""
-#    ApplicationManifest = "DefaultManifest"
-#    AssemblyFileVersion = "0.1.0.0"
-#    AspnetVersion threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    FileSharePath threw System.Runtime.InteropServices.COMException (Exception occurred. (Exception from HRESULT: 0x80020009 (DISP_E_EXCEPTION)))
-#    AssemblyName = "Erwine.Leonard.T.Speech"
-#    LocalPath = "E:\Visual Studio 2015\Projects\PowerShell-Modules\master\Speech\"
-#    DefaultNamespace = "Speech"
-#    LinkRepair = [System.Boolean] (False)
-#    WPFProjectExtender.HostInBrowser = "false"
-#    TargetZone = ""
-#    SignAssembly = [System.Boolean] (False)

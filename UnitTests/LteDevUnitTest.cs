@@ -66,6 +66,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("LteDev")]
+        [Description("Tests loading the LteDev PowerShell module.")]
         public void ImportLteDevTestMethod()
         {
             PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1", Path.GetFullPath(@"..\..\..\IOUtility\IOUtility\Erwine.Leonard.T.IOUtility.psd1"));

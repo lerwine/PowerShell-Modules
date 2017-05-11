@@ -73,7 +73,20 @@ namespace UnitTests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Param(
+        ///	[Parameter(Mandatory = $true, Position = 0)]
+        ///	[object]$Sender,
+        ///
+        ///	
+        ///	[Parameter(Mandatory = $true, Position = 1)]
+        ///	[System.ComponentModel.PropertyChangedEventArgs]$E
+        ///)
+        ///
+        ///&quot;Again&quot; | Write-Output;
+        ///$SynchronizedData[&apos;xyz&apos;] = $args.Count;
+        ///$TestVar2 = $E;
+        ///$TestVar = 12;
+        ///$this.Value = 40;.
         /// </summary>
         internal static string PSInvocationEventHandler {
             get {
