@@ -1,0 +1,675 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9D184A11-3E95-47BB-90C1-98A456225200}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XmlUtility</RootNamespace>
+    <AssemblyName>Erwine.Leonard.T.XmlUtilityLib</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assembly\V4\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LinqEmul.cs" />
+    <Compile Include="LoadableBinaryResource.cs" />
+    <Compile Include="LoadableResource.cs" />
+    <Compile Include="LoadableTextResource.cs" />
+    <Compile Include="LoadableXmlResource.cs" />
+    <Compile Include="LoadableXmlSchemaResource.cs" />
+    <Compile Include="LoadableXsdResource.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceLoadError.cs" />
+    <Compile Include="SchemaSetCollection.cs" />
+    <Compile Include="SchemaValidationError.cs" />
+    <Compile Include="SchemaValidationHandler.cs" />
+    <Compile Include="SerializationManager.cs" />
+    <Compile Include="WebResourceLoadError.cs" />
+    <Compile Include="XmlResourceLoadError.cs" />
+    <Compile Include="XmlUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Release\Erwine.Leonard.T.XmlUtilityLib.dll" />
+    <Content Include="bin\Release\Erwine.Leonard.T.XmlUtilityLib.pdb" />
+    <Content Include="bin\Release\Schemas\Maml_HTML.xsl" />
+    <Content Include="bin\Release\Schemas\Maml_HTML_Style.xsl" />
+    <Content Include="Erwine.Leonard.T.XmlUtility.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Erwine.Leonard.T.XmlUtility.psm1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="bin\Release\Erwine.Leonard.T.XmlUtility.psd1" />
+    <None Include="bin\Release\Erwine.Leonard.T.XmlUtility.psm1" />
+    <None Include="bin\Release\Schemas\base.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\baseConditional.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\block.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\blockCommon.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\blockSoftware.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\command.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\conditionSet.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developer.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerCommand.rld" />
+    <None Include="bin\Release\Schemas\developerCommand.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerDscResource.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManaged.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedClass.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedConstructor.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedDelegate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedEnumeration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedEvent.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedField.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedInterface.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedMethod.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedNamespace.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedOperator.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedOverload.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedProperty.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerManagedStructure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerReference.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerStructure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\developerXaml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\endUser.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\faq.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\glossary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\helpItems.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\hierarchy.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\HTMLsymbol.ent" />
+    <None Include="bin\Release\Schemas\inline.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\inlineCommon.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\inlineSoftware.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\inlineUi.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\ITPro.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\Maml.rld" />
+    <None Include="bin\Release\Schemas\Maml.tbr" />
+    <None Include="bin\Release\Schemas\Maml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\Maml.xsx">
+      <DependentUpon>Maml.xsd</DependentUpon>
+    </None>
+    <None Include="bin\Release\Schemas\ManagedDeveloper.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\ManagedDeveloperStructure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\ProviderHelp.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\README.md" />
+    <None Include="bin\Release\Schemas\shellExecute.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\soap-encoding.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\soap-envelope.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\soap11encoding.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\soap11envelope.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\structure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\structureGlossary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\structureList.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\structureProcedure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\structureTable.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\structureTaskExecution.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\task.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\troubleshooting.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-array.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-binary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-list.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-math.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-nn-array.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-nn-binary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-nn-list.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-nn-math.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-nn-quantity.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-nn-text.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-quantity.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary-text.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\TypeLibrary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\WindowsPhoneSynthesis-core.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\WindowsPhoneSynthesis.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\wsdl.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\wsdl11html.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\wsdl11mime.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\wsdl11soap12.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\xhtml-lat1.ent" />
+    <None Include="bin\Release\Schemas\xhtml-special.ent" />
+    <None Include="bin\Release\Schemas\xhtml-symbol.ent" />
+    <None Include="bin\Release\Schemas\xml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\XMLSchema-instance.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\XmlSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bin\Release\Schemas\Xslt.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GetWsdl.ps1" />
+    <None Include="README.md" />
+    <Content Include="Schemas\base.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\baseConditional.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\block.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\blockCommon.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\blockSoftware.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\command.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\conditionSet.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developer.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerCommand.rld">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerCommand.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerDscResource.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManaged.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedClass.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedConstructor.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedDelegate.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedEnumeration.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedEvent.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedField.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedInterface.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedMethod.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedNamespace.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedOperator.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedOverload.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedProperty.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerManagedStructure.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerReference.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerStructure.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\developerXaml.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\endUser.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\faq.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\glossary.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\helpItems.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\hierarchy.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\HTMLsymbol.ent">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\inline.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\inlineCommon.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\inlineSoftware.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\inlineUi.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\ITPro.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\Maml.rld">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\Maml.tbr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\Maml.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Schemas\Maml.xsx">
+      <DependentUpon>Maml.xsd</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Schemas\ManagedDeveloper.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\ManagedDeveloperStructure.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\ProviderHelp.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\shellExecute.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\soap-encoding.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\soap-envelope.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\soap11encoding.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\soap11envelope.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\structure.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\structureGlossary.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\structureList.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\structureProcedure.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\structureTable.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\structureTaskExecution.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\task.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\troubleshooting.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-array.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-binary.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-list.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-math.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-nn-array.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-nn-binary.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-nn-list.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-nn-math.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-nn-quantity.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-nn-text.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-quantity.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary-text.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\TypeLibrary.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\WindowsPhoneSynthesis-core.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\WindowsPhoneSynthesis.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\wsdl.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\wsdl11html.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\wsdl11mime.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\wsdl11soap12.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\xhtml-lat1.ent">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\xhtml-special.ent">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\xhtml-symbol.ent">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\xml.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\XMLSchema-instance.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\XmlSchema.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\Xslt.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MyCollection1.html" />
+    <Content Include="Schemas\Maml_HTML.xsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\Maml_HTML_Style.xsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

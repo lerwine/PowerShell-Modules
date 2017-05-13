@@ -45,102 +45,11 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "NetworkUtility", "NetworkUt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityCLR", "NetworkUtility\NetworkUtilityCLR\NetworkUtilityCLR.csproj", "{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XmlUtility", "XmlUtility", "{1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}"
-	ProjectSection(SolutionItems) = preProject
-		WPF\WPF\about.xslt = WPF\WPF\about.xslt
-		XmlUtility\README.md = XmlUtility\README.md
-	EndProjectSection
-EndProject
-Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "XmlUtility", "XmlUtility\XmlUtility\XmlUtility.pssproj", "{2BB4AEF1-5684-44A0-ACEE-326E4C676659}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlUtilityCLR", "XmlUtility\XmlUtilityCLR\XmlUtilityCLR.csproj", "{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}"
-EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Scripts", "Scripts\Scripts.pssproj", "{8C1F29FD-EB34-4DBB-A1CA-819BF73A4AEC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{48C415CD-E07B-4E0B-9087-A3A33F90CE73}"
-	ProjectSection(SolutionItems) = preProject
-		XmlUtility\Schemas\developerCommand.xsd = XmlUtility\Schemas\developerCommand.xsd
-		XmlUtility\Schemas\developerDscResource.xsd = XmlUtility\Schemas\developerDscResource.xsd
-		XmlUtility\Schemas\developerManaged.xsd = XmlUtility\Schemas\developerManaged.xsd
-		XmlUtility\Schemas\developerManagedClass.xsd = XmlUtility\Schemas\developerManagedClass.xsd
-		XmlUtility\Schemas\developerManagedConstructor.xsd = XmlUtility\Schemas\developerManagedConstructor.xsd
-		XmlUtility\Schemas\developerManagedDelegate.xsd = XmlUtility\Schemas\developerManagedDelegate.xsd
-		XmlUtility\Schemas\developerManagedEnumeration.xsd = XmlUtility\Schemas\developerManagedEnumeration.xsd
-		XmlUtility\Schemas\developerManagedEvent.xsd = XmlUtility\Schemas\developerManagedEvent.xsd
-		XmlUtility\Schemas\developerManagedField.xsd = XmlUtility\Schemas\developerManagedField.xsd
-		XmlUtility\Schemas\developerManagedInterface.xsd = XmlUtility\Schemas\developerManagedInterface.xsd
-		XmlUtility\Schemas\developerManagedMethod.xsd = XmlUtility\Schemas\developerManagedMethod.xsd
-		XmlUtility\Schemas\developerManagedNamespace.xsd = XmlUtility\Schemas\developerManagedNamespace.xsd
-		XmlUtility\Schemas\developerManagedOperator.xsd = XmlUtility\Schemas\developerManagedOperator.xsd
-		XmlUtility\Schemas\developerManagedOverload.xsd = XmlUtility\Schemas\developerManagedOverload.xsd
-		XmlUtility\Schemas\developerManagedProperty.xsd = XmlUtility\Schemas\developerManagedProperty.xsd
-		XmlUtility\Schemas\developerManagedStructure.xsd = XmlUtility\Schemas\developerManagedStructure.xsd
-		XmlUtility\Schemas\developerReference.xsd = XmlUtility\Schemas\developerReference.xsd
-		XmlUtility\Schemas\developerStructure.xsd = XmlUtility\Schemas\developerStructure.xsd
-		XmlUtility\Schemas\developerXaml.xsd = XmlUtility\Schemas\developerXaml.xsd
-		XmlUtility\Schemas\endUser.xsd = XmlUtility\Schemas\endUser.xsd
-		XmlUtility\Schemas\faq.xsd = XmlUtility\Schemas\faq.xsd
-		XmlUtility\Schemas\glossary.xsd = XmlUtility\Schemas\glossary.xsd
-		XmlUtility\Schemas\helpItems.xsd = XmlUtility\Schemas\helpItems.xsd
-		XmlUtility\Schemas\hierarchy.xsd = XmlUtility\Schemas\hierarchy.xsd
-		XmlUtility\Schemas\inline.xsd = XmlUtility\Schemas\inline.xsd
-		XmlUtility\Schemas\inlineCommon.xsd = XmlUtility\Schemas\inlineCommon.xsd
-		XmlUtility\Schemas\inlineSoftware.xsd = XmlUtility\Schemas\inlineSoftware.xsd
-		XmlUtility\Schemas\inlineUi.xsd = XmlUtility\Schemas\inlineUi.xsd
-		XmlUtility\Schemas\ITPro.xsd = XmlUtility\Schemas\ITPro.xsd
-		XmlUtility\Schemas\Maml.rld = XmlUtility\Schemas\Maml.rld
-		XmlUtility\Schemas\Maml.tbr = XmlUtility\Schemas\Maml.tbr
-		XmlUtility\Schemas\Maml.xsd = XmlUtility\Schemas\Maml.xsd
-		XmlUtility\Schemas\Maml.xsx = XmlUtility\Schemas\Maml.xsx
-		XmlUtility\Schemas\Maml_HTML.xsl = XmlUtility\Schemas\Maml_HTML.xsl
-		XmlUtility\Schemas\Maml_HTML_Style.xsl = XmlUtility\Schemas\Maml_HTML_Style.xsl
-		XmlUtility\Schemas\ManagedDeveloper.xsd = XmlUtility\Schemas\ManagedDeveloper.xsd
-		XmlUtility\Schemas\ManagedDeveloperStructure.xsd = XmlUtility\Schemas\ManagedDeveloperStructure.xsd
-		XmlUtility\Schemas\ProviderHelp.xsd = XmlUtility\Schemas\ProviderHelp.xsd
-		XmlUtility\Schemas\README.md = XmlUtility\Schemas\README.md
-		XmlUtility\Schemas\shellExecute.xsd = XmlUtility\Schemas\shellExecute.xsd
-		XmlUtility\Schemas\soap-encoding.xsd = XmlUtility\Schemas\soap-encoding.xsd
-		XmlUtility\Schemas\soap-envelope.xsd = XmlUtility\Schemas\soap-envelope.xsd
-		XmlUtility\Schemas\soap11encoding.xsd = XmlUtility\Schemas\soap11encoding.xsd
-		XmlUtility\Schemas\soap11envelope.xsd = XmlUtility\Schemas\soap11envelope.xsd
-		XmlUtility\Schemas\structure.xsd = XmlUtility\Schemas\structure.xsd
-		XmlUtility\Schemas\structureGlossary.xsd = XmlUtility\Schemas\structureGlossary.xsd
-		XmlUtility\Schemas\structureList.xsd = XmlUtility\Schemas\structureList.xsd
-		XmlUtility\Schemas\structureProcedure.xsd = XmlUtility\Schemas\structureProcedure.xsd
-		XmlUtility\Schemas\structureTable.xsd = XmlUtility\Schemas\structureTable.xsd
-		XmlUtility\Schemas\structureTaskExecution.xsd = XmlUtility\Schemas\structureTaskExecution.xsd
-		XmlUtility\Schemas\task.xsd = XmlUtility\Schemas\task.xsd
-		XmlUtility\Schemas\troubleshooting.xsd = XmlUtility\Schemas\troubleshooting.xsd
-		XmlUtility\Schemas\TypeLibrary-array.xsd = XmlUtility\Schemas\TypeLibrary-array.xsd
-		XmlUtility\Schemas\TypeLibrary-binary.xsd = XmlUtility\Schemas\TypeLibrary-binary.xsd
-		XmlUtility\Schemas\TypeLibrary-list.xsd = XmlUtility\Schemas\TypeLibrary-list.xsd
-		XmlUtility\Schemas\TypeLibrary-math.xsd = XmlUtility\Schemas\TypeLibrary-math.xsd
-		XmlUtility\Schemas\TypeLibrary-nn-array.xsd = XmlUtility\Schemas\TypeLibrary-nn-array.xsd
-		XmlUtility\Schemas\TypeLibrary-nn-binary.xsd = XmlUtility\Schemas\TypeLibrary-nn-binary.xsd
-		XmlUtility\Schemas\TypeLibrary-nn-list.xsd = XmlUtility\Schemas\TypeLibrary-nn-list.xsd
-		XmlUtility\Schemas\TypeLibrary-nn-math.xsd = XmlUtility\Schemas\TypeLibrary-nn-math.xsd
-		XmlUtility\Schemas\TypeLibrary-nn-quantity.xsd = XmlUtility\Schemas\TypeLibrary-nn-quantity.xsd
-		XmlUtility\Schemas\TypeLibrary-nn-text.xsd = XmlUtility\Schemas\TypeLibrary-nn-text.xsd
-		XmlUtility\Schemas\TypeLibrary-quantity.xsd = XmlUtility\Schemas\TypeLibrary-quantity.xsd
-		XmlUtility\Schemas\TypeLibrary-text.xsd = XmlUtility\Schemas\TypeLibrary-text.xsd
-		XmlUtility\Schemas\TypeLibrary.xsd = XmlUtility\Schemas\TypeLibrary.xsd
-		XmlUtility\Schemas\WindowsPhoneSynthesis-core.xsd = XmlUtility\Schemas\WindowsPhoneSynthesis-core.xsd
-		XmlUtility\Schemas\WindowsPhoneSynthesis.xsd = XmlUtility\Schemas\WindowsPhoneSynthesis.xsd
-		XmlUtility\Schemas\wsdl.xsd = XmlUtility\Schemas\wsdl.xsd
-		XmlUtility\Schemas\wsdl11html.xsd = XmlUtility\Schemas\wsdl11html.xsd
-		XmlUtility\Schemas\wsdl11mime.xsd = XmlUtility\Schemas\wsdl11mime.xsd
-		XmlUtility\Schemas\wsdl11soap12.xsd = XmlUtility\Schemas\wsdl11soap12.xsd
-		XmlUtility\Schemas\xml.xsd = XmlUtility\Schemas\xml.xsd
-		XmlUtility\Schemas\XMLSchema-instance.xsd = XmlUtility\Schemas\XMLSchema-instance.xsd
-		XmlUtility\Schemas\XmlSchema.xsd = XmlUtility\Schemas\XmlSchema.xsd
-		XmlUtility\Schemas\Xslt.xsd = XmlUtility\Schemas\Xslt.xsd
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{4BE857E7-98B4-436E-A623-2F0941ABCA3E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityLegacyCLR", "NetworkUtility\NetworkUtilityLegacyCLR\NetworkUtilityLegacyCLR.csproj", "{68BB6B97-CB36-463A-B854-C268C6E87D74}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlUtilityLegacyCLR", "XmlUtility\XmlUtilityLegacyCLR\XmlUtilityLegacyCLR.csproj", "{BB8270DC-E151-4FF2-8D15-675EF026A32A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assembly", "Assembly", "{70233A10-5051-4811-959E-2C05A59C3DAA}"
 EndProject
@@ -228,6 +137,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LteDev", "LteDev\LteDev.csproj", "{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOUtility", "IOUtility\IOUtility.csproj", "{AC556AFD-A2DC-4AEE-A79F-583F54F7B17F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlUtility", "XmlUtility\XmlUtility.csproj", "{9D184A11-3E95-47BB-90C1-98A456225200}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -368,42 +279,6 @@ Global
 		{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}.ReleasePS3|Any CPU.Build.0 = ReleasePS3|Any CPU
 		{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.DebugPS2|Any CPU.ActiveCfg = DebugPS2|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.DebugPS2|Any CPU.Build.0 = DebugPS2|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.DebugPS3|Any CPU.ActiveCfg = DebugPS3|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.DebugPS3|Any CPU.Build.0 = DebugPS3|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.ReleasePS2|Any CPU.ActiveCfg = ReleasePS2|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.ReleasePS2|Any CPU.Build.0 = ReleasePS2|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.ReleasePS3|Any CPU.ActiveCfg = ReleasePS3|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.ReleasePS3|Any CPU.Build.0 = ReleasePS3|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.DebugPS2|Any CPU.ActiveCfg = DebugPS2|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.DebugPS2|Any CPU.Build.0 = DebugPS2|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.DebugPS3|Any CPU.ActiveCfg = DebugPS3|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.DebugPS3|Any CPU.Build.0 = DebugPS3|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.ReleasePS2|Any CPU.ActiveCfg = ReleasePS2|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.ReleasePS2|Any CPU.Build.0 = ReleasePS2|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.ReleasePS3|Any CPU.ActiveCfg = ReleasePS3|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.ReleasePS3|Any CPU.Build.0 = ReleasePS3|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 		{8C1F29FD-EB34-4DBB-A1CA-819BF73A4AEC}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{8C1F29FD-EB34-4DBB-A1CA-819BF73A4AEC}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{8C1F29FD-EB34-4DBB-A1CA-819BF73A4AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -458,24 +333,6 @@ Global
 		{68BB6B97-CB36-463A-B854-C268C6E87D74}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{68BB6B97-CB36-463A-B854-C268C6E87D74}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{68BB6B97-CB36-463A-B854-C268C6E87D74}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 		{2D0DD060-7FB7-4019-ACCA-64897ED26E81}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{2D0DD060-7FB7-4019-ACCA-64897ED26E81}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{2D0DD060-7FB7-4019-ACCA-64897ED26E81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -908,6 +765,24 @@ Global
 		{AC556AFD-A2DC-4AEE-A79F-583F54F7B17F}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{AC556AFD-A2DC-4AEE-A79F-583F54F7B17F}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{AC556AFD-A2DC-4AEE-A79F-583F54F7B17F}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{9D184A11-3E95-47BB-90C1-98A456225200}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -917,11 +792,7 @@ Global
 		{F3508D88-E526-4DB8-8879-3D844BBD4AC2} = {7FB70CDA-4CD6-422A-A62D-7E41613C3388}
 		{EE4D730A-CF19-41EB-93AB-A1183C9EC14D} = {9BC7C0D9-B0A0-4F34-93E7-29E3136CB622}
 		{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67} = {9BC7C0D9-B0A0-4F34-93E7-29E3136CB622}
-		{2BB4AEF1-5684-44A0-ACEE-326E4C676659} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
-		{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
-		{48C415CD-E07B-4E0B-9087-A3A33F90CE73} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
 		{68BB6B97-CB36-463A-B854-C268C6E87D74} = {9BC7C0D9-B0A0-4F34-93E7-29E3136CB622}
-		{BB8270DC-E151-4FF2-8D15-675EF026A32A} = {1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}
 		{9C631468-D535-4E45-A71D-722B912C347E} = {70233A10-5051-4811-959E-2C05A59C3DAA}
 		{5AC8E2CB-C360-4945-8E00-94BB77A8B4F6} = {70233A10-5051-4811-959E-2C05A59C3DAA}
 		{2D0DD060-7FB7-4019-ACCA-64897ED26E81} = {344DCE87-E7C0-4130-8473-5B6D1B434809}
