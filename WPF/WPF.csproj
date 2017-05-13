@@ -95,20 +95,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="bin\Debug\Erwine.Leonard.T.WPFLib.dll" />
-    <Content Include="bin\Debug\Erwine.Leonard.T.WPFLib.pdb" />
-    <Content Include="bin\Release\Erwine.Leonard.T.WPFLib.dll" />
-    <Content Include="bin\Release\Erwine.Leonard.T.WPFLib.pdb" />
-    <Content Include="Erwine.Leonard.T.WPF.psd1" />
-    <Content Include="Erwine.Leonard.T.WPF.psm1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Test.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -106,10 +106,6 @@
       <DependentUpon>SpeechProgressWindow.xaml</DependentUpon>
     </Compile>
     <Resource Include="ModuleConfig.xml" />
-    <Content Include="bin\Debug\Erwine.Leonard.T.Speech.dll" />
-    <Content Include="bin\Debug\Erwine.Leonard.T.Speech.pdb" />
-    <Content Include="bin\Release\Erwine.Leonard.T.Speech.dll" />
-    <Content Include="bin\Release\Erwine.Leonard.T.Speech.pdb" />
     <Content Include="TexErwine.Leonard.T.Speech.dll-Help.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TexErwine.Leonard.T.Speech.dll-Help.ps1xml</LastGenOutput>
@@ -123,13 +119,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Erwine.Leonard.T.Speech2.tt</DependentUpon>
     </Content>
-    <Content Include="Install.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Install.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Erwine.Leonard.T.Speech.psd1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -138,12 +127,6 @@
     <Content Include="Erwine.Leonard.T.Speech2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Erwine.Leonard.T.Speech2.psd1</LastGenOutput>
-    </Content>
-    <Content Include="Test.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Test.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TexErwine.Leonard.T.Speech.dll-Help.ps1xml">
       <AutoGen>True</AutoGen>
@@ -181,6 +164,10 @@
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

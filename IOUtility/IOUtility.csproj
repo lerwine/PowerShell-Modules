@@ -66,12 +66,6 @@
     <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\Erwine.Leonard.T.IOUtilityLib.dll" />
-    <Content Include="bin\Debug\Erwine.Leonard.T.IOUtilityLib.pdb" />
-    <Content Include="bin\Release\Erwine.Leonard.T.IOUtilityLib.dll" />
-    <Content Include="bin\Release\Erwine.Leonard.T.IOUtilityLib.pdb" />
-    <Content Include="Erwine.Leonard.T.IOUtility.psd1" />
-    <Content Include="Erwine.Leonard.T.IOUtility.psm1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +73,10 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -16,11 +16,8 @@ namespace UnitTests
     public class SpeechUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.Speech";
-#if DEBUG
-        public const string RelativeModulePath = @"Speech/bin/Debug";
-#else
-        public const string RelativeModulePath = @"Speech/bin/Release";
-#endif
+        public const string RelativeModulePath = @"Deployment\Speech";
+
         class SpeechPropertyState
         {
             private static int _originalSpeechRate;

@@ -21,7 +21,7 @@ namespace UnitTests
     public class IOUtilityUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.IOUtility";
-        public const string RelativeModulePath = @"IOUtility";
+        public const string RelativeModulePath = @"Deployment\IOUtility";
 
         public IOUtilityUnitTest()
         {

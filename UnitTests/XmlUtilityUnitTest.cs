@@ -16,7 +16,7 @@ namespace UnitTests
     public class XmlUtilityUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.XmlUtility";
-        public const string RelativeModulePath = @"XmlUtility";
+        public const string RelativeModulePath = @"Deployment\XmlUtility";
 
         public XmlUtilityUnitTest()
         {

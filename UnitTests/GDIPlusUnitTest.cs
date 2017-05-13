@@ -16,7 +16,7 @@ namespace UnitTests
     public class GDIPlusUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.GDIPlus";
-        public const string RelativeModulePath = @"GDIPlus\Installer";
+        public const string RelativeModulePath = @"Deployment\GDIPlus";
 
         public GDIPlusUnitTest()
         {

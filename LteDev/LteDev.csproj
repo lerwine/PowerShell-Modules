@@ -107,12 +107,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Diff\ClassDiagram1.cd" />
-    <Content Include="bin\Debug\Erwine.Leonard.T.LteDevLib.dll" />
-    <Content Include="bin\Debug\Erwine.Leonard.T.LteDevLib.pdb" />
-    <Content Include="bin\Release\Erwine.Leonard.T.LteDevLib.dll" />
-    <Content Include="bin\Release\Erwine.Leonard.T.LteDevLib.pdb" />
-    <Content Include="Erwine.Leonard.T.LteDev.psd1" />
-    <Content Include="Erwine.Leonard.T.LteDev.psm1" />
     <None Include="ModuleGeneration\ModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -129,6 +123,10 @@
     <Folder Include="Commands\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

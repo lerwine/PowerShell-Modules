@@ -90,6 +90,14 @@ namespace UnitTests
         private static object _hostName = null;
         private static object _hostVersion = null;
 
+        public static Version AsMajorMinor(Version version)
+        {
+            if (version == null || (version.Build == 0 && version.Revision == 0))
+                return version;
+
+            return new Version(version.Major, version.Minor);
+
+        }
         public static Version GetPSVersion(TestContext testContext)
         {
             if (_psVersion == null)
@@ -119,30 +127,30 @@ namespace UnitTests
 
         public static string GetPSHome(TestContext testContext)
         {
-            if (_psCompatibleVersions == null)
+            if (_psHome == null)
                 _GetHostPsInfo(testContext);
-            return _psCompatibleVersions as string;
+            return _psHome as string;
         }
 
         public static string[] GetPSModulePath(TestContext testContext)
         {
-            if (_psCompatibleVersions == null)
+            if (_psModulePath == null)
                 _GetHostPsInfo(testContext);
-            return _psCompatibleVersions as string[];
+            return _psModulePath as string[];
         }
 
         public static string GetHostName(TestContext testContext)
         {
-            if (_psCompatibleVersions == null)
+            if (_hostName == null)
                 _GetHostPsInfo(testContext);
-            return _psCompatibleVersions as string;
+            return _hostName as string;
         }
 
         public static Version GetHostVersion(TestContext testContext)
         {
-            if (_psCompatibleVersions == null)
+            if (_hostVersion == null)
                 _GetHostPsInfo(testContext);
-            return _psCompatibleVersions as Version;
+            return _hostVersion as Version;
         }
 
         private static void _GetHostPsInfo(TestContext testContext)
@@ -199,6 +207,7 @@ namespace UnitTests
                                 _psVersion = new object();
                             if ((_clrVersion = psVersionTable["CLRVersion"] as Version) == null)
                                 _clrVersion = new object();
+                            else
                             if ((_buildVersion = psVersionTable["BuildVersion"] as Version) == null)
                                 _buildVersion = new object();
                             if ((_psCompatibleVersions = psVersionTable["PSCompatibleVersions"] as Version[]) == null)
@@ -299,14 +308,14 @@ Import-Module $args[0] -PassThru;
                     if (version != null)
                     {
                         Assert.IsNotNull(psModuleInfo.PowerShellVersion, "PowerShell version not specified");
-                        Assert.AreEqual(version, psModuleInfo.PowerShellVersion, "Invalid PowerShell version");
+                        Assert.AreEqual(AsMajorMinor(version), AsMajorMinor(psModuleInfo.PowerShellVersion), "Invalid PowerShell version");
                     }
                     if ((version = GetCLRVersion(testContext)) != null)
                     {
                         Assert.IsNotNull(psModuleInfo.ClrVersion, "CLR version not specified");
-                        Assert.AreEqual(version, psModuleInfo.ClrVersion, "Invalid CLR version");
+                        Assert.AreEqual(AsMajorMinor(version), AsMajorMinor(psModuleInfo.ClrVersion), "Invalid CLR version");
                         if (psModuleInfo.DotNetFrameworkVersion != null)
-                            Assert.AreEqual(version, psModuleInfo.DotNetFrameworkVersion, "Invalid .NET Framework version");
+                            Assert.AreEqual(AsMajorMinor(version), AsMajorMinor(psModuleInfo.DotNetFrameworkVersion), "Invalid .NET Framework version");
                     }
                 }
             }
