@@ -2,7 +2,7 @@
 using System.Management.Automation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Management.Automation.Language;
-using IOUtilityCLR;
+using IOUtility;
 using System.ComponentModel;
 
 namespace UnitTests

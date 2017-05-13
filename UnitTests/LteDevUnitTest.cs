@@ -16,7 +16,7 @@ namespace UnitTests
     public class LteDevUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.LteDev";
-        public const string RelativeModulePath = @"LteDev\LteDev";
+        public const string RelativeModulePath = @"LteDev";
 
         public LteDevUnitTest()
         {

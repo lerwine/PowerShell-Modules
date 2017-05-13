@@ -6,7 +6,7 @@ using System.Management.Automation.Runspaces;
 using System.Management.Automation;
 using System.IO;
 using System.Collections.ObjectModel;
-using IOUtilityCLR;
+using IOUtility;
 using System.Threading;
 using System.Speech.Synthesis;
 using System.Speech.AudioFormat;
@@ -21,7 +21,7 @@ namespace UnitTests
     public class IOUtilityUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.IOUtility";
-        public const string RelativeModulePath = @"IOUtility\IOUtility";
+        public const string RelativeModulePath = @"IOUtility";
 
         public IOUtilityUnitTest()
         {
