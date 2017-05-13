@@ -106,17 +106,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="bin\Release\Erwine.Leonard.T.LteDev.psd1" />
-    <None Include="bin\Release\Erwine.Leonard.T.LteDev.psm1" />
     <None Include="Diff\ClassDiagram1.cd" />
+    <Content Include="bin\Debug\Erwine.Leonard.T.LteDevLib.dll" />
+    <Content Include="bin\Debug\Erwine.Leonard.T.LteDevLib.pdb" />
     <Content Include="bin\Release\Erwine.Leonard.T.LteDevLib.dll" />
     <Content Include="bin\Release\Erwine.Leonard.T.LteDevLib.pdb" />
-    <Content Include="Erwine.Leonard.T.LteDev.psd1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Erwine.Leonard.T.LteDev.psm1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Erwine.Leonard.T.LteDev.psd1" />
+    <Content Include="Erwine.Leonard.T.LteDev.psm1" />
     <None Include="ModuleGeneration\ModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>

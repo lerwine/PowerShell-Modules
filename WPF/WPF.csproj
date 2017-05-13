@@ -95,16 +95,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="bin\Debug\Erwine.Leonard.T.WPFLib.dll" />
+    <Content Include="bin\Debug\Erwine.Leonard.T.WPFLib.pdb" />
     <Content Include="bin\Release\Erwine.Leonard.T.WPFLib.dll" />
     <Content Include="bin\Release\Erwine.Leonard.T.WPFLib.pdb" />
-    <Content Include="Erwine.Leonard.T.WPF.psd1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Erwine.Leonard.T.WPF.psm1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="bin\Release\Erwine.Leonard.T.WPF.psd1" />
-    <None Include="bin\Release\Erwine.Leonard.T.WPF.psm1" />
+    <Content Include="Erwine.Leonard.T.WPF.psd1" />
+    <Content Include="Erwine.Leonard.T.WPF.psm1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
