@@ -88,11 +88,9 @@
     <Content Include="IOUtility\Erwine.Leonard.T.IOUtilityLib.pdb" />
     <Content Include="LteDev\Erwine.Leonard.T.LteDev.psd1" />
     <Content Include="LteDev\Erwine.Leonard.T.LteDev.psm1" />
-    <None Include="GDIPlus\Compile.ps1" />
     <None Include="GDIPlus\Erwine.Leonard.T.GDIPlus.psd1" />
     <None Include="GDIPlus\Install.bat" />
     <None Include="GDIPlus\Install.ps1" />
-    <None Include="GDIPlus\README.md" />
     <None Include="GDIPlus\Uninstall.bat" />
     <None Include="GDIPlus\Uninstall.ps1" />
     <None Include="Properties\Settings.settings">
@@ -243,7 +241,6 @@
     </Content>
     <None Include="Speech\Erwine.Leonard.T.Speech.dll-Help.ps1xml" />
     <None Include="WPF\Test.ps1" />
-    <None Include="XmlUtility\GetWsdl.ps1" />
     <None Include="XmlUtility\Schemas\Maml.xsx">
       <DependentUpon>Maml.xsd</DependentUpon>
     </None>

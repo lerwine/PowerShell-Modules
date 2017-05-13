@@ -184,6 +184,7 @@
     <Folder Include="Commands\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Compile.ps1" />
     <None Include="GDIPlus.snk" />
     <None Include="Palette\README.md" />
     <None Include="README.md" />

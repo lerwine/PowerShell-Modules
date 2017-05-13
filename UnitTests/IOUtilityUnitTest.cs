@@ -75,7 +75,8 @@ namespace UnitTests
         [Description("Tests loading the IOUtility PowerShell module.")]
         public void ImportIOUtilityTestMethod()
         {
-            PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1");
+            PSModuleInfo module = PowerShellHelper.LoadPSModuleFromDeploymentDir(TestContext, "IOUtility\\Erwine.Leonard.T.IOUtility.psd1");
+            ModuleConformance.ModuleValidator.AssertPSModule(TestContext, module);
         }
     }
 }

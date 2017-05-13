@@ -222,6 +222,56 @@ namespace UnitTests
             }
         }
 
+        public static PSModuleInfo LoadPSModuleFromDeploymentDir(TestContext testContext, string relativePath, params string[] additionalModulePaths)
+        {
+            string path = GetDeploymentRelativePath(testContext, relativePath);
+            Assert.IsTrue(File.Exists(path));
+
+            InitialSessionState iss = InitialSessionState.CreateDefault();
+            // this.TestContext;
+            using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
+            {
+                runspace.Open();
+                using (PowerShell powershell = PowerShell.Create(RunspaceMode.NewRunspace))
+                {
+                    string modulePath = Path.GetFullPath(path);
+                    testContext.WriteLine("Path: {0}", modulePath);
+                    powershell.Runspace = runspace;
+
+                    PowerShell ps = powershell.AddScript(@"
+for ($i = 1; $i -lt $args.Count; $i++) {
+    Import-Module $args[$i];
+}
+Import-Module $args[0] -PassThru;
+");
+                    PowerShell ps2 = ps.AddArgument(modulePath);
+                    if (additionalModulePaths != null && additionalModulePaths.Length > 0)
+                    {
+                        foreach (string m in additionalModulePaths)
+                            powershell.AddArgument(GetDeploymentRelativePath(testContext, m));
+                    }
+
+                    Collection<PSObject> result = powershell.Invoke();
+                    if (powershell.HadErrors)
+                    {
+                        foreach (ErrorRecord errorRecord in powershell.Streams.Error)
+                            WriteErrorRecord(testContext, errorRecord);
+                        Assert.IsFalse(powershell.HadErrors, "Multiple errors encountered: See test output for details.");
+                    }
+                    Assert.AreEqual(1, result.Count, "There was not exactly one item returned.");
+                    Assert.IsNotNull(result[0], "Return value is null");
+                    Assert.IsNotNull(result[0].BaseObject, "Return value is null");
+                    Assert.IsInstanceOfType(result[0].BaseObject, typeof(PSModuleInfo), "Return value is not a PSModuleInfo object");
+                    return result[0].BaseObject as PSModuleInfo;
+                }
+            }
+        }
+
+        public static string GetDeploymentRelativePath(TestContext testContext, string relativePath)
+        {
+            return Path.GetFullPath(Path.Combine(Path.Combine(testContext.DeploymentDirectory, @"..\..\..\Deployment"), relativePath));
+        }
+
         public static PSModuleInfo LoadPSModuleInfo(TestContext testContext, string path, params string[] additionalModules)
         {
             InitialSessionState iss = InitialSessionState.CreateDefault();

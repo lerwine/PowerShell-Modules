@@ -66,6 +66,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("SPUtility")]
+        [Description("Tests loading the SPUtility module.")]
         public void ImportSPUtilityTestMethod()
         {
             PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1");

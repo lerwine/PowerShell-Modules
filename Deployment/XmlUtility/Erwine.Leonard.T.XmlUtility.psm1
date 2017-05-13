@@ -1,13 +1,13 @@
 Function New-XmlReaderSettings {
-	<#
-		.SYNOPSIS
-			Creates an instance of the XmlReaderSettings class.
+    <#
+        .SYNOPSIS
+            Creates an instance of the XmlReaderSettings class.
  
-		.DESCRIPTION
-			Initializes a new instance of the XmlReaderSettings class for use with an xml reader.
+        .DESCRIPTION
+            Initializes a new instance of the XmlReaderSettings class for use with an xml reader.
         
-		.OUTPUTS
-			System.Xml.XmlReaderSettings. Specifies a set of features to support on the XmlReader object created by the Create method.
+        .OUTPUTS
+            System.Xml.XmlReaderSettings. Specifies a set of features to support on the XmlReader object created by the Create method.
         
         .LINK
             Read-XmlDocument
@@ -32,10 +32,10 @@ Function New-XmlReaderSettings {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.schema.xmlschemaset.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'New')]
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'New')]
     [OutputType([System.Xml.XmlReaderSettings])]
-	Param(
+    Param(
         # Sets the XmlNameTable used for atomized string comparisons.
         [System.Xml.XmlNameTable]$NameTable,
         
@@ -83,7 +83,7 @@ Function New-XmlReaderSettings {
         
         # XmlReaderSettings to be cloned.
         [System.Xml.XmlReaderSettings]$Settings
-	)
+    )
     
     if ($PSBoundParameters.ContainsKey('Settings')) {
         $XmlReaderSettings = $Settings.Clone();
@@ -109,15 +109,15 @@ Function New-XmlReaderSettings {
 }
 
 Function New-XmlWriterSettings {
-	<#
-		.SYNOPSIS
-			Creates an instance of the XmlWriterSettings class.
+    <#
+        .SYNOPSIS
+            Creates an instance of the XmlWriterSettings class.
  
-		.DESCRIPTION
-			Initializes a new instance of the XmlWriterSettings class for use with an xml writer.
+        .DESCRIPTION
+            Initializes a new instance of the XmlWriterSettings class for use with an xml writer.
         
-		.OUTPUTS
-			System.Xml.XmlWriterSettings. Specifies a set of features to support on the XmlWriter object created by the XmlWriter.Create method.
+        .OUTPUTS
+            System.Xml.XmlWriterSettings. Specifies a set of features to support on the XmlWriter object created by the XmlWriter.Create method.
         
         .LINK
             Write-XmlDocument
@@ -139,24 +139,24 @@ Function New-XmlWriterSettings {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.conformancelevel.aspx
-	#>
-	[CmdletBinding()]
+    #>
+    [CmdletBinding()]
     [OutputType([System.Xml.XmlWriterSettings])]
-	Param(
+    Param(
         # Sets the type of text encoding to use
-		[System.Text.Encoding]$Encoding,
+        [System.Text.Encoding]$Encoding,
         
         # Sets a value that indicates whether the XmlWriter should remove duplicate namespace declarations when writing XML content. The default behavior is for the writer to output all namespace declarations that are present in the writer's namespace resolver.
-		[System.Xml.NewLineHandling]$NewLineHandling,
+        [System.Xml.NewLineHandling]$NewLineHandling,
         
         # Sets the character string to use for line breaks
-		[string]$NewLineChars,
+        [string]$NewLineChars,
         
         # Sets a value indicating whether to indent elements
         [bool]$Indent,
         
         # Sets the character string to use when indenting. This setting is used when the Indent property is set to true.
-		[string]$IndentChars,
+        [string]$IndentChars,
         
         # Sets a value indicating whether to write attributes on a new line
         [bool]$NewLineOnAttributes,
@@ -165,7 +165,7 @@ Function New-XmlWriterSettings {
         [bool]$CloseOutput,
         
         # Sets the level of conformance that the XML writer checks the XML output for
-		[System.Xml.ConformanceLevel]$ConformanceLevel,
+        [System.Xml.ConformanceLevel]$ConformanceLevel,
         
         # Sets a value that indicates whether the XML writer should check to ensure that all characters in the document conform to the "2.2 Characters" section of the W3C XML 1.0 Recommendation
         [bool]$CheckCharacters,
@@ -175,7 +175,7 @@ Function New-XmlWriterSettings {
         
         # XmlWriterSettings object to be cloned.
         [System.Xml.XmlWriterSettings]$Settings
-	)
+    )
     
     if ($PSBoundParameters.ContainsKey('Settings')) {
         $XmlWriterSettings = $Settings.Clone();
@@ -198,15 +198,15 @@ Function New-XmlWriterSettings {
 }
 
 Function Read-XmlDocument {
-	<#
-		.SYNOPSIS
-			Reads XML data.
+    <#
+        .SYNOPSIS
+            Reads XML data.
  
-		.DESCRIPTION
-			Initializes a new instance of the XmlDocument class and loads the XML data.
+        .DESCRIPTION
+            Initializes a new instance of the XmlDocument class and loads the XML data.
         
-		.OUTPUTS
-			System.Xml.XmlDocument. The xml document which was read.
+        .OUTPUTS
+            System.Xml.XmlDocument. The xml document which was read.
         
         .LINK
             New-XmlReaderSettings
@@ -225,96 +225,96 @@ Function Read-XmlDocument {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlreader.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'File')]
-	[OutputType([System.Xml.XmlDocument])]
-	Param(
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'File')]
+    [OutputType([System.Xml.XmlDocument])]
+    Param(
         # The URI for the file containing the XML data. The XmlResolver object on the XmlReaderSettings object is used to convert the path to a canonical data representation.
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'File')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'File')]
         [Alias('Path')]
-		[string]$InputUri,
+        [string]$InputUri,
         
         # The stream that contains the XML data.
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Stream')]
-		[System.IO.Stream]$Stream,
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Stream')]
+        [System.IO.Stream]$Stream,
         
         # The stream that contains the XML data.
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'TextReader')]
-		[System.IO.TextReader]$TextReader,
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'TextReader')]
+        [System.IO.TextReader]$TextReader,
         
         # The stream that contains the XML data.
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'XmlReader')]
-		[System.Xml.XmlReader]$XmlReader,
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'XmlReader')]
+        [System.Xml.XmlReader]$XmlReader,
         
         # Byte array containing the XML data.
-		[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Bytes')]
-		[byte[]]$ByteArray,
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Bytes')]
+        [byte[]]$ByteArray,
         
         # The settings for the new XmlReader instance.
-		[Parameter(Position = 1)]
-		[System.Xml.XmlReaderSettings]$Settings,
+        [Parameter(Position = 1)]
+        [System.Xml.XmlReaderSettings]$Settings,
         
         # The base URI for the entity or document being read.
-		[Parameter(Position = 2, ParameterSetName = 'File')]
-		[Parameter(Position = 2, ParameterSetName = 'Stream')]
-		[Parameter(Position = 2, ParameterSetName = 'TextReader')]
-		[Parameter(Position = 2, ParameterSetName = 'Bytes')]
-		[string]$BaseUri
-	)
+        [Parameter(Position = 2, ParameterSetName = 'File')]
+        [Parameter(Position = 2, ParameterSetName = 'Stream')]
+        [Parameter(Position = 2, ParameterSetName = 'TextReader')]
+        [Parameter(Position = 2, ParameterSetName = 'Bytes')]
+        [string]$BaseUri
+    )
     
-	if ($PSCmdlet.ParameterSetName -eq 'Bytes') {
-		$Stream = New-Object -TypeName 'System.IO.MemoryStream' -ArgumentList (,$ByteArray);
-		if ($Stream -eq $null) { return }
-	}
-	
-	switch ($PSCmdlet.ParameterSetName) {
-		'File' { $InputObj = $InputUri; break; }
-		'TextReader' { $InputObj = $TextReader; break; }
-		'XmlReader' { $InputObj = $XmlReader; break; }
-		default { $InputObj = $Stream; break; }
-	}
-	
-	if ($PSBoundParameters.ContainsKey('Settings')) {
-		if ($PSBoundParameters.ContainsKey('BaseUri')) {
-			$Reader = [System.Xml.XmlReader]::Create($InputObj, $Settings, $BaseUri);
-		} else {
-			$Reader = [System.Xml.XmlReader]::Create($InputObj, $Settings);
-		}
-	} else {
-		if ($PSBoundParameters.ContainsKey('BaseUri')) {
-			$Reader = [System.Xml.XmlReader]::Create($InputObj, $null, $BaseUri);
-		} else {
-			$Reader = $InputObj;
-		}
-	}
+    if ($PSCmdlet.ParameterSetName -eq 'Bytes') {
+        $Stream = New-Object -TypeName 'System.IO.MemoryStream' -ArgumentList (,$ByteArray);
+        if ($Stream -eq $null) { return }
+    }
+    
+    switch ($PSCmdlet.ParameterSetName) {
+        'File' { $InputObj = $InputUri; break; }
+        'TextReader' { $InputObj = $TextReader; break; }
+        'XmlReader' { $InputObj = $XmlReader; break; }
+        default { $InputObj = $Stream; break; }
+    }
+    
+    if ($PSBoundParameters.ContainsKey('Settings')) {
+        if ($PSBoundParameters.ContainsKey('BaseUri')) {
+            $Reader = [System.Xml.XmlReader]::Create($InputObj, $Settings, $BaseUri);
+        } else {
+            $Reader = [System.Xml.XmlReader]::Create($InputObj, $Settings);
+        }
+    } else {
+        if ($PSBoundParameters.ContainsKey('BaseUri')) {
+            $Reader = [System.Xml.XmlReader]::Create($InputObj, $null, $BaseUri);
+        } else {
+            $Reader = $InputObj;
+        }
+    }
 
-	if ($Reader -eq $null -and -not ($PSBoundParameters.ContainsKey('Settings') -or $PSBoundParameters.ContainsKey('BaseUri'))) { return }
-	
-	try {
+    if ($Reader -eq $null -and -not ($PSBoundParameters.ContainsKey('Settings') -or $PSBoundParameters.ContainsKey('BaseUri'))) { return }
+    
+    try {
         $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
-		$XmlDocument.Load($Reader);
-		if ($XmlDocument.DocumentElement -ne $null) { $XmlDocument | Write-Output }
-	} catch {
-		throw;
-	} finally {
-		if ($Reader -is [System.Xml.XmlReader] -and -not $PSBoundParameters.ContainsKey('XmlReader')) { $XmlReader.Close() }
-		if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
-	}
+        $XmlDocument.Load($Reader);
+        if ($XmlDocument.DocumentElement -ne $null) { $XmlDocument | Write-Output }
+    } catch {
+        throw;
+    } finally {
+        if ($Reader -is [System.Xml.XmlReader] -and -not $PSBoundParameters.ContainsKey('XmlReader')) { $XmlReader.Close() }
+        if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
+    }
 }
 
 Function Write-XmlDocument {
-	<#
-		.SYNOPSIS
-			Writes XML data with custom options.
+    <#
+        .SYNOPSIS
+            Writes XML data with custom options.
  
-		.DESCRIPTION
-			Writes XML data contained within an XmlDocument object with custom output options.
+        .DESCRIPTION
+            Writes XML data contained within an XmlDocument object with custom output options.
         
-		.OUTPUTS
-			System.Byte[]. The XML data as a byte array. This is only when using the AsByteArray switch.
+        .OUTPUTS
+            System.Byte[]. The XML data as a byte array. This is only when using the AsByteArray switch.
         
-		.OUTPUTS
-			System.String. The XML data as a string. This is only when using the AsString switch.
+        .OUTPUTS
+            System.String. The XML data as a string. This is only when using the AsString switch.
         
         .LINK
             New-XmlWriterSettings
@@ -336,63 +336,63 @@ Function Write-XmlDocument {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlwriter.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'File')]
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'File')]
     [OutputType([string], ParameterSetName = 'String')]
     [OutputType([byte[]], ParameterSetName = 'Bytes')]
-	Param(
+    Param(
         # The XmlDocument containing the XML you wish to write.
-		[Parameter(Mandatory = $true, Position = 0)]
-		[Alias('XmlDocument')]
-		[System.Xml.XmlDocument]$Document,
+        [Parameter(Mandatory = $true, Position = 0)]
+        [Alias('XmlDocument')]
+        [System.Xml.XmlDocument]$Document,
         
         # The file to which you want to write.
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'File')]
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'File')]
         [Alias('Path')]
-		[string]$OutputFileName,
+        [string]$OutputFileName,
         
         # The stream to which you want to write.
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Stream')]
-		[System.IO.Stream]$Stream,
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Stream')]
+        [System.IO.Stream]$Stream,
         
         # The System.IO.TextWriter to which you want to write.
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'TextWriter')]
-		[System.IO.TextWriter]$TextWriter,
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'TextWriter')]
+        [System.IO.TextWriter]$TextWriter,
         
         # The System.Xml.XmlWriter object that you want to use as the underlying writer.
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'XmlWriter')]
-		[System.Xml.XmlWriter]$XmlWriter,
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'XmlWriter')]
+        [System.Xml.XmlWriter]$XmlWriter,
         
         # The XmlWriterSettings object used to configure the new XmlWriter instance. If this is not specified, a XmlWriterSettings with default settings is used.
-		[Parameter(Position = 2)]
-		[System.Xml.XmlWriterSettings]$Settings,
+        [Parameter(Position = 2)]
+        [System.Xml.XmlWriterSettings]$Settings,
         
         # Returns the written XML data as an array of bytes.
-		[Parameter(Mandatory = $true, ParameterSetName = 'Bytes')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Bytes')]
         [switch]$AsByteArray,
         
         # Returns the written XML data as a string.
-		[Parameter(Mandatory = $true, ParameterSetName = 'String')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'String')]
         [switch]$AsString
-	)
+    )
     
-	if ($AsByteArray -or $AsString) {
-		$Stream = New-Object -TypeName 'System.IO.MemoryStream';
-		if ($Stream -eq $null) { return }
-	}
-	
-	switch ($PSCmdlet.ParameterSetName) {
-		'File' { $OutputObj = $OutputFileName; break; }
-		'TextWriter' { $OutputObj = $TextWriter; break; }
-		'XmlWriter' { $OutputObj = $XmlWriter; break; }
-		default { $OutputObj = $Stream; break; }
-	}
-	
-	if ($PSBoundParameters.ContainsKey('Settings')) {
-		$Writer = [System.Xml.XmlWriter]::Create($OutputObj, $Settings);
-	} else {
-		$Writer = $OutputObj;
-	}
+    if ($AsByteArray -or $AsString) {
+        $Stream = New-Object -TypeName 'System.IO.MemoryStream';
+        if ($Stream -eq $null) { return }
+    }
+    
+    switch ($PSCmdlet.ParameterSetName) {
+        'File' { $OutputObj = $OutputFileName; break; }
+        'TextWriter' { $OutputObj = $TextWriter; break; }
+        'XmlWriter' { $OutputObj = $XmlWriter; break; }
+        default { $OutputObj = $Stream; break; }
+    }
+    
+    if ($PSBoundParameters.ContainsKey('Settings')) {
+        $Writer = [System.Xml.XmlWriter]::Create($OutputObj, $Settings);
+    } else {
+        $Writer = $OutputObj;
+    }
 
     if ($Writer -eq $null -and $PSBoundParameters.ContainsKey('Settings')) {
         throw 'Unable to create xml writer.';
@@ -401,125 +401,125 @@ Function Write-XmlDocument {
     
     try {
         $Document.WriteTo($Writer);
-		if ($Writer -isnot [string]) { $Writer.Flush() }
+        if ($Writer -isnot [string]) { $Writer.Flush() }
         if ($AsByteArray) {
             Write-Output -InputObject (,$Stream.ToArray());
         } else {
             if ($AsString) {
-				if ($XmlDocument.FirstChild.NodeType -eq [System.Xml.XmlNodeType]::XmlDeclaration) {
-					try {
-						$Encoding = [System.Text.Encoding]::GetEncoding($Document.FirstChild.Encoding);
-					} catch {
-						$Encoding = [System.Text.Encoding]::UTF8;
-					}
-				} else {
-					$Encoding = [System.Text.Encoding]::UTF8;
-				}
-				$Encoding.GetString($Stream.ToArray()) | Write-Output;
-			}
+                if ($XmlDocument.FirstChild.NodeType -eq [System.Xml.XmlNodeType]::XmlDeclaration) {
+                    try {
+                        $Encoding = [System.Text.Encoding]::GetEncoding($Document.FirstChild.Encoding);
+                    } catch {
+                        $Encoding = [System.Text.Encoding]::UTF8;
+                    }
+                } else {
+                    $Encoding = [System.Text.Encoding]::UTF8;
+                }
+                $Encoding.GetString($Stream.ToArray()) | Write-Output;
+            }
         }
     } catch {
         throw;
     } finally {
-		if ($Writer -is [System.Xml.XmlWriter] -and -not $PSBoundParameters.ContainsKey('XmlWriter')) { $Writer.Close() }
-		if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
+        if ($Writer -is [System.Xml.XmlWriter] -and -not $PSBoundParameters.ContainsKey('XmlWriter')) { $Writer.Close() }
+        if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
     }
 }
 
 Function ConvertTo-XmlEncodedNmToken {
-	<#
-		.SYNOPSIS
-			Verifies the name is valid according to the XML specification.
+    <#
+        .SYNOPSIS
+            Verifies the name is valid according to the XML specification.
  
-		.DESCRIPTION
-			This method guarantees that the name is valid according to the XML specification.
+        .DESCRIPTION
+            This method guarantees that the name is valid according to the XML specification.
             For example, if you passed this method the invalid name 70+, it returns 70_x002b_ which is a valid XML name.
         
-		.OUTPUTS
-			System.String. The encoded name.
+        .OUTPUTS
+            System.String. The encoded name.
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlconvert.encodenmtoken.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
         # The name to be encoded. 
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[string]$Value
-	)
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Value
+    )
     
-	Process { [System.Xml.XmlConvert]::EncodeNmToken($Value) }
+    Process { [System.Xml.XmlConvert]::EncodeNmToken($Value) }
 }
 
 Function ConvertTo-XmlEncodedName {
-	<#
-		.SYNOPSIS
-			Converts the name to a valid XML name.
+    <#
+        .SYNOPSIS
+            Converts the name to a valid XML name.
  
-		.DESCRIPTION
-			This method translates invalid characters, such as spaces or half-width Katakana, that need to be mapped to XML names without the support or presence of schemas.
+        .DESCRIPTION
+            This method translates invalid characters, such as spaces or half-width Katakana, that need to be mapped to XML names without the support or presence of schemas.
             The invalid characters are translated into escaped numeric entity encodings.
 
-		.OUTPUTS
-			System.String. The name with any invalid characters replaced by an escape string.
+        .OUTPUTS
+            System.String. The name with any invalid characters replaced by an escape string.
         
         .LINK
             ConvertFrom-XmlEncodedName
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlconvert.encodename.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
         # A name to be translated
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[string]$Value
-	)
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Value
+    )
     
-	Process { [System.Xml.XmlConvert]::EncodeName($Value) }
+    Process { [System.Xml.XmlConvert]::EncodeName($Value) }
 }
 
 Function ConvertTo-XmlEncodedLocalName {
-	<#
-		.SYNOPSIS
-			Converts the name to a valid XML local name.
+    <#
+        .SYNOPSIS
+            Converts the name to a valid XML local name.
  
-		.DESCRIPTION
-			This method is similar to the EncodeName method except that it encodes the colon character, which guarantees that the name can be used as the local name part of a namespace qualified name.
+        .DESCRIPTION
+            This method is similar to the EncodeName method except that it encodes the colon character, which guarantees that the name can be used as the local name part of a namespace qualified name.
             For example, if you passed this method the invalid name a:b, it returns a_x003a_b, which is a valid local name.
 
-		.OUTPUTS
-			System.String. The encoded name.
+        .OUTPUTS
+            System.String. The encoded name.
         
         .LINK
             ConvertFrom-XmlEncodedName
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlconvert.encodelocalname.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
         # The name to be encoded
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[string]$Value
-	)
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Value
+    )
     
-	Process { [System.Xml.XmlConvert]::EncodeLocalName($Value) }
+    Process { [System.Xml.XmlConvert]::EncodeLocalName($Value) }
 }
 
 Function ConvertFrom-XmlEncodedName {
-	<#
-		.SYNOPSIS
-			Decodes a name.
+    <#
+        .SYNOPSIS
+            Decodes a name.
  
-		.DESCRIPTION
-			This method does the reverse of the ConvertTo-XmlEncodedName and ConvertTo-XmlEncodedLocalName Functions.
+        .DESCRIPTION
+            This method does the reverse of the ConvertTo-XmlEncodedName and ConvertTo-XmlEncodedLocalName Functions.
 
-		.OUTPUTS
-			System.String. The decoded  name.
+        .OUTPUTS
+            System.String. The decoded  name.
         
         .LINK
             ConvertTo-XmlEncodedName
@@ -529,28 +529,28 @@ Function ConvertFrom-XmlEncodedName {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlconvert.decodename.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
         # The name to be transformed
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[string]$Value
-	)
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Value
+    )
     
-	Process { [System.Xml.XmlConvert]::DecodeName($Value) }
+    Process { [System.Xml.XmlConvert]::DecodeName($Value) }
 }
 
 Function ConvertTo-XmlString {
-	<#
-		.SYNOPSIS
-			Converts data to XML String.
+    <#
+        .SYNOPSIS
+            Converts data to XML String.
  
-		.DESCRIPTION
-			Converts strongly typed data to an equivalent XML String representation.
+        .DESCRIPTION
+            Converts strongly typed data to an equivalent XML String representation.
 
-		.OUTPUTS
-			System.String. The converted value.
+        .OUTPUTS
+            System.String. The converted value.
         
         .LINK
             ConvertFrom-XmlString
@@ -560,10 +560,10 @@ Function ConvertTo-XmlString {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlconvert.tostring.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'DateTime')]
-	[OutputType([string])]
-	Param(
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'DateTime')]
+    [OutputType([string])]
+    Param(
         # Converts boolean value to XML string
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Boolean')]
         [System.Boolean]$Boolean,
@@ -729,15 +729,15 @@ Function ConvertTo-XmlString {
 }
 
 Function ConvertFrom-XmlString {
-	<#
-		.SYNOPSIS
-			Converts data from XML String.
+    <#
+        .SYNOPSIS
+            Converts data from XML String.
  
-		.DESCRIPTION
-			Converts an XML string representation to strongly typed data.
+        .DESCRIPTION
+            Converts an XML string representation to strongly typed data.
 
-		.OUTPUTS
-			System.Object. The converted data.
+        .OUTPUTS
+            System.Object. The converted data.
         
         .LINK
             ConvertTo-XmlString
@@ -747,8 +747,8 @@ Function ConvertFrom-XmlString {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlconvert.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'DateTime')]
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'DateTime')]
     [OutputType([System.Boolean], ParameterSetName = 'Boolean')]
     [OutputType([System.Char], ParameterSetName = 'Char')]
     [OutputType([System.Decimal], ParameterSetName = 'Decimal')]
@@ -785,17 +785,17 @@ Function ConvertFrom-XmlString {
 
         # Converts an XML string to an Int16 value.
         [Parameter(Mandatory = $true, ParameterSetName = 'Int16')]
-		[Alias('Int16')]
+        [Alias('Int16')]
         [switch]$Short,
 
         # Converts an XML string to an Int32 value.
         [Parameter(Mandatory = $true, ParameterSetName = 'Int32')]
-		[Alias('Int32')]
+        [Alias('Int32')]
         [switch]$Int,
 
         # Converts an XML string to an Int64 value.
         [Parameter(Mandatory = $true, ParameterSetName = 'Int64')]
-		[Alias('Int64')]
+        [Alias('Int64')]
         [switch]$Long,
 
         # Converts an XML string to a Byte value.
@@ -804,22 +804,22 @@ Function ConvertFrom-XmlString {
 
         # Converts an XML string to a UInt32 value.
         [Parameter(Mandatory = $true, ParameterSetName = 'UInt16')]
-		[Alias('UInt16')]
+        [Alias('UInt16')]
         [switch]$UShort,
 
         # Converts an XML string to a UInt32 value.
         [Parameter(Mandatory = $true, ParameterSetName = 'UInt32')]
-		[Alias('UInt32')]
+        [Alias('UInt32')]
         [switch]$UInt,
 
         # Converts an XML string to a UInt64 value.
         [Parameter(Mandatory = $true, ParameterSetName = 'UInt64')]
-		[Alias('UInt64')]
+        [Alias('UInt64')]
         [switch]$ULong,
 
         # Converts an XML string to a Single value.
         [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
-		[Alias('Single')]
+        [Alias('Single')]
         [switch]$Float,
 
         # Converts an XML string to a Double value.
@@ -948,15 +948,15 @@ Function ConvertFrom-XmlString {
 }
 
 Function ConvertTo-XmlBinary {
-	<#
-		.SYNOPSIS
-			Converts byte array XML String.
+    <#
+        .SYNOPSIS
+            Converts byte array XML String.
  
-		.DESCRIPTION
-			Converts a byte array to an XML string representation.
+        .DESCRIPTION
+            Converts a byte array to an XML string representation.
 
-		.OUTPUTS
-			System.String. The converted binary data.
+        .OUTPUTS
+            System.String. The converted binary data.
         
         .LINK
             ConvertFrom-XmlBinary
@@ -966,47 +966,47 @@ Function ConvertTo-XmlBinary {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.convert.tobase64string.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
-		# The binary data to be encoded
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[AllowEmptyCollection()]
-		[byte[]]$Bytes,
-		
-		# Encode binary data as base-64 text. This is the default.
-		[Parameter(ParameterSetName = 'Base64')]
-		[switch]$Base64,
-		
-		# Encode binary data as a hexidecimal string.
-		[Parameter(Mandatory = $true, ParameterSetName = 'Hex')]
-		[switch]$Hex
-	)
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
+        # The binary data to be encoded
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyCollection()]
+        [byte[]]$Bytes,
+        
+        # Encode binary data as base-64 text. This is the default.
+        [Parameter(ParameterSetName = 'Base64')]
+        [switch]$Base64,
+        
+        # Encode binary data as a hexidecimal string.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Hex')]
+        [switch]$Hex
+    )
 
-	Process {
-		if ($Bytes.Length -eq 0) {
-			'' | Write-Output;
-		} else {
-			if ($Hex) {
-				(-join ($Bytes | ForEach-Object { ([int]$_).ToString('X2') })) | Write-Output;
-			} else {
-				[System.Convert]::ToBase64String($Bytes, [System.Base64FormattingOptions]::InsertLineBreaks);
-			}
-		}
-	}
+    Process {
+        if ($Bytes.Length -eq 0) {
+            '' | Write-Output;
+        } else {
+            if ($Hex) {
+                (-join ($Bytes | ForEach-Object { ([int]$_).ToString('X2') })) | Write-Output;
+            } else {
+                [System.Convert]::ToBase64String($Bytes, [System.Base64FormattingOptions]::InsertLineBreaks);
+            }
+        }
+    }
 }
 
 Function ConvertFrom-XmlBinary {
-	<#
-		.SYNOPSIS
-			Converts XML String to byte array.
+    <#
+        .SYNOPSIS
+            Converts XML String to byte array.
  
-		.DESCRIPTION
-			Converts an XML string representation to a byte array.
+        .DESCRIPTION
+            Converts an XML string representation to a byte array.
 
-		.OUTPUTS
-			System.Byte[]. The converted binary data.
+        .OUTPUTS
+            System.Byte[]. The converted binary data.
         
         .LINK
             ConvertTo-XmlBinary
@@ -1016,122 +1016,122 @@ Function ConvertFrom-XmlBinary {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.convert.frombase64string.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([byte[]])]
-	Param(
-		# The text to be decoded.
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[AllowEmptyString()]
-		[string]$Text,
-		
-		# Decodes text as base-64
-		[Parameter(ParameterSetName = 'Base64')]
-		[switch]$Base64,
-		
-		# Decodes text as hexidecimal values
-		[Parameter(Mandatory = $true, ParameterSetName = 'Hex')]
-		[switch]$Hex
-	)
+    #>
+    [CmdletBinding()]
+    [OutputType([byte[]])]
+    Param(
+        # The text to be decoded.
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [string]$Text,
+        
+        # Decodes text as base-64
+        [Parameter(ParameterSetName = 'Base64')]
+        [switch]$Base64,
+        
+        # Decodes text as hexidecimal values
+        [Parameter(Mandatory = $true, ParameterSetName = 'Hex')]
+        [switch]$Hex
+    )
 
-	Process {
-		$Text = $Text.Trim();
-		if ($Text.Length -eq 0) {
-			Write-Output -InputObject (,(New-Object -TypeName 'System.Byte[]' -ArgumentList 0));
-		} else {
-			if ($Hex) {
-				$List = New-Object -TypeName 'System.Collections.Generic.List[char]';
-				if ($Text.StartsWith('0x') -or $Text.StartsWith('0X')) { $Text = $Text.Substring(2) }
-				$Text = [XmlUtility.XmlUtility]::WhitespaceRegex.Replace($Text, '');
-				if ($Text.Length -gt 0) {
-					for ($i = 0; $i -lt $Text.Length; $i+=2) {
-						$List.Add(([char]([int]::Parse($Text.Substring($i, 2), [System.Globalization.NumberStyles]::HexNumber))));
-						Write-Output -InputObject (,$List.ToArray());
-					}
-				}
-				Write-Output -InputObject (,$List.ToArray());
-			} else {
-				Write-Output -InputObject (,[System.Convert]::FromBase64String($Text.Trim()));
-			}
-		}
-	}
+    Process {
+        $Text = $Text.Trim();
+        if ($Text.Length -eq 0) {
+            Write-Output -InputObject (,(New-Object -TypeName 'System.Byte[]' -ArgumentList 0));
+        } else {
+            if ($Hex) {
+                $List = New-Object -TypeName 'System.Collections.Generic.List[char]';
+                if ($Text.StartsWith('0x') -or $Text.StartsWith('0X')) { $Text = $Text.Substring(2) }
+                $Text = [XmlUtility.XmlUtility]::WhitespaceRegex.Replace($Text, '');
+                if ($Text.Length -gt 0) {
+                    for ($i = 0; $i -lt $Text.Length; $i+=2) {
+                        $List.Add(([char]([int]::Parse($Text.Substring($i, 2), [System.Globalization.NumberStyles]::HexNumber))));
+                        Write-Output -InputObject (,$List.ToArray());
+                    }
+                }
+                Write-Output -InputObject (,$List.ToArray());
+            } else {
+                Write-Output -InputObject (,[System.Convert]::FromBase64String($Text.Trim()));
+            }
+        }
+    }
 }
 
 Function ConvertTo-XmlList {
-	<#
-		.SYNOPSIS
-			Converts string values to an XML list.
+    <#
+        .SYNOPSIS
+            Converts string values to an XML list.
  
-		.DESCRIPTION
-			Converts string values to an XML string representation of a list.
+        .DESCRIPTION
+            Converts string values to an XML string representation of a list.
 
-		.OUTPUTS
-			System.String. The converted strings.
+        .OUTPUTS
+            System.String. The converted strings.
         
         .LINK
             ConvertFrom-XmlList
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
-		# Text values to be added to the XML list
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[string[]]$Text
-	)
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
+        # Text values to be added to the XML list
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string[]]$Text
+    )
 
-	Begin { $Items = @(); }
+    Begin { $Items = @(); }
 
-	Process { $Items += $Text }
+    Process { $Items += $Text }
 
-	End {
-		($Items | ForEach-Object { [XmlUtility.XmlUtility]::EncodeSpace($_) }) -join ' ';
-	}
+    End {
+        ($Items | ForEach-Object { [XmlUtility.XmlUtility]::EncodeSpace($_) }) -join ' ';
+    }
 }
 
 Function ConvertFrom-XmlList {
-	<#
-		.SYNOPSIS
-			Converts XML list string item values.
+    <#
+        .SYNOPSIS
+            Converts XML list string item values.
  
-		.DESCRIPTION
-			Converts an XML string representation of a list to individual string values.
+        .DESCRIPTION
+            Converts an XML string representation of a list to individual string values.
 
-		.OUTPUTS
-			System.String[]. The list items.
+        .OUTPUTS
+            System.String[]. The list items.
 
         .LINK
             ConvertFrom-XmlList
-	#>
-	[CmdletBinding()]
-	[OutputType([string[]])]
-	Param(
-		# Text representing an XML list
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[string]$Text,
+    #>
+    [CmdletBinding()]
+    [OutputType([string[]])]
+    Param(
+        # Text representing an XML list
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Text,
 
-		# XML list items are not encoded
-		[switch]$NoDecode
-	)
+        # XML list items are not encoded
+        [switch]$NoDecode
+    )
 
-	Process {
-		if ($NoDecode) {
-			$Items -split '\s+';
-		} else {
-			($Items -split '\s+') | ForEach-Object { [XmlUtility.XmlUtility]::Decode($_) }
-		}
-	}
+    Process {
+        if ($NoDecode) {
+            $Items -split '\s+';
+        } else {
+            ($Items -split '\s+') | ForEach-Object { [XmlUtility.XmlUtility]::Decode($_) }
+        }
+    }
 }
 
 Function Add-XmlAttribute {
-	<#
-		.SYNOPSIS
-			Adds or sets an XML attribute.
+    <#
+        .SYNOPSIS
+            Adds or sets an XML attribute.
  
-		.DESCRIPTION
-			If a matching attribute already exists, then the attribute's value is set. Otherwise, a new attribute is added as the last node in the XML element's attribute collection.
+        .DESCRIPTION
+            If a matching attribute already exists, then the attribute's value is set. Otherwise, a new attribute is added as the last node in the XML element's attribute collection.
 
-		.OUTPUTS
-			System.Xml.XmlAttribute. The added or modified attribute, if $PassThru is set.
+        .OUTPUTS
+            System.Xml.XmlAttribute. The added or modified attribute, if $PassThru is set.
         
         .LINK
             Set-XmlAttribute
@@ -1147,44 +1147,44 @@ Function Add-XmlAttribute {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlattributecollection.append.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'Name')]
-	[OutputType([System.Xml.XmlAttribute])]
-	Param(
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Xml.XmlAttribute])]
+    Param(
         # The XML element to which the attribute is to be added.
-		[Parameter(Mandatory = $true, Position = 0)]
-		[System.Xml.XmlElement]$XmlElement,
-		
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Xml.XmlElement]$XmlElement,
+        
         # The value to assign to the attribute.
-		[Parameter(Mandatory = $true, Position = 1)]
-		[AllowEmptyString()]
-		[string]$Value,
-		
+        [Parameter(Mandatory = $true, Position = 1)]
+        [AllowEmptyString()]
+        [string]$Value,
+        
         # The prefix of the attribute.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyNCName($_) } catch { }; $n -eq $_ })]
-		[string]$Prefix,
-		
+        [string]$Prefix,
+        
         # The qualified name of the attribute.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Name')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Name')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyName($_) } catch { }; $n -eq $_ })]
-		[string]$Name,
-		
+        [string]$Name,
+        
         # The local name of the attribute.
-		[Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
+        [Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyNCName($_) } catch { }; $n -eq $_ })]
-		[string]$LocalName,
-		
+        [string]$LocalName,
+        
         # The namespaceURI of the attribute.
-		[Parameter(Mandatory = $true, Position = 4, ParameterSetName = 'Prefix')]
-		[Parameter(Position = 3, ParameterSetName = 'Name')]
-		[AllowEmptyString()]
+        [Parameter(Mandatory = $true, Position = 4, ParameterSetName = 'Prefix')]
+        [Parameter(Position = 3, ParameterSetName = 'Name')]
+        [AllowEmptyString()]
         [ValidateScript({ $_ -eq '' -or [System.Uri]::IsWellFormedUriString($_, [System.UriKind]::Absolute) })]
-		[string]$NamespaceURI,
+        [string]$NamespaceURI,
         
         # If set, then the attribute will be returned.
-		[switch]$PassThru
-	)
+        [switch]$PassThru
+    )
     
     if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
         if ($PSBoundParameters.ContainsKey('Prefix')) {
@@ -1210,16 +1210,16 @@ Function Add-XmlAttribute {
 }
 
 Function Set-XmlAttribute {
-	<#
-		.SYNOPSIS
-			Sets an XML attribute.
+    <#
+        .SYNOPSIS
+            Sets an XML attribute.
  
-		.DESCRIPTION
-			Sets the value of an XML attribute belonging to the XML element.
+        .DESCRIPTION
+            Sets the value of an XML attribute belonging to the XML element.
             If the attribute does not exist, and $Create is set, then a new attribute is added as the last node in the XML element's attribute collection. Otherwise an error is thrown;
 
-		.OUTPUTS
-			System.Xml.XmlAttribute. The modified or added attribute, if $PassThru is set.
+        .OUTPUTS
+            System.Xml.XmlAttribute. The modified or added attribute, if $PassThru is set.
         
         .LINK
             Add-XmlAttribute
@@ -1235,47 +1235,47 @@ Function Set-XmlAttribute {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlattributecollection.append.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'Name')]
-	[OutputType([System.Xml.XmlAttribute])]
-	Param(
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Xml.XmlAttribute])]
+    Param(
         # The XML element containing the attribute which is to be modified.
-		[Parameter(Mandatory = $true, Position = 0)]
-		[System.Xml.XmlElement]$XmlElement,
-		
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Xml.XmlElement]$XmlElement,
+        
         # The value to assign to the attribute.
-		[Parameter(Mandatory = $true, Position = 1)]
-		[AllowEmptyString()]
-		[string]$Value,
-		
+        [Parameter(Mandatory = $true, Position = 1)]
+        [AllowEmptyString()]
+        [string]$Value,
+        
         # The prefix of the attribute.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyNCName($_) } catch { }; $n -eq $_ })]
-		[string]$Prefix,
-		
+        [string]$Prefix,
+        
         # The qualified name of the attribute.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Name')]
-		[string]$Name,
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Name')]
+        [string]$Name,
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyName($_) } catch { }; $n -eq $_ })]
-		
+        
         # The local name of the attribute.
-		[Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
+        [Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyNCName($_) } catch { }; $n -eq $_ })]
-		[string]$LocalName,
-		
+        [string]$LocalName,
+        
         # The namespaceURI of the attribute.
-		[Parameter(Mandatory = $true, Position = 4, ParameterSetName = 'Prefix')]
-		[Parameter(Position = 3, ParameterSetName = 'Name')]
-		[AllowEmptyString()]
+        [Parameter(Mandatory = $true, Position = 4, ParameterSetName = 'Prefix')]
+        [Parameter(Position = 3, ParameterSetName = 'Name')]
+        [AllowEmptyString()]
         [ValidateScript({ $_ -eq '' -or [System.Uri]::IsWellFormedUriString($_, [System.UriKind]::Absolute) })]
-		[string]$NamespaceURI,
+        [string]$NamespaceURI,
 
         # If set, and the attribute does not exist, then it will be appended.
-		[switch]$Create,
+        [switch]$Create,
 
         # If set, then the attribute will be returned.
-		[switch]$PassThru
-	)
+        [switch]$PassThru
+    )
     
     if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
         $XmlNamespaceManager = New-Object -TypeName 'System.Xml.XmlNamespaceManager' -ArgumentList $XmlElement.OwnerDocument.NameTable;
@@ -1314,15 +1314,15 @@ Function Set-XmlAttribute {
 }
 
 Function Add-XmlElement {
-	<#
-		.SYNOPSIS
-			Adds an XML element.
+    <#
+        .SYNOPSIS
+            Adds an XML element.
  
-		.DESCRIPTION
-			Adds an XML element to the specified parent XML element.
+        .DESCRIPTION
+            Adds an XML element to the specified parent XML element.
 
-		.OUTPUTS
-			System.Xml.XmlElement. The XML element which was added.
+        .OUTPUTS
+            System.Xml.XmlElement. The XML element which was added.
         
         .LINK
             Add-XmlAttribute
@@ -1339,33 +1339,33 @@ Function Add-XmlElement {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlelement.aspx
     #>
-	[CmdletBinding(DefaultParameterSetName = 'Name')]
-	[OutputType([System.Xml.XmlElement])]
-	Param(
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Xml.XmlElement])]
+    Param(
         # The XML element to which the new child element is to be added.
-		[Parameter(Mandatory = $true, Position = 0)]
-		[System.Xml.XmlElement]$ParentElement,
-		
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Xml.XmlElement]$ParentElement,
+        
         # The prefix of the new child element.
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Prefix')]
-		[string]$Prefix,
-		
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Prefix')]
+        [string]$Prefix,
+        
         # The qualified name of the new child element.
-		[Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Name')]
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Name')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyName($_) } catch { }; $n -eq $_ })]
-		[string]$Name,
-		
+        [string]$Name,
+        
         # The local name of the new child element.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
-		[string]$LocalName,
-		
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
+        [string]$LocalName,
+        
         # The namespaceURI of the new child element.
-		[Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
-		[Parameter(Position = 2, ParameterSetName = 'Name')]
-		[AllowEmptyString()]
+        [Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
+        [Parameter(Position = 2, ParameterSetName = 'Name')]
+        [AllowEmptyString()]
         [ValidateScript({ $_ -eq '' -or [System.Uri]::IsWellFormedUriString($_, [System.UriKind]::Absolute) })]
-		[string]$NamespaceURI
-	)
+        [string]$NamespaceURI
+    )
     
     if ($PSBoundParameters.ContainsKey('Name')) {
         if ($PSBoundParameters.ContainsKey('NamespaceURI')) {
@@ -1379,15 +1379,15 @@ Function Add-XmlElement {
 }
 
 Function Add-XmlTextElement {
-	<#
-		.SYNOPSIS
-			Adds an XML element with text content.
+    <#
+        .SYNOPSIS
+            Adds an XML element with text content.
  
-		.DESCRIPTION
-			Adds an XML element, with text content, to the specified parent XML element.
+        .DESCRIPTION
+            Adds an XML element, with text content, to the specified parent XML element.
 
-		.OUTPUTS
-			System.Xml.XmlElement. If $PassThru was set, the XML element which was added.
+        .OUTPUTS
+            System.Xml.XmlElement. If $PassThru was set, the XML element which was added.
         
         .LINK
             Set-XmlText
@@ -1410,43 +1410,43 @@ Function Add-XmlTextElement {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlelement.aspx
     #>
-	[CmdletBinding(DefaultParameterSetName = 'Name')]
-	[OutputType([System.Xml.XmlElement])]
-	Param(
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Xml.XmlElement])]
+    Param(
         # The XML element to which the new child element is to be added.
-		[Parameter(Mandatory = $true, Position = 0)]
-		[System.Xml.XmlElement]$ParentElement,
-		
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Xml.XmlElement]$ParentElement,
+        
         # The inner text for the new child element.
-		[Parameter(Mandatory = $true, Position = 1)]
-		[AllowEmptyString()]
-		[string]$InnerText,
-		
+        [Parameter(Mandatory = $true, Position = 1)]
+        [AllowEmptyString()]
+        [string]$InnerText,
+        
         # The prefix of the new child element.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Prefix')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyNCName($_) } catch { }; $n -eq $_ })]
-		[string]$Prefix,
-		
+        [string]$Prefix,
+        
         # The qualified name of the new child element.
-		[Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Name')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Name')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyName($_) } catch { }; $n -eq $_ })]
-		[string]$Name,
-		
+        [string]$Name,
+        
         # The local name of the new child element.
-		[Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
+        [Parameter(Mandatory = $true, Position = 3, ParameterSetName = 'Prefix')]
         [ValidateScript({ $n = $null; try { $n = [System.Xml.XmlConvert]::VerifyNCName($_) } catch { }; $n -eq $_ })]
-		[string]$LocalName,
-		
+        [string]$LocalName,
+        
         # The namespaceURI of the new child element.
-		[Parameter(Mandatory = $true, Position = 4, ParameterSetName = 'Prefix')]
-		[Parameter(Position = 3, ParameterSetName = 'Name')]
-		[AllowEmptyString()]
+        [Parameter(Mandatory = $true, Position = 4, ParameterSetName = 'Prefix')]
+        [Parameter(Position = 3, ParameterSetName = 'Name')]
+        [AllowEmptyString()]
         [ValidateScript({ $_ -eq '' -or [System.Uri]::IsWellFormedUriString($_, [System.UriKind]::Absolute) })]
-		[string]$NamespaceURI,
+        [string]$NamespaceURI,
 
         # If set, then the new child element will be returned.
-		[switch]$PassThru
-	)
+        [switch]$PassThru
+    )
     
     if ($PSBoundParameters.ContainsKey('Name')) {
         if ($PSBoundParameters.ContainsKey('Namespace')) {
@@ -1464,15 +1464,15 @@ Function Add-XmlTextElement {
 }
 
 Function Set-XmlText {
-	<#
-		.SYNOPSIS
-			Sets XML element inner text.
+    <#
+        .SYNOPSIS
+            Sets XML element inner text.
  
-		.DESCRIPTION
-			Sets the inner text, as an optimal text node, of an XML element. All child nodes, including child elements will be replaced with the new text.
+        .DESCRIPTION
+            Sets the inner text, as an optimal text node, of an XML element. All child nodes, including child elements will be replaced with the new text.
 
-		.OUTPUTS
-			System.Xml.XmlElement. If $PassThru was set, the XML element which was added.
+        .OUTPUTS
+            System.Xml.XmlElement. If $PassThru was set, the XML element which was added.
         
         .LINK
             Set-XmlText
@@ -1495,26 +1495,26 @@ Function Set-XmlText {
         .LINK
             https://msdn.microsoft.com/en-us/library/system.xml.xmlelement.aspx
     #>
-	[CmdletBinding(DefaultParameterSetName = 'Text')]
-	Param(
+    [CmdletBinding(DefaultParameterSetName = 'Text')]
+    Param(
         # The XML element to which a text node will be added
-		[Parameter(Mandatory = $true, Position = 0)]
-		[System.Xml.XmlElement]$XmlElement,
-		
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.Xml.XmlElement]$XmlElement,
+        
         # The inner text for the new child element. A null value will result in an empty element.
-		[Parameter(Mandatory = $true, Position = 1)]
-		[AllowEmptyString()]
+        [Parameter(Mandatory = $true, Position = 1)]
+        [AllowEmptyString()]
         [AllowNull()]
-		[string]$InnerText,
+        [string]$InnerText,
         
         # Forces the inner text to be added as a Text node.
-		[Parameter(ParameterSetName = 'Text')]
+        [Parameter(ParameterSetName = 'Text')]
         [switch]$ForceText,
         
         # Forces the inner text to be added as a CData node.
-		[Parameter(Mandatory = $true, ParameterSetName = 'CData')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'CData')]
         [switch]$ForceCData
-	)
+    )
     
     if ($InnerText -eq $null) {
         if (-not $XmlElement.IsEmpty) {

@@ -63,6 +63,7 @@
     <Compile Include="XmlUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GetWsdl.ps1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

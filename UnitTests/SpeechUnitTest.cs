@@ -651,10 +651,8 @@ namespace UnitTests
         [Description("Tests loading the Speech PowerShell module.")]
         public void SpeechModuleLoadTestMethod()
         {
-            string path = Path.GetFullPath(Path.Combine(TestContext.DeploymentDirectory, @"..\..\..\Speech\bin\Debug\Erwine.Leonard.T.Speech2.psd1"));
-            Assert.IsTrue(File.Exists(path));
-            PSModuleInfo module = PowerShellHelper.LoadPSModuleInfo(TestContext, path);
-            ModuleConformance.ModuleValidator.AssertPSModule(module);
+            PSModuleInfo module = PowerShellHelper.LoadPSModuleFromDeploymentDir(TestContext, "Speech\\Erwine.Leonard.T.Speech.psd1");
+            ModuleConformance.ModuleValidator.AssertPSModule(TestContext, module);
         }
     }
 }

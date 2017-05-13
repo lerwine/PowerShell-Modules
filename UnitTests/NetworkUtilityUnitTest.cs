@@ -66,7 +66,7 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
-        [TestCategory("LteDev")]
+        [TestCategory("NetworkUtility")]
         [Description("Tests loading the NetworkUtility PowerShell module.")]
         public void ImportNetworkUtilityTestMethod()
         {

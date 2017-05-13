@@ -66,6 +66,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("CredentialStorage")]
+        [Description("Tests loading the CredentialStorage module.")]
         public void ImportCredentialStorageTestMethod()
         {
             PowerShellHelper.TestLoadModule(TestContext, ModuleName, RelativeModulePath, ".psm1", Path.GetFullPath(@"..\..\..\IOUtility\IOUtility\Erwine.Leonard.T.IOUtility.psd1"), Path.GetFullPath(@"..\..\..\XmlUtility\XmlUtility\Erwine.Leonard.T.XmlUtility.psd1"));
