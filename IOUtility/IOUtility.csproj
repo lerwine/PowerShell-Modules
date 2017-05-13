@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IOUtility</RootNamespace>
-    <AssemblyName>IOUtilityLib</AssemblyName>
+    <AssemblyName>Erwine.Leonard.T.IOUtilityLib</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -66,12 +66,23 @@
     <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Erwine.Leonard.T.IOUtility.psd1" />
-    <None Include="Erwine.Leonard.T.IOUtility.psm1" />
+    <Content Include="bin\Release\Erwine.Leonard.T.IOUtilityLib.dll" />
+    <Content Include="bin\Release\Erwine.Leonard.T.IOUtilityLib.pdb" />
+    <Content Include="bin\Release\KnownMimeTypes.xml" />
+    <Content Include="Erwine.Leonard.T.IOUtility.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Erwine.Leonard.T.IOUtility.psm1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="bin\Release\Erwine.Leonard.T.IOUtility.psd1" />
+    <None Include="bin\Release\Erwine.Leonard.T.IOUtility.psm1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="KnownMimeTypes.xml" />
+    <Content Include="KnownMimeTypes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

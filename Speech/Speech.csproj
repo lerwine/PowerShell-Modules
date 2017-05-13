@@ -106,6 +106,8 @@
       <DependentUpon>SpeechProgressWindow.xaml</DependentUpon>
     </Compile>
     <Resource Include="ModuleConfig.xml" />
+    <Content Include="bin\Release\Erwine.Leonard.T.Speech.dll" />
+    <Content Include="bin\Release\Erwine.Leonard.T.Speech.pdb" />
     <Content Include="TexErwine.Leonard.T.Speech.dll-Help.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TexErwine.Leonard.T.Speech.dll-Help.ps1xml</LastGenOutput>
@@ -126,7 +128,10 @@
     <Content Include="Install.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Erwine.Leonard.T.Speech.psd1" />
+    <Content Include="Erwine.Leonard.T.Speech.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="bin\Release\Erwine.Leonard.T.Speech.psd1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
