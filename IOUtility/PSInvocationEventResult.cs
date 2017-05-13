@@ -1,4 +1,4 @@
-﻿namespace IOUtilityCLR
+﻿namespace IOUtility
 {
     /// <summary>
     /// Result information about a handled event.

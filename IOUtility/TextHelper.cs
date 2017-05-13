@@ -6,7 +6,7 @@ using System.Linq;
 #endif
 using System.Text.RegularExpressions;
 
-namespace IOUtilityCLR
+namespace IOUtility
 {
     public class TextHelper
     {

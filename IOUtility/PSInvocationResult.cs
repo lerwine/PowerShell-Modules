@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if !PSLEGACY
+#if !PSLEGACY2
 using System.Linq;
 #endif
 using System.Management.Automation;
 using System.Text;
 
-namespace IOUtilityCLR
+namespace IOUtility
 {
     public class PSInvocationResult
     {
@@ -60,7 +60,7 @@ namespace IOUtilityCLR
             _errors = powerShell.Streams.Error.ReadAll();
             if (error != null)
                 _errors.Add(error);
-#if PSLEGACY2
+#if PSLEGACY
 			if (_errors.Count > 0)
 				_hadErrors = true;
 #endif

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
 
-namespace IOUtilityCLR
+namespace IOUtility
 {
     public interface IPSEventScriptHandler : IPSInvocationContext
     {

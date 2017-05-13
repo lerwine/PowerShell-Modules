@@ -4,7 +4,7 @@ using System.Management.Automation;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace IOUtilityCLR
+namespace IOUtility
 {
     /// <summary>
     /// Uses a <see cref="ScriptBlock" /> to replace matching text.

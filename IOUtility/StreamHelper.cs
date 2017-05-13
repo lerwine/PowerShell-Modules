@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace IOUtilityCLR
+namespace IOUtility
 {
     public class StreamHelper
     {

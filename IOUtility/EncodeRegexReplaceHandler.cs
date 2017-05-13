@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace IOUtilityCLR
+namespace IOUtility
 {
     /// <summary>
     /// Encodes text according to a specific pattern.

@@ -153,12 +153,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IOUtility\IOUtilityCLR\IOUtilityCLR.csproj">
-      <Project>{f32b9a73-7059-4cc3-b376-d6bab4ab76fb}</Project>
-      <Name>IOUtilityCLR</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
