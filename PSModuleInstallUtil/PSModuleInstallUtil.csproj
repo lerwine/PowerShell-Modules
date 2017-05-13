@@ -101,6 +101,7 @@
     <Compile Include="Module\ArrayExpressionNode.cs" />
     <Compile Include="Module\AssociativeExpressionNode.cs" />
     <Compile Include="Module\IndexerOperatorNode.cs" />
+    <Compile Include="Module\PowerShellScriptReader.cs" />
     <Compile Include="Module\SimpleTokenNode.cs" />
     <Compile Include="Module\GroupEndNode.cs" />
     <Compile Include="Module\GroupingNode.cs" />
