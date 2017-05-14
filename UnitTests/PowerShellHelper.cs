@@ -222,6 +222,47 @@ namespace UnitTests
             }
         }
 
+        public static PSInvocationResult InvokeScript(TestContext testContext, string script, IEnumerable parameters, params string[] moduleRelativePath)
+        {
+            InitialSessionState iss = InitialSessionState.CreateDefault();
+            // this.TestContext;
+            using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
+            {
+                runspace.Open();
+                using (PowerShell powershell = PowerShell.Create(RunspaceMode.NewRunspace))
+                {
+                    powershell.Runspace = runspace;
+
+                    if (moduleRelativePath != null && moduleRelativePath.Length > 0)
+                    {
+                        powershell.AddScript(@"
+for ($i = 0; $i -lt $args.Count; $i++) {
+    Import-Module $args[$i];
+}
+", true);
+                        foreach (string m in moduleRelativePath)
+                            powershell.AddArgument(GetDeploymentRelativePath(testContext, m));
+                    }
+                    powershell.AddScript(script, true);
+                    if (parameters != null)
+                    {
+                        if (parameters is IDictionary)
+                        {
+                            IDictionary arguments = parameters as IDictionary;
+                            foreach (string key in arguments)
+                                powershell.AddParameter(key, arguments[key]);
+                        }
+                        else
+                        {
+                            foreach (object obj in parameters)
+                                powershell.AddArgument(obj);
+                        }
+                    }
+                    return PSInvocationResult.Create(runspace, powershell);
+                }
+            }
+        }
+
         public static PSModuleInfo LoadPSModuleFromDeploymentDir(TestContext testContext, string relativePath, params string[] additionalModulePaths)
         {
             string path = GetDeploymentRelativePath(testContext, relativePath);
@@ -396,12 +437,29 @@ Import-Module $args[0] -PassThru;
 
         public class PSInvocationResult
         {
-            public static Collection<PSObject> Output { get; private set; }
+            public Collection<PSObject> Output { get; private set; }
+
+            public Collection<ErrorRecord> Errors { get; private set; }
+
+            public Collection<WarningRecord> Warnings { get; private set; }
+
+            public Collection<VerboseRecord> Verbose{ get; private set; }
+
+            public Collection<DebugRecord> Debug { get; private set; }
+
+            public PSInvocationResult(Collection<PSObject> output, Collection<ErrorRecord> errors, Collection<WarningRecord> warnings, Collection<VerboseRecord> verbose, Collection<DebugRecord> debug)
+            {
+                Output = output;
+                this.Errors = errors;
+                this.Warnings = warnings;
+                this.Verbose = verbose;
+                this.Debug = debug;
+            }
 
             internal static PSInvocationResult Create(Runspace runspace, PowerShell powershell)
             {
-                Output = powershell.Invoke();
-                throw new NotImplementedException();
+                Collection<PSObject> output = powershell.Invoke();
+                return new PSInvocationResult(output, (powershell.HadErrors) ? powershell.Streams.Error.ReadAll() : new Collection<ErrorRecord>(), powershell.Streams.Warning.ReadAll(), powershell.Streams.Verbose.ReadAll(), powershell.Streams.Debug.ReadAll());
             }
         }
     }

@@ -627,11 +627,11 @@ Function Write-IntegerToStream {
 		[System.IO.Stream]$Stream,
 		
 		# Integer value to be written
-		[Parameter(Mandatory = $true, Position = 0)]
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		[int]$Value
 	)
 	
-	[IOUtility.StreamHelper]::WriteInteger($Stream, $Value);
+	Process { [IOUtility.StreamHelper]::WriteInteger($Stream, $Value) }
 }
 
 Function Write-LongIntegerToStream {
@@ -658,11 +658,11 @@ Function Write-LongIntegerToStream {
 		[System.IO.Stream]$Stream,
 		
 		# Long Integer value to be written
-		[Parameter(Mandatory = $true, Position = 0)]
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		[long]$Value
 	)
 	
-	[IOUtility.StreamHelper]::WriteLongInteger($Stream, $Value);
+	Process { [IOUtility.StreamHelper]::WriteLongInteger($Stream, $Value) }
 }
 
 Function Read-LengthEncodedBytes {
