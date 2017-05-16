@@ -262,6 +262,49 @@ for ($i = 0; $i -lt $args.Count; $i++) {
                 }
             }
         }
+        
+        internal static PSObject GetCommandHelp(TestContext testContext, string name, PSModuleInfo moduleInfo, string[] relativeModulePath)
+        {
+            InitialSessionState iss = InitialSessionState.CreateDefault();
+
+            if (relativeModulePath != null && relativeModulePath.Length > 0)
+                iss.ImportPSModule(relativeModulePath.Select(m => GetDeploymentRelativePath(testContext, m)).ToArray());
+
+            using (Runspace runspace = RunspaceFactory.CreateRunspace(iss))
+            {
+                runspace.Open();
+                using (PowerShell powershell = PowerShell.Create(RunspaceMode.NewRunspace))
+                {
+                    powershell.Runspace = runspace;
+//                    if (relativeModulePath != null && relativeModulePath.Length > 0)
+//                    {
+//                        powershell.AddScript(@"
+//for ($i = 0; $i -lt $args.Count; $i++) {
+//    Import-Module $args[$i];
+//}
+//", true);
+//                        foreach (string m in relativeModulePath)
+//                            powershell.AddArgument(GetDeploymentRelativePath(testContext, m));
+//                    }
+                    
+                    powershell.AddCommand("Get-Help").AddParameter("Name", name).AddParameter("Full").AddStatement();
+                    IEnumerable<PSObject> result = powershell.Invoke();
+                    if (powershell.HadErrors)
+                    {
+                        foreach (ErrorRecord errorRecord in powershell.Streams.Error)
+                            WriteErrorRecord(testContext, errorRecord);
+                        Assert.IsFalse(powershell.HadErrors, "Multiple errors encountered: See test output for details.");
+                    }
+
+                    return result.Select(o => new
+                    {
+                        Result = o,
+                        ModuleName = o.Properties.Where(p => p.Name == "ModuleName").Select(p => p.Value as string).FirstOrDefault(s => !String.IsNullOrWhiteSpace(s))
+                    }).Where(a => a.ModuleName != null && String.Equals(a.ModuleName, moduleInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Select(a => a.Result)
+                    .DefaultIfEmpty(result.DefaultIfEmpty(new PSObject()).First()).First();
+                }
+            }
+        }
 
         public static PSModuleInfo LoadPSModuleFromDeploymentDir(TestContext testContext, string relativePath, params string[] additionalModulePaths)
         {
@@ -412,7 +455,7 @@ Import-Module $args[0] -PassThru;
             }
         }
 
-        private static void WriteErrorRecord(TestContext testContext, ErrorRecord errorRecord)
+        public static void WriteErrorRecord(TestContext testContext, ErrorRecord errorRecord)
         {
             if (errorRecord.InvocationInfo != null)
             {

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Management.Automation;
+using System.Xml;
 
 namespace UnitTests
 {
@@ -653,6 +654,19 @@ namespace UnitTests
         {
             PSModuleInfo module = PowerShellHelper.LoadPSModuleFromDeploymentDir(TestContext, "Speech\\Erwine.Leonard.T.Speech.psd1");
             ModuleConformance.ModuleValidator.AssertPSModule(TestContext, module);
+            string path = Path.Combine(TestContext.ResultsDirectory, Path.GetFileName(module.Path) + PsHelp.helpItems.HelpFileNameAppend);
+            using (XmlWriter writer = XmlWriter.Create(path, new XmlWriterSettings
+            {
+                CheckCharacters = false,
+                Indent = true,
+                OmitXmlDeclaration = true
+            }))
+            {
+                XmlDocument document = PsHelp.helpItems.CreateModuleHelp(TestContext, module, "Speech\\Erwine.Leonard.T.Speech.psd1");
+                document.WriteTo(writer);
+                writer.Flush();
+            }
+            TestContext.AddResultFile(path);
         }
     }
 }

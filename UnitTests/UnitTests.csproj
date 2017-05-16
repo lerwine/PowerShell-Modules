@@ -107,17 +107,10 @@
     <Compile Include="commandBase.cs" />
     <Compile Include="CredentialStorageTest.cs" />
     <Compile Include="CredentialStorageUnitTest.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GDIPlusUnitTest.cs" />
     <Compile Include="LteUtilsUnitTest.cs" />
-    <Compile Include="PsHelp\command\CommandNode.cs" />
-    <Compile Include="PsHelp\command\DetailsNode.cs" />
-    <Compile Include="PsHelp\command\InputTypeNode.cs" />
-    <Compile Include="PsHelp\command\InputTypesNode.cs" />
-    <Compile Include="PsHelp\command\ParameterNode.cs" />
-    <Compile Include="PsHelp\command\ParameterValueNode.cs" />
-    <Compile Include="PsHelp\command\ReturnValueNode.cs" />
-    <Compile Include="PsHelp\command\SyntaxItemNode.cs" />
-    <Compile Include="PsHelp\dev\TypeNode.cs" />
+    <Compile Include="PowerShellAssumptionsUnitTest.cs" />
     <Compile Include="InstallerTestResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -134,17 +127,22 @@
     <Compile Include="PowerShellHelper.cs" />
     <Compile Include="PreProcessorUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PsHelp\HelpItemsNode.cs" />
-    <Compile Include="PsHelp\maml\CopyrightNode.cs" />
-    <Compile Include="PsHelp\maml\DescriptionNode.cs" />
-    <Compile Include="PsHelp\maml\ParagraphAndTextContent.cs" />
-    <Compile Include="PsHelp\maml\ParagraphAndTextNode.cs" />
+    <Compile Include="PsHelp\command-parameter.cs" />
+    <Compile Include="PsHelp\command.cs" />
+    <Compile Include="PsHelp\dev.cs" />
+    <Compile Include="PsHelp\ExtensionMethods.cs" />
+    <Compile Include="PsHelp\helpItems.cs" />
+    <Compile Include="PsHelp\maml.cs" />
+    <Compile Include="PsHelp\syntaxItem-parameter.cs" />
+    <Compile Include="PsHelp\syntaxItem.cs" />
     <Compile Include="PSInvocationResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PSInvocationResources.resx</DependentUpon>
     </Compile>
     <Compile Include="PSInvocationUnitTest.cs" />
+    <Compile Include="PSObjectHelper.cs" />
+    <Compile Include="PSPropertyHelper.cs" />
     <Compile Include="ScriptDocumentTest.cs" />
     <Compile Include="SpeechUnitTest.cs" />
     <Compile Include="SPUtilityUnitTest.cs" />
@@ -220,7 +218,6 @@
     <Content Include="Resources\PsInvocation1.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="PsHelp\ClassDiagram1.cd" />
     <None Include="Resources\PSInvocationEventHandler.ps1" />
     <Content Include="Resources\ScriptParseTest.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

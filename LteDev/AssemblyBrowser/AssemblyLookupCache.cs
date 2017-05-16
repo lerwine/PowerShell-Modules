@@ -8,9 +8,9 @@ namespace LteDev.AssemblyBrowser
     public class AssemblyLookupCache
     {
         private static Dictionary<string, AssemblyLookupCache> _assemblies = new Dictionary<string, AssemblyLookupCache>();
-        private static bool _appDomainEnumerated = false;
+        //private static bool _appDomainEnumerated = false;
         public Dictionary<string, TypeDefinitionItem> _types = new Dictionary<string, TypeDefinitionItem>();
-        private bool _assemblyEnumerated = false;
+        //private bool _assemblyEnumerated = false;
         private Assembly _assembly;
 
         public AssemblyLookupCache(Assembly assembly)
@@ -27,7 +27,7 @@ namespace LteDev.AssemblyBrowser
 
                 AssemblyLookupCache assemblyLookupCache = new AssemblyLookupCache(assembly);
                 AssemblyLookupCache._assemblies.Add(assembly.FullName, assemblyLookupCache);
-                AssemblyLookupCache._appDomainEnumerated = false;
+                //AssemblyLookupCache._appDomainEnumerated = false;
                 return assemblyLookupCache;
             }
         }

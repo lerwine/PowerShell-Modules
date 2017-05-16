@@ -183,7 +183,6 @@ namespace Erwine.Leonard.T.WPF
 
             XmlAttribute xmlAttribute = element.SelectSingleNode("@" + XmlConvert.EncodeLocalName(attributeName)) as XmlAttribute;
             string s;
-            int i;
             if (xmlAttribute == null || (s = xmlAttribute.Value.Trim()).Length == 0)
                 return null;
             try { return XmlConvert.ToInt32(s); } catch { return null; }

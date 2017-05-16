@@ -15,6 +15,7 @@ namespace Speech.Commands
     /// </remarks>
     [Cmdlet(VerbsData.ConvertTo, "PromptBuilder", DefaultParameterSetName = ParameterSetName_NewPromptBuilder, RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(PromptBuilder))]
+    [Alias("cpb")]
     public class ConvertTo_PromptBuilder : TextToSpeechCmdlet
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -28,6 +29,7 @@ namespace Speech.Commands
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNull()]
         [AllowEmptyString()]
+        [Alias("Text")]
         public string[] InputText { get; set; }
 
         /// <summary>

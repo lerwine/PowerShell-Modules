@@ -6,19 +6,36 @@
       <command:name>ConvertTo-PromptBuilder</command:name>
       <maml:description>
         <maml:para>
-          <!--Add synopsis here-->
+          Converts text to a PromptBuilder object.
         </maml:para>
+        <maml:list class="unordered">
+          <maml:listItem>
+            <maml:para>Test One</maml:para>
+          </maml:listItem>
+          <maml:listItem>
+            <maml:para>Test Two</maml:para>
+          </maml:listItem>
+        </maml:list>
       </maml:description>
+      <command:synonyms>
+        <command:synonym>cpb</command:synonym>
+      </command:synonyms>
       <maml:copyright>
         <maml:para>(c) 2017 Leonard T. Erwine. All rights reserved.</maml:para>
       </maml:copyright>
       <command:verb>ConvertTo</command:verb>
       <command:noun>PromptBuilder</command:noun>
       <dev:version>1.0</dev:version>
+      <command:vendor>
+        <maml:name></maml:name>
+        <dev:products>
+          <dev:product>mixed</dev:product>
+        </dev:products>
+      </command:vendor>
     </command:details>
     <maml:description>
       <maml:para>
-        <!--Add detailed description here-->
+        HEre is the deatiled description.
       </maml:para>
     </maml:description>
     <command:syntax>
@@ -105,6 +122,42 @@
         </maml:description>
       </command:returnValue>
     </command:returnValues>
+    <command:terminatingErrors>
+      <command:terminatingError>
+        <dev:type>
+          
+        </dev:type>
+        <maml:description>
+          
+        </maml:description>
+      </command:terminatingError>
+    </command:terminatingErrors>
+    <command:nonTerminatingErrors>
+      <command:nonTerminatingError>
+        <dev:type>
+          
+        </dev:type>
+        <maml:description>
+          
+        </maml:description>
+      </command:nonTerminatingError>
+    </command:nonTerminatingErrors>
+    <maml:alertSet>
+      <maml:alert>
+        
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText></maml:linkText>
+        <maml:uri></maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
   <command:command>
     <command:details>

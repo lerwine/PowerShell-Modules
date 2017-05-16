@@ -1,11 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace UnitTests.ModuleConformance
 {
@@ -71,13 +75,8 @@ namespace UnitTests.ModuleConformance
             if (s.StartsWith("v"))
                 s = s.Substring(1);
             Assert.AreEqual(new Version(s).ToString(2), moduleInfo.ClrVersion.ToString(2), "Unexpected CLR version");
-            string path = moduleInfo.Path + "-Help.xml";
-            if (File.Exists(path))
-            {
-                // TODO: Generate help
-            }
         }
-
+        
         private static void _AssertPSModule(TestContext testContext, PSModuleInfo moduleInfo)
         {
             Assert.IsNotNull(moduleInfo.Author, "Author must be defined.");
