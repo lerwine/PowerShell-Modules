@@ -133,7 +133,7 @@ class ProjectInfoObject
 	internal string FullName { get { return _project.FullName; } }
 	internal string SolutionName { get { return GetProjectPropertyString("SolutionName", ""); } }
 	internal string TargetFileName { get { return GetProjectPropertyString("TargetFileName", ""); } }
-	internal string TargetFrameworkName { get { return (TargetFrameworkMoniker.Keys[0] == null) ? TargetFrameworkMoniker.Keys[0] : ""; } }
+	internal string TargetFrameworkName { get { return (TargetFrameworkMoniker.Keys[0] != null) ? TargetFrameworkMoniker.Keys[0] : ""; } }
 	internal Version TargetFrameworkVersion
 	{
 		get
@@ -169,7 +169,7 @@ class ProjectInfoObject
 					if (m.Groups["v"].Success)
 						_targetFrameworkMoniker.Add(m.Groups["k"].Value, m.Groups["v"].Value);
 					else
-						_targetFrameworkMoniker.Add(m.Groups["v"].Value, null);
+						_targetFrameworkMoniker.Add(m.Groups["k"].Value, null);
 				}
 			}
 
@@ -218,7 +218,7 @@ internal static Version GetPropertyVersion(EnvDTE.Properties properties, string 
 	string s = GetProperty<string>(properties, key);
 	Version v;
 	if (String.IsNullOrEmpty(s) || !Version.TryParse(s.Trim(), out v))
-		return null;
+		return defaultValue;
 
 	if (v.Revision != 0)
 		return v;
@@ -233,7 +233,7 @@ internal static Guid? GetPropertyGuid(EnvDTE.Properties properties, string key, 
 	string s = GetProperty<string>(properties, key);
 	Guid g;
 	if (String.IsNullOrEmpty(s) || !Guid.TryParse(s.Trim(), out g))
-		return null;
+		return defaultValue;
 
 	return g;
 }
