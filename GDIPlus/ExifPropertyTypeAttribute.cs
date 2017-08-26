@@ -3,6 +3,7 @@
 namespace Erwine.Leonard.T.GDIPlus
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed class ExifPropertyTypeAttribute : Attribute
     {
         private readonly ExifPropertyType _type;
@@ -20,4 +21,5 @@ namespace Erwine.Leonard.T.GDIPlus
         public bool IsRepeating { get { return _isRepeating; } set { _isRepeating = value; } }
         public bool IsPrimary { get { return _isPrimary; } set { _isPrimary = value; } }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

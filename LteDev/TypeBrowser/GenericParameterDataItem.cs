@@ -5,12 +5,15 @@ using System.Text;
 
 namespace LteDev.TypeBrowser
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class GenericArgumentDataItem : TypeInfoDataItem
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private MemberInfo _declaringMember;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public MemberInfo DeclaringMember { get { return this._declaringMember; } }
-        
+
         protected GenericArgumentDataItem(Type type, MemberInfo declaringMember) : base(type)
         {
             if (!type.IsGenericParameter)
@@ -35,8 +38,10 @@ namespace LteDev.TypeBrowser
 
             return new GenericTypeArgument(type, type.DeclaringType);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class GenericParameterDataItem<TDeclaringMemberInfo> : GenericArgumentDataItem
         where TDeclaringMemberInfo : MemberInfo
     {
@@ -44,4 +49,5 @@ namespace LteDev.TypeBrowser
 
         protected GenericParameterDataItem(Type representedMember, TDeclaringMemberInfo declaringMember) : base(representedMember, declaringMember) { }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assembly\V4\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -61,10 +66,46 @@
     <Compile Include="AssemblyBrowser\MethodDefinitionItem.cs" />
     <Compile Include="AssemblyBrowser\TypeDefinitionItem.cs" />
     <Compile Include="AssemblyBrowser\TypeInfoDataItem.cs" />
+    <Compile Include="CodeXmlDocHelper.cs" />
+    <Compile Include="Commands\Export-PSHelpXml.cs" />
+    <Compile Include="Commands\Get-PSHelpXml.cs" />
+    <Compile Include="DllXmlDocHelper.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\AssemblyContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\CmdletFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\CommandFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\CommandHelpFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\DevHelpFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\FunctionFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\MamlFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\ParameterFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\ParameterFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\ExtensionMethods.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSCommandReader.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpExporter.cs" />
     <Compile Include="ComparisonResult.cs" />
     <Compile Include="ComparisonStatus.cs" />
-    <Compile Include="HelpXml\HelpSourceItem.cs" />
-    <Compile Include="HelpXml\SourceDocExtensions.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactoryBase.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\SyntaxParameterFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\SyntaxParameterFactoryContext.cs" />
+    <Compile Include="ModuleBuilder\AssemblyInfo.cs" />
+    <Compile Include="ModuleBuilder\BinaryModuleInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\CLRPropertyInfo.cs" />
+    <Compile Include="ModuleBuilder\CLRTypeInfo.cs" />
+    <Compile Include="ModuleBuilder\CmdletInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\CmdInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\CmdParamInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\AggregateInfoFactory.cs" />
+    <Compile Include="ModuleBuilder\ExtensionMethods.cs" />
+    <Compile Include="ModuleBuilder\FunctionInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\IHasAssemblyInfo.cs" />
+    <Compile Include="ModuleBuilder\InformationAggregator.cs" />
+    <Compile Include="ModuleBuilder\ModuleInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\ParamInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\ParameterSetAggregate.cs" />
+    <Compile Include="ModuleBuilder\ParameterSetParamInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\ScriptModuleInfoAggregate.cs" />
     <Compile Include="ModuleGeneration\CommandDefinition.cs" />
     <Compile Include="ModuleGeneration\CommandItem.cs" />
     <Compile Include="ModuleGeneration\ModuleConfig.cs">
@@ -92,8 +133,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PSLinq.cs" />
+    <Compile Include="PSMamlGenerator.cs" />
+    <Compile Include="PSMamlHelper.cs" />
+    <Compile Include="PSObjectHelper.cs" />
     <Compile Include="TypeBrowser\AssemblyDataItem.cs" />
     <Compile Include="TypeBrowser\ConstructedTypeDefinition.cs" />
+    <Compile Include="TypeBrowser\CustomObjectSchema.cs" />
     <Compile Include="TypeBrowser\GenericMethodArgument.cs" />
     <Compile Include="TypeBrowser\GenericParameterDataItem.cs" />
     <Compile Include="TypeBrowser\GenericTypeArgument.cs" />
@@ -102,11 +148,89 @@
     <Compile Include="TypeBrowser\MethodInfoDataItem.cs" />
     <Compile Include="TypeBrowser\TypeDefinition.cs" />
     <Compile Include="TypeBrowser\TypeInfoDataItem.cs" />
+    <Compile Include="XsdTypeGen\command\command.cs" />
+    <Compile Include="XsdTypeGen\command\details.cs" />
+    <Compile Include="XsdTypeGen\command\examples.cs" />
+    <Compile Include="XsdTypeGen\command\inputTypes.cs" />
+    <Compile Include="XsdTypeGen\command\nonTerminatingErrors.cs" />
+    <Compile Include="XsdTypeGen\command\parameterNameInline.cs" />
+    <Compile Include="XsdTypeGen\command\parameters.cs" />
+    <Compile Include="XsdTypeGen\command\parameterValueInline.cs" />
+    <Compile Include="XsdTypeGen\command\returnValues.cs" />
+    <Compile Include="XsdTypeGen\command\synonyms.cs" />
+    <Compile Include="XsdTypeGen\command\syntax.cs" />
+    <Compile Include="XsdTypeGen\command\terminatingErrors.cs" />
+    <Compile Include="XsdTypeGen\command\vendor.cs" />
+    <Compile Include="XsdTypeGen\Constants.cs" />
+    <Compile Include="XsdTypeGen\dev\version.cs" />
+    <Compile Include="XsdTypeGen\maml\abbreviation.cs" />
+    <Compile Include="XsdTypeGen\maml\acronym.cs" />
+    <Compile Include="XsdTypeGen\maml\alertInline.cs" />
+    <Compile Include="XsdTypeGen\maml\alertSet.cs" />
+    <Compile Include="XsdTypeGen\maml\alertTypes.cs" />
+    <Compile Include="XsdTypeGen\maml\application.cs" />
+    <Compile Include="XsdTypeGen\maml\codeInline.cs" />
+    <Compile Include="XsdTypeGen\maml\commandInline.cs" />
+    <Compile Include="XsdTypeGen\maml\computerOutputInline.cs" />
+    <Compile Include="XsdTypeGen\maml\conditionalInline.cs" />
+    <Compile Include="XsdTypeGen\maml\copyright.cs" />
+    <Compile Include="XsdTypeGen\maml\copyrightInline.cs" />
+    <Compile Include="XsdTypeGen\maml\corporation.cs" />
+    <Compile Include="XsdTypeGen\maml\country.cs" />
+    <Compile Include="XsdTypeGen\maml\database.cs" />
+    <Compile Include="XsdTypeGen\maml\date.cs" />
+    <Compile Include="XsdTypeGen\maml\definitionList.cs" />
+    <Compile Include="XsdTypeGen\maml\description.cs" />
+    <Compile Include="XsdTypeGen\maml\embedObject.cs" />
+    <Compile Include="XsdTypeGen\maml\entityInline.cs" />
+    <Compile Include="XsdTypeGen\maml\environmentVariable.cs" />
+    <Compile Include="XsdTypeGen\maml\errorInline.cs" />
+    <Compile Include="XsdTypeGen\maml\example.cs" />
+    <Compile Include="XsdTypeGen\maml\footnote.cs" />
+    <Compile Include="XsdTypeGen\maml\foreignPhrase.cs" />
+    <Compile Include="XsdTypeGen\maml\glossaryEntryLink.cs" />
+    <Compile Include="XsdTypeGen\maml\hardware.cs" />
+    <Compile Include="XsdTypeGen\maml\inline.cs" />
+    <Compile Include="XsdTypeGen\maml\internetUri.cs" />
+    <Compile Include="XsdTypeGen\maml\internetUriType.cs" />
+    <Compile Include="XsdTypeGen\maml\keyCombinationInline.cs" />
+    <Compile Include="XsdTypeGen\maml\languageKeyword.cs" />
+    <Compile Include="XsdTypeGen\maml\lineBreak.cs" />
+    <Compile Include="XsdTypeGen\maml\list.cs" />
+    <Compile Include="XsdTypeGen\maml\literal.cs" />
+    <Compile Include="XsdTypeGen\maml\localUri.cs" />
+    <Compile Include="XsdTypeGen\maml\markup.cs" />
+    <Compile Include="XsdTypeGen\maml\math.cs" />
+    <Compile Include="XsdTypeGen\maml\menuSelection.cs" />
+    <Compile Include="XsdTypeGen\maml\newTerm.cs" />
+    <Compile Include="XsdTypeGen\maml\prompt.cs" />
+    <Compile Include="XsdTypeGen\maml\quoteInline.cs" />
+    <Compile Include="XsdTypeGen\maml\rangeInline.cs" />
+    <Compile Include="XsdTypeGen\maml\replaceable.cs" />
+    <Compile Include="XsdTypeGen\maml\textType.cs" />
+    <Compile Include="XsdTypeGen\maml\navigationLink.cs" />
+    <Compile Include="XsdTypeGen\maml\notLocalizable.cs" />
+    <Compile Include="XsdTypeGen\maml\para.cs" />
+    <Compile Include="XsdTypeGen\maml\phrase.cs" />
+    <Compile Include="XsdTypeGen\maml\quote.cs" />
+    <Compile Include="XsdTypeGen\maml\registryEntryInline.cs" />
+    <Compile Include="XsdTypeGen\maml\relatedLinks.cs" />
+    <Compile Include="XsdTypeGen\maml\shellExecuteLink.cs" />
+    <Compile Include="XsdTypeGen\maml\shortcut.cs" />
+    <Compile Include="XsdTypeGen\maml\subscript.cs" />
+    <Compile Include="XsdTypeGen\maml\superscript.cs" />
+    <Compile Include="XsdTypeGen\maml\table.cs" />
+    <Compile Include="XsdTypeGen\maml\textBlockType.cs" />
+    <Compile Include="XsdTypeGen\maml\token.cs" />
+    <Compile Include="XsdTypeGen\maml\ui.cs" />
+    <Compile Include="XsdTypeGen\maml\userInput.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Diff\ClassDiagram1.cd" />
+    <None Include="ModuleGeneration\HelpXml\ClassDiagram1.cd" />
+    <None Include="ModuleBuilder\ClassDiagram1.cd" />
     <None Include="ModuleGeneration\ModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -120,8 +244,9 @@
     <None Include="Untitled1.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\" />
+    <Resource Include="ModuleGeneration\HelpXml\AssemblyInfo.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"

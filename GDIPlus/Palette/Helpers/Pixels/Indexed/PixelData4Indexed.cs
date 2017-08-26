@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.Indexed
 {
     [StructLayout(LayoutKind.Sequential, Size = 1)]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public struct PixelData4Indexed : IIndexedPixel
     {
         // raw component values
@@ -65,4 +66,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.Indexed
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

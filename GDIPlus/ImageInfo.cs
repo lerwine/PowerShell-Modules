@@ -6,7 +6,9 @@ using System.Linq;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ImageInfo : FileItem
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private bool _exists = false;
         private bool _isReadOnly = true;
@@ -23,6 +25,7 @@ namespace Erwine.Leonard.T.GDIPlus
         private bool _isIndexed = false;
         private ColorSpaceType _colorSpace;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Exists { get { return _exists; } set { _exists = value; } }
 
         public bool IsReadOnly { get { return _isReadOnly; } set { _isReadOnly = value; } }
@@ -50,9 +53,12 @@ namespace Erwine.Leonard.T.GDIPlus
         public bool IsIndexed { get { return _isIndexed; } set { _isIndexed = value; } }
 
         public ColorSpaceType ColorSpace { get { return _colorSpace; } set { _colorSpace = value; } }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static FileType RawFormatToImageType(ImageFormat rawFormat)
-		{
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        {
 			if (rawFormat == null)
 				return FileType.Unknown;
 			
@@ -86,9 +92,13 @@ namespace Erwine.Leonard.T.GDIPlus
 			return FileType.Unknown;
 		}
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ImageInfo() { }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ImageInfo(FileInfo file, Bitmap bitmap)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             : base(file)
         {
             if (file == null)
@@ -134,7 +144,9 @@ namespace Erwine.Leonard.T.GDIPlus
                 _colorSpace = ColorSpaceType.Unknown;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ImageInfo(ImageInfo item)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             : base(item)
         {
             if (item == null)

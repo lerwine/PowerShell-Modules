@@ -2,6 +2,7 @@ using System;
 
 namespace Erwine.Leonard.T.GDIPlus.Collections
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IExpandable
     {
         event EventHandler IsExpandedChanged;
@@ -17,4 +18,5 @@ namespace Erwine.Leonard.T.GDIPlus.Collections
     {
         T Value { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

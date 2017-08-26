@@ -4,7 +4,9 @@ using System.Drawing;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class BucketInfo
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private readonly SortedDictionary<Int32, Color> colors;
 

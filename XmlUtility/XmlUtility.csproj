@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Erwine.Leonard.T.XmlUtilityLib.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Open-XmlSchema.cs" />
+    <Compile Include="ISimpleType.cs" />
     <Compile Include="LinqEmul.cs" />
     <Compile Include="LoadableBinaryResource.cs" />
     <Compile Include="LoadableResource.cs" />
@@ -57,7 +60,11 @@
     <Compile Include="SchemaSetCollection.cs" />
     <Compile Include="SchemaValidationError.cs" />
     <Compile Include="SchemaValidationHandler.cs" />
+    <Compile Include="SchemaValidationRelay.cs" />
     <Compile Include="SerializationManager.cs" />
+    <Compile Include="SimpleType.cs" />
+    <Compile Include="SimpleTypeUnion.cs" />
+    <Compile Include="TokenList.cs" />
     <Compile Include="WebResourceLoadError.cs" />
     <Compile Include="XmlResourceLoadError.cs" />
     <Compile Include="XmlUtility.cs" />

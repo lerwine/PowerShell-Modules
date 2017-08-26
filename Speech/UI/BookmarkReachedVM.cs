@@ -4,7 +4,9 @@ using System.Windows;
 
 namespace Speech.UI
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class BookmarkReachedVM : DependencyObject
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region AudioPosition Property Members
         
@@ -88,12 +90,16 @@ namespace Speech.UI
             get { return (int)(GetValue(RelativePositionProperty)); }
             private set { SetValue(RelativePositionPropertyKey, value); }
         }
-        
+
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public BookmarkReachedVM() { }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public BookmarkReachedVM(BookmarkReachedEventArgs e, int relativePosition)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             AudioPosition = e.AudioPosition;
             Bookmark = e.Bookmark;

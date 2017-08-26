@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DistinctBucket
     {
         public DistinctColorInfo ColorInfo { get; private set; }
@@ -67,4 +68,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
                 ToList();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

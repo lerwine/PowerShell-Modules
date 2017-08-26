@@ -5,19 +5,19 @@ using System.Collections.Generic;
 namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
 {
     /// <summary>
-    /// Wraps an <see cref="System.Collections.IEnumerator"/> as a strongly-typed enumerator.
+    /// Wraps an <see cref="IEnumerator"/> as a strongly-typed enumerator.
     /// </summary>
-    /// <typeparam name="T">Type of value expected to be returned from <see cref="System.Collections.IEnumerable"/> object.</typeparam>
+    /// <typeparam name="T">Type of value expected to be returned from <see cref="IEnumerable"/> object.</typeparam>
     public class TypedEnumeratorWrapper<T> : IEnumerator<T>
     {
         private IEnumerator _innerEnumerator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="SynchronizedCollections.TypedEnumeratorWrapper&lt;T&gt;"/> to enumerate results from
-        /// an <see cref="System.Collections.IEnumerator"/> obtained from <paramref name="obj"/>.
+        /// Initializes a new instance of <see cref="TypedEnumeratorWrapper{T}"/> to enumerate results from
+        /// an <see cref="IEnumerator"/> obtained from <paramref name="obj"/>.
         /// </summary>
-        /// <param name="obj"> <see cref="System.Collections.IEnumerable"/> object to enumerate.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="obj"/> is null.</exception>
+        /// <param name="obj"> <see cref="IEnumerable"/> object to enumerate.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="obj"/> is null.</exception>
         public TypedEnumeratorWrapper(IEnumerable obj)
         {
             if (obj == null)
@@ -29,35 +29,35 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <summary>
         /// Gets the element in the collection at the current position of the enumerator.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">The enumeration has not started or the enumeration was finished.</exception>
-        /// <exception cref="System.InvalidCastException">Enumerated item could not be cast to.</exception>
-        /// <exception cref="System.NullReferenceException">Enumerated item was null and type <typeparamref name="T"/> is a value type.</exception>
+        /// <exception cref="InvalidOperationException">The enumeration has not started or the enumeration was finished.</exception>
+        /// <exception cref="InvalidCastException">Enumerated item could not be cast to.</exception>
+        /// <exception cref="NullReferenceException">Enumerated item was null and type <typeparamref name="T"/> is a value type.</exception>
         public T Current { get { return (T)(this._innerEnumerator.Current); } }
 
         /// <summary>
         /// Gets the current element in the collection.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">The enumeration has not started or the enumeration was finished.</exception>
-        /// <exception cref="System.InvalidCastException">Enumerated item could not be cast to.</exception>
-        /// <exception cref="System.NullReferenceException">Enumerated item was null and type <typeparamref name="T"/> is a value type.</exception>
-        object System.Collections.IEnumerator.Current { get { return this._innerEnumerator.Current; } }
+        /// <exception cref="InvalidOperationException">The enumeration has not started or the enumeration was finished.</exception>
+        /// <exception cref="InvalidCastException">Enumerated item could not be cast to.</exception>
+        /// <exception cref="NullReferenceException">Enumerated item was null and type <typeparamref name="T"/> is a value type.</exception>
+        object IEnumerator.Current { get { return this._innerEnumerator.Current; } }
 
         /// <summary>
         /// Advances the enumerator to the next element of the collection.
         /// </summary>
         /// <returns>true if the enumerator was successfully advanced to the next element;
         /// false if the enumerator has passed the end of the collection.</returns>
-        /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        /// <exception cref="InvalidOperationException">The collection was modified after the enumerator was created.</exception>
         public bool MoveNext() { return this._innerEnumerator.MoveNext(); }
 
         /// <summary>
         /// Advances the enumerator to the next element of the collection.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        /// <exception cref="InvalidOperationException">The collection was modified after the enumerator was created.</exception>
         public void Reset() { this._innerEnumerator.Reset(); }
 
         /// <summary>
-        /// Disposes the internal <see cref="System.Collections.IEnumerator"/> if applicable.
+        /// Disposes the internal <see cref="IEnumerator"/> if applicable.
         /// </summary>
         public void Dispose()
         {
@@ -66,7 +66,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         }
 
         /// <summary>
-        /// Disposes the internal <see cref="System.Collections.IEnumerator"/> if applicable.
+        /// Disposes the internal <see cref="IEnumerator"/> if applicable.
         /// </summary>
         /// <param name="disposing">true if method has been called direclty or indirectly by user code;
         /// otherwise false to indicate that this has been called by the runtime inside the finalizer.</param>

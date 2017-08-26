@@ -15,6 +15,7 @@ namespace Erwine.Leonard.T.WPF.Commands
     [OutputType(typeof(XmlDocument))]
     public class Show_WpfWindow : XamlMarkupCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_Existing = "Existing";
         public const string ParameterSetName_ = "";
 
@@ -23,5 +24,6 @@ namespace Erwine.Leonard.T.WPF.Commands
 
         [Parameter()]
         public SwitchParameter Modal { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

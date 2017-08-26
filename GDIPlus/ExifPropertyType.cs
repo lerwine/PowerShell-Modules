@@ -8,8 +8,10 @@ namespace Erwine.Leonard.T.GDIPlus
 	/// <remarks>Many of the definitions were obtained from the document at https://msdn.microsoft.com/en-us/library/ms534416.aspx.</remarks>
     public enum ExifPropertyType
     {
-		Undefined,
-        
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        Undefined,
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// 8-bit value that can take any value depending upon the field definition.
         /// </summary>
@@ -49,6 +51,8 @@ namespace Erwine.Leonard.T.GDIPlus
         /// Two consecutive 32-bit (4-byte) signed values, where the first value is the numerator, and teh second is the denominator.
         /// </summary>
         SRational,
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         Any
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

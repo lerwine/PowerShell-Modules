@@ -1,0 +1,634 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Erwine.Leonard.T.WPFLib</name>
+    </assembly>
+    <members>
+        <member name="T:Erwine.Leonard.T.WPF.Commands.Assert_ValidXamlMarkup">
+            <summary>
+            Asserts validity of XAML markup.
+            </summary>
+            <remarks>Writes an error if the XML Markup is not valid.</remarks>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.Commands.New_WpfWindow">
+            <summary>
+            New-WpfWindow
+            </summary>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.Commands.New_XamlMarkup">
+            <summary>
+            Create empty markup for new window.
+            </summary>
+            <remarks>Creates template XAML markup for creating a new window.</remarks>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.Commands.Show_WpfWindow">
+            <summary>
+            Show a WPF Window.
+            </summary>
+            <remarks>Shows a WPF Window from a proxy object.</remarks>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.Commands.Test_XamlMarkup">
+            <summary>
+            Test-XamlMarkup
+            </summary>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.Commands.XamlMarkupCmdlet">
+            <summary>
+            Base class for cmdlets which process XAML markup.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.Commands.XamlMarkupCmdlet.AsEnumerableValue(System.Object)">
+            <summary>
+            Returns source value as an enumerable collection.
+            </summary>
+            <param name="value">Value to convert to an enumerable collection.</param>
+            <returns>An <seealso cref="T:System.Collections.IEnumerable"/> collection created from <paramref name="value"/>.</returns>
+            <remarks>If <paramref name="value"/> is null, then an empty collection is returned.
+            If <paramref name="value"/> implements <seealso cref="T:System.Collections.IEnumerable"/> and it is not a string, then <paramref name="value"/> is returned, cast as <seealso cref="T:System.Collections.IEnumerable"/>;
+            otherwise, a collection with a single element containing <paramref name="value"/> is returned.
+            If <paramref name="value"/> is a <seealso cref="T:System.Management.Automation.PSObject"/>, then <seealso cref="P:System.Management.Automation.PSObject.BaseObject"/> will be used in place of <paramref name="value"/>.</remarks>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.ThisObj">
+            <summary>
+            Context object for scripts invoked while the XAML window is being displayed.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.NamedElements">
+            <summary>
+            Named elements (control) detected from XAML markup.
+            </summary>
+            <remarks>When the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated"/> <see cref="T:System.Management.Automation.ScriptBlock"/> is invoked, the values will be the corresponding elements in the XAML markup.</remarks>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.MainWindow">
+            <summary>
+            Main WPF window being displayed.
+            </summary>
+            <remarks>This will be null if the window hasn't been created yet, or if there was an error while trying to create the window</remarks>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.SynchronizedData">
+            <summary>
+            Data which will be synchronized with the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.SynchronizedData" /> property of the object responsible for creating the WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.Output">
+            <summary>
+            Collection which contains the resulting output from displaying the WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.ErrorRecords">
+            <summary>
+            Collection which contains the resulting error records generated while displaying the WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.WarningRecords">
+            <summary>
+            Collection which contains the resulting warning messages generated while displaying the WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.VerboseRecords">
+            <summary>
+            Collection which contains the resulting verbose messages generated while displaying the WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.ThisObj.DebugRecords">
+            <summary>
+            Collection which contains the resulting debug messages generated while displaying the WPF window.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.ThisObj.AttachButtonClick(System.Windows.Controls.Button,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Attach a script block to a button click event.
+            </summary>
+            <param name="button">The button to attache the click even to.</param>
+            <param name="scriptBlock">The script block that will handle the click event.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="button"/> or <paramref name="scriptBlock"/> is null.</exception>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.GetMainWindowHandler">
+            <summary>
+            (internal) Handles event which creates the main WPF window.
+            </summary>
+            <returns>A new WPF <seealso cref="T:System.Windows.Window" />.</returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.WindowProcessInternal">
+            <summary>
+            Internal class which manages the creation and invocation of the WPF window.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WindowProcessInternal.CreateMainWindow">
+            <summary>
+            This gets invoked by an internally-generated script at a point when the main window is to be created.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WindowProcessInternal.ShowMainWindow(System.Boolean)">
+            <summary>
+            This gets invoked by an internally-generated script at a point when the main window is to be shown.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WindowProcessInternal.Dispose">
+            <summary>
+            Disposes this object and the associated PowerShell instance.
+            </summary>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.WpfWindow_obsolete">
+            <summary>
+            Proxy object for a WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.SynchronizedData">
+            <summary>
+            Data which is provided to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated" />, <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.DialogResult">
+            <summary>
+            A value that specifies whether the activity was accepted (true) or canceled (false) after the last time the window was shown.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.WindowXaml">
+            <summary>
+            Text which contains the XAML markup that is used to create the WPF window.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.Output">
+            <summary>
+            Collection of <seealso cref="T:System.Management.Automation.PSObject" /> values which represent the output from the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated" />, <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown" /> and
+            <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords">
+            <summary>
+            Collection of <seealso cref="T:System.Management.Automation.ErrorRecord" /> objects which represent the errors encountered while showing the window as well as executing the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.WarningRecords">
+            <summary>
+            Collection of <seealso cref="T:System.Management.Automation.WarningRecord" /> objects which represent the warning messages emitted while showing the window as well as executing the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.VerboseRecords">
+            <summary>
+            Collection of <seealso cref="T:System.Management.Automation.VerboseRecord" /> objects which represent the verbose messages emitted while showing the window as well as executing the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.DebugRecords">
+            <summary>
+            Collection of <seealso cref="T:System.Management.Automation.DebugRecord" /> objects which represent the debug messages emitted while showing the window as well as executing the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated" />,
+            <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown" /> and <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed" /> <seealso cref="T:System.Management.Automation.ScriptBlock" /> parameters.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowCreated">
+            <summary>
+            Script which gets executed before the XAML window is created.
+            </summary>
+            <remarks>
+            When this script is invoked, the &quot;$this&quot; variable will be an instance of the <see cref="T:Erwine.Leonard.T.WPF.ThisObj" /> object.
+            </remarks>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.BeforeWindowShown">
+            <summary>
+            Script which gets executed after the XAML window is created, but before it is shown.
+            </summary>
+            <remarks>
+            When this script is invoked, the &quot;$this&quot; variable will be an instance of the <see cref="T:Erwine.Leonard.T.WPF.ThisObj" /> object.
+            If <code>$this.Window</code> is null, then that means there was an error while trying to create the window.
+            </remarks>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AfterWindowClosed">
+            <summary>
+            Script which gets executed after the XAML window has been displayed and has been closed.
+            </summary>
+            <remarks>
+            When this script is invoked, the &quot;$this&quot; variable will be an instance of the <see cref="T:Erwine.Leonard.T.WPF.ThisObj" /> object.
+            If <code>$this.Window</code> is null, then that means there was an error while trying to create the window, also indicating that no window was actually displayed.
+            </remarks>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddOutput(System.Management.Automation.PSDataStreams)">
+            <summary>
+            Add output from a <seealso cref="T:System.Management.Automation.PSDataStreams" /> object to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords" />, <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.WarningRecords" />, <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.VerboseRecords" /> and
+            <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.DebugRecords" /> collections.
+            </summary>
+            <param name="dataStreams">Data streams object to be added.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddOutput(System.Management.Automation.PSDataCollection{System.Management.Automation.PSObject})">
+            <summary>
+            Add async output to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.Output" /> collections.
+            </summary>
+            <param name="asyncOutput">Output object to be added.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddOutput(System.Collections.Generic.IEnumerable{System.Management.Automation.PSObject})">
+            <summary>
+            Add output to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.Output" /> collections.
+            </summary>
+            <param name="output">Output object to be added.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
+            <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="activity">Description of the activity that caused the error.</param>
+            <param name="reason">Description of the reason for the error.</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
+            <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="activity">Description of the activity that caused the error.</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="activity">Description of the activity that caused the error.</param>
+            <param name="reason">Description of the reason for the error.</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="activity">Description of the activity that caused the error.</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
+            <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
+            <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.String,System.Exception,System.String)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception. This cannot be null, empty or entirely whitespace.</param>
+            <param name="recommendedAction">Recommended action that should be taken as a result of this error.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="message"/>, <paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="message"/> or <paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String,System.Management.Automation.ErrorCategory)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.String,System.Exception,System.String)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="message">The replacement error message for the exception.</param>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.String,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="activity">Description of the activity that caused the error.</param>
+            <param name="reason">Description of the reason for the error.</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.String,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="activity">Description of the activity that caused the error.</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory,System.Object)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <param name="targetObject">The object that was being operated on when the error occurred.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.Exception,System.String,System.Management.Automation.ErrorCategory)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <param name="errorCategory">An <seealso cref="T:System.Management.Automation.ErrorCategory"/> constant that defines the category of the error (for display purposes).</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AddError(System.Exception,System.String)">
+            <summary>
+            Adds an error record to the <see cref="P:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ErrorRecords"/> collection.
+            </summary>
+            <param name="exception">The exception that is associated with this record. This cannot be null.</param>
+            <param name="errorId">A developer-defined identifier of the error. This identifier must be a non-localized string for a specific error type and
+            cannot be null, empty or entirely whitespace.</param>
+            <returns><seealso cref="T:System.Management.Automation.ErrorRecord"/> object that was added.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="exception"/> or <paramref name="errorId"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="errorId"/> is empty.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AssertValidXaml(System.String,System.Xml.XmlDocument@)">
+            <summary>
+            Asserts that a string value contains valid XML markup that represents a WPF window.
+            </summary>
+            <param name="value">The XML to be parsed.</param>
+            <param name="xmlDocument">The parsed XML document object.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="value"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="value"/> is empty or contains no markup.</exception>
+            <exception cref="T:System.Xml.XmlException"><paramref name="value"/> does not contain valid XML.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The root element of <paramref name="value"/> is not a WPF window.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.TryValidateXaml(System.String,System.Exception@,System.Xml.XmlDocument@)">
+            <summary>
+            Attempts to validate that a string value contains valid XML markup which represents a WPF window.
+            </summary>
+            <param name="value">The XML to be parsed.</param>
+            <param name="exception">Exception that was thrown while trying to validate the document.</param>
+            <param name="xmlDocument">The parsed XML document object or null if an exception occurred.</param>
+            <returns>True if the XML is valid; otherwise false. This invokes <seealso cref="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.AssertValidXaml(System.String,System.Xml.XmlDocument@)"/> to validate the XML.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.TryValidateXaml(System.String,System.String@)">
+            <summary>
+            Attempts to validate that a string value contains valid XML markup which represents a WPF window.
+            </summary>
+            <param name="value">The XML to be parsed.</param>
+            <param name="message">Message which represents the result of validation.</param>
+            <returns>True if the XML is valid; otherwise false.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.ShowDialog(System.Management.Automation.Host.PSHost)">
+            <summary>
+            Displays WPF window as a dialog (modal).
+            </summary>
+            <param name="host">The PowerShell host to be used.</param>
+            <returns>A value that specifies whether the activity was accepted (true) or canceled (false). The return value is the value of the DialogResult property before the window closes.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.WPF.WpfWindow_obsolete.Show(System.Management.Automation.Host.PSHost)">
+            <summary>
+            Displays WPF window, permitting child windows to be created.
+            </summary>
+            <param name="host">The PowerShell host to be used.</param>
+            <returns>A value that specifies whether the activity was accepted (true) or canceled (false). The return value is the value of the DialogResult property before the window closes.</returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.XamlUtility">
+            <summary>
+            Utility methods and definitions for processing XAML markup.
+            </summary>
+        </member>
+        <member name="T:Erwine.Leonard.T.WPF.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.WPF.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:CredentialStorageLibrary.Command.RelayCommand`1">
+            <summary>
+            Command which is used to relay interacive events.
+            </summary>
+            <typeparam name="TArg">Type of argument to be passed to the command invocation handler.</typeparam>
+        </member>
+        <member name="E:CredentialStorageLibrary.Command.RelayCommand`1.CanExecuteChanged">
+            <summary>
+            Occurs when command object's state changes in a way that affect whether the command should be able to execute.
+            </summary>
+        </member>
+        <member name="E:CredentialStorageLibrary.Command.RelayCommand`1.PropertyChanged">
+            <summary>
+            Occurs when the value of a property has changed.
+            </summary>
+        </member>
+        <member name="P:CredentialStorageLibrary.Command.RelayCommand`1.AllowConcurrentInvocations">
+            <summary>
+            Determines whether multiple invocations of this command should be allowed to occur at the same time.
+            </summary>
+        </member>
+        <member name="P:CredentialStorageLibrary.Command.RelayCommand`1.IsEnabled">
+            <summary>
+            Controls whether the command may be invoked.
+            </summary>
+        </member>
+        <member name="P:CredentialStorageLibrary.Command.RelayCommand`1.ConcurrencyLevel">
+            <summary>
+            Gets the number of conncurent invocations of this command.
+            </summary>
+        </member>
+        <member name="P:CredentialStorageLibrary.Command.RelayCommand`1.IsBeingInvoked">
+            <summary>
+            Determines whether the command is currently being invoked.
+            </summary>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.#ctor(CredentialStorageLibrary.Command.RelayInvocationHandler{`0})">
+            <summary>
+            Create new relay command.
+            </summary>
+            <param name="invocationhandler">Command invocation handler.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.#ctor(CredentialStorageLibrary.Command.RelayInvocationHandler{`0},System.Boolean)">
+            <summary>
+            Create new relay command
+            </summary>
+            <param name="invocationhandler">Command invocation handler.</param>
+            <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.#ctor(CredentialStorageLibrary.Command.RelayInvocationHandler{`0},System.Boolean,System.Boolean)">
+            <summary>
+            Create new relay command.
+            </summary>
+            <param name="invocationhandler">Command invocation handler.</param>
+            <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
+            <param name="isDisabled">Whether command is to be intially disabled.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.OnCanExecuteChanged">
+            <summary>
+            This gets called when the command object's state changes in a way that affect whether the command should be able to execute.
+            </summary>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.RaisePropertyChanged(System.String)">
+            <summary>
+            This gets called when a property value has changed.
+            </summary>
+            <param name="propertyName">Name of the property that was changed.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            This gets called when the value of a property has changed.
+            </summary>
+            <param name="args">Arguments to be passed to the PropertyChanged event.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.OnCanExecute(`0)">
+            <summary>
+            This gets called when it needs to be determined whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">Parameter which will be passed to the relay command.</param>
+            <returns>true if this command can be executed; otherwise false.</returns>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.CanExecute(System.Object)">
+            <summary>
+            This is the method that gets called in order to determine whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">Parameter which will be passed to the relay command.</param>
+            <returns>true if this command can be executed; otherwise false.</returns>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.OnExecute(`0)">
+            <summary>
+            Occurs when the command is being executed.
+            </summary>
+            <param name="parameter">Parameter which was passed by the interactive command.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand`1.Execute(System.Object)">
+            <summary>
+            This is the method that gets called when the command is to be invoked.
+            </summary>
+            <param name="parameter">Parameter being passed by the interactive command.</param>
+        </member>
+        <member name="T:CredentialStorageLibrary.Command.RelayInvocationHandler`1">
+            <summary>
+            Handles relay command invocation events.
+            </summary>
+            <param name="arg">Argument being passed with the command.</param>
+            <typeparam name="TArg">Type of argument to be passed with the command.</typeparam>
+        </member>
+        <member name="T:CredentialStorageLibrary.Command.RelayCommand">
+            <summary>
+            Command which is used to relay interacive events.
+            </summary>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand.#ctor(CredentialStorageLibrary.Command.RelayInvocationHandler{System.Object})">
+            <summary>
+            Create new relay command.
+            </summary>
+            <param name="invocationhandler">Command invocation handler.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand.#ctor(CredentialStorageLibrary.Command.RelayInvocationHandler{System.Object},System.Boolean)">
+            <summary>
+            Create new relay command.
+            </summary>
+            <param name="invocationhandler">Command invocation handler.</param>
+            <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
+        </member>
+        <member name="M:CredentialStorageLibrary.Command.RelayCommand.#ctor(CredentialStorageLibrary.Command.RelayInvocationHandler{System.Object},System.Boolean,System.Boolean)">
+            <summary>
+            Create new relay command
+            </summary>
+            <param name="invocationhandler">Command invocation handler.</param>
+            <param name="allowConcurrentInvocations">Whether multiple concurrent invocations should be allowed.</param>
+            <param name="isDisabled">Whether command is to be intially disabled.</param>
+        </member>
+    </members>
+</doc>

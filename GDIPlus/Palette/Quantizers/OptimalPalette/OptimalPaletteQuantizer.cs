@@ -6,6 +6,7 @@ using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.OptimalPalette
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class OptimalPaletteQuantizer : BaseColorCacheQuantizer
     {
         #region | Fields |
@@ -131,4 +132,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.OptimalPalette
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

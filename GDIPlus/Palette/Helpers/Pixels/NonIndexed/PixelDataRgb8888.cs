@@ -21,11 +21,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
         // raw high-level values
         [FieldOffset(0)] private Int32 raw;             // 00 - 23
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         // processed component values
         public Int32 Alpha { get { return 0xFF; } }
         public Int32 Red { get { return red; } }
         public Int32 Green { get { return green; } }
         public Int32 Blue { get { return blue; } }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.Argb"/> for more details.

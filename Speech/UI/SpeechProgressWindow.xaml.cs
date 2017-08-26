@@ -19,7 +19,9 @@ namespace Speech.UI
     /// </summary>
     public partial class SpeechProgressWindow : Window
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public SpeechProgressWindow()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             InitializeComponent();
 
@@ -31,26 +33,23 @@ namespace Speech.UI
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void SpeakAsync(IEnumerable<PromptBuilder> prompts)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-            throw new NotImplementedException();
-            //if (!CheckAccess())
-            //{
-            //    Dispatcher.Invoke
-            //}
-            //if (prompts == null)
-            //{
-            //    SetSpeechCompleted();
-            //    return;
-            //}
+            if (!CheckAccess())
+            {
+                Dispatcher.Invoke(() => SpeakAsync(prompts));
+                return;
+            }
 
-            //int index = 0;
-            //foreach (PromptBuilder promptBuilder in prompts)
-            //{
-            //    PromptQueueVM item = new PromptQueueVM(promptBuilder, index);
-            //    index++;
-            //}
-            //vm.StartSpeech(prompts);
+            SpeechProgressVM vm = DataContext as SpeechProgressVM;
+            if (vm == null)
+            {
+                vm = new SpeechProgressVM();
+                DataContext = vm;
+            }
+            vm.StartSpeech(prompts);
         }
     }
 }

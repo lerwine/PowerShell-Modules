@@ -5,7 +5,9 @@ using Erwine.Leonard.T.GDIPlus.Palette.Quantizers;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IColorDitherer : IPathProvider
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Gets a value indicating whether this ditherer uses only actually process pixel.

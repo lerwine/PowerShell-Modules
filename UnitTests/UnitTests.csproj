@@ -154,6 +154,7 @@
       <DependentUpon>XmlHelp.resx</DependentUpon>
     </Compile>
     <Compile Include="XmlUtilityUnitTest.cs" />
+    <Compile Include="XsdTypeGenUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="InstallerTestResources.resx">
@@ -170,6 +171,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Erwine.Leonard.T.GDIPlus.XML" />
+    <None Include="Resources\Erwine.Leonard.T.IOUtilityLib.XML" />
+    <None Include="Resources\Erwine.Leonard.T.LteDevLib.XML" />
+    <None Include="Resources\Erwine.Leonard.T.Speech.XML" />
+    <None Include="Resources\Erwine.Leonard.T.WPFLib.XML" />
+    <None Include="Resources\Erwine.Leonard.T.XmlUtilityLib.XML" />
     <Content Include="Resources\ExampleSSML.xml" />
     <Content Include="Resources\HelpItems.xml">
       <SubType>Designer</SubType>
@@ -209,6 +216,7 @@
     <Content Include="Resources\ExampleManifest1.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Microsoft.BackgroundIntelligentTransfer.Management.dll-Help.xml" />
     <Content Include="Resources\MyFirst.types.ps1xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -11,7 +11,7 @@ namespace Speech.Commands
     /// <summary>
     /// Imports text into a <seealso cref="PromptBuilder"/> object.
     /// </summary>
-    /// <remarks>Loads plain text or SSML into a <seealso cref="PromptBuilder"/> object.</remarks>
+    /// <description>Loads plain text or SSML into a <seealso cref="PromptBuilder"/> object.</description>
     [Cmdlet(VerbsData.Import, "SpokenText", DefaultParameterSetName = ParameterSetName_Text, RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(PromptBuilder))]
     public class Import_SpokenText : TextToSpeechCmdlet

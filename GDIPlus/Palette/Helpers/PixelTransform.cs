@@ -1,6 +1,8 @@
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class PixelTransform
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Gets the source pixel.

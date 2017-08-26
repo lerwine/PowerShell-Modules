@@ -5,6 +5,7 @@ using System.Text;
 
 namespace LteDev.AssemblyBrowser
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class TypeInfoDataItem
     {
 
@@ -32,4 +33,5 @@ namespace LteDev.AssemblyBrowser
 
         public abstract TypeInfoDataItem FindNested(Type type);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

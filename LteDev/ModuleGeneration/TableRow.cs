@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace LteDev.ModuleGeneration
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Serializable]
     public class TableRow
     {
@@ -20,4 +21,5 @@ namespace LteDev.ModuleGeneration
             set { _cells = value ?? new Collection<ParagraphHost>(); }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

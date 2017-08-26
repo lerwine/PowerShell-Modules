@@ -4,6 +4,7 @@ using System.Drawing;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.PathProviders
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SerpentinePathProvider : IPathProvider
     {
         public IList<Point> GetPointPath(Int32 width, Int32 height)
@@ -25,4 +26,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.PathProviders
             return result;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

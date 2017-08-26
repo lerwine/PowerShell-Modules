@@ -36,7 +36,9 @@ namespace PSModuleInstallUtil
         private bool _segmentSync = true;
 
         // TODO: Implement method to look for changes and populate a string array of property changed events to raise.
+#pragma warning disable CS0067 // Missing XML comment for publicly visible type or member
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore CS0067 // Missing XML comment for publicly visible type or member
 
         public UriPathBuilder() { }
 

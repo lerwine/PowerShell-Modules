@@ -12,6 +12,7 @@ using Erwine.Leonard.T.GDIPlus.Palette.Quantizers;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ImageBuffer : IDisposable
     {
         #region | Fields |
@@ -1103,7 +1104,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             public Int32 EndOffset { get; private set; }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="SimplePaletteQuantizer.Helpers.ImageBuffer.LineTask"/> class.
+            /// Initializes a new instance of the <see cref="LineTask"/> class.
             /// </summary>
             public LineTask(Int32 startOffset, Int32 endOffset)
             {
@@ -1114,4 +1115,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

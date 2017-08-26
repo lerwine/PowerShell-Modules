@@ -6,21 +6,29 @@ using System.Text.RegularExpressions;
 
 namespace LteDev.TypeBrowser
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class TypeInfoDataItem : MemberInfoDataItem<Type>
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static readonly Regex GenericParamCountRegex = new Regex(@"`\d+$", RegexOptions.Compiled);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private bool _allNestedEnumerated = false;
         private Dictionary<string, TypeInfoDataItem> _allNestedTypes = new Dictionary<string, TypeInfoDataItem>();
         private Dictionary<string, TypeInfoDataItem> _visibleNestedTypes = new Dictionary<string, TypeInfoDataItem>();
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected TypeInfoDataItem(Type representedMember) : base(representedMember) { }
 
         protected abstract bool CanHaveNestedTypes { get; }
-        
-        protected abstract bool CanHaveGenericParameters { get; }
 
+        protected abstract bool CanHaveGenericParameters { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public Dictionary<string, TypeInfoDataItem> NestedTypes
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             get
             {
@@ -56,8 +64,10 @@ namespace LteDev.TypeBrowser
                 return this._visibleNestedTypes;
             }
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static TypeInfoDataItem CreateNew(Type type)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (type == null)
                 throw new ArgumentNullException("type");
@@ -71,7 +81,9 @@ namespace LteDev.TypeBrowser
             return new TypeDefinition(type);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static TypeInfoDataItem Get(Type type)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (type == null)
                 throw new ArgumentNullException("type");
@@ -88,7 +100,9 @@ namespace LteDev.TypeBrowser
             return AssemblyDataItem.Lookup(type.Assembly).Find(type);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TypeInfoDataItem FindNested(Type type)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (!this.CanHaveNestedTypes || type == null || !type.IsNested || !type.ReflectedType.Equals(this.RepresentedMember))
                 return null;

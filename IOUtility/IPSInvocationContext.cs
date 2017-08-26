@@ -7,6 +7,7 @@ using System.Threading;
 
 namespace IOUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IPSInvocationContext
     {
         PSHost Host { get; }
@@ -19,4 +20,5 @@ namespace IOUtility
         Hashtable SynchronizedData { get; }
         PSObject This { get; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

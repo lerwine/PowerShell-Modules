@@ -4,7 +4,9 @@ using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers.Ordered
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseOrderedDitherer : BaseColorDitherer
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region | Properties |
 

@@ -7,7 +7,9 @@ using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class LshColorCache : BaseColorCache
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region | Constants |
 

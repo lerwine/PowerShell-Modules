@@ -4,9 +4,13 @@ using System.Text.RegularExpressions;
 
 namespace IOUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class StreamHelper
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private static int? _minBase64BlockSize = null;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static int MinBase64BlockSize
         {
             get
@@ -39,6 +43,7 @@ namespace IOUtility
 
             return BitConverter.ToInt32(buffer, 0);
         }
+
         public static long ReadLongInteger(Stream inputStream)
         {
             if (inputStream == null)
@@ -50,6 +55,7 @@ namespace IOUtility
 
             return BitConverter.ToInt64(buffer, 0);
         }
+
         public static byte[] ReadLengthEncodedBytes(Stream inputStream)
         {
             if (inputStream == null)
@@ -65,6 +71,7 @@ namespace IOUtility
 
             return buffer;
         }
+
         public static void WriteInteger(Stream outputStream, int value)
         {
             if (outputStream == null)
@@ -72,6 +79,7 @@ namespace IOUtility
             byte[] buffer = BitConverter.GetBytes(value);
             outputStream.Write(buffer, 0, buffer.Length);
         }
+
         public static void WriteLongInteger(Stream outputStream, long value)
         {
             if (outputStream == null)
@@ -79,6 +87,8 @@ namespace IOUtility
             byte[] buffer = BitConverter.GetBytes(value);
             outputStream.Write(buffer, 0, buffer.Length);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         private static void _WriteLengthEncodedBytes(Stream outputStream, byte[] buffer, int offset, int count)
         {
             if (outputStream == null)
@@ -88,7 +98,9 @@ namespace IOUtility
             if (count > 0)
                 outputStream.Write(buffer, offset, count);
         }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static void WriteLengthEncodedBytes(Stream outputStream, byte[] buffer, int offset, int count)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer");
@@ -102,7 +114,9 @@ namespace IOUtility
                 throw new ArgumentOutOfRangeException("Offset pluc Count cannot extend past the end of the buffer.", "count");
             StreamHelper._WriteLengthEncodedBytes(outputStream, buffer, offset, count);
         }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static void WriteLengthEncodedBytes(Stream outputStream, byte[] buffer)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer");

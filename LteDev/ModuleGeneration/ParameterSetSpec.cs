@@ -2,6 +2,7 @@
 
 namespace LteDev.ModuleGeneration
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ParameterSetSpec
     {
         [XmlAttribute]
@@ -19,6 +20,7 @@ namespace LteDev.ModuleGeneration
         [XmlAttribute]
         public int Position { get { return _position; } set { _position = (value < 0) ? -1 : value; } }
 
-        public int _position = -1;
+        private int _position = -1;
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -6,7 +6,7 @@ namespace Speech.Commands
     /// <summary>
     /// Pauses text-to-speech job.
     /// </summary>
-    /// <remarks>If the text-to-speech job was in processes, the speech generation will be paused.</remarks>
+    /// <description>If the text-to-speech job was in processes, the speech generation will be paused.</description>
     [Cmdlet(VerbsLifecycle.Suspend, "TextToSpeech", RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(PromptBuilder))]
     public class Suspend_TextToSpeech : TextToSpeechCmdlet

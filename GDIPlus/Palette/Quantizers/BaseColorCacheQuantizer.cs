@@ -6,6 +6,7 @@ using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorCacheQuantizer : BaseColorQuantizer
     {
         #region | Fields |
@@ -122,4 +123,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

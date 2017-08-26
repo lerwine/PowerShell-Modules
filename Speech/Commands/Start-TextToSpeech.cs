@@ -12,7 +12,7 @@ namespace Speech.Commands
     /// <summary>
     /// Starts text-to-speech job.
     /// </summary>
-    /// <remarks>Starts text-to-speech process as a background job.</remarks>
+    /// <description>Starts text-to-speech process as a background job.</description>
     [Cmdlet(VerbsLifecycle.Start, "TextToSpeech", RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(TextToSpeechJob))]
     public class Start_TextToSpeech : TextToSpeechCmdlet

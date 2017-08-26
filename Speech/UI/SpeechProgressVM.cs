@@ -9,7 +9,9 @@ using System.Windows;
 
 namespace Speech.UI
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SpeechProgressVM : DependencyObject
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private object _syncRoot = new object();
         private object _speechSynthesizer = null;
@@ -462,17 +464,21 @@ namespace Speech.UI
             get { return (BookmarkReachedVM)(GetValue(LastBookmarkReachedProperty)); }
             private set { SetValue(LastBookmarkReachedPropertyKey, value); }
         }
-        
+
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public SpeechProgressVM()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             Queue = new ReadOnlyObservableCollection<PromptQueueVM>(_queue);
             BookmarksReached = new ReadOnlyObservableCollection<BookmarkReachedVM>(_bookmarksReached);
             LastBookmarkReached = new BookmarkReachedVM();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void StartSpeech(IEnumerable<PromptBuilder> prompts)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (!CheckAccess())
             {
@@ -504,6 +510,7 @@ namespace Speech.UI
                 SetCompleted();
                 return;
             }
+
             SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer();
             speechSynthesizer.BookmarkReached += SpeechSynthesizer_BookmarkReached;
             speechSynthesizer.SpeakCompleted += SpeechSynthesizer_SpeakCompleted;
@@ -529,7 +536,25 @@ namespace Speech.UI
 
         private void SetCompleted()
         {
-            throw new NotImplementedException();
+            SpeechSynthesizer speechSynthesizer;
+            lock (_syncRoot)
+            {
+                speechSynthesizer = _speechSynthesizer as SpeechSynthesizer;
+                _speechSynthesizer = new object();
+                if (speechSynthesizer != null)
+                {
+                    speechSynthesizer.BookmarkReached -= SpeechSynthesizer_BookmarkReached;
+                    speechSynthesizer.SpeakCompleted -= SpeechSynthesizer_SpeakCompleted;
+                    speechSynthesizer.SpeakProgress -= SpeechSynthesizer_SpeakProgress;
+                    speechSynthesizer.SpeakStarted -= SpeechSynthesizer_SpeakStarted;
+                    speechSynthesizer.StateChanged -= SpeechSynthesizer_StateChanged;
+                    speechSynthesizer.VoiceChange -= SpeechSynthesizer_VoiceChange;
+                }
+                _speechSynthesizer = null;
+            }
+
+            if (speechSynthesizer != null)
+                speechSynthesizer.Dispose();
         }
 
         private void MoveToNextPrompt()

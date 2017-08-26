@@ -3,6 +3,7 @@ using System.IO;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class FileItem : FileBase
     {
         private string _directoryName;
@@ -39,4 +40,5 @@ namespace Erwine.Leonard.T.GDIPlus
             return Path.Combine(DirectoryName, (Name + Extension));
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

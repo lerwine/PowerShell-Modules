@@ -2,6 +2,7 @@
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
     public sealed class ExifItemDisplayNameAttribute : Attribute
     {
@@ -16,4 +17,5 @@ namespace Erwine.Leonard.T.GDIPlus
             _displayText = displayText;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

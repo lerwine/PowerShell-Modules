@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 namespace LteDev.ModuleGeneration
 {
     [Serializable]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class RootModule
     {
         public static readonly Regex NewLineRegex = new Regex(@"\r\n?|\n", RegexOptions.Compiled);
@@ -278,4 +279,5 @@ namespace LteDev.ModuleGeneration
         [XmlAttribute]
         public string DefaultCommandPrefix { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

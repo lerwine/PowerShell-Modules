@@ -9,10 +9,14 @@ namespace Speech.Commands
     /// <summary>
     /// Converts plain text to a <seealso cref="System.Speech.Synthesis.PromptBuilder"/>.
     /// </summary>
-    /// <remarks>
-    /// <para type="description">Creates a new <seealso cref="System.Speech.Synthesis.PromptBuilder"/> from the provided plain text or appends text to a
-    /// provided <seealso cref="System.Speech.Synthesis.PromptBuilder"/>.</para>
-    /// </remarks>
+    /// <description>
+    /// Creates a new PromptBuilder from the provided plain text or appends text to a provided PromptBuilder.
+    /// </description>
+    /// <example>
+    /// Convert text to a new PromptBuilder.
+    /// <code><![CDATA[$Text = @('First line to speak', 'Second line to speak');
+    /// $PromptBuilder = $Text | ConvertTo-PromptBuilder;]]></code>
+    /// </example>
     [Cmdlet(VerbsData.ConvertTo, "PromptBuilder", DefaultParameterSetName = ParameterSetName_NewPromptBuilder, RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(PromptBuilder))]
     [Alias("cpb")]
@@ -26,7 +30,8 @@ namespace Speech.Commands
         /// <summary>
         /// Text to be imported into the resulting <seealso cref="System.Speech.Synthesis.PromptBuilder"/>.
         /// </summary>
-        [Parameter(Mandatory = true, ValueFromPipeline = true)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_NewPromptBuilder)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_ExistingPromptBuilder)]
         [ValidateNotNull()]
         [AllowEmptyString()]
         [Alias("Text")]

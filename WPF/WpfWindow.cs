@@ -13,12 +13,16 @@ using System.Collections;
 
 namespace Erwine.Leonard.T.WPF
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class WpfWindow
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private XmlDocument _window = null;
         private Hashtable _variables = new Hashtable();
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public XmlDocument Window
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             get
             {
@@ -68,12 +72,17 @@ namespace Erwine.Leonard.T.WPF
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public class VariablesHashtable : Hashtable
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public const string VariableName_Window = "Window";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
             private static StringComparer _comparer = StringComparer.InvariantCultureIgnoreCase;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public VariablesHashtable() : base(_comparer) { }
 
             public VariablesHashtable(XmlDocument windowDocument) : this(windowDocument, null) { }
@@ -81,6 +90,7 @@ namespace Erwine.Leonard.T.WPF
             public VariablesHashtable(IDictionary source) : this(XamlUtility.CreateXamlWindowMarkup(), source) { }
 
             public VariablesHashtable(XmlDocument windowDocument, IDictionary source) : base(_comparer) { }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
             private static string _AsName(object key)
             {
@@ -88,6 +98,8 @@ namespace Erwine.Leonard.T.WPF
                     key = (key as PSObject).BaseObject;
                 return (key == null || key is string) ? key as string : key.ToString();
             }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public override void Add(object key, object value)
             {
                 base.Add(key, value);
@@ -175,8 +187,11 @@ namespace Erwine.Leonard.T.WPF
                 SetAttributeValue(Window.DocumentElement, XamlUtility.XmlAttributeName_Height, value);
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static int? GetAttributeAsInt32(XmlElement element, string attributeName)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (element == null || String.IsNullOrEmpty(attributeName))
                 return null;
@@ -188,13 +203,17 @@ namespace Erwine.Leonard.T.WPF
             try { return XmlConvert.ToInt32(s); } catch { return null; }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static int GetAttributeAsInt32(XmlElement element, string attributeName, int defaultValue)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             int? result = GetAttributeAsInt32(element, attributeName);
             return (result.HasValue) ? result.Value : defaultValue;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static void SetAttributeValue(XmlElement element, string attributeName, int value)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             XmlAttribute xmlAttribute = element.SelectSingleNode("@" + XmlConvert.EncodeLocalName(attributeName)) as XmlAttribute;
             if (xmlAttribute == null)
@@ -203,7 +222,9 @@ namespace Erwine.Leonard.T.WPF
                 xmlAttribute.Value = XmlConvert.ToString(value);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public WpfWindow()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
         }
     }
@@ -712,8 +733,10 @@ namespace Erwine.Leonard.T.WPF
         {
             return AddError(exception, errorId, ErrorCategoryFromExceptionType(exception));
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static ErrorCategory ErrorCategoryFromExceptionType(Exception exception)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (exception == null)
                 return ErrorCategory.NotSpecified;

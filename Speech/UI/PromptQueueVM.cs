@@ -3,7 +3,9 @@ using System.Windows;
 
 namespace Speech.UI
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class PromptQueueVM : DependencyObject
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region Length Property Members
         
@@ -59,7 +61,9 @@ namespace Speech.UI
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public PromptQueueVM(PromptBuilder promptBuilder)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (promptBuilder == null)
                 return;

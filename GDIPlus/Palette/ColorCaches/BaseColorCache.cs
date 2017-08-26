@@ -6,7 +6,9 @@ using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorCache : IColorCache
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region | Fields |
 

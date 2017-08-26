@@ -3,17 +3,20 @@ using System.Xml;
 
 namespace Erwine.Leonard.T.WPF
 {
-	public class XamlLoadResult
-	{
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public class XamlLoadResult
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    {
 		private Exception _error;
 		private XmlDocument _xmlDocument;
 		private object _rootObject;
 		private int _lineNumber;
 		private int _linePosition;
-		
-		public Exception Error { get { return _error; } }
-		
-		public XmlDocument XmlDocument { get { return _xmlDocument; } }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public Exception Error { get { return _error; } }
+
+        public XmlDocument XmlDocument { get { return _xmlDocument; } }
 		
 		public object RootObject { get { return _rootObject; } }
 		
@@ -22,7 +25,9 @@ namespace Erwine.Leonard.T.WPF
 		public int LinePosition { get { return _linePosition; } }
 		
 		public bool Success { get { return _error == null && _rootObject != null; } }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		public XamlLoadResult(Exception error, XmlDocument xmlDocument, object rootObject, int lineNumber, int linePosition)
 		{
 			_error = error;
@@ -31,15 +36,18 @@ namespace Erwine.Leonard.T.WPF
 			_lineNumber = lineNumber;
 			_linePosition = linePosition;
 		}
-		
-		public XamlLoadResult(Exception error, XmlDocument xmlDocument, int lineNumber, int linePosition) : this(error, xmlDocument, null, lineNumber, linePosition) { }
-		
-		public XamlLoadResult(Exception error, XmlDocument xmlDocument) : this(error, xmlDocument, 0, 0) { }
+
+        public XamlLoadResult(Exception error, XmlDocument xmlDocument, int lineNumber, int linePosition) : this(error, xmlDocument, null, lineNumber, linePosition) { }
+
+        public XamlLoadResult(Exception error, XmlDocument xmlDocument) : this(error, xmlDocument, 0, 0) { }
 		
 		public XamlLoadResult(XmlDocument xmlDocument, object rootObject) : this(null, xmlDocument, rootObject, 1, 1) { }
-		
-		public override string ToString()
-		{
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public override string ToString()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        {
 			if (_error == null)
 			return (_rootObject == null) ? "Nothing loaded." : String.Format("{0} successfully loaded.", _rootObject.GetType().FullName);
 		
@@ -54,9 +62,11 @@ namespace Erwine.Leonard.T.WPF
 			return (_error.Message == null || _error.Message.Trim().Length == 0) ? String.Format("An unexpected {0} has occurred on line {1}, position {2}.", _error.GetType().FullName, _lineNumber, _linePosition) :
 				String.Format("Load error on line {0}, position {1}: {2}", _lineNumber, _linePosition, _error.Message);
 		}
-		
-		public override int GetHashCode()
-		{
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public override int GetHashCode()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        {
 			if (_xmlDocument != null)
 				return _xmlDocument.GetHashCode();
 			

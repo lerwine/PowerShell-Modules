@@ -6,13 +6,12 @@ namespace Speech.Commands
     /// <summary>
     /// Waits for a text-to-speech job.
     /// </summary>
-    /// <remarks>Waits for the text-to-speech job, returning any queued output from the background job.</remarks>
+    /// <description>Waits for the text-to-speech job, returning any queued output from the background job.</description>
     [Cmdlet(VerbsLifecycle.Wait, "TextToSpeech", RemotingCapability = RemotingCapability.None, DefaultParameterSetName = ParameterSetName_Completed)]
     public class Wait_TextToSpeech : TextToSpeechCmdlet
     {
         /// <summary>
         /// Name of parameter set for waiting for speech generation to complete.
-        /// <para></para>
         /// </summary>
         public const string ParameterSetName_Completed = "Completed";
 
@@ -29,7 +28,7 @@ namespace Speech.Commands
         public TextToSpeechJob Job { get; set; }
 
         /// <summary>
-        /// Wait for text-to-speech job ot complete.
+        /// Wait for text-to-speech job to complete.
         /// </summary>
         [Parameter()]
         public SwitchParameter Completed { get; set; }
@@ -45,6 +44,7 @@ namespace Speech.Commands
         /// <summary>
         /// Number of milliseconds to wait.
         /// </summary>
+        [Parameter()]
         public int MillisecondsTimeout { get { return (_milliSecondsTimeout.HasValue) ? _milliSecondsTimeout.Value : 0; } set { _milliSecondsTimeout = value; } }
 
         /// <summary>

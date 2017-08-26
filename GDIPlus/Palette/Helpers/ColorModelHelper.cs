@@ -5,6 +5,7 @@ using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ColorModelHelper
     {
         #region | Constants |
@@ -323,4 +324,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -32,7 +32,9 @@ namespace IOUtility
         private RunspaceConfiguration _configuration = null;
 		private Hashtable _synchronizedData;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void AddEventHandler(IPSEventScriptHandler handler)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             lock (_syncRoot)
             {
@@ -44,7 +46,9 @@ namespace IOUtility
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void RemoveEventHandler(IPSEventScriptHandler handler)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             lock (_syncRoot)
             {
@@ -64,7 +68,9 @@ namespace IOUtility
                 _eventHandlerResults.Add(new PSInvocationEventResult((handler == null) ? null : handler.Name, e));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public PSHost Host
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             get { return _host; }
             set
@@ -90,6 +96,7 @@ namespace IOUtility
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool? UseLocalScope
         {
             get { return _useLocalScope; }
@@ -124,7 +131,7 @@ namespace IOUtility
         }
 
         public RunspaceConfiguration Configuration
-		{
+        {
 			get { return _configuration; }
 			set
             {
@@ -132,7 +139,8 @@ namespace IOUtility
                     throw new InvalidOperationException();
                 _configuration = value;
             }
-		}
+        }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Other variables to define when invoking a script.
@@ -159,8 +167,10 @@ namespace IOUtility
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public Collection<PSInvocationEventResult> EventHandlerResults { get { return _eventHandlerResults; } }
-		
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// Initialize new Context object.
         /// </summary>

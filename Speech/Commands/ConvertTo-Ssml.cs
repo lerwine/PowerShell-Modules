@@ -8,8 +8,15 @@ using System.Xml;
 namespace Speech.Commands
 {
     /// <summary>
-    /// Converts plain text to SSML Markup.
+    /// Convert to SSML.
     /// </summary>
+    /// <description>
+    /// Converts plain text to SSML Markup.
+    /// </description>
+    /// <example>
+    /// <code><![CDATA[$Text = @('First line to convert.', 'Second line to convert.');
+    /// $SSMLMarkup = $Text | ConvertTo-SSML;]]></code>
+    /// </example>
     [Cmdlet(VerbsData.ConvertTo, "Ssml", RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(XmlDocument))]
     public class ConvertTo_Ssml : TextToSpeechCmdlet

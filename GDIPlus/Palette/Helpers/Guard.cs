@@ -2,6 +2,7 @@ using System;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class Guard
     {
         /// <summary>
@@ -18,4 +19,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

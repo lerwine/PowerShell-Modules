@@ -6,7 +6,7 @@ namespace Speech.Commands
     /// <summary>
     /// Gets current status of speech synthesis.
     /// </summary>
-    /// <remarks>Gets the current <seealso cref="SynthesizerState"/> from the referenced text-to-speech job.</remarks>
+    /// <description>Gets the current <seealso cref="SynthesizerState"/> from the referenced text-to-speech job.</description>
     [Cmdlet(VerbsCommon.Get, "TextToSpeechStatus", RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(SynthesizerState))]
     public class Get_TextToSpeechStatus : TextToSpeechCmdlet

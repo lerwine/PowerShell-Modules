@@ -4,7 +4,9 @@ using System.Drawing;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IColorCache
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Prepares color cache for next use.

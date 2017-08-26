@@ -10,7 +10,9 @@ using System.Text;
 
 namespace IOUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class PSInvocationResult
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private Hashtable _variables;
         private Collection<DebugRecord> _debug;
@@ -20,9 +22,14 @@ namespace IOUtility
         private bool _ranToCompletion;
         private Collection<VerboseRecord> _verbose;
         private Collection<WarningRecord> _warnings;
-		
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public PSInvocationResult(string script, IPSInvocationContext context, PowerShell powerShell, object[] variableKeys) : this(script, context, powerShell, variableKeys, new object[0]) { }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public PSInvocationResult(string script, IPSInvocationContext context, PowerShell powerShell, object[] variableKeys, params object[] arguments)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             ErrorRecord error = null;
             try
@@ -73,7 +80,8 @@ namespace IOUtility
             foreach (object key in variableKeys)
                 _variables[key] = powerShell.Runspace.SessionStateProxy.GetVariable((key is string) ? key as string : key.ToString());
         }
-		
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public Hashtable Variables { get { return _variables; } }
         public Collection<DebugRecord> Debug { get { return _debug; } }
         public Collection<ErrorRecord> Errors { get { return _errors; } }
@@ -82,5 +90,6 @@ namespace IOUtility
         public bool RanToCompletion { get { return _ranToCompletion; } }
         public Collection<VerboseRecord> Verbose { get { return _verbose; } }
         public Collection<WarningRecord> Warnings { get { return _warnings; } }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

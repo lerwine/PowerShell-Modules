@@ -17,9 +17,12 @@ namespace Erwine.Leonard.T.WPF.Commands
     [OutputType(typeof(XamlLoadResult), ParameterSetName = new string[] { ParameterSetName_PassThru })]
     public class Assert_ValidXamlMarkup : XamlMarkupCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_BooleanOutput = "BooleanOutput";
         public const string ParameterSetName_PassThru = "PassThru";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Parameter(Mandatory = true, HelpMessage = "XAML markup.", Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetName_BooleanOutput)]
         [Parameter(Mandatory = true, HelpMessage = "XAML markup.", Position = 0, ValueFromPipeline = true, ParameterSetName = ParameterSetName_PassThru)]
         [ValidateNotNullOrEmpty()]
@@ -31,8 +34,11 @@ namespace Erwine.Leonard.T.WPF.Commands
 
         [Parameter(HelpMessage = "Do not write any errors.")]
         public SwitchParameter NoError { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (Xaml == null)
                 return;

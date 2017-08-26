@@ -12,32 +12,26 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
     public class SynchronizedReadOnlyList<T> : SynchronizedEnumerableBase<T>, IList<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedCollections.SynchronizedReadOnlyList&lt;T&gt;"/> class with a 
+        /// Initializes a new instance of the <see cref="SynchronizedReadOnlyList{T}"/> class with a 
         /// specified number of auto-created elements.
         /// </summary>
         /// <param name="size">Size of the read-only collection.</param>
         /// <exception cref="System.OverflowException"><paramref name="size"/> is less than zero.</exception>
         /// <exception cref="System.MissingMethodException">The type that is specified for <typeparamref name="T"/> does not have a parameterless constructor.</exception>
-        /// <exception cref="System.InvalidOperationException"><see cref="SynchronizedCollections.SynchronizedEnumerableBase&lt;T&gt;.CreateSynchronizedList()"/>
-        /// was overridden and did not return a syncrhonzized list.</exception>
         public SynchronizedReadOnlyList(int size) : base(new T[size]) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedCollections.SynchronizedReadOnlyList&lt;T&gt;"/> class that contains elements copied from the 
+        /// Initializes a new instance of the <see cref="SynchronizedReadOnlyList{T}"/> class that contains elements copied from the 
         /// specified array.
         /// </summary>
-        /// <param name="list">The list whose elements are copied to the new list.</param>
+        /// <param name="array">The array whose elements are copied to the new list.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="array"/> is null.</exception>
-        /// <exception cref="System.InvalidOperationException"><see cref="SynchronizedCollections.SynchronizedEnumerableBase&lt;T&gt;.CreateSynchronizedList()"/>
-        /// was overridden and did not return a syncrhonzized list.</exception>
         public SynchronizedReadOnlyList(params T[] array) : base(new List<T>(array)) { }
 
         /// <summary>
         /// Called from within the base constructor to initialize the inner synchronized list.
         /// </summary>
         /// <param name="collection">The collection whose elements are copied to the new list.</param>
-        /// <exception cref="System.InvalidOperationException"><see cref="SynchronizedCollections.SynchronizedEnumerableBase&lt;T&gt;.CreateSynchronizedList()"/>
-        /// was overridden and did not return a syncrhonzized list.</exception>
         protected override void Initialize(ICollection<T> collection)
         {
             T[] array;
@@ -91,6 +85,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
 
         #region Overrides to prevent list from being modified
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void BaseClear() { throw new NotSupportedException(); }
 
         protected override bool BaseRemove(T item) { throw new NotSupportedException(); }
@@ -104,6 +99,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         protected override bool InnerRemove(object value) { throw new NotSupportedException(); }
 
         protected override void InnerSet(int index, object value) { throw new NotSupportedException(); }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

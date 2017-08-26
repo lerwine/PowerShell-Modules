@@ -5,6 +5,7 @@ using System.Text;
 
 namespace LteDev.AssemblyBrowser
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class AssemblyLookupCache
     {
         private static Dictionary<string, AssemblyLookupCache> _assemblies = new Dictionary<string, AssemblyLookupCache>();
@@ -62,4 +63,5 @@ namespace LteDev.AssemblyBrowser
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

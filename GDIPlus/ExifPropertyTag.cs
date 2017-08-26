@@ -989,7 +989,7 @@ See also ExifPropertyType.SamplesPerPixel.")]
         ///     <item><term>0</term><description>perceptual</description></item>
         ///     <item><term>1</term><description>relative colorimetric</description></item>
         ///     <item><term>2</term><description>saturation</description></item>
-        ///     <item><term>3</term><description>absolute colorimetric.</item>
+        ///     <item><term>3</term><description>absolute colorimetric.</description></item>
         /// </list>
         /// <para>Absolute colorimetric intent is suitable for proofs (previews of images destined for a different display device) that require preservation of 
         /// absolute colorimetry.</para></remarks>
@@ -1015,7 +1015,7 @@ Absolute colorimetric intent is suitable for proofs (previews of images destined
         /// </summary>
         /// <remarks><list type="number">
         ///     <item><term>1</term><description>pixels per inch</description></item>
-        ///     <item><term>2</term><description>pixels per centimeter.</item>
+        ///     <item><term>2</term><description>pixels per centimeter.</description></item>
         /// </list></remarks>
         [ExifPropertyType(ExifPropertyType.Short)]
         [ExifPropertyDescription("Resolution X-Unit", Summary = "Units in which to display horizontal resolution.",
@@ -1029,7 +1029,7 @@ Absolute colorimetric intent is suitable for proofs (previews of images destined
         /// </summary>
         /// <remarks><list type="number">
         ///     <item><term>1</term><description>pixels per inch</description></item>
-        ///     <item><term>2</term><description>pixels per centimeter.</item>
+        ///     <item><term>2</term><description>pixels per centimeter.</description></item>
         /// </list></remarks>
         [ExifPropertyType(ExifPropertyType.Short)]
         [ExifPropertyDescription("Resolution Y-Unit", Summary = "Units in which to display vertical resolution.",
@@ -1052,10 +1052,10 @@ Absolute colorimetric intent is suitable for proofs (previews of images destined
         /// </summary>
         /// <remarks><list type="number">
         ///     <item><term>1</term><description>inches</description></item>
-        ///     <item><term>2</term><description>centimeters</item>
-        ///     <item><term>3</term><description>points</item>
-        ///     <item><term>4</term><description>picas</item>
-        ///     <item><term>5</term><description>columns</item>
+        ///     <item><term>2</term><description>centimeters</description></item>
+        ///     <item><term>3</term><description>points</description></item>
+        ///     <item><term>4</term><description>picas</description></item>
+        ///     <item><term>5</term><description>columns</description></item>
         /// </list></remarks>
         [ExifPropertyType(ExifPropertyType.Short)]
         [ExifPropertyDescription("Resolution Y-Length Unit", Summary = "Units in which to display the image height.",
@@ -1504,7 +1504,7 @@ See also ExifPropertyType.TransferFunction.")]
         /// Luminance table.
         /// </summary>
         /// <remarks>The luminance table and the chrominance table are used to control JPEG quality.
-        /// A valid luminance or chrominance table has 64 entries of type <see cref="TypeShort" />.
+        /// A valid luminance or chrominance table has 64 entries of type <see cref="short" />.
         /// If an image has either a luminance table or a chrominance table, then it must have both tables.</remarks>
         [ExifPropertyType(ExifPropertyType.Short, Count = 64)]
         [ExifPropertyDescription("Luminance Table", Summary = "Luminance table.",
@@ -1517,7 +1517,7 @@ If an image has either a luminance table or a chrominance table, then it must ha
         /// Chrominance table.
         /// </summary>
         /// <remarks>The luminance table and the chrominance table are used to control JPEG quality.
-        /// A valid luminance or chrominance table has 64 entries of type <see cref="TypeShort" />.
+        /// A valid luminance or chrominance table has 64 entries of type <see cref="short" />.
         /// If an image has either a luminance table or a chrominance table, then it must have both tables.</remarks>
         [ExifPropertyType(ExifPropertyType.Short, Count = 64)]
         [ExifPropertyDescription("Chrominance Table", Summary = "Chrominance table.",
@@ -1685,7 +1685,7 @@ The string is compatible with the standard developed by the ASTM Technical Commi
         /// <summary>
         /// Offset to a block of GPS property items.
         /// </summary>
-        /// <remarks>Property items whose tags have the prefix <see cref="Gps" /> are stored in the GPS block.
+        /// <remarks>Property items whose tags have the prefix Gps are stored in the GPS block.
         /// The GPS property items are defined in the EXIF specification. GDI+ uses this tag to locate GPS information, but GDI+ does not expose this tag for public use.</remarks>
         [ExifPropertyType(ExifPropertyType.Long)]
         [ExifPropertyDescription("Gps IFD", Summary = "Offset to a block of GPS property items.",
@@ -1718,7 +1718,7 @@ The OECF is the relationship between the camera optical input and the image valu
         /// </summary>
         /// <remarks>Default	0210.
         /// <para>Nonexistence of this field is taken to mean nonconformance to the standard.
-        /// Conformance to the standard is indicated by recording 0210 as a 4-byte ASCII string. Because the type is <see cref="TypeUndefined" />, there is no NULL terminator.</para></remarks>
+        /// Conformance to the standard is indicated by recording 0210 as a 4-byte ASCII string. Because the type is undefined, there is no NULL terminator.</para></remarks>
         [ExifPropertyType(ExifPropertyType.Any, Count = 4)]
         [ExifPropertyDescription("EXIF Version", Summary = "Version of the EXIF standard supported.",
             Remarks = @"Default	0210.
@@ -1950,7 +1950,7 @@ A tag used by EXIF users to write keywords or comments about the image besides t
         /// </summary>
         /// <remarks>Default	0100 0100 - FlashPix format version 1.0 Other - reserved.
         /// <para>If the FPXR function supports FlashPix format version 1.0, this is indicated similarly to <see cref="ExifVer" /> by recording 0100 as a 4-byte ASCII string.
-        /// Because the type is <see cref="TypeUndefined" />, there is no NULL terminator.</para></remarks>
+        /// Because the type is undefined, there is no NULL terminator.</para></remarks>
         [ExifPropertyType(ExifPropertyType.Any, Count = 4)]
         [ExifPropertyDescription("FlashPix format version", Summary = "FlashPix format version supported by an FPXR file.",
             Remarks = @"Default	0100 0100 - FlashPix format version 1.0 Other - reserved.

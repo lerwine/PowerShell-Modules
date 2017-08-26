@@ -14,36 +14,28 @@ namespace Erwine.Leonard.T.WPF
     /// </summary>
     public static class XamlUtility
     {
-        /// <summary>
-        /// Namespace for WPF markup.
-        /// </summary>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string XmlNamespaceURI_Presentation = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-        
-        /// <summary>
-        /// Namespace for XAML markup.
-        /// </summary>
+
         public const string XmlNamespaceURI_Xaml = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         public const string XmlNamespaceURI_Blend = "http://schemas.microsoft.com/expression/blend/2008";
 
         public const string XmlNamespaceURI_MarkupCompatibility = "http://schemas.openxmlformats.org/markup-compatibility/2006";
-
-        /// <summary>
-        /// Namespace for XML markup.
-        /// </summary>
+        
         public const string XmlNamespaceURI_Xml = "http://www.w3.org/2000/xmlns/";
         
-        /// <summary>
-        /// XAML markup for an empty WPF window.
-        /// </summary>
         public const string Xaml_EmptyWindow = @"<Window xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
 </Window>";
 
         public const string XmlElementName_Window = "Window";
         public const string XmlAttributeName_Width = "Width";
         public const string XmlAttributeName_Height = "Height";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument CreateXamlMarkup(string rootElementName, string xamlName)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (rootElementName == null)
                 throw new ArgumentNullException("rootElementName");
@@ -52,7 +44,9 @@ namespace Erwine.Leonard.T.WPF
             catch (Exception exception) { throw new ArgumentException("Invalid root element name", "rootElementName", exception); }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument CreateXamlMarkup(XmlQualifiedName rootElementName, string xamlName)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (rootElementName == null)
                 throw new ArgumentNullException("rootElementName");
@@ -67,7 +61,9 @@ namespace Erwine.Leonard.T.WPF
             return xmlDocument;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument LoadXmlDocument(XmlReader xmlReader)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (xmlReader == null)
                 throw new ArgumentNullException("xmlReader");
@@ -76,8 +72,10 @@ namespace Erwine.Leonard.T.WPF
             xmlDocument.Load(xmlReader);
             return xmlDocument;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument LoadXmlDocument(Stream stream, XmlReaderSettings xmlReaderSettings)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -85,8 +83,10 @@ namespace Erwine.Leonard.T.WPF
             using (XmlReader xmlReader = XmlReader.Create(stream, xmlReaderSettings))
                 return LoadXmlDocument(xmlReader);
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument LoadXmlDocument(Stream stream)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -95,8 +95,10 @@ namespace Erwine.Leonard.T.WPF
             xmlDocument.Load(stream);
             return xmlDocument;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument LoadXmlDocument(TextReader textReader, XmlReaderSettings xmlReaderSettings)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (textReader == null)
                 throw new ArgumentNullException("textReader");
@@ -118,7 +120,9 @@ namespace Erwine.Leonard.T.WPF
             return windowXaml;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument LoadXmlDocument(TextReader textReader)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (textReader == null)
                 throw new ArgumentNullException("textReader");
@@ -127,8 +131,10 @@ namespace Erwine.Leonard.T.WPF
             xmlDocument.Load(textReader);
             return xmlDocument;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument ParseXmlDocument(string xmlText, XmlReaderSettings xmlReaderSettings)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (xmlText == null)
                 throw new ArgumentNullException("xmlText");
@@ -136,8 +142,10 @@ namespace Erwine.Leonard.T.WPF
             using (StringReader stringReader = new StringReader(xmlText))
                 return LoadXmlDocument(stringReader, xmlReaderSettings);
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static XmlDocument ParseXmlDocument(string xmlText)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (xmlText == null)
                 throw new ArgumentNullException("xmlText");
@@ -146,8 +154,10 @@ namespace Erwine.Leonard.T.WPF
             xmlDocument.LoadXml(xmlText);
             return xmlDocument;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(XmlElement xmlElement, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             XmlDocument xmlDocument = null;
             try
@@ -184,7 +194,9 @@ namespace Erwine.Leonard.T.WPF
             return false;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(XDocument xDocument, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -200,7 +212,9 @@ namespace Erwine.Leonard.T.WPF
             return false;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(XElement xElement, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             XmlDocument xmlDocument = null;
             try
@@ -232,7 +246,9 @@ namespace Erwine.Leonard.T.WPF
             return false;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(XmlDocument xmlDocument, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -261,8 +277,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(Stream stream, XmlReaderSettings xmlReaderSettings, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -286,8 +304,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(Stream stream, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -311,8 +331,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(TextReader textReader, XmlReaderSettings xmlReaderSettings, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -336,8 +358,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(TextReader textReader, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -361,8 +385,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryParseXaml(string xamlText, XmlReaderSettings xmlReaderSettings, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -386,8 +412,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryParseXaml(string xamlText, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {
@@ -411,8 +439,10 @@ namespace Erwine.Leonard.T.WPF
             
             return result.Success;
         }
-        
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool TryLoadXaml(XmlReader xmlReader, out XamlLoadResult result)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             try
             {

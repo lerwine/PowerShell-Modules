@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace IOUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DecodeRegexReplaceHandler : RegexReplaceHandler
     {
         public DecodeRegexReplaceHandler() : base(RegularExpressions.EncodedName) { }
@@ -15,4 +16,5 @@ namespace IOUtility
             return new string((char)value, 1);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

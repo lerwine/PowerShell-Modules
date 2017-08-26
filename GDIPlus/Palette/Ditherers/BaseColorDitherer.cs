@@ -7,6 +7,7 @@ using Erwine.Leonard.T.GDIPlus.Palette.Quantizers;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorDitherer : IColorDitherer
     {
         #region | Fields |
@@ -219,4 +220,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

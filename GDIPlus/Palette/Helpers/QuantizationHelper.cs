@@ -3,7 +3,9 @@ using System.Drawing;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class QuantizationHelper
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private const int Alpha = 255 << 24;
         private static readonly Color BackgroundColor;

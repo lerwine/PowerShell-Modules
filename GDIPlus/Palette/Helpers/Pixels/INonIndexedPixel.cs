@@ -3,6 +3,7 @@ using System.Drawing;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface INonIndexedPixel
     {
         // components
@@ -19,4 +20,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels
         Color GetColor();
         void SetColor(Color color);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

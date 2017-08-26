@@ -6,7 +6,7 @@ namespace Speech.Commands
     /// <summary>
     /// Stops text-to-speech job.
     /// </summary>
-    /// <remarks>If a text-to-speech job was in progress, it is stopped, and any queued output from the text-to-speech process is returned.</remarks>
+    /// <description>If a text-to-speech job was in progress, it is stopped, and any queued output from the text-to-speech process is returned.</description>
     [Cmdlet(VerbsLifecycle.Stop, "TextToSpeech", RemotingCapability = RemotingCapability.None)]
     public class Stop_TextToSpeech : TextToSpeechCmdlet
     {

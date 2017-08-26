@@ -15,9 +15,13 @@ namespace Erwine.Leonard.T.WPF.Commands
     [OutputType(typeof(XmlDocument))]
     public class New_XamlMarkup : XamlMarkupCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_ImplicitNs = "ImplicitNs";
         public const string ParameterSetName_ExplicitNs = "ExplicitNs";
         public const string DefaultValue_ElementName = "Window";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Parameter(ParameterSetName = ParameterSetName_ImplicitNs)]
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_ExplicitNs)]
         [PSDefaultValue(Value = DefaultValue_ElementName)]
@@ -31,8 +35,11 @@ namespace Erwine.Leonard.T.WPF.Commands
         [ValidateNotNull()]
         [AllowEmptyString()]
         public string NamespaceURI { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             object targetObject = (String.IsNullOrWhiteSpace(ElementName)) ? DefaultValue_ElementName : ElementName;
             try

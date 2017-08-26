@@ -2,6 +2,7 @@ using System;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class FastRandom
     {
         private const Double RealUnitInt = 1.0/(Int32.MaxValue + 1.0);
@@ -22,4 +23,5 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             return (Int32) ((RealUnitInt*(Int32) (0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8)))))*upperBound);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

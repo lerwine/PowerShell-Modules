@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class FileBase
     {
         private string _name = "";
@@ -91,4 +92,5 @@ namespace Erwine.Leonard.T.GDIPlus
             _name = item._name;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

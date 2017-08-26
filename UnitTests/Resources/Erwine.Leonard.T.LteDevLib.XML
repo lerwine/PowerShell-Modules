@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Erwine.Leonard.T.LteDevLib</name>
+    </assembly>
+    <members>
+        <member name="T:LteDev.Commands.Get_PSHelpXml">
+            <summary>
+            Generates PowerShell help file from module information.
+            </summary>
+            <description>
+            Gets information from the PowerShell module, including the DLL files, if the module is binary.
+            </description>
+        </member>
+        <member name="P:LteDev.Commands.Get_PSHelpXml.ModuleInfo">
+            <summary>
+            Information about the module, which is used to generate parameter help.
+            </summary>
+        </member>
+        <member name="P:LteDev.Commands.Get_PSHelpXml.Path">
+            <summary>
+            Path of module to load.
+            </summary>
+            <remarks>Using this parameter results in the module being loaded, if it not already loaded.</remarks>
+        </member>
+        <member name="P:LteDev.Commands.Get_PSHelpXml.LiteralPath">
+            <summary>
+            Literal path of module to load.
+            </summary>
+            <remarks>Using this parameter results in the module being loaded, if it not already loaded.</remarks>
+        </member>
+        <member name="T:LteDev.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:LteDev.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:LteDev.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>

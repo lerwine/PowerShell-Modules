@@ -4,7 +4,9 @@ using System.Drawing;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class OctreeCacheNode
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private static readonly Byte[] Mask = new Byte[] { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 

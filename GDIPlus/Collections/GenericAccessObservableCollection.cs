@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Erwine.Leonard.T.GDIPlus.Collections
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class GenericAccessObservableCollection<TItem, TBaseType> : ObservableCollection<TItem>, IGenericAccessObservableCollection<TItem, TBaseType>
         where TItem : TBaseType
     {
@@ -68,4 +69,5 @@ namespace Erwine.Leonard.T.GDIPlus.Collections
             this._innerItemCollection[index] = item;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

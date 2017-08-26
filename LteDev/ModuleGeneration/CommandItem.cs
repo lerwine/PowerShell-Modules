@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 namespace LteDev.ModuleGeneration
 {
     [Serializable]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class CommandItem
     {
         public const string xmlns_maml = "http://schemas.microsoft.com/maml/2004/10";
@@ -172,4 +173,5 @@ namespace LteDev.ModuleGeneration
             writer.WriteEndElement(); // </command:command>
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

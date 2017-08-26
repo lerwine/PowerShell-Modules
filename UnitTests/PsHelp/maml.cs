@@ -29,12 +29,12 @@ namespace UnitTests.PsHelp
 
         internal static XmlElement GetCopyrightElement(XmlNode node)
         {
-            throw new NotImplementedException();
+            return node.GetChildElements(ElementName_copyright, Xmlns_URI).FirstOrDefault();
         }
 
         internal static XmlElement GetDescriptionElement(XmlNode node)
         {
-            throw new NotImplementedException();
+            return node.GetChildElements(ElementName_description, Xmlns_URI).FirstOrDefault();
         }
 
         internal static void SetEmptyMaml(XmlElement descriptionElement, string comment)

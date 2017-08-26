@@ -3,6 +3,7 @@
 namespace Erwine.Leonard.T.GDIPlus
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed class ExifValueTranslationAttribute : Attribute
     {
         private readonly byte[] _sourceValue;
@@ -26,4 +27,5 @@ namespace Erwine.Leonard.T.GDIPlus
             _displayText = displayText;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

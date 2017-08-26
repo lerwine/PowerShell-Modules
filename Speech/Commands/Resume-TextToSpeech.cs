@@ -5,7 +5,7 @@ namespace Speech.Commands
     /// <summary>
     /// Resumes speech synthesis.
     /// </summary>
-    /// <remarks>If speech was paused, this resume the speech synthesis process.</remarks>
+    /// <description>If speech was paused, this resume the speech synthesis process.</description>
     [Cmdlet(VerbsLifecycle.Resume, "TextToSpeech", RemotingCapability = RemotingCapability.None)]
     public class Resume_TextToSpeech : TextToSpeechCmdlet
     {

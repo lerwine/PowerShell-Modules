@@ -12,36 +12,32 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         where T : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedCollections.NonNullSynchronizedList&lt;T&gt;"/> class that is empty and has the 
+        /// Initializes a new instance of the <see cref="NonNullSynchronizedList{T}"/> class that is empty and has the 
         /// default initial capacity.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException"><see cref="SynchronizedCollections.SynchronizedEnumerableBase&lt;T&gt;.CreateSynchronizedList()"/>
-        /// was overridden and did not return a syncrhonzized list.</exception>
         public NonNullSynchronizedList() : base() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedCollections.NonNullSynchronizedList&lt;T&gt;"/> class that contains elements copied from the 
+        /// Initializes a new instance of the <see cref="NonNullSynchronizedList{T}"/> class that contains elements copied from the 
         /// specified list and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name="list">The list whose elements are copied to the new list.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="list"/> is null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="list"/> contains one or more null values.</exception>
-        /// <exception cref="System.InvalidOperationException"><see cref="SynchronizedCollections.SynchronizedEnumerableBase&lt;T&gt;.CreateSynchronizedList()"/>
-        /// was overridden and did not return a syncrhonzized list.</exception>
         public NonNullSynchronizedList(IList<T> list) : base(list) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizedCollections.NonNullSynchronizedList&lt;T&gt;"/> class that contains elements copied from the 
+        /// Initializes a new instance of the <see cref="NonNullSynchronizedList{T}"/> class that contains elements copied from the 
         /// specified collection and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name="collection">The collection whose elements are copied to the new list.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="collection"/> contains one or more null values.</exception>
-        /// <exception cref="System.InvalidOperationException"><see cref="SynchronizedCollections.SynchronizedEnumerableBase&lt;T&gt;.CreateSynchronizedList()"/>
-        /// was overridden and did not return a syncrhonzized list.</exception>
         public NonNullSynchronizedList(ICollection<T> collection) : base(collection) { }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void Initialize(ICollection<T> collection)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.Initialize(collection);
 
@@ -51,7 +47,9 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
 
         #region Overrides to deny null values
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override int InnerAdd(object value)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (value == null)
                 throw new ArgumentNullException("value");
@@ -59,7 +57,9 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
             return base.InnerAdd(value);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void InnerInsert(int index, object value)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (value == null)
                 throw new ArgumentNullException("value");
@@ -67,7 +67,9 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
             base.InnerInsert(index, value);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void InnerSet(int index, object value)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (value == null)
                 throw new ArgumentNullException("value");

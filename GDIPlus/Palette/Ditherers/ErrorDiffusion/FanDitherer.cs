@@ -2,7 +2,9 @@ using System;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers.ErrorDiffusion
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class FanDitherer : BaseErrorDistributionDitherer
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// See <see cref="BaseColorDitherer.CreateCoeficientMatrix"/> for more details.

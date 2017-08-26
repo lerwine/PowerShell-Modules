@@ -5,6 +5,7 @@ using System.Text;
 
 namespace LteDev.TypeBrowser
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class MethodDefinitionItem : MethodInfoDataItem
     {
         public MethodDefinitionItem(MethodInfo representedMember) : base(representedMember) { }
@@ -17,4 +18,5 @@ namespace LteDev.TypeBrowser
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
