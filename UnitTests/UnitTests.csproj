@@ -81,11 +81,14 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.Common, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assembly\V4\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Speech" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
@@ -127,6 +130,11 @@
     <Compile Include="PowerShellHelper.cs" />
     <Compile Include="PreProcessorUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="PsHelp\command-parameter.cs" />
     <Compile Include="PsHelp\command.cs" />
     <Compile Include="PsHelp\dev.cs" />
@@ -146,6 +154,11 @@
     <Compile Include="ScriptDocumentTest.cs" />
     <Compile Include="SpeechUnitTest.cs" />
     <Compile Include="SPUtilityUnitTest.cs" />
+    <Compile Include="Web References\localhost\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="WindowsFormsUnitTest.cs" />
     <Compile Include="WinFormsUnitTest.cs" />
     <Compile Include="XmlHelp.Designer.cs">
@@ -171,6 +184,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\localhost\Lists.disco" />
     <None Include="Resources\Erwine.Leonard.T.GDIPlus.XML" />
     <None Include="Resources\Erwine.Leonard.T.IOUtilityLib.XML" />
     <None Include="Resources\Erwine.Leonard.T.LteDevLib.XML" />
@@ -181,6 +200,11 @@
     <Content Include="Resources\HelpItems.xml">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Web References\localhost\Lists.wsdl" />
+    <None Include="Web References\localhost\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CredentialStorage\CredentialStorageLibrary\CredentialStorageLibrary.csproj">
@@ -240,7 +264,25 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://localhost/_vti_bin/Lists.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\localhost\</RelPath>
+      <UpdateFromURL>http://localhost/_vti_bin/Lists.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>UnitTests_localhost_Lists</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
