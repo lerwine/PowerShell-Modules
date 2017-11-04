@@ -1,0 +1,47 @@
+﻿<Window x:Class="Speech.GUI.RollupSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Speech.GUI"
+        mc:Ignorable="d"
+        Title="Rollup Selection" Height="600" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+        <DataGrid Grid.ColumnSpan="8" ItemsSource="{Binding RollupItems}" SelectedItem="{Binding SelectedRollupItem}" AutoGenerateColumns="False" SelectionMode="Single">
+			<DataGrid.Columns>
+				<DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{Binding FullName}" Header="Name" IsReadOnly="True" Width="*"/>
+				<DataGridCheckBoxColumn Binding="{Binding HasText}" ClipboardContentBinding="{x:Null}" Header="Text" IsReadOnly="True" />
+				<DataGridCheckBoxColumn Binding="{Binding HasXml}" ClipboardContentBinding="{x:Null}" Header="Xml" IsReadOnly="True"/>
+				<DataGridCheckBoxColumn Binding="{Binding HasWav}" ClipboardContentBinding="{x:Null}" Header="Wav" IsReadOnly="True"/>
+			</DataGrid.Columns>
+		</DataGrid>
+        <ComboBox Name="NewFileTypeComboBox" VerticalAlignment="Top" HorizontalAlignment="Right" ItemsSource="{Binding NewFileTypeOptions}" SelectedItem="{Binding SelectedNewFileType}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayText}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+		<Button Grid.Row="1" Content="New" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding NewFileCommand, Mode=OneWay}" />
+		<Button Grid.Row="1" Grid.Column="1" Content="Edit Text" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding EditTextCommand, Mode=OneWay}" />
+		<Button Grid.Row="1" Grid.Column="2" Content="Edit XML" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding EditXmlCommand, Mode=OneWay}" />
+		<Button Grid.Row="1" Grid.Column="2" Content="Generate XML" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding GenerateXmlCommand, Mode=OneWay}" />
+		<Button Grid.Row="1" Grid.Column="2" Content="Speak" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding SpeakCommand, Mode=OneWay}" />
+		<Button Grid.Row="1" Grid.Column="2" Content="Generate Audio" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding GenerateAudioCommand, Mode=OneWay}" />
+		<Button Grid.Row="1" Grid.Column="2" Content="Exit" VerticalAlignment="Top" Height="23" Width="75" Command="{Binding ExitCommand, Mode=OneWay}" />
+    </Grid>
+</Window>

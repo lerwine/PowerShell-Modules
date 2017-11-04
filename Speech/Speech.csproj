@@ -75,6 +75,19 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <Page Include="GUI\XmlEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\RollupSelectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+=======
+>>>>>>> 61d63293c2c1459394af87c19c129ecd1468f501
     <Compile Include="Commands\ConvertTo-PromptBuilder.cs" />
     <Compile Include="Commands\ConvertTo-Ssml.cs" />
     <Compile Include="Commands\Get-TextToSpeechStatus.cs" />
@@ -85,6 +98,15 @@
     <Compile Include="Commands\Suspend-TextToSpeech.cs" />
     <Compile Include="Commands\TextToSpeechCmdlet.cs" />
     <Compile Include="Commands\Wait-TextToSpeech.cs" />
+<<<<<<< HEAD
+    <Compile Include="GUI\XmlEditorWindow.xaml.cs">
+      <DependentUpon>XmlEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\RollupSelectionWindow.xaml.cs">
+      <DependentUpon>RollupSelectionWindow.xaml</DependentUpon>
+    </Compile>
+=======
+>>>>>>> 61d63293c2c1459394af87c19c129ecd1468f501
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

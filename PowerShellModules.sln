@@ -45,10 +45,42 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "NetworkUtility", "NetworkUt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityCLR", "NetworkUtility\NetworkUtilityCLR\NetworkUtilityCLR.csproj", "{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}"
 EndProject
+<<<<<<< HEAD
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LteDev", "LteDev", "{F5D07E3B-5C87-4C20-A129-C3FF471C23A2}"
+	ProjectSection(SolutionItems) = preProject
+		LteDev\README.md = LteDev\README.md
+		LteDev\Untitled1.ps1 = LteDev\Untitled1.ps1
+	EndProjectSection
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "LteDev", "LteDev\LteDev\LteDev.pssproj", "{40F4C26C-05B3-436E-ABF1-3044176D1FE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XmlUtility", "XmlUtility", "{1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}"
+	ProjectSection(SolutionItems) = preProject
+		Legacy\WPF\WPF\about.xslt = Legacy\WPF\WPF\about.xslt
+		XmlUtility\README.md = XmlUtility\README.md
+	EndProjectSection
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "XmlUtility", "XmlUtility\XmlUtility\XmlUtility.pssproj", "{2BB4AEF1-5684-44A0-ACEE-326E4C676659}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlUtilityCLR", "XmlUtility\XmlUtilityCLR\XmlUtilityCLR.csproj", "{B0C6789A-5404-4EFD-8EFB-9AEC6D4617AB}"
+EndProject
+=======
+>>>>>>> 61d63293c2c1459394af87c19c129ecd1468f501
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Scripts", "Scripts\Scripts.pssproj", "{8C1F29FD-EB34-4DBB-A1CA-819BF73A4AEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{4BE857E7-98B4-436E-A623-2F0941ABCA3E}"
 EndProject
+<<<<<<< HEAD
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{54DBA9CA-1337-4C3D-A9A1-8F8D5FE84FFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfCLR", "WPF\WpfCLR\WpfCLR.csproj", "{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}"
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "WPF", "Legacy\WPF\WPF\WPFLegacyPS.pssproj", "{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOUtilityLegacyCLR", "IOUtility\IOUtilityLegacyCLR\IOUtilityLegacyCLR.csproj", "{1A4EF800-90F7-413D-820E-497FEFCF86DE}"
+EndProject
+=======
+>>>>>>> 61d63293c2c1459394af87c19c129ecd1468f501
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityLegacyCLR", "NetworkUtility\NetworkUtilityLegacyCLR\NetworkUtilityLegacyCLR.csproj", "{68BB6B97-CB36-463A-B854-C268C6E87D74}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assembly", "Assembly", "{70233A10-5051-4811-959E-2C05A59C3DAA}"
