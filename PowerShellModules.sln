@@ -62,7 +62,7 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "LteDev", "LteDev\LteDev\Lte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XmlUtility", "XmlUtility", "{1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}"
 	ProjectSection(SolutionItems) = preProject
-		WPF\WPF\about.xslt = WPF\WPF\about.xslt
+		Legacy\WPF\WPF\about.xslt = Legacy\WPF\WPF\about.xslt
 		XmlUtility\README.md = XmlUtility\README.md
 	EndProjectSection
 EndProject
@@ -108,7 +108,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{54DBA9CA-133
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfCLR", "WPF\WpfCLR\WpfCLR.csproj", "{2E161262-30CB-4EFC-AFDD-B4D8D5529FC6}"
 EndProject
-Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "WPF", "WPF\WPF\WPF.pssproj", "{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}"
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "WPF", "Legacy\WPF\WPF\WPFLegacyPS.pssproj", "{B4A15FD4-53D1-4E4E-8DBF-D9A7F71EE61E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOUtilityLegacyCLR", "IOUtility\IOUtilityLegacyCLR\IOUtilityLegacyCLR.csproj", "{1A4EF800-90F7-413D-820E-497FEFCF86DE}"
 EndProject

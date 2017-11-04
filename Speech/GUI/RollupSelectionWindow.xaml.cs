@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Speech.GUI
 {
     /// <summary>
-    /// Interaction logic for XmlEditorWindow.xaml
+    /// Interaction logic for RollupSelectionWindow.xaml
     /// </summary>
-    public partial class XmlEditorWindow : Window
+    public partial class RollupSelectionWindow : Window
     {
-        public XmlEditorWindow()
+        public RollupSelectionWindow()
         {
             InitializeComponent();
         }
