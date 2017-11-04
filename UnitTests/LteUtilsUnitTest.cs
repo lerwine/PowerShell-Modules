@@ -66,6 +66,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("LteUtils")]
+        [Description("Tests loading the LteUtils module.")]
         public void ImportLteUtilsTestMethod()
         {
             PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1");

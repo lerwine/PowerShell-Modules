@@ -15,7 +15,7 @@
  *     Microsoft.VisualStudio.TextTemplating
  */
 
-if (GenerationEnvironment.ToString().Trim().Length == 0)
+if (GenerationEnvironment.Length > 0)
 	GenerationEnvironment.Clear();
 InitializeMembers(Host as IServiceProvider, Host.TemplateFile);
 #>
@@ -273,58 +273,58 @@ void GetTypeDetail(Type type)
 }
 void GetTypeInheritance(Type type)
 {
-    for (Type t = type.BaseType; t != null && t.BaseType != null; t = t.BaseType)
+	for (Type t = type.BaseType; t != null && t.BaseType != null; t = t.BaseType)
 		WriteLine(String.Format("Inherits {0}", t.FullName));
-    foreach (Type t in type.GetInterfaces())
+	foreach (Type t in type.GetInterfaces())
 		WriteLine(String.Format("Implements {0}", t.FullName));
 }
 void GetProperties(Type type)
 {
-    foreach (System.Reflection.PropertyInfo propertyInfo in type.GetProperties())
-    {
-        WriteLine(propertyInfo.Name);
+	foreach (System.Reflection.PropertyInfo propertyInfo in type.GetProperties())
+	{
+		WriteLine(propertyInfo.Name);
 		PushIndent("    ");
-        WriteLine(String.Format("Type: {0}", propertyInfo.PropertyType.FullName));
+		WriteLine(String.Format("Type: {0}", propertyInfo.PropertyType.FullName));
 		PushIndent("    ");
 		GetTypeInheritance(propertyInfo.PropertyType);
 		PopIndent();
-        WriteLine(String.Format("IsSpecialName: {0}", propertyInfo.IsSpecialName.ToString()));
-        WriteLine(String.Format("DeclaringType: {0}", propertyInfo.DeclaringType.FullName));
+		WriteLine(String.Format("IsSpecialName: {0}", propertyInfo.IsSpecialName.ToString()));
+		WriteLine(String.Format("DeclaringType: {0}", propertyInfo.DeclaringType.FullName));
 		PushIndent("    ");
 		GetTypeInheritance(propertyInfo.DeclaringType);
 		PopIndent();
-        WriteLine(String.Format("CanRead: {0}", propertyInfo.CanRead.ToString()));
-        System.Reflection.MethodInfo methodInfo = propertyInfo.GetGetMethod();
-        if (methodInfo != null)
-            WriteLine(String.Format("GetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
-        methodInfo = propertyInfo.GetSetMethod();
-        WriteLine(String.Format("CanWrite: {0}", propertyInfo.CanWrite.ToString()));
-        if (methodInfo != null)
-            WriteLine(String.Format("SetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
+		WriteLine(String.Format("CanRead: {0}", propertyInfo.CanRead.ToString()));
+		System.Reflection.MethodInfo methodInfo = propertyInfo.GetGetMethod();
+		if (methodInfo != null)
+			WriteLine(String.Format("GetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
+		methodInfo = propertyInfo.GetSetMethod();
+		WriteLine(String.Format("CanWrite: {0}", propertyInfo.CanWrite.ToString()));
+		if (methodInfo != null)
+			WriteLine(String.Format("SetMethod: Public={0}, Static={1}", methodInfo.IsPublic.ToString(), methodInfo.IsStatic.ToString()));
 		PopIndent();
-    }
+	}
 }
 void GetMethods(Type type)
 {
-    StringBuilder sb = new StringBuilder();
-    foreach (System.Reflection.MethodInfo methodInfo in type.GetMethods())
-    {
+	StringBuilder sb = new StringBuilder();
+	foreach (System.Reflection.MethodInfo methodInfo in type.GetMethods())
+	{
 		if (methodInfo.IsSpecialName)
 			continue;
-        WriteLine(String.Format("{0} {1}({2});", methodInfo.ReturnType.Name, methodInfo.Name, String.Join(", ", methodInfo.GetParameters().Select(p => p.ToString()).ToArray())));
+		WriteLine(String.Format("{0} {1}({2});", methodInfo.ReturnType.Name, methodInfo.Name, String.Join(", ", methodInfo.GetParameters().Select(p => p.ToString()).ToArray())));
 		PushIndent("    ");
-        WriteLine(String.Format("ReturnType: {0}", methodInfo.ReturnType.FullName));
+		WriteLine(String.Format("ReturnType: {0}", methodInfo.ReturnType.FullName));
 		PushIndent("    ");
 		GetTypeInheritance(methodInfo.ReturnType);
 		PopIndent();
-        WriteLine(String.Format("IsSpecialName: {0}", methodInfo.IsSpecialName.ToString()));
-        WriteLine(String.Format("DeclaringType: {0}", methodInfo.DeclaringType.FullName));
+		WriteLine(String.Format("IsSpecialName: {0}", methodInfo.IsSpecialName.ToString()));
+		WriteLine(String.Format("DeclaringType: {0}", methodInfo.DeclaringType.FullName));
 		PushIndent("    ");
 		GetTypeInheritance(methodInfo.DeclaringType);
 		PopIndent();
-        WriteLine(String.Format("IsPublic: {0}", methodInfo.IsPublic.ToString()));
-        WriteLine(String.Format("IsStatic: {0}", methodInfo.IsStatic.ToString()));
+		WriteLine(String.Format("IsPublic: {0}", methodInfo.IsPublic.ToString()));
+		WriteLine(String.Format("IsStatic: {0}", methodInfo.IsStatic.ToString()));
 		PopIndent();
-    }
+	}
 }
 #>

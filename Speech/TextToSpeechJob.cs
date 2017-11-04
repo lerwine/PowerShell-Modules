@@ -197,7 +197,9 @@ namespace Speech
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         ~TextToSpeechJob() { Dispose(false); }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private bool _ApplyOutputQueue()
         {
@@ -390,6 +392,10 @@ namespace Speech
                 _phoneticEventArgs.Clear();
         }
 
+        /// <summary>
+        /// This gets called when the current object is being disposed.
+        /// </summary>
+        /// <param name="disposing">True if being disposed from the public <seealso cref="Dispose()"/> method, otherwise false.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
@@ -411,7 +417,9 @@ namespace Speech
             speechSynthesizer.Dispose();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void Dispose()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             GC.SuppressFinalize(this);
             Dispose(true);

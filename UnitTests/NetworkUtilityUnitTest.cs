@@ -66,6 +66,8 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("NetworkUtility")]
+        [Description("Tests loading the NetworkUtility PowerShell module.")]
         public void ImportNetworkUtilityTestMethod()
         {
             PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".psm1");

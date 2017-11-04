@@ -1,0 +1,893 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Erwine.Leonard.T.Speech</name>
+    </assembly>
+    <members>
+        <member name="T:Speech.Commands.ConvertTo_PromptBuilder">
+            <summary>
+            Converts plain text to a <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/>.
+            </summary>
+            <remarks>
+            <para type="description">Creates a new <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> from the provided plain text or appends text to a
+            provided <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/>.</para>
+            </remarks>
+        </member>
+        <member name="P:Speech.Commands.ConvertTo_PromptBuilder.InputText">
+            <summary>
+            Text to be imported into the resulting <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.ConvertTo_PromptBuilder.PromptBuilder">
+            <summary>
+            <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> object to append to.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.ConvertTo_PromptBuilder.PassThru">
+            <summary>
+            Returns the <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> that was passed.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.ConvertTo_Ssml">
+            <summary>
+            Converts plain text to SSML Markup.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.ConvertTo_Ssml.InputText">
+            <summary>
+            Plain text to be converted.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.Get_TextToSpeechStatus">
+            <summary>
+            Gets current status of speech synthesis.
+            </summary>
+            <remarks>Gets the current <seealso cref="T:System.Speech.Synthesis.SynthesizerState"/> from the referenced text-to-speech job.</remarks>
+        </member>
+        <member name="P:Speech.Commands.Get_TextToSpeechStatus.Job">
+            <summary>
+            Object representing a Text-To-Speech job.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.Import_SpokenText">
+            <summary>
+            Imports text into a <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> object.
+            </summary>
+            <remarks>Loads plain text or SSML into a <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> object.</remarks>
+        </member>
+        <member name="F:Speech.Commands.Import_SpokenText.ParameterSetName_Text">
+            <summary>
+            Name of parameter set for importing plain text as paragraphs and sentences.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Import_SpokenText.ParameterSetName_Path">
+            <summary>
+            Name of parameter set for importing text or SSML from a file, supporting wildcard characters.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Import_SpokenText.ParameterSetName_LiteralPath">
+            <summary>
+            Name of parameter set for importing text or SSML from a literal file path.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Import_SpokenText.ParameterSetName_Ssml">
+            <summary>
+            Name of parameter set for importing SSML markup.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Import_SpokenText.Text">
+            <summary>
+            Plain text to be imported as paragraphs and sentences.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Import_SpokenText.Path">
+            <summary>
+            Path pointing to file(s) to be loaded.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Import_SpokenText.LiteralPath">
+            <summary>
+            Literal path of file to be loaded.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Import_SpokenText.Ssml">
+            <summary>
+            SSML node to be loaded.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.Resume_TextToSpeech">
+            <summary>
+            Resumes speech synthesis.
+            </summary>
+            <remarks>If speech was paused, this resume the speech synthesis process.</remarks>
+        </member>
+        <member name="P:Speech.Commands.Resume_TextToSpeech.Job">
+            <summary>
+            Object representing a text-to-speech job.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.Start_TextToSpeech">
+            <summary>
+            Starts text-to-speech job.
+            </summary>
+            <remarks>Starts text-to-speech process as a background job.</remarks>
+        </member>
+        <member name="F:Speech.Commands.Start_TextToSpeech.ParameterSetName_Text">
+            <summary>
+            Name of parameter set for converting plain text to speech.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Start_TextToSpeech.ParameterSetName_Path">
+            <summary>
+            Name of parameter set for speaking text from a file (supports wilcard file names).
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Start_TextToSpeech.ParameterSetName_LiteralPath">
+            <summary>
+            Name of parameter set for speaking text from the literal path of a file.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Start_TextToSpeech.ParameterSetName_Ssml">
+            <summary>
+            Name of parameter set for converting SSML markup to speech.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Start_TextToSpeech.ParameterSetName_PromptBuilder">
+            <summary>
+            Name of parameter set for converting a <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> to speech.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Start_TextToSpeech.ParameterSetName_Prompt">
+            <summary>
+            Name of parameter set for converting a <seealso cref="T:System.Speech.Synthesis.Prompt"/> to speech.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.Text">
+            <summary>
+            Plain text to be spoken.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.PromptBuilder">
+            <summary>
+            <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> to be spoken.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.Prompt">
+            <summary>
+            <seealso cref="T:System.Speech.Synthesis.Prompt"/> to be spoken.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.InputPath">
+            <summary>
+            Path of file(s) to be spoken.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.LiteralPath">
+            <summary>
+            Literal path of file to be spoken.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.Ssml">
+            <summary>
+            SSML markup to be spoken.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.OutputPath">
+            <summary>
+            Path of audio file to generate.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.AudioFormat">
+            <summary>
+            Audio format information.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.Volume">
+            <summary>
+            Default volume of speech.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.Rate">
+            <summary>
+            Default rate of speech.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.VoiceName">
+            <summary>
+            Name of default voice.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.AsyncState">
+            <summary>
+            State object to associate with text-to-speech job.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Start_TextToSpeech.AsPaused">
+            <summary>
+            Do not start speech generation automatically.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.Stop_TextToSpeech">
+            <summary>
+            Stops text-to-speech job.
+            </summary>
+            <remarks>If a text-to-speech job was in progress, it is stopped, and any queued output from the text-to-speech process is returned.</remarks>
+        </member>
+        <member name="P:Speech.Commands.Stop_TextToSpeech.Job">
+            <summary>
+            Object representing the text-to-speech background job to stop.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.Suspend_TextToSpeech">
+            <summary>
+            Pauses text-to-speech job.
+            </summary>
+            <remarks>If the text-to-speech job was in processes, the speech generation will be paused.</remarks>
+        </member>
+        <member name="P:Speech.Commands.Suspend_TextToSpeech.Job">
+            <summary>
+            Object representing the text-to-speech background job to pause.
+            </summary>
+        </member>
+        <member name="T:Speech.Commands.TextToSpeechCmdlet">
+            <summary>
+            Base class for Text-To-Speech cmdlets.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.FileExtension_Xml">
+            <summary>
+            File extension for XML files.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.FileExtension_Ssml">
+            <summary>
+            File extension for SSML markup Files.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.FileExtension_Sml">
+            <summary>
+            3-letter file extension for SSML markup Files.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.FileExtension_Txt">
+            <summary>
+            File extension for plain text files.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.ParagraphSeparatorRegex">
+            <summary>
+            Matches text which indicates a paragraph separation.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.SentenceSeparatorRegex">
+            <summary>
+            Matches text which indicates a sentence separation.
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.TextToSpeechCmdlet.OtherSeparatorRegex">
+            <summary>
+            Matches text which indicates any separator.
+            </summary>
+        </member>
+        <member name="M:Speech.Commands.TextToSpeechCmdlet.AppendParagraphs(System.Speech.Synthesis.PromptBuilder,System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{System.String}})">
+            <summary>
+            Appends paragraphs and sentences to a <seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> object.
+            </summary>
+            <param name="promptBuilder"><seealso cref="T:System.Speech.Synthesis.PromptBuilder"/> object to append to.</param>
+            <param name="paragraphs">Collection where each element is a collection of sentences.</param>
+        </member>
+        <member name="M:Speech.Commands.TextToSpeechCmdlet.SplitAfterMatches(System.String,System.Text.RegularExpressions.Regex)">
+            <summary>
+            Splits text at the end of each match.
+            </summary>
+            <param name="text">Text to be parsed.</param>
+            <param name="regex">Expression used to split text.</param>
+            <returns>Array of string values which are split at each match.</returns>
+        </member>
+        <member name="M:Speech.Commands.TextToSpeechCmdlet.SplitParagraphs(System.String)">
+            <summary>
+            Splits text along paragraph boundaries.
+            </summary>
+            <param name="text">Text to be parsed.</param>
+            <returns>Text split by paragraph boundaries.</returns>
+        </member>
+        <member name="M:Speech.Commands.TextToSpeechCmdlet.SplitSentences(System.String)">
+            <summary>
+            Splits text
+            </summary>
+            <param name="text">Text to be parsed.</param>
+            <returns>Text split by sentence boundaries.</returns>
+        </member>
+        <member name="M:Speech.Commands.TextToSpeechCmdlet.SplitParagraphsAndSentences(System.String)">
+            <summary>
+            Splits text into paragraphs and sentences
+            </summary>
+            <param name="text">Text to be parsed.</param>
+            <returns>Text split into paragraphs and then split into sentences.</returns>
+        </member>
+        <member name="T:Speech.Commands.Wait_TextToSpeech">
+            <summary>
+            Waits for a text-to-speech job.
+            </summary>
+            <remarks>Waits for the text-to-speech job, returning any queued output from the background job.</remarks>
+        </member>
+        <member name="F:Speech.Commands.Wait_TextToSpeech.ParameterSetName_Completed">
+            <summary>
+            Name of parameter set for waiting for speech generation to complete.
+            <para></para>
+            </summary>
+        </member>
+        <member name="F:Speech.Commands.Wait_TextToSpeech.ParameterSetName_Progress">
+            <summary>
+            Name of parameter set for waiting for a speech generation progress change.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Wait_TextToSpeech.Job">
+            <summary>
+            Object representing a text-to-speech background job.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Wait_TextToSpeech.Completed">
+            <summary>
+            Wait for text-to-speech job ot complete.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Wait_TextToSpeech.Progress">
+            <summary>
+            Wait for a progress update event from the text-to-speech job.
+            </summary>
+        </member>
+        <member name="P:Speech.Commands.Wait_TextToSpeech.MillisecondsTimeout">
+            <summary>
+            Number of milliseconds to wait.
+            </summary>
+        </member>
+        <member name="M:Speech.Commands.Wait_TextToSpeech.TryWait(Speech.TextToSpeechJob,System.Nullable{System.Int32},System.Boolean,System.Collections.ObjectModel.Collection{System.Object}@)">
+            <summary>
+            Waits for a <seealso cref="T:Speech.TextToSpeechJob"/>.
+            </summary>
+            <param name="job">Text-To-Speech job to wait on.</param>
+            <param name="milliSecondsTimeout">Number of milliseconds to wait, or null to wait indefinitely.</param>
+            <param name="progress">true to wait for a progress change; otherwise, false to wait for completion.</param>
+            <param name="output">Objects representing output of the text-to-speech process.</param>
+            <returns>true if job was completed; otherwise false. This also returns true if <paramref name="progress"/> was true, and there was a progress change event.</returns>
+        </member>
+        <member name="T:Speech.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Speech.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Speech.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:Speech.TextToSpeechJob">
+            <summary>
+            Manages a Text-To-Speech invocation
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.OutputPath">
+            <summary>
+            Path of generated WAV file or null if speech is generated to default audio device.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.Rate">
+            <summary>
+            Rate of speech.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.Voice">
+            <summary>
+            Current voice.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.Volume">
+            <summary>
+            Volume
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.State">
+            <summary>
+            Current speech synthesis state.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.IsCompleted">
+            <summary>
+            True if speech generation is completed; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.IsCanceled">
+            <summary>
+            True if speech generation wass cancelled; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.CurrentPromptIndex">
+            <summary>
+            Index of current <seealso cref="T:System.Speech.Synthesis.Prompt"/>.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.TotalPromptCount">
+            <summary>
+            Total number of prompts.
+            </summary>
+        </member>
+        <member name="P:Speech.TextToSpeechJob.AsyncState">
+            <summary>
+            User state object associated with Text-To-Speech job.
+            </summary>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.#ctor(System.Collections.ObjectModel.Collection{System.Speech.Synthesis.Prompt},System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Speech.AudioFormat.SpeechAudioFormatInfo,System.Object)">
+            <summary>
+            Initialize new <see cref="T:Speech.TextToSpeechJob"/>.
+            </summary>
+            <param name="prompts">Collection of <seealso cref="T:System.Speech.Synthesis.Prompt"/>s to be spoken.</param>
+            <param name="noAutoStart">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
+            <param name="rate">Initial rate of speech.</param>
+            <param name="volume">Initial speech volume.</param>
+            <param name="voice">Name of voice to select or null for default voice.</param>
+            <param name="outputPath">Path of WAV file output or null to speak to default audio device.</param>
+            <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="outputPath"/> is not specified.</param>
+            <param name="asyncState">User state object to associate with Text-To-Speech job.</param>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.#ctor(System.Collections.ObjectModel.Collection{System.Speech.Synthesis.Prompt},System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Speech.Synthesis.VoiceGender,System.String,System.Speech.AudioFormat.SpeechAudioFormatInfo,System.Object)">
+            <summary>
+            Initialize new <see cref="T:Speech.TextToSpeechJob"/>.
+            </summary>
+            <param name="prompts">Collection of <seealso cref="T:System.Speech.Synthesis.Prompt"/>s to be spoken.</param>
+            <param name="noAutoStart">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
+            <param name="rate">Initial rate of speech.</param>
+            <param name="volume">Initial speech volume.</param>
+            <param name="gender">Gender of voice.</param>
+            <param name="outputPath">Path of WAV file output or null to speak to default audio device.</param>
+            <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="outputPath"/> is not specified.</param>
+            <param name="asyncState">User state object to associate with Text-To-Speech job.</param>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.#ctor(System.Collections.ObjectModel.Collection{System.Speech.Synthesis.Prompt},System.Boolean,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Speech.Synthesis.VoiceGender,System.Speech.Synthesis.VoiceAge,System.String,System.Speech.AudioFormat.SpeechAudioFormatInfo,System.Object)">
+            <summary>
+            Initialize new <see cref="T:Speech.TextToSpeechJob"/>.
+            </summary>
+            <param name="prompts">Collection of <seealso cref="T:System.Speech.Synthesis.Prompt"/>s to be spoken.</param>
+            <param name="noAutoStart">True if speech should not automatically start; otherwise false to begin speaking immediately.</param>
+            <param name="rate">Initial rate of speech.</param>
+            <param name="volume">Initial speech volume.</param>
+            <param name="gender">Gender of voice.</param>
+            <param name="age">Age of voice.</param>
+            <param name="outputPath">Path of WAV file output or null to speak to default audio device.</param>
+            <param name="formatInfo">Format of output WAV file. This is ignored if <paramref name="outputPath"/> is not specified.</param>
+            <param name="asyncState">User state object to associate with Text-To-Speech job.</param>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.WaitSpeechCompleted">
+            <summary>
+            Waits indefinitely for speech completion.
+            </summary>
+            <returns>True if speech was completed; otherwise this never returns.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.WaitSpeechCompleted(System.Int32)">
+            <summary>
+            Waits for a specified number of milliseconds for speech completion.
+            </summary>
+            <param name="millisecondsTimeout">Number of milliseconds to wait.</param>
+            <returns>True if speech completed within the specified number of milliseconds; otherwise, false.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.WaitSpeechCompleted(System.TimeSpan)">
+            <summary>
+            Waits for a specified timeframe for speech completion.
+            </summary>
+            <param name="timeout">Length of time to wait.</param>
+            <returns>True if speech completed within the specified <seealso cref="T:System.TimeSpan"/>; otherwise, false.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.WaitSpeechProgress">
+            <summary>
+            Waits indefinitely for speech progress change.
+            </summary>
+            <returns>True if speech progress events have occurred; otherwise, false.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.WaitSpeechProgress(System.Int32)">
+            <summary>
+            Waits for a specified number of milliseconds for speech progress change.
+            </summary>
+            <param name="millisecondsTimeout">Number of milliseconds to wait.</param>
+            <returns>True if speech progress events have occurred; otherwise, false.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.WaitSpeechProgress(System.TimeSpan)">
+            <summary>
+            Waits for a specified timeframe for speech progress change.
+            </summary>
+            <param name="timeout">Length of time to wait</param>
+            <returns>True if speech progress events have occurred; otherwise, false.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.GetOutput">
+            <summary>
+            Gets event data output.
+            </summary>
+            <returns>Objects which represent progress event data.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.GetOutput(System.Boolean)">
+            <summary>
+            Gets event data output.
+            </summary>
+            <param name="doNotClear">True to leave output in the internal buffer; otherwise, false to clear the event data after returning the values.</param>
+            <returns>Objects which represent progress event data.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.GetPhoneticEventArgs">
+            <summary>
+            Get event data from phonetic events.
+            </summary>
+            <returns>Objects which represent phonetic event data.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.GetPhoneticEventArgs(System.Boolean)">
+            <summary>
+            Get event data from phonetic events.
+            </summary>
+            <param name="doNotClear">True to leave phonetic event data in the internal buffer; otherwise, false to clear the event data after returning the values.</param>
+            <returns>Objects which represent phonetic event data.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.ClearPhoneticEventArgs">
+            <summary>
+            Expunges any phonetic event data.
+            </summary>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.Dispose(System.Boolean)">
+            <summary>
+            This gets called when the current object is being disposed.
+            </summary>
+            <param name="disposing">True if being disposed from the public <seealso cref="M:Speech.TextToSpeechJob.Dispose"/> method, otherwise false.</param>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.GetCurrentlySpokenPrompt">
+            <summary>
+            Gets prompt currently being spoken.
+            </summary>
+            <returns><seealso cref="T:System.Speech.Synthesis.Prompt"/> currently being spoken or null if speech has comnpleted.</returns>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.Pause">
+            <summary>
+            Pauses speech.
+            </summary>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.Resume">
+            <summary>
+            Resumes speech or starts speech if speech was initially paused.
+            </summary>
+        </member>
+        <member name="M:Speech.TextToSpeechJob.AsyncCancel">
+            <summary>
+            Cancels any speech in progress, including any queued prompts.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.BookmarkReachedVM.PropertyName_AudioPosition">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.BookmarkReachedVM.AudioPosition"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.BookmarkReachedVM.AudioPositionProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.BookmarkReachedVM.AudioPosition"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.BookmarkReachedVM.AudioPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.BookmarkReachedVM.PropertyName_Bookmark">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.BookmarkReachedVM.Bookmark"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.BookmarkReachedVM.BookmarkProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.BookmarkReachedVM.Bookmark"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.BookmarkReachedVM.Bookmark">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.BookmarkReachedVM.PropertyName_RelativePosition">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.BookmarkReachedVM.RelativePosition"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.BookmarkReachedVM.RelativePositionProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.BookmarkReachedVM.RelativePosition"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.BookmarkReachedVM.RelativePosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.PromptQueueVM.PropertyName_Length">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.PromptQueueVM.Length"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.PromptQueueVM.LengthProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.PromptQueueVM.Length"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.PromptQueueVM.Length">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.PromptQueueVM.PropertyName_Target">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.PromptQueueVM.Target"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.PromptQueueVM.TargetProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.PromptQueueVM.Target"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.PromptQueueVM.Target">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_Queue">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.Queue"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.QueueProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.Queue"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.Queue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_CurrentQueueIndex">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.CurrentQueueIndex"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.CurrentQueueIndexProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.CurrentQueueIndex"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.CurrentQueueIndex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_PercentComplete">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.PercentComplete"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PercentCompleteProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.PercentComplete"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.PercentComplete">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_CurrentPrompt">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.CurrentPrompt"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.CurrentPromptProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.CurrentPrompt"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.CurrentPrompt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_TotalLength">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.TotalLength"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.TotalLengthProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.TotalLength"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.TotalLength">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_CompletedLength">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.CompletedLength"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.CompletedLengthProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.CompletedLength"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.CompletedLength">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_VoiceName">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.VoiceName"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.VoiceNameProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.VoiceName"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.VoiceName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_Gender">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.Gender"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.GenderProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.Gender"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.Gender">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_Age">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.Age"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.AgeProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.Age"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.Age">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_Cancelled">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.Cancelled"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.CancelledProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.Cancelled"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.Cancelled">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_PauseRequested">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.PauseRequested"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PauseRequestedProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.PauseRequested"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.PauseRequested">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_IsPaused">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.IsPaused"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.IsPausedProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.IsPaused"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.IsPaused">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_Rate">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.Rate"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.RateProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.Rate"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.Rate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_Volume">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.Volume"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.VolumeProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.Volume"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.Volume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_BookmarksReached">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.BookmarksReached"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.BookmarksReachedProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.BookmarksReached"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.BookmarksReached">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.PropertyName_LastBookmarkReached">
+            <summary>
+            Defines the name for the <see cref="P:Speech.UI.SpeechProgressVM.LastBookmarkReached"/> dependency property.
+            </summary>
+        </member>
+        <member name="F:Speech.UI.SpeechProgressVM.LastBookmarkReachedProperty">
+            <summary>
+            Identifies the <see cref="P:Speech.UI.SpeechProgressVM.LastBookmarkReached"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:Speech.UI.SpeechProgressVM.LastBookmarkReached">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Speech.UI.SpeechProgressWindow">
+            <summary>
+            Interaction logic for SpeechProgressWindow.xaml
+            </summary>
+            <summary>
+            SpeechProgressWindow
+            </summary>
+        </member>
+        <member name="M:Speech.UI.SpeechProgressWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>

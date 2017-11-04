@@ -1,0 +1,383 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Erwine.Leonard.T.IOUtilityLib</name>
+    </assembly>
+    <members>
+        <member name="T:IOUtility.EncodeRegexReplaceHandler">
+            <summary>
+            Encodes text according to a specific pattern.
+            </summary>
+        </member>
+        <member name="M:IOUtility.EncodeRegexReplaceHandler.#ctor(System.String,System.Text.RegularExpressions.RegexOptions)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.EncodeRegexReplaceHandler" />.
+            </summary>
+            <param name="pattern">Regular Expression pattern of text to encode.</param>
+            <param name="options">Regular expression pattern options.</param>
+        </member>
+        <member name="M:IOUtility.EncodeRegexReplaceHandler.#ctor(System.String)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.EncodeRegexReplaceHandler" />.
+            </summary>
+            <param name="pattern">Regular Expression pattern of text to encode.</param>
+        </member>
+        <member name="M:IOUtility.EncodeRegexReplaceHandler.#ctor(System.Text.RegularExpressions.Regex)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.EncodeRegexReplaceHandler" />.
+            </summary>
+            <param name="regex">Regular Expression object which matches text to encode.</param>
+        </member>
+        <member name="M:IOUtility.EncodeRegexReplaceHandler.Evaluator(System.Text.RegularExpressions.Match)">
+            <summary>
+            Returns encoded text.
+            </summary>
+            <param name="match">Current regular expression match to be replaced.</param>
+            <returns>Text with matches encoded.</returns>
+        </member>
+        <member name="T:IOUtility.PSEventScriptHandler`1">
+            <summary>
+            A specialized context for invoking a <seealso cref="T:System.Management.Automation.ScriptBlock"/> which will handle an event.
+            </summary>
+        </member>
+        <member name="E:IOUtility.PSEventScriptHandler`1.EventHandlerInvoked">
+            <summary>
+            This gets raised after <see cref="M:IOUtility.PSEventScriptHandler`1.EventHandler(System.Object,`0)"/> is invoked and <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/> handles the event.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.HandlerScript">
+            <summary>
+            <seealso cref="T:System.Management.Automation.ScriptBlock"/> which gets invoked when <see cref="M:IOUtility.PSEventScriptHandler`1.EventHandler(System.Object,`0)"/> is invoked.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.Name">
+            <summary>
+            Arbitrary name to associate with events handled by this object.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.Host">
+            <summary>
+            PowerShell host to use when invoking <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.InitialLocation">
+            <summary>
+            Path representing initial location to be represented by the current Context.
+            </summary>
+            <remarks>If an invoked script changes the location, this variable will not be updated.</remarks>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.UseLocalScope">
+            <summary>
+            Whether or not to use the local scope when invoking <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.ApartmentState">
+            <summary>
+            Specifies the apartment state to use when invoking <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.ThreadOptions">
+            <summary>
+            PowerShell threading options for invoking <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.Configuration">
+            <summary>
+            Runspace configuration to use when invoking <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/>.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.Variables">
+            <summary>
+            Other variables to define when invoking a script.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.SynchronizedData">
+            <summary>
+            Data which is synchronized with the parent context.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSEventScriptHandler`1.This">
+            <summary>
+            The object which will serve as the &quot;$this&quot; variable during script execution.
+            </summary>
+        </member>
+        <member name="M:IOUtility.PSEventScriptHandler`1.#ctor(System.String,System.Management.Automation.ScriptBlock,IOUtility.PSInvocationContext)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.PSEventScriptHandler`1"/> object for handling <seealso cref="T:System.EventHandler`1"/> events.
+            </summary>
+            <param name="name">Arbitrary name to associate with events handled by this object.</param>
+            <param name="handlerScript"><seealso cref="T:System.Management.Automation.ScriptBlock"/> which handles <seealso cref="T:System.EventHandler`1"/> events.</param>
+            <param name="parentContext">Parent <seealso cref="T:IOUtility.PSInvocationContext"/> object.</param>
+        </member>
+        <member name="M:IOUtility.PSEventScriptHandler`1.EventHandler(System.Object,`0)">
+            <summary>
+            Method which is intended for handling source <seealso cref="T:System.EventHandler`1"/> events.
+            </summary>
+            <param name="sender">Object which raised the event.</param>
+            <param name="e">Information about the event.</param>
+        </member>
+        <member name="M:IOUtility.PSEventScriptHandler`1.RaiseEventHandlerInvoked(System.Object,`0,IOUtility.PSInvocationResult)">
+            <summary>
+            Raises the <see cref="E:IOUtility.PSEventScriptHandler`1.EventHandlerInvoked"/> event.
+            </summary>
+            <param name="sender">Object which is the source of the original event.</param>
+            <param name="args">Information about the original event.</param>
+            <param name="invocationResult">Results of handling the event.</param>
+        </member>
+        <member name="M:IOUtility.PSEventScriptHandler`1.OnEventHandlerInvoked(IOUtility.PSInvocationEventHandlerInvokedArgs{`0})">
+            <summary>
+            This gets invoked after <see cref="P:IOUtility.PSEventScriptHandler`1.HandlerScript"/> has handled the event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:IOUtility.PSInvocationContext">
+            <summary>
+            Context under which ScriptBlock will be executed.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationContext.InitialLocation">
+            <summary>
+            Path representing initial location to be represented by the current Context.
+            </summary>
+            <remarks>If an invoked script changes the location, this variable will not be updated.</remarks>
+        </member>
+        <member name="P:IOUtility.PSInvocationContext.Variables">
+            <summary>
+            Other variables to define when invoking a script.
+            </summary>
+            <remarks>After a script is executed, the values in this property will not be updated. Instead, the values of these variables wil be represnted in the resulting InvocationResult object.</remarks>
+        </member>
+        <member name="P:IOUtility.PSInvocationContext.SynchronizedData">
+            <summary>
+            Data which is synchronized with all invocations and event handlers.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationContext.This">
+            <summary>
+            The object which will serve as the "this" variable during script execution.
+            </summary>
+        </member>
+        <member name="M:IOUtility.PSInvocationContext.#ctor">
+            <summary>
+            Initialize new Context object.
+            </summary>
+        </member>
+        <member name="M:IOUtility.PSInvocationContext.GetResult(System.String)">
+            <summary>
+            Asynchronously executes a script using the current Context.
+            </summary>
+            <param name="script">Script to execute.</param>
+            <returns>An InvocationResult object representing the results of the execution.</returns>
+        </member>
+        <member name="M:IOUtility.PSInvocationContext.GetResult(System.Management.Automation.ScriptBlock)">
+            <summary>
+            Asynchronously invokes a ScriptBlock using the current Context.
+            </summary>
+            <param name="script">ScriptBlock to execute.</param>
+            <returns>An InvocationResult object representing the results of the execution.</returns>
+        </member>
+        <member name="T:IOUtility.PSInvocationEventHandlerInvokedArgs">
+            <summary>
+            Base abstract event information class for accessing base <seealso cref="P:IOUtility.PSInvocationEventHandlerInvokedArgs.EventArgs"/> object.
+            </summary>
+        </member>
+        <member name="M:IOUtility.PSInvocationEventHandlerInvokedArgs.#ctor(System.Object,System.EventArgs,IOUtility.PSInvocationResult)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.PSInvocationEventHandlerInvokedArgs"/> object.
+            </summary>
+            <param name="sender">Object which was the source of the event.</param>
+            <param name="eventArgs">Information about the event.</param>
+            <param name="invocationResult">Result from the event handler.</param>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Sender">
+            <summary>
+            Object which raised the original event.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.EventArgs">
+            <summary>
+            Information about the source event which was handled by the event handler script.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.HadErrors">
+            <summary>
+            True if errors were encountered while handling the event.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.RanToCompletion">
+            <summary>
+            True if event handling script ran to completion.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Output">
+            <summary>
+            Output returned from event handler script.
+            </summary>}
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Variables">
+            <summary>
+            Values of variables after event handler script completion.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Errors">
+            <summary>
+            Errors which occurred during event handler script execution.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Warnings">
+            <summary>
+            Warnings which occurred during event handler script execution.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Verbose">
+            <summary>
+            Verbose messages generated during event handler script execution.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs.Debug">
+            <summary>
+            Debug messages generated during event handler script execution.
+            </summary>
+        </member>
+        <member name="T:IOUtility.PSInvocationEventHandlerInvokedArgs`1">
+            <summary>
+            Contains information about the result of a script-handled event.
+            </summary>
+            <typeparam name="TEventArgs">Type of arguments passed from the source event, to the event handler script.</typeparam>
+        </member>
+        <member name="M:IOUtility.PSInvocationEventHandlerInvokedArgs`1.#ctor(System.Object,`0,IOUtility.PSInvocationResult)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.PSInvocationEventHandlerInvokedArgs`1"/> object.
+            </summary>
+            <param name="sender">Object which was the source of the event.</param>
+            <param name="eventArgs">Information about the event.</param>
+            <param name="invocationResult">Result from the event handler.</param>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventHandlerInvokedArgs`1.EventArgs">
+            <summary>
+            Information about the source event which was handled by the event handler script.
+            </summary>
+        </member>
+        <member name="T:IOUtility.PSInvocationEventResult">
+            <summary>
+            Result information about a handled event.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventResult.Name">
+            <summary>
+            Arbitrary name associated with <seealso cref="T:IOUtility.PSEventScriptHandler`1"/> which handled the event.
+            </summary>
+        </member>
+        <member name="P:IOUtility.PSInvocationEventResult.Args">
+            <summary>
+            Result of handling the event.
+            </summary>
+        </member>
+        <member name="M:IOUtility.PSInvocationEventResult.#ctor(System.String,IOUtility.PSInvocationEventHandlerInvokedArgs)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.PSInvocationEventResult"/> object.
+            </summary>
+            <param name="name">Arbitrary name associated with <seealso cref="T:IOUtility.PSEventScriptHandler`1"/> which handled the event.</param>
+            <param name="args">Result of handling the event.</param>
+        </member>
+        <member name="T:IOUtility.RegexReplaceHandler">
+            <summary>
+            Base class for replacing text based upon regular expression matches.
+            </summary>
+        </member>
+        <member name="P:IOUtility.RegexReplaceHandler.Regex">
+            <summary>
+            Regular Expression object which matches text to encode.
+            </summary>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.#ctor(System.String,System.Text.RegularExpressions.RegexOptions)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.RegexReplaceHandler" />.
+            </summary>
+            <param name="pattern">Regular Expression pattern of text to encode.</param>
+            <param name="options">Regular expression pattern options.</param>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.#ctor(System.String)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.RegexReplaceHandler" />.
+            </summary>
+            <param name="pattern">Regular Expression pattern of text to encode.</param>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.#ctor(System.Text.RegularExpressions.Regex)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.RegexReplaceHandler" />.
+            </summary>
+            <param name="regex">Regular Expression object which matches text to encode.</param>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.Evaluator(System.Text.RegularExpressions.Match)">
+            <summary>
+            Returns replaced text.
+            </summary>
+            <param name="match">Current regular expression match to be replaced.</param>
+            <returns>Text which has been replaced according to match results.</returns>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.Replace(System.String)">
+            <summary>
+            Replaces text.
+            </summary>
+            <param name="input">Text to be searched and replaced.</param>
+            <returns>Text which has been replaced according to match results.</returns>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.Replace(System.String,System.Int32)">
+            <summary>
+            Replaces text.
+            </summary>
+            <param name="input">Text to be searched and replaced.</param>
+            <param name="count">Maximum number of matches to be replaced.</param>
+            <returns>Text which has been replaced according to match results.</returns>
+        </member>
+        <member name="M:IOUtility.RegexReplaceHandler.Replace(System.String,System.Int32,System.Int32)">
+            <summary>
+            Replaces text.
+            </summary>
+            <param name="input">Text to be searched and replaced.</param>
+            <param name="count">Maximum number of matches to be replaced.</param>
+            <param name="startat">Index at which replacement starts.</param>
+            <returns>Text which has been replaced according to match results.</returns>
+        </member>
+        <member name="T:IOUtility.ScriptRegexReplaceHandler">
+            <summary>
+            Uses a <see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" /> to replace matching text.
+            </summary>
+        </member>
+        <member name="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock">
+            <summary>
+            <see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" /> which gets invoked when a match occurs.
+            </summary>
+        </member>
+        <member name="M:IOUtility.ScriptRegexReplaceHandler.#ctor(System.String,System.Text.RegularExpressions.RegexOptions,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.ScriptRegexReplaceHandler" />.
+            </summary>
+            <param name="pattern">Regular Expression pattern of text to encode.</param>
+            <param name="options">Regular expression pattern options.</param>
+            <param name="scriptBlock"><see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" /> which gets invoked when a match occurs.</param>
+        </member>
+        <member name="M:IOUtility.ScriptRegexReplaceHandler.#ctor(System.String,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.ScriptRegexReplaceHandler" />.
+            </summary>
+            <param name="pattern">Regular Expression pattern of text to encode.</param>
+            <param name="scriptBlock"><see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" /> which gets invoked when a match occurs.</param>
+        </member>
+        <member name="M:IOUtility.ScriptRegexReplaceHandler.#ctor(System.Text.RegularExpressions.Regex,System.Management.Automation.ScriptBlock)">
+            <summary>
+            Initialize new <see cref="T:IOUtility.ScriptRegexReplaceHandler" />.
+            </summary>
+            <param name="regex">Regular Expression object which matches text to encode.</param>
+            <param name="scriptBlock"><see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" /> which gets invoked when a match occurs.</param>
+        </member>
+        <member name="M:IOUtility.ScriptRegexReplaceHandler.Evaluator(System.Text.RegularExpressions.Match)">
+            <summary>
+            Returns replaced text.
+            </summary>
+            <param name="match">Current regular expression match to be replaced.</param>
+            <returns>Text which has been replaced by <see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" />.</returns>
+        </member>
+    </members>
+</doc>

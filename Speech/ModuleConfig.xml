@@ -1,0 +1,44 @@
+<ModuleConfig Author="Leonard T. Erwine" PowerShellVersion="4.0">
+  <Copyright>(c) 2017 Leonard T. Erwine. All rights reserved.</Copyright>
+  <Command Export="true" Verb="ConvertTo" Noun="PromptBuilder">
+    <Synopsis>Converts text to a PromptBuilder object.</Synopsis>
+    <Description>
+      <P>Converts plain text into a PromptBuilder Object.</P>
+    </Description>
+    <Parameter Name="InputText" Required="true" PipelineInputByValue="true">
+      <Description>
+        <P>Text to convert.</P>
+      </Description>
+      <Type Name="System.String" />
+    </Parameter>
+    <Parameter Name="PromptBuilder" Required="true">
+      <Description>
+        <P>PromptBuilder to append to.</P>
+      </Description>
+      <Type Name="System.Speech.Synthesis.PromptBuilder" />
+    </Parameter>
+    <Parameter Name="PassThru">
+      <Description>
+        <P>Returns PromptBuilder.</P>
+      </Description>
+      <Type Name="System.Management.Automation.SwitchParameter" />
+    </Parameter>
+    <ParameterSet Name="NewPromptBuilder">
+      <Parameter Name="InputText" />
+    </ParameterSet>
+    <ParameterSet Name="ExistingPromptBuilder">
+      <Parameter Name="InputText" />
+      <Parameter Name="PromptBuilder" />
+      <Parameter Name="PassThru" />
+    </ParameterSet>
+    <OutputType Name="System.Speech.Synthesis.PromptBuilder" ParameterSetName="ExistingPromptBuilder">
+      <Description>
+        <P>PromptBuilder that was pased to the command.</P>
+      </Description>
+    </OutputType>
+    <Navigation Link="ConvertTo-Ssml"/>
+  </Command>
+  <Type Name="System.String" HelpUrl="http://msdn.microsoft.com/library/system.string.aspx" />
+  <Type Name="System.Speech.Synthesis.PromptBuilder" HelpUrl="http://msdn.microsoft.com/library/system.speech.synthesis.promptbuilder.aspx" />
+  <Type Name="System.Management.Automation.SwitchParameter" HelpUrl="http://msdn.microsoft.com/library/system.management.automation.switchparameter.aspx" />
+</ModuleConfig>

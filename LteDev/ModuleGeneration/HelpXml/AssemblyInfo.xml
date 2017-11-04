@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc xmlns="http://schemas.microsoft.com/maml/dev/managed/2004/10"
+       xmlns:maml="http://schemas.microsoft.com/maml/2004/10" 
+	   xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10"
+		
+		xmlns:managed="http://schemas.microsoft.com/maml/dev/managed/2004/10"
+    xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+  <!--xmlns:doc="http://schemas.microsoft.com/maml/internal"-->
+</doc>

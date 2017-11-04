@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LteDev</RootNamespace>
+    <AssemblyName>Erwine.Leonard.T.LteDevLib</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assembly\V4\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assembly\V4\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyBrowser\AssemblyLookupCache.cs" />
+    <Compile Include="AssemblyBrowser\GenericParameterDataItem.cs" />
+    <Compile Include="AssemblyBrowser\GenericTypeParameterDataItem.cs" />
+    <Compile Include="AssemblyBrowser\InstantiatedTypeDefinition.cs" />
+    <Compile Include="AssemblyBrowser\MethodDataItem.cs" />
+    <Compile Include="AssemblyBrowser\MethodDefinitionItem.cs" />
+    <Compile Include="AssemblyBrowser\TypeDefinitionItem.cs" />
+    <Compile Include="AssemblyBrowser\TypeInfoDataItem.cs" />
+    <Compile Include="CodeXmlDocHelper.cs" />
+    <Compile Include="Commands\Export-PSHelpXml.cs" />
+    <Compile Include="Commands\Get-PSHelpXml.cs" />
+    <Compile Include="DllXmlDocHelper.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\AssemblyContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\CmdletFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\CommandFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\CommandHelpFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\DevHelpFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\FunctionFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\MamlFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\ParameterFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\ParameterFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\ExtensionMethods.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSCommandReader.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpExporter.cs" />
+    <Compile Include="ComparisonResult.cs" />
+    <Compile Include="ComparisonStatus.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactoryBase.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactoryContext.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\SyntaxParameterFactory.cs" />
+    <Compile Include="ModuleGeneration\HelpXml\SyntaxParameterFactoryContext.cs" />
+    <Compile Include="ModuleBuilder\AssemblyInfo.cs" />
+    <Compile Include="ModuleBuilder\BinaryModuleInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\CLRPropertyInfo.cs" />
+    <Compile Include="ModuleBuilder\CLRTypeInfo.cs" />
+    <Compile Include="ModuleBuilder\CmdletInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\CmdInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\CmdParamInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\AggregateInfoFactory.cs" />
+    <Compile Include="ModuleBuilder\ExtensionMethods.cs" />
+    <Compile Include="ModuleBuilder\FunctionInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\IHasAssemblyInfo.cs" />
+    <Compile Include="ModuleBuilder\InformationAggregator.cs" />
+    <Compile Include="ModuleBuilder\ModuleInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\ParamInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\ParameterSetAggregate.cs" />
+    <Compile Include="ModuleBuilder\ParameterSetParamInfoAggregate.cs" />
+    <Compile Include="ModuleBuilder\ScriptModuleInfoAggregate.cs" />
+    <Compile Include="ModuleGeneration\CommandDefinition.cs" />
+    <Compile Include="ModuleGeneration\CommandItem.cs" />
+    <Compile Include="ModuleGeneration\ModuleConfig.cs">
+      <DependentUpon>ModuleConfig.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ModuleGeneration\ModuleReference.cs" />
+    <Compile Include="ModuleGeneration\OutputTypeSpec.cs" />
+    <Compile Include="ModuleGeneration\ParagraphContent.cs" />
+    <Compile Include="ModuleGeneration\ParagraphHost.cs" />
+    <Compile Include="ModuleGeneration\ParameterSetSpec.cs" />
+    <Compile Include="ModuleGeneration\ParameterSpec.cs" />
+    <Compile Include="ModuleGeneration\RootModule.cs" />
+    <Compile Include="ModuleGeneration\TableRow.cs" />
+    <Compile Include="ModuleGeneration\TypeDefinition.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="PSLinq.cs" />
+    <Compile Include="PSMamlGenerator.cs" />
+    <Compile Include="PSMamlHelper.cs" />
+    <Compile Include="PSObjectHelper.cs" />
+    <Compile Include="TypeBrowser\AssemblyDataItem.cs" />
+    <Compile Include="TypeBrowser\ConstructedTypeDefinition.cs" />
+    <Compile Include="TypeBrowser\CustomObjectSchema.cs" />
+    <Compile Include="TypeBrowser\GenericMethodArgument.cs" />
+    <Compile Include="TypeBrowser\GenericParameterDataItem.cs" />
+    <Compile Include="TypeBrowser\GenericTypeArgument.cs" />
+    <Compile Include="TypeBrowser\MemberInfoDataItem.cs" />
+    <Compile Include="TypeBrowser\MethodDefinitionItem.cs" />
+    <Compile Include="TypeBrowser\MethodInfoDataItem.cs" />
+    <Compile Include="TypeBrowser\TypeDefinition.cs" />
+    <Compile Include="TypeBrowser\TypeInfoDataItem.cs" />
+    <Compile Include="XsdTypeGen\command\command.cs" />
+    <Compile Include="XsdTypeGen\command\details.cs" />
+    <Compile Include="XsdTypeGen\command\examples.cs" />
+    <Compile Include="XsdTypeGen\command\inputTypes.cs" />
+    <Compile Include="XsdTypeGen\command\nonTerminatingErrors.cs" />
+    <Compile Include="XsdTypeGen\command\parameterNameInline.cs" />
+    <Compile Include="XsdTypeGen\command\parameters.cs" />
+    <Compile Include="XsdTypeGen\command\parameterValueInline.cs" />
+    <Compile Include="XsdTypeGen\command\returnValues.cs" />
+    <Compile Include="XsdTypeGen\command\synonyms.cs" />
+    <Compile Include="XsdTypeGen\command\syntax.cs" />
+    <Compile Include="XsdTypeGen\command\terminatingErrors.cs" />
+    <Compile Include="XsdTypeGen\command\vendor.cs" />
+    <Compile Include="XsdTypeGen\Constants.cs" />
+    <Compile Include="XsdTypeGen\dev\version.cs" />
+    <Compile Include="XsdTypeGen\maml\abbreviation.cs" />
+    <Compile Include="XsdTypeGen\maml\acronym.cs" />
+    <Compile Include="XsdTypeGen\maml\alertInline.cs" />
+    <Compile Include="XsdTypeGen\maml\alertSet.cs" />
+    <Compile Include="XsdTypeGen\maml\alertTypes.cs" />
+    <Compile Include="XsdTypeGen\maml\application.cs" />
+    <Compile Include="XsdTypeGen\maml\codeInline.cs" />
+    <Compile Include="XsdTypeGen\maml\commandInline.cs" />
+    <Compile Include="XsdTypeGen\maml\computerOutputInline.cs" />
+    <Compile Include="XsdTypeGen\maml\conditionalInline.cs" />
+    <Compile Include="XsdTypeGen\maml\copyright.cs" />
+    <Compile Include="XsdTypeGen\maml\copyrightInline.cs" />
+    <Compile Include="XsdTypeGen\maml\corporation.cs" />
+    <Compile Include="XsdTypeGen\maml\country.cs" />
+    <Compile Include="XsdTypeGen\maml\database.cs" />
+    <Compile Include="XsdTypeGen\maml\date.cs" />
+    <Compile Include="XsdTypeGen\maml\definitionList.cs" />
+    <Compile Include="XsdTypeGen\maml\description.cs" />
+    <Compile Include="XsdTypeGen\maml\embedObject.cs" />
+    <Compile Include="XsdTypeGen\maml\entityInline.cs" />
+    <Compile Include="XsdTypeGen\maml\environmentVariable.cs" />
+    <Compile Include="XsdTypeGen\maml\errorInline.cs" />
+    <Compile Include="XsdTypeGen\maml\example.cs" />
+    <Compile Include="XsdTypeGen\maml\footnote.cs" />
+    <Compile Include="XsdTypeGen\maml\foreignPhrase.cs" />
+    <Compile Include="XsdTypeGen\maml\glossaryEntryLink.cs" />
+    <Compile Include="XsdTypeGen\maml\hardware.cs" />
+    <Compile Include="XsdTypeGen\maml\inline.cs" />
+    <Compile Include="XsdTypeGen\maml\internetUri.cs" />
+    <Compile Include="XsdTypeGen\maml\internetUriType.cs" />
+    <Compile Include="XsdTypeGen\maml\keyCombinationInline.cs" />
+    <Compile Include="XsdTypeGen\maml\languageKeyword.cs" />
+    <Compile Include="XsdTypeGen\maml\lineBreak.cs" />
+    <Compile Include="XsdTypeGen\maml\list.cs" />
+    <Compile Include="XsdTypeGen\maml\literal.cs" />
+    <Compile Include="XsdTypeGen\maml\localUri.cs" />
+    <Compile Include="XsdTypeGen\maml\markup.cs" />
+    <Compile Include="XsdTypeGen\maml\math.cs" />
+    <Compile Include="XsdTypeGen\maml\menuSelection.cs" />
+    <Compile Include="XsdTypeGen\maml\newTerm.cs" />
+    <Compile Include="XsdTypeGen\maml\prompt.cs" />
+    <Compile Include="XsdTypeGen\maml\quoteInline.cs" />
+    <Compile Include="XsdTypeGen\maml\rangeInline.cs" />
+    <Compile Include="XsdTypeGen\maml\replaceable.cs" />
+    <Compile Include="XsdTypeGen\maml\textType.cs" />
+    <Compile Include="XsdTypeGen\maml\navigationLink.cs" />
+    <Compile Include="XsdTypeGen\maml\notLocalizable.cs" />
+    <Compile Include="XsdTypeGen\maml\para.cs" />
+    <Compile Include="XsdTypeGen\maml\phrase.cs" />
+    <Compile Include="XsdTypeGen\maml\quote.cs" />
+    <Compile Include="XsdTypeGen\maml\registryEntryInline.cs" />
+    <Compile Include="XsdTypeGen\maml\relatedLinks.cs" />
+    <Compile Include="XsdTypeGen\maml\shellExecuteLink.cs" />
+    <Compile Include="XsdTypeGen\maml\shortcut.cs" />
+    <Compile Include="XsdTypeGen\maml\subscript.cs" />
+    <Compile Include="XsdTypeGen\maml\superscript.cs" />
+    <Compile Include="XsdTypeGen\maml\table.cs" />
+    <Compile Include="XsdTypeGen\maml\textBlockType.cs" />
+    <Compile Include="XsdTypeGen\maml\token.cs" />
+    <Compile Include="XsdTypeGen\maml\ui.cs" />
+    <Compile Include="XsdTypeGen\maml\userInput.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Diff\ClassDiagram1.cd" />
+    <None Include="ModuleGeneration\HelpXml\ClassDiagram1.cd" />
+    <None Include="ModuleBuilder\ClassDiagram1.cd" />
+    <None Include="ModuleGeneration\ModuleConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="README.md" />
+    <None Include="TypeBrowser\ClassDiagram1.cd" />
+    <None Include="Untitled1.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ModuleGeneration\HelpXml\AssemblyInfo.xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

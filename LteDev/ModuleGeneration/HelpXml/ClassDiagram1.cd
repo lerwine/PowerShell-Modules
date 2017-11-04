@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LteDev.HelpXml.CmdletFactoryContext">
+    <Position X="5" Y="10" Width="2.5" />
+    <Members>
+      <Field Name="_assemblyContext" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAABAAAAAAAAAAACAAAAAAAAAAAAACAAAAIAAA=</HashCode>
+      <FileName>HelpXml\CmdletFactoryContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssemblyContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.CommandFactoryContext&lt;T&gt;">
+    <Position X="6.75" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HelpXml\CommandFactoryContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.CommandFactoryContext">
+    <Position X="6.25" Y="3.25" Width="3" />
+    <Members>
+      <Field Name="_aliases" Hidden="true" />
+      <Field Name="_commandDescriptionElement" Hidden="true" />
+      <Field Name="_copyrightElement" Hidden="true" />
+      <Field Name="_synopsisElement" Hidden="true" />
+      <Field Name="_vendorElement" Hidden="true" />
+      <Field Name="_versionElement" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIABAAgABAAEAAAQAAEAiAAFAAAAAgQAAACAEgAIAAA=</HashCode>
+      <FileName>HelpXml\CommandFactoryContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssemblyContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.CommandHelpFactory">
+    <Position X="15.25" Y="14.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAABBAkAACACAAQAAAQQCAEQEIARAQAAEAhDAgAA=</HashCode>
+      <FileName>HelpXml\CommandHelpFactory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SyntaxFactory" />
+      <Property Name="ParameterFactoryInstance" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.DevHelpFactory">
+    <Position X="21.5" Y="14.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ACAAACABAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>HelpXml\DevHelpFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.ExtensionMethods" Collapsed="true">
+    <Position X="27" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAARAAAAAAAAAAAAAAAAAAgCAABAAECEAAAAAgAA=</HashCode>
+      <FileName>HelpXml\ExtensionMethods.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.FunctionFactoryContext">
+    <Position X="8.25" Y="10" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAABAAAAAAAAAAACAAAAAAAAAAAAACAAAAIAAA=</HashCode>
+      <FileName>HelpXml\FunctionFactoryContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssemblyContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.MamlFactory">
+    <Position X="12.5" Y="14.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAACIAAAAAAAAAIQEAAAAEkAAEAAAAAQAAAAIAAAA=</HashCode>
+      <FileName>HelpXml\MamlFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.ParameterFactory">
+    <Position X="18.5" Y="14.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HelpXml\ParameterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.ParameterFactoryContext">
+    <Position X="11.5" Y="7.5" Width="2.75" />
+    <Members>
+      <Field Name="_parameterDescriptionElement" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AYAAAiAAhAEKAAAgAAAACAAAQAAQACAAAAiEAAAIAAA=</HashCode>
+      <FileName>HelpXml\ParameterFactoryContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssemblyContext" />
+      <Property Name="CommandContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.PSHelpFactory">
+    <Position X="18.75" Y="17.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAECAQAACBAAAEAAAABQAAISQAQAACAA=</HashCode>
+      <FileName>HelpXml\PSHelpFactory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Command" />
+      <Property Name="Dev" />
+      <Property Name="Maml" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.PSHelpFactoryBase">
+    <Position X="18.5" Y="12.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>HelpXml\PSHelpFactoryBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PSHelp" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.PSHelpFactoryContext">
+    <Position X="6.5" Y="0.5" Width="2.75" />
+    <Members>
+      <Field Name="_assemblies" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>GAAAAAAAAAAAACAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>HelpXml\PSHelpFactoryContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.SyntaxParameterFactory">
+    <Position X="24" Y="14.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAACAABAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>HelpXml\SyntaxParameterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LteDev.HelpXml.SyntaxParameterFactoryContext">
+    <Position X="1.5" Y="7.5" Width="2.75" />
+    <Members>
+      <Field Name="_parameterDescriptionElement" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AYAAAiAAhAEKAAAgAAAACAAAQAAQAAAAAAiAAAAIAAA=</HashCode>
+      <FileName>HelpXml\SyntaxParameterFactoryContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CommandContext" />
+      <Property Name="AssemblyContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LteDev.HelpXml.AssemblyContext">
+    <Position X="10" Y="1" Width="1.75" />
+    <Members>
+      <Field Name="_assemblyVersion" Hidden="true" />
+      <Field Name="_company" Hidden="true" />
+      <Field Name="_copyright" Hidden="true" />
+      <Field Name="_description" Hidden="true" />
+      <Field Name="_helpDoc" Hidden="true" />
+      <Field Name="_name" Hidden="true" />
+      <Field Name="_product" Hidden="true" />
+      <Field Name="_title" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EIAGIAABAIIgAEAEAAAEIQQAABAAAICAAIBADQggAAA=</HashCode>
+      <FileName>HelpXml\AssemblyContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -16,7 +16,7 @@ namespace UnitTests
     public class GDIPlusUnitTest
     {
         public const string ModuleName = "Erwine.Leonard.T.GDIPlus";
-        public const string RelativeModulePath = @"GDIPlus\Installer";
+        public const string RelativeModulePath = @"Deployment\GDIPlus";
 
         public GDIPlusUnitTest()
         {
@@ -66,9 +66,12 @@ namespace UnitTests
         #endregion
 
         [TestMethod]
+        [TestCategory("GDIPlus")]
+        [Description("Tests loading the GDI+ module.")]
         public void ImportGDIPlusTestMethod()
         {
-            PowerShellHelper.TestLoadModule(this.TestContext, ModuleName, RelativeModulePath, ".dll");
+            PSModuleInfo module = PowerShellHelper.LoadPSModuleFromDeploymentDir(TestContext, "GDIPlus\\Erwine.Leonard.T.GDIPlus.psd1");
+            ModuleConformance.ModuleValidator.AssertPSModule(TestContext, module);
         }
     }
 }

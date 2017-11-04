@@ -1,0 +1,458 @@
+<#@ include file="Common.ttinc" #><#+
+ /* The following namespace is required:
+ *     System.Xml.Serialization
+ */
+
+public ModuleConfigInfo ModuleConfig
+{
+	get
+	{
+		if (_moduleConfig == null)
+		{
+			string path = Path.Combine(TemplateFolder, "ModuleConfig.xml");
+			if (File.Exists(path))
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(ModuleConfigInfo));
+				using (XmlReader xmlReader = XmlReader.Create(path))
+					_moduleConfig = (ModuleConfigInfo)(serializer.Deserialize(xmlReader));
+			}
+			else
+				_moduleConfig = new ModuleConfigInfo();
+		}
+
+		return _moduleConfig;
+	}
+}
+
+private ModuleConfigInfo _moduleConfig = null;
+
+void EmitCommentLines(StringBuilder generationEnvironment, string text)
+{
+	if (text == null)
+		return;
+
+	foreach (string line in System.Text.RegularExpressions.Regex.Split(text, @"\r\n?|\n"))
+	{
+		generationEnvironment.Append("# ");
+		generationEnvironment.AppendLine(line);
+	}
+}
+
+void EmitManifestValueString(StringBuilder generationEnvironment, string text)
+{
+	if (text == null)
+	{
+		generationEnvironment.Append("''");
+		return;
+	}
+
+	if (text.Contains("\r") || text.Contains("\n"))
+	{
+		generationEnvironment.AppendLine("@'");
+		generationEnvironment.AppendLine(text);
+		generationEnvironment.Append("'@");
+	}
+	else
+	{
+		generationEnvironment.Append("'");
+		generationEnvironment.Append(text.Replace("'", "''"));
+		generationEnvironment.Append("'");
+	}
+}
+
+void EmitPsManifestRootModule(StringBuilder generationEnvironment, string comment = "Script module or binary module file associated with this manifest.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	generationEnvironment.Append("RootModule = ");
+	EmitManifestValueString(generationEnvironment, ProjectInfo.OutputFileName);
+	generationEnvironment.AppendLine();
+}
+
+void EmitPsManifestVersion(StringBuilder generationEnvironment, string comment = "Version number of this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.AssemblyFileVersion == null)
+		generationEnvironment.AppendLine("ModuleVersion = '0.1'");
+	else
+	{
+		generationEnvironment.Append("ModuleVersion = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.AssemblyFileVersion.ToString());
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestGUID(StringBuilder generationEnvironment, string comment = "ID used to uniquely identify this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.AssemblyGuid.HasValue)
+	{
+		generationEnvironment.Append("GUID = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.AssemblyGuid.Value.ToString("d"));
+		generationEnvironment.AppendLine();
+	}
+	else
+	{
+		generationEnvironment.AppendLine(@"# WARNING! You must define the GUID on the output assembly.");
+		generationEnvironment.AppendLine("# GUID = '00000000-0000-0000-0000-000000000000'");
+	}
+}
+
+void EmitPsManifestAuthor(StringBuilder generationEnvironment, string comment = "Author of this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	generationEnvironment.Append("Author = ");
+	EmitManifestValueString(generationEnvironment, (String.IsNullOrEmpty(ModuleConfig.Author)) ? "Unknown" : ModuleConfig.Author);
+	generationEnvironment.AppendLine();
+}
+
+void EmitPsManifestDescription(StringBuilder generationEnvironment, string comment = "Description of the functionality provided by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.Description == null)
+		generationEnvironment.AppendLine("# Description = ''");
+	else
+	{
+		generationEnvironment.Append("Description = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.Description);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestPowerShellVersion(StringBuilder generationEnvironment, string comment = "Minimum version of the Windows PowerShell engine required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.PowerShellVersion == null)
+		generationEnvironment.AppendLine("# PowerShellVersion = ''");
+	else
+	{
+		generationEnvironment.Append("PowerShellVersion = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.PowerShellVersion);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestPowerShellHostName(StringBuilder generationEnvironment, string comment = "Name of the Windows PowerShell host required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.PowerShellHostName == null)
+		generationEnvironment.AppendLine("# PowerShellHostName = ''");
+	else
+	{
+		generationEnvironment.Append("PowerShellHostName = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.PowerShellHostName);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestPowerShellHostVersion(StringBuilder generationEnvironment, string comment = "Minimum version of the Windows PowerShell host required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.PowerShellHostVersion == null)
+		generationEnvironment.AppendLine("# PowerShellHostVersion = ''");
+	else
+	{
+		generationEnvironment.Append("PowerShellHostVersion = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.PowerShellHostVersion);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestDotNetFrameworkVersion(StringBuilder generationEnvironment, string comment = "Minimum version of Microsoft .NET Framework required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.TargetFrameworkVersion == null)
+		generationEnvironment.AppendLine("# DotNetFrameworkVersion = ''");
+	else
+	{
+		generationEnvironment.Append("DotNetFrameworkVersion = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion.ToString());
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestCLRVersion(StringBuilder generationEnvironment, string comment = "Minimum version of the common language runtime (CLR) required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ProjectInfo.TargetFrameworkVersion == null)
+		generationEnvironment.AppendLine("# DotNetFrameworkVersion = ''");
+	else
+	{
+		generationEnvironment.Append("DotNetFrameworkVersion = ");
+		EmitManifestValueString(generationEnvironment, ProjectInfo.TargetFrameworkVersion.ToString());
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestProcessorArchitecture(StringBuilder generationEnvironment, string comment = "Name of the Windows PowerShell host required by this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	if (ModuleConfig.ProcessorArchitecture == null)
+		generationEnvironment.AppendLine("# ProcessorArchitecture = ''");
+	else
+	{
+		generationEnvironment.Append("ProcessorArchitecture = ");
+		EmitManifestValueString(generationEnvironment, ModuleConfig.ProcessorArchitecture);
+		generationEnvironment.AppendLine();
+	}
+}
+
+void EmitPsManifestModuleReferences(StringBuilder generationEnvironment, List<ModuleReference> moduleReferences, string name)
+{
+	ModuleReference[] modules = (moduleReferences == null) ? new ModuleReference[0] : moduleReferences.Where(r => r != null && !String.IsNullOrEmpty(r.ModuleName)).ToArray();
+	if (modules.Length == 0)
+	{
+		generationEnvironment.Append("# ");
+		generationEnvironment.Append(name);
+		generationEnvironment.AppendLine(" = @()");
+		return;
+	}
+	generationEnvironment.Append(name);
+	generationEnvironment.Append(" = @(");
+	if (modules.Any(m => !String.IsNullOrEmpty(m.ModuleVersion) || !String.IsNullOrEmpty(m.Guid)))
+	{
+		generationEnvironment.AppendLine();
+		generationEnvironment.Append("    @{ ModuleName = ");
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+		if (!String.IsNullOrEmpty(modules[0].ModuleVersion))
+		{
+			generationEnvironment.Append("; ModuleVersion = ");
+			EmitManifestValueString(generationEnvironment, modules[0].ModuleVersion);
+		}
+		if (!String.IsNullOrEmpty(modules[0].Guid))
+		{
+			generationEnvironment.Append("; Guid = ");
+			EmitManifestValueString(generationEnvironment, modules[0].Guid);
+		}
+		generationEnvironment.Append(" }");
+		foreach (ModuleReference m in modules.Skip(1))
+		{
+			generationEnvironment.AppendLine(",");
+			generationEnvironment.Append("    @{ ModuleName = ");
+			EmitManifestValueString(generationEnvironment, m.ModuleName);
+			if (!String.IsNullOrEmpty(m.ModuleVersion))
+			{
+				generationEnvironment.Append("; ModuleVersion = ");
+				EmitManifestValueString(generationEnvironment, m.ModuleVersion);
+			}
+			if (!String.IsNullOrEmpty(m.Guid))
+			{
+				generationEnvironment.Append("; Guid = ");
+				EmitManifestValueString(generationEnvironment,m.Guid);
+			}
+			generationEnvironment.Append(" }");
+		}
+		generationEnvironment.AppendLine();
+	}
+	else if (modules.Length == 1)
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+	else
+	{
+		generationEnvironment.AppendLine();
+		generationEnvironment.Append("    ");
+		EmitManifestValueString(generationEnvironment, modules[0].ModuleName);
+		foreach (ModuleReference m in modules.Skip(1))
+		{
+			generationEnvironment.AppendLine(",");
+			generationEnvironment.Append("    ");
+			EmitManifestValueString(generationEnvironment, m.ModuleName);
+		}
+	}
+	generationEnvironment.AppendLine(")");
+}
+
+void EmitPsManifestList(StringBuilder generationEnvironment, List<string> values, string name)
+{
+	string[] sArr = (values == null) ? new string[0] : values.Where(s => !String.IsNullOrEmpty(s)).ToArray();
+	if (sArr.Length == 0)
+	{
+		generationEnvironment.Append("# ");
+		generationEnvironment.Append(name);
+		generationEnvironment.AppendLine(" = @()");
+		return;
+	}
+	generationEnvironment.Append(name);
+	
+	if (sArr.Length == 1)
+	{
+		EmitManifestValueString(generationEnvironment, sArr[0]);
+		generationEnvironment.AppendLine();
+		return;
+	}
+	
+	generationEnvironment.Append(" = @(");
+	generationEnvironment.AppendLine();
+	generationEnvironment.Append("    ");
+	EmitManifestValueString(generationEnvironment, sArr[0]);
+	foreach (string s in sArr.Skip(1))
+	{
+		generationEnvironment.AppendLine(",");
+		generationEnvironment.Append("    ");
+		EmitManifestValueString(generationEnvironment, s);
+	}
+	generationEnvironment.AppendLine(")");
+}
+
+void EmitPsManifestRequiredModules(StringBuilder generationEnvironment, string comment = "Modules that must be imported into the global environment prior to importing this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	EmitPsManifestModuleReferences(generationEnvironment, ModuleConfig.RequiredModules, "RequiredModules");
+}
+
+void EmitPsManifestRequiredAssemblies(StringBuilder generationEnvironment, string comment = "Assemblies that must be loaded prior to importing this module.")
+{
+	EmitCommentLines(generationEnvironment, comment);
+	EmitPsManifestList(generationEnvironment, ModuleConfig.RequiredAssemblies, "RequiredAssemblies");
+}
+
+[Serializable]
+[XmlRoot("ModuleConfig")]
+public class ModuleConfigInfo
+{
+	[XmlAttribute]
+	public string Author { get; set; }
+
+	[XmlAttribute]
+	public string PowerShellVersion { get; set; }
+
+	[XmlAttribute]
+	public string PowerShellHostName { get; set; }
+
+	[XmlAttribute]
+	public string PowerShellHostVersion { get; set; }
+
+	[XmlAttribute]
+	public string ProcessorArchitecture { get; set; }
+	
+	[XmlElement("RequiredModule")]
+	public List<ModuleReference> RequiredModules { get; set; }
+	
+	[XmlElement("RequiredAssembly")]
+	public List<string> RequiredAssemblies { get; set; }
+	
+	// Script files (.ps1) that are run in the caller's environment prior to importing this module.
+	[XmlElement("ScriptToProcess")]
+	public List<string> ScriptsToProcess { get; set; }
+	
+	// Type files (.ps1xml) to be loaded when importing this module
+	[XmlElement("TypeToProcess")]
+	public List<string> TypesToProcess { get; set; }
+
+	// Format files (.ps1xml) to be loaded when importing this module
+	[XmlElement("FormatToProcess")]
+	public List<string> FormatsToProcess { get; set; }
+
+	// Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
+	[XmlElement("NestedModule")]
+	public List<string> NestedModules { get; set; }
+
+	// Functions to export from this module
+	[XmlElement("FunctionToExport")]
+	public List<string> FunctionsToExport { get; set; }
+
+	// Cmdlets to export from this module
+	[XmlElement("CmdletToExport")]
+	public List<string> CmdletsToExport { get; set; }
+
+	// Variables to export from this module
+	[XmlElement("VariableToExport")]
+	public List<string> VariablesToExport { get; set; }
+
+	// Aliases to export from this module
+	[XmlElement("AliasToExport")]
+	public List<string> AliasesToExport { get; set; }
+
+	// List of all modules packaged with this module
+	[XmlElement("Module")]
+	public List<ModuleReference> ModuleList { get; set; }
+
+	// List of all files packaged with this module
+	[XmlElement("File")]
+	public List<string> FileList { get; set; }
+	
+	// Private data to pass to the module specified in RootModule/ModuleToProcess
+	[XmlElement("PrivateData")]
+	public string PrivateData { get; set; }
+
+	// HelpInfo URI of this module
+	[XmlAttribute]
+	public string HelpInfoURI { get; set; }
+
+	// Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
+	[XmlAttribute]
+	public string DefaultCommandPrefix { get; set; }
+}
+
+[Serializable]
+public class CommandInfo
+{
+	[XmlAttribute]
+	public string Verb { get; set; }
+	
+	[XmlAttribute]
+	public string Noun { get; set; }
+	
+	public string Synopsis { get; set; }
+	
+	public string Description { get; set; }
+	
+	[XmlElement("Link")]
+	public List<string> Links { get; set; }
+	
+	[XmlElement("OutputType")]
+	public List<OutputTypeSpec> OutputTypes { get; set; }
+	
+	[XmlElement("Parameter")]
+	public List<ParameterSpec> Parameters { get; set; }
+}
+
+[Serializable]
+public class ParameterSpec
+{
+	[XmlAttribute]
+	public string Name { get; set; }
+	
+	[XmlAttribute]
+	public string TypeName { get; set; }
+	
+	[XmlAttribute]
+	public string ParameterSetName { get; set; }
+	
+	[XmlAttribute]
+	public bool Mandatory { get; set; }
+	
+	[XmlAttribute]
+	public bool ValueFromPipeline { get; set; }
+
+	[XmlAttribute]
+	public bool ValueFromPipelineByPropertyName { get; set; }
+
+	[XmlAttribute]
+	public int Position { get { return _position; } set { _position = (value < 0) ? -1 : value; } }
+
+	public int _position = -1;
+}
+
+[Serializable]
+public class OutputTypeSpec
+{
+	[XmlAttribute]
+	public string TypeName { get; set; }
+	
+	[XmlAttribute]
+	public string ParameterSetName { get; set; }
+}
+
+[Serializable]
+[XmlRoot("RequiredModule")]
+public class ModuleReference
+{
+	[XmlAttribute]
+	public string ModuleName { get; set; }
+	
+	[XmlAttribute]
+	public string ModuleVersion { get; set; }
+	
+	[XmlAttribute]
+	public string Guid { get; set; }
+}
+#>

@@ -8,41 +8,76 @@ using System.Xml;
 
 namespace Speech.Commands
 {
+    /// <summary>
+    /// Imports text into a <seealso cref="PromptBuilder"/> object.
+    /// </summary>
+    /// <description>Loads plain text or SSML into a <seealso cref="PromptBuilder"/> object.</description>
     [Cmdlet(VerbsData.Import, "SpokenText", DefaultParameterSetName = ParameterSetName_Text, RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(PromptBuilder))]
     public class Import_SpokenText : TextToSpeechCmdlet
     {
+        /// <summary>
+        /// Name of parameter set for importing plain text as paragraphs and sentences.
+        /// </summary>
         public const string ParameterSetName_Text = "Text";
+
+        /// <summary>
+        /// Name of parameter set for importing text or SSML from a file, supporting wildcard characters.
+        /// </summary>
         public const string ParameterSetName_Path = "Path";
+
+        /// <summary>
+        /// Name of parameter set for importing text or SSML from a literal file path.
+        /// </summary>
         public const string ParameterSetName_LiteralPath = "LiteralPath";
+
+        /// <summary>
+        /// Name of parameter set for importing SSML markup.
+        /// </summary>
         public const string ParameterSetName_Ssml = "Ssml";
 
+        /// <summary>
+        /// Plain text to be imported as paragraphs and sentences.
+        /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Text)]
         [ValidateNotNull()]
         public string[] Text { get; set; }
 
+        /// <summary>
+        /// Path pointing to file(s) to be loaded.
+        /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Path)]
         [ValidateNotNullOrEmpty()]
         [SupportsWildcards()]
         public string[] Path { get; set; }
 
+        /// <summary>
+        /// Literal path of file to be loaded.
+        /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_LiteralPath)]
         [ValidateNotNullOrEmpty()]
         public string LiteralPath { get; set; }
 
+        /// <summary>
+        /// SSML node to be loaded.
+        /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Ssml)]
         [ValidateNotNull()]
         public XmlNode Ssml { get; set; }
 
         PromptBuilder _promptBuilder = null;
-
+        
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void BeginProcessing()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             _promptBuilder = new PromptBuilder();
             base.BeginProcessing();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.ProcessRecord();
 

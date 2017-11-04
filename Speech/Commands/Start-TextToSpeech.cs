@@ -9,80 +9,150 @@ using System.Xml;
 
 namespace Speech.Commands
 {
+    /// <summary>
+    /// Starts text-to-speech job.
+    /// </summary>
+    /// <description>Starts text-to-speech process as a background job.</description>
     [Cmdlet(VerbsLifecycle.Start, "TextToSpeech", RemotingCapability = RemotingCapability.None)]
     [OutputType(typeof(TextToSpeechJob))]
     public class Start_TextToSpeech : TextToSpeechCmdlet
     {
+        /// <summary>
+        /// Name of parameter set for converting plain text to speech.
+        /// </summary>
         public const string ParameterSetName_Text = "Text";
+
+        /// <summary>
+        /// Name of parameter set for speaking text from a file (supports wilcard file names).
+        /// </summary>
         public const string ParameterSetName_Path = "Path";
+
+        /// <summary>
+        /// Name of parameter set for speaking text from the literal path of a file.
+        /// </summary>
         public const string ParameterSetName_LiteralPath = "LiteralPath";
+
+        /// <summary>
+        /// Name of parameter set for converting SSML markup to speech.
+        /// </summary>
         public const string ParameterSetName_Ssml = "Ssml";
+
+        /// <summary>
+        /// Name of parameter set for converting a <seealso cref="System.Speech.Synthesis.PromptBuilder"/> to speech.
+        /// </summary>
         public const string ParameterSetName_PromptBuilder = "PromptBuilder";
+
+        /// <summary>
+        /// Name of parameter set for converting a <seealso cref="System.Speech.Synthesis.Prompt"/> to speech.
+        /// </summary>
         public const string ParameterSetName_Prompt = "Prompt";
 
+        /// <summary>
+        /// Plain text to be spoken.
+        /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Text)]
         [ValidateNotNull()]
         public string[] Text { get; set; }
 
+        /// <summary>
+        /// <seealso cref="System.Speech.Synthesis.PromptBuilder"/> to be spoken.
+        /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_PromptBuilder)]
         [ValidateNotNull()]
         public PromptBuilder[] PromptBuilder { get; set; }
 
+        /// <summary>
+        /// <seealso cref="System.Speech.Synthesis.Prompt"/> to be spoken.
+        /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Prompt)]
         [ValidateNotNull()]
         public Prompt[] Prompt { get; set; }
 
+        /// <summary>
+        /// Path of file(s) to be spoken.
+        /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Path)]
         [ValidateNotNullOrEmpty()]
         [SupportsWildcards()]
         public string[] InputPath { get; set; }
 
+        /// <summary>
+        /// Literal path of file to be spoken.
+        /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_LiteralPath)]
         [ValidateNotNullOrEmpty()]
         public string LiteralPath { get; set; }
 
+        /// <summary>
+        /// SSML markup to be spoken.
+        /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Ssml)]
         [ValidateNotNull()]
         public XmlNode Ssml { get; set; }
 
-        [Parameter(HelpMessage = "")]
+        /// <summary>
+        /// Path of audio file to generate.
+        /// </summary>
+        [Parameter()]
         [ValidateNotNullOrEmpty()]
         public string OutputPath { get; set; }
 
-        [Parameter(HelpMessage = "")]
+        /// <summary>
+        /// Audio format information.
+        /// </summary>
+        [Parameter()]
         public SpeechAudioFormatInfo AudioFormat { get; set; }
 
         private int? _volume = null;
         private int? _rate = null;
 
+        /// <summary>
+        /// Default volume of speech.
+        /// </summary>
         [Parameter()]
         [ValidateRange(0, 100)]
         public int Volume { get { return (_volume.HasValue) ? _volume.Value : 50; } set { _volume = value; } }
 
+        /// <summary>
+        /// Default rate of speech.
+        /// </summary>
         [Parameter()]
         [ValidateRange(-10, 10)]
         public int Rate { get { return (_rate.HasValue) ? _rate.Value : 0; } set { _rate = value; } }
 
+        /// <summary>
+        /// Name of default voice.
+        /// </summary>
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         public string VoiceName { get; set; }
 
+        /// <summary>
+        /// State object to associate with text-to-speech job.
+        /// </summary>
         [Parameter()]
         [AllowNull()]
         public object AsyncState { get; set; }
 
+        /// <summary>
+        /// Do not start speech generation automatically.
+        /// </summary>
         [Parameter()]
         public SwitchParameter AsPaused { get; set; }
 
         Collection<Prompt> _prompts = new Collection<Prompt>();
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void BeginProcessing()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             _prompts.Clear();
             base.BeginProcessing();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.ProcessRecord();
 
@@ -264,7 +334,9 @@ namespace Speech.Commands
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void EndProcessing()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             WriteObject(new TextToSpeechJob(_prompts, AsPaused.IsPresent, _rate, _volume, VoiceName, OutputPath, AudioFormat, AsyncState));
             base.EndProcessing();

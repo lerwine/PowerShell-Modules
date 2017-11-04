@@ -118,7 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Erwine_Leonard_T_GDIPlus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Erwine.Leonard.T.GDIPlus.XML;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Erwine_Leonard_T_IOUtilityLib" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Erwine.Leonard.T.IOUtilityLib.XML;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Erwine_Leonard_T_LteDevLib" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Erwine.Leonard.T.LteDevLib.XML;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Erwine_Leonard_T_Speech" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Erwine.Leonard.T.Speech.XML;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Erwine_Leonard_T_WPFLib" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Erwine.Leonard.T.WPFLib.XML;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Erwine_Leonard_T_XmlUtilityLib" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Erwine.Leonard.T.XmlUtilityLib.XML;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="ExampleSSML" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\ExampleSSML.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Microsoft_BackgroundIntelligentTransfer_Management_dll_Help" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Microsoft.BackgroundIntelligentTransfer.Management.dll-Help.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>
