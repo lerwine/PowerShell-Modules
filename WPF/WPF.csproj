@@ -66,6 +66,22 @@
     <Compile Include="Commands\Show-WpfWindow.cs" />
     <Compile Include="Commands\Test-XamlMarkup.cs" />
     <Compile Include="Commands\XamlMarkupCmdlet.cs" />
+    <Compile Include="UI\CoerceItemValueEventArgs.cs" />
+    <Compile Include="UI\CoerceValueEventArgs.cs" />
+    <Compile Include="UI\DependencyObjectBuilderVM.cs" />
+    <Compile Include="UI\DependencyObjectBuilderWindow.xaml.cs">
+      <DependentUpon>DependencyObjectBuilderWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DependencyPropertyBuilderVM.cs" />
+    <Compile Include="UI\DependencyPropertyBuilderWindow.xaml.cs">
+      <DependentUpon>DependencyPropertyBuilderWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ForcableValue.cs" />
+    <Compile Include="UI\ItemValueChangedEventArgs.cs" />
+    <Compile Include="UI\DisplayValueChangedEventArgs.cs" />
+    <Compile Include="UI\SelectableItemVM.cs" />
+    <Compile Include="UI\SingleSelectVM.cs" />
+    <Compile Include="UI\ValueChangedEventArgs.cs" />
     <Compile Include="WpfWindowInstance.cs" />
     <Compile Include="XmlConstants.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
@@ -101,6 +117,16 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\DependencyObjectBuilderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\DependencyPropertyBuilderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
