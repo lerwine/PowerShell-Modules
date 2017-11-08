@@ -36,12 +36,6 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "NetworkUtility", "NetworkUt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtilityCLR", "NetworkUtility\NetworkUtilityCLR\NetworkUtilityCLR.csproj", "{C0CA8AB4-F6E7-4672-82A9-2F6BB2114D67}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LteDev", "LteDev", "{F5D07E3B-5C87-4C20-A129-C3FF471C23A2}"
-	ProjectSection(SolutionItems) = preProject
-		LteDev\README.md = LteDev\README.md
-		LteDev\Untitled1.ps1 = LteDev\Untitled1.ps1
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XmlUtility", "XmlUtility", "{1882C9D2-9AA3-4680-BB3E-255ABF4CDEC9}"
 	ProjectSection(SolutionItems) = preProject
 		Legacy\WPF\WPF\about.xslt = Legacy\WPF\WPF\about.xslt
@@ -136,6 +130,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDIPlus", "GDIPlus\GDIPlus.csproj", "{F4D8E16C-C2A5-4B97-BD00-58F9B17EA01F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LteDev", "LteDev\LteDev.csproj", "{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -708,6 +704,24 @@ Global
 		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{ADABE7AB-0A7B-42AB-A19A-6A3230B1DA08}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC1C1E3-8D93-45B0-ADEB-847C576E6231}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

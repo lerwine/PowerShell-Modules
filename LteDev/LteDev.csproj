@@ -148,6 +148,7 @@
     <Compile Include="TypeBrowser\MethodInfoDataItem.cs" />
     <Compile Include="TypeBrowser\TypeDefinition.cs" />
     <Compile Include="TypeBrowser\TypeInfoDataItem.cs" />
+    <Compile Include="WPF\DependencyPropertyVM.cs" />
     <Compile Include="XsdTypeGen\command\command.cs" />
     <Compile Include="XsdTypeGen\command\details.cs" />
     <Compile Include="XsdTypeGen\command\examples.cs" />
