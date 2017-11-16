@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>ISO-2</LangVersion>
+    <LangVersion>6</LangVersion>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Debug\Erwine.Leonard.T.NetworkUtility.XML</DocumentationFile>
   </PropertyGroup>
@@ -94,6 +94,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UrnQuery.cs" />
+    <Compile Include="UrnInfo.cs" />
     <Compile Include="FormEncoder.cs" />
     <Compile Include="JsonArray.cs" />
     <Compile Include="JsonConverter.cs" />
@@ -114,6 +116,9 @@
     <Compile Include="MediaTypeRegXRef.cs" />
     <Compile Include="MimeUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UrnPath.cs" />
+    <Compile Include="UrnQueryItem.cs" />
+    <Compile Include="UrnType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
