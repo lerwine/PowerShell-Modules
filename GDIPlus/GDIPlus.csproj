@@ -84,12 +84,20 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Assembly\V4\System.Management.Automation.dll</HintPath>
+      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\New-Image.cs" />
+    <Compile Include="Commands\Open-Image.cs" />
+    <Compile Include="Commands\Enter-DrawingSurface.cs" />
+    <Compile Include="Commands\Sync-DrawingSurface.cs" />
+    <Compile Include="Commands\Exit-DrawingSurface.cs" />
+    <Compile Include="Commands\Copy-Image.cs" />
+    <Compile Include="Commands\ConvertTo-ResizedImage.cs" />
+    <Compile Include="Commands\ConvertTo-CroppedImage.cs" />
     <Compile Include="Collections\GenericAccessObservableCollection.cs" />
     <Compile Include="Collections\IExpandable.cs" />
     <Compile Include="Collections\IGenericAccessObservableCollection.cs" />
