@@ -14,8 +14,8 @@ namespace CredentialStorageLibrary
     {
         private InnerList _innerList = new InnerList();
 
-        public ICollection<string> Keys { get { return _innerList.Keys; } }
-
+        public ICollection<string> GetKeys()
+        { return _innerList.GetKeys(); }
         public ICollection<object> Values
         {
             get
@@ -142,8 +142,8 @@ namespace CredentialStorageLibrary
 
             public object SyncRoot { get { return _syncRoot; } }
 
-            public ICollection<NormalizingText> Keys { get { return Dictionary.Keys; } }
-
+            public ICollection<NormalizingText> GetKeys()
+            { return Dictionary.GetKeys(); }
             public ICollection<MetaDataItem> Values { get { return Dictionary.Values; } }
 
             bool ICollection<KeyValuePair<NormalizingText, MetaDataItem>>.IsReadOnly { get { return false; } }

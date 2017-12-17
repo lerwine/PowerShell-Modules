@@ -197,7 +197,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
                 Int32 index = 0;
                 Int32 colorIndex = ColorModelHelper.GetEuclideanDistance(color, ColorModel, bucket.Colors.Values.ToList());
 
-                foreach (Int32 colorPaletteIndex in bucket.Colors.Keys)
+                foreach (Int32 colorPaletteIndex in bucket.Colors.GetKeys())
                 {
                     if (index == colorIndex)
                     {

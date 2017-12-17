@@ -273,7 +273,7 @@ namespace LteDev
                 if (assembly == null)
                     continue;
                 string n = assembly.GetName().Name;
-                foreach (XmlDocSourceKey key in _cache.Keys.Where(k => k.FullName == null && k.Name == n))
+                foreach (XmlDocSourceKey key in _cache.GetKeys().Where(k => k.FullName == null && k.Name == n))
                     yield return _cache[key];
             }
         }

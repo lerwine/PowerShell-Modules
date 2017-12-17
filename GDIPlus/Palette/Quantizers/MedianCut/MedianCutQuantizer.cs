@@ -109,7 +109,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
         protected override List<Color> OnGetPaletteToCache(Int32 colorCount)
         {
             // creates the initial cube covering all the pixels in the image
-            MedianCutCube initalMedianCutCube = new MedianCutCube(UniqueColors.Keys);
+            MedianCutCube initalMedianCutCube = new MedianCutCube(UniqueColors.GetKeys());
             cubeList.Add(initalMedianCutCube);
 
             // finds the minimum iterations needed to achieve the cube count (color count) we need

@@ -18,12 +18,9 @@ namespace UnitTests
             private PSObject _target;
             private Dictionary<string, PSPropertyHelper> _innerDictionary;
 
-            public ICollection<string> Keys
+            public ICollection<string> GetKeys()
             {
-                get
-                {
-                    return _innerDictionary.Keys;
-                }
+                return _innerDictionary.Keys;
             }
 
             public ICollection<PSPropertyHelper> Values

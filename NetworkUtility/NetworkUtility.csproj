@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F11DDEF6-E803-45E7-B49A-68876B352E39}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetworkUtility</RootNamespace>
+    <AssemblyName>Erwine.Leonard.T.NetworkUtility</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Install\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>Install\Debug\Erwine.Leonard.T.NetworkUtility.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Install\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>Install\Release\Erwine.Leonard.T.NetworkUtility.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Web.Administration\7.0.0.0__31bf3856ad364e35\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Management\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FormEncoder.cs" />
+    <Compile Include="JsonArray.cs" />
+    <Compile Include="JsonConverter.cs" />
+    <Compile Include="JsonDictionary.cs" />
+    <Compile Include="JsonText.cs" />
+    <Compile Include="JSonValue.cs" />
+    <Compile Include="MediaType.cs" />
+    <Compile Include="MediaTypeRegFile.cs" />
+    <Compile Include="MediaTypeRegHide.cs" />
+    <Compile Include="MediaTypeRegistry.cs" />
+    <Compile Include="MediaTypeRegistryBase.cs" />
+    <Compile Include="MediaTypeRegistryDB.cs" />
+    <Compile Include="MediaTypeRegName.cs" />
+    <Compile Include="MediaTypeRegNote.cs" />
+    <Compile Include="MediaTypeRegPeople.cs" />
+    <Compile Include="MediaTypeRegRawXml.cs" />
+    <Compile Include="MediaTypeRegRecord.cs" />
+    <Compile Include="MediaTypeRegXRef.cs" />
+    <Compile Include="MimeUtility.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UriInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Build.ps1" />
+    <None Include="build-debug.bat" />
+    <None Include="build-deploy.bat" />
+    <None Include="build-release.bat" />
+    <None Include="build-test.batmd" />
+    <None Include="README.md" />
+    <None Include="TestScripts/Test-Mime.ps1" />
+    <None Include="TestScripts/Test-UriInfo.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Module\MediaTypes.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Erwine.Leonard.T.NetworkUtility.psd1">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Erwine.Leonard.T.NetworkUtility.psm1">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\README.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent></PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

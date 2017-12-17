@@ -199,8 +199,8 @@ namespace LteDev.TypeBrowser
 
         protected ICollection<TKey> Keys { get { return _keys; } }
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys { get { return _keys; } }
-
+        ICollection<TKey> IDictionary<TKey, TValue>.GetKeys()
+        { return _keys; }
         ICollection<TValue> IDictionary<TKey, TValue>.Values { get { return Items; } }
 
         public int Count { get { return _items.Count; } }
