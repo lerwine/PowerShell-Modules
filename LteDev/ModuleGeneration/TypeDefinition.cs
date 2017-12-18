@@ -9,10 +9,10 @@ namespace LteDev.ModuleGeneration
 {
     [Serializable]
     [XmlRoot(ElementName_Type)]
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class TypeDefinition
     {
         public const string ElementName_Type = "Type";
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

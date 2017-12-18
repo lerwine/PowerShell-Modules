@@ -17,7 +17,7 @@ namespace LteDev.Commands
     {
         #region Constants
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
 
         public const string HelpXml_FileName_Append = "-Help.ps1xml";
         public const string HelpInfo_FileName_Append = "_HelpInfo.xml";
@@ -81,7 +81,7 @@ namespace LteDev.Commands
             public const string para = "para";
         }
 
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         #endregion
 
@@ -270,7 +270,7 @@ namespace LteDev.Commands
 
         #region Overrides
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
 
         protected override void BeginProcessing()
         {
@@ -333,7 +333,7 @@ namespace LteDev.Commands
             }
             base.EndProcessing();
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

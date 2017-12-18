@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LteDev.TypeBrowser
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class GenericMethodArgument : GenericParameterDataItem<MethodBase>
     {
         public GenericMethodArgument(Type representedMember, MethodBase declaringMember)
@@ -42,5 +42,5 @@ namespace LteDev.TypeBrowser
             }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

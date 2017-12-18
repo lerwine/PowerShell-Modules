@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class PSHelpFactory
     {
         public const string HelpXml_FileName_Append = "-Help.ps1xml";
@@ -64,5 +64,5 @@ namespace LteDev.HelpXml
             return element.Elements("description").FirstOrDefault();
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

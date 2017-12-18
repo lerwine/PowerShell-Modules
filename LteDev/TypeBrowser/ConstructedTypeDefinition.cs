@@ -6,7 +6,7 @@ using System.Text;
 
 namespace LteDev.TypeBrowser
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ConstructedTypeDefinition : TypeInfoDataItem
     {
         private object _syncRoot = new object();
@@ -109,5 +109,5 @@ namespace LteDev.TypeBrowser
                 throw new ArgumentException("Type must have an Element Type or be an instantiated Generic Type.", "representedMember");
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

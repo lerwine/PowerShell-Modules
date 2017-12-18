@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>Install\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>Install\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -79,9 +79,6 @@
     <Compile Include="CodeXmlDocHelper.cs" />
     <Compile Include="Commands\Export-PSHelpXml.cs" />
     <Compile Include="Commands\Get-PSHelpXml.cs" />
-    <Compile Include="Commands\New-VSProject.cs" />
-    <Compile Include="Commands\Add-VSProject.cs" />
-    <Compile Include="Commands\New-VSSolution.cs" />
     <Compile Include="DllXmlDocHelper.cs" />
     <Compile Include="ModuleGeneration\HelpXml\AssemblyContext.cs" />
     <Compile Include="ModuleGeneration\HelpXml\CmdletFactoryContext.cs" />
@@ -161,6 +158,7 @@
     <Compile Include="TypeBrowser\MethodInfoDataItem.cs" />
     <Compile Include="TypeBrowser\TypeDefinition.cs" />
     <Compile Include="TypeBrowser\TypeInfoDataItem.cs" />
+    <Compile Include="WPF\ImpliedAndExplicitVM.cs" />
     <Compile Include="WPF\DependencyPropertyVM.cs" />
     <Compile Include="XsdTypeGen\command\command.cs" />
     <Compile Include="XsdTypeGen\command\details.cs" />
@@ -257,6 +255,186 @@
     <None Include="README.md" />
     <None Include="TypeBrowser\ClassDiagram1.cd" />
     <None Include="Untitled1.ps1" />
+    <None Include="Build.ps1" />
+    <None Include="build-debug.bat" />
+    <None Include="build-deploy.bat" />
+    <None Include="build-release.bat" />
+    <None Include="build-test.bat" />
+    <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Module\Test.ps1">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Erwine.Leonard.T.LteDev.psd1">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Erwine.Leonard.T.LteDev.psm1">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\base.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\baseConditional.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\block.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\blockCommon.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\blockSoftware.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\conditionSet.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developer.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerCommand.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManaged.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedClass.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedConstructor.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedDelegate.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedEnumeration.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedEvent.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedField.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedInterface.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedMethod.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedNamespace.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedOperator.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedOverload.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedProperty.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\developerManagedStructure.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\endUser.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\faq.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\glossary.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\hierarchy.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\inline.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\inlineCommon.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\inlineSoftware.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\inlineUi.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\ITPro.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\Maml.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\shellExecute.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\structure.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\structureGlossary.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\structureList.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\structureProcedure.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\structureTable.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\task.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="Module\Schemas\troubleshooting.xsd">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>Schemas\%(Filename)%(Extension)</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ModuleGeneration\HelpXml\AssemblyInfo.xml" />
@@ -264,9 +442,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
-copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
-  </PropertyGroup>
+    <PostBuildEvent>del "$(TargetDir)/*.nlp"
+del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
+  </PropertyGroup> 
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

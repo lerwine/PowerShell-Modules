@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LteDev.AssemblyBrowser
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class TypeDefinitionItem
     {
         private Type _type;
@@ -64,5 +64,5 @@ namespace LteDev.AssemblyBrowser
             }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

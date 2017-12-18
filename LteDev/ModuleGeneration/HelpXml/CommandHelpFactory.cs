@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class CommandHelpFactory : PSHelpFactoryBase
     {
         public const string XmlNsUri_command = "http://schemas.microsoft.com/maml/dev/command/2004/10";
@@ -178,5 +178,5 @@ namespace LteDev.HelpXml
                 context.Aliases.Add(aliasInfo.Name);
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

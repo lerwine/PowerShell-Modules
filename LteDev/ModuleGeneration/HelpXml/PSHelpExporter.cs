@@ -9,11 +9,11 @@ using System.IO;
 
 namespace LteDev.HelpXml
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class PSHelpExporter
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public static readonly XNamespace Xmlns_msh = "http://msh";
         public static readonly XNamespace Xmlns_maml = "http://schemas.microsoft.com/maml/2004/10";
         public static readonly XNamespace Xmlns_command = "http://schemas.microsoft.com/maml/dev/command/2004/10";
@@ -53,7 +53,7 @@ namespace LteDev.HelpXml
         public const string NCName_members = "members";
         public const string NCName_member = "member";
         public const string NCName_summary = "summary";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         private XDocument _helpItemsDocument;
         private Commands.Export_PSHelpXml _hostCmdlet;
@@ -63,13 +63,13 @@ namespace LteDev.HelpXml
         private Dictionary<string, XDocument> _allAssemblyDocuments = new Dictionary<string, XDocument>();
         private Dictionary<string, Tuple<Type, CmdletAttribute>> _allCmdletAttributes = new Dictionary<string, Tuple<Type, CmdletAttribute>>();
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public XElement HelpItemsElement { get { return _helpItemsDocument.Root; } }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public PSHelpExporter(Commands.Export_PSHelpXml hostCmdlet)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
         {
             _hostCmdlet = hostCmdlet;
         }

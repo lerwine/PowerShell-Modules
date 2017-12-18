@@ -18,7 +18,7 @@ namespace LteDev
     {
         #region Constants
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public const string AttributeName_name = "name";
         public const string AttributeName_cref = "cref";
         public const string AttributeName_type = "type";
@@ -57,7 +57,7 @@ namespace LteDev
         public const string Prefix_Property = "P:";
         public const string Prefix_Const = "F:";
         public const string Prefix_Method = "M:";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         #endregion
 
@@ -538,9 +538,9 @@ namespace LteDev
             private string _name;
             private string _fullName;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
             public static readonly StringComparer UriComparer = StringComparer.InvariantCultureIgnoreCase;
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
             /// <summary>
             /// A URI string which describes the source location of the referenced Source Code XML Documentation.
@@ -720,7 +720,7 @@ namespace LteDev
                 return _fullName != null && _fullName == other;
             }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
             public override bool Equals(object obj)
             {
                 if (obj == null)
@@ -734,7 +734,7 @@ namespace LteDev
             public override int GetHashCode() { return ToString().GetHashCode(); }
 
             public override string ToString() { return (String.IsNullOrEmpty(_sourceUri)) ? _fullName ?? (_name ?? "") : _sourceUri; }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
         }
 
         internal static IEnumerable<XElement> GetCommandDescription(Type implementingType)
@@ -742,5 +742,4 @@ namespace LteDev
             throw new NotImplementedException();
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

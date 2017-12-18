@@ -19,7 +19,7 @@ namespace LteDev
     {
         #region Constants
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
 
         public const string HelpXml_FileName_Append = "-Help.ps1xml";
         public const string HelpInfo_FileName_Append = "_HelpInfo.xml";
@@ -96,7 +96,7 @@ namespace LteDev
         public const string ElementName_security = "security";
         public const string ElementName_results = "results";
         public const string ElementName_remarks = "remarks";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         #endregion
 
@@ -606,12 +606,14 @@ namespace LteDev
                     refNode.AddBeforeSelf(result);
                 else
                     refNode.AddAfterSelf(result);
-                onNew?.Invoke(result);
+                if (onNew != null)
+                    onNew(result);
                 return result;
             }
             for (int i = 0; i < level; i++)
                 result = result.Parent;
-            onExists?.Invoke(result);
+            if (onExists != null)
+                onExists(result);
             return result;
         }
 
@@ -665,12 +667,14 @@ namespace LteDev
                     parent.AddFirst(result);
                 else
                     parent.Add(result);
-                onNew?.Invoke(result);
+                if (onNew != null)
+                    onNew(result);
                 return result;
             }
             for (int i = 0; i < level; i++)
                 result = result.Parent;
-            onExists?.Invoke(result);
+            if (onExists != null)
+                onExists(result);
             return result;
         }
 
@@ -809,7 +813,8 @@ namespace LteDev
             
             if (result != null)
             {
-                onExists?.Invoke(result);
+                if (onExists != null)
+                    onExists(result);
                 return result;
             }
 
@@ -818,7 +823,8 @@ namespace LteDev
                 refNode.AddBeforeSelf(result);
             else
                 refNode.AddAfterSelf(result);
-            onNew?.Invoke(result);
+            if (onNew != null)
+                onNew(result);
             return result;
         }
 
@@ -847,7 +853,8 @@ namespace LteDev
             XElement result = parent.Element(name);
             if (result != null)
             {
-                onExists?.Invoke(result);
+                if (onExists != null)
+                    onExists(result);
                 return result;
             }
 
@@ -856,7 +863,8 @@ namespace LteDev
                 parent.AddFirst(result);
             else
                 parent.Add(result);
-            onNew?.Invoke(result);
+            if (onNew != null)
+                onNew(result);
             return result;
         }
 
@@ -2815,7 +2823,7 @@ namespace LteDev
             return false;
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public const string ElementName_value = "value";
         public const string ElementName_icon = "icon";
         public const string ElementName_label = "label";
@@ -2890,7 +2898,7 @@ namespace LteDev
         public const string ElementName_ui = "ui";
         public const string ElementName_userInput = "userInput";
         public const string ElementName_listItem = "listItem";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         public static XElement ToPSMaml(XElement xmlDocElement)
         {

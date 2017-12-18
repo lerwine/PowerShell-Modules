@@ -1,5 +1,57 @@
 if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
 $Script:IndentText = '  ';
+$Script:ProjectTypesByName = @{};
+$Script:ProjectTypesByGuid = [System.Collections.Generic.Dictionary[System.Guid, System.Collections.ObjectModel.Collection[System.String]]]::new();
+if ($MyInvocation.MyCommand.Module.PrivateData -eq $null -or $MyInvocation.MyCommand.Module.PrivateData.ProjectTypes -eq $null -or $MyInvocation.MyCommand.Module.PrivateData.ProjectTypes -isnot [Hashtable] -or $MyInvocation.MyCommand.Module.PrivateData.ProjectTypes.Count -eq 0) {
+	Write-Warning -Message 'No project types defined in module manifest';
+} else {
+	@($MyInvocation.MyCommand.Module.PrivateData.ProjectTypes.Keys) | ForEach-Object {
+		$SourceItem = $MyInvocation.MyCommand.Module.PrivateData.ProjectTypes[$_];
+		$TargetItem = @{ Name = $_ };
+		$SourceItem.Keys | ForEach-Object { $TargetItem[$_] = $SourceItem[$_]; }
+		$TargetItem['Guid'] = [System.Guid]::Parse($TargetItem['Guid']);
+		if (-not $TargetItem.ContainsKey('IsPrimary')) { $TargetItem['IsPrimary'] = $false }
+		if ($TargetItem['Description'] -eq $null -or ($TargetItem['Description'] = $TargetItem['Description'].Trim()).Length -eq 0) {
+			$TargetItem['Description'] = $TargetItem['Name'];
+		}
+		if ($TargetItem['Extension'] -ne $null) {
+			if (($TargetItem['Extension'] = $TargetItem['Extension'].Trim()).Length -eq 0) {
+				$TargetItem.Remove('Extension');
+			} else {
+				if ($TargetItem['Extension'].Substring(0, 1) -ne '.') { $TargetItem['Extension'] = ".$($TargetItem['Extension'])" }
+			}
+		}
+		$Script:ProjectTypesByName[$_] = New-Object -TypeName 'System.Management.Automation.PSObject' -Property $TargetItem;
+		if ($Script:ProjectTypesByGuid.ContainsKey($Item['Guid'])) {
+			$Script:ProjectTypesByGuid[$Item['Guid']].Add($_);
+		} else {
+			$c = [System.Collections.ObjectModel.Collection[System.String]]::new();
+			$c.Add($_);
+			$Script:ProjectTypesByGuid.Add($Item['Guid'], $c);
+		}
+	}
+	$Script:ProjectTypesByGuid.Keys | ForEach-Object {
+		if ($Script:ProjectTypesByGuid[$_].Count -gt 1) {
+			$Items = @($Script:ProjectTypesByGuid[$_] | ForEach-Object { $Script:ProjectTypesByName[$_] });
+			$Primary = @($Items | Where-Object { $_.IsPrimary });
+			if ($Primary.Count -eq 0) {
+				Write-Warning -Message "No Primary: $(($Items | ForEach-Object { "$($_.Name) ($($_.Description))" }) -join ', ')";
+			} else {
+				if ($Primary.Count -gt 1) {
+					Write-Warning -Message "Multiple Primary: $(($Primary | ForEach-Object { "$($_.Name) ($($_.Description))" }) -join ', ')";
+				}
+			}
+			$Extensions = @($Items | Where-Object { $_.Extension -ne $null });
+			if ($Extensions.Count -gt 0 -and $Extensions.Count -lt $Items.Count) {
+				if ($Extensions.Count -gt 1) {
+					$e = @($Extensions | Where-Object { $_.IsPrimary });
+					if (e.Count -gt 0) { $Extensions = $e }
+				}
+				$Items | Where-Object { $_.Extension -eq $null } | ForEach-Object { $_ | Add-Member -MemberType NoteProperty -Name 'Extension' -Value $Extensions[0].Extension }
+			}
+		}
+	}
+}
 
 Function Get-ClrSimpleName {
 	<#
@@ -524,4 +576,73 @@ Function New-HelpSourceItem {
 		$XmlDocument.Load($DocPath);
 	}
 	New-Object -TypeName 'HelpXml.HelpSourceItem' -ArgumentList $ModuleAssembly, $XmlDocument, $Author;
+}
+
+Function Find-ProjectTypeInfo {
+	[CmdletBinding(DefaultParameterSetName = 'Guid')]
+	Param(
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Name')]
+		[string[]]$Name,
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'FileExtension')]
+		[string[]]$FileExtension,
+		
+		[Parameter(ParameterSetName = 'Guid')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'GuidPrimary')]
+		[System.Guid[]]$Guid,
+
+		[Parameter(ParameterSetName = 'FileExtension')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'GuidPrimary')]
+		[switch]$Primary
+	)
+
+	Process {
+		$ProjectObjArr = @();
+		if ($PSBoundParameters.ContainsKey('Name')) {
+			$ProjectObjArr = @(($Name | Select-Object -Unique) | ForEach-Object {
+				if ($Script:ProjectTypesByName.ContainsKey($_)) {
+					$Script:ProjectTypesByName[$_] | Write-Output;
+				}
+			});
+		} else {
+			if ($PSBoundParameters.ContainsKey('FileExtension')) {
+				$Matching = @($Script:	.Keys | ForEach-Object { $Script:ProjectTypesByName[$_]  } | Where-Object { $_.Extension -ne $null -and $_.Extension -ieq $FileExtension });
+				if ($Matching.Count -eq 1) {
+					$Matching[0] | Write-Output;
+				} else {
+					if ($Matching.Count -gt 1) {
+						if ($Primary) {
+							$m = @($Matching | Where-Object { $_.IsPrimary });
+							if ($m.Count -gt 0) { $m[0] | Write-Output } else { $Matching[0] | Write-Output }
+						} else {
+							$Matching | Write-Output;
+						}
+					}
+				}
+			} else {
+				if ($PSBoundParameters.ContainsKey('Guid')) {
+					if ($Primary) {
+						(($Guid | Select-Object -Unique) | ForEach-Object {
+							if ($Script:ProjectTypesByGuid.ContainsKey($_)) {
+								$Items = @($Script:ProjectTypesByGuid[$_] | ForEach-Object { $Script:ProjectTypesByName[$_] | Write-Output });
+								if ($Items.Count -gt 1) {
+									$a = @($Items | Where-Object { $_.IsPrimary });
+									if ($a.Count -gt 0) { $Items = $a }
+								}
+								$Items[0] | Write-Output;
+							}
+						}) | Select-Object -Unique;
+					} else {
+						(($Guid | Select-Object -Unique) | ForEach-Object {
+							if ($Script:ProjectTypesByGuid.ContainsKey($_)) {
+								$Script:ProjectTypesByGuid[$_] | ForEach-Object { $Script:ProjectTypesByName[$_] | Write-Output }
+							}
+						}) | Select-Object -Unique;
+					}
+				} else {
+					$Script:ProjectTypesByName.Keys | ForEach-Object { $Script:ProjectTypesByName[$_] | Write-Output }
+				}
+			}
+		}
+	}
 }

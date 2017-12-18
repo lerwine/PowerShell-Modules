@@ -10,8 +10,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
-    public class ParamInfoAggregate<T>
-: InformationAggregator
+    public class ParamInfoAggregate<T> : InformationAggregator
     {
         public T Parameter { get; private set; }
 

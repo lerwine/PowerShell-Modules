@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace LteDev.ModuleGeneration
 {
     [Serializable]
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ModuleConfig
     {
         private string _author = null;
@@ -60,5 +60,5 @@ namespace LteDev.ModuleGeneration
             set { _types = value ?? new Collection<TypeDefinition>(); }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

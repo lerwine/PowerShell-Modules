@@ -16,11 +16,11 @@ namespace LteDev.Commands
     [Cmdlet(VerbsCommon.Get, "PSHelpXml")]
     public class Get_PSHelpXml : PSCmdlet
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_ModuleInfo = "ModuleInfo";
         public const string ParameterSetName_LiteralPath = "LiteralPath";
         public const string ParameterSetName_WildCardPath = "WildCardPath";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Information about the module, which is used to generate parameter help.
@@ -42,9 +42,9 @@ namespace LteDev.Commands
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_LiteralPath)]
         public string[] LiteralPath { get; set; }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
         {
             IEnumerable<PSModuleInfo> modules;
             switch (ParameterSetName)
@@ -59,9 +59,9 @@ namespace LteDev.Commands
             }
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public static PSModuleInfo GetPSModule()
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
         {
             throw new NotImplementedException();
         }

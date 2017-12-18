@@ -16,8 +16,6 @@ namespace LteDev.ModuleBuilder
         private object _syncRoot = new object();
         private CLRTypeInfo _parameterType = null;
 
-        public CommandParameterInfo Parameter { get; private set; }
-        
         public ParameterSetAggregate ParameterSet { get; private set; }
 
         public virtual XElement GetParameterTypeHelp()
@@ -56,7 +54,6 @@ namespace LteDev.ModuleBuilder
             if (!parmeterSetContext.ParameterSet.Parameters.Any(p => ReferenceEquals(p, parameter)))
                 throw new ArgumentException("Parameter belongs to another parameter set.");
 
-            Parameter = parameter;
             ParameterSet = parmeterSetContext;
         }
     }

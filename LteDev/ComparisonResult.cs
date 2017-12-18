@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace LteDev
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public struct ComparisonResult
     {
         private string _description;
@@ -84,5 +84,5 @@ namespace LteDev
             return new BindingList<ComparisonResult>(items);
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }
