@@ -11,7 +11,7 @@
 )
 
 $csproj_name = 'LteDev.csproj';
-$module_name = 'Erwine.Leonard.T.NetworkUtility';
+$module_name = 'Erwine.Leonard.T.LteDev';
 
 cls;
 
@@ -528,12 +528,13 @@ if ($ShouldBuild) {
     'Build not necessary' | Write-Host;
 }
 
+$Error.Clear();
 
 if ((Get-Module -Name $module_name) -ne $null) { Remove-Module -Name $module_name -ErrorAction Stop }
 $CmdErrors = @();
 $CmdWarnings = @();
 $ModuleInfo = $null;
-$ModuleInfo = Import-module -Name (($PSScriptRoot | Join-Path -ChildPath $Project.GetPropertyValue('OutputPath')) | Join-Path -ChildPath "Erwine.Leonard.T.NetworkUtility.psd1") `
+$ModuleInfo = Import-module -Name (($PSScriptRoot | Join-Path -ChildPath $Project.GetPropertyValue('OutputPath')) | Join-Path -ChildPath "$module_name.psd1") `
     -ErrorVariable 'CmdErrors' -WarningVariable 'CmdWarnings' -ErrorAction Continue -PassThru;
 $ErrorObj = @();
 if ($CmdErrors.Count -gt 0) {

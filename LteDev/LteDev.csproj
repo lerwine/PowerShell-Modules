@@ -263,10 +263,6 @@
     <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Module\Test.ps1">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
-    </Content>
     <Content Include="Module\Erwine.Leonard.T.LteDev.psd1">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <Link>%(Filename)%(Extension)</Link>
