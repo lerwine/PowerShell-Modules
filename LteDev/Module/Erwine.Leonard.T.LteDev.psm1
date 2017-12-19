@@ -650,6 +650,161 @@ Function Find-ProjectTypeInfo {
 	}
 }
 
+$Script:SolutionContentRegex_old = [System.Text.RegularExpressions.Regex]::new('(\G(\r\n?|\n)|^)(?<i>\t+)?((End(?<e>\S+))|(#(?<c>.*))|(((?<s>[^\r\n\s()=]+)|(?<n>[^\r\n()=]+))(\((?<a>[^()]*)\))?|(?<k>[^\r\n=]*))([ \t]*=[ \t]*(?<v>[^\r\n]*))?)(?=[\r\n]|$)', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase);
+$Script:SolutionContentRegex_old = [System.Text.RegularExpressions.Regex]::new(@'
+
+^
+(?<s>[a-z])+
+[a-z]?
+(?:\k<s>(?<-s>))+
+(?(s)(?!))$
+
+'@, ([System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::IgnorePatternWhitespace));
+
+Function Open-VSSolution_old {
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Path')]
+		[sttring[]]$Path,
+		
+		[Parameter(Mandatory = $true, ParameterSetName = 'Literal')]
+		[sttring]$LiteralPath
+	)
+
+	Process {
+		$ResolvedPaths = @();
+		if ($PSBoundParameters.ContainsKey('Path')) {
+			$ResolvedPaths = @($Path | Resolve-Path);
+		} else {
+			$ResolvedPaths = @(Resolve-Path -LiteralPath $LiteralPath);
+		}
+		$ResolvedPaths | ForEach-Object {
+			if ($_ | Test-Path -PathType Leaf) {
+				$Text = Get-Content -LiteralPath $_;
+				if ($Text.Length -eq 0) {
+					Write-Error -Message 'File is empty' -Category InvalidData -ErrorId 'EmptyFile' -TargetObject $_;
+				} else {
+					$MatchCollection = $SolutionContentRegex.Matches($Text);
+					$TokenCollection = [System.Collections.Generic.LinkedList[System.Management.Automation.PSObject]]::new();
+					$ParentStack = [System.Collections.Generic.Stack[System.Management.Automation.PSObject]]::new();
+					@($MatchCollection) | ForEach-Object {
+						$Properties = @{ Kind = ''; Key = ''; Level = 0; Arguments = $null; Value = $null; PreviousLineEnd = $_.Index; Length = $_.Length; Index = $_.Index };
+						if ($_.Groups['t'].Success) { $Properties['Level'] = $_.Groups['t'].Length }
+						if ($_.Groups['c'].Success) {
+							$Properties['Kind'] = 'Comment';
+							$Properties['Index'] = $_.Groups['c'].Index;
+							$Properties['Value'] = $_.Groups['c'].Value;
+						} else {
+							if ($_.Groups['c'].Success) {
+								$Properties['Kind'] = 'End';
+								$Properties['Index'] = $_.Groups['e'].Index - 3;
+								$Properties['Key'] = $_.Groups['e'].Value;
+							} else {
+								if ($_.Groups['k'].Success) {
+									$Properties['Kind'] = 'Key';
+									$Properties['Index'] = $_.Groups['k'].Index;
+									$Properties['Key'] = $_.Groups['k'].Value;
+								} else {
+									if ($_.Groups['s'].Success) {
+										$Properties['Kind'] = 'Start';
+										$Properties['Index'] = $_.Groups['s'].Index;
+										$Properties['Key'] = $_.Groups['s'].Value;
+									} else {
+										$Properties['Kind'] = 'Named';
+										$Properties['Index'] = $_.Groups['n'].Index;
+										$Properties['Key'] = $_.Groups['n'].Value;
+									}
+									if ($_.Groups['a'].Success) {
+										$Properties['Arguments'] = $_.Groups['a'].Value;
+									}
+								}
+								if ($_.Groups['v'].Success) {
+									$Properties['Value'] = $_.Groups['v'].Value;
+								}
+							}
+						}
+						$TokenCollection.AddLast((New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties));
+					}
+					$StartIndex = 0;
+					while ($TokenCollection.Count -gt 0) {
+						$t = $TokenCollection.First;
+						if ($t.Kind -eq 'Comment') {
+							if ($t.PreviousLineEnd -gt $StartIndex) {
+								$SolutionItems.Add((New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+									Kind = 'Header'
+									Value = $Text.Substring($StartIndex, $t.PreviousLineEnd - $StartIndex);
+									Index = $StartIndex;
+								}));
+							}
+							$StartIndex = $t.PreviousLineEnd + $t.Length;
+							$SolutionItems.Add((New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+								Kind = 'Comment'
+								Value = $t.Value;
+								Index = $T.Index;
+							}));
+						}
+						if ($t.Level -eq 0 -and $t.Kind -ne 'Comment' -and ($t.Kind -ne 'Key' -or $t.Value -ne $null)) {
+							break;
+						}
+						$TokenCollection.RemoveFirst();
+					}
+
+					$ParentStack.Push((New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+						Path = $_;
+						Items = [System.Collections.Generic.LinkedList[System.Management.Automation.PSObject]]::new();
+					}));
+					$ChildLevel = 0;
+					for ($CurrentNode = $TokenCollection.First; $CurrentNode -ne $null; $CurrentNode = $CurrentNode.Next) {
+						$CurrentParent = $ParentStack.Peek();
+						$CurrentToken = $CurrentNode.Value;
+						$Properties = @{
+							Key = $CurrentToken.Key;
+							Kind = $CurrentToken.Kind;
+							Value = $CurrentToken.Value;
+							Arguments = $CurrentToken.Arguments;
+							Index = $CurrentToken.Index;
+							Length = $CurrentToken.Length - ($CurrentToken.Index - $CurrentToken.PreviousLineEnd);
+						};
+						if ($Properties['Kind'] -ne 'Comment') {
+							$HasChildren = $CurrentNode.Next -ne $null -and $CurrentNode.Next.Value.Level -gt $CurrentToken.Level;
+							$IsSection = $HasChildren -or (($CurrentNode.Kind -eq 'Start' -or $CurrentNode.Kind -eq 'Named') -and $CurrentNode.Next -ne $null -and $CurrentNode.Next.Value.Level -eq $CurrentToken.Level -and $CurrentNode.Next.Value.Kind -eq 'End' -and $CurrentNode.Next.Value.Key -eq $CurrentToken.Key);
+							if ($IsSection) {
+								$Properties['Kind'] = 'Section';
+							} else {
+								if ($Properties['Kind'] -ne 'Comment') { $Properties['Kind']= 'Setting' }
+							}
+							if ($CurrentToken.Level -eq $ChildLevel) {
+								if ($CurrentToken.Kind -eq 'End' -and $CurrentParent.Items.Last -ne $null -and $CurrentParent.Items.Last.Value.Kind -eq 'Section' -and $CurrentParent.Items.Last.Value.Key -eq $CurrentToken.Key) { continue }
+
+							} else {
+								if ($current.Level -lt $ChildLevel) {
+									# Need to check to see if it's the end item
+
+								} else {
+
+								}
+							}
+						}
+					}
+					if ($t.PreviousLineEnd -gt $StartIndex) {
+						$SolutionItems.Add((New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+							Kind = 'Header'
+							Value = $Text.Substring($StartIndex, $t.PreviousLineEnd - $StartIndex);
+							Index = $StartIndex;
+						}));
+					}
+					New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+						Path = $_;
+						Items = $SolutionItems;
+					}
+				}
+			} else {
+				Write-Error -Message 'Path not found' -Category ObjectNotFound -ErrorId 'PathNotFound' -TargetObject $_;
+			}
+		}
+	}
+}
+
 if (@(Find-ProjectTypeInfo).Count -eq 0) {
 	Write-Warning -Message 'No project types defined in module manifest';
 }
