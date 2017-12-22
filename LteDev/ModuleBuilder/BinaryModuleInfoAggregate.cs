@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class BinaryModuleInfoAggregate : ModuleInfoAggregate, IHasAssemblyInfo
     {
         public AssemblyInfo AssemblyInfo
@@ -23,4 +24,5 @@ namespace LteDev.ModuleBuilder
                 throw new ArgumentException("Module is not a binary module.", "moduleInfo");
         }
     }
+#pragma restore disable 1591 // Missing XML comment for publicly visible type or member
 }

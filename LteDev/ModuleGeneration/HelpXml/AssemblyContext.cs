@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class AssemblyContext
     {
         public const string Prefix_Namespace = "N";
@@ -167,5 +168,5 @@ namespace LteDev.HelpXml
                 .Select(a => a.Parent).FirstOrDefault();
         }
     }
-
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

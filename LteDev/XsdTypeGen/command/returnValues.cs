@@ -8,10 +8,14 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.command
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
     [Serializable()]
     [XmlRoot("returnValues", Namespace = Constants.Xmlns_command)]
     public class returnValues
     {
         // TODO: Reference from command/command.cs: command:returnValues
     }
+    
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

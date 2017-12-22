@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ParameterFactoryContext : CommandFactoryContext
     {
         public ParameterMetadata Parameter { get; private set; }
@@ -110,4 +111,5 @@ namespace LteDev.HelpXml
 </complexType>
          */
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

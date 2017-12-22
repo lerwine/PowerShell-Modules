@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class CmdletFactoryContext : CommandFactoryContext<CmdletInfo>
     {
         public CmdletFactoryContext(PSHelpFactoryContext context, CmdletInfo cmdletInfo) : base(context, cmdletInfo) { }
@@ -33,4 +34,5 @@ namespace LteDev.HelpXml
             get { return GetAssemblyContext(CommandInfo.ImplementingType.Assembly); }
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

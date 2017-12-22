@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class SyntaxParameterFactory : PSHelpFactoryBase
     {
         public SyntaxParameterFactory(CommandHelpFactory commandHelpFactory)
@@ -37,4 +38,5 @@ namespace LteDev.HelpXml
             return context.CommandInfo.ParameterSets.SelectMany(s => s.Parameters.Where(p => p.ValueFromPipeline || p.ValueFromPipelineByPropertyName)).GroupBy(p => p.Name);
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

@@ -19,6 +19,7 @@ namespace LteDev
         #region Constants
 
 #pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
         public const string AttributeName_name = "name";
         public const string AttributeName_cref = "cref";
         public const string AttributeName_type = "type";
@@ -63,6 +64,7 @@ namespace LteDev
 
         private static IDictionary<XmlDocSourceKey, XDocument> _cache = new Dictionary<XmlDocSourceKey, XDocument>();
 
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public static IEnumerable<XElement> GetCommandSummary(this Type key)
         {
             if (key == null)
@@ -528,6 +530,7 @@ namespace LteDev
             }
             return GetPropertyChildElement(property, elementName);
         }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
         
         /// <summary>
         /// Refers to a specific instance of an <seealso cref="XDocument"/> which contains Source Code XML Documentation of an assembly at a specific location.

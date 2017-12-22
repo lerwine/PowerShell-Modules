@@ -15,6 +15,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class AssemblyInfo : InformationAggregator, IEquatable<AssemblyInfo>, IEquatable<Assembly>
     {
         public const string ElementName_doc = "doc";
@@ -320,4 +321,5 @@ namespace LteDev.ModuleBuilder
 
         public override string ToString() { return Assembly.FullName; }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

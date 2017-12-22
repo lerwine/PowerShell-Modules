@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace LteDev
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public static class PSLinq
     {
         public static IEnumerable<PSObject> AsPSEnumerable(IEnumerable source)
@@ -425,4 +426,5 @@ namespace LteDev
             return source.SelectMany<PSObject, string>(s => s.ToStringValues());
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

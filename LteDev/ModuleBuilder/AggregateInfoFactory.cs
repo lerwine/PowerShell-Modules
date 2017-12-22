@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class AggregateInfoFactory : InformationAggregator
     {
         private List<AssemblyInfo> _assemblyContextCache = new List<AssemblyInfo>();
@@ -97,4 +98,5 @@ namespace LteDev.ModuleBuilder
             Path = path;
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

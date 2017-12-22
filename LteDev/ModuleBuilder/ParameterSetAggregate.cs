@@ -11,6 +11,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ParameterSetAggregate : InformationAggregator
     {
         private object _syncRoot = new object();
@@ -63,4 +64,5 @@ namespace LteDev.ModuleBuilder
 #warning Not implemented
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

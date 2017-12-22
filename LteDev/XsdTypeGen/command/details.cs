@@ -8,6 +8,8 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.command
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
     [Serializable()]
     [XmlRoot("details", Namespace = Constants.Xmlns_command)]
     public class details
@@ -37,4 +39,6 @@ namespace LteDev.XsdTypeGen.command
         [XmlElement("vendor", Namespace = Constants.Xmlns_command)]
         public vendor vendor { get; set; }
     }
+    
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

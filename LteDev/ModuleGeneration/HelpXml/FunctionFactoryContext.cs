@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class FunctionFactoryContext : CommandFactoryContext<FunctionInfo>
     {
         public FunctionFactoryContext(PSHelpFactoryContext context, FunctionInfo functionInfo) : base(context, functionInfo) { }
@@ -22,4 +23,5 @@ namespace LteDev.HelpXml
 
         public override XElement GetAssemblyPropertyHelp(string propertyName) { return null; }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

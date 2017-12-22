@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class FunctionInfoAggregate : CmdInfoAggregate<FunctionInfo>
     {
         public override string Verb { get { return Command.Verb; } }
@@ -18,4 +19,5 @@ namespace LteDev.ModuleBuilder
 
         protected FunctionInfoAggregate(FunctionInfo command, ModuleInfoAggregate module) : base(command, module) { }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

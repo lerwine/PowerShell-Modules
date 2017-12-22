@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ScriptModuleInfoAggregate : ModuleInfoAggregate
     {
         public ScriptModuleInfoAggregate(PSModuleInfo moduleInfo, AggregateInfoFactory factory) : base(moduleInfo, factory)
@@ -17,4 +18,5 @@ namespace LteDev.ModuleBuilder
                 throw new ArgumentException("Module is not a script module.", "moduleInfo");
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

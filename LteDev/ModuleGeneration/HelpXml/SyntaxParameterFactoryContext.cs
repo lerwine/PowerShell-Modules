@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class SyntaxParameterFactoryContext : CommandFactoryContext
     {
         public CommandParameterInfo Parameter { get; private set; }
@@ -59,4 +60,5 @@ namespace LteDev.HelpXml
 
         public override XElement GetAssemblyPropertyHelp(string propertyName) { return CommandContext.GetAssemblyPropertyHelp(propertyName); }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

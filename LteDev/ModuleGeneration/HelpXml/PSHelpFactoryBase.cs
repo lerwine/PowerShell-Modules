@@ -4,6 +4,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class PSHelpFactoryBase
     {
         public PSHelpFactory PSHelp { get; private set; }
@@ -20,4 +21,5 @@ namespace LteDev.HelpXml
                 element.Add((getDefaultContent == null || (node = getDefaultContent()) == null) ? new XComment("Enter text here.") : node);
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

@@ -14,6 +14,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class CLRTypeInfo : InformationAggregator, IEquatable<CLRTypeInfo>, IEquatable<Type>
     {
         private List<CLRPropertyInfo> _propertyContexts = new List<CLRPropertyInfo>();
@@ -128,4 +129,5 @@ namespace LteDev.ModuleBuilder
 
         public override string ToString() { return Type.ToString(); }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

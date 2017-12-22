@@ -13,6 +13,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     /// <summary>
     /// Contextual information for a CLR property.
     /// </summary>
@@ -110,4 +111,5 @@ namespace LteDev.ModuleBuilder
 
         public override string ToString() { return PropertyInfo.Name; }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

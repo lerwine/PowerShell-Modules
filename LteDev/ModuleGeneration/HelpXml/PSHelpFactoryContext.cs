@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class PSHelpFactoryContext
     {
         private List<AssemblyContext> _assemblies = new List<AssemblyContext>();
@@ -50,4 +51,5 @@ namespace LteDev.HelpXml
             ModuleInfo = context.ModuleInfo;
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

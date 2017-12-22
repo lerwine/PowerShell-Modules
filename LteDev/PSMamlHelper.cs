@@ -2267,6 +2267,7 @@ namespace LteDev
             return nameElement.Parent.Parent;
         }
 
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public const string ElementName_quote = "quote";
         public const string ElementName_code = "code";
         public const string ElementName_codeReference = "codeReference";
@@ -2898,7 +2899,6 @@ namespace LteDev
         public const string ElementName_ui = "ui";
         public const string ElementName_userInput = "userInput";
         public const string ElementName_listItem = "listItem";
-#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         public static XElement ToPSMaml(XElement xmlDocElement)
         {
@@ -3008,5 +3008,6 @@ namespace LteDev
             // Allow list, example, quote, alertSet, definitionList, table, para
             throw new NotImplementedException();
         }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
     }
 }

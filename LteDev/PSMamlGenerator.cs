@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LteDev
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class PSMamlGenerator
     {
         public const string XmlNs_doc = "http://schemas.microsoft.com/maml/internal";
@@ -30,4 +31,5 @@ namespace LteDev
 
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

@@ -8,6 +8,8 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.command
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
     [Serializable()]
     [XmlRoot("parameterNameInline", Namespace = Constants.Xmlns_command)]
     public class parameterNameInline
@@ -15,4 +17,6 @@ namespace LteDev.XsdTypeGen.command
         [XmlText]
         public string Value { get; set; }
     }
+    
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

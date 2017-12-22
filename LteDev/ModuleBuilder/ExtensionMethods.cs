@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public static class ExtensionMethods
     {
         public static PSPropertyInfo GetPropertyInfo(this PSObject obj, string propertyName, bool @static = false)
@@ -219,4 +220,5 @@ namespace LteDev.ModuleBuilder
             return !en.MoveNext();
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

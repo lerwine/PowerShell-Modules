@@ -8,9 +8,13 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.maml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
     [Serializable()]
     [XmlRoot("conditionalInline", Namespace = Constants.Xmlns_maml)]
     public class conditionalInline : inline
     {
     }
+    
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

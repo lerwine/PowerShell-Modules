@@ -13,6 +13,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     /// <summary>
     /// Aggregates information about a PowerShell command
     /// </summary>
@@ -415,4 +416,5 @@ namespace LteDev.ModuleBuilder
 
         protected CmdInfoAggregate(T command, ModuleInfoAggregate module) : base(command, module) { }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

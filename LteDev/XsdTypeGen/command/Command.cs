@@ -7,6 +7,8 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.command
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
     [XmlRoot("command", Namespace = Constants.Xmlns_command)]
     public class command
     {
@@ -47,4 +49,6 @@ namespace LteDev.XsdTypeGen.command
         [XmlElement("relatedLinks", Namespace = Constants.Xmlns_maml)]
         public maml.relatedLinks relatedLinks { get; set; }
     }
+    
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

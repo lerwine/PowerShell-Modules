@@ -19,6 +19,7 @@ namespace LteDev.ModuleBuilder
         /// </summary>
         public static readonly XNamespace NS_command = XNamespace.Get("http://schemas.microsoft.com/maml/dev/command/2004/10");
 
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public static class maml
         {
             /// <summary>
@@ -230,153 +231,83 @@ namespace LteDev.ModuleBuilder
         /// </summary>
         public static readonly XNamespace NS_msh = XNamespace.Get("http://msh");
 
-
-
         /// <summary>
-
-        /// Extracts text for a given property from the full help object
-
+        /// Extracts text for a given property from the full help object.
         /// </summary>
-
         /// <param name="psObject">FullHelp object</param>
-
         /// <param name="propertyName">
-
         /// Name of the property for which text needs to be extracted.
-
         /// </param>
-
         /// <returns></returns>
-
         private string ExtractTextForHelpProperty(PSObject psObject, string propertyName)
-
         {
-
             if (psObject == null)
-
                 return string.Empty;
-
-
 
             if (psObject.Properties[propertyName] == null ||
-
                 psObject.Properties[propertyName].Value == null)
-
             {
-                return string.Empty;
-
+               return string.Empty;
             }
-            
-
+           
             return ExtractText(PSObject.AsPSObject(psObject.Properties[propertyName].Value));
         }
 
         /// <summary>
-
         /// Given a PSObject, this method will traverse through the objects properties,
-
         /// extracts content from properties that are of type System.String, appends them
-
         /// together and returns.
-
         /// </summary>
-
         /// <param name="psObject"></param>
-
         /// <returns></returns>
-
         private string ExtractText(PSObject psObject)
-
         {
-
             if (null == psObject)
-
             {
-
                 return string.Empty;
-
             }
 
-
-
             // I think every cmdlet description should atleast have 400 characters...
-
             // so starting with this assumption..I did an average of all the cmdlet
-
             // help content available at the time of writing this code and came up
-
             // with this number.
-
             StringBuilder result = new StringBuilder(400);
 
             foreach (PSPropertyInfo propertyInfo in psObject.Properties)
-
             {
-
                 string typeNameOfValue = propertyInfo.TypeNameOfValue;
-
                 switch (typeNameOfValue.ToLowerInvariant())
-
                 {
-
                     case "system.boolean":
-
                     case "system.int32":
-
                     case "system.object":
-
                     case "system.object[]":
-
                         continue;
-
                     case "system.string":
-
                         result.Append((string)LanguagePrimitives.ConvertTo(propertyInfo.Value,
-
                             typeof(string), CultureInfo.InvariantCulture));
-
                         break;
-
                     case "system.management.automation.psobject[]":
-
                         PSObject[] items = (PSObject[])LanguagePrimitives.ConvertTo(
-
                                 propertyInfo.Value,
-
                                 typeof(PSObject[]),
-
                                 CultureInfo.InvariantCulture);
-
                         foreach (PSObject item in items)
-
                         {
-
                             result.Append(ExtractText(item));
-
                         }
-
                         break;
-
                     case "system.management.automation.psobject":
-
                         result.Append(ExtractText(PSObject.AsPSObject(propertyInfo.Value)));
-
                         break;
-
                     default:
-
                         result.Append(ExtractText(PSObject.AsPSObject(propertyInfo.Value)));
-
                         break;
-
                 }
-
             }
 
-
-
             return result.ToString();
-
         }
-    }
+   }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

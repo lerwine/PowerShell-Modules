@@ -7,6 +7,7 @@ using System.Xml.Linq;
 
 namespace LteDev.HelpXml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ParameterFactory : PSHelpFactoryBase
     {
         public ParameterFactory(CommandHelpFactory commandHelpFactory)
@@ -24,4 +25,5 @@ namespace LteDev.HelpXml
             throw new NotImplementedException();
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

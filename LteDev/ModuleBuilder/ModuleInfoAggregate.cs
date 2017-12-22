@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace LteDev.ModuleBuilder
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ModuleInfoAggregate : InformationAggregator
     {
         public PSModuleInfo ModuleInfo { get; private set; }
@@ -38,4 +39,5 @@ namespace LteDev.ModuleBuilder
             AggregateFactory = factory;
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }
