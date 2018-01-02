@@ -413,8 +413,8 @@ namespace LteDev.TypeBrowser
         public const string PropertyName_IsVisible = "IsVisible";
 
         private static readonly DependencyPropertyKey IsVisiblePropertyKey = DependencyProperty.RegisterReadOnly(PropertyName_IsVisible,
-            typeof(bool), typeof(TypeListItemVM), new PropertyMetadatafalse(false));
-
+            typeof(bool), typeof(TypeListItemVM), new PropertyMetadata(false));
+    
         /// <summary>
         /// Identifies the <see cref="IsVisible"/> dependency property.
         /// </summary>

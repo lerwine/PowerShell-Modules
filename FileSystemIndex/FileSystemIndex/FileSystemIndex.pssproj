@@ -26,10 +26,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="ResolveDifferences.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystemIndex.psd1" />
     <Compile Include="FileSystemIndex.psm1" />
+    <Compile Include="ResolveDifferences.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

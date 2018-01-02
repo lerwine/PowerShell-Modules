@@ -252,7 +252,7 @@ namespace LteDev.TypeBrowser
                 ((model.DefaultValue == null) ? "null" :
                 ((model.DefaultValue is string) ? "\"" +
                     ((string)(model.DefaultValue)).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"" :
-                    model.DefaultValue.ToString());
+                    model.DefaultValue.ToString())) : "";
             ParameterType = TypeListItemVM.ToCSharpTypeName(model.ParameterType.FullName);
             IsIn = model.IsIn;
             IsOut = model.IsOut;

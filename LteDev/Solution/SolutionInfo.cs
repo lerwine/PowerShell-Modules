@@ -41,7 +41,7 @@ namespace LteDev.Solution
 
         public static SolutionInfo Load(string path)
         {
-
+            throw new NotImplementedException();
         }
 
         #endregion

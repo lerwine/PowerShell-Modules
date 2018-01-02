@@ -51,10 +51,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseRecord.cs" />
+    <Compile Include="DiffChunk.cs" />
+    <Compile Include="DiffChunkCollection.cs" />
     <Compile Include="DirectoryCrawlIterator.cs" />
     <Compile Include="DirectoryRecord.cs" />
     <Compile Include="FileInfoEx.cs" />
     <Compile Include="FileRecord.cs" />
+    <Compile Include="FileSystemDiff.cs" />
+    <Compile Include="FileSystemDiffChunk.cs" />
+    <Compile Include="FileSystemDiffLine.cs" />
     <Compile Include="FileSystemFeature.cs" />
     <Compile Include="FsRecord.cs" />
     <Compile Include="HashCodeEx.cs" />
@@ -68,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Test.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

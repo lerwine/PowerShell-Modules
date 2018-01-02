@@ -200,7 +200,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\" />
     <Folder Include="UI\" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +207,7 @@
     <None Include="GDIPlus.snk" />
     <None Include="Palette\README.md" />
     <None Include="README.md" />
+    <None Include="TestCompile.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Palette\LICENSE.htm" />

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Install\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,10 +26,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Install\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -49,22 +50,27 @@
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Management\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Management.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Build">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Build.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Build.Framework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Utilities.v4.0">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Build.Utilities.v4.0.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +153,9 @@
     <Compile Include="PSMamlGenerator.cs" />
     <Compile Include="PSMamlHelper.cs" />
     <Compile Include="PSObjectHelper.cs" />
+    <Compile Include="Solution\ProjectRef.cs" />
+    <Compile Include="Solution\SolutionInfo.cs" />
+    <Compile Include="Solution\SolutionNode.cs" />
     <Compile Include="TypeBrowser\AssemblyDetailVM.cs" />
     <Compile Include="TypeBrowser\AssemblyListItemVM.cs" />
     <Compile Include="TypeBrowser\AssemblyNameListItemVM.cs" />
@@ -251,6 +260,131 @@
     <None Include="ModuleGeneration\ModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Module\Erwine.Leonard.T.LteDev.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Module\Erwine.Leonard.T.LteDev.psm1" />
+    <Content Include="Module\Schemas\base.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Module\Schemas\baseConditional.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\block.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\blockCommon.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\blockSoftware.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\conditionSet.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developer.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerCommand.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManaged.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedClass.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedConstructor.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedDelegate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedEnumeration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedEvent.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedField.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedInterface.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedMethod.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedNamespace.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedOperator.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedOverload.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedProperty.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\developerManagedStructure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\endUser.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\faq.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\glossary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\hierarchy.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\inline.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\inlineCommon.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\inlineSoftware.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\inlineUi.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\ITPro.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\Maml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\shellExecute.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\structure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\structureGlossary.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\structureList.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\structureProcedure.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\structureTable.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\task.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Module\Schemas\troubleshooting.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -267,189 +401,25 @@
     <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Module\Erwine.Leonard.T.LteDev.psd1">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Erwine.Leonard.T.LteDev.psm1">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\base.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\baseConditional.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\block.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\blockCommon.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\blockSoftware.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\conditionSet.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developer.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerCommand.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManaged.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedClass.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedConstructor.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedDelegate.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedEnumeration.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedEvent.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedField.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedInterface.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedMethod.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedNamespace.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedOperator.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedOverload.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedProperty.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\developerManagedStructure.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\endUser.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\faq.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\glossary.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\hierarchy.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\inline.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\inlineCommon.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\inlineSoftware.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\inlineUi.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\ITPro.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\Maml.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\shellExecute.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\structure.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\structureGlossary.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\structureList.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\structureProcedure.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\structureTable.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\task.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\Schemas\troubleshooting.xsd">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>Schemas\%(Filename)%(Extension)</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="ModuleGeneration\HelpXml\AssemblyInfo.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del "$(TargetDir)/*.nlp"
 del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
-  </PropertyGroup> 
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+  </PropertyGroup>
   <Target Name="BeforeBuild">
+    <ItemGroup>
+      <ExistingOutputItems Include="$(TargetDir)Module\**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(ExistingOutputItems)">
+    </Delete>
+    <RemoveDir Directories="$(TargetDir)Module" />
   </Target>
   <Target Name="AfterBuild">
+    <ItemGroup>
+      <TargetOutputItems Include="$(TargetDir)**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TargetOutputItems)" DestinationFolder="$(TargetDir)Module" SkipUnchangedFiles="false" Condition=" '%(Identity.Substring(0, 7))' != 'Module\' and '%(Extension)' != '.tmp' " />
   </Target>
-  -->
 </Project>
