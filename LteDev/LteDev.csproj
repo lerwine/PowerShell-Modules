@@ -181,6 +181,7 @@
     <Compile Include="TypeBrowser\TypeListItemVM.cs" />
     <Compile Include="UriQueryParam.cs" />
     <Compile Include="ParsedUrl.cs" />
+    <Compile Include="UriSegment.cs" />
     <Compile Include="WPF\ImpliedAndExplicitVM.cs" />
     <Compile Include="WPF\DependencyPropertyVM.cs" />
     <Compile Include="XsdTypeGen\command\command.cs" />

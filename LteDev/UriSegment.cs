@@ -2,12 +2,10 @@
 
 namespace LteDev
 {
-    public class UriQueryParam : INotifyPropertyChanged
+    public class UriSegment : INotifyPropertyChanged
     {
         private int _order = 0;
-        private string _key = "";
-        private string _value = "";
-        private bool _hasValue = false;
+        private string _name = "";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -25,43 +23,16 @@ namespace LteDev
         }
 
         [DataObjectField(false, false, false)]
-        public string Key
+        public string Name
         {
-            get { return _key; }
+            get { return _name; }
             private set
             {
                 string s = (value == null) ? "" : value;
-                if (s == _key)
+                if (s == _name)
                     return;
-                _key = s;
-                RaisePropertyChanged("Key");
-            }
-        }
-
-        [DataObjectField(false, false, false)]
-        public string Value
-        {
-            get { return _value; }
-            private set
-            {
-                string s = (value == null) ? "" : value;
-                if (s == _value)
-                    return;
-                _value = s;
-                RaisePropertyChanged("Value");
-            }
-        }
-
-        [DataObjectField(false, false, false)]
-        public bool HasValue
-        {
-            get { return _hasValue; }
-            set
-            {
-                if (value == _hasValue)
-                    return;
-                _hasValue = value;
-                RaisePropertyChanged("HasValue");
+                _name = s;
+                RaisePropertyChanged("Name");
             }
         }
 
