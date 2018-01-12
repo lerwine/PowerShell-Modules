@@ -11,6 +11,8 @@ namespace LteDev
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+		protected internal const string PropertyName_Order = "Order";
+		
         [DataObjectField(true, false, false)]
         public int Order
         {
@@ -20,38 +22,52 @@ namespace LteDev
                 if (value == _order)
                     return;
                 _order = value;
-                RaisePropertyChanged("Order");
+                RaisePropertyChanged(PropertyName_Order);
             }
         }
 
+		protected internal const string PropertyName_Key = "Key";
+		
         [DataObjectField(false, false, false)]
         public string Key
         {
             get { return _key; }
-            private set
+            set
             {
                 string s = (value == null) ? "" : value;
                 if (s == _key)
                     return;
                 _key = s;
-                RaisePropertyChanged("Key");
+                RaisePropertyChanged(PropertyName_Key);
             }
         }
 
+		protected internal const string PropertyName_Value = "Value";
+		
         [DataObjectField(false, false, false)]
         public string Value
         {
             get { return _value; }
-            private set
+            set
             {
-                string s = (value == null) ? "" : value;
+                string s;
+				if (value == null)
+				{
+					if (!_hasValue)
+						return;
+					s = "";
+				} else
+					s = value;
                 if (s == _value)
                     return;
                 _value = s;
-                RaisePropertyChanged("Value");
+				HasValue = true;
+                RaisePropertyChanged(PropertyName_Value);
             }
         }
 
+		protected internal const string PropertyName_HasValue = "HasValue";
+		
         [DataObjectField(false, false, false)]
         public bool HasValue
         {
@@ -60,8 +76,10 @@ namespace LteDev
             {
                 if (value == _hasValue)
                     return;
+				if (!value)
+					Value = "";
                 _hasValue = value;
-                RaisePropertyChanged("HasValue");
+                RaisePropertyChanged(PropertyName_HasValue);
             }
         }
 
@@ -79,5 +97,30 @@ namespace LteDev
             }
         }
 
+		public UriQueryParam(string key, string value, int order)
+		{
+			Key = key;
+			Value = value;
+			Order = order;
+		}
+		
+		public UriQueryParam(string key, int order)
+		{
+			Key = key;
+			Order = order;
+		}
+		
+		public UriQueryParam(string key, string value)
+		{
+			Key = key;
+			Value = value;
+		}
+		
+		public UriQueryParam(string key)
+		{
+			Key = key;
+		}
+		
+		public UriQueryParam() { }
     }
 }

@@ -9,6 +9,8 @@ namespace LteDev
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+		protected internal const string PropertyName_Order = "Order";
+		
         [DataObjectField(true, false, false)]
         public int Order
         {
@@ -18,10 +20,12 @@ namespace LteDev
                 if (value == _order)
                     return;
                 _order = value;
-                RaisePropertyChanged("Order");
+                RaisePropertyChanged(PropertyName_Order);
             }
         }
 
+		protected internal const string PropertyName_Name = "Name";
+		
         [DataObjectField(false, false, false)]
         public string Name
         {
@@ -32,7 +36,7 @@ namespace LteDev
                 if (s == _name)
                     return;
                 _name = s;
-                RaisePropertyChanged("Name");
+                RaisePropertyChanged(PropertyName_Name);
             }
         }
 
@@ -49,6 +53,18 @@ namespace LteDev
                     propertyChanged(this, args);
             }
         }
-
+		
+		public UriSegment(string name, int order)
+		{
+			Name = name;
+			Order = order;
+		}
+		
+		public UriSegment(string name)
+		{
+			Name = name;
+		}
+		
+		public UriSegment() { }
     }
 }
