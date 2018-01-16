@@ -1,10 +1,12 @@
 ('System.Core', 'mscorlib', 'System.Security') | ForEach-Object {
 	if ((Add-Type -AssemblyName $_ -PassThru -ErrorAction Stop) -eq $null) { throw ('Cannot load assembly "{0}".' -f $_) }
 }
+
+<#
 if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
 
 Function New-CryptographyOid {
-    <#
+    < #
         .SYNOPSIS
             Create new cryptographic object identifier.
 
@@ -45,7 +47,7 @@ Function New-CryptographyOid {
         
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.oid.aspx
-    #>
+    # >
     [CmdletBinding(DefaultParameterSetName = 'String')]
     [OutputType([System.Security.Cryptography.Oid])]
     Param(
@@ -85,10 +87,12 @@ Function New-CryptographyOid {
 }
 New-Alias -Name 'New-CryptoObjectIdentifier' -Value 'New-CryptographyOid' -Scope Global -Force;
 
+#>
+
 Function New-AsnEncodedData {
     <#
         .SYNOPSIS
-            Create new cryptographic object identifier.
+            Create new Abstract Syntax Notation One (ASN.1)-encoded data.
 
         .DESCRIPTION
             Initializes a new instance of an object which represents Abstract Syntax Notation One (ASN.1)-encoded data.
@@ -1078,7 +1082,7 @@ Function Protect-WithSymmetricAlgorithm {
         }
 
         $ProgressObject.WriteOperationProgress('Writing encryption data headers');
-        Write-LengthEncodedBytes -Stream $OutputStream -Bytes $Algorithm.IV -ErrorAction Stop;
+		[Erwine.Leonard.T.CertificateCryptography.StreamHelper]::WriteLengthEncodedBytes($OutputStream, $Algorithm.IV, 0, $Algorithm.IV.Length);
 
         $splat = @{ Bytes = $Algorithm.Key; ErrorAction = ([System.Management.Automation.ActionPreference]::Stop) };
         if ($OAEP) { $splat.Add('OAEP', [switch]$true) }
@@ -1089,9 +1093,8 @@ Function Protect-WithSymmetricAlgorithm {
             $splat.Add('RSA', $RSA);
             $EncryptedKey = Protect-WithRSA @splat;
         }
-        Write-LengthEncodedBytes -Stream $OutputStream -Bytes $EncryptedKey -ErrorAction Stop;
-        Write-LongIntegerToStream -Stream $OutputStream -Value $ProgressObject.TotalBytes -ErrorAction Stop;
-    
+		[Erwine.Leonard.T.CertificateCryptography.StreamHelper]::WriteLengthEncodedBytes($OutputStream, $EncryptedKey, 0, $EncryptedKey.Length);
+		[Erwine.Leonard.T.CertificateCryptography.StreamHelper]::WriteLongInteger($OutputStream, $ProgressObject.TotalBytes);
         $ICryptoTransform = $Algorithm.CreateEncryptor();
 	    $Path = [System.IO.Path]::GetTempFileName();
 	    $FileStream = $null;
@@ -1351,8 +1354,9 @@ Function Unprotect-WithSymmetricAlgorithm {
     }
 }
 
+<#
 Function New-X500DistinguishedName {
-    <#
+    < #
         .SYNOPSIS
             Create new X500 Distinguished Name.
 
@@ -1373,7 +1377,7 @@ Function New-X500DistinguishedName {
 
         .LINK
             https://msdn.microsoft.com/en-us/library/system.security.cryptography.x500distinguishedname.aspx
-    #>
+    # >
     [CmdletBinding(DefaultParameterSetName = 'String')]
     [OutputType([System.Security.Cryptography.X509Certificates.X500DistinguishedName])]
     Param(
@@ -1692,3 +1696,4 @@ Function New-SelfSignedCertificate {
     );
 '@
 }
+#>

@@ -22,6 +22,7 @@ namespace LteDev.HelpXml
 
         internal XElement GetParametersElement(ParameterFactoryContext[] parameters)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

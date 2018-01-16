@@ -41,6 +41,7 @@ namespace LteDev.Solution
 
         public static SolutionInfo Load(string path)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

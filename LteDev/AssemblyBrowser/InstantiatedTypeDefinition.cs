@@ -12,16 +12,19 @@ namespace LteDev.AssemblyBrowser
 
         internal static TypeInfoDataItem Create(Type type)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public override GenericTypeParameterDataItem FindGenericParameter(Type type)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public override TypeInfoDataItem FindNested(Type type)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

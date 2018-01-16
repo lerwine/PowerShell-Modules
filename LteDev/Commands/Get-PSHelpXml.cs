@@ -53,8 +53,10 @@ namespace LteDev.Commands
                     modules = ModuleInfo;
                     break;
                 case ParameterSetName_LiteralPath:
+#warning Not implemented
                     throw new NotImplementedException();
                 case ParameterSetName_WildCardPath:
+#warning Not implemented
                     throw new NotImplementedException();
             }
         }
@@ -63,6 +65,7 @@ namespace LteDev.Commands
         public static PSModuleInfo GetPSModule()
 #pragma warning restore 1591 // Missing XML comment for publicly visible type or member
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

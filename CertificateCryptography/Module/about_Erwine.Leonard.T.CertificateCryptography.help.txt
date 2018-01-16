@@ -2,84 +2,82 @@
     about_Erwine.Leonard.T.CertificateCryptography
 
 SHORT DESCRIPTION
-    Provides advanced cryptographic support
+    Provides advanced cryptographic support.
 
 LONG DESCRIPTION
-    Provides access to .NET CLR cryptographic functions, mainly in the
-    System.Security.Cryptography namespace.
+    Provides access to .NET CLR cryptographic functions, mainly in the System.Security.Cryptography namespace.
 
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    Get-X509Store
-        Create an X.509 store object.
-
-    New-AesManaged
-        Create AES encryption provider.
-
-    New-AsnEncodedData
-        Create new cryptographic object identifier.
-
-    New-CryptographyOid
-        Create new cryptographic object identifier.
-
-    New-SelfSignedCertificate
-        New-SelfSignedCertificate [-CN] <String> [-Verbose] [-Debug]
-        [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>]
-        [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable
-        <String>] [-OutBuffer <Int32>]
-
-    New-X500DistinguishedName
-        Create new X500 Distinguished Name.
-
-    New-X509KeyUsageFlags
-        Create X.509 certificate key usage flags.
-
-    New-X509StoreOpenFlags
+	New-AsnEncodedData
+        Create new Abstract Syntax Notation One (ASN.1)-encoded data.
+	
+	New-X509StoreOpenFlags
         Create X.509 certificate store open flags.
 
-    Protect-WithRSA
-        Encrypt data with RSA.
+	Get-X509Store
+        Create an X.509 store object.
 
-    Protect-WithSymmetricAlgorithm
-        Encrypt data with symmetric algorithm.
+	New-X509KeyUsageFlags
+        Create X.509 certificate key usage flags.
 
-    Protect-WithX509Certificate
-        Encrypt data with PKI certificate.
-
-    Read-X509Certificate
-        Prompt user for certificate selection.
-
-    Select-X509Certificate
+	Select-X509Certificate
         Select X.509 certificates from a store.
 
-    Show-X509Certificate
+	Show-X509Certificate
         Display certificate information.
+
+	Read-X509Certificate
+        Prompt user for certificate selection.
+
+	New-RSACryptoServiceProvider
+        Create RSA encryption provider.
+	
+	New-AesManaged
+        Create AES encryption provider.
+
+	Protect-WithRSA
+        Encrypt data with RSA.
+
+	Protect-WithX509Certificate
+        Encrypt data with PKI certificate.
+
+	Protect-WithSymmetricAlgorithm
+        Encrypt data with symmetric algorithm.
 
     Unprotect-WithRSA
         Decrypt data with RSA.
 
-    Unprotect-WithSymmetricAlgorithm
-        Decrypt data with symmetric algorithm.
-
-    Unprotect-WithX509Certificate
+	Unprotect-WithX509Certificate
         Decrypt data with PKI certificate.
 
+	Unprotect-WithSymmetricAlgorithm
+        Decrypt data with symmetric algorithm.
+
+	New-CryptographyOid
+        Create new cryptographic object identifier.
+
+	New-X500DistinguishedName
+        Create new X500 Distinguished Name.
+
+	New-SelfSignedCertificate
+		Create a new self-signed PKI certificate.
+
 SEE ALSO
-    Get-X509Store
-    New-AesManaged
     New-AsnEncodedData
-    New-CryptographyOid
-    New-SelfSignedCertificate
-    New-X500DistinguishedName
-    New-X509KeyUsageFlags
-    New-X509StoreOpenFlags
-    Protect-WithRSA
-    Protect-WithSymmetricAlgorithm
-    Protect-WithX509Certificate
-    Read-X509Certificate
-    Select-X509Certificate
-    Show-X509Certificate
+	New-X509StoreOpenFlags
+	New-X509KeyUsageFlags
+	Show-X509Certificate
+	Read-X509Certificate
+	New-RSACryptoServiceProvider
+	New-AesManaged
+	Protect-WithRSA
+	Protect-WithX509Certificate
+	Protect-WithSymmetricAlgorithm
     Unprotect-WithRSA
-    Unprotect-WithSymmetricAlgorithm
-    Unprotect-WithX509Certificate
+	Unprotect-WithX509Certificate
+	Unprotect-WithSymmetricAlgorithm
+	New-CryptographyOid
+	New-X500DistinguishedName
+	New-SelfSignedCertificate

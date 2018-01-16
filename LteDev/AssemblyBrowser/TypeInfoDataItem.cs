@@ -24,6 +24,7 @@ namespace LteDev.AssemblyBrowser
             if (type.HasElementType)
                 return InstantiatedTypeDefinition.Create(type);
 
+#warning Not implemented
             throw new NotImplementedException();
         }
 

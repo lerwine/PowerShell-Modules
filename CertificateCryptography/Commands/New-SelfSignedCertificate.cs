@@ -9,6 +9,7 @@ using SecureString = System.Security.SecureString;
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace Erwine.Leonard.T.CertificateCryptography.Commands
 {
@@ -16,11 +17,44 @@ namespace Erwine.Leonard.T.CertificateCryptography.Commands
     [OutputType(typeof(Oid))]
     public class New_SelfSignedCertificate : PSCmdlet
     {
-        public static X509Certificate2 GenerateSelfSignedCertificate(string name = "CN = Example", DateTime? startTime = null,
-            DateTime? endTime = null)
+        [Parameter(ValueFromPipeline = true, HelpMessage = "Distinguished name of Issuer.")]
+        [ValidateX500DistinguishedName(AllowEmpty = true)]
+        public string[] IssuerDN { get; set; }
+
+        [Parameter()]
+        public DateTime StartTime { get; set; }
+
+        [Parameter()]
+        public DateTime EndTime { get; set; }
+
+
+        protected override void ProcessRecord()
         {
-            if (name == null)
-                name = String.Empty;
+            if (IssuerDN == null || IssuerDN.Length == 0)
+                IssuerDN = new string[] { "" };
+            DateTime? startTime = null, endTime = null;
+            if (MyInvocation.BoundParameters.ContainsKey("StartTime"))
+                startTime = StartTime;
+            if (MyInvocation.BoundParameters.ContainsKey("EndTime"))
+                endTime = EndTime;
+            foreach (string issuerDN in IssuerDN)
+            {
+                try { WriteObject(GenerateSelfSignedCertificate(issuerDN, startTime, endTime)); }
+                catch (Exception e)
+                {
+                    Hashtable target = new Hashtable();
+                    target.Add("IssuerDN", issuerDN);
+                    target.Add("StartTime", startTime);
+                    target.Add("EndTime", endTime);
+                    WriteError(new ErrorRecord(e, "New_SelfSignedCertificate", ErrorCategory.InvalidData, target));
+                }
+            }
+        }
+
+        public static X509Certificate2 GenerateSelfSignedCertificate(string issuerDN, DateTime? startTime = null, DateTime? endTime = null)
+        {
+            if (issuerDN == null)
+                issuerDN = String.Empty;
             var startSystemTime = default(SystemTime);
             if (startTime == null || (DateTime)startTime < DateTime.FromFileTimeUtc(0))
             {
@@ -40,8 +74,8 @@ namespace Erwine.Leonard.T.CertificateCryptography.Commands
             {
                 providerContext = Externs.CryptAcquireContextW(containerName, null, 1, 0x8);
                 cryptKey = Externs.CryptGenKey(providerContext, 1, 0x8000001);
-                CryptoApiBlob nameBlob = CryptoApiBlob.Create(name);
-                CryptKeyProviderInformation keyProvider = new CryptKeyProviderInformation
+                CryptoApiBlob nameBlob = CryptoApiBlob.Create(issuerDN);
+                CryptKeyProvInfo keyProvider = new CryptKeyProvInfo
                 {
                     pwszContainerName = containerName,
                     dwProvType = 1,

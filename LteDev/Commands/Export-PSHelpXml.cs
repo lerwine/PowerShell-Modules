@@ -237,8 +237,9 @@ namespace LteDev.Commands
                 ),
                 new XElement(XmlNs_Maml.GetName(ElementNames.description)),
                 GetSyntaxElement(commandInfo));
-            
+
             // BUG: Not Implemented
+#warning Not implemented
             throw new NotImplementedException();
         }
 

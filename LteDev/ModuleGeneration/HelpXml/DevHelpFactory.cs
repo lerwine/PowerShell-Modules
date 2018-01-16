@@ -19,6 +19,7 @@ namespace LteDev.HelpXml
 
         internal XElement CreateTypeElement(Type parameterType)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

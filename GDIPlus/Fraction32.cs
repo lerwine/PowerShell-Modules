@@ -25,15 +25,15 @@ namespace Erwine.Leonard.T.GDIPlus
 
         public int WholeNumber { get { return _wholeNumber; } }
 
-        IComparable IFraction.WholeNumber { get { return _wholeNumber; } }
+        IConvertible IFraction.WholeNumber { get { return _wholeNumber; } }
 
         public int Numerator { get { return _numerator; } }
 
-        IComparable IFraction.Numerator { get { return _numerator; } }
+        IConvertible IFraction.Numerator { get { return _numerator; } }
 
         public int Denominator { get { return _denominator; } }
 
-        IComparable IFraction.Denominator { get { return _denominator; } }
+        IConvertible IFraction.Denominator { get { return _denominator; } }
 
         #endregion
 
@@ -523,12 +523,17 @@ namespace Erwine.Leonard.T.GDIPlus
 
         public Fraction32 Subtract(Fraction32 other)
         {
-            throw new NotImplementedException();
+            if (other._denominator == 0)
+                return Subtract(0, 0, 1);
+            return Subtract(other._wholeNumber, other._numerator, other._denominator);
         }
 
         IFraction<int> IFraction<int>.Subtract(IFraction<int> other)
         {
-            throw new NotImplementedException();
+            if (other == null)
+                throw new ArgumentNullException("other");
+
+            return Subtract(other.WholeNumber, other.Numerator, other.Denominator);
         }
 
         public Fraction32 Subtract(int wholeNumber) { return Subtract(wholeNumber, 0, 1); }
@@ -611,7 +616,38 @@ namespace Erwine.Leonard.T.GDIPlus
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            throw new NotImplementedException();
+            if (conversionType == null || conversionType.AssemblyQualifiedName == (typeof(double)).AssemblyQualifiedName)
+                return ToDouble();
+            IConvertible c = this;
+            if (conversionType.AssemblyQualifiedName == (typeof(float)).AssemblyQualifiedName)
+                c.ToSingle(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(int)).AssemblyQualifiedName)
+                c.ToInt32(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(string)).AssemblyQualifiedName)
+                c.ToString(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(long)).AssemblyQualifiedName)
+                c.ToInt64(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(decimal)).AssemblyQualifiedName)
+                c.ToDecimal(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(uint)).AssemblyQualifiedName)
+                c.ToUInt32(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(ulong)).AssemblyQualifiedName)
+                c.ToUInt64(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(short)).AssemblyQualifiedName)
+                c.ToInt16(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(ushort)).AssemblyQualifiedName)
+                c.ToUInt16(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(sbyte)).AssemblyQualifiedName)
+                c.ToSByte(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(byte)).AssemblyQualifiedName)
+                c.ToByte(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(DateTime)).AssemblyQualifiedName)
+                c.ToDateTime(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(bool)).AssemblyQualifiedName)
+                c.ToBoolean(provider);
+            if (conversionType.AssemblyQualifiedName == (typeof(char)).AssemblyQualifiedName)
+                c.ToChar(provider);
+            return Convert.ChangeType(ToDouble(), conversionType);
         }
 
         ushort IConvertible.ToUInt16(IFormatProvider provider) { return Convert.ToUInt16(AsRoundedValue(), provider); }

@@ -100,6 +100,7 @@ namespace FileSystemIndexLib
             }
             
             return result; */
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -116,6 +117,7 @@ namespace FileSystemIndexLib
             }
             
             return result; */
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -170,11 +172,13 @@ namespace FileSystemIndexLib
 
         protected override void RestorePropertyValues(BaseRecord originalValuesObject)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         protected override BaseRecord CreateClone()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

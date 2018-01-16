@@ -30,6 +30,7 @@ namespace LteDev.HelpXml
         {
             yield return new XElement(CommandHelpFactory.XmlNs_command.GetName(CommandHelpFactory.name), context.CommandInfo.Name);
             parameterSet.Parameters.Select(p => new SyntaxParameterFactoryContext(context, p));
+#warning Not implemented
             throw new NotImplementedException();
         }
 

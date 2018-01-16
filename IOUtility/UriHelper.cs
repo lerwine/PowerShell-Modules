@@ -181,6 +181,7 @@ namespace IOUtility
         
         public static UriBuilder AsString(object obj)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

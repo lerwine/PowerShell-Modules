@@ -15,8 +15,11 @@ namespace LteDev.ModuleBuilder
     {
         public AssemblyInfo AssemblyInfo
         {
-            get { throw new NotImplementedException(); }
-        }
+            get
+            {
+#warning Not implemented
+                throw new NotImplementedException(); }
+            }
 
         public BinaryModuleInfoAggregate(PSModuleInfo moduleInfo, AggregateInfoFactory factory) : base(moduleInfo, factory)
         {

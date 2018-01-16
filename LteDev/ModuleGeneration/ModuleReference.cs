@@ -19,6 +19,7 @@ namespace LteDev.ModuleGeneration
 
         internal void WriteManifestHashValue(StringBuilder generationEnvironment)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

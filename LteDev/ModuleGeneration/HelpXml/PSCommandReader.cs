@@ -180,6 +180,7 @@ namespace LteDev.HelpXml
 
         private static XElement GetCommandHelp(ICommandHelpGenContext context)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -245,16 +246,19 @@ namespace LteDev.HelpXml
             //string name = "T:"+_currentCmdletType.FullName;
             //XElement typeDocElement = _currentAssemblyDoc.Elements("doc").Elements("members").Elements("member")
             //    .Attributes("name").Where(a => a.Value == name).Select(a => a.Parent).FirstOrDefault();
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private void Load(Dictionary<string, ParameterMetadata> parameters, XElement parametersElement)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private void Load(ReadOnlyCollection<CommandParameterSetInfo> parameterSets, XElement syntaxElement, XElement parametersElement)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

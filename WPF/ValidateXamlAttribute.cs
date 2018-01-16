@@ -79,6 +79,7 @@ namespace Erwine.Leonard.T.WPF
         protected override void ValidateElement(object element)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

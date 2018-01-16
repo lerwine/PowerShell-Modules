@@ -110,6 +110,7 @@ namespace XmlUtility
         public static ResourceLoadError Create(ValidationEventArgs args)
         {
             // TODO: Implement Create method
+#warning Not implemented
             throw new NotImplementedException();
         }
 

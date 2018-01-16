@@ -16,6 +16,7 @@ namespace LteDev.ModuleGeneration
 
         internal void WriteReturnValue(XmlWriter writer)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

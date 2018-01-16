@@ -161,6 +161,7 @@
     <Compile Include="PSMamlGenerator.cs" />
     <Compile Include="PSMamlHelper.cs" />
     <Compile Include="PSObjectHelper.cs" />
+    <Compile Include="QueryItemList.cs" />
     <Compile Include="Solution\ProjectRef.cs" />
     <Compile Include="Solution\SolutionInfo.cs" />
     <Compile Include="Solution\SolutionNode.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="UriQueryParam.cs" />
     <Compile Include="ParsedUrl.cs" />
     <Compile Include="UriSegment.cs" />
+    <Compile Include="UriSegmentList.cs" />
     <Compile Include="WPF\ImpliedAndExplicitVM.cs" />
     <Compile Include="WPF\DependencyPropertyVM.cs" />
     <Compile Include="XsdTypeGen\command\command.cs" />
@@ -260,7 +262,7 @@
     <Compile Include="XsdTypeGen\maml\token.cs" />
     <Compile Include="XsdTypeGen\maml\ui.cs" />
     <Compile Include="XsdTypeGen\maml\userInput.cs" />
-    <Compile Include="MSBuildLogHelper.cs" />
+    <None Include="MSBuildLogHelper.cs" />
     <EmbeddedResource Include="EditUrlForm.resx">
       <DependentUpon>EditUrlForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -269,6 +271,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Diff\ClassDiagram1.cd" />
+    <None Include="GenerateReadOnlyDependencyProperty.ps1" />
     <None Include="ModuleGeneration\HelpXml\ClassDiagram1.cd" />
     <None Include="ModuleBuilder\ClassDiagram1.cd" />
     <None Include="ModuleGeneration\ModuleConfig.xsd">
@@ -413,6 +416,7 @@
     <None Include="build-release.bat" />
     <None Include="build-test.bat" />
     <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
+    <None Include="WindowsFormsHelper.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ModuleGeneration\HelpXml\AssemblyInfo.xml" />

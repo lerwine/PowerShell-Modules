@@ -48,6 +48,7 @@ namespace LteDev.HelpXml
 
         internal IEnumerable<XElement> ConvertAssemblyHelp(XElement element, bool inlinesOnly = false)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

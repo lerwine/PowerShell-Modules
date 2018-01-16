@@ -29,13 +29,15 @@ namespace LteDev.AssemblyBrowser
 
                 if (this._type.IsGenericParameter)
                     this._fullName = this.Name;
-                else {
+                else
+                {
                     if (this._type.IsNested)
                     {
                         TypeDefinitionItem declaringType = AssemblyLookupCache.Lookup(this._type.DeclaringType);
                         this._fullName = String.Format("{0}+{1}", declaringType.FullName, this.Name);
                     }
                 }
+#warning Not implemented
                 throw new NotImplementedException();
             }
         }

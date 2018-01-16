@@ -57,6 +57,7 @@ namespace LteDev.ModuleGeneration
             if (parameterSet == null)
                 parameterSet = new ParameterSetSpec();
 
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -67,6 +68,7 @@ namespace LteDev.ModuleGeneration
 
         public void WriteInputTypes(XmlWriter writer)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 #pragma warning restore 1591 // Missing XML comment for publicly visible type or member

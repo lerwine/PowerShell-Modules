@@ -60,7 +60,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 }
                 catch (Exception e)
                 {
-                    WriteError(new ErrorRecord(e, "New_Image.FromImage", ErrorCategory.InvalidData, Original));
+                    WriteError(new ErrorRecord(e, "New_Image.FromImage", ErrorCategory.InvalidData, image));
                 }
             }
         }

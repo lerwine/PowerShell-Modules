@@ -631,6 +631,7 @@ namespace Speech.UI
                 return;
             }
 
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -742,6 +743,7 @@ namespace Speech.UI
 
         private void UpdateAudioPosition(TimeSpan audioPosition)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

@@ -111,6 +111,8 @@ namespace NetworkUtility
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) { }
 
+#warning Not implemented
+
         public int CompareTo(UriInfo other)
         {
             throw new NotImplementedException();

@@ -24,16 +24,19 @@ namespace Erwine.Leonard.T.WPF.UI
 
         private void ClassName_PropertyChanged(string newValue, string oldValue, DependencyProperty property)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private object ClassName_CoerceValue(object baseValue)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private static bool ClassName_IsValid(string value)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

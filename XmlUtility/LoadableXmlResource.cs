@@ -99,6 +99,7 @@ namespace XmlUtility
         /// </summary>
         protected override XmlDocument Read(XmlReader xmlReader)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

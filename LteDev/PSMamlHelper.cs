@@ -2942,6 +2942,7 @@ namespace LteDev
                     element = new XElement(XmlNs_maml.GetName(ElementName_para));
                     break;
                 default:
+#warning Not implemented
                     throw new NotImplementedException();
             }
             if (!xmlDocElement.IsEmpty)
@@ -3006,6 +3007,7 @@ namespace LteDev
         private static void ImportPSMamlBlocks(XElement psMamlParent, XElement xmlDocElement)
         {
             // Allow list, example, quote, alertSet, definitionList, table, para
+#warning Not implemented
             throw new NotImplementedException();
         }
 #pragma warning restore 1591 // Missing XML comment for publicly visible type or member

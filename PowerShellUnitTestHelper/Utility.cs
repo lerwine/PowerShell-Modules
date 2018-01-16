@@ -23,6 +23,7 @@ namespace PowerShellUnitTestHelper
 
         public static Dictionary<string, object> GetDefaultVariables()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

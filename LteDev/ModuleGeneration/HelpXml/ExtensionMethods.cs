@@ -48,6 +48,7 @@ namespace LteDev.HelpXml
             if (path == null)
                 return null;
 
+#warning Not implemented
             throw new NotImplementedException();
             //return path + PSHelpFactory.PSMaml.HelpXml_FileName_Append;
         }

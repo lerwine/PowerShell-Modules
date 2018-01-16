@@ -67,21 +67,25 @@ namespace FileSystemIndexLib
 
         public bool HasErrors()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public IEnumerable<string> GetErrors(string propertyName)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
         
         public string GetErrorMessage(string columnName)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public string GetErrorMessage()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -207,6 +211,7 @@ namespace FileSystemIndexLib
 
         public void AcceptChanges()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

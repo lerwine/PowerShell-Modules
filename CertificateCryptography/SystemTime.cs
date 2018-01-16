@@ -17,10 +17,7 @@ namespace Erwine.Leonard.T.CertificateCryptography
 
         internal static SystemTime Create(DateTime dateTime)
         {
-            long fileTime = dateTime.ToFileTime();
-            SystemTime systemTime;
-            MarshalHelper.ErrorCheck(FileTimeToSystemTime(ref fileTime, out systemTime));
-            return systemTime;
+            return Externs.FileTimeToSystemTime(dateTime.ToFileTime());
         }
     }
 }

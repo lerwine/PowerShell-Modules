@@ -21,6 +21,7 @@ namespace Erwine.Leonard.T.CertificateCryptography
             Assert(() => _Extern.FileTimeToSystemTime(ref fileTime, out result));
             return result;
         }
+
         internal static IntPtr CryptAcquireContextW(string container, string provider, int providerType, int flags)
         {
             IntPtr result = IntPtr.Zero;
@@ -68,7 +69,7 @@ namespace Erwine.Leonard.T.CertificateCryptography
         }
 
         internal static IntPtr CertCreateSelfSignCertificate(IntPtr providerHandle, CryptoApiBlob subjectIssuerBlob, int flags,
-            CryptKeyProviderInformation keyProviderInformation, IntPtr signatureAlgorithm, SystemTime startTime,
+            CryptKeyProvInfo keyProviderInformation, IntPtr signatureAlgorithm, SystemTime startTime,
             SystemTime endTime, IntPtr extensions)
         {
             IntPtr result = IntPtr.Zero;
@@ -87,7 +88,7 @@ namespace Erwine.Leonard.T.CertificateCryptography
         }
 
         internal static void CertSetCertificateContextProperty(IntPtr certificateContext, int propertyId, int flags,
-            CryptKeyProviderInformation data)
+            CryptKeyProvInfo data)
         {
             Assert(() => _Extern.CertSetCertificateContextProperty(certificateContext, propertyId, flags, ref data));
         }
@@ -113,13 +114,13 @@ namespace Erwine.Leonard.T.CertificateCryptography
             internal static extern bool CertStrToNameW(int certificateEncodingType, IntPtr x500, int strType, IntPtr reserved, byte[] encoded, ref int encodedLength, out IntPtr errorString);
 
             [DllImport("crypt32.dll", SetLastError = true)]
-            internal static extern IntPtr CertCreateSelfSignCertificate(IntPtr providerHandle, ref CryptoApiBlob subjectIssuerBlob, int flags, ref CryptKeyProviderInformation keyProviderInformation, IntPtr signatureAlgorithm, ref SystemTime startTime, ref SystemTime endTime, IntPtr extensions);
+            internal static extern IntPtr CertCreateSelfSignCertificate(IntPtr providerHandle, ref CryptoApiBlob subjectIssuerBlob, int flags, ref CryptKeyProvInfo keyProviderInformation, IntPtr signatureAlgorithm, ref SystemTime startTime, ref SystemTime endTime, IntPtr extensions);
 
             [DllImport("crypt32.dll", SetLastError = true)]
             internal static extern bool CertFreeCertificateContext(IntPtr certificateContext);
 
             [DllImport("crypt32.dll", SetLastError = true)]
-            internal static extern bool CertSetCertificateContextProperty(IntPtr certificateContext, int propertyId, int flags, ref CryptKeyProviderInformation data);
+            internal static extern bool CertSetCertificateContextProperty(IntPtr certificateContext, int propertyId, int flags, ref CryptKeyProvInfo data);
         }
     }
 }

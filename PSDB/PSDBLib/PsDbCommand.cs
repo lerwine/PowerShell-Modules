@@ -8,6 +8,7 @@ namespace PSDBLib
     {
         public PsDbCommand() { }
 
+#warning Not implemented
         public override string CommandText
         {
             get
@@ -21,6 +22,7 @@ namespace PSDBLib
             }
         }
 
+#warning Not implemented
         public override int CommandTimeout
         {
             get
@@ -47,6 +49,7 @@ namespace PSDBLib
             }
         }
 
+#warning Not implemented
         public override bool DesignTimeVisible
         {
             get
@@ -73,6 +76,7 @@ namespace PSDBLib
             }
         }
 
+#warning Not implemented
         protected override DbConnection DbConnection
         {
             get
@@ -86,6 +90,7 @@ namespace PSDBLib
             }
         }
 
+#warning Not implemented
         protected override DbParameterCollection DbParameterCollection
         {
             get
@@ -94,6 +99,7 @@ namespace PSDBLib
             }
         }
 
+#warning Not implemented
         protected override DbTransaction DbTransaction
         {
             get
@@ -109,31 +115,37 @@ namespace PSDBLib
 
         public override void Cancel()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public override int ExecuteNonQuery()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public override object ExecuteScalar()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         public override void Prepare()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         protected override DbParameter CreateDbParameter()
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

@@ -82,6 +82,7 @@ namespace NetworkUtility
         /// </summary>
         public static bool IsUrlFormEncoded(WebResponse webResponse)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

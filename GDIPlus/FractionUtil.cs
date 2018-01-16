@@ -495,7 +495,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #endregion
 
-        #region 64-bit Methods InvalidCastException
+        #region 64-bit Methods
 
         internal static long Parse64(string s, out long n, out long d) { return Parse<long>(ValueHelper64.Instance, s, out n, out d); }
         
@@ -585,7 +585,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
 		public static void ToCommonDenominator16(ref short n1, ref short d1, ref short n2, ref short d2) { ToCommonDenominator<short>(ValueHelper16.Instance, ref n1, ref d1, ref n2, ref d2); }
 
-        public static short GetInvertedRational16(short w, short n, short d, out short numerator, out short denominator) { return GetInvertedRational<short>(ValueHelper32.Instance, w, n, d, out numerator, out denominator); }
+        public static short GetInvertedRational16(short w, short n, short d, out short numerator, out short denominator) { return GetInvertedRational<short>(ValueHelper16.Instance, w, n, d, out numerator, out denominator); }
 
         public static short GetNormalizedRational16(short w, short n, short d, out short numerator, out short denominator) { return GetNormalizedRational<short>(ValueHelper16.Instance, w, n, d, out numerator, out denominator); }
         
@@ -615,7 +615,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
 		public static sbyte GetSimplifiedRational8(sbyte n, sbyte d, out sbyte denominator) { return GetSimplifiedRational<sbyte>(ValueHelper8.Instance, n, d, out denominator); }
 
-        public static sbyte GetInvertedRational8(sbyte w, sbyte n, sbyte d, out sbyte numerator, out sbyte denominator) { return GetInvertedRational<sbyte>(ValueHelper32.Instance, w, n, d, out numerator, out denominator); }
+        public static sbyte GetInvertedRational8(sbyte w, sbyte n, sbyte d, out sbyte numerator, out sbyte denominator) { return GetInvertedRational<sbyte>(ValueHelper8.Instance, w, n, d, out numerator, out denominator); }
 
 		public static void ToCommonDenominator8(ref sbyte n1, ref sbyte d1, ref sbyte n2, ref sbyte d2) { ToCommonDenominator<sbyte>(ValueHelper8.Instance, ref n1, ref d1, ref n2, ref d2); }
 

@@ -251,11 +251,13 @@ namespace FileSystemIndexLib
                     xmlElement.AppendChild(xmlDocument.CreateElement(ElementName_Data, XmlSerialization_NamespaceUri)).AppendChild(xmlDocument.CreateCDataSection(Convert.ToBase64String(memoryStream.ToArray(), Base64FormattingOptions.InsertLineBreaks)));
                 }
                 // TODO: Serialize error
+#warning Not implemented
                 throw new NotImplementedException();
             }
             set
             {
                 // TODO: Deserialize error
+#warning Not implemented
                 throw new NotImplementedException();
             }
         }
@@ -322,6 +324,7 @@ namespace FileSystemIndexLib
         /// <param name="path">Root path to be iterated</param>
         public IterationState(string path)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -396,6 +399,7 @@ namespace FileSystemIndexLib
         /// <returns>True if information was successfully refreshed or false if there was an error.</returns>
         public bool TryRefresh()
         {
+#warning Not implemented
             throw new System.NotImplementedException();
         }
 
@@ -408,6 +412,7 @@ namespace FileSystemIndexLib
         /// <remarks>This will always advance to the next iteration, even if an exception was encountered.</remarks>
         public bool TryMoveNext(IterationOptions options, out bool directoryChanged)
         {
+#warning Not implemented
             throw new System.NotImplementedException();
         }
 
@@ -419,6 +424,7 @@ namespace FileSystemIndexLib
         /// <remarks>This will always advance to the next iteration, even if an exception was encountered.</remarks>
         public bool TryMoveNext(out bool directoryChanged)
         {
+#warning Not implemented
             throw new System.NotImplementedException();
         }
     }

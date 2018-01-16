@@ -38,6 +38,7 @@ namespace LteDev.AssemblyBrowser
             if (type == null)
                 return null;
 
+#warning Not implemented
             throw new NotImplementedException();
         }
 

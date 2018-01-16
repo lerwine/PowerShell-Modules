@@ -93,6 +93,7 @@ namespace Erwine.Leonard.T.GDIPlus
                     property = AsDecimalValue(bytes, count);
                     break;
                 case ExifPropertyType.BestMatching:
+#warning Not implemented
                     throw new NotImplementedException();
                 default:
                     property = AsHexValues(bytes, count);

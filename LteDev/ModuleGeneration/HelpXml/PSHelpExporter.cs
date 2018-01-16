@@ -146,11 +146,13 @@ namespace LteDev.HelpXml
                 helpDescription.Add(new XElement(Xmlns_maml.GetName(NCName_para), new XComment("Synoposis goes here")));
             else
                 AddMamlBlockOnly(assemblySummary.Nodes(), helpDescription);
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private void AddMamlBlockOnly(IEnumerable<XNode> enumerable, XElement helpDescription)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -168,22 +170,26 @@ namespace LteDev.HelpXml
                 //{
                 //    if (target.IsHelpDocPara())
                 //}
+#warning Not implemented
                 throw new NotImplementedException();
             }
         }
 
         private void AddMamlInlineOnly(IEnumerable<XNode> source, XElement target)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private void AddMamlList(XElement listElement, XElement target)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
         private void AddMamlBlock(XElement blockElement, XElement target)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 

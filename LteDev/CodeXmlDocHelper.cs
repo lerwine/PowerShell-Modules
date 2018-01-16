@@ -77,6 +77,7 @@ namespace LteDev
 
         public static IEnumerable<XElement> AsMamlBlocks(IEnumerable<XNode> enumerable)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
 
@@ -742,6 +743,7 @@ namespace LteDev
 
         internal static IEnumerable<XElement> GetCommandDescription(Type implementingType)
         {
+#warning Not implemented
             throw new NotImplementedException();
         }
     }

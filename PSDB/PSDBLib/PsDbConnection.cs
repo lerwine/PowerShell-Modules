@@ -4,6 +4,7 @@ using System.Data.Common;
 
 namespace PSDBLib
 {
+#warning Not implemented
     public class PsDbConnection : DbConnection
     {
         public PsDbConnection() { }
