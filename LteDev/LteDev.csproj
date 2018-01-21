@@ -262,7 +262,10 @@
     <Compile Include="XsdTypeGen\maml\token.cs" />
     <Compile Include="XsdTypeGen\maml\ui.cs" />
     <Compile Include="XsdTypeGen\maml\userInput.cs" />
-    <None Include="MSBuildLogHelper.cs" />
+    <Compile Include="MSBuildLogHelper.cs" />
+    <Content Include="Module\VsProjectTypes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="EditUrlForm.resx">
       <DependentUpon>EditUrlForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -280,7 +283,9 @@
     <Content Include="Module\Erwine.Leonard.T.LteDev.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Module\Erwine.Leonard.T.LteDev.psm1" />
+    <Content Include="Module\Erwine.Leonard.T.LteDev.psm1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Module\Schemas\base.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

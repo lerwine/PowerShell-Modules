@@ -12,13 +12,15 @@ namespace LteDev
 {
     public partial class EditUrlForm : Form
     {
-		private QueryItemList _queryItemList = new UriSegmentList();
-		private UriSegmentList _segmentsList = new QueryItemList();
+		private QueryItemList _queryItemList = new QueryItemList();
+		private UriSegmentList _segmentsList = new UriSegmentList();
 		private DataGridViewTextBoxColumn _orderBuildDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn _keyBuildDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn _valueBuildDataGridViewTextBoxColumn;
 		private DataGridViewCheckBoxColumn _hasValueBuildDataGridViewCheckBoxColumn;
-		private DataGridViewTextBoxColumn _orderComponentDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn _orderSegmentsDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn _nameSegmentsDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn _orderComponentDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn _keyComponentDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn _valueComponentDataGridViewTextBoxColumn;
 		private DataGridViewCheckBoxColumn _hasValueComponentDataGridViewCheckBoxColumn;
@@ -152,7 +154,7 @@ namespace LteDev
 			}
 			urlTextBox.Text = text;
 			
-			string scheme = null, userName = null, password = null, host = null, path = null, query = null, fragment = null;
+			string scheme = null, userName = null, password = null, host = null, ps = null, path = null, query = null, fragment = null;
 			int? port = null;
 			
 			int index = text.IndexOfAny(new char[] { ':', '@', '/', '\\', '?', '#' });
@@ -188,7 +190,6 @@ namespace LteDev
 					text = text.Substring(index + 1);
 					// text@text:text
 					index = text.IndexOfAny(new char[] { '/', '\\', '?', '#' });
-					string ps;
 					if (index < 0)
 						ps = text;
 					else
@@ -229,7 +230,6 @@ namespace LteDev
 					host = text.Substring(0, index);
 					text = text.Substring(index + 1);
 					index = text.IndexOfAny(new char[] { '@', ':', '/', '\\', '?', '#' });
-					string ps;
 					if (index < 0)
 						ps = text;
 					else if (text[index] == '@')
@@ -295,7 +295,7 @@ namespace LteDev
 				else
 				{
 					query = path.Substring(index + 1);
-					int index = query.IndexOf('#');
+					index = query.IndexOf('#');
 					if (index >= 0)
 					{
 						fragment = query.Substring(index + 1);
@@ -374,7 +374,7 @@ namespace LteDev
 						if (String.IsNullOrEmpty(host))
 							uriBuilder.Host = "localhost";
 						else
-							try { uriBuilder.Host = host; } catch { uriBuilder.Host = "localhost" }
+							try { uriBuilder.Host = host; } catch { uriBuilder.Host = "localhost"; }
 						try
 						{
 							if (uriBuilder.Uri.Port > 0)
@@ -449,7 +449,7 @@ namespace LteDev
 			queryCheckBox.Checked = true;
 			
 			order = 0;
-			foreach (string[] kvp in query.Split('&').Select(s => s.Split('=', 2)))
+			foreach (string[] kvp in query.Split('&').Select(s => s.Split(new char[] { '=' }, 2)))
 			{
 				if (kvp.Length == 2)
 					_queryItemList.Add(new UriQueryParam(Uri.UnescapeDataString(kvp[0]), Uri.UnescapeDataString(kvp[1]), order));
@@ -491,7 +491,7 @@ namespace LteDev
 			string text = uri.ToString();
 			if (!text.StartsWith("/"))
 				text = "/" + text;
-			if (Uri.TryCreate("http://localhost" + text, UriKind.Absolute))
+			if (Uri.TryCreate("http://localhost" + text, UriKind.Absolute, out u))
 				Load(new UriBuilder(u), true);
 			else
 				LoadFallback(uri.ToString());
@@ -688,10 +688,10 @@ namespace LteDev
 
         }
 
-        private void addQueryItemButton_Click(object sender, EventArgs e)
-        {
+        //private void addQueryItemButton_Click(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
         private void insertQueryItemButton_Click(object sender, EventArgs e)
         {

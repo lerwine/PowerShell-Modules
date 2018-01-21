@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VsProjectTypes>
+  <ProjectType Key="SdtUpg" Guid="006ac3c3-e446-4c8a-b35f-cba0e2238d60" Description="Microsoft SQL Server Data Tools Upgrade" Language="Database" Package="00fee386-5f9f-4577-99f4-f327fafc0fb9" Extension=".dbproj">
+    <AltExt>.dbp</AltExt>
+  </ProjectType>
+  <ProjectType Key="SDT" Guid="00d1a9c2-b5f0-4af3-8072-f6c62b433612" Description="Microsoft SQL Server Data Tools" Language="SQLDB" Package="00fee386-5f9f-4577-99f4-f327fafc0fb9" Extension=".sqlproj" />
+  <ProjectType Key="TypeScripts" Guid="0188900e-b2f5-48b2-8cd3-d907fff86357" Description="TypeScript" Language="TypeScript" Package="2ffe45c4-5c73-493c-b187-f2e955ff875e" />
+  <ProjectType Key="TypeScriptTemplates" Guid="f938420c-e90f-49cd-a24c-6da815ee44e7" Description="TypeScript" Language="TypeScript" />
+  <ProjectType Key="ProjCvt" Guid="059d6162-cd51-11d0-ae1f-00a0c90fffc3" Description="Project Converter" Package="da9fb551-c724-11d0-ae1f-00a0c90fffc3" Extension=".dsp">
+    <AltExt>.vcp</AltExt>
+  </ProjectType>
+  <ProjectType Key="DeploymentMergeModule" Guid="06a35ccd-c46d-44d5-987b-cf40ff872267" Description="Visual Studio Deployment Merge Module Project" Package="66d6f801-b1ec-40a4-bb15-318617e96dad" />
+  <ProjectType Key="CPS" Guid="13b669be-bb05-4ddf-9536-439f39a36129" Description="Common Project System" Language="CPS Projects" Package="3347bee8-d7a1-4082-95e4-38a439553cc2" Extension=".msbuildproj" />
+  <ProjectType Key="VBPortableLibrary" Guid="14182a97-f7f0-4c62-8b27-98aa8ae2109a" Description="Portable Library Project" Language="VisualBasic" Package="fe426dcb-ff5c-44a9-b84d-24cf031ba095" />
+  <ProjectType Key="WorkflowCSharp" Guid="14822709-b5a1-4724-98ca-57a101d1b079" Description="Workflow Visual C# Project" Language="CSharp" Package="9d2881f7-f482-416c-8d64-ca83326250b9" />
+  <ProjectType Key="DataTransformations" Guid="159641d6-6404-4a2a-ae62-294de0fe8301" Description="Data Transformations Project" Package="4a0c6509-bf90-43da-abee-0aba3a8527f1" Extension=".dtproj" />
+  <ProjectType Key="VBWebMVC" Guid="162f00ec-2232-4771-b72f-6bbfb0f7dcc1" Description="VB Web MVC Project Templates" Language="VisualBasic" Package="141da93e-88a7-45d5-b15b-89117f514d64" />
+  <ProjectType Key="WPFProjFlavorCS" Guid="1d6d3185-e7ba-44a5-8dbe-00485ef28094" Description="WPF Project Flavor CSharp Templates" Language="CSharp" Package="b3bae735-386c-4030-8329-ef48eeda4036" />
+  <ProjectType Key="DNX" Guid="1faf1d54-1a80-4e4f-9050-d6b7965cd433" Description="DNX Project Factory" Language="DNX" Package="98f77210-a364-4168-bae6-4d46fa7e19fe" />
+  <ProjectType Key="SolutionFolder" Guid="2150e333-8fdc-42a3-9474-1a3956d46de8" Description="Solution Folder Project" Language="General" Package="da9fb551-c724-11d0-ae1f-00a0c90fffc3" />
+  <ProjectType Key="SharedProjFile" Guid="22912bb2-3ff9-4d55-b4db-d210b6035d4c" Description="Shared Project File" Package="29c54e43-6464-4762-a105-fa308dccb107">
+    <AltExt>.projitems</AltExt>
+    <AltExt>.items</AltExt>
+  </ProjectType>
+  <ProjectType Key="JavaScript" Guid="262852c6-cd72-467d-83fe-5eeb1973a190" Description="JavaScript Project" Language="JavaScript" Package="7e89d1bd-0041-4382-9816-0e78fc502bed" Extension=".jsproj" />
+  <ProjectType Key="TailoredVBWin8" Guid="2d9c1f4e-a90a-440d-861a-ff79d57dc248" Description="WinRT Visual Basic Project Add Win 8 Item Templates" Language="VisualBasic" Package="bb89afca-43da-45c1-907d-9d61dd11f28d" />
+  <ProjectType Key="XnaXBox" Guid="2df5c3f4-5a5f-47a9-8e94-23b4456f55e2" Description="XNA (XBox)" />
+  <ProjectType Key="SharedVBItemTemplates" Guid="2f4d68aa-6da4-465e-88de-2b0f67afc98d" Description="Code Sharing VB Project Add Item Templates" Language="VisualBasic" Package="3347bee8-d7a1-4082-95e4-38a439553cc2" />
+  <ProjectType Key="CSMVCWeb" Guid="2f6ad3cd-6215-4895-b241-ce606a2491cd" Description="C# Web MVC Project Templates" Language="CSharp" Package="141da93e-88a7-45d5-b15b-89117f514d64" />
+  <ProjectType Key="VSTA2015" Guid="30d016f9-3734-4e33-a861-5e7d899e18f3" Description="Microsoft Visual Studio Tools for Applications 2015 Project" Package="50b40206-7995-4a7e-9665-4a930d2051bc" />
+  <ProjectType Key="VC" Guid="3295daf3-837e-4482-ab9c-a945fa3e0cee" Description="VC" Language="VC" />
+  <ProjectType Key="WF" Guid="32f31d43-81cc-4c15-9de6-3fc5453562b6" Description="Workflow Foundation Project" Package="aaffdc1e-a1c7-47bc-b3dc-9e685df3959b" />
+  <ProjectType Key="IVsProjectFactory" Guid="33fcd00a-bd45-403c-9c66-07ba9a923501" Description="PowerShell" Language="PowerShell" Package="8d6fdf26-c2d9-43d0-866a-f2af71f19813" />
+  <ProjectType Key="MVC5" Guid="349c5851-65df-11da-9384-00065b846f21" Description="Model-View-Controller v5 (MVC 5)" Package="349c5850-65df-11da-9384-00065b846f21" />
+  <ProjectType Key="CSWepApp" Guid="349c5853-65df-11da-9384-00065b846f21" Description="C# Web Application Project Templates" Language="CSharp" Package="349c5850-65df-11da-9384-00065b846f21" />
+  <ProjectType Key="VBWebApp" Guid="349c5854-65df-11da-9384-00065b846f21" Description="VB Web Application Project Templates" Language="VisualBasic" Package="349c5850-65df-11da-9384-00065b846f21" />
+  <ProjectType Key="CSTest" Guid="39d444fd-b490-1554-5274-2d612a165298" Description="CSharp Test Project" Language="CSharp" Package="52cbd135-1f97-2580-011f-c7cd052e44de" />
+  <ProjectType Key="TestProj" Guid="3ac096d0-a1c2-e12c-1390-a8335801fdab" Description="Test Project" Package="52cbd135-1f97-2580-011f-c7cd052e44de" />
+  <ProjectType Key="WCF" Guid="3d9ad99f-2412-4246-b90b-4eaa41c64699" Description="Windows Communication Foundation (WCF)" Package="2c0f61bf-3c36-468c-94b8-4021965749e7" />
+  <ProjectType Key="DeploymentCab" Guid="3ea9e505-35ac-4774-b492-ad1749c4943a" Description="Visual Studio Deployment Cab Project" Package="66d6f801-b1ec-40a4-bb15-318617e96dad" />
+  <ProjectType Key="TailoredCSWin81" Guid="3ecd74aa-4430-4c6b-ab7a-bf1e4b565ec1" Description="WinRT C# Project Add Item Templates" Language="CSharp" Package="bb89afca-43da-45c1-907d-9d61dd11f28d" />
+  <ProjectType Key="TailoredCSWin8" Guid="4f45f976-4ff2-47b8-b5a2-2b8a56313153" Description="WinRT C# Project Add Win 8 Item Templates" Language="CSharp" Package="bb89afca-43da-45c1-907d-9d61dd11f28d" />
+  <ProjectType Key="VBTest" Guid="4fd007e8-1a56-7e75-70ca-0466484d4f98" Description="VisualBasic Test Project" Language="VisualBasic" Package="52cbd135-1f97-2580-011f-c7cd052e44de" />
+  <ProjectType Key="VSInstallerProjectExtension" Guid="54435603-dbb4-11d2-8724-00a0c9a8b90c" Description="Visual Studio Deployment Project" Package="66d6f801-b1ec-40a4-bb15-318617e96dad" Extension=".vdproj">
+    <AltExt>.vdp</AltExt>
+  </ProjectType>
+  <ProjectType Key="Placeholder" Guid="57c4a424-b37b-4482-bbbc-ac0311b7e048" Description="Placeholder Project" Language="SetupAndDeployment" Package="dfe21000-2a85-444f-8c75-f28376aa1c0f" />
+  <ProjectType Key="VBWPF" Guid="58839851-977a-4c1b-a0d3-79157d5f2bbf" Description="Visual Basic WPF Project" Language="VisualBasic" Package="b3bae735-386c-4030-8329-ef48eeda4036" />
+  <ProjectType Key="WPF" Guid="60dc8134-eba5-43b8-bcc9-bb4bc16c2548" Description="Windows Presentation Foundation (WPF)" Package="b3bae735-386c-4030-8329-ef48eeda4036" />
+  <ProjectType Key="CSSilverlight" Guid="66e200f7-60e8-4616-90f5-e52b2f2f8298" Description="C# Silverlight Project Templates" Language="CSharp" Package="cb22ee0e-4072-4ae7-96e2-90fccf879544" />
+  <ProjectType Key="BI" Guid="6870e480-7721-4708-bfb8-9ae898aa21b3" Description="Business Intelligence Project" Language="Business Intelligence" Package="3c9ffd2d-5e28-444c-8ea5-d1754ff4b8ad" Extension=".smproj" />
+  <ProjectType Key="NeutralJS" Guid="6c5e4f72-fbe8-4308-a81c-67cee370d0b5" Description="Neutral JavaScript Templates" Language="JavaScript" />
+  <ProjectType Key="XnaWindows" Guid="6d335f3a-9d43-41b4-9d22-f6f17c4be596" Description="XNA (Windows)" />
+  <ProjectType Key="CodeSharingCS" Guid="72c8cc65-a019-4582-9859-d22c29245638" Description="Code Sharing C# Project Add Item Templates" Language="CSharp" Package="3347bee8-d7a1-4082-95e4-38a439553cc2" />
+  <ProjectType Key="CSPortableLibrary" Guid="786c830f-07a1-408b-bd7f-6ee04809d6db" Description="Portable Class Library" Language="CSharp" Package="fe426dcb-ff5c-44a9-b84d-24cf031ba095" />
+  <ProjectType Key="VCPPTest" Guid="7d6034c3-afb8-05cb-2a75-daa65e89be83" Description="Visucal C++ Test Project" Language="VisualC" Package="52cbd135-1f97-2580-011f-c7cd052e44de" />
+  <ProjectType Key="Extensibility" Guid="82b43b9b-a64c-4715-b499-d71e9ca2bd60" Description="Extensibility Project" Package="f5d4bb28-24eb-4fc7-bdec-bf96ba99a8ee" />
+  <ProjectType Key="VC" Guid="887e6942-90cd-4266-8816-b74502858c07" Description="VC" Language="VC">
+    <AltGuid>8bc9ceb8-8b4a-11d0-8d11-00a0c91bc943</AltGuid>
+    <AltGuid>8bc9ceb8-8b4a-11d0-8d11-00a0c91bc944</AltGuid>
+    <AltGuid>8c3ffdcc-9a63-43f2-9a3e-c45fb2abf450</AltGuid>
+    <AltGuid>dc073cad-303e-4838-9969-278c87bd53eb</AltGuid>
+    <AltGuid>fae1d128-4bbf-454a-b96c-e83e7ad6a783</AltGuid>
+    <AltGuid>fe0b9df8-a7c2-4687-a235-316c1aca78d3</AltGuid>
+  </ProjectType>
+  <ProjectType Key="DNX" Guid="8995eee9-f6c2-4122-aca7-19384033a7b1" Description="DNX" Language="DNX" Package="98f77210-a364-4168-bae6-4d46fa7e19fe" />
+  <ProjectType Key="DNXProject" Guid="8bb2217d-0f2d-49d1-97bc-3654ed321f3b" Description="DNX" Language="DNX" Package="98f77210-a364-4168-bae6-4d46fa7e19fe" Extension=".xproj">
+    <AltExt>.kproj</AltExt>
+    <AltDescription Key="AspNet5">ASP.NET 5</AltDescription>
+  </ProjectType>
+  <ProjectType Key="CPP" Guid="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Description="Windows (Visual C++)" Language="VC" Package="f1c25864-3097-11d2-a5c5-00c04f7968b4" Extension=".vcxproj">
+    <AltExt>.vcxitems</AltExt>
+    <AltExt>.vcproj</AltExt>
+    <AltExt>.dsp</AltExt>
+    <AltExt>.mdp</AltExt>
+    <AltExt>.mak</AltExt>
+    <AltExt>.vcp</AltExt>
+    <AltExt>.nativeproj</AltExt>
+  </ProjectType>
+  <ProjectType Key="Exe" Guid="911e67c6-3d85-4fce-b560-20a9c3e3ff48" Description="Exe Projects" Package="beb01ddf-9d2b-435b-a9e7-76557e2b6b52" Extension=".exe" />
+  <ProjectType Key="JSWin8" Guid="9293fd04-bbe3-47bd-9197-774bbfade394" Description="JavaScript" Language="JavaScript" />
+  <ProjectType Key="DeploymentSetup" Guid="978c614f-708e-4e1a-b201-565925725dba" Description="Visual Studio Deployment Setup Project" Package="66d6f801-b1ec-40a4-bb15-318617e96dad" />
+  <ProjectType Key="JSWin81" Guid="9bc242f5-d663-4497-ac11-b6c68998175c" Description="JavaScript" Language="JavaScript" />
+  <ProjectType Key="Silverlight" Guid="a1591282-1198-4647-a2b1-27e5ff5f6f3b" Description="Microsoft Silverlight Project Factory" Package="cb22ee0e-4072-4ae7-96e2-90fccf879544" />
+  <ProjectType Key="Miscellaneous Files Project" Guid="a2fe74e1-b743-11d0-ae1a-00a0c90fffc3" Description="General" Language="General" Package="da9fb551-c724-11d0-ae1f-00a0c90fffc3" />
+  <ProjectType Key="Extensibility" Guid="aa11600a-52bd-49b1-86b1-b5f35331f9fa" Description="Extensibility" Language="Extensibility" Package="4db90d39-d5c9-4e11-85d3-c77668f19cc4" />
+  <ProjectType Key="Xml" Guid="b11a6ad6-2d76-4c13-bdd7-78ed7004c364" Description="Xml Project" Package="87569308-4813-40a0-9cd0-d7a30838ca3f" />
+  <ProjectType Key="Metro" Guid="bc8a1ffa-bee3-4634-8014-f334798102b3" Description="Windows Store (Metro) Apps &amp; Components" Package="bb89afca-43da-45c1-907d-9d61dd11f28d" />
+  <ProjectType Key="VisualDatabaseTools" Guid="c252feb5-a946-4202-b1d4-9916a0590387" Description="Microsoft SQL Server Data Tools Upgrade Factory for VDT Project Flavors" Package="00fee386-5f9f-4577-99f4-f327fafc0fb9" />
+  <ProjectType Key="VBWin81" Guid="cd68a23b-f13c-4f03-a0ac-8501c79036f9" Description="WinRT Visual Basic Project Add Item Templates" Language="VisualBasic" Package="bb89afca-43da-45c1-907d-9d61dd11f28d" />
+  <ProjectType Key="SolutionItems" Guid="d1dcdb85-c5e8-11d2-bfca-00c04f990235" Description="Solution Items Project" Language="General" Package="da9fb551-c724-11d0-ae1f-00a0c90fffc3" />
+  <ProjectType Key="VBSilverlight" Guid="d236e6ca-a73b-4ede-86f5-9bc20a84ef90" Description="VB Silverlight Project Templates" Language="VisualBasic" Package="cb22ee0e-4072-4ae7-96e2-90fccf879544" />
+  <ProjectType Key="AnalysisServices" Guid="d2abab84-bf74-430a-b69e-9dc6d40dda17" Description="Analysis Services Project" Package="4a0c6509-bf90-43da-abee-0aba3a8527f1" Extension=".dwproj">
+    <AltExt>.asproj</AltExt>
+  </ProjectType>
+  <ProjectType Key="JSCodeSharing" Guid="d38d89b0-85d5-4c40-9ee2-3b2111bde3fd" Description="Code Sharing JavaScript Project Add Item Templates" Language="JavaScript" Package="7e89d1bd-0041-4382-9816-0e78fc502bed" />
+  <ProjectType Key="XnaZune" Guid="d399b71a-8929-442a-a9ac-8bec78bb2433" Description="XNA (Zune)" />
+  <ProjectType Key="WorkflowVbNet" Guid="d59be175-2ed0-4c54-be3d-cdaa9f3214c8" Description="Workflow Visual Basic Project" Language="VisualBasic" Package="9d2881f7-f482-416c-8d64-ca83326250b9" />
+  <ProjectType Key="Store App Universal" Guid="d954291e-2a0b-460d-934e-dc6b0785db48" Description="Store App Universal" Language="Code Sharing Projects" Package="3347bee8-d7a1-4082-95e4-38a439553cc2" Extension=".shproj" />
+  <ProjectType Key="CSSharedItem" Guid="ddddc6be-451d-46dd-a712-a5d07027e072" Description="C# Shared Project Add Item Templates" Language="CSharp" Package="3347bee8-d7a1-4082-95e4-38a439553cc2" />
+  <ProjectType Key="WebSite" Guid="e24c65dc-7377-472b-9aba-bc803b73c61a" Description="Web Site" Language="Web" Package="39c9c826-8ef8-4079-8c95-428f5b1c323f" Extension=".webproj" />
+  <ProjectType Key="MVC4" Guid="e3e379df-f4c6-4180-9b81-6769533abe47" Description="Model-View-Controller v4 (MVC 4)" Package="141da93e-88a7-45d5-b15b-89117f514d64" />
+  <ProjectType Key="MVC3" Guid="e53f8fea-eae0-44a6-8774-ffd645390401" Description="Model-View-Controller v3 (MVC 3)" Package="141da93e-88a7-45d5-b15b-89117f514d64" />
+  <ProjectType Key="CSWebMVC" Guid="e53f8feb-eae0-44a6-8774-ffd645390401" Description="CSharp" Language="CSharp" Package="141da93e-88a7-45d5-b15b-89117f514d64" />
+  <ProjectType Key="VBWebMVC" Guid="e53f8fec-eae0-44a6-8774-ffd645390401" Description="VisualBasic" Language="VisualBasic" Package="141da93e-88a7-45d5-b15b-89117f514d64" />
+  <ProjectType Key="JSharp" Guid="e6fdf86b-f3d1-11d4-8576-0002a516ece8" Description="J#" />
+  <ProjectType Key="Modeling" Guid="f088123c-0e9e-452a-89e6-6ba2f21d5cac" Description="Modeling" Language="Modeling" Package="fa1929d0-d314-4897-9248-6fe1faf50a89" Extension=".modelproj" />
+  <ProjectType Key="Report" Guid="f14b399a-7131-4c87-9e4b-1186c45ef12d" Description="Report Project" Package="4a0c6509-bf90-43da-abee-0aba3a8527f1" Extension=".rptproj" />
+  <ProjectType Key="WindowsVbNet" Guid="f184b08f-c81c-45f6-a57f-5abd9991f28f" Description="Windows (VB.NET)" Language="VisualBasic" Package="164b10b9-b200-11d0-8c61-00a0c91e29d5" Extension=".vbproj">
+    <AltExt>.vbp</AltExt>
+  </ProjectType>
+  <ProjectType Key="PowerShell" Guid="f5034706-568f-408a-b7b3-4d38c6db8a32" Description="Windows PowerShell Script" Language="PowerShell" Package="5520558a-236b-453b-8cff-442671db0bb5" Extension=".pssproj" />
+  <ProjectType Key="WindowsCSharp" Guid="fae04ec0-301f-11d3-bf4b-00c04f79efbc" Description="Windows (C#)" Language="CSharp" Package="fae04ec1-301f-11d3-bf4b-00c04f79efbc" Extension=".csproj">
+    <AltExt>.btproj</AltExt>
+  </ProjectType>
+  <ProjectType Key="UniversalWindowsClassLibrary" Guid="a5a43c5b-de2a-4c0c-9213-0a381af9435a" Description="Universal Windows Class Library" />
+  <ProjectType Key="WindowsPhone8Other" Guid="76f1466a-8b6d-4e39-a767-685a06062a39" Description="Windows Phone 8/8.1 Blank/Hub/Webview App" />
+  <ProjectType Key="XamarinAndroid" Guid="efba0ad7-5a72-4c68-af49-83d382785dcf" Description="Xamarin.Android">
+    <AltDescription Key="MonoAndroid">Mono for Android</AltDescription>
+  </ProjectType>
+  <ProjectType Key="SmartDeviceCSharp" Guid="4d628b5b-2fbc-4aa6-8c16-197242aeb884" Description="Smart Device (C#)" />
+  <ProjectType Key="MicroFramework" Guid="b69e3092-b931-443c-abe7-7e7b65f2a37f" Description="Micro Framework" />
+  <ProjectType Key="OfficeSharePointApp" Guid="c1cddadd-2546-481f-9697-4ea41081f2fc" Description="Office/SharePoint App" />
+  <ProjectType Key="Legacy2003SmartDeviceVbNet" Guid="cb4ce8c6-1bdb-4dc7-a4d3-65a1999772f8" Description="Legacy (2003) Smart Device (VB.NET)" />
+  <ProjectType Key="Dynamics2012AxCInAot" Guid="bf6f8e12-879d-49e7-adf0-5503146b24b8" Description="Dynamics 2012 AX C# in AOT" />
+  <ProjectType Key="SharePointVbNet" Guid="ec05e597-79d4-47f3-ada0-324c4f7c7484" Description="SharePoint (VB.NET)" />
+  <ProjectType Key="DeploymentSmartDeviceCab" Guid="ab322303-2255-48ef-a496-5904eb18da55" Description="Deployment Smart Device Cab" />
+  <ProjectType Key="MonoTouchBinding" Guid="f5b4f3bc-b597-4e2b-b552-ef5d8a32436f" Description="MonoTouch Binding" />
+  <ProjectType Key="Windows_Phone8AppCSharp" Guid="c089c8c0-30e0-4e22-80c0-ce093f111a43" Description="Windows Phone 8/8.1 App (C#)" />
+  <ProjectType Key="FSharp" Guid="f2a71f9b-5d33-465a-a702-920d77279786" Description="F#" Extension=".fsproj" />
+  <ProjectType Key="LightSwitchProject" Guid="581633eb-b896-402f-8e60-36f3da191c85" Description="LightSwitch Project" />
+  <ProjectType Key="MVC1" Guid="603c0e0b-db56-11dc-be95-000d561079b0" Description="ASP.NET MVC 1" />
+  <ProjectType Key="LightSwitch" Guid="8bb0c5e8-0616-4f60-8e55-a43933e57e9c" Description="LightSwitch" />
+  <ProjectType Key="SharePointWorkflow" Guid="f8810ec1-6754-47fc-a15f-dfabd2e3fa90" Description="SharePoint Workflow" />
+  <ProjectType Key="ProjectFolders" Guid="66a26720-8fb5-11d2-aa7e-00c04f688dde" Description="Project Folders" />
+  <ProjectType Key="DbOther" Guid="4f174c21-8c12-11d0-8340-0000f80270f8" Description="Database (other project types)" />
+  <ProjectType Key="VSTA" Guid="a860303f-1f3f-4691-b57e-529fc101a107" Description="Visual Studio Tools for Applications (VSTA)" />
+  <ProjectType Key="MVC2" Guid="f85e285d-a4e0-4152-9332-ab1d724d3325" Description="Model-View-Controller v2 (MVC 2)" />
+  <ProjectType Key="DistributedSystem" Guid="f135691a-bf7e-435d-8960-f99683d2d49c" Description="Distributed System" />
+  <ProjectType Key="Windows_Phone8AppVbNet" Guid="db03555f-0c8b-43be-9ff9-57896b3c5e56" Description="Windows Phone 8/8.1 App (VB.NET)" />
+  <ProjectType Key="XamarinIOS" Guid="6bc8ed88-2882-458c-8e55-dfd12b67127b" Description="Xamarin.iOS">
+    <AltDescription Key="MonoTouch">MonoTouch</AltDescription>
+  </ProjectType>
+  <ProjectType Key="SharePointCSharp" Guid="593b0543-81f6-4436-ba1e-4747859caae2" Description="SharePoint (C#)" />
+  <ProjectType Key="NodeJS" Guid="9092aa53-fb77-4645-b42d-1ccca6bd08bd" Description="Node.js" Extension=".njsproj" />
+  <ProjectType Key="Legacy2003SmartDeviceCSharp" Guid="20d4826a-c6fa-45db-90f4-c717570b9f32" Description="Legacy (2003) Smart Device (C#)" />
+  <ProjectType Key="VSTO" Guid="baa0c2d2-18e2-41b9-852f-f413020caa33" Description="Visual Studio Tools for Office (VSTO)" />
+  <ProjectType Key="SmartDeviceVbNet" Guid="68b1623d-7fb9-47d8-8664-7ecea3297d4f" Description="Smart Device (VB.NET)" />
+  <ProjectType Key="Database" Guid="a9ace9bb-cece-4e62-9aa4-c7e7c5bd2124" Description="Database" />
+</VsProjectTypes>

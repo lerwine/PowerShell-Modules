@@ -13,6 +13,79 @@
 $csproj_name = 'CertificateCryptography.csproj';
 $module_name = 'Erwine.Leonard.T.CertificateCryptography';
 
+Function Test-PathEquals {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string[]]$TargetPath,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Expected,
+
+        [switch]$Resolve
+    )
+
+    Begin {
+        $EParent = @($Expected);
+        $ELeaf = @('');
+        try {
+            if ($Resolve) {
+                $EParent = @(($Expected | Split-Path -Parent -Resolve) | Sort-Object -Property @{ Expression = { $_.ToLower() } });
+                $ELeaf = @((($Expected | Split-Path -Leaf -Resolve) | Sort-Object -Property @{ Expression = { [System.IO.Path]::GetExtension($_.ToLower()) } }) | Sort-Object -Property @{ Expression = { [System.IO.Path]::GetFileNameWithoutExtension($_.ToLower()) } });
+            } else {
+                $EParent = @(($Expected | Split-Path -Parent) | Sort-Object -Property @{ Expression = { $_.ToLower() } });
+                $ELeaf = @((($Expected | Split-Path -Leaf) | Sort-Object -Property @{ Expression = { [System.IO.Path]::GetExtension($_.ToLower()) } }) | Sort-Object -Property @{ Expression = { [System.IO.Path]::GetFileNameWithoutExtension($_.ToLower()) } });
+            }
+        } catch {
+            $EParent = @($Expected);
+            $ELeaf = @('');
+        }
+        $Passed = $true;
+    }
+    Process {
+        if ($Passed) {
+            foreach ($Path in $TargetPath) {
+                $AParent = @($Path);
+                $ALeaf = @('');
+                try {
+                    if ($Resolve) {
+                        $AParent = @($Path | Split-Path -Parent -Resolve);
+                        $ALeaf = @($Path | Split-Path -Leaf -Resolve);
+                    } else {
+                        $AParent = @($Path | Split-Path -Parent);
+                        $ALeaf = @($Expected | Split-Path -Leaf);
+                    }
+                } catch {
+                    $AParent = @($Path);
+                    $ALeaf = @('');
+                }
+                if ($AParent.Count -ne $EParent.Count -or $ALeaf.Count -ne $ELeaf.Count) {
+                    $Passed = $false;
+                    break;
+                }
+                $AParent = @($AParent | Sort-Object -Property @{ Expression = { $_.ToLower() } });
+                for ($i = 0; $i -lt $EParent.Count; $i++) {
+                    if ($AParent[$i] -ine $EParent[$i]) {
+                        $Passed = $false;
+                        break;
+                    }
+                }
+                if (-not $Passed) { break }
+                $ALeaf = @(($ALeaf | Sort-Object -Property @{ Expression = { [System.IO.Path]::GetExtension($_.ToLower()) } }) | Sort-Object -Property @{ Expression = { [System.IO.Path]::GetFileNameWithoutExtension($_.ToLower()) } });
+                
+                for ($i = 0; $i -lt $EParent.Count; $i++) {
+                    if ($ALeaf[$i] -ine $ELeaf[$i]) {
+                        $Passed = $false;
+                        break;
+                    }
+                }
+                if (-not $Passed) { break }
+            }
+        }
+    }
+    End { $Passed | Write-Output }
+}
+
 cls;
 
 Add-Type -AssemblyName 'Microsoft.Build', 'Microsoft.Build.Framework', 'Microsoft.Build.Utilities.v4.0' -ErrorAction Stop;
@@ -533,9 +606,9 @@ $Error.Clear();
 if ((Get-Module -Name $module_name) -ne $null) { Remove-Module -Name $module_name -ErrorAction Stop }
 $CmdErrors = @();
 $CmdWarnings = @();
+$OutputPath = $PSScriptRoot | Join-Path -ChildPath $Project.GetPropertyValue('OutputPath');
 $ModuleInfo = $null;
-$ModuleInfo = Import-module -Name (($PSScriptRoot | Join-Path -ChildPath $Project.GetPropertyValue('OutputPath')) | Join-Path -ChildPath "$module_name.psd1") `
-    -ErrorVariable 'CmdErrors' -WarningVariable 'CmdWarnings' -ErrorAction Continue -PassThru;
+$ModuleInfo = Test-ModuleManifest -Path ($TargetModulePath | Join-Path -ChildPath "$module_name.psd1") -ErrorVariable 'CmdErrors' -WarningVariable 'CmdWarnings' -ErrorAction Continue;
 $ErrorObj = @();
 if ($CmdErrors.Count -gt 0) {
     $ErrorObj = @(@($Error) | Select-Object -Property @{
@@ -551,15 +624,24 @@ if ($CmdErrors.Count -gt 0) {
         Label = 'Category'; Expression = { if ($_.CategoryInfo -eq $null) { return '' } $_.CategoryInfo.GetMessage() } }, @{
         Label = 'Stack Trace'; Expression = { if ($_.ScriptStackTrace -eq $null) { return '' } $_.ScriptStackTrace } });
 }
-if ($CmdWarnings.Count -gt 0) { $CmdWarnings | Out-GridView -Title 'Module Load Warnings' }
-if ($ErrorObj.Count -gt 0) { $ErrorObj | Out-GridView -Title 'Module Load Errors' }
+if ($CmdWarnings.Count -gt 0) { $CmdWarnings | Out-GridView -Title 'Module Manifest Format Warnings' }
+if ($ErrorObj.Count -gt 0) { $ErrorObj | Out-GridView -Title 'Module Manifest Format Errors' }
 if ($ModuleInfo -eq $null) {
-    Write-Warning -Message 'Module load failed';
+    Write-Warning -Message 'Module Manifest Format failed';
     return;
 }
 if ($ErrorObj.Count -gt 0) {
-    Write-Warning -Message 'Test scripts not invoked due to errors during module load';
+    Write-Warning -Message 'Test scripts not invoked due to Module Manifest Format errors.';
     return;
+}
+
+[Microsoft.PowerShell.Commands.ModuleSpecification]$fqn = @{ModuleName = "modulename"; ModuleVersion = "1.4"; Guid = [Guid]::NewGuid().ToString('D'); };
+
+$TestModulePath = $env:PSModulePath;
+$ModulePaths = @($TestModulePath.Split([System.IO.Path]::PathSeparator);
+
+if (-not ($ModulePaths.Count -gt 0 -and $ModulePaths[0] | Test-PathEquals -Expected $OutputPath)) {
+   $TestModulePath = (@($OutputPath) + @($ModulePaths | Where-Object { -not ($_ | Test-PathEquals -Expected $OutputPath) })) -join [System.IO.Path]::PathSeparator;
 }
 
 $TestScripts = @(Get-ChildItem -Path ($PSScriptRoot | Join-Path -ChildPath 'TestScripts') -Filter 'Test-*.ps1');

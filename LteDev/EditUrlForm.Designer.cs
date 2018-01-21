@@ -1086,7 +1086,6 @@
         private System.Windows.Forms.Button saveQueryItemButton;
         private System.Windows.Forms.Button moveUpQueryItemButton;
         private System.Windows.Forms.Button moveDownQueryItemButton;
-        private System.Windows.Forms.Button addQueryItemButton;
         private System.Windows.Forms.Button insertQueryItemButton;
         private System.Windows.Forms.Button cancelQueryItemButton;
         private System.Windows.Forms.Button deleteQueryItemButton;
