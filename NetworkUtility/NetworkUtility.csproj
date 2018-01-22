@@ -21,8 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>Install\Debug\Erwine.Leonard.T.NetworkUtility.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,13 +30,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>Install\Release\Erwine.Leonard.T.NetworkUtility.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Web.Administration\7.0.0.0__31bf3856ad364e35\Microsoft.Web.Administration.dll</HintPath>
@@ -51,13 +53,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Management\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Management.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormEncoder.cs" />
@@ -87,27 +82,20 @@
     <None Include="build-debug.bat" />
     <None Include="build-deploy.bat" />
     <None Include="build-release.bat" />
-    <None Include="build-test.batmd" />
+    <None Include="build-test.bat" />
     <None Include="README.md" />
     <None Include="TestScripts/Test-Mime.ps1" />
     <None Include="TestScripts/Test-UriInfo.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Module\MediaTypes.xml">
+    <Content Include="MediaTypes.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="Module\Erwine.Leonard.T.NetworkUtility.psd1">
+    <Content Include="Erwine.Leonard.T.NetworkUtility.psd1">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="Module\Erwine.Leonard.T.NetworkUtility.psm1">
+    <Content Include="Erwine.Leonard.T.NetworkUtility.psm1">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="Module\README.md">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <Link>%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
