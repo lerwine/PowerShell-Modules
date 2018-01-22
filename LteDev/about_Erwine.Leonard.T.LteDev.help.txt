@@ -1,0 +1,73 @@
+﻿TOPIC
+    about_Erwine.Leonard.T.LteDev
+
+SHORT DESCRIPTION
+    PowerShell Dev utility functions.
+
+LONG DESCRIPTION
+    Provides utility functions that are useful when developing PowerShell scripts.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    Get-ClrSimpleName
+        Get simple CLR full name
+
+
+    Get-FieldUsage
+        Get-FieldUsage [-FieldInfo] &lt;FieldInfo&gt; [-IncludeSpecialNamed]
+        [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
+
+
+    Get-PropertyUsage
+        Get-PropertyUsage [-PropertyInfo] &lt;PropertyInfo&gt;
+        [-IncludeSpecialNamed] [-Verbose] [-Debug] [-ErrorAction
+        &lt;ActionPreference&gt;] [-WarningAction &lt;ActionPreference&gt;]
+        [-ErrorVariable &lt;String&gt;] [-WarningVariable &lt;String&gt;] [-OutVariable
+        &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
+
+
+    Get-ParameterUsage
+        Get-ParameterUsage [-Method] &lt;MethodBase&gt; [-IsInitVars] [-NonOptional]
+        [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
+
+
+    Get-ConstructorUsage
+        Get-ConstructorUsage [-ConstructorInfo] &lt;ConstructorInfo&gt; [-Verbose]
+        [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
+
+
+    Get-MethodUsage
+        Get-MethodUsage [-MethodInfo] &lt;MethodInfo&gt; [-IncludeSpecialNamed]
+        [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
+
+
+    Get-TypeUsage
+        Get object type sample usage
+
+SEE ALSO
+Get simple CLR full nameGet-FieldUsage [-FieldInfo] &lt;FieldInfo&gt; [-IncludeSpecialNamed]
+        [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]Get-PropertyUsage [-PropertyInfo] &lt;PropertyInfo&gt;
+        [-IncludeSpecialNamed] [-Verbose] [-Debug] [-ErrorAction
+        &lt;ActionPreference&gt;] [-WarningAction &lt;ActionPreference&gt;]
+        [-ErrorVariable &lt;String&gt;] [-WarningVariable &lt;String&gt;] [-OutVariable
+        &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]Get-ParameterUsage [-Method] &lt;MethodBase&gt; [-IsInitVars] [-NonOptional]
+        [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]Get-ConstructorUsage [-ConstructorInfo] &lt;ConstructorInfo&gt; [-Verbose]
+        [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]Get-MethodUsage [-MethodInfo] &lt;MethodInfo&gt; [-IncludeSpecialNamed]
+        [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction
+        &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable
+        &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]Get object type sample usage

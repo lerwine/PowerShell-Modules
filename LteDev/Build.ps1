@@ -241,6 +241,7 @@ Function Out-BuildEventArgs {
 Function Write-Logger {
     Param(
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [LteDev.MSBuildLogHelper]$Logger
     )
 
@@ -472,7 +473,7 @@ if ($Project -ne $null) {
     $Project.ProjectCollection.UnloadAllProjects();
     $Project = $null;
 }
-$csproj_name = 'LteDev.csproj';
+
 $csproj_path = $PSScriptRoot | Join-Path -ChildPath $csproj_name;
 $Project = [Microsoft.Build.Evaluation.Project]::new($csproj_path);
 if ($Project -eq $null) { return }
