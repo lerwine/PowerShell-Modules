@@ -6,7 +6,7 @@ $Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Pr
 Function Get-SpecialFolderNames {
 	<#
 		.SYNOPSIS
-			Get special folder names
+			Get special folder names.
 		 
 		.DESCRIPTION
 			Returns a list of names that can be used to refer to actual spcial folder paths.
@@ -33,10 +33,10 @@ Function Get-SpecialFolderNames {
 Function Get-SpecialFolder {
 	<#
 		.SYNOPSIS
-			Get special folder path
+			Get special folder path.
  
 		.DESCRIPTION
-			Converts special folder enumerated value to string path
+			Converts special folder enumerated value to string path.
 		
 		.OUTPUTS
 			System.String. Path of special folder.
@@ -146,7 +146,7 @@ Function ConvertTo-SafeFileName {
 Function ConvertFrom-SafeFileName {
 	<#
 		.SYNOPSIS
-			Decodes a file name back to the original text
+			Decodes a file name back to the original text.
  
 		.DESCRIPTION
 			If a file name was creating using 'ConvertTo-SafeFileName', this method will convert it back.
@@ -544,7 +544,7 @@ Function Get-MinBase64BlockSize {
 Function Read-IntegerFromStream {
 	<#
 		.SYNOPSIS
-			Read integer value from stream.
+			Read integer value from a stream.
  
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an integer.
@@ -575,7 +575,7 @@ Function Read-IntegerFromStream {
 Function Read-LongIntegerFromStream {
 	<#
 		.SYNOPSIS
-			Read long integer value from stream.
+			Read long integer value from a stream.
  
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to a long integer.
@@ -606,7 +606,7 @@ Function Read-LongIntegerFromStream {
 Function Write-IntegerToStream {
 	<#
 		.SYNOPSIS
-			Write integer value to a Stream.
+			Write integer value to a stream.
  
 		.DESCRIPTION
 			Writes an integer value to the Stream as an array of bytes.
@@ -637,7 +637,7 @@ Function Write-IntegerToStream {
 Function Write-LongIntegerToStream {
 	<#
 		.SYNOPSIS
-			Write long integer value to a Stream.
+			Write long integer value to a stream.
  
 		.DESCRIPTION
 			Writes a long integer value to the Stream as an array of bytes.
@@ -668,7 +668,7 @@ Function Write-LongIntegerToStream {
 Function Read-LengthEncodedBytes {
 	<#
 		.SYNOPSIS
-			Read length-encoded array of bytes from a Stream.
+			Read length-encoded array of bytes from a stream.
  
 		.DESCRIPTION
 			Reads a length value from the Stream, and then reads the associated number of bytes.
@@ -696,7 +696,7 @@ Function Read-LengthEncodedBytes {
 Function Write-LengthEncodedBytes {
 	<#
 		.SYNOPSIS
-			Writes length-encoded data a Stream.
+			Writes length-encoded data a stream.
  
 		.DESCRIPTION
 			Writes a length-encoded byte array to the Stream.
@@ -1307,7 +1307,7 @@ Function Out-NormalizedText {
 			Normalizes text.
  
 		.DESCRIPTION
-			Splits text according a pattern.
+			Normalizes input strings.
 		
 		.OUTPUTS
 			System.String. The normalized text.
@@ -1405,7 +1405,7 @@ Function Out-IndentedText {
 			Indents text.
  
 		.DESCRIPTION
-			Prepends indent text to input text
+			Prepends indent text to input text.
 		
 		.OUTPUTS
 			System.String. The indented text.
@@ -1782,4 +1782,124 @@ Function Compare-FileSystemInfo {
 			}
 		}
 	}
+}
+
+Function Test-PathsAreEqual {
+	<#
+		.SYNOPSIS
+			Determines if 2 paths are equal.
+ 
+		.DESCRIPTION
+			Determines if 2 paths point to the same location.
+		
+		.INPUTS
+			System.String. The path being compared.
+		
+		.OUTPUTS
+			System.Boolean. True if TargetPath is equal to SourcePath; otherwise, false.
+	#>
+	[OutputType([bool])]
+	Param(
+		# Path being compared.
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		[ValidateScript({ $_ | Test-Path -IsValid })]
+		[string[]]$TargetPath,
+		
+		# Path being compared to.
+		[Parameter(Mandatory = $true, Position = 1)]
+		[ValidateScript({ $_ | Test-Path -IsValid })]
+		[string]$SourcePath,
+		
+		#  Specifies a user account that has permission to perform this action. The default is the current user.
+		[PSCredential]$Credential,
+		
+		#  Includes the command in the active transaction. This parameter is valid only when a transaction is in progress. For more information, see about_Transactions.
+		[switch]$UseTransaction
+	)
+	
+	Begin {
+		$Success = $true;
+		$FullSourcePath = @($SourcePath);
+		if ($SourcePath | Test-Path) {
+			if ($PSBoundParameters.ContainsKey('Credential')) {
+				if ($UseTransaction) {
+					$FullSourcePath = @($SourcePath | Resolve-Path -Credential $Credential -UseTransaction);
+				} else {
+					$FullSourcePath = @($SourcePath | Resolve-Path -Credential $Credential);
+				}
+			} else {
+				if ($UseTransaction) {
+					$FullSourcePath = @($SourcePath | Resolve-Path -UseTransaction);
+				} else {
+					$FullSourcePath = @($SourcePath | Resolve-Path);
+				}
+			}
+		}
+		$SourceSegments = @();
+		$FullSourcePath | ForEach-Object {
+			$Parent = $_;
+			$Arr = @();
+			while ($Parent.Length -gt 0) {
+				$Arr = @($Parent | Split-Path -Leaf) + $Arr;
+				$Parent = $Parent | Split-Path -Parent;
+			}
+			$SourceSegments += (, $Arr);
+		}
+	}
+	
+	Process {
+		if ($Success) {
+			foreach ($Path in $TargetPath) {
+				$FullTargetPath = @($Path);
+				if ($Path | Test-Path) {
+					if ($PSBoundParameters.ContainsKey('Credential')) {
+						if ($UseTransaction) {
+							$FullTargetPath = @($Path | Resolve-Path -Credential $Credential -UseTransaction);
+						} else {
+							$FullTargetPath = @($Path | Resolve-Path -Credential $Credential);
+						}
+					} else {
+						if ($UseTransaction) {
+							$FullTargetPath = @($Path | Resolve-Path -UseTransaction);
+						} else {
+							$FullTargetPath = @($Path | Resolve-Path);
+						}
+					}
+				}
+				$TargetSegments = @();
+				$FullTargetPath | ForEach-Object {
+					$Parent = $_;
+					$Arr = @();
+					while ($Parent.Length -gt 0) {
+						$Arr = @($Parent | Split-Path -Leaf) + $Arr;
+						$Parent = $Parent | Split-Path -Parent;
+					}
+					$TargetSegments += (, $Arr);
+				}
+				if ($TargetSegments.Count -eq $SourceSegments.Count) {
+					for ($p = 0; $p -lt $SourceSegments.Count; $p++) {
+						$SrcArr = $SourceSegments[$p];
+						$TgtArr = $TargetSegments[$p];
+						if ($SrcArr.Count -eq $TgtArr.Count) {
+							for ($i = 0; $i -lt $SrcArr.Count; $i++) {
+								if ($SrcArr[$i] -ine $TgtArr[$i]) {
+									$Success = $false;
+									break;
+								}
+							}
+						} else {
+							$Success = $false;
+							break;
+						}
+					}
+					if (-not $Success) { break }
+				} else {
+					$Success = $false;
+					break;
+				}
+			}
+		}
+	}
+	
+	End { $Success | Write-Output }
 }

@@ -1,0 +1,125 @@
+﻿TOPIC
+    about_Erwine.Leonard.T.IOUtility
+
+SHORT DESCRIPTION
+    PowerShell I/O utility functions.
+
+LONG DESCRIPTION
+    Provides utility functions that are useful for advanced input/output functions.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    Get-SpecialFolderNames
+        Get special folder names.
+
+    Get-SpecialFolder
+        Get special folder path.
+
+    ConvertTo-SafeFileName
+        Converts a string to a usable file name / path.
+
+    ConvertFrom-SafeFileName
+        Decodes a file name back to the original text.
+
+    Get-AppDataPath
+        Get path for application data storage.
+
+    New-WindowOwner
+        Create new window owner object.
+
+    Read-FileDialog
+        Prompt user for filesystem path.
+
+    Get-MinBase64BlockSize
+        Get minimum base-64 encoding block size.
+
+    Read-IntegerFromStream
+        Read integer value from a stream.
+
+    Read-LongIntegerFromStream
+        Read long integer value from a stream.
+
+    Write-IntegerToStream
+        Write integer value to a stream.
+		
+    Write-LongIntegerToStream
+        Write long integer value to a stream.
+
+    Read-LengthEncodedBytes
+        Read length-encoded array of bytes from a stream.
+
+    Write-LengthEncodedBytes
+        Writes length-encoded data a stream.
+
+    ConvertTo-Base64String
+        Convert data buffer to base-64 encoded text.
+
+    ConvertFrom-Base64String
+        Convert base-64 encoded text to a data buffer.
+
+    Get-TextEncoding
+        Gets an instance of the Encoding class.
+
+    New-MemoryStream
+        Creates a stream whose backing store is memory.
+
+    New-DataTable
+        Creates a new DataTable object.
+
+    Add-DataColumn
+        Adds a new DataColumn object to a DataTable.
+
+    Test-IsNullOrWhitespace
+        Tests if string is null or whitespace.
+
+    Split-DelimitedText
+        Splits text by delimiter.
+
+    Out-NormalizedText
+        Normalizes text.
+
+    Out-IndentedText
+        Indents text.
+
+    Get-IndentLevel
+        Get number of times text is indented.
+
+    Out-UnindentedText
+        Removes indentation from input text.
+
+    Compare-FileSystemInfo
+        Compares 2 filesystem items.
+
+    Test-PathsAreEqual
+        Determines if 2 paths are equal.
+
+SEE ALSO
+    Get-SpecialFolderNames
+    Get-SpecialFolder
+    ConvertTo-SafeFileName
+    ConvertFrom-SafeFileName
+    Get-AppDataPath
+    New-WindowOwner
+    Read-FileDialog
+    Get-MinBase64BlockSize
+    Read-IntegerFromStream
+    Read-LongIntegerFromStream
+    Write-IntegerToStream
+    Write-LongIntegerToStream
+    Read-LengthEncodedBytes
+    Write-LengthEncodedBytes
+    ConvertTo-Base64String
+    ConvertFrom-Base64String
+    Get-TextEncoding
+    New-MemoryStream
+    New-DataTable
+    Add-DataColumn
+    Test-IsNullOrWhitespace
+    Split-DelimitedText
+    Out-NormalizedText
+    Out-IndentedText
+    Get-IndentLevel
+    Out-UnindentedText
+    Compare-FileSystemInfo
+    Test-PathsAreEqual
