@@ -31,7 +31,7 @@ namespace NetworkUtility
         protected internal override object AsSerializedValue(JavaScriptSerializer serializer)
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
-            foreach (string key in _innerDictionary.GetKeys())
+            foreach (string key in _innerDictionary.Keys)
                 result.Add(key, (_innerDictionary[key] == null) ? null : _innerDictionary[key].AsSerializedValue(serializer));
             return result;
         }
@@ -63,7 +63,7 @@ namespace NetworkUtility
             if (dictionary == null)
                 return;
             
-            foreach (string key in dictionary.GetKeys())
+            foreach (string key in dictionary.Keys)
             {
                 object o = dictionary[key];
                 if (o == null)
@@ -82,8 +82,10 @@ namespace NetworkUtility
         /// <summary>
         /// 
         /// </summary>
-        public ICollection<string> GetKeys()
-        { return _innerDictionary.GetKeys(); }
+        public ICollection<string> GetKeys() { return _innerDictionary.Keys; }
+		
+		ICollection<string> IDictionary<string,JsonValue>.Keys { get { return _innerDictionary.Keys; } }
+
         /// <summary>
         /// 
         /// </summary>

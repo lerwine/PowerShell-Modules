@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -7,8 +8,7 @@ using System.Threading;
 namespace NetworkUtility
 {
     [Serializable]
-    public class UriInfo : INotifyPropertyChanged, IEquatable<UriInfo>, IEquatable<string>,
-        IComparable<UriInfo>, IComparable<string>, IComparable, IConvertible
+    public class UriInfo : INotifyPropertyChanged, IEquatable<UriInfo>, IEquatable<string>, IComparable<UriInfo>, IComparable<string>, IComparable, IConvertible
     {
         private object _syncRoot = new object();
         private string _scheme = null;
@@ -32,7 +32,7 @@ namespace NetworkUtility
                     if ((_scheme == null) ? value == null : value != null && _scheme == value)
                         return;
                     _scheme = value;
-                    RaisePropertyChanged("scheme");
+                    RaisePropertyChanged("Scheme");
                 }
                 finally { Monitor.Exit(_syncRoot); }
             }
@@ -73,7 +73,7 @@ namespace NetworkUtility
             get
             {
                 Monitor.Enter(_syncRoot);
-                try { return (_hierarchy == null) ? null : _hierarchy.Port; }
+                try { return (_hierarchy == null) ? -1 : _hierarchy.Port; }
                 finally { Monitor.Exit(_syncRoot); }
             }
         }
@@ -88,13 +88,82 @@ namespace NetworkUtility
             }
         }
 
-        public UriHierarchy Hierarchy { get; set; }
+        public UriHierarchy Hierarchy
+        {
+            get
+            {
+                Monitor.Enter(_syncRoot);
+                try { return _hierarchy; }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    if ((_hierarchy == null) ? value == null : value != null && ReferenceEquals(_hierarchy, value))
+                        return;
+					string oldUserName = UserName, oldPassword = Password, oldHost = Host;
+					int oldPort = Port;
+					UriPathSegmentList oldPath = Path;
+					if (_hierarchy != null)
+						_hierarchy.PropertyChanged -= Hierarchy_PropertyChanged;
+                    _hierarchy = value;
+					if (value != null)
+						value.PropertyChanged += Hierarchy_PropertyChanged;
+					
+                    RaisePropertyChanged("Hierarchy");
+					if ((oldUserName == null) ? UserName != null : UserName == null || oldUserName != UserName)
+						RaisePropertyChanged("UserName");
+					if ((oldPassword == null) ? Password != null : Password == null || oldPassword != Password)
+						RaisePropertyChanged("Password");
+					if ((oldHost == null) ? Host != null : Host == null || oldHost != Host)
+						RaisePropertyChanged("Host");
+					if (oldPort != Port)
+						RaisePropertyChanged("Port");
+					if ((oldPath == null) ? Path != null : Path == null || !ReferenceEquals(oldPath, Path))
+						RaisePropertyChanged("Path");
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+        }
         
-        public UriQueryList Query { get; set; }
+        public UriQueryList Query
+        {
+            get
+            {
+                Monitor.Enter(_syncRoot);
+                try { return _query; }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    if ((_query == null) ? value == null : value != null && ReferenceEquals(_query, value))
+                        return;
+					string oldUserName = UserName, oldPassword = Password, oldHost = Host;
+					int oldPort = Port;
+					UriPathSegmentList oldPath = Path;
+					if (_query != null)
+						_query.CollectionChanged -= Query_CollectionChanged;
+                    _query = value;
+					if (value != null)
+						value.CollectionChanged += Query_CollectionChanged;
+					
+                    RaisePropertyChanged("Query");
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+        }
         
         public string Fragment { get; set; }
         
-
+		private void Hierarchy_PropertyChanged(object sender, PropertyChangedEventArgs e) { RaisePropertyChanged(e.PropertyName); }
+		
+		private void Query_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) { RaisePropertyChanged("Query"); }
+		
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void RaisePropertyChanged(string propertyName)

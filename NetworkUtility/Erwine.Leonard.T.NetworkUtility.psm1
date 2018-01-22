@@ -1249,7 +1249,7 @@ Function Get-SqlStoredProcedureColumnInfo {
 Function Test-ContentType {
 	<#
 		.SYNOPSIS
-			Check validity of content type.
+			Check validity of a content type specification.
  
 		.DESCRIPTION
 			Returns boolean value to indicate whether the content type is a recognized content type.
@@ -2074,7 +2074,7 @@ Function Write-FormUrlEncoded2 {
     }
 }
 
-Function Write-XmlData {
+Function Write-XmlResponseData {
     [CmdletBinding(DefaultParameterSetName = 'WebRequestEncoding')]
     [OutputType([string], ParameterSetName = 'String')]
     Param(
@@ -2200,7 +2200,7 @@ Function Initialize-WebRequestPostXml {
             Get-WebResponse
             
         .LINK
-            Write-FormUrlEncoded
+            Write-XmlResponseData
             
         .LINK
             https://msdn.microsoft.com/en-us/library/system.net.webresponse.aspx
