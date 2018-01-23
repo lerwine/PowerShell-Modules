@@ -547,8 +547,7 @@ Function Read-FileDialog {
                         $d = $_.Description;
                         if ($d -eq $null) { $d = $_.Label }
                         if ($d -isnot [string]) { $d = $d.ToString() }
-                        $e = $_.Extension;
-                        if ($e -eq $null) { $e = $_.Ext }
+                        $e = $_.Pattern;
                         if ($e -isnot [string]) { $e = $e.ToString() }
                         "$d|$e"
                     }
