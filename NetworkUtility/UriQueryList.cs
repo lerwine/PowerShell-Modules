@@ -186,7 +186,7 @@ namespace NetworkUtility
             }
         }
 
-        object IDictionary.this[object key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        object IDictionary.this[object key] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
         public UriQueryList()
         {
@@ -258,12 +258,12 @@ namespace NetworkUtility
 
         private void RaiseCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
-
+            throw new NotImplementedException();
         }
 
         private void RaisePropertyChanged(string propertyName)
         {
-
+            throw new NotImplementedException();
         }
 
         public int IndexOf(UriQueryItem item)
@@ -425,6 +425,34 @@ namespace NetworkUtility
         {
             throw new NotImplementedException();
         }
+
+#warning Not implemented
+
+        public int CompareTo(UriQueryList other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CompareTo(object obj) { return CompareTo(obj as UriQueryList); }
+
+        public bool Equals(UriQueryList other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj) { return Equals(obj as UriQueryList); }
+		
+		public override int GetHashCode() { return ToString().GetHashCode(); }
+		
+		public override string ToString()
+		{
+			Monitor.Enter(_syncRoot);
+			try
+			{
+				throw new NotImplementedException();
+			}
+			finally { Monitor.Exit(_syncRoot); }
+		}
 
         class KeyCollection : ICollection<string>, ICollection
         {

@@ -10,10 +10,8 @@
     [switch]$ForceRebuild
 )
 
-$csproj_name = 'LteDev.csproj';
-$module_name = 'Erwine.Leonard.T.LteDev';
-
-cls;
+$csproj_name = 'IOUtility.csproj';
+$module_name = 'Erwine.Leonard.T.IOUtility';
 
 Add-Type -AssemblyName 'Microsoft.Build', 'Microsoft.Build.Framework', 'Microsoft.Build.Utilities.v4.0' -ErrorAction Stop;
 Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath 'MsBuildLogHelper.cs') -ReferencedAssemblies 'System', 'Microsoft.Build', 'Microsoft.Build.Framework', 'Microsoft.Build.Utilities.v4.0', 'System.Management.Automation' -ErrorAction Stop;

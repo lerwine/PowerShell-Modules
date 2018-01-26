@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace NetworkUtility
 {
-    public class UriPathSegmentList : IList<string>, IList, INotifyPropertyChanged, INotifyCollectionChanged
+    public class UriPathSegmentList : IList<string>, IList, INotifyPropertyChanged, INotifyCollectionChanged, IEquatable<UriPathSegmentList>, IComparable<UriPathSegmentList>, IComparable
     {
         private static StringComparer _comparer = StringComparer.InvariantCultureIgnoreCase;
 
@@ -618,5 +618,33 @@ namespace NetworkUtility
         }
 
         IEnumerator IEnumerable.GetEnumerator() { return _segments.ToArray().GetEnumerator(); }
+
+#warning Not implemented
+
+        public int CompareTo(UriPathSegmentList other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CompareTo(object obj) { return CompareTo(obj as UriPathSegmentList); }
+
+        public bool Equals(UriPathSegmentList other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj) { return Equals(obj as UriPathSegmentList); }
+		
+		public override int GetHashCode() { return ToString().GetHashCode(); }
+		
+		public override string ToString()
+		{
+			Monitor.Enter(_syncRoot);
+			try
+			{
+				throw new NotImplementedException();
+			}
+			finally { Monitor.Exit(_syncRoot); }
+		}
     }
 }
