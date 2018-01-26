@@ -72,15 +72,15 @@
     <None Include="build-release.bat" />
     <None Include="build-test.bat" />
     <None Include="Build.ps1" />
-    <Content Include="Module\Erwine.Leonard.T.CertificateCryptography.psd1">
+    <Content Include="Erwine.Leonard.T.CertificateCryptography.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Module\Erwine.Leonard.T.CertificateCryptography.psm1">
+    <Content Include="Erwine.Leonard.T.CertificateCryptography.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Module\about_Erwine.Leonard.T.CertificateCryptography.help.txt">
+    <Content Include="about_Erwine.Leonard.T.CertificateCryptography.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -92,9 +92,9 @@
     <PostBuildEvent>del "$(TargetDir)/*.nlp"
 del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
   </PropertyGroup>
-  <Target Name="BeforeBuild">
+  <!--<Target Name="BeforeBuild">
     <ItemGroup>
-      <ExistingOutputItems Include="$(TargetDir)Module\**\*.*" />
+      <ExistingOutputItems Include="$(TargetDir)**\*.*" />
     </ItemGroup>
     <Delete Files="@(ExistingOutputItems)">
     </Delete>
@@ -102,8 +102,8 @@ del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
   </Target>
   <Target Name="AfterBuild">
     <ItemGroup>
-      <TargetOutputItems Include="$(TargetDir)**\*.*" />
+      <TargetOutputItems Include="$(TargetDir)*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(TargetOutputItems)" DestinationFolder="$(TargetDir)Module" SkipUnchangedFiles="false" Condition=" '%(Identity.Substring(0, 7))' != 'Module\' and '%(Extension)' != '.tmp' " />
-  </Target>
+    <Copy SourceFiles="@(TargetOutputItems)" DestinationFolder="$(TargetDir)Module" SkipUnchangedFiles="false" Condition=" '%(Identity.Substring(0, 7))' != '' and '%(Extension)' != '.tmp' " />
+  </Target>-->
 </Project>

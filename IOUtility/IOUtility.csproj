@@ -61,6 +61,7 @@
     <Compile Include="IPSEventScriptHandler.cs" />
     <Compile Include="IPSInvocationContext.cs" />
     <Compile Include="LinqEmul.cs" />
+    <None Include="MSBuildLogHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSEventScriptHandler.cs" />
     <Compile Include="PSInvocationContext.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
+    <None Include="UriHelper.cs" />
     <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,12 +87,21 @@
     <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="build-debug.bat" />
+    <None Include="build-deploy.bat" />
+    <None Include="build-release.bat" />
+    <None Include="build-test.bat" />
+    <None Include="Build.ps1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="KnownMimeTypes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="TestScripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

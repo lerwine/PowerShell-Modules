@@ -256,7 +256,7 @@
     <Compile Include="XsdTypeGen\maml\token.cs" />
     <Compile Include="XsdTypeGen\maml\ui.cs" />
     <Compile Include="XsdTypeGen\maml\userInput.cs" />
-    <Compile Include="MSBuildLogHelper.cs" />
+    <None Include="MSBuildLogHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -451,6 +451,7 @@
     <None Include="build-release.bat" />
     <None Include="build-test.bat" />
     <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
+    <None Include="Untitled11.ps1" />
     <None Include="WindowsFormsHelper.ps1" />
   </ItemGroup>
   <ItemGroup>

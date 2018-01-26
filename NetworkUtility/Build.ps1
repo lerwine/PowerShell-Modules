@@ -9,6 +9,7 @@ Param(
 
     [switch]$ForceRebuild
 )
+# Build targeting packs can be downloaded from https://www.microsoft.com/net/download/visual-studio-sdks
 
 $csproj_name = 'NetworkUtility.csproj';
 $module_name = 'Erwine.Leonard.T.NetworkUtility';

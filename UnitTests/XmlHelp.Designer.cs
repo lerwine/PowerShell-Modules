@@ -109,13 +109,15 @@ namespace UnitTests {
         ///        &lt;name&gt;Erwine.Leonard.T.LteDevLib&lt;/name&gt;
         ///    &lt;/assembly&gt;
         ///    &lt;members&gt;
-        ///        &lt;!-- Badly formed XML comment ignored for member &quot;P:LteDev.HelpXml.CmdletHelpExporter.CurrentHelpElement&quot; --&gt;
         ///        &lt;member name=&quot;T:LteDev.Commands.Get_PSHelpXml&quot;&gt;
         ///            &lt;summary&gt;
         ///            Generates PowerShell help file from module information.
         ///            &lt;/summary&gt;
         ///            &lt;description&gt;
-        ///            Gets information from the PowerShell module, including [rest of string was truncated]&quot;;.
+        ///            Gets information from the PowerShell module, including the DLL files, if the module is binary.
+        ///            &lt;/description&gt;
+        ///        &lt;/member&gt;
+        ///        &lt;member name=&quot;P:LteDev [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Erwine_Leonard_T_LteDevLib {
             get {
