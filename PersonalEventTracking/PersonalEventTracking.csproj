@@ -1,14 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AC556AFD-A2DC-4AEE-A79F-583F54F7B17F}</ProjectGuid>
+    <ProjectGuid>{14148499-5C05-4E58-8111-2B806785FD6E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IOUtility</RootNamespace>
-    <AssemblyName>Erwine.Leonard.T.IOUtilityLib</AssemblyName>
+    <RootNamespace>PersonalEventTracking</RootNamespace>
+    <AssemblyName>Erwine.Leonard.T.PersonalEventTracking</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Erwine.Leonard.T.IOUtilityLib.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Erwine.Leonard.T.PersonalEventTracking.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Erwine.Leonard.T.IOUtilityLib.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Erwine.Leonard.T.PersonalEventTracking.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,48 +57,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DecodeRegexReplaceHandler.cs" />
-    <Compile Include="EncodeRegexReplaceHandler.cs" />
-    <Compile Include="IPSEventScriptHandler.cs" />
-    <Compile Include="IPSInvocationContext.cs" />
-    <Compile Include="LinqEmul.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PSEventScriptHandler.cs" />
-    <Compile Include="PSInvocationContext.cs" />
-    <Compile Include="PSInvocationEventHandlerInvokedArgs.cs" />
-    <Compile Include="PSInvocationEventResult.cs" />
-    <Compile Include="PSInvocationResult.cs" />
-    <Compile Include="ReadOnlyDictionary.cs" />
-    <Compile Include="RegexReplaceHandler.cs" />
-    <Compile Include="RegularExpressions.cs" />
-    <Compile Include="ScriptRegexReplaceHandler.cs" />
-    <Compile Include="StreamHelper.cs" />
-    <Compile Include="TextHelper.cs" />
+    <Compile Include="CalendarEventDefinition.cs" />
+    <Compile Include="EventDefinitionBase.cs" />
+    <Compile Include="IntervalRecurranceDefinition.cs" />
+    <Compile Include="RecurranceDefinition.cs" />
+    <Compile Include="SerialRecurranceDefinition.cs" />
+    <Compile Include="TaskDefinition.cs" />
+    <Compile Include="TaskState.cs" />
+    <Compile Include="TaskStateChangeEventArgs.cs" />
+    <Compile Include="TaskStateChangingEventArgs.cs" />
     <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Erwine.Leonard.T.IOUtility.psd1">
+    <Content Include="PersonalEventTracking.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Erwine.Leonard.T.IOUtility.psm1">
+    <Content Include="PersonalEventTracking.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt">
+    <Content Include="about_PersonalEventTracking.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="MSBuildLogHelper.cs" />
     <None Include="build-debug.bat" />
     <None Include="build-deploy.bat" />
     <None Include="build-release.bat" />
     <None Include="build-test.bat" />
     <None Include="Build.ps1" />
     <None Include="README.md" />
-    <None Include="MSBuildLogHelper.cs" />
-    <None Include="UriHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="KnownMimeTypes.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />

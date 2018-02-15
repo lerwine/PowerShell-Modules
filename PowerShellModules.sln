@@ -112,6 +112,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSModuleProjectTemplate", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertificateCryptography", "CertificateCryptography\CertificateCryptography.csproj", "{72FCF08B-AEA8-4965-9CBE-CC9D213B2F03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalEventTracking", "PersonalEventTracking\PersonalEventTracking.csproj", "{14148499-5C05-4E58-8111-2B806785FD6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -629,6 +631,24 @@ Global
 		{72FCF08B-AEA8-4965-9CBE-CC9D213B2F03}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
 		{72FCF08B-AEA8-4965-9CBE-CC9D213B2F03}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{72FCF08B-AEA8-4965-9CBE-CC9D213B2F03}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.DebugPS2|Any CPU.ActiveCfg = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.DebugPS2|Any CPU.Build.0 = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.DebugPS3|Any CPU.ActiveCfg = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.DebugPS3|Any CPU.Build.0 = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.ReleasePS2|Any CPU.ActiveCfg = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.ReleasePS2|Any CPU.Build.0 = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.ReleasePS3|Any CPU.ActiveCfg = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.ReleasePS3|Any CPU.Build.0 = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{14148499-5C05-4E58-8111-2B806785FD6E}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
