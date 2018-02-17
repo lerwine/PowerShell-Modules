@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -462,18 +464,11 @@
     <PostBuildEvent>del "$(TargetDir)/*.nlp"
 del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
   </PropertyGroup>
-  <!--<Target Name="BeforeBuild">
-    <ItemGroup>
-      <ExistingOutputItems Include="$(TargetDir)**\*.*" />
-    </ItemGroup>
-    <Delete Files="@(ExistingOutputItems)">
-    </Delete>
-    <RemoveDir Directories="$(TargetDir)Module" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-    <ItemGroup>
-      <TargetOutputItems Include="$(TargetDir)*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(TargetOutputItems)" DestinationFolder="$(TargetDir)Module" SkipUnchangedFiles="false" Condition=" '%(Identity.Substring(0, 7))' != '' and '%(Extension)' != '.tmp' " />
-  </Target>-->
+  </Target>
+  -->
 </Project>

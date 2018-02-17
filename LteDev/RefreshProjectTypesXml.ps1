@@ -1,4 +1,5 @@
-﻿$t=@'
+﻿$ProjectTypesPath = $PSScriptRoot | Join-Path -ChildPath 'VsProjectTypes.xml';
+$t=@'
 Windows (C#) {FAE04EC0-301F-11D3-BF4B-00C04F79EFBC} 
 Windows (VB.NET) {F184B08F-C81C-45F6-A57F-5ABD9991F28F} 
 Windows (Visual C++) {8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942} 
@@ -403,73 +404,75 @@ $ProjectTypes = @{
 #>
 
 $vsk = [Microsoft.Win32.Registry]::Users.OpenSubKey('.DEFAULT\Software\Microsoft\VisualStudio');
-$vsk.GetSubKeyNames() | ForEach-Object {
-    $vk = $vsk.OpenSubKey($_);
-    if ($vk.GetSubKeyNames() -contains 'Projects') {
-        $prjck = $vk.OpenSubKey('Projects');
-        $prjck.GetSubKeyNames() | ForEach-Object {
-            $prjk = $prjck.OpenSubKey($_);
+if ($vsk -ne $null) {
+    $vsk.GetSubKeyNames() | ForEach-Object {
+        $vk = $vsk.OpenSubKey($_);
+        if ($vk.GetSubKeyNames() -contains 'Projects') {
+            $prjck = $vk.OpenSubKey('Projects');
+            $prjck.GetSubKeyNames() | ForEach-Object {
+                $prjk = $prjck.OpenSubKey($_);
             
-            $d = $prjk.GetValue('DisplayName');
-            $l = $prjk.GetValue('Language(VsTemplate)');
-            $k = $prjk.GetValue('');
-            if ($k -eq $null) { $k = $_ }
-            if ([string]::IsNullOrEmpty($d)) {
-                if ([string]::IsNullOrEmpty($l)) { $d = $k } else { $d = $l }
-            }
-            $pg = [Guid]::Empty;
-            $s = $prjk.GetValue('Package');
-            if (-not [string]::IsNullOrEmpty($s)) {
-                [Guid]$pg = $s;
-            }
-            [Guid]$g = $_;
-            $v = $g.ToString();
-            $e=$x.DocumentElement.SelectSingleNode("ProjectType[@Guid='$v']");
-            if($e -eq $null){
-                $e=$x.DocumentElement.AppendChild($x.CreateElement('ProjectType'));
-                $e.Attributes.Append($x.CreateAttribute('Key')).Value=$k;
-                $e.Attributes.Append($x.CreateAttribute('Guid')).Value=$v;
-                $e.Attributes.Append($x.CreateAttribute('Description')).Value=$d;
-                if (-not [string]::IsNullOrEmpty($l)) { $e.Attributes.Append($x.CreateAttribute('Language')).Value=$l }
-                if (-not ($pg.Equals([Guid]::Empty) -or $pg.Equals($g))) { $e.Attributes.Append($x.CreateAttribute('Package')).Value=$pg.ToString() }
-            }else{
-                $n=$e.AppendChild($x.CreateElement('AltDescription'));
-                $n.Attributes.Append($x.CreateAttribute('Key')).Value=$k;
-                if (-not [string]::IsNullOrEmpty($l)) { $n.Attributes.Append($x.CreateAttribute('Language')).Value=$l }
-                if (-not ($pg.Equals([Guid]::Empty) -or $pg.Equals($g))) { $n.Attributes.Append($x.CreateAttribute('Package')).Value=$pg.ToString() }
-                $n.InnerText=$ProjectTypes[$k].Description;
-            }
-            $dpe = $prjk.GetValue('DefaultProjectExtension');
-            $a = $e.SelectSingleNode('Extension');
-            if ([string]::IsNullOrEmpty($dpe)) {
-                if ($a -eq $null) { $dpe = '' } else { $dpe = $a.Value }
-            } else {
-                if (-not $dpe.StartsWith('.')) { $dpe = ".$dpe" }
-                if($a -ne $null){
-                    if ($a.Value -ine $dpe) {
-                        $e.AppendChild($x.CreateElement('AltExt')).InnerText = $dpe;
-                        $dpe = $a.Value;
-                    }
+                $d = $prjk.GetValue('DisplayName');
+                $l = $prjk.GetValue('Language(VsTemplate)');
+                $k = $prjk.GetValue('');
+                if ($k -eq $null) { $k = $_ }
+                if ([string]::IsNullOrEmpty($d)) {
+                    if ([string]::IsNullOrEmpty($l)) { $d = $k } else { $d = $l }
+                }
+                $pg = [Guid]::Empty;
+                $s = $prjk.GetValue('Package');
+                if (-not [string]::IsNullOrEmpty($s)) {
+                    [Guid]$pg = $s;
+                }
+                [Guid]$g = $_;
+                $v = $g.ToString();
+                $e=$x.DocumentElement.SelectSingleNode("ProjectType[@Guid='$v']");
+                if($e -eq $null){
+                    $e=$x.DocumentElement.AppendChild($x.CreateElement('ProjectType'));
+                    $e.Attributes.Append($x.CreateAttribute('Key')).Value=$k;
+                    $e.Attributes.Append($x.CreateAttribute('Guid')).Value=$v;
+                    $e.Attributes.Append($x.CreateAttribute('Description')).Value=$d;
+                    if (-not [string]::IsNullOrEmpty($l)) { $e.Attributes.Append($x.CreateAttribute('Language')).Value=$l }
+                    if (-not ($pg.Equals([Guid]::Empty) -or $pg.Equals($g))) { $e.Attributes.Append($x.CreateAttribute('Package')).Value=$pg.ToString() }
                 }else{
-                    $e.Attributes.Append($x.CreateAttribute('Extension')).Value=$dpe;
+                    $n=$e.AppendChild($x.CreateElement('AltDescription'));
+                    $n.Attributes.Append($x.CreateAttribute('Key')).Value=$k;
+                    if (-not [string]::IsNullOrEmpty($l)) { $n.Attributes.Append($x.CreateAttribute('Language')).Value=$l }
+                    if (-not ($pg.Equals([Guid]::Empty) -or $pg.Equals($g))) { $n.Attributes.Append($x.CreateAttribute('Package')).Value=$pg.ToString() }
+                    $n.InnerText=$ProjectTypes[$k].Description;
                 }
-            }
-            $ape = $prjk.GetValue('PossibleProjectExtensions');
-            if (-not [string]::IsNullOrEmpty($ape)) {
-                $ape.Split(';') | ForEach-Object {
-                    $s = $_;
-                    if (-not $s.StartsWith('.')) { $s = ".$s" }
-                    if ($s -ine $dpe -and $e.SelectSingleNode("AltExt[.='$s']") -eq $null) { $e.AppendChild($x.CreateElement('AltExt')).InnerText = $s }
+                $dpe = $prjk.GetValue('DefaultProjectExtension');
+                $a = $e.SelectSingleNode('Extension');
+                if ([string]::IsNullOrEmpty($dpe)) {
+                    if ($a -eq $null) { $dpe = '' } else { $dpe = $a.Value }
+                } else {
+                    if (-not $dpe.StartsWith('.')) { $dpe = ".$dpe" }
+                    if($a -ne $null){
+                        if ($a.Value -ine $dpe) {
+                            $e.AppendChild($x.CreateElement('AltExt')).InnerText = $dpe;
+                            $dpe = $a.Value;
+                        }
+                    }else{
+                        $e.Attributes.Append($x.CreateAttribute('Extension')).Value=$dpe;
+                    }
                 }
+                $ape = $prjk.GetValue('PossibleProjectExtensions');
+                if (-not [string]::IsNullOrEmpty($ape)) {
+                    $ape.Split(';') | ForEach-Object {
+                        $s = $_;
+                        if (-not $s.StartsWith('.')) { $s = ".$s" }
+                        if ($s -ine $dpe -and $e.SelectSingleNode("AltExt[.='$s']") -eq $null) { $e.AppendChild($x.CreateElement('AltExt')).InnerText = $s }
+                    }
+                }
+                $prjk.Close();
             }
-            $prjk.Close();
+            $prjck.Close();
         }
-        $prjck.Close();
-    }
-    $vk.Close();
+        $vk.Close();
 
-}
-$vsk.Close();
+    }
+    $vsk.Close();
+};
 
 foreach ($k in $ProjectTypes.Keys){
     [guid]$g=$ProjectTypes[$k].Guid;
@@ -484,13 +487,13 @@ foreach ($k in $ProjectTypes.Keys){
         if($ProjectTypes[$k].IsPrimary){
             $a1=$e.SelectSingleNode('@Description');
             $a2=$e.SelectSingleNode('@Key');
-            $n=$e.AppendChild($x.CreateElement('AltDescription_x'));
+            $n=$e.AppendChild($x.CreateElement('AltDescription'));
             $n.Attributes.Append($x.CreateAttribute('Key')).Value=$a2.Value;
             $n.InnerText=$a1.Value;
             $a1.Value=$ProjectTypes[$k].Description;
             $a2.Value=$k;
         }else{
-            $n=$e.AppendChild($x.CreateElement('AltDescription_y'));
+            $n=$e.AppendChild($x.CreateElement('AltDescription'));
             $n.Attributes.Append($x.CreateAttribute('Key')).Value=$k;
             $n.InnerText=$ProjectTypes[$k].Description;
         }
@@ -498,7 +501,7 @@ foreach ($k in $ProjectTypes.Keys){
     if ($ProjectTypes[$k].Extension -ne $null){
         $a = $e.SelectSingleNode('Extension');
         if ($a -eq $null) { $e.Attributes.Append($x.CreateAttribute('Extension')).Value=$ProjectTypes[$k].Extension; } else {
-            if ($ProjectTypes[$k].Extension -ine $a.Value) { $e.AppendChild($x.CreateElement('AltExt_y')).InnerText = $ProjectTypes[$k].Extension }
+            if ($ProjectTypes[$k].Extension -ine $a.Value) { $e.AppendChild($x.CreateElement('AltExt')).InnerText = $ProjectTypes[$k].Extension }
         }
 
     }
@@ -514,7 +517,6 @@ $e.Attributes.Append($x.CreateAttribute('Description')).Value=$_.substring(0,$i)
 }}
 $ws=new-object -typename 'System.Xml.XmlWriterSettings'
 $ws.Indent=$true;
-$w=[System.Xml.XmlWriter]::Create('E:\Visual Studio 2015\Projects\PowerShell-Modules\master\LteDev\Module\VsProjectTypes.xml',$ws);
+$w=[System.Xml.XmlWriter]::Create($ProjectTypesPath,$ws);
 $x.WriteTo($w);$w.Flush();
-
 $w.Close();

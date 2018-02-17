@@ -5,7 +5,7 @@ SHORT DESCRIPTION
     PowerShell I/O utility functions.
 
 LONG DESCRIPTION
-    Provides utility functions that are useful for advanced input/output functions.
+    Provides utility functions that are useful for advanced input/output operations.
 
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:

@@ -2,10 +2,10 @@
     about_Erwine.Leonard.T.LteDev
 
 SHORT DESCRIPTION
-    PowerShell Dev utility functions.
+    PowerShell PowerShell development utility functions.
 
 LONG DESCRIPTION
-    Provides utility functions that are useful when developing PowerShell scripts.
+    Provides utility functions that are useful when developing PowerShell scripts and modules.
 
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:

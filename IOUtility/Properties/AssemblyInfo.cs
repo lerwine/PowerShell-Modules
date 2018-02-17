@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("IOUtility")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("IOUtility CLR Library")]
+[assembly: AssemblyDescription("Supporting CLR Library for PowerShell Module Erwine.Leonard.T.IOUtility")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("IOUtility")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCompany("Leonard T. Erwine")]
+[assembly: AssemblyProduct("PowerShell Module Erwine.Leonard.T.IOUtility")]
+[assembly: AssemblyCopyright("Copyright © Leonard Thomas Erwine 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
