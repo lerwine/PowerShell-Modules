@@ -67,10 +67,10 @@ if ($m.Success) { "globalContent: `"$($m.Groups['globalContent'].Value)`"" }
 
 #>
 
-if ($VsProjectGuids -eq $null) {
+if ($Script:VsProjectGuids -eq $null) {
     $XmlDocument = [System.Xml.XmlDocument]::new();
     $XmlDocument.Load(($PSScriptRoot | Join-Path -ChildPath 'LteDev\VsProjectTypes.xml'));
-    $VsProjectGuids = @{};
+    $Script:VsProjectGuids = @{};
     $XmlDocument.SelectNodes('/VsProjectTypes/ProjectType') | ForEach-Object {
         $Properties = @{
             Guid = [Guid]::Parse($_.SelectSingleNode('@Guid').Value);
@@ -87,37 +87,405 @@ if ($VsProjectGuids -eq $null) {
             }
         }
         $Item = New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
-        if (-not $VsProjectGuids.ContainsKey($Item.Guid)) {
-            $VsProjectGuids[$Item.Guid] = [System.Collections.ObjectModel.Collection[System.Management.Automation.PSObject]]::new();
+        if (-not $Script:VsProjectGuids.ContainsKey($Item.Guid)) {
+            $Script:VsProjectGuids[$Item.Guid] = [System.Collections.ObjectModel.Collection[System.Management.Automation.PSObject]]::new();
         }
-        $VsProjectGuids[$Item.Guid].Add($Item);
+        $Script:VsProjectGuids[$Item.Guid].Add($Item);
     }
 }
 
+Function Test-Proiect {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Guid]$TypeGuid,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        
+        [Parameter(Mandatory = $true)]
+        [System.Guid]$ProjectGuid
+    )
+    
+    $FullProjectPath = $PSScriptRoot | Join-Path -ChildPath $Path;
+    $IsCsProject = $false;
+    $ProjectDescription = "{$($Item.ProjectGuid)} Project";
+    $Issues = @();
+    if (-not $Script:VsProjectGuids.ContainsKey($TypeGuid)) {
+        "Unknown project type Guid";
+    } else {
+        $IsCsProject = (@($Script:VsProjectGuids[$TypeGuid] | Where-Object { $_.Extensions -icontains '.csproj' }).Count -gt 0);
+        $ProjectDescription = ($Script:VsProjectGuids[$TypeGuid] | ForEach-Object { $_.Description }) -join ' / ';
+    }
+    if (-not ($FullProjectPath | Test-Path -PathType Leaf)) {
+        "Project file $Path not found.";
+        return;
+    }
+    try { $Project = [Microsoft.Build.Evaluation.Project]::new($FullProjectPath) }
+    catch {
+        "Failed to load project file $Path`: $_.";
+        return;
+    }
+    if ($Project -eq $null) {
+        "Failed to load project file $Path.";
+        return;
+    }
+    $Project.ReevaluateIfNecessary();
+    $OutputPath = $Project.GetProperty('OutputPath').UnevaluatedValue;
+    $AssemblyName = $Project.GetProperty('AssemblyName').UnevaluatedValue;
+    $p = $Project.GetProperty('DefineConstants');
+    $DefineConstants = @();
+    if ($p -ne $null -and $p.UnevaluatedValue.Length -gt 0) {
+        $DefineConstants = @($p.UnevaluatedValue.split(';') | ForEach-Object { $_.Trim() } | Where-Object { $_.Length -gt 0 });
+    }
+    $OutputType = $Project.GetProperty('OutputType').UnevaluatedValue;
+    $ProjectDir = $Project.GetPropertyValue('ProjectDir');
+    Test-PropertyValue -Project $Project -Name 'PostBuildEvent' -Expected @'
+del "$(TargetDir)/*.nlp"
+del "$(TargetDir)/mscorlib.dll"
+'@;
+    Test-PropertyValue -Project $Project -Name 'ProjectGuid' -Expected $Item.ProjectGuid.ToString('B');
+    Test-PropertyValue -Project $Project -Name 'Configuration' -Expected '';
+    Test-PropertyValue -Project $Project -Name 'AppDesignerFolder' -Expected 'Properties';
+    Test-PropertyValue -Project $Project -Name 'TargetFrameworkVersion' -Expected 'v4.6';
+    Test-PropertyValue -Project $Project -Name 'DocumentationFile' -Expected "$OutputPath$AssemblyName.XML";
+    Test-PropertyValue -Project $Project -Name 'CodeAnalysisRuleSet' -Expected 'MinimumRecommendedRules.ruleset';
+    $Items = $Project.GetItems('Content');
+    $ExpectedItems = @();
+    $ModuleManifestItems = @($Items | Where-Object { $_.UnevaluatedInclude.EndsWith('.psd1') });
+    $ScriptModuleItems = @($Items | Where-Object { $_.UnevaluatedInclude.EndsWith('.psm1') });
+    $ScriptModuleInfo = @{};
+    $ModuleManifestItems | ForEach-Object {
+        $bn = $_.UnevaluatedInclude.Substring(0, $_.UnevaluatedInclude.Length - 4);
+        $p = "about_$bn.help";
+        $ExpectedItems += @(
+            @{ Include = $_.UnevaluatedInclude; Type = 'Content'; CopyToOutputDirectory = 'Always' }
+            @{ Include = "about_$bn.help"; Type = 'Content'; CopyToOutputDirectory = 'Always' }
+        );
+    }
+    $ScriptModuleItems | ForEach-Object {
+        $ExpectedItems += @(
+            @{ Include = $_.UnevaluatedInclude; Type = 'Content'; CopyToOutputDirectory = 'Always' }
+        );
+        $mmp = $_.UnevaluatedInclude.Substring(0, $_.UnevaluatedInclude.Length - 4) + '.psd1';
+        if (@($ExpectedItems | Where-Object { $_.Include -eq $mmp }).Count -eq 0) {
+            @{ Include = $mmp; Type = 'Content'; CopyToOutputDirectory = 'Always' }
+        }
+    }
+    $ExpectedItems += @(@{ Include = 'Build.ps1'; Type = 'None' });
+    if ($Project.GetPropertyValue('MSBuildProjectName') -ne 'LteDev') {
+        $ExpectedItems += @(@{ Include = 'MSBuildLogHelper.cs'; Type = 'None' });
+    } else {
+        $ExpectedItems += @(@{ Include = 'MSBuildLogHelper.cs'; Type = 'Compile' });
+    }
+    
+    $ByType = $ExpectedItems | Group-Object -Property 'Type' -AsHashTable;
+    ($ByType.Keys) | ForEach-Object {
+        $ExpectedItems += @(
+            @{ Include = $_.UnevaluatedInclude; Type = 'Content'; CopyToOutputDirectory = 'Always' }
+        );
+        $bn = $_.UnevaluatedInclude.Substring(0, $_.UnevaluatedInclude.Length - 4);
+        $mmp = "$bn.psd1";
+        if (@($ModuleManifestItems | Where-Object { $_.UnevaluatedInclude -eq $mm}).Count -eq 0) {
+            $Issues += "Module manifest $mmp not in project.";
+        } else {
+            $mle = $null;
+            $mm = $null;
+            $mm = Test-ModuleManifest -Path ($ProjectDir | Join-Path -ChildPath $mpp) -ErrorAction Continue -ErrorVariable 'mle';
+            if ($mle -ne $null) {
+                $Issues += "Errer loading Module manifest $mmp`: $mle";
+            } else {
+                if ($mm -eq $null) {
+                    $Issues += "Errer loading Module manifest $mmp`: faiked to load";
+                } else {
+                    $ScriptModuleInfo[$mmp] = $mm;
+                }
+            }
+        }
+    }
+
+}
+
+Function Test-BinaryProject {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [Microsoft.Build.Evaluation.Project]$Project,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true)]
+        [System.Guid]$Guid,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Description,
+        
+        [Parameter(Mandatory = $true)]
+        [bool]$IsCsProject
+    )
+}
+
+Function Test-ScriptProject {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [Microsoft.Build.Evaluation.Project]$Project,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true)]
+        [System.Guid]$Guid,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Description,
+        
+        [Parameter(Mandatory = $true)]
+        [bool]$IsCsProject
+    )
+}
+
+Function Test-PropertyValue {
+    Param(
+        [Parameter(Mandatory = $true)]
+        [Microsoft.Build.Evaluation.Project]$Project,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [string[]]$Expected,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Pattern')]
+        [string]$Pattern,
+
+        [Parameter(ParameterSetName = 'Pattern')]
+        [System.Text.RegularExpressions.RegexOptions[]]$Options,
+        
+        [Parameter(ParameterSetName = 'Pattern')]
+        [switch]$AllowNulls,
+        
+        [Parameter(ParameterSetName = 'Explicit')]
+        [switch]$CaseSensitive,
+        
+        [switch]$EvaluatedValue
+    )
+
+    $Value = $null;
+    $P = $Project.GetProperty($Name);
+    if ($P -ne $null) {
+        if ($EvaluatedValue) {
+            $Value = $P.EvaluatedValue;
+        } else {
+            $Value = $P.UnevaluatedValue;
+        }
+    }
+    $av = '';
+    $es = '';
+    if ($Value -eq $null) {
+                $av = 'null';
+            } else {
+                $av = "`"$($Value -replace '\"', '\"')`"";
+            }
+    $IsMatch = $false;
+    if ($PsCmdlet.ParameterSetName -eq 'Explicit') {
+        $es = ($Expected | ForEach-Object { if ($_ -eq $null) {
+                'null';
+            } else {
+                "`"$($_ -replace '\"', '\"')`"";
+            } }) -join ', ';
+        if ($Expected.Length -gt 1) { $es = "Any of ($es)" }
+        if  ($Value -eq $null) {
+            $IsMatch = (@($Expected | Where-Object { $_ -eq $null }).Count -gt 0);
+        } else {
+            if ($CaseSensitive) {
+                $IsMatch = (@($Expected | Where-Object { $_ -ne $null -and $_ -ceq $Value }).Count -gt 0);
+            } else {
+                $IsMatch = (@($Expected | Where-Object { $_ -ne $null -and $_ -ceq $Value }).Count -gt 0);
+            }
+        }
+    } else {
+        $es = ($Pattern | ForEach-Object { "`"$($_ -replace '\"', '\"')`"" }) -join ', ';
+        if ($Expected.Length -gt 1) { $es = "Matching any of ($es)" } else { $es = "Matching $es" }
+        if  ($Value -eq $null) {
+            $IsMatch = $AllowNulls;
+        } else {
+            if ($PSBoundParameters.ContainsKey('Options')) {
+                $o = [System.Text.RegularExpressions.RegexOptions]::None;
+                $Options | ForEach-Object { [System.Text.RegularExpressions.RegexOptions]$o = $o -bor $_ }
+                $IsMatch = (@($Pattern | Where-Object { [System.Text.RegularExpressions.Regex]::IsMatch($Value, $_, $o) }).Count -gt 0);
+            } else {
+                $IsMatch = (@($Pattern | Where-Object { [System.Text.RegularExpressions.Regex]::IsMatch($Value, $_) }).Count -gt 0);
+            }
+        }
+    }
+    if (-not $IsMatch) {
+        "$($Project.GetPropertyValue('MSBuildProjectName')): Property $Name` Expected: $es; Actual: $av";
+    }
+}
+
+[Microsoft.Build.Evaluation.ProjectCollection]::GlobalProjectCollection.UnloadAllProjects();
 $FullPattern = "$StartOfNewLine($ProjectPattern|$GlobalPattern|$KeyValuePairPattern|[^\r\n]+)[ \t]*";
 $Regex = [System.Text.RegularExpressions.Regex]::new($FullPattern, ([System.Text.RegularExpressions.RegexOptions]::Compiled -bor [System.Text.RegularExpressions.RegexOptions]::IgnoreCase));
 $MatchCollection = $Regex.Matches($SlnContent);
-$MatchCollection.Count;
 $MatchCollection | ForEach-Object {
     if ($_.Groups['typeGuid'].Success) {
-        Write-Debug -Message "typeGuid: `"$($_.Groups['typeGuid'].Value)`"; projectName: `"$($_.Groups['projectName'].Value)`"; projectPath: `"$($_.Groups['projectPath'].Value)`"; projectGuid: `"$($_.Groups['projectGuid'].Value)`"; content.Length: `"$($_.Groups['content'].Length)`"";
-        $TypeGuid = [Guid]::Parse($_.Groups['typeGuid'].Value);
-        $ProjectGuid = [Guid]::Parse($_.Groups['projectGuid'].Value);
-        $ProjectName = $_.Groups['projectName'].Value;
-        $ProjectPath = $_.Groups['projectPath'].Value;
-        $FullProjectPath = $PSScriptRoot | Join-Path -ChildPath $ProjectPath;
-        $IsCsProject = $false;
-        $ProjectDescription = "$ProjectGuid Project";
-        if (-not $VsProjectGuids.ContainsKey($TypeGuid)) {
-            Write-Warning -Message "Unknown project type guid: $TypeGUid";
-        } else {
-            $IsCsProject = (@($VsProjectGuids[$TypeGuid] | Where-Object { $_.Extensions -icontains '.csproj' }).Count -gt 0);
-            $ProjectDescription = ($VsProjectGuids[$TypeGuid] | ForEach-Object { $_.Description }) -join ' / ';
-        }
         if ($FullProjectPath | Test-Path -PathType Leaf) {
-            [Microsoft.Build.Project]
+            $Project = [Microsoft.Build.Evaluation.Project]::new($FullProjectPath);
+            if ($Project -eq $null) {
+                $Issues += "Failed to load project file.";
+            } else {
+                $Project.ReevaluateIfNecessary();
+                Test-Proiect -Project $Project -Description $ProjectDescription -IsCsProject $IsCsProject -Guid $Item.ProjectGuid -Name $Item.ProjectName;
+                $OutputPath = $Project.GetProperty('OutputPath').UnevaluatedValue;
+                $AssemblyName = $Project.GetProperty('AssemblyName').UnevaluatedValue;
+                $AssemblyName = $Project.GetProperty('AssemblyName').UnevaluatedValue;
+                $OutputType = $Project.GetProperty('OutputType').UnevaluatedValue;
+                $ProjectDir = $Project.GetPropertyValue('ProjectDir');
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'PostBuildEvent' -Expected @'
+del "$(TargetDir)/*.nlp"
+del "$(TargetDir)/mscorlib.dll"
+'@);
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'ProjectGuid' -Expected $Item.ProjectGuid.ToString('B'));
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'Configuration' -Expected '';
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'AppDesignerFolder' -Expected 'Properties';
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'TargetFrameworkVersion' -Expected 'v4.6';
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'DocumentationFile' -Expected "$OutputPath$AssemblyName.XML";
+                $Issues += @(Test-PropertyValue -Project $Project -Name 'CodeAnalysisRuleSet' -Expected 'MinimumRecommendedRules.ruleset';
+                $Items = $Project.GetItems('Content');
+                $ModuleManifestItems = @($Items | Where-Object { $_.UnevaluatedInclude.EndsWith('.psd1') });
+                $ScriptModuleItems = @($Items | Where-Object { $_.UnevaluatedInclude.EndsWith('.psm1') });
+                $ScriptModuleInfo = @{};
+                $ModuleManifestItems | ForEach-Object {
+                    $bn = $_.UnevaluatedInclude.Substring(0, $_.UnevaluatedInclude.Length - 4);
+                    $p = "about_$bn.help";
+                    if (@($Items | Where-Object { $_.UnevaluatedInclude -eq $p}).Count -eq 0) {
+                        $Issues += "Module overview help file $p not in project.";
+                    }
+                }
+                $ScriptModuleItems | ForEach-Object {
+                    $bn = $_.UnevaluatedInclude.Substring(0, $_.UnevaluatedInclude.Length - 4);
+                    $mmp = "$bn.psd1";
+                    if (@($ModuleManifestItems | Where-Object { $_.UnevaluatedInclude -eq $mm}).Count -eq 0) {
+                        $Issues += "Module manifest $mmp not in project.";
+                    } else {
+                        $mle = $null;
+                        $mm = $null;
+                        $mm = Test-ModuleManifest -Path ($ProjectDir | Join-Path -ChildPath $mpp) -ErrorAction Continue -ErrorVariable 'mle';
+                        if ($mle -ne $null) {
+                            $Issues += "Errer loading Module manifest $mmp`: $mle";
+                        } else {
+                            if ($mm -eq $null) {
+                                $Issues += "Errer loading Module manifest $mmp`: faiked to load";
+                            } else {
+                                $ScriptModuleInfo[$mmp] = $mm;
+                            }
+                        }
+                    }
+                }
+                if ($OutputType -eq 'Library') {
+                    if ($ModuleManifestItems.Count -gt 0) {
+                        $Items = $Project.GetItems('Reference');
+                        $Matching = @($Items | Where-Object { $_.UnevaluatedInclude.StartsWith('System.Management.Automation') });
+                        if ($Matching.Count -eq 0) {
+                            $Issues += "No reference to System.Management.Automation.";
+                        } else {
+                            $Assembly = [PSObject].Assembly;
+                            $Expected = "$($Assembly.FullName), processorArchitecture=MSI";
+                            $Actual = $Matching[0].UnevaluatedInclude;
+                            if ($Actual -ne $Assembly.FullName -and $Actual -ne $Expected) {
+                                $Issues += "$($Assembly.GetName().Name) reference expected: $Expected; Actual: $Actual";
+                            } else {
+                                $md = $Matching[0].DirectMetadata['SpecificVersion'];
+                                if ($md -eq $null) {
+                                    $Issues += "SpecificVersion for $($Assembly.GetName().Name) reference expected: False; Actual not defined";
+                                } else {
+                                    if ($md.UnevaluatedValue -ne 'False') {
+                                        $Issues += "SpecificVersion for $($Assembly.GetName().Name) reference expected: False; Actual: $($md.UnevaluatedValue)";
+                                    }
+                                }
+                                $md = $Matching[0].DirectMetadata['HintPath'];
+                                if ($md -eq $null) {
+                                    $Issues += "HintPath for $($Assembly.GetName().Name) reference expected: $($Assembly.Location); Actual not defined";
+                                } else {
+                                    if ($md.UnevaluatedValue -ne 'False') {
+                                        $Issues += "HintPath for $($Assembly.GetName().Name) reference expected: $($Assembly.Location); Actual: $($md.UnevaluatedValue)";
+                                    }
+                                }
+                            }
+                        }
+                        @([Microsoft.PowerShell.Commands.OutStringCommand], [Microsoft.PowerShell.Commands.GetContentCommand]) | ForEach-Object {
+                            $Assembly = $_.Assembly;
+                            $an = $Assembly.GetName();
+                            $Matching = @($Items | Where-Object { $_.UnevaluatedInclude.StartsWith($an) });
+                            if ($Matching.Count -gt 0) {
+                                $Expected = "$an, processorArchitecture=MSI";
+                                $Actual = $Matching[0].UnevaluatedInclude;
+                                if ($Actual -ne $Assembly.FullName -and $Actual -ne $Expected) {
+                                    $Issues += "$an reference expected: $Expected; Actual: $Actual";
+                                } else {
+                                    $md = $Matching[0].DirectMetadata['SpecificVersion'];
+                                    if ($md -eq $null) {
+                                        $Issues += "SpecificVersion for $an reference expected: False; Actual not defined";
+                                    } else {
+                                        if ($md.UnevaluatedValue -ne 'False') {
+                                            $Issues += "SpecificVersion for $an reference expected: False; Actual: $($md.UnevaluatedValue)";
+                                        }
+                                    }
+                                    $md = $Matching[0].DirectMetadata['HintPath'];
+                                    if ($md -eq $null) {
+                                        $Issues += "HintPath for $an reference expected: $($Assembly.Location); Actual not defined";
+                                    } else {
+                                        if ($md.UnevaluatedValue -ne 'False') {
+                                            $Issues += "HintPath for $an reference expected: $($Assembly.Location); Actual: $($md.UnevaluatedValue)";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        @([PSObject], [Microsoft.PowerShell.Commands.OutStringCommand], [Microsoft.PowerShell.Commands.GetContentCommand]) | ForEach-Object {
+                            $Assembly = $_.Assembly;
+                            $an = $Assembly.GetName();
+                            $Matching = @($Items | Where-Object { $_.UnevaluatedInclude.StartsWith($an) });
+                            if ($Matching.Count -gt 0) {
+                                $Expected = "$an, processorArchitecture=MSI";
+                                $Actual = $Matching[0].UnevaluatedInclude;
+                                if ($Actual -ne $Assembly.FullName -and $Actual -ne $Expected) {
+                                    $Issues += "$an reference expected: $Expected; Actual: $Actual";
+                                } else {
+                                    $md = $Matching[0].DirectMetadata['SpecificVersion'];
+                                    if ($md -eq $null) {
+                                        $Issues += "SpecificVersion for $an reference expected: False; Actual not defined";
+                                    } else {
+                                        if ($md.UnevaluatedValue -ne 'False') {
+                                            $Issues += "SpecificVersion for $an reference expected: False; Actual: $($md.UnevaluatedValue)";
+                                        }
+                                    }
+                                    $md = $Matching[0].DirectMetadata['HintPath'];
+                                    if ($md -eq $null) {
+                                        $Issues += "HintPath for $an reference expected: $($Assembly.Location); Actual not defined";
+                                    } else {
+                                        if ($md.UnevaluatedValue -ne 'False') {
+                                            $Issues += "HintPath for $an reference expected: $($Assembly.Location); Actual: $($md.UnevaluatedValue)";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $Items = $Project.GetItems('None');
+                    $Matching = @($Items | Where-Object { $_.UnevaluatedInclude -eq 'Build.ps1' });
+                    if ($Matching.Count -eq 0) {
+                        $Issues += "No build script in project.";
+                    }
+                }
+            }
         } else {
-            Write-Warning -Message "$ProjectDescription Project ($ProjectGuid) not found at $ProjectPath";
+            $Issues += "Project file not found.";
         }
     } else {
         if ($_.Groups['globalContent'].Success) {
