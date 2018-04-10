@@ -1,5 +1,5 @@
-Powershell-Modules
-==================
+# Powershell-Modules #
+
 This project is a collection of various PowerShell modules, which I have been developing during personal studies and research.
 Please reference the appropriate version-named branch for versions which are deemed releasable.
 
@@ -8,45 +8,78 @@ This is a development branch, not intended to be releasable.
 The modules in this branch have been targeted for PowerShell 4.0 or greater.
 Branches which start with the name 'legacy', are intended to be compatible with systems which only have PowerShell 2.0 and supports only c# 2.0 for custom types and assemblies.
 
-Contents
---------
+## Contents ##
 
-### CertificateCryptography
+### CertificateCryptography ###
+
 Encrypt and decrypt using PKI technology.
 
-### CredentialStorage
+### CredentialStorage ###
+
 Provides secure credential storage and retrieval.
 
-### CryptographyScripts
+### CryptographyScripts ###
+
 Powershell scripts to support encrypting and decrypting data.
 
-### GDIPlus
+### GDIPlus ###
+
 Binary Module to support graphic file manipulation.
 
-### IOUtility
+### IOUtility ###
+
 Utility functions to manage filesystem, console, and stream IO.
 
-### LteDev
+### LteDev ###
+
 PowerShell development utility functions.
 
-### LteUtils
+### LteUtils ###
+
 System and web admin utility functions.
 
-### NetworkUtility
+### NetworkUtility ###
+
 Utility functions for network access.
 
-### WindowsForms
+### WindowsForms ###
+
 Script Module to support windows forms in Powershell.
 
-### WinForms
+### WinForms ###
+
 Module providing GUI components.
 
-### WPF
+### WPF ###
+
 Display WPF windows.
 
-### XmlUtility
+### XmlUtility ###
+
 Provides advanced XML functionality.
 
-Contributing
-------------
+## Dev Environment Setup ##
+
+### .NET 4.6 Framework SDK ###
+
+Since many of these modules currently utilize windows GUI components, you will need install the .NET Framework 4.6 SDK Developer Pack, which can be obtained from <https://www.microsoft.com/net/download/visual-studio-sdks>.
+
+### PowerShell 4.0+ ###
+
+The PowerShell modules contained in this project were targeted for PowerShell 4.0. It is recommended that you have the 
+
+### Visual Studio Code ###
+
+This project was recently converted from being developed from Visual Studio Ultimate to Visual Studio Code (<https://code.visualstudio.com/download>).
+Additional environment configuration may be necessary for development, or to compile the projects.
+
+#### Extensions ####
+
+The "C# for Visual Studio Code (powered by OmniSharp)" extension is required in order to compile the binary modules.
+
+This extension, as well as others which are recommended for development, are listed in the .vscode/extensions.json file, and
+should appear in the Recommended extension listing in Visual Studio Code. Alternatively, you can refer to <https://sites.google.com/erwinefamily.net/vscodedevcheatsheet> for an example script that you can use in the terminal window to install multiple extensions.
+
+## Contributing ##
+
 This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, simply edit a file and propose a change, or propose a new file at [My Public GitHub Website](https://github.com/lerwine/PowerShell-Modules.git).
