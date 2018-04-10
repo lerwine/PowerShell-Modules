@@ -108,8 +108,6 @@
   <ItemGroup>
     <Compile Include="CertificateCryptographyUnitTest.cs" />
     <Compile Include="commandBase.cs" />
-    <Compile Include="CredentialStorageTest.cs" />
-    <Compile Include="CredentialStorageUnitTest.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GDIPlusUnitTest.cs" />
     <Compile Include="LteUtilsUnitTest.cs" />
@@ -207,10 +205,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CredentialStorage\CredentialStorageLibrary\CredentialStorageLibrary.csproj">
-      <Project>{a8f9b8a8-0a75-493f-810a-fc8c10afe72a}</Project>
-      <Name>CredentialStorageLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\IOUtility\IOUtility.csproj">
       <Project>{ac556afd-a2dc-4aee-a79f-583f54f7b17f}</Project>
       <Name>IOUtility</Name>
