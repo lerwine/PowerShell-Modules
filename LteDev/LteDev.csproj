@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -160,6 +160,7 @@
     <Compile Include="QueryItemList.cs" />
     <Compile Include="Solution\ProjectRef.cs" />
     <Compile Include="Solution\SolutionInfo.cs" />
+    <Compile Include="Solution\ProjectNode.cs" />
     <Compile Include="Solution\SolutionNode.cs" />
     <Compile Include="TypeBrowser\AssemblyDetailVM.cs" />
     <Compile Include="TypeBrowser\AssemblyListItemVM.cs" />

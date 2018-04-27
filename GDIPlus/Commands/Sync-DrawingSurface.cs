@@ -23,11 +23,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         {
             if (Surface == null)
                 return;
-            foreach (Graphics g in Surface)
+            for (int i = 0; i < Surface.Length; i++)
             {
-                if (g == null)
+                if (Surface[i] == null)
                     continue;
-                try { g.Flush(); }
+                try { Surface[i].Flush(); }
                 catch (Exception e)
                 {
                     WriteError(new ErrorRecord(e, "Sync_DrawingSurface", ErrorCategory.InvalidData, i));

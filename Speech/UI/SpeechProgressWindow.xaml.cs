@@ -23,7 +23,7 @@ namespace Speech.UI
         public SpeechProgressWindow()
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-            InitializeComponent();
+            //InitializeComponent();
 
             SpeechProgressVM vm = DataContext as SpeechProgressVM;
             if (vm == null)

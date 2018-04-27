@@ -1,6 +1,7 @@
 using System;
-using System.Drawing
+using System.Drawing;
 using System.Management.Automation;
+using System.Runtime.InteropServices;
 
 namespace Erwine.Leonard.T.GDIPlus.Commands
 {
@@ -21,7 +22,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
 
             public byte H { get { return _h; } }
             
-            public byte H { get { return _s; } }
+            public byte S { get { return _s; } }
             
             public byte B { get { return _b; } }
             
@@ -41,7 +42,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 _b = Convert.ToByte(Math.Round((b * 25.5f) / 36f));
             }
 
-            public override GetHashCode() { return _hashCode; }
+            public override int GetHashCode() { return _hashCode; }
         }
         
         public const float HUE_MAXVALUE = 360f;
@@ -111,7 +112,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         public HsbColor(Color color)
         {
             float h, s, b;
-            RGBtoHSB(other.R, other.G, other.B, out h, out s, out b);
+            RGBtoHSB(color.R, color.G, color.B, out h, out s, out b);
             _h = h;
             _s = s;
             _b = b;
@@ -238,7 +239,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             throw new NotImplementedException();
         }
 
-        public override GetHashCode() { return _hsb.GetHashCode(); }
+        public override int GetHashCode() { return _hsb.GetHashCode(); }
 
         public override string ToString()
         {

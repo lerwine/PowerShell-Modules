@@ -21,7 +21,7 @@ namespace Speech.GUI
     {
         public RollupSelectionWindow()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }

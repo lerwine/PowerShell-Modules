@@ -75,10 +75,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="GUI\XmlEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="GUI\RollupSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -95,9 +91,6 @@
     <Compile Include="Commands\Suspend-TextToSpeech.cs" />
     <Compile Include="Commands\TextToSpeechCmdlet.cs" />
     <Compile Include="Commands\Wait-TextToSpeech.cs" />
-    <Compile Include="GUI\XmlEditorWindow.xaml.cs">
-      <DependentUpon>XmlEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GUI\RollupSelectionWindow.xaml.cs">
       <DependentUpon>RollupSelectionWindow.xaml</DependentUpon>
     </Compile>

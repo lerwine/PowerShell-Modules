@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PersonalEventTracking
@@ -25,7 +26,7 @@ namespace PersonalEventTracking
 
         private RecurranceDefinition _recurrance = null;
 
-        protected object SyncRoot { get { return _syncRoot; } }
+        protected internal object SyncRoot { get { return _syncRoot; } }
 
         public int Urgency
         {
@@ -109,7 +110,7 @@ namespace PersonalEventTracking
                     }
                     else
                     {
-                        dateTime = (_end.HasValue) ? (_duration.HasValue && !_duration.Equals(TimeSpan.Zero)) ? _end.Add(TimeSpan.Zero.Subtract(_duration.Value)) : _end : DateTime.Now;
+                        dateTime = (_end.HasValue) ? (_duration.HasValue && !_duration.Equals(TimeSpan.Zero)) ? _end.Value.Add(TimeSpan.Zero.Subtract(_duration.Value)) : _end.Value : DateTime.Now;
                         _start = dateTime;
                         _snoozeEnd = null;
                         UpdateExpiration();
@@ -299,7 +300,7 @@ namespace PersonalEventTracking
 
         public abstract bool CanClose(out string reason);
         
-        public abstract public bool TryClose(out string reason);
+        public abstract bool TryClose(out string reason);
 
         public bool TryClose()
         {

@@ -1,11 +1,12 @@
 using System;
-using System.Drawing
+using System.Drawing;
 using System.Management.Automation;
+using System.Runtime.InteropServices;
 
 namespace Erwine.Leonard.T.GDIPlus.Commands
 {
-    public struct RgbColor : IRgbValue<byte>, IEquatable<RgbValue>, IEquatable<RgbValueF>, IEquatable<HsbValue>, IEquatable<Color>,
-        IComparable<RgbValue>, IComparable<RgbValueF>, IComparable<HsbValue>, IComparable<Color>, IComparable
+    public struct RgbColor : IEquatable<RgbColor>, IEquatable<HsbColor>, IEquatable<Color>,
+        IComparable<RgbColor>, IComparable<HsbColor>, IComparable<Color>, IComparable
     {
         [StructLayout(LayoutKind.Explicit)]
         struct RgbHash
@@ -33,7 +34,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 _b = b;
             }
 
-            public override GetHashCode() { return _hashCode; }
+            public override int GetHashCode() { return _hashCode; }
         }
         
         private RgbHash _rgb;
@@ -47,11 +48,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         
         public byte B { get { return _rgb.B; } }
         
-        public float RSCale { get { return _rScale; } }
+        public float RScale { get { return _rScale; } }
         
-        public float GSCale { get { return _gScale; } }
+        public float GScale { get { return _gScale; } }
         
-        public float BSCale { get { return _bScale; } }
+        public float BScale { get { return _bScale; } }
 
         public RgbColor(byte red, byte green, byte blue)
         {
@@ -78,10 +79,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
 
         public RgbColor(HsbColor other)
         {
-            _hashCode = 0;
-            _r = Convert.ToByte(Math.Round(other.R * 255f));
-            _g = Convert.ToByte(Math.Round(other.G * 255f));
-            _b = Convert.ToByte(Math.Round(other.B * 255f));
+            throw new NotImplementedException();
         }
 
         public RgbColor(Color color)
@@ -94,8 +92,8 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
 
         public static void HSBtoRGB(float hue, float saturation, float brightness, out float r, out float g, out float b)
         {
-            if (hue < 0f || hue > HsbValue.HUE_MAXVALUE)
-                throw new ArgumentOutOfRangeException("Hue must be a value from 0 to " + HsbValue.HUE_MAXVALUE.ToString());
+            if (hue < 0f || hue > HsbColor.HUE_MAXVALUE)
+                throw new ArgumentOutOfRangeException("Hue must be a value from 0 to " + HsbColor.HUE_MAXVALUE.ToString());
             if (saturation < 0f || saturation > 1f)
                 throw new ArgumentOutOfRangeException("Saturation must be a value from 0 to 1");
             if (brightness < 0f || brightness > 1f)
@@ -112,56 +110,57 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 max = brightness - brightness * saturation + saturation;
             }
 
-            int sextant = Math.Floor(hue / 60f);
-            hue = ((hue >= 300f) ? hue - 360f : hue) / 60f - 2f * Math.Floor(Convert.ToSingle((sextant + 1) % 6) / 2f);
+            int sextant = Convert.ToInt32(Math.Floor(hue / 60f));
+            hue = ((hue >= 300f) ? hue - 360f : hue) / 60f - (float)(2f * Math.Floor(Convert.ToSingle((sextant + 1) % 6) / 2f));
             float mid = hue * (max - min);
             if ((sextant % 2) == 0)
-                mid = += min;
+                mid += min;
             else
                 mid = min - mid;
             
             switch (sextant)
             {
                 case 1:
-                    return new RgbValue(mid, max, min);
+                    r = mid; g = max; b = min;
+                    break;
                 case 2:
-                    return new RgbValue(min, max, mid);
+                    r = min; g = max; b = mid;
+                    break;
                 case 3:
-                    return new RgbValue(min, mid, max);
+                    r = min; g = mid; b = max;
+                    break;
                 case 4:
-                    return new RgbValue(mid, min, max);
+                    r = mid; g = min; b = max;
+                    break;
+                default:
+                    r = max; g = min; b = mid;
+                    break;
             }
-            return new RgbValue(max, min, mid);
         }
 
         public Color ToColor() { return Color.FromArgb(255, _rgb.R, _rgb.G, _rgb.B); }
 
         public bool Equals(RgbColor other) { return _rScale == other._rScale && _gScale == other._gScale && _bScale == other._bScale; }
 
-        public bool Equals(HsbColor other) { other.Equals(this); }
+        public bool Equals(HsbColor other) { return other.Equals(this); }
+
+        public bool Equals(Color other) { throw new NotImplementedException(); }
 
         public override bool Equals(object obj) { throw new NotImplementedException(); }
 
-        public int CompareTo(RgbValue other)
-        {
-            float h1, s1, b1, h2, s2, b2;
-            RGBFtoHSB(_rScale, _gScale, _bScale, out h1, out s1, out b1);
-            RGBFtoHSB(other._rScale, other._gScale, other._bScale, out h2, out s2, out b2);
-            int result = h1.CompareTo(h2);
-            if (result == 0 && (result = b1.CompareTo(b2)) == 0)
-                return s1.CompareTo(s2);
-            return result;
-        }
+        public int CompareTo(RgbColor other) { throw new NotImplementedException(); }
 
-        public int CompareTo(HsbColor other) { 0 - other.CompareTo(this); }
+        public int CompareTo(HsbColor other) { throw new NotImplementedException(); }
+
+        public int CompareTo(Color other) { throw new NotImplementedException(); }
 
         public int CompareTo(object obj) { throw new NotImplementedException(); }
 
-        public override GetHashCode() { return _rgb.GetHashCode(); }
+        public override int GetHashCode() { return _rgb.GetHashCode(); }
 
         public override string ToString()
         {
-            return "#" + _rgb.R.ToString('x2') + _rgb.G.ToString('x2') + _rgb.B.ToString('x2');
+            return "#" + _rgb.R.ToString("x2") + _rgb.G.ToString("x2") + _rgb.B.ToString("x2");
         }
     }
 }

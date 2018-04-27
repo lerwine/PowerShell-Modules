@@ -21,7 +21,7 @@ namespace Erwine.Leonard.T.WPF.UI
     {
         public DependencyPropertyBuilderWindow()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }

@@ -28,4 +28,5 @@ namespace PersonalEventTracking
         /// Initializes a new instance of <see cref="TaskStateChangingEventArgs" />
         /// </summary>
         public TaskStateChangingEventArgs() { }
+    }
 }

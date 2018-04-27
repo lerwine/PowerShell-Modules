@@ -40,9 +40,10 @@ namespace LteDev.Solution
                 if (m.Success)
                 {
                     result._nodes.Add(new ProjectNode(Guid.Parse(m.Groups["projectGuid"].Value), Guid.Parse(m.Groups["typeGuid"].Value), m.Groups["projectName"].Value,
-                        m.Groups["projectPath"].Value, m.Groups["otherProperties"].Value, m.Groups["content"].Value))
+                        m.Groups["projectPath"].Value, m.Groups["otherProperties"].Value, m.Groups["content"].Value));
                 }
             }
+            throw new NotImplementedException();
         }
         #region Fields
  

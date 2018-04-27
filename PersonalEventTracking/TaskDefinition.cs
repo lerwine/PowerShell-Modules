@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -106,17 +107,17 @@ namespace PersonalEventTracking
             Monitor.Enter(SyncRoot);
             try
             {
-                if (State == state)
+                actualState = State;
+                if (actualState == state)
                 {
                     reason = "Task is already at that state.";
                     return true;
                 }
                 int count;
                 reason = "";
-                actualState = State;
                 switch (state)
                 {
-                    TaskState.NotStarted:
+                    case TaskState.NotStarted:
                         count = _innerDependencies.Count(t => t._state != TaskState.NotStarted);
                         if (count > 0)
                         {
@@ -125,7 +126,7 @@ namespace PersonalEventTracking
                             return false;
                         }
                         break;
-                    TaskState.Suspended:
+                    case TaskState.Suspended:
                         count = _innerDependencies.Count(t => t._state == TaskState.Active);
                         if (count > 0)
                         {
@@ -134,7 +135,7 @@ namespace PersonalEventTracking
                             return false;
                         }
                         break;
-                    TaskState.PendingDependencies:
+                    case TaskState.PendingDependencies:
                         if (_innerDependencies.Count == 0)
                         {
                             reason = "Current task has no dependencies.";
@@ -146,7 +147,7 @@ namespace PersonalEventTracking
                             return false;
                         }
                         break;
-                    TaskState.Completed:
+                    case TaskState.Completed:
                         count = _innerDependencies.Count(t => t._state < TaskState.Completed);
                         if (count > 0)
                         {
@@ -343,13 +344,13 @@ namespace PersonalEventTracking
         public bool IsDependencyOf(TaskDefinition task) { return task != null && task.DependsUpon(this); }
 
         /// <summary>
-        /// Adds a <see cref="TaskDefinition" /> to the collection of <see cref="Dependencies"> for the current
+        /// Adds a <see cref="TaskDefinition" /> to the collection of <see cref="Dependencies" /> for the current
         /// <see cref="TaskDefinition" />.
         /// </summary>
         /// <param name="task">Dependency <see cref="TaskDefinition" /> to be added.</param>
         /// <exception cref="ArgumentNullException"><paramref name="task" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The <paramref name="task" /> already exists within (or is nested within)
-        /// the current collection of <see cref="Dependencies"> - or - the current <see cref="TaskDefinition" /> is a direct or
+        /// the current collection of <see cref="Dependencies" /> - or - the current <see cref="TaskDefinition" /> is a direct or
         /// indirect dependency of the <paramref name="task" />.</exception>
         /// <exception cref="ArgumentException">Current <see cref="TaskDefinition.State" /> is <seealso cref="TaskState.NotStarted" />
         /// and <see cref="TaskDefinition.State" /> of <paramref name="task" /> is not <seealso cref="TaskState.NotStarted" /> -- or --
@@ -386,16 +387,16 @@ namespace PersonalEventTracking
         }
 
         /// <summary>
-        /// Inserts a <see cref="TaskDefinition" /> to the collection of <see cref="Dependencies"> for the current
+        /// Inserts a <see cref="TaskDefinition" /> to the collection of <see cref="Dependencies" /> for the current
         /// <see cref="TaskDefinition" />.
         /// </summary>
         /// <param name="index">Zero-based index at which the <see cref="TaskDefinition" /> is inserted as a dependency.</param>
         /// <param name="task">Dependency <see cref="TaskDefinition" /> to be inserted.</param>
         /// <exception cref="ArgumentNullException"><paramref name="task" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index" /> is less than zero or greater than the current count
-        /// of <see cref="Dependencies">.</exception>
+        /// of <see cref="Dependencies" />.</exception>
         /// <exception cref="InvalidOperationException">The <paramref name="task" /> already exists within (or is nested within)
-        /// the current collection of <see cref="Dependencies"> - or - the current <see cref="TaskDefinition" /> is a direct or
+        /// the current collection of <see cref="Dependencies" /> - or - the current <see cref="TaskDefinition" /> is a direct or
         /// indirect dependency of the <paramref name="task" />.</exception>
         /// <exception cref="ArgumentException">Current <see cref="TaskDefinition.State" /> is <seealso cref="TaskState.NotStarted" />
         /// and <see cref="TaskDefinition.State" /> of <paramref name="task" /> is not <seealso cref="TaskState.NotStarted" /> -- or --
@@ -428,9 +429,9 @@ namespace PersonalEventTracking
                         {
                             task.StateChanging -= DependencyTask_StateChanging;
                             task.StateChanged -= DependencyTask_StateChanged;
-                            int index = _innerDependencies.TakeWhile(i => !ReferenceEquals(i, task)).Count();
-                            if (index < _innerDependencies.Count)
-                                _innerDependencies.RemoveAt(index);
+                            int idx = _innerDependencies.TakeWhile(i => !ReferenceEquals(i, task)).Count();
+                            if (idx < _innerDependencies.Count)
+                                _innerDependencies.RemoveAt(idx);
                             throw;
                         }
                     }
@@ -443,7 +444,7 @@ namespace PersonalEventTracking
         /// <summary>
         /// Removes a <see cref="TaskDefinition" /> dependency from the current <see cref="TaskDefinition" />.
         /// </summary>
-        /// <param name="task"><see cref="TaskDefinition" /> to be removed from the collection of <see cref="Dependencies">
+        /// <param name="task"><see cref="TaskDefinition" /> to be removed from the collection of <see cref="Dependencies" />
         /// for the current <see cref="TaskDefinition" />.</param>
         /// <returns>True if the <paramref name="task" /> was removed; otherwise, false if <paramref name="task" /> was not a
         /// direct dependency of the current <see cref="TaskDefinition" /> (contained in <see cref="Dependencies" /> collection).</returns>
@@ -463,6 +464,7 @@ namespace PersonalEventTracking
                 DependencyTask_StateChanged(task, new TaskStateChangeEventArgs(task._state, TaskState.Canceled));
             }
             finally { Monitor.Exit(SyncRoot); }
+            return true;
         }
 
         /// <summary>
@@ -581,7 +583,7 @@ namespace PersonalEventTracking
                         if (count == 0)
                             return currentIndex;
 
-                        int newIndex = current - count;
+                        int newIndex = currentIndex - count;
                         if (newIndex < 0)
                             newIndex = 0;
                         Monitor.Enter(SyncRoot);
@@ -632,13 +634,13 @@ namespace PersonalEventTracking
                         if (count == 0 || currentIndex == lastIndex)
                             return currentIndex;
 
-                        int newIndex = current + count;
+                        int newIndex = currentIndex + count;
                         if (newIndex > lastIndex)
                             newIndex = lastIndex;
                         Monitor.Enter(SyncRoot);
                         try
                         {
-                            if (lastIndex == lastIndex)
+                            if (newIndex == lastIndex)
                                 _innerDependencies.Add(task);
                             else
                                 _innerDependencies.Insert(newIndex, task);
@@ -659,7 +661,7 @@ namespace PersonalEventTracking
         /// <param name="task">The <see cref="TaskDefinition" /> to be moved down.</param>
         /// <returns>The new order index of the <see cref="TaskDefinition" /> or -1 if <paramref name="task" />
         /// is not a direct dependency of the current <see cref="TaskDefinition" />.</returns>
-        public int MoveDependencyDown(TaskDefinition task, int count) { return MoveDependencyDown(task, 1); }
+        public int MoveDependencyDown(TaskDefinition task) { return MoveDependencyDown(task, 1); }
 
         class TaskDefinitionComparerProxy : IComparer<TaskDefinition>
         {
@@ -699,7 +701,7 @@ namespace PersonalEventTracking
             Monitor.Enter(SyncRoot);
             try
             {
-                if (_state == TaskState.Canceled && e.NewState !== TaskState.Completed && e.NewState !== TaskState.Canceled)
+                if (_state == TaskState.Canceled && e.NewState != TaskState.Completed && e.NewState != TaskState.Canceled)
                 {
                     e.Cancel = true;
                     e.Reason = "Dependent task is already canceled.";
@@ -748,7 +750,7 @@ namespace PersonalEventTracking
                 throw new InvalidOperationException("The task is already a dependency of the current task.");
             if (DependsUpon(task))
                 throw new InvalidOperationException("The task is already a nested dependency of the current task.");
-            if (_state == TaskState.Canceled && task._state !== TaskState.Completed && task._state !== TaskState.Canceled)
+            if (_state == TaskState.Canceled && task._state != TaskState.Completed && task._state != TaskState.Canceled)
                 throw new InvalidOperationException("Dependent task is already canceled.");
             task.StateChanging += DependencyTask_StateChanging;
             task.StateChanged += DependencyTask_StateChanged;

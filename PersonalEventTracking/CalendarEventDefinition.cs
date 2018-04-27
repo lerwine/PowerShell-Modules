@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PersonalEventTracking
@@ -11,6 +15,7 @@ namespace PersonalEventTracking
     {
         private bool _isClosed = false;
         private bool _hasOpenTasks = false;
+        
         private Collection<TaskDefinition> _innerTaskList = new Collection<TaskDefinition>();
         private ReadOnlyCollection<TaskDefinition> _taskList = null;
         
@@ -20,7 +25,8 @@ namespace PersonalEventTracking
         /// </summary>
         public bool HasOpenTasks { get { return _hasOpenTasks; } }
 
-        public override bool IsClosed { return _isClosed; }
+        public override bool IsClosed { get { return _isClosed; } }
+
 
         /// <summary>
         /// Child tasks which must be completed before the current task can be completed.
@@ -56,7 +62,7 @@ namespace PersonalEventTracking
                     reason = "Calendar event is already closed.";
                 else
                 {
-                    int count = _innerTaskList.Count(t => t._state != TaskState.NotStarted);
+                    int count = _innerTaskList.Count(t => t.State != TaskState.NotStarted);
                     if (count > 0)
                     {
                         reason = (count == 1) ? "1 dependency task has already been started." :
@@ -78,7 +84,7 @@ namespace PersonalEventTracking
             {
                 if (!_isClosed)
                 {
-                    if (!CanClose(state, out actualState, out reason))
+                    if (!CanClose(out reason))
                         return false;
                     _isClosed = true;
                     UpdateExpiration();
@@ -113,13 +119,13 @@ namespace PersonalEventTracking
         }
 
         /// <summary>
-        /// Adds a <see cref="TaskDefinition" /> to the collection of <see cref="TaskList"> for the current
+        /// Adds a <see cref="TaskDefinition" /> to the collection of <see cref="TaskList" /> for the current
         /// <see cref="TaskDefinition" />.
         /// </summary>
         /// <param name="task"><see cref="TaskDefinition" /> to be added.</param>
         /// <exception cref="ArgumentNullException"><paramref name="task" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The <paramref name="task" /> already exists within (or is nested within)
-        /// the current collection of <see cref="TaskList">.</exception>
+        /// the current collection of <see cref="TaskList" />.</exception>
         /// <exception cref="ArgumentException">Current <see cref="TaskDefinition.State" /> is <seealso cref="TaskState.NotStarted" />
         /// and <see cref="TaskDefinition.State" /> of <paramref name="task" /> is not <seealso cref="TaskState.NotStarted" /> -- or --
         /// Current <see cref="TaskDefinition.State" /> is <seealso cref="TaskState.Suspended" /> and <see cref="TaskDefinition.State" />
@@ -138,7 +144,7 @@ namespace PersonalEventTracking
                 {
                     AssertCanAddTask(task);
                     _innerTaskList.Add(task);
-                    try { Task_StateChanged(task, new TaskStateChangeEventArgs(_state, task._state)); }
+                    try { Task_StateChanged(task, new TaskStateChangeEventArgs(TaskState.NotStarted, task.State)); }
                     catch
                     {
                         task.StateChanging -= Task_StateChanging;
@@ -155,16 +161,16 @@ namespace PersonalEventTracking
         }
 
         /// <summary>
-        /// Inserts a <see cref="TaskDefinition" /> to the <see cref="TaskList"> for the current
+        /// Inserts a <see cref="TaskDefinition" /> to the <see cref="TaskList" /> for the current
         /// <see cref="TaskDefinition" />.
         /// </summary>
         /// <param name="index">Zero-based index at which the <see cref="TaskDefinition" /> is inserted.</param>
         /// <param name="task"><see cref="TaskDefinition" /> to be inserted.</param>
         /// <exception cref="ArgumentNullException"><paramref name="task" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index" /> is less than zero or greater than the current count
-        /// of <see cref="TaskList">.</exception>
+        /// of <see cref="TaskList" />.</exception>
         /// <exception cref="InvalidOperationException">The <paramref name="task" /> already exists within (or is nested within)
-        /// the current <see cref="TaskList">.</exception>
+        /// the current <see cref="TaskList" />.</exception>
         /// <exception cref="ArgumentException">Current <see cref="CalendarEventDefintion.IsClosed" /> is true.</exception>
         public void InsertTask(int index, TaskDefinition task)
         {
@@ -186,14 +192,14 @@ namespace PersonalEventTracking
                     {
                         AssertCanAddTask(task);
                         _innerTaskList.Insert(index, task);
-                        try { Task_StateChanged(task, new TaskStateChangeEventArgs(_state, task._state)); }
+                        try { Task_StateChanged(task, new TaskStateChangeEventArgs(TaskState.NotStarted, task.State)); }
                         catch
                         {
                             task.StateChanging -= Task_StateChanging;
                             task.StateChanged -= Task_StateChanged;
-                            int index = _innerTaskList.TakeWhile(i => !ReferenceEquals(i, task)).Count();
-                            if (index < _innerTaskList.Count)
-                                _innerTaskList.RemoveAt(index);
+                            int idx = _innerTaskList.TakeWhile(i => !ReferenceEquals(i, task)).Count();
+                            if (idx < _innerTaskList.Count)
+                                _innerTaskList.RemoveAt(idx);
                             throw;
                         }
                     }
@@ -206,7 +212,7 @@ namespace PersonalEventTracking
         /// <summary>
         /// Removes a <see cref="TaskDefinition" /> from the current <see cref="CalendarEventDefinition" />.
         /// </summary>
-        /// <param name="task"><see cref="TaskDefinition" /> to be removed from the collection of <see cref="TaskList">
+        /// <param name="task"><see cref="TaskDefinition" /> to be removed from the collection of <see cref="TaskList" />
         /// for the current <see cref="CalendarEventDefinition" />.</param>
         /// <returns>True if the <paramref name="task" /> was removed; otherwise, false if <paramref name="task" /> was not a
         /// direct dependency of the current <see cref="CalendarEventDefinition" /> (contained in <see cref="TaskList" /> collection).</returns>
@@ -223,9 +229,10 @@ namespace PersonalEventTracking
                 task.StateChanging -= Task_StateChanging;
                 task.StateChanged -= Task_StateChanged;
                 _innerTaskList.RemoveAt(index);
-                Task_StateChanged(task, new TaskStateChangeEventArgs(task._state, TaskState.Canceled));
+                Task_StateChanged(task, new TaskStateChangeEventArgs(task.State, TaskState.Canceled));
             }
             finally { Monitor.Exit(SyncRoot); }
+            return true;
         }
 
         /// <summary>
@@ -344,7 +351,7 @@ namespace PersonalEventTracking
                         if (count == 0)
                             return currentIndex;
 
-                        int newIndex = current - count;
+                        int newIndex = currentIndex - count;
                         if (newIndex < 0)
                             newIndex = 0;
                         Monitor.Enter(SyncRoot);
@@ -395,7 +402,7 @@ namespace PersonalEventTracking
                         if (count == 0 || currentIndex == lastIndex)
                             return currentIndex;
 
-                        int newIndex = current + count;
+                        int newIndex = currentIndex + count;
                         if (newIndex > lastIndex)
                             newIndex = lastIndex;
                         Monitor.Enter(SyncRoot);
@@ -422,7 +429,7 @@ namespace PersonalEventTracking
         /// <param name="task">The <see cref="TaskDefinition" /> to be moved down.</param>
         /// <returns>The new order index of the <see cref="TaskDefinition" /> or -1 if <paramref name="task" />
         /// is not a direct dependency of the current <see cref="CalendarEventDefinition" />.</returns>
-        public int MoveTaskDown(TaskDefinition task, int count) { return MoveTaskDown(task, 1); }
+        public int MoveTaskDown(TaskDefinition task) { return MoveTaskDown(task, 1); }
 
         class TaskDefinitionComparerProxy : IComparer<TaskDefinition>
         {
@@ -462,7 +469,7 @@ namespace PersonalEventTracking
             Monitor.Enter(SyncRoot);
             try
             {
-                if (_isClosed && e.NewState !== TaskState.Completed && e.NewState !== TaskState.Canceled)
+                if (_isClosed && e.NewState != TaskState.Completed && e.NewState != TaskState.Canceled)
                 {
                     e.Cancel = true;
                     e.Reason = "Parent calendar event is already closed.";
@@ -479,7 +486,7 @@ namespace PersonalEventTracking
                 if (e.NewState < TaskState.Completed)
                     _hasOpenTasks = true;
                 else if (_hasOpenTasks)
-                    _hasOpenTasks = _innerTaskList.Any(t => t._state < TaskState.Completed);
+                    _hasOpenTasks = _innerTaskList.Any(t => t.State < TaskState.Completed);
                 if (!_hasOpenTasks)
                     TryClose();
             }
@@ -494,7 +501,7 @@ namespace PersonalEventTracking
                 throw new InvalidOperationException("The task is already a dependency of the current task.");
             if (DependsUpon(task))
                 throw new InvalidOperationException("The task is already a nested dependency of the current task.");
-            if (_isClosed && task._state !== TaskState.Completed && task._state !== TaskState.Canceled)
+            if (_isClosed && task.State != TaskState.Completed && task.State != TaskState.Canceled)
                 throw new InvalidOperationException("Dependent task is already canceled.");
             task.StateChanging += Task_StateChanging;
             task.StateChanged += Task_StateChanged;
