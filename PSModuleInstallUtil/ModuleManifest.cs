@@ -39,7 +39,7 @@ namespace PSModuleInstallUtil
         private string _defaultCommandPrefix = "";
         private Collection<string> _exportedDscResources = new Collection<string>();
         private Hashtable _parsedModule = new Hashtable();
-        /// <summary>
+        
         #region Properties
 
         public FileInfo ManifestFileInfo { get; private set; }
@@ -656,7 +656,9 @@ namespace PSModuleInstallUtil
         public int GetMemberEnd(Collection<PSToken> tokens, int startRange)
         {
             int nextMember = GetNextMemberIndex(tokens, startRange + 1);
+#pragma warning disable CS0162 // Unreachable code detected
             for (int index = nextMember - 1; index > startRange; index--)
+#pragma warning restore CS0162 // Unreachable code detected
             {
                 switch  (tokens[index].Type)
                 {

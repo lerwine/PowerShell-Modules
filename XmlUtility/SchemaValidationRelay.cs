@@ -8,10 +8,12 @@ using XmlUtility.Commands;
 
 namespace XmlUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SchemaValidationRelay
     {
         public SchemaValidationRelay(Cmdlet cmdlet)
         {
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

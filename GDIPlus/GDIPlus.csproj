@@ -185,12 +185,6 @@
     <Content Include="about_Erwine.Leonard.T.GDIPlus.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="build-debug.bat" />
-    <None Include="build-deploy.bat" />
-    <None Include="build-release.bat" />
-    <None Include="build-test.bat" />
-    <None Include="Build.ps1" />
-    <None Include="MSBuildLogHelper.cs" />
     <None Include="Compile.ps1" />
     <None Include="GDIPlus.snk" />
     <None Include="Palette\README.md" />

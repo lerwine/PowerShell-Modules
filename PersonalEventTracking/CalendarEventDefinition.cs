@@ -171,7 +171,7 @@ namespace PersonalEventTracking
         /// of <see cref="TaskList" />.</exception>
         /// <exception cref="InvalidOperationException">The <paramref name="task" /> already exists within (or is nested within)
         /// the current <see cref="TaskList" />.</exception>
-        /// <exception cref="ArgumentException">Current <see cref="CalendarEventDefintion.IsClosed" /> is true.</exception>
+        /// <exception cref="ArgumentException">Current <see cref="CalendarEventDefinition.IsClosed" /> is true.</exception>
         public void InsertTask(int index, TaskDefinition task)
         {
             if (task == null)
@@ -408,7 +408,7 @@ namespace PersonalEventTracking
                         Monitor.Enter(SyncRoot);
                         try
                         {
-                            if (lastIndex == lastIndex)
+                            if (newIndex == lastIndex)
                                 _innerTaskList.Add(task);
                             else
                                 _innerTaskList.Insert(newIndex, task);

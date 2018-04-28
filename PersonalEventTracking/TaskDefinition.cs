@@ -11,8 +11,10 @@ namespace PersonalEventTracking
     /// </summary>
     public class TaskDefinition : EventDefinitionBase
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public event EventHandler<TaskStateChangingEventArgs> StateChanging;
         public event EventHandler<TaskStateChangeEventArgs> StateChanged;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private TaskState _state = TaskState.NotStarted;
         private bool _hasOpenDependencies = false;
@@ -54,6 +56,7 @@ namespace PersonalEventTracking
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool IsDueToday { get { return (_state != TaskState.Completed && _state != TaskState.Canceled && base.IsDueToday); } }
         
         public override bool IsDueNow { get { return (_state != TaskState.Completed && _state != TaskState.Canceled && base.IsDueNow); } }
@@ -67,6 +70,7 @@ namespace PersonalEventTracking
         protected virtual void OnStateChanging(TaskStateChangingEventArgs args) { }
         
         protected virtual void OnStateChanged(TaskStateChangeEventArgs args) { }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         
         /// <summary>
         /// Child tasks which must be completed before the current task can be completed.
@@ -289,6 +293,7 @@ namespace PersonalEventTracking
             return state;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool CanClose(out string reason)
         {
             if (_state == TaskState.Canceled)
@@ -309,8 +314,9 @@ namespace PersonalEventTracking
             }
             TaskState actualState;
             return TrySetState(TaskState.Completed, out actualState, out reason);
-        }
-        
+        }        
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// Determines whether the current <see cref="TaskDefinition" /> is dependent upon another <see cref="TaskDefinition" />.
         /// </summary>
@@ -670,6 +676,7 @@ namespace PersonalEventTracking
             public int Compare(TaskDefinition x, TaskDefinition y) { return _comparer(x, y); }
         }
         
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void SortDependencies(Func<TaskDefinition, TaskDefinition, int> comparer)
         {
             if (comparer == null)
@@ -695,6 +702,7 @@ namespace PersonalEventTracking
             }
             finally { Monitor.Exit(SyncRoot); }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         
         private void DependencyTask_StateChanging(object sender, TaskStateChangingEventArgs e)
         {

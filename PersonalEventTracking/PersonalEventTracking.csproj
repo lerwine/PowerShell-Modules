@@ -78,12 +78,6 @@
     <Content Include="about_PersonalEventTracking.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="MSBuildLogHelper.cs" />
-    <None Include="build-debug.bat" />
-    <None Include="build-deploy.bat" />
-    <None Include="build-release.bat" />
-    <None Include="build-test.bat" />
-    <None Include="Build.ps1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

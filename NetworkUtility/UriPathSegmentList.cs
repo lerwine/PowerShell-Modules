@@ -10,6 +10,7 @@ using System.Threading;
 
 namespace NetworkUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class UriPathSegmentList : IList<string>, IList, INotifyPropertyChanged, INotifyCollectionChanged, IEquatable<UriPathSegmentList>, IComparable<UriPathSegmentList>, IComparable
     {
         private static StringComparer _comparer = StringComparer.InvariantCultureIgnoreCase;
@@ -647,4 +648,5 @@ namespace NetworkUtility
 			finally { Monitor.Exit(_syncRoot); }
 		}
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

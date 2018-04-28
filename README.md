@@ -60,13 +60,14 @@ Provides advanced XML functionality.
 
 ## Dev Environment Setup ##
 
-### .NET 4.6 Framework SDK ###
+### Compiling manually or with VS Code ###
 
-Since many of these modules currently utilize windows GUI components, you will need install the .NET Framework 4.6 SDK Developer Pack, which can be obtained from <https://www.microsoft.com/net/download/visual-studio-sdks>.
+To compile using Visual Studio Code or the build.ps1 script, will need install the .NET Framework 4.6 SDK Developer Pack, which can be obtained from <https://www.microsoft.com/net/download/visual-studio-sdks>. You will also
+need to install Microsoft Build Tools (<https://www.microsoft.com/en-us/download/details.aspx?id=48159>).
 
 ### PowerShell 4.0+ ###
 
-The PowerShell modules contained in this project were targeted for PowerShell 4.0. It is recommended that you have the 
+The PowerShell modules contained in this project were targeted for PowerShell 4.0 or later.
 
 ### Visual Studio Code ###
 
@@ -75,10 +76,12 @@ Additional environment configuration may be necessary for development, or to com
 
 #### Extensions ####
 
-The "C# for Visual Studio Code (powered by OmniSharp)" extension is required in order to compile the binary modules.
+The "C# for Visual Studio Code (powered by OmniSharp)" extension is required for development.
 
 This extension, as well as others which are recommended for development, are listed in the .vscode/extensions.json file, and
 should appear in the Recommended extension listing in Visual Studio Code. Alternatively, you can refer to <https://sites.google.com/erwinefamily.net/vscodedevcheatsheet> for an example script that you can use in the terminal window to install multiple extensions.
+
+To compile without Visual Studio, you will also need .
 
 ## Contributing ##
 

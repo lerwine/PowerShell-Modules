@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="BaseRecord.cs" />
     <Compile Include="DiffChunk.cs" />
+    <Compile Include="DiffItem.cs" />
     <Compile Include="DiffChunkCollection.cs" />
     <Compile Include="DirectoryCrawlIterator.cs" />
     <Compile Include="DirectoryRecord.cs" />
