@@ -24,7 +24,7 @@ namespace NetworkUtility
         /// <param name="arg2">Value of second argument to pass to <paramref name="func" />.</param>
         /// <param name="arg3">Value of third argument to pass to <paramref name="func" />.</param>
         /// <param name="arg4">Value of fourth argument to pass to <paramref name="func" />.</param>
-        /// <param name="syncRoot"The object on which to acquire an exclusive lock while <paramref name="func" /> is being invoked.</param>
+        /// <param name="syncRoot">The object on which to acquire an exclusive lock while <paramref name="func" /> is being invoked.</param>
         /// <param name="func">Function to be invoked, which may result in events being raised.</param>
         /// <returns><typeparamref name="TResult" /> value returned from <paramref name="func" />.</returns>
         /// <remarks>While <paramref name="func" /> is being invoked, any calls to the <see cref="EventQueueManager" /> <code>Raise</code>
@@ -46,7 +46,7 @@ namespace NetworkUtility
         /// <param name="arg2">Value of second argument to pass to <paramref name="method" />.</param>
         /// <param name="arg3">Value of third argument to pass to <paramref name="method" />.</param>
         /// <param name="arg4">Value of fourth argument to pass to <paramref name="method" />.</param>
-        /// <param name="syncRoot"The object on which to acquire an exclusive lock while <paramref name="method" /> is being invoked.</param>
+        /// <param name="syncRoot">The object on which to acquire an exclusive lock while <paramref name="method" /> is being invoked.</param>
         /// <param name="method">Method to be invoked, which may result in events being raised.</param>
         /// <remarks>While <paramref name="method" /> is being invoked, any calls to the <see cref="EventQueueManager" /> <code>Raise</code>
         /// will result in the event handler being queued for invocation until the call to <paramref name="method" /> is finished.</remarks>
@@ -133,7 +133,7 @@ namespace NetworkUtility
         /// <typeparam name="T">Type of argument to pass to <paramref name="func" />.</typeparam>
         /// <typeparam name="TResult">Type of value returned from <paramref name="func" />.</typeparam>
         /// <param name="arg">Value of argument to pass to <paramref name="func" />.</param>
-        /// <param name="syncRoot"The object on which to acquire an exclusive lock while <paramref name="func" /> is being invoked.</param>
+        /// <param name="syncRoot">The object on which to acquire an exclusive lock while <paramref name="func" /> is being invoked.</param>
         /// <param name="func">Function to be invoked, which may result in events being raised.</param>
         /// <returns><typeparamref name="TResult" /> value returned from <paramref name="func" />.</returns>
         /// <remarks>While <paramref name="func" /> is being invoked, any calls to the <see cref="EventQueueManager" /> <code>Raise</code>
