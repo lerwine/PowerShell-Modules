@@ -12,7 +12,7 @@
                 "/p:GenerateFullPaths=true",
                 "/p:Configuration=Release",
                 "/p:Platform=\"Any CPU\"",
-                "PowerShellModules.sln"
+                "src/PowerShellModules.sln"
             ],
             "group":{
                 "kind": "build",
@@ -33,7 +33,7 @@
                 "/p:GenerateFullPaths=true",
                 "/p:Configuration=Debug",
                 "/p:Platform=\"Any CPU\"",
-                "PowerShellModules.sln"
+                "src/PowerShellModules.sln"
             ],
             "group": "build",
             "presentation": {
