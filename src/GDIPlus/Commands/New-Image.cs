@@ -15,6 +15,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Bitmap))]
     public class New_Image : PSCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_New = "New";
         public const string ParameterSetName_FromImage = "FromImage";
 
@@ -61,5 +62,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 WriteError(new ErrorRecord(e, "New_Image.New", ErrorCategory.InvalidArgument, new Size(Width, Height)));    
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

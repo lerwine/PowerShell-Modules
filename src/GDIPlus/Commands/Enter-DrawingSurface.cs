@@ -15,6 +15,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Graphics))]
     public class Enter_DrawingSurface : PSCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]
         public Image[] Image { get; set; }
@@ -34,5 +35,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 }
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

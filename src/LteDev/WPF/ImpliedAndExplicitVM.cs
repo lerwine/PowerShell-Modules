@@ -7,6 +7,7 @@ using System.Windows;
 
 namespace LteDev.WPF
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class ImpliedAndExplicitVM<T> : DependencyObject
     {
         public event CoerceValueCallback OnCoerceValue;
@@ -211,4 +212,5 @@ namespace LteDev.WPF
 
         public ImpliedAndExplicitVM() { }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

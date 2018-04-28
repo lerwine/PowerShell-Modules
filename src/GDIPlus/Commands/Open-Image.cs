@@ -18,6 +18,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Image))]
     public class Open_Image : PSCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_Path = "Path";
         public const string ParameterSetName_LiteralPath = "LiteralPath";
 
@@ -297,5 +298,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 }
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

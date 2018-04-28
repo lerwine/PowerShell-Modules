@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Erwine.Leonard.T.GDIPlus.Commands
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public struct HsbColor : IEquatable<HsbColor>, IEquatable<RgbColor>, IEquatable<Color>,
         IComparable<HsbColor>, IComparable<RgbColor>, IComparable<Color>, IComparable
     {
@@ -247,4 +248,5 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 Math.Round(_b * 100f, 2).ToString() + "%)";
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

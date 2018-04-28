@@ -53,9 +53,6 @@ Function Convert-HsbToRgb {
     return @($iMax, $iMid, $iMin);
 }
 
-
-
-
 Function Convert-HsbToRgb {
     [CmdletBinding()]
     Param(

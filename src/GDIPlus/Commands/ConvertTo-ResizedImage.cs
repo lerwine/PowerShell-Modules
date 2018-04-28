@@ -15,6 +15,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Bitmap))]
     public class ConvertTo_ResizedImage : PSCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]        
         public Image[] Source { get; set; }
@@ -89,5 +90,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 }
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

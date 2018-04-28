@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace LteDev
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     [DataObject()]
     public class ParsedUrl : INotifyPropertyChanged, IDataErrorInfo, INotifyDataErrorInfo
     {
@@ -312,4 +313,5 @@ namespace LteDev
             }
         }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

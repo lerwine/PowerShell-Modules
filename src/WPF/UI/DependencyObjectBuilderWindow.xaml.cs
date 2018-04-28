@@ -19,9 +19,11 @@ namespace Erwine.Leonard.T.WPF.UI
     /// </summary>
     public partial class DependencyObjectBuilderWindow : Window
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public DependencyObjectBuilderWindow()
         {
             //InitializeComponent();
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.maml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     [Serializable()]
     public class textType
     {
@@ -14,4 +15,5 @@ namespace LteDev.XsdTypeGen.maml
         [XmlText(Type = typeof(string))]
         public List<object> Contents { get; set; }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

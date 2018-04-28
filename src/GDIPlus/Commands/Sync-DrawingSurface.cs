@@ -14,6 +14,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [Cmdlet(VerbsData.Sync, "DrawingSurface", RemotingCapability = RemotingCapability.None)]
     public class Sync_DrawingSurface : PSCmdlet
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]
         [Alias("Graphics", "DrawingSurface")]
@@ -34,5 +35,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 }
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Erwine.Leonard.T.GDIPlus.Commands
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public struct RgbColor : IEquatable<RgbColor>, IEquatable<HsbColor>, IEquatable<Color>,
         IComparable<RgbColor>, IComparable<HsbColor>, IComparable<Color>, IComparable
     {
@@ -163,4 +164,5 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             return "#" + _rgb.R.ToString("x2") + _rgb.G.ToString("x2") + _rgb.B.ToString("x2");
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

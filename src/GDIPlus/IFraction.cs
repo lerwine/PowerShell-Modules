@@ -2,6 +2,7 @@ using System;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IFraction : IEquatable<IFraction>, IComparable<IFraction>, IComparable, IConvertible
     {
         IConvertible WholeNumber { get; }
@@ -46,4 +47,5 @@ namespace Erwine.Leonard.T.GDIPlus
         IFraction<T> Divide(T wholeNumber);
         new IFraction<T> AsInverted();
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

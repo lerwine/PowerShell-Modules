@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class FractionUtil
     {
         #region Generic Methods
@@ -768,4 +769,5 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

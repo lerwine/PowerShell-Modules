@@ -7,6 +7,7 @@ using System.Windows;
 
 namespace LteDev.WPF
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class DependencyPropertyVM : DependencyObject
     {
         #region OwnerClass Property Members
@@ -583,4 +584,5 @@ namespace LteDev.WPF
 
         internal static string CoerceNonNullString(DependencyObject d, object baseValue) { return (baseValue as string) ?? ""; }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

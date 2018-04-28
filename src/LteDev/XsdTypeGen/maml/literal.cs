@@ -8,9 +8,11 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.maml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     [Serializable()]
     [XmlRoot("literal", Namespace = Constants.Xmlns_maml)]
     public class literal : textType
     {
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

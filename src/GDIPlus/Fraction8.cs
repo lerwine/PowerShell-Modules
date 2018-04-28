@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [StructLayout(LayoutKind.Explicit)]
     public struct Fraction8 : IEquatable<Fraction8>, IComparable<Fraction8>, IFraction<sbyte>
     {
@@ -377,4 +378,6 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #endregion
     }
+    
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

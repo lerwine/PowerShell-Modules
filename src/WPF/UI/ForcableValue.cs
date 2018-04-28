@@ -3,6 +3,7 @@ using System.Windows;
 
 namespace Erwine.Leonard.T.WPF.UI
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ForcableValue<T> : DependencyObject
     {
         #region SpecifiedValue Dependency Property Members
@@ -114,4 +115,5 @@ namespace Erwine.Leonard.T.WPF.UI
             EffectiveValue = SpecifiedValue;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

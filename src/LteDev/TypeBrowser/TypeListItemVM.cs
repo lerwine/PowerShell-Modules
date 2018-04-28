@@ -11,6 +11,7 @@ using System.Windows;
 
 namespace LteDev.TypeBrowser
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class TypeListItemVM : DependencyObject
     {
         private Type _model = null;
@@ -1089,4 +1090,5 @@ namespace LteDev.TypeBrowser
 
         public Type GetModel() { return _model; }
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

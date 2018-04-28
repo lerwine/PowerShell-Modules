@@ -13,4 +13,4 @@ Param(
 )
 
 $MSBuildExePath = 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe';
-. $MSBuildExePath "/t:$($Targets -join ';')" "/p:GenerateFullPaths=true;Configuration=`"$Configuration`";Platform=`"$Platform`"" 'PowerShellModules.sln';
+. $MSBuildExePath "/t:$($Targets -join ';')" "/p:GenerateFullPaths=true;Configuration=`"$Configuration`";Platform=`"$Platform`"" 'src/PowerShellModules.sln';

@@ -185,11 +185,9 @@
     <Content Include="about_Erwine.Leonard.T.GDIPlus.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Compile.ps1" />
     <None Include="GDIPlus.snk" />
     <None Include="Palette\README.md" />
     <None Include="README.md" />
-    <None Include="TestCompile.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Palette\LICENSE.htm">
@@ -201,8 +199,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del "$(TargetDir)/*.nlp"
-del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
+    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)/PostBuild.ps1 $(TargetName) $(TargetExt) $(ProjectName) $(ProjectDir) $(OutDir) $(SolutionDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LteDev
 {
-#pragma disable restore 1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class PSObjectHelper
     {
         public static IEnumerable<PSObject> AsPSObjects(object source)

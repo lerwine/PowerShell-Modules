@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace LteDev
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     public class QueryItemList : BindingList<UriQueryParam>
 	{
 		private object _syncRoot = new object();
@@ -318,4 +319,5 @@ namespace LteDev
 				itemArray[i].Order = i;
 		}
 	}
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

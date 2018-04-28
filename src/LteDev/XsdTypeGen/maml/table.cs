@@ -8,10 +8,12 @@ using System.Xml.Serialization;
 
 namespace LteDev.XsdTypeGen.maml
 {
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
     [Serializable()]
     [XmlRoot("table", Namespace = Constants.Xmlns_maml)]
     public class table
     {
         // TODO: Reference from maml/textBlockType.cs: maml:table
     }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 }

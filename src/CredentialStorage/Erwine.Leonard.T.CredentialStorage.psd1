@@ -82,7 +82,7 @@
     # ModuleList = @()
     
     # List of all files packaged with this module
-    # FileList = @()
+    FileList = @('about_Erwine.Leonard.T.CredentialStorage.help.txt')
     
     # Private data to pass to the module specified in RootModule/ModuleToProcess
     PrivateData = @{

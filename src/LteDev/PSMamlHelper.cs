@@ -1626,6 +1626,7 @@ namespace LteDev
 
         #endregion
 
+#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         public static XmlQualifiedName ToXmlQualifiedName(XName name)
         {
             if (name == null)
@@ -1676,6 +1677,7 @@ namespace LteDev
 
             return result;
         }
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member
 
         private static XmlSchemaObject GetSchema(XmlSchemaObject obj, XmlQualifiedName name)
         {
