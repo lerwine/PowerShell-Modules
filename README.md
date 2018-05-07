@@ -18,10 +18,6 @@ Encrypt and decrypt using PKI technology.
 
 Provides secure credential storage and retrieval.
 
-### CryptographyScripts ###
-
-Powershell scripts to support encrypting and decrypting data.
-
 ### GDIPlus ###
 
 Binary Module to support graphic file manipulation.
@@ -34,25 +30,11 @@ Utility functions to manage filesystem, console, and stream IO.
 
 PowerShell development utility functions.
 
-### LteUtils ###
-
-System and web admin utility functions.
-
 ### NetworkUtility ###
 
-Utility functions for network access.
+### PSDB ###
 
-### WindowsForms ###
-
-Script Module to support windows forms in Powershell.
-
-### WinForms ###
-
-Module providing GUI components.
-
-### WPF ###
-
-Display WPF windows.
+Database command utilities
 
 ### XmlUtility ###
 
