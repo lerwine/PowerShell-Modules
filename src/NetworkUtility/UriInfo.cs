@@ -15,7 +15,7 @@ namespace NetworkUtility
         private string _scheme = null;
         private UriHierarchy _hierarchy = null;
         private UriQueryList _query = null;
-        private string _fragment = null;
+        //private string _fragment = null;
 
         public string Scheme
         {

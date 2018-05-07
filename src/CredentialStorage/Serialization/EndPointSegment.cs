@@ -11,13 +11,6 @@ namespace CredentialStorage.Serialization
     public class EndPointSegment
     {
         /// <summary>
-        /// Unique identifier for the authentication domain.
-        /// </summary>
-        /// <returns>String representing a unique identifier GUID of an <seealso cref="AuthDomain" />.</returns>
-        [DataMember]
-        public string auth { get; set; }
-        
-        /// <summary>
         /// Unique identifier for the default credential.
         /// </summary>
         /// <returns>String representing a unique identifier GUID of a <seealso cref="Credential" /> within the referenced <see cref="auth" />.</returns>

@@ -199,7 +199,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)/PostBuild.ps1 $(TargetName) $(TargetExt) $(ProjectName) $(ProjectDir) $(OutDir) $(SolutionDir)</PostBuildEvent>
+    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)PostBuild.ps1 -TargetName $(TargetName) -TargetExt $(TargetExt) -ProjectName $(ProjectName) -ProjectDir $(ProjectDir) -OutDir $(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

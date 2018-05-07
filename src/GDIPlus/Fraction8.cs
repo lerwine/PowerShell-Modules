@@ -303,8 +303,9 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #endregion
 
+        public override int GetHashCode() { throw new NotImplementedException(); }
+        
         #region IConvertible Explicit Implementation
-
 
         TypeCode IConvertible.GetTypeCode() { return TypeCode.Double; }
 

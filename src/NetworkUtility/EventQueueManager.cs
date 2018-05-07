@@ -327,7 +327,7 @@ namespace NetworkUtility
         /// </summary>
         /// <typeparam name="T">Type of argument to pass to <paramref name="handler" />.</typeparam>
         /// <param name="sender">Object which raised the event.</param>
-        /// <param name="arg">Value of event argument to pass to <paramref name="handler" />.</param>
+        /// <param name="eventArgs">Value of event argument to pass to <paramref name="handler" />.</param>
         /// <param name="handler">Method which gets invoked to handle the event.</param>
         /// <param name="onException">Method which gets invoked when <paramref name="handler" /> throws an exception.</param>
         /// <returns><code>true</code> if <paramref name="handler" /> was immediately invoked or <code>false</code>
@@ -385,8 +385,6 @@ namespace NetworkUtility
         /// <summary>
         /// Queues a method invocation to handle an event.
         /// </summary>
-        /// <typeparam name="T">Type of argument to pass to <paramref name="handler" />.</typeparam>
-        /// <param name="arg">Value of event argument to pass to <paramref name="handler" />.</param>
         /// <param name="handler">Method which gets invoked to handle the event.</param>
         /// <param name="onException">Method which gets invoked when <paramref name="handler" /> throws an exception.</param>
         /// <returns><code>true</code> if <paramref name="handler" /> was immediately invoked or <code>false</code>
@@ -421,7 +419,7 @@ namespace NetworkUtility
         /// </summary>
         /// <typeparam name="T">Type of argument to pass to <paramref name="handler" />.</typeparam>
         /// <param name="sender">Object which raised the event.</param>
-        /// <param name="arg">Value of event argument to pass to <paramref name="handler" />.</param>
+        /// <param name="eventArgs">Value of event argument to pass to <paramref name="handler" />.</param>
         /// <param name="handler">Method which gets invoked to handle the event.</param>
         /// <returns><code>true</code> if <paramref name="handler" /> was immediately invoked or <code>false</code>
         /// if <paramref name="handler" /> was queued for later execution.</returns>

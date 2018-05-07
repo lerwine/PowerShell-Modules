@@ -4,43 +4,89 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Release",
+            "label": "Build All Release",
+            "identifier": "buildAllRelease",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\MSBuild.exe",
+            "command": "${workspaceFolder}/build.bat",
             "args": [
-                "/t:build",
-                "/p:GenerateFullPaths=true",
-                "/p:Configuration=Release",
-                "/p:Platform=\"Any CPU\"",
-                "src/PowerShellModules.sln"
+                "-Configuration",
+                "Release"
             ],
-            "group":{
+            "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "presentation": {
-                // Reveal the output only if unrecognized errors occur.
                 "reveal": "silent"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
             "problemMatcher": "$msCompile"
-        }, {
-            "label": "Build Debug",
+        },
+        {
+            "label": "Re-Build Release",
+            "identifier": "rebuildAllRelease",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\MSBuild.exe",
+            "command": "${workspaceFolder}/build.bat",
             "args": [
-                "/t:build",
-                "/p:GenerateFullPaths=true",
-                "/p:Configuration=Debug",
-                "/p:Platform=\"Any CPU\"",
-                "src/PowerShellModules.sln"
+                "-Targets",
+                "Rebuild",
+                "-Configuration",
+                "Release"
             ],
             "group": "build",
             "presentation": {
-                // Reveal the output only if unrecognized errors occur.
                 "reveal": "silent"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build All Debug",
+            "identifier": "buildAllDebug",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.bat",
+            "args": [
+                "-Configuration",
+                "Debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Re-Build All Debug",
+            "identifier": "rebuildAllDebug",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.bat",
+            "args": [
+                "-Targets",
+                "Rebuild",
+                "-Configuration",
+                "Debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Re-Build LTEDev Debug",
+            "identifier": "rebuildLTEDevDebug",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.bat",
+            "args": [
+                "-Targets",
+                "Rebuild",
+                "-Configuration",
+                "Debug",
+                "-Project",
+                "LteDev"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
             "problemMatcher": "$msCompile"
         }
     ]

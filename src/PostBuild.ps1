@@ -1,28 +1,28 @@
 Param(
-#    [Parameter(Mandatory = $true, Position = 0)]
-    [string]$TargetName = 'Erwine.Leonard.T.GDIPlusLib',
+    [Parameter(Mandatory = $true)]
+    [string]$TargetName,
 
-#    [Parameter(Mandatory = $true, Position = 1)]
-    [string]$TargetExt = '.dll',
+    [Parameter(Mandatory = $true)]
+    [string]$TargetExt,
 
-#    [Parameter(Mandatory = $true, Position = 2)]
-    [string]$ProjectName = 'GDIPlus',
+    [Parameter(Mandatory = $true)]
+    [string]$ProjectName,
 
-#    [Parameter(Mandatory = $true, Position = 3)]
-    [string]$ProjectDir = 'C:\Users\lerwi\GitHub\PowerShell-Modules\src\GDIPlus\',
+    [Parameter(Mandatory = $true)]
+    [string]$ProjectDir,
 
-#    [Parameter(Mandatory = $true, Position = 4)]
-    [string]$OutDir = 'bin\Debug\',
+    [Parameter(Mandatory = $true)]
+    [string]$OutDir,
 
-#    [Parameter(Mandatory = $true, Position = 5)]
-    [string]$SolutionDir = 'C:\Users\lerwi\GitHub\PowerShell-Modules\src\'
+    [Parameter(Mandatory = $true)]
+    [string]$SolutionDir
 )
-     
+
 $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop;
 $WarningPreference = [System.Management.Automation.ActionPreference]::Continue;
 $InformationPreference = [System.Management.Automation.ActionPreference]::Continue;
 
-Function Normalize-Path {
+Function Optimize-Path {
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [string]$Path
@@ -35,24 +35,13 @@ Function Normalize-Path {
         ($d | Join-Path -ChildPath $n) | Write-Output;
     }
 }
-$OutPath = ((Join-Path -Path $ProjectDir -ChildPath $OutDir) | Resolve-Path).Path | Normalize-Path;
-$DistPath = ((($SolutionDir | Join-Path -ChildPath '../dist') | Resolve-Path).Path | Join-Path -ChildPath $ProjectName) | Normalize-Path;
-Write-Information -MessageData "'$TargetName', '$TargetExt', '$ProjectName', '$ProjectDir', '$OutDir' '$SolutionDir' Copying $OutPath to $DistPath";
-$PsdPath = Join-Path -Path $OutPath -ChildPath "$TargetName.psd1";
-if (-not ($PsdPath | Test-Path -PathType Leaf)) {
-    $allPsds = @($OutPath | Get-ChildItem -Filter "*.psd1");
-    $slnMatch = @($allPsds | Where-Object { $_.BaseName.EndsWith($ProjectName) });
-    if ($allPsds.Count -eq 1) {
-        $PsdPath = $allPsds[0].FullName;
-    } else {
-        if ($slnMatch.Count -gt 0) {
-            $PsdPath = $slnMatch[0].FullName;
-        } else {
-            throw "Module manifest not found at $PsdPath.";
-        }
-    }
-}
+
+$OutPath = ((Join-Path -Path $ProjectDir -ChildPath $OutDir) | Resolve-Path).Path | Optimize-Path;
+$DistPath = ((($SolutionDir | Join-Path -ChildPath '../dist') | Resolve-Path).Path | Join-Path -ChildPath "Erwine.Leonard.T.$ProjectName") | Optimize-Path;
+$PsdPath = Join-Path -Path $OutPath -ChildPath "Erwine.Leonard.T.$ProjectName.psd1";
+if (-not ($PsdPath | Test-Path -PathType Leaf)) { throw "Module manifest not found at $PsdPath." }
 $ModuleManifest = Test-ModuleManifest -Path $PsdPath;
+if ($ModuleManifest.RootModule -eq $null -or $ModuleManifest.RootModule.Trim().Length -eq 0) { throw "Module manifest not dfined for $PsdPath." }
 
 $FileList = @($PsdPath, ($OutPath | Join-Path -ChildPath $ModuleManifest.RootModule), (Join-Path -Path $OutPath -ChildPath "$TargetName$TargetExt")) + @($ModuleManifest.FileList) + @($ModuleManifest.NestedModules) + @($ModuleManifest.Scripts) + @($ModuleManifest.ScriptsToProcess) + @($ModuleManifest.ExportedFormatFiles) + @($ModuleManifest.ExportedTypeFiles);
 

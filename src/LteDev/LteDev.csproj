@@ -45,12 +45,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
@@ -78,68 +72,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyBrowser\AssemblyLookupCache.cs" />
-    <Compile Include="AssemblyBrowser\GenericParameterDataItem.cs" />
-    <Compile Include="AssemblyBrowser\GenericTypeParameterDataItem.cs" />
-    <Compile Include="AssemblyBrowser\InstantiatedTypeDefinition.cs" />
-    <Compile Include="AssemblyBrowser\MethodDataItem.cs" />
-    <Compile Include="AssemblyBrowser\MethodDefinitionItem.cs" />
-    <Compile Include="AssemblyBrowser\TypeDefinitionItem.cs" />
-    <Compile Include="AssemblyBrowser\TypeInfoDataItem.cs" />
-    <Compile Include="CodeXmlDocHelper.cs" />
-    <Compile Include="Commands\Export-PSHelpXml.cs" />
-    <Compile Include="Commands\Get-PSHelpXml.cs" />
-    <Compile Include="DllXmlDocHelper.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\AssemblyContext.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\CmdletFactoryContext.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\CommandFactoryContext.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\CommandHelpFactory.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\DevHelpFactory.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\FunctionFactoryContext.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\MamlFactory.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\ParameterFactory.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\ParameterFactoryContext.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactory.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\ExtensionMethods.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\PSCommandReader.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\PSHelpExporter.cs" />
-    <Compile Include="ComparisonResult.cs" />
-    <Compile Include="ComparisonStatus.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactoryBase.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\PSHelpFactoryContext.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\SyntaxParameterFactory.cs" />
-    <Compile Include="ModuleGeneration\HelpXml\SyntaxParameterFactoryContext.cs" />
-    <Compile Include="ModuleBuilder\AssemblyInfo.cs" />
-    <Compile Include="ModuleBuilder\BinaryModuleInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\CLRPropertyInfo.cs" />
-    <Compile Include="ModuleBuilder\CLRTypeInfo.cs" />
-    <Compile Include="ModuleBuilder\CmdletInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\CmdInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\CmdParamInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\AggregateInfoFactory.cs" />
-    <Compile Include="ModuleBuilder\ExtensionMethods.cs" />
-    <Compile Include="ModuleBuilder\FunctionInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\IHasAssemblyInfo.cs" />
-    <Compile Include="ModuleBuilder\InformationAggregator.cs" />
-    <Compile Include="ModuleBuilder\ModuleInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\ParamInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\ParameterSetAggregate.cs" />
-    <Compile Include="ModuleBuilder\ParameterSetParamInfoAggregate.cs" />
-    <Compile Include="ModuleBuilder\ScriptModuleInfoAggregate.cs" />
-    <Compile Include="ModuleGeneration\CommandDefinition.cs" />
-    <Compile Include="ModuleGeneration\CommandItem.cs" />
-    <Compile Include="ModuleGeneration\ModuleConfig.cs">
-      <DependentUpon>ModuleConfig.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="ModuleGeneration\ModuleReference.cs" />
-    <Compile Include="ModuleGeneration\OutputTypeSpec.cs" />
-    <Compile Include="ModuleGeneration\ParagraphContent.cs" />
-    <Compile Include="ModuleGeneration\ParagraphHost.cs" />
-    <Compile Include="ModuleGeneration\ParameterSetSpec.cs" />
-    <Compile Include="ModuleGeneration\ParameterSpec.cs" />
-    <Compile Include="ModuleGeneration\RootModule.cs" />
-    <Compile Include="ModuleGeneration\TableRow.cs" />
-    <Compile Include="ModuleGeneration\TypeDefinition.cs" />
+    <Compile Include="ValidateCsNameAttribute.cs" />
+    <Compile Include="ValidateCsNamespaceAttribute.cs" />
+    <Compile Include="ValidateTypeOrRefAttribute.cs" />
+    <Compile Include="CodeDomProxy\INamespaceAndType.cs" />
+    <Compile Include="CodeDomProxy\NamespaceAndType.cs" />
+    <Compile Include="CodeDomProxy\NamespaceAndNestedType.cs" />
+    <Compile Include="Commands\Test-CsName.cs" />
+    <Compile Include="Commands\Test-CsNamespace.cs" />
+    <Compile Include="Commands\New-CodeDomProvider.cs" />
+    <Compile Include="Commands\Write-GeneratedCode.cs" />
+    <Compile Include="Commands\New-CodeNamespace.cs" />
+    <Compile Include="Commands\Add-UsingNamespace.cs" />
+    <Compile Include="Commands\Add-CodeClassDeclaration.cs" />
+    <Compile Include="Commands\ConvertTo-CodeTypeReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -153,123 +99,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PSLinq.cs" />
-    <Compile Include="PSMamlGenerator.cs" />
-    <Compile Include="PSMamlHelper.cs" />
-    <Compile Include="PSObjectHelper.cs" />
-    <Compile Include="QueryItemList.cs" />
-    <Compile Include="Solution\ProjectRef.cs" />
-    <Compile Include="Solution\SolutionInfo.cs" />
-    <Compile Include="Solution\ProjectNode.cs" />
-    <Compile Include="Solution\SolutionNode.cs" />
-    <Compile Include="TypeBrowser\AssemblyDetailVM.cs" />
-    <Compile Include="TypeBrowser\AssemblyListItemVM.cs" />
-    <Compile Include="TypeBrowser\AssemblyNameListItemVM.cs" />
-    <Compile Include="TypeBrowser\ConstructorListItemVM.cs" />
-    <Compile Include="TypeBrowser\CustomAttributeVM.cs" />
-    <Compile Include="TypeBrowser\EventListItemVM.cs" />
-    <Compile Include="TypeBrowser\FieldListItemVM.cs" />
-    <Compile Include="TypeBrowser\MemberListItemVM.cs" />
-    <Compile Include="TypeBrowser\MemberValueVM.cs" />
-    <Compile Include="TypeBrowser\MethodBaseListItemVM.cs" />
-    <Compile Include="TypeBrowser\MethodListItemVM.cs" />
-    <Compile Include="TypeBrowser\ParameterListItemVM.cs" />
-    <Compile Include="TypeBrowser\PropertyListItemVM.cs" />
-    <Compile Include="TypeBrowser\TypeDetailVM.cs" />
-    <Compile Include="TypeBrowser\TypeListItemVM.cs" />
-    <Compile Include="UriQueryParam.cs" />
-    <Compile Include="ParsedUrl.cs" />
-    <Compile Include="UriSegment.cs" />
-    <Compile Include="UriSegmentList.cs" />
-    <Compile Include="WPF\ImpliedAndExplicitVM.cs" />
-    <Compile Include="WPF\DependencyPropertyVM.cs" />
-    <Compile Include="XsdTypeGen\command\command.cs" />
-    <Compile Include="XsdTypeGen\command\details.cs" />
-    <Compile Include="XsdTypeGen\command\examples.cs" />
-    <Compile Include="XsdTypeGen\command\inputTypes.cs" />
-    <Compile Include="XsdTypeGen\command\nonTerminatingErrors.cs" />
-    <Compile Include="XsdTypeGen\command\parameterNameInline.cs" />
-    <Compile Include="XsdTypeGen\command\parameters.cs" />
-    <Compile Include="XsdTypeGen\command\parameterValueInline.cs" />
-    <Compile Include="XsdTypeGen\command\returnValues.cs" />
-    <Compile Include="XsdTypeGen\command\synonyms.cs" />
-    <Compile Include="XsdTypeGen\command\syntax.cs" />
-    <Compile Include="XsdTypeGen\command\terminatingErrors.cs" />
-    <Compile Include="XsdTypeGen\command\vendor.cs" />
-    <Compile Include="XsdTypeGen\Constants.cs" />
-    <Compile Include="XsdTypeGen\dev\version.cs" />
-    <Compile Include="XsdTypeGen\maml\abbreviation.cs" />
-    <Compile Include="XsdTypeGen\maml\acronym.cs" />
-    <Compile Include="XsdTypeGen\maml\alertInline.cs" />
-    <Compile Include="XsdTypeGen\maml\alertSet.cs" />
-    <Compile Include="XsdTypeGen\maml\alertTypes.cs" />
-    <Compile Include="XsdTypeGen\maml\application.cs" />
-    <Compile Include="XsdTypeGen\maml\codeInline.cs" />
-    <Compile Include="XsdTypeGen\maml\commandInline.cs" />
-    <Compile Include="XsdTypeGen\maml\computerOutputInline.cs" />
-    <Compile Include="XsdTypeGen\maml\conditionalInline.cs" />
-    <Compile Include="XsdTypeGen\maml\copyright.cs" />
-    <Compile Include="XsdTypeGen\maml\copyrightInline.cs" />
-    <Compile Include="XsdTypeGen\maml\corporation.cs" />
-    <Compile Include="XsdTypeGen\maml\country.cs" />
-    <Compile Include="XsdTypeGen\maml\database.cs" />
-    <Compile Include="XsdTypeGen\maml\date.cs" />
-    <Compile Include="XsdTypeGen\maml\definitionList.cs" />
-    <Compile Include="XsdTypeGen\maml\description.cs" />
-    <Compile Include="XsdTypeGen\maml\embedObject.cs" />
-    <Compile Include="XsdTypeGen\maml\entityInline.cs" />
-    <Compile Include="XsdTypeGen\maml\environmentVariable.cs" />
-    <Compile Include="XsdTypeGen\maml\errorInline.cs" />
-    <Compile Include="XsdTypeGen\maml\example.cs" />
-    <Compile Include="XsdTypeGen\maml\footnote.cs" />
-    <Compile Include="XsdTypeGen\maml\foreignPhrase.cs" />
-    <Compile Include="XsdTypeGen\maml\glossaryEntryLink.cs" />
-    <Compile Include="XsdTypeGen\maml\hardware.cs" />
-    <Compile Include="XsdTypeGen\maml\inline.cs" />
-    <Compile Include="XsdTypeGen\maml\internetUri.cs" />
-    <Compile Include="XsdTypeGen\maml\internetUriType.cs" />
-    <Compile Include="XsdTypeGen\maml\keyCombinationInline.cs" />
-    <Compile Include="XsdTypeGen\maml\languageKeyword.cs" />
-    <Compile Include="XsdTypeGen\maml\lineBreak.cs" />
-    <Compile Include="XsdTypeGen\maml\list.cs" />
-    <Compile Include="XsdTypeGen\maml\literal.cs" />
-    <Compile Include="XsdTypeGen\maml\localUri.cs" />
-    <Compile Include="XsdTypeGen\maml\markup.cs" />
-    <Compile Include="XsdTypeGen\maml\math.cs" />
-    <Compile Include="XsdTypeGen\maml\menuSelection.cs" />
-    <Compile Include="XsdTypeGen\maml\newTerm.cs" />
-    <Compile Include="XsdTypeGen\maml\prompt.cs" />
-    <Compile Include="XsdTypeGen\maml\quoteInline.cs" />
-    <Compile Include="XsdTypeGen\maml\rangeInline.cs" />
-    <Compile Include="XsdTypeGen\maml\replaceable.cs" />
-    <Compile Include="XsdTypeGen\maml\textType.cs" />
-    <Compile Include="XsdTypeGen\maml\navigationLink.cs" />
-    <Compile Include="XsdTypeGen\maml\notLocalizable.cs" />
-    <Compile Include="XsdTypeGen\maml\para.cs" />
-    <Compile Include="XsdTypeGen\maml\phrase.cs" />
-    <Compile Include="XsdTypeGen\maml\quote.cs" />
-    <Compile Include="XsdTypeGen\maml\registryEntryInline.cs" />
-    <Compile Include="XsdTypeGen\maml\relatedLinks.cs" />
-    <Compile Include="XsdTypeGen\maml\shellExecuteLink.cs" />
-    <Compile Include="XsdTypeGen\maml\shortcut.cs" />
-    <Compile Include="XsdTypeGen\maml\subscript.cs" />
-    <Compile Include="XsdTypeGen\maml\superscript.cs" />
-    <Compile Include="XsdTypeGen\maml\table.cs" />
-    <Compile Include="XsdTypeGen\maml\textBlockType.cs" />
-    <Compile Include="XsdTypeGen\maml\token.cs" />
-    <Compile Include="XsdTypeGen\maml\ui.cs" />
-    <Compile Include="XsdTypeGen\maml\userInput.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Diff\ClassDiagram1.cd" />
     <None Include="GenerateReadOnlyDependencyProperty.ps1" />
-    <None Include="ModuleGeneration\HelpXml\ClassDiagram1.cd" />
-    <None Include="ModuleBuilder\ClassDiagram1.cd" />
-    <None Include="ModuleGeneration\ModuleConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Erwine.Leonard.T.LteDev.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -279,164 +113,7 @@
     <Content Include="Erwine.Leonard.T.LteDev.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Schemas\base.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\baseConditional.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\block.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\blockCommon.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\blockSoftware.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\conditionSet.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developer.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerCommand.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManaged.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedClass.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedConstructor.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedDelegate.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedEnumeration.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedEvent.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedField.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedInterface.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedMethod.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedNamespace.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedOperator.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedOverload.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedProperty.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\developerManagedStructure.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\endUser.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\faq.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\glossary.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\hierarchy.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\inline.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\inlineCommon.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\inlineSoftware.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\inlineUi.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\ITPro.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\Maml.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\shellExecute.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\structure.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\structureGlossary.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\structureList.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\structureProcedure.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\structureTable.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\task.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Schemas\troubleshooting.xsd">
-      <SubType>Designer</SubType>
+    <Content Include="VsProjectTypes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\Settings.settings">
@@ -445,17 +122,12 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="README.md" />
-    <None Include="TypeBrowser\ClassDiagram1.cd" />
     <None Include="Untitled1.ps1" />
-    <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
     <None Include="WindowsFormsHelper.ps1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ModuleGeneration\HelpXml\AssemblyInfo.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)/PostBuild.ps1 $(TargetName) $(TargetExt) $(ProjectName) $(ProjectDir) $(OutDir) $(SolutionDir)</PostBuildEvent>
+    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)PostBuild.ps1 -TargetName $(TargetName) -TargetExt $(TargetExt) -ProjectName $(ProjectName) -ProjectDir $(ProjectDir) -OutDir $(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

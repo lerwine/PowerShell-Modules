@@ -1,0 +1,11 @@
+{
+    "terminal.integrated.env.linux": {
+        "VSCodeNeedsWideBuffer": "true"
+    },
+    "terminal.integrated.env.osx": {
+        "VSCodeNeedsWideBuffer": "true"
+    },
+    "terminal.integrated.env.windows": {
+        "VSCodeNeedsWideBuffer": "true"
+    }
+}

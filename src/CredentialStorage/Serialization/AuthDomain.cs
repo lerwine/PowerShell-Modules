@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace CredentialStorage.Serialization
 {
     /// <summary>
-    /// Represents an authentication authority within a <seealso cref="Domain" />.
+    /// Represents an authentication authority within a <seealso cref="Realm" />.
     /// </summary>
     [DataContract(Name = "domain")]
     public class AuthDomain : ISerializableItem
