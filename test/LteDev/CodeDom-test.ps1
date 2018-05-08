@@ -1,7 +1,7 @@
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.LteDev/Erwine.Leonard.T.IOUtility.psd1');
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.LteDev/Erwine.Leonard.T.LteDev.psd1');
 
-Describe 'Test-CsName' {
+Describe 'Testing Test-CsName Cmdlet' {
     Context 'Invoking using parameter with single string' {
         foreach ($Target in @({'TestName'}, {'test_Name'}, {'x'}, {'_'}, {'_test'}, {'_123'})) {
             It "$($Target.ToString()) string should return true" {
@@ -68,7 +68,7 @@ Describe 'Test-CsName' {
     }
 }
 
-Describe 'Test-CsNamespace' {
+Describe 'Testing Test-CsNamespace Cmdlet' {
     Context 'Invoking using parameter with single string' {
         foreach ($Target in @({'TestName'}, {'test_Name'}, {'x'}, {'_'}, {'_test'}, {'_123'}, {'TestName.test_Name'}, {'x._._test._123'})) {
             It "$($Target.ToString()) string should return true" {
@@ -138,3 +138,12 @@ Describe 'Test-CsNamespace' {
         }
     }
 }
+
+Push-Location -Path (Get-Location);
+Set-Location -Path 'C:\Users\lerwi\GitHub\PowerShell-Modules-PR2\test\IOUtility';
+@('Get-SpecialFolderNames', 'Get-SpecialFolder', 'ConvertTo-SafeFileName', 'ConvertFrom-SafeFileName', 'Get-AppDataPath', 'New-WindowOwner', 'Read-FileDialog',
+	'Get-MinBase64BlockSize', 'Read-IntegerFromStream', 'Read-LongIntegerFromStream', 'Write-IntegerToStream', 'Write-LongIntegerToStream', 'Read-LengthEncodedBytes', 'Write-LengthEncodedBytes',
+	'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'Get-TextEncoding', 'New-MemoryStream', 'New-DataTable', 'Add-DataColumn', 'Test-IsNullOrWhitespace', 'Split-DelimitedText',
+	'Out-NormalizedText', 'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText', 'Compare-FileSystemInfo', 'Test-PathsAreEqual') | ForEach-Object {
+        
+    }

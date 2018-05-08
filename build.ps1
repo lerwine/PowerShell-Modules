@@ -50,7 +50,7 @@ try {
 $Script:SolutionFilePath = $PSScriptRoot | Join-Path -ChildPath $SolutionFile;
 $Script:SolutionDirectory = $Script:SolutionFilePath | Split-Path -Parent;
 $MSBuildExePath = $MsBuildBin | Join-Path -ChildPath 'MSBuild.exe';
-if ($Project -ne $null -and $Project.Trim().Length > 0) {
+if ($Project -ne $null -and $Project.Trim().Length -gt 0) {
     . $MSBuildExePath "/t:$($Targets -join ';')" "/p:GenerateFullPaths=true" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/$Project/$Project.csproj";
 } else {
     . $MSBuildExePath "/t:$($Targets -join ';')" "/p:GenerateFullPaths=true" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/PowerShellModules.sln";
