@@ -326,48 +326,48 @@ Function Get-TypeUsage {
     [CmdletBinding(DefaultParameterSetName = 'Type')]
     [OutputType([string[]])]
     Param(
-        # Type of CLR object
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Type')]
+        # Type of CLR object
         [Type]$InputType,
         
-        # Object for which to get usage info
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Object')]
+        # Object for which to get usage info
         [object[]]$InputObject,
         
-        # Return constructors
         [Parameter(Mandatory = $false)]
+        # Return constructors
         [switch]$Constructors,
         
-        # Return methods
         [Parameter(Mandatory = $false)]
+        # Return methods
         [switch]$Methods,
         
-        # Return properties
         [Parameter(Mandatory = $false)]
+        # Return properties
         [switch]$Properties,
         
-        # Return fields
         [Parameter(Mandatory = $false)]
+        # Return fields
         [switch]$Fields,
         
-        # Return events
         [Parameter(Mandatory = $false)]
+        # Return events
         $Events,
         
-        # Return static members
         [Parameter(Mandatory = $false)]
+        # Return static members
         [switch]$Static,
         
-        # Return instance (non-static) members
         [Parameter(Mandatory = $false)]
+        # Return instance (non-static) members
         [switch]$Instance,
         
-        # Include inherited members
         [Parameter(Mandatory = $false)]
+        # Include inherited members
         [switch]$Inherited,
         
-        # Include base type names
         [Parameter(Mandatory = $false)]
+        # Include base type names
         [switch]$ShowBaseTypes
     )
     
@@ -603,4 +603,254 @@ Function Find-ProjectTypeInfo {
 			New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
 		}
     }
+}
+
+$Script:MamlSchema = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+    msh = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+        ns = 'http://msh';
+        rootElement = 'helpItems';
+    };
+    maml = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+        ns = 'http://schemas.microsoft.com/maml/2004/10';
+    };
+    command = 'http://schemas.microsoft.com/maml/dev/command/2004/10';
+    dev = 'http://schemas.microsoft.com/maml/dev/2004/10';
+};
+
+Function New-PSMaml {
+    <#
+        .SYNOPSIS
+            Get PowerShell help MAML.
+ 
+        .DESCRIPTION
+            Creates a new Xml document for PowerShell MAML help.
+
+        .EXAMPLE
+            $MamDocument = New-PSMaml;
+            $CommandElement = Add-CommandMaml -Maml $MamDocument -Verb 'Invoke' -Noun 'MyCommand';
+
+        .LINK
+            Add-CommandMaml
+
+    #>
+    [CmdletBinding()]
+    [OutputType([xml])]
+    Param()
+
+    $PSMaml = New-Object -TypeName 'System.Xml.XmlDocument';
+    $PSMaml.AppendChild($PSMaml.CreateElement($Script:MamlSchema.msh.rootElement, $Script:MamlSchema.msh.ns)) | Out-Null;
+    $PSMaml | Write-Output;
+}
+
+Function Import-PSMaml {
+    <#
+        .SYNOPSIS
+            Imports PowerShell help MAML.
+ 
+        .DESCRIPTION
+            Loads PowerShell help MAM into a new Xml document.
+
+        .EXAMPLE
+            $MamDocument = (Get-Content -Path 'MyModule.dll-Help.xml') | Import-PSMaml;
+
+        .LINK
+            New-CommandMaml
+    #>
+    [CmdletBinding()]
+    [OutputType([xml])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'Content')]
+        [AllowEmptyString()]
+        [string[]]$Content,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Stream')]
+        [System.IO.Stream]$Stream,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'TextReader')]
+        [System.IO.TextReader]$TextReader,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'XmlReader')]
+        [System.Xml.XmlReader]$XmlReader
+    )
+
+    Begin {
+        $PSMaml = New-Object -TypeName 'System.Xml.XmlDocument';
+        $AllContent = @();
+    }
+
+    Process {
+        switch ($PSCmdlet.ParameterSetName) {
+            'Stream' {
+                $PSMaml.Load($Stream);
+                break;
+            }
+            'TextReader' {
+                $PSMaml.Load($TextReader);
+                break;
+            }
+            'XmlReader' {
+                $PSMaml.Load($XmlReader);
+                break;
+            }
+            default {
+                $AllContent = $AllContent + @($Content);
+                break;
+            }
+        }
+    }
+    End {
+        if ($PSCmdlet.ParameterSetName -eq 'Content') {
+            $PSMaml.LoadXml(($AllContent | Out-String).Trim());
+        }
+        $PSMaml | Write-Output;
+    }
+}
+
+Function Test-PSMaml {
+    <#
+        .SYNOPSIS
+            Checks whether XML represents PowerShell help MAML.
+ 
+        .DESCRIPTION
+            Checks whether the XML document element name is 'helpItems' and the namespace of that element is 'http://msh'.
+    #>
+    [CmdletBinding()]
+    [OutputType([bool], [string])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [Alias('maml')]
+        [xml]$PSMaml
+    )
+
+    Begin {
+        $Success = $true;
+    }
+    Process {
+        if ($Success) {
+            foreach ($x in $PSMaml) {
+                if ($x -eq $null -or $PSMaml.DocumentElement -eq $null -or $PSMaml.DocumentElement.LocalName -ne $Script:MamlSchema.msh.rootElement -or $PSMaml.DocumentElement.NamespaceURI -ne $Script:MamlSchema.msh.ns) {
+                    $Success = $false;
+                    break;
+                }
+            }
+        }
+    }
+    End {
+        $Success | Write-Output;
+    }
+}
+
+Function Test-CommandVerb {
+    <#
+        .SYNOPSIS
+            Test command verb text.
+ 
+        .DESCRIPTION
+            Checks validity of command verb text or gets proper letter-case commnd verb string.
+
+        .EXAMPLE
+            $VerbText = Read-Host -Prompt 'Enter verb';
+            $IsVerbValid = $VerbText | Test-CommandVerb;
+
+        .EXAMPLE
+            $VerbText = Read-Host -Prompt 'Enter verb';
+            $VerbText = $VerbText | Test-CommandVerb -GetMatching;
+            if ($VerbText -eq $null) {
+                Write-Warning -Message "'$VerbText' is not a valid verb.";
+            }
+    #>
+    [CmdletBinding()]
+    [OutputType([bool], [string])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [string[]]$Verb,
+
+        [switch]$GetMatching
+    )
+
+    Begin {
+        if ($Script:__Test_CommandVerb -eq $null) {
+            $Script:__Test_CommandVerb = @(Get-Verb | ForEach-Object { $_.Verb })
+        }
+        $Success = $true;
+    }
+    Process {
+        if ($GetMatching) {
+            foreach ($v in $Verb) {
+                if ($v -ne $null) {
+                    $s = $v.Trim();
+                    $Script:__Test_CommandVerb | Where-Object { $_ -ieq $s }
+                }
+            }
+        } else {
+            if ($Success) {
+                foreach ($v in $Verb) {
+                    if ($v -eq $null -or $Script:__Test_CommandVerb -inotcontains $v) {
+                        $Success = $false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    End {
+        if (-not $GetMatching) { $Success | Write-Output }
+    }
+}
+
+Function Get-CommandMaml {
+    [CmdletBinding()]
+    [OutputType([System.Xml.XmlElement])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [Alias('maml')]
+        [ValidateScript({ $_ | Test-PSMaml })]
+        [xml]$PSMaml,
+        
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'InputNames')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'InputVerbs')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'InputNouns')]
+        [string[]]$InputString,
+        
+        [Parameter(ParameterSetName = 'VerbNoun')]
+        [string[]]$Verb,
+        
+        [Parameter(ParameterSetName = 'VerbNoun')]
+        [string]$Noun,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'Name')]
+        [string[]]$Name,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'InputName')]
+        [switch]$Names,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'InputVerbs')]
+        [switch]$Verbs,
+        
+        [Parameter(Mandatory = $true, ParameterSetName = 'InputNouns')]
+        [switch]$Nouns
+    )
+
+
+
+    Process {
+        switch ($PSCmdlet.ParameterSetName) {
+            'InputNames' {
+                
+            }
+        }
+    }
+}
+Function Add-CommandMaml {
+    [CmdletBinding()]
+    [OutputType([System.Xml.XmlElement])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({})]
+        [string]$Verb
+    )
+
 }

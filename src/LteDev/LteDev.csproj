@@ -75,6 +75,7 @@
     <Compile Include="ValidateCsNameAttribute.cs" />
     <Compile Include="ValidateCsNamespaceAttribute.cs" />
     <Compile Include="ValidateTypeOrRefAttribute.cs" />
+    <Compile Include="MshDocument.cs" />
     <Compile Include="CodeDomProxy\INamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndNestedType.cs" />
