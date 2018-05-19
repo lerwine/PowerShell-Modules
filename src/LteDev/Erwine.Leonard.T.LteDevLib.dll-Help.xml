@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<helpItems xmlns="http://msh" schema="maml">
+    <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+        <command:details>
+            <command:name>CmdletName</command:name>
+            <command:verb>Verb</command:verb>
+            <command:noun>Noun</command:noun>
+            <command:name>CmdletName</command:name>
+            <command:verb>Verb</command:verb>
+            <command:noun>Noun</command:noun>
+            <maml:description>
+                <maml:para>CmdletSynopsis</maml:para>
+            </maml:description>
+        </command:details>
+        <maml:description>
+            <maml:para>DetailedDescription</maml:para>
+        </maml:description>
+        <command:syntax>
+            <command:syntaxItem>
+                <maml:name>Cmdlet-Name</maml:name>
+                <command:parameter required="true" globbing="true" pipelineInput="true (ByValue)" position="1">
+                    <maml:name>ParameterName1</maml:name>
+                    <command:parameterValue required="true">
+                        string[]
+                    </command:parameterValue>
+                </command:parameter>
+                <command:parameter required="true" globbing="true" pipelineInput="true (ByPropertyName)">
+                    <maml:name>ParameterName2</maml:name>
+                    <command:parameterValue required="true">
+                        int32[]
+                    </command:parameterValue>
+                </command:parameter>
+            </command:syntaxItem>
+        </command:syntax>
+        <command:parameters>
+            <!--Add parameter information here-->
+        </command:parameters>
+        <command:inputTypes>
+            <!--Add input type information here-->
+        </command:inputTypes>
+        <command:returnValues>
+            <!--Add return value information here-->
+        </command:returnValues>
+        <maml:alertSet>
+            <!--Add Note information here-->
+        </maml:alertSet>
+        <command:examples>
+            <!--Add cmdlet examples here-->
+        </command:examples>
+        <maml:relatedLinks>
+            <!--Add links to related content here-->
+        </maml:relatedLinks>
+    </command:command>
+</helpItems>
