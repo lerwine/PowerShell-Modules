@@ -1,0 +1,12 @@
+<Types>
+    <Type>
+        <Name>System.Reflection.PropertyInfo</Name>
+        <Members>
+            <ScriptProperty>
+                <Name>IsPublic</Name>
+                <GetScriptBlock>
+                </GetScriptBlock>
+            </ScriptProperty>
+        </Members>
+    </Type>
+</Types>

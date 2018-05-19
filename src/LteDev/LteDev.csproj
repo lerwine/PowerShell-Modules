@@ -50,6 +50,11 @@
       <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.PowerShell.Commands.Utility, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Utility\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Utility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.PowerShell.Commands.Management, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.PowerShell.Commands.Management\v4.0_3.0.0.0__31bf3856ad364e35\Microsoft.PowerShell.Commands.Management.dll</HintPath>
@@ -86,6 +91,9 @@
     <Compile Include="Commands\Add-UsingNamespace.cs" />
     <Compile Include="Commands\Add-CodeClassDeclaration.cs" />
     <Compile Include="Commands\ConvertTo-CodeTypeReference.cs" />
+    <Compile Include="Commands\Get-CodeTypeReference.cs" />
+    <Compile Include="Commands\Group-TypeInfo.cs" />
+    <Compile Include="Commands\Select-ObjectWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
