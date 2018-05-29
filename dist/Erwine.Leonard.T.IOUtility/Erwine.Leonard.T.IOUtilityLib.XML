@@ -379,5 +379,117 @@
             <param name="match">Current regular expression match to be replaced.</param>
             <returns>Text which has been replaced by <see cref="P:IOUtility.ScriptRegexReplaceHandler.ScriptBlock" />.</returns>
         </member>
+        <member name="T:IOUtility.Commands.New_DataTable">
+            <summary>
+            Creates a new DataTable object.
+            </summary>
+            <details>Initializes a new instance of the System.Data.DataTable class.</details>
+        </member>
+        <member name="P:IOUtility.Commands.New_DataTable.TableName">
+            <summary>
+            The name to give the table.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.New_DataTable.TableNamespace">
+            <summary>
+            The namespace for the XML representation of the data stored in the DataTable.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.New_DataTable.Prefix">
+            <summary>
+            The namespace prefix for the XML representation of the data stored in the System.Data.DataTable
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.New_DataTable.CaseSensitive">
+            <summary>
+            Indicates whether string comparisons within the table are case-sensitive
+            </summary>
+        </member>
+        <member name="T:IOUtility.Commands.Add_DataColumn">
+            <summary>
+            Adds a new DataColumn object to a DataTable.
+            </summary>
+            <details>Creates a new instance of the System.Data.DataColumn class and adds it to a System.Data.DataTable object.</details>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.Table">
+            <summary>
+            DataTable to add the DataColumn to.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.ColumnName">
+            <summary>
+            A string that represents the name of the column to be added.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.DataType">
+            <summary>
+            A supported column type.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.Expr">
+            <summary>
+            An expression to calculate the value of a column, or create an aggregate column. The return type of an expression is determined by the System.Data.DataColumn.DataType of the column
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.Type">
+            <summary>
+            One of the System.Data.MappingType values
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.Caption">
+            <summary>
+            The caption for the column.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.AllowDBNull">
+            <summary>
+            Indicates whether null values are allowed in this column for rows that belong to the table.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.AutoIncrement">
+            <summary>
+            Indicates whether the column automatically increments the value of the column for new rows added to the table.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.AutoIncrementSeed">
+            <summary>
+            The starting value for a column when AutoIncrement is set.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.AutoIncrementStep">
+            <summary>
+            The starting value for a column when AutoIncrement is set.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.DateTimeMode">
+            <summary>
+            The DateTime mode for the column.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.DefaultValue">
+            <summary>
+            The default value for the column when you are creating new rows.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.MaxLength">
+            <summary>
+            The maximum length of a text column.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.ReadOnly">
+            <summary>
+            Indicates whether the column allows for changes as soon as a row has been added to the table.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.Unique">
+            <summary>
+            Indicates whether the values in each row of the column must be unique.
+            </summary>
+        </member>
+        <member name="P:IOUtility.Commands.Add_DataColumn.PassThru">
+            <summary>
+            Indicates whether the new data column is returned.
+            </summary>
+        </member>
     </members>
 </doc>

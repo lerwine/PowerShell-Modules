@@ -65,7 +65,6 @@
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="IPSEventScriptHandler.cs" />
     <Compile Include="IPSInvocationContext.cs" />
-    <Compile Include="LinqEmul.cs" />
     <Compile Include="PSEventScriptHandler.cs" />
     <Compile Include="PSInvocationContext.cs" />
     <Compile Include="PSInvocationEventHandlerInvokedArgs.cs" />
@@ -78,6 +77,8 @@
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
     <Compile Include="WindowOwner.cs" />
+    <Compile Include="Commands/New-DataTable.cs" />
+    <Compile Include="Commands/Add-DataColumn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Erwine.Leonard.T.IOUtility.psd1">
@@ -99,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="TestScripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

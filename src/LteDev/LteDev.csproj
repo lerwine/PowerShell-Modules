@@ -77,24 +77,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TypeDetail.cs" />
     <Compile Include="ValidateCsNameAttribute.cs" />
     <Compile Include="ValidateCsNamespaceAttribute.cs" />
     <Compile Include="ValidateTypeOrRefAttribute.cs" />
-    <Compile Include="MshDocument.cs" />
     <Compile Include="CodeDomProxy\INamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndNestedType.cs" />
+    <Compile Include="Commands\Add-CodeClassDeclaration.cs" />
+    <Compile Include="Commands\Add-UsingNamespace.cs" />
+    <Compile Include="Commands\ConvertTo-CodeTypeReference.cs" />
+    <Compile Include="Commands\ConvertTo-CodeTypeString.cs" />
+    <Compile Include="Commands\Group-TypeInfo.cs" />
+    <Compile Include="Commands\New-CodeDomProvider.cs" />
+    <Compile Include="Commands\New-CodeNamespace.cs" />
+    <Compile Include="Commands\Select-ObjectWrapper.cs" />
     <Compile Include="Commands\Test-CsName.cs" />
     <Compile Include="Commands\Test-CsNamespace.cs" />
-    <Compile Include="Commands\New-CodeDomProvider.cs" />
     <Compile Include="Commands\Write-GeneratedCode.cs" />
-    <Compile Include="Commands\New-CodeNamespace.cs" />
-    <Compile Include="Commands\Add-UsingNamespace.cs" />
-    <Compile Include="Commands\Add-CodeClassDeclaration.cs" />
-    <Compile Include="Commands\ConvertTo-CodeTypeReference.cs" />
-    <Compile Include="Commands\Get-CodeTypeReference.cs" />
-    <Compile Include="Commands\Group-TypeInfo.cs" />
-    <Compile Include="Commands\Select-ObjectWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

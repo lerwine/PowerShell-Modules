@@ -13,7 +13,7 @@ namespace CredentialStorage.Serialization
         /// <summary>
         /// Unique identifier for the default credential.
         /// </summary>
-        /// <returns>String representing a unique identifier GUID of a <seealso cref="Credential" /> within the referenced <see cref="auth" />.</returns>
+        /// <returns>String representing a unique identifier GUID of a <seealso cref="Credential" /> within the referenced <see cref="EndPointRoot" />.</returns>
         [DataMember]
         public string credential { get; set; }
         

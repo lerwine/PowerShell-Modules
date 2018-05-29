@@ -1034,6 +1034,11 @@ Function ConvertFrom-XmlBinary {
         [switch]$Hex
     )
 
+    Begin {
+        if ($Script:__ConvertFrom_XmlBinary_WhitespaceRegex -eq $null) {
+            $Script:__ConvertFrom_XmlBinary_WhitespaceRegex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s+', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
+        }
+    }
     Process {
         $Text = $Text.Trim();
         if ($Text.Length -eq 0) {
@@ -1042,7 +1047,7 @@ Function ConvertFrom-XmlBinary {
             if ($Hex) {
                 $List = New-Object -TypeName 'System.Collections.Generic.List[char]';
                 if ($Text.StartsWith('0x') -or $Text.StartsWith('0X')) { $Text = $Text.Substring(2) }
-                $Text = [XmlUtility.XmlUtility]::WhitespaceRegex.Replace($Text, '');
+                $Text = $Script:__ConvertFrom_XmlBinary_WhitespaceRegex.Replace($Text, '');
                 if ($Text.Length -gt 0) {
                     for ($i = 0; $i -lt $Text.Length; $i+=2) {
                         $List.Add(([char]([int]::Parse($Text.Substring($i, 2), [System.Globalization.NumberStyles]::HexNumber))));
@@ -1079,12 +1084,14 @@ Function ConvertTo-XmlList {
         [string[]]$Text
     )
 
-    Begin { $Items = @(); }
+    Begin {
+        $Items = @();
+    }
 
     Process { $Items += $Text }
 
     End {
-        ($Items | ForEach-Object { [XmlUtility.XmlUtility]::EncodeSpace($_) }) -join ' ';
+        ($Items | ForEach-Object { $_.Replace("_", "_x005f_").Replace(" ", "_x0020_") }) -join ' ';
     }
 }
 
@@ -1117,7 +1124,7 @@ Function ConvertFrom-XmlList {
         if ($NoDecode) {
             $Items -split '\s+';
         } else {
-            ($Items -split '\s+') | ForEach-Object { [XmlUtility.XmlUtility]::Decode($_) }
+            ($Items -split '\s+') | ForEach-Object { $_.Replace("_x0020_", " ").Replace("_x005f_", "_") }
         }
     }
 }

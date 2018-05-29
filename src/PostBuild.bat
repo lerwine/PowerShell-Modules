@@ -1,4 +1,11 @@
 @ECHO OFF
-SET BatchPath=%~dp0
-cd "%BatchPath%"
-powershell -STA -ExecutionPolicy Bypass -File PostBuild.ps1 %1 %2 %3 %4 %5 %6 %7 %8 %9
+SET ScriptName=%~n0.ps1
+PUSHD "%~dp0%"
+IF EXIST "%ScriptName%" GOTO :runCmd
+ECHO "%~dp0%%ScriptName% does not exist."
+GOTO end
+:runCmd
+powershell -STA -ExecutionPolicy Bypass -File "%ScriptName%" %*
+IF ERRORLEVEL 1 "Script execution returned error code %ERRORLEVEL%."
+:end
+POPD

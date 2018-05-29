@@ -311,7 +311,14 @@ namespace LteDev
         private Assembly _assembly;
         public string Name { get { return _assembly.FullName; } }
         public TypeInfoNsTreeNode NsRoot { get; private set; }
-        public ITypeInfoNodeContainer Parent => throw new NotImplementedException();
+        public ITypeInfoNodeContainer Parent
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public Assembly GetAssembly() { return _assembly; }
         public AssemblyTreeNode(Assembly assembly)
         {

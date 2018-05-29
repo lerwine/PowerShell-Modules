@@ -60,6 +60,8 @@ namespace Erwine.Leonard.T.GDIPlus
             if (attributes.Length > 1 && attributes.Any(a => a.IsPrimary))
                 attributes = attributes.Where(a => a.IsPrimary).ToArray();
             ExifPropertyTypeAttribute attr = attributes.DefaultIfEmpty(new ExifPropertyTypeAttribute(type) { HasNullTerminator = type == ExifPropertyType.ASCII }).First();
+            if (type == ExifPropertyType.BestMatching)
+                type = attr.Type;
             PSObject property;
             switch (type)
             {
@@ -92,9 +94,6 @@ namespace Erwine.Leonard.T.GDIPlus
                 case ExifPropertyType.SRational:
                     property = AsDecimalValue(bytes, count);
                     break;
-                case ExifPropertyType.BestMatching:
-#warning Not implemented
-                    throw new NotImplementedException();
                 default:
                     property = AsHexValues(bytes, count);
                     break;
