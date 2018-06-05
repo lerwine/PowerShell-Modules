@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlUtility", "XmlUtility\Xm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSDB", "PSDB\PSDB.csproj", "{DB0BD3F8-B09D-4688-AD2E-EC1F24945D37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsMsBuildHelper", "PsMsBuildHelper\PsMsBuildHelper.csproj", "{495E7263-E73D-402C-93DB-0BE801F94FEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,18 @@ Global
 		{DB0BD3F8-B09D-4688-AD2E-EC1F24945D37}.Release|x64.Build.0 = Release|x64
 		{DB0BD3F8-B09D-4688-AD2E-EC1F24945D37}.Release|x86.ActiveCfg = Release|x86
 		{DB0BD3F8-B09D-4688-AD2E-EC1F24945D37}.Release|x86.Build.0 = Release|x86
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Debug|x64.ActiveCfg = Debug|x64
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Debug|x64.Build.0 = Debug|x64
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Debug|x86.ActiveCfg = Debug|x86
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Debug|x86.Build.0 = Debug|x86
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x64.ActiveCfg = Release|x64
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x64.Build.0 = Release|x64
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x86.ActiveCfg = Release|x86
+		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
