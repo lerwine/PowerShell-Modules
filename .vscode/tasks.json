@@ -88,6 +88,42 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build PsMsBuildHelper Debug",
+            "identifier": "buildPsMsBuildHelperDebug",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.bat",
+            "args": [
+                "-Configuration",
+                "Debug",
+                "-Project",
+                "PsMsBuildHelper"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "ReBuild PsMsBuildHelper Debug",
+            "identifier": "rebuildPsMsBuildHelperDebug",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.bat",
+            "args": [
+                "-Targets",
+                "Rebuild",
+                "-Configuration",
+                "Debug",
+                "-Project",
+                "PsMsBuildHelper"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
         }
     ]
 }

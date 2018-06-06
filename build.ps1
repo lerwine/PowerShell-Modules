@@ -2,7 +2,7 @@ Param(
     [ValidateSet('Debug', 'Release')]
     [string]$Configuration = 'Release',
 
-    [string]$Platform = 'Any CPU',
+    [string]$Platform = 'AnyCPU',
 
     [ValidateSet('Test', 'Deploy', 'None')]
     [string]$Action = 'None',
@@ -10,7 +10,7 @@ Param(
     [ValidateSet('Build', 'Resources', 'Compile', 'Rebuild', 'Clean', 'Publish')]
     [string[]]$Targets = @('Build'),
 
-    [ValidateSet('CertificateCryptography', 'CredentialStorage', 'GDIPlus', 'IOUtility', 'LteDev', 'NetworkUtility', 'PSDB', 'XmlUtility')]
+    [ValidateSet('CertificateCryptography', 'CredentialStorage', 'GDIPlus', 'IOUtility', 'LteDev', 'NetworkUtility', 'PSDB', 'PsMsBuildHelper', 'XmlUtility')]
     [string]$Project,
 
     [int]$TermMinWidth = 2048,
@@ -51,7 +51,27 @@ $Script:SolutionFilePath = $PSScriptRoot | Join-Path -ChildPath $SolutionFile;
 $Script:SolutionDirectory = $Script:SolutionFilePath | Split-Path -Parent;
 $MSBuildExePath = $MsBuildBin | Join-Path -ChildPath 'MSBuild.exe';
 if ($Project -ne $null -and $Project.Trim().Length -gt 0) {
-    . $MSBuildExePath "/t:$($Targets -join ';')" "/p:GenerateFullPaths=true" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/$Project/$Project.csproj";
+    . $MSBuildExePath "/t:$($Targets -join ';')" "/verbosity:Detailed" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "/logger:XmlMsBuildLogger,PsMsBuildHelper.dll;BuildResult_$Project.xml" "src/$Project/$Project.csproj";
+#    . $MSBuildExePath "/t:$($Targets -join ';')" "/verbosity:Detailed" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/$Project/$Project.csproj";
+#    "$MSBuildExePath `"/t:$($Targets -join ';')`" `"/verbosity:Detailed`" `"/p:Configuration=`"$Configuration`"`" `"/p:Platform=`"$Platform`"`" `"src/$Project/$Project.csproj`"";
+#    Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath "PsMsBuildHelper.dll") -ErrorAction Stop;
+#    $Success = [PsMsBuildHelper.XmlMsBuildLogger]::BuildProject(($PSScriptRoot | Join-Path -ChildPath "src/$Project/$Project.csproj"), ($PSScriptRoot | Join-Path -ChildPath "BuildResult_$Project.xml"), $Configuration, $Platform, $Targets);
+#    if ($Success -eq $null) {
+#        $Host.SetShouldExit(1);
+#        exit;
+#    }
+#    if ($Success -is [bool]) {
+#        if (-not $Success) {
+#            $Host.SetShouldExit(2);
+#            exit;
+#        }
+#    } else {
+#        $Success | Out-String;
+#        $Host.SetShouldExit(3);
+#        exit;
+#    }
 } else {
-    . $MSBuildExePath "/t:$($Targets -join ';')" "/p:GenerateFullPaths=true" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/PowerShellModules.sln";
+    . $MSBuildExePath "/t:$($Targets -join ';')" "/verbosity:Detailed" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "/logger:XmlMsBuildLogger,PsMsBuildHelper.dll;BuildResult.xml" "src/PowerShellModules.sln";
+#    . $MSBuildExePath "/t:$($Targets -join ';')" "/verbosity:Detailed" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/PowerShellModules.sln";
+    "$MSBuildExePath `"/t:$($Targets -join ';')`" `"/verbosity:Detailed`"`"/p:Configuration=`"$Configuration`"`" `"/p:Platform=`"$Platform`"`" `"src/PowerShellModules.sln`"";
 }
