@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -12,6 +16,32 @@ namespace PsMsBuildHelper
 {
     public class XmlMsBuildLogger : Logger, INodeLogger
     {
+        public static object BuildProject(string projectPath, string outputPath, string configuration = null, string platform = null, string[] targets = null)
+        {
+            if (projectPath == null)
+                throw new ArgumentNullException("projectPath");
+            if (outputPath == null)
+                throw new ArgumentNullException("outputPath");
+            if (projectPath.Trim().Length == 0 || !File.Exists(projectPath))
+                throw new FileNotFoundException("Project file not found", projectPath);
+            if (outputPath.Trim().Length == 0 || !Directory.Exists(Path.GetDirectoryName(outputPath)))
+                throw new DirectoryNotFoundException("Output Directory not found");
+            try {
+                XmlMsBuildLogger logger = new XmlMsBuildLogger();
+                logger.Parameters = outputPath;
+                Project project;
+                if (ProjectCollection.GlobalProjectCollection.Count > 0)
+                    ProjectCollection.GlobalProjectCollection.UnloadAllProjects();
+                project = ProjectCollection.GlobalProjectCollection.LoadProject(projectPath);
+                if (configuration != null && (configuration = configuration.Trim()).Length > 0)
+                    project.SetProperty("Configuration", configuration);
+                if (configuration != null && (platform = platform.Trim()).Length > 0)
+                    project.SetProperty("Platform", platform);
+                return (targets.Length == 0) ? project.Build(logger) : project.Build(targets, new ILogger[] { logger });
+            } catch (Exception exception) {
+                return exception;
+            }
+        }
         public const string RoundTrimDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffffffzzzzzz";
         private XmlWriter _writer = null;
         private object _syncRoot = new object();
@@ -68,13 +98,19 @@ namespace PsMsBuildHelper
                 {
                     string[] kvp = p.Split(new char[] { '=' }, 2);
                     if (kvp.Length == 1)
-                        return new { Key = "Path", Value = kvp[0].Trim() };
+                    {
+                        if ((kvp[0]= kvp[0].Trim()).Length > 0)
+                            return new { Key = "Path", Value = kvp[0] };
+                        return new { Key = "Path", Value = null as string };
+                    }
                     return new { Key = kvp[0].Trim(), Value = kvp[1].Trim() };
                 }).GroupBy(kvp => kvp.Key, StringComparer.InvariantCultureIgnoreCase))
                 {
-                    if (g.Count() > 0)
+                    if (g.Count() > 1)
                         throw new Exception("Parameter '" + g.Key + "' cannot be defined more than once.");
                     string text = g.First().Value;
+                    if (text == null)
+                        continue;
                     switch (g.Key.ToLower())
                     {
                         case "path":
@@ -142,7 +178,8 @@ namespace PsMsBuildHelper
                     settings.Encoding = new UTF32Encoding(bigEndian, emitIdentifier);
                 else if (settings.Encoding is UTF7Encoding)
                     settings.Encoding = new UTF7Encoding(allowOpt);
-                else if (String.IsNullOrEmpty(_outputPath))
+                else
+                if (String.IsNullOrEmpty(_outputPath))
                     throw new Exception("Path parameter not provided");
                 _writer = XmlWriter.Create(_outputPath, settings);
                 _writer.WriteStartElement("BuildResult");
@@ -150,6 +187,7 @@ namespace PsMsBuildHelper
                 _writer.WriteAttributeString("CpuCount", XmlConvert.ToString(nodeCount));
                 _eventSource = eventSource;
                 _cpuCount = nodeCount;
+                _stopwatches = new StopwatchDictionary();
                 eventSource.MessageRaised += OnMessageRaised;
                 eventSource.ErrorRaised += OnErrorRaised;
                 eventSource.WarningRaised += OnWarningRaised;
@@ -172,11 +210,11 @@ namespace PsMsBuildHelper
 
         public void Initialize(IEventSource eventSource, Int32 nodeCount)
         {
-            Initialize(eventSource, nodeCount);
+            _Initialize(eventSource, nodeCount);
         }
         public override void Initialize(IEventSource eventSource)
         {
-            Initialize(eventSource, -1);
+            _Initialize(eventSource, -1);
         }
         public override void Shutdown()
         {
@@ -222,10 +260,13 @@ namespace PsMsBuildHelper
                     _eventSource.TaskStarted -= OnTaskStarted;
                     _eventSource.TaskFinished -= OnTaskFinished;
                     _eventSource.CustomEventRaised -= OnCustomEventRaised;
-                    _eventSource = null;
                 }
             }
-            finally { Monitor.Exit(_syncRoot); }
+            finally
+            {
+                _eventSource = null;
+                Monitor.Exit(_syncRoot);
+            }
         }
         public static readonly Regex RequiresCDataRegex = new Regex(@"^(\s+|[^\p{C}<>&""]*([\r\n\t]+[^\p{C}<>&""]+)*[^\p{C}<>&""]|\S+(\s+\S+)*\s)", RegexOptions.Compiled);
         private void WriteBuildEventContext(BuildEventContext context, string elementName = "Context")
@@ -290,7 +331,7 @@ namespace PsMsBuildHelper
                         {
                             foreach (string key in e.BuildEnvironment.Keys)
                             {
-                                _writer.WriteStartElement("Property");
+                                _writer.WriteStartElement("Var");
                                 try
                                 {
                                     _writer.WriteAttributeString("Name", key);
@@ -313,7 +354,6 @@ namespace PsMsBuildHelper
             }
             finally { Monitor.Exit(_syncRoot); }
         }
-
         private void OnBuildFinished(object sender, BuildFinishedEventArgs e)
         {
             Monitor.Enter(_syncRoot);
@@ -329,6 +369,465 @@ namespace PsMsBuildHelper
                 finally { _writer.WriteEndElement(); }
             }
             finally { Monitor.Exit(_syncRoot); }
+        }
+
+        private string ObjectToXmlString(object value, out string typeName)
+        {
+            if (value == null || value is DBNull)
+            {
+                typeName = "null";
+                return "";
+            }
+            if (value is string)
+            {
+                typeName = null;
+                return (string)value;
+            }
+            if (value is int)
+            {
+                typeName = null;
+                return XmlConvert.ToString((int)value);
+            }
+            if (value is TimeSpan)
+            {
+                typeName = "duration";
+                return XmlConvert.ToString((TimeSpan)value);
+            }
+            if (value is double)
+            {
+                typeName = "double";
+                return XmlConvert.ToString((double)value);
+            }
+            if (value is decimal)
+            {
+                typeName = "decimal";
+                return XmlConvert.ToString((decimal)value);
+            }
+            if (value is bool)
+            {
+                typeName = "bool";
+                return XmlConvert.ToString((bool)value);
+            }
+            if (value is sbyte)
+            {
+                typeName = "sbyte";
+                return XmlConvert.ToString((sbyte)value);
+            }
+            if (value is short)
+            {
+                typeName = "short";
+                return XmlConvert.ToString((short)value);
+            }
+            if (value is char)
+            {
+                typeName = "char";
+                return XmlConvert.ToString((char)value);
+            }
+            if (value is byte)
+            {
+                typeName = "byte";
+                return XmlConvert.ToString((byte)value);
+            }
+            if (value is ushort)
+            {
+                typeName = "ushort";
+                return XmlConvert.ToString((ushort)value);
+            }
+            if (value is uint)
+            {
+                typeName = "uint";
+                return XmlConvert.ToString((uint)value);
+            }
+            if (value is ulong)
+            {
+                typeName = "ulong";
+                return XmlConvert.ToString((ulong)value);
+            }
+            if (value is float)
+            {
+                typeName = "float";
+                return XmlConvert.ToString((float)value);
+            }
+            if (value is long)
+            {
+                typeName = "long";
+                return XmlConvert.ToString((long)value);
+            }
+            Type t = value.GetType();
+            typeName = t.GetType().Name;
+            if (t.IsEnum)
+                return Enum.GetName(t, value);
+            if (value is DateTime)
+                return XmlConvert.ToString((DateTime)value, RoundTrimDateTimeFormat);
+            if (value is Guid)
+                return XmlConvert.ToString((Guid)value);
+            if (value is DateTimeOffset)
+                return XmlConvert.ToString((DateTimeOffset)value);
+            if (value is IConvertible)
+            {
+                IConvertible convertible = (IConvertible)value;
+                try
+                {
+                    object obj;
+                    IFormatProvider fmt = System.Globalization.CultureInfo.CurrentCulture;
+                    switch (convertible.GetTypeCode())
+                    {
+                        case TypeCode.Boolean:
+                            if ((obj = convertible.ToBoolean(fmt)) != null && obj is bool)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Byte:
+                            if ((obj = convertible.ToByte(fmt)) != null && obj is byte)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Char:
+                            if ((obj = convertible.ToChar(fmt)) != null && obj is char)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.DateTime:
+                            if ((obj = convertible.ToDateTime(fmt)) != null && obj is DateTime)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.DBNull:
+                                return ObjectToXmlString(null, out typeName);
+                        case TypeCode.Decimal:
+                            if ((obj = convertible.ToDecimal(fmt)) != null && obj is decimal)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Double:
+                            if ((obj = convertible.ToDouble(fmt)) != null && obj is double)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Int16:
+                            if ((obj = convertible.ToInt16(fmt)) != null && obj is short)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Int32:
+                            if ((obj = convertible.ToInt32(fmt)) != null && obj is int)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Int64:
+                            if ((obj = convertible.ToInt64(fmt)) != null && obj is long)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.SByte:
+                            if ((obj = convertible.ToSByte(fmt)) != null && obj is bool)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.Single:
+                            if ((obj = convertible.ToSingle(fmt)) != null && obj is float)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.String:
+                            if ((obj = convertible.ToString(fmt)) != null && obj is string)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.UInt16:
+                            if ((obj = convertible.ToUInt16(fmt)) != null && obj is ushort)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.UInt32:
+                            if ((obj = convertible.ToUInt32(fmt)) != null && obj is uint)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                        case TypeCode.UInt64:
+                            if ((obj = convertible.ToUInt64(fmt)) != null && obj is ulong)
+                                return ObjectToXmlString(obj, out typeName);
+                            break;
+                    }
+                }
+                catch { }
+            }
+
+            return value.ToString();
+        }
+
+        private void WriteObjectElement(object value, string elementName, int maxDepth = 16)
+        {
+            _writer.WriteStartElement(elementName);
+            try
+            {
+                if (value != null && value is DictionaryEntry)
+                    WriteDictionaryEntry((DictionaryEntry)value, elementName, maxDepth);
+                else
+                    WriteObjectElementValue(value, maxDepth);
+            }
+            finally { _writer.WriteEndElement(); }
+        }
+        private static readonly string _keyValuePairName = (typeof(System.Collections.Generic.KeyValuePair<,>)).AssemblyQualifiedName;
+        private static readonly string _dictionaryName = (typeof(System.Collections.Generic.IDictionary<,>)).AssemblyQualifiedName;
+        private void WriteObjectElementValue(object value, int maxDepth = 16)
+        {
+            if (value == null || value is DBNull)
+                _writer.WriteAttributeString("Type", "null");
+            else if (value is string)
+            {
+                string s = (string)value;
+                if (RequiresCDataRegex.IsMatch(s))
+                    _writer.WriteCData(s);
+                else
+                    _writer.WriteString(s);
+
+            }
+            else if (value is int)
+            {
+                _writer.WriteAttributeString("Type", "int");
+                _writer.WriteString(XmlConvert.ToString((int)value));
+            }
+            else if (value is TimeSpan)
+            {
+                _writer.WriteAttributeString("Type", "duration");
+                _writer.WriteString(XmlConvert.ToString((TimeSpan)value));
+            }
+            else if (value is DateTime)
+            {
+                _writer.WriteAttributeString("Type", "DateTime");
+                _writer.WriteString(XmlConvert.ToString((DateTime)value, RoundTrimDateTimeFormat));
+            }
+            else if (value is Guid)
+            {
+                _writer.WriteAttributeString("Type", "Guid");
+                _writer.WriteString(XmlConvert.ToString((Guid)value));
+            }
+            else if (value is DateTimeOffset)
+            {
+                _writer.WriteAttributeString("Type", "DateTimeOffset");
+                _writer.WriteString(XmlConvert.ToString((DateTimeOffset)value));
+            }
+            else
+            {
+                Type t = value.GetType();
+                string typeName;
+                if (t.IsPrimitive)
+                {
+                    string txt = ObjectToXmlString(value, out typeName);
+                    if (typeName != null)
+                        _writer.WriteAttributeString("Type", typeName);
+                    if (txt != null)
+                        _writer.WriteString(txt);
+                }
+                else if (t.IsArray)
+                {
+                    Array array = (Array)value;
+                    _writer.WriteAttributeString("Type", t.Name);
+                    if (maxDepth < 1)
+                        _writer.WriteString("[" + t.FullName + "].Length = " + XmlConvert.ToString(array.Length));
+                    else
+                    {
+                        foreach (object obj in array)
+                            WriteObjectElement(obj, "Element", maxDepth - 1);
+                    }
+                }
+                if (t.IsEnum)
+                {
+                    _writer.WriteAttributeString("Type", t.Name);
+                    _writer.WriteString(Enum.GetName(t, value));
+                }
+                else if (value is IConvertible)
+                {
+                    IConvertible convertible = (IConvertible)value;
+                    try
+                    {
+                        object obj;
+                        IFormatProvider fmt = System.Globalization.CultureInfo.CurrentCulture;
+                        switch (convertible.GetTypeCode())
+                        {
+                            case TypeCode.Boolean:
+                                if ((obj = convertible.ToBoolean(fmt)) != null && obj is bool)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Byte:
+                                if ((obj = convertible.ToByte(fmt)) != null && obj is byte)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Char:
+                                if ((obj = convertible.ToChar(fmt)) != null && obj is char)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.DateTime:
+                                if ((obj = convertible.ToDateTime(fmt)) != null && obj is DateTime)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.DBNull:
+                                WriteObjectElementValue(DBNull.Value, maxDepth);
+                                return;
+                            case TypeCode.Decimal:
+                                if ((obj = convertible.ToDecimal(fmt)) != null && obj is decimal)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Double:
+                                if ((obj = convertible.ToDouble(fmt)) != null && obj is double)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Int16:
+                                if ((obj = convertible.ToInt16(fmt)) != null && obj is short)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Int32:
+                                if ((obj = convertible.ToInt32(fmt)) != null && obj is int)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Int64:
+                                if ((obj = convertible.ToInt64(fmt)) != null && obj is long)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.SByte:
+                                if ((obj = convertible.ToSByte(fmt)) != null && obj is bool)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.Single:
+                                if ((obj = convertible.ToSingle(fmt)) != null && obj is float)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.String:
+                                if ((obj = convertible.ToString(fmt)) != null && obj is string)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.UInt16:
+                                if ((obj = convertible.ToUInt16(fmt)) != null && obj is ushort)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.UInt32:
+                                if ((obj = convertible.ToUInt32(fmt)) != null && obj is uint)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                            case TypeCode.UInt64:
+                                if ((obj = convertible.ToUInt64(fmt)) != null && obj is ulong)
+                                {
+                                    WriteObjectElementValue(obj, maxDepth);
+                                    return;
+                                }
+                                break;
+                        }
+                    }
+                    catch { }
+                    _writer.WriteAttributeString("Type", t.Name);
+                    _writer.WriteString(value.ToString());
+                }
+                else if (maxDepth < 1)
+                {
+                    _writer.WriteAttributeString("Type", t.Name);
+                    if (value is ICollection)
+                        _writer.WriteString("(" + t.FullName + ").Count = " + XmlConvert.ToString(((ICollection)value).Count));
+                    else
+                        _writer.WriteString("(" + t.FullName + ")");
+                }
+                else if (t.IsGenericType && t.GetGenericTypeDefinition().AssemblyQualifiedName == _keyValuePairName)
+                {
+                    WriteObjectElement(t.GetProperty("Key").GetValue(value), "Key", maxDepth - 1);
+                    WriteObjectElement(t.GetProperty("Value").GetValue(value), "Value", maxDepth - 1);
+                }
+                else if (value is DictionaryEntry)
+                {
+                    DictionaryEntry de = (DictionaryEntry)value;
+                    _writer.WriteAttributeString("Type", t.Name);
+                    WriteObjectElement(de.Key, "Key", maxDepth - 1);
+                    WriteObjectElement(de.Value, "Value", maxDepth - 1);
+                }
+                else if (value is IDictionary)
+                {
+                    _writer.WriteAttributeString("Type", t.Name);
+                    IDictionary dictionary = (IDictionary)value;
+                    foreach (object k in dictionary.Keys)
+                        WriteDictionaryEntry(k, dictionary[k], "DictionaryEntry", maxDepth - 1);
+                }
+                else if (value is IEnumerable)
+                {
+                    _writer.WriteAttributeString("Type", t.Name);
+                    IEnumerable enumerable = (IEnumerable)value;
+                    Type it = t.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition().AssemblyQualifiedName == _dictionaryName);
+                    if (it != null)
+                    {
+                        t = (typeof(KeyValuePair<,>)).MakeGenericType(it.GetGenericArguments());
+                        PropertyInfo kp = t.GetProperty("Key");
+                        PropertyInfo vp = t.GetProperty("Value");
+                        foreach (object kvp in enumerable)
+                            WriteDictionaryEntry(kp.GetValue(value), vp.GetValue(value), "KeyValuePair", maxDepth - 1);
+                    }
+                    else
+                    {
+                        foreach (object obj in enumerable)
+                            WriteObjectElement(obj, "Item", maxDepth - 1);
+                    }
+                }
+                else
+                {
+                    _writer.WriteAttributeString("Type", t.Name);
+                    _writer.WriteString(value.ToString());
+                }
+            }
+        }
+
+        private void WriteDictionaryEntry(object entryKey, object value, string elementName, int maxDepth = 16)
+        {
+            _writer.WriteStartElement(elementName);
+            try
+            {
+                string typeName;
+                string key;
+                if (entryKey is string)
+                    _writer.WriteAttributeString("Name", (string)entryKey);
+                else if (entryKey is int)
+                    _writer.WriteAttributeString("Number", XmlConvert.ToString((int)entryKey));
+                else
+                {
+                    key = ObjectToXmlString(entryKey, out typeName);
+                    if (key == null)
+                        key = "";
+                    _writer.WriteAttributeString("Key", key);
+                    if (typeName != null)
+                        _writer.WriteAttributeString("KeyType", typeName);
+                }
+                WriteObjectElementValue(value, maxDepth);
+            }
+            finally { _writer.WriteEndElement(); }
+        }
+
+        private void WriteDictionaryEntry(DictionaryEntry entry, string elementName = "Item", int maxDepth = 16)
+        {
+            WriteDictionaryEntry(entry.Key, entry.Value, elementName, maxDepth);
         }
         private void WriteTypeInfo(Type type, string elementName = "Type", int maxDepth = 12)
         {
@@ -394,12 +893,8 @@ namespace PsMsBuildHelper
                         _writer.WriteStartElement("Items");
                         try
                         {
-                            WriteTypeInfo(e.Items.GetType());
-                            foreach (object obj in e.Items)
-                            {
-                                if (obj != null)
-                                    WriteTypeInfo(obj.GetType(), "Item");
-                            }
+                            foreach (object obj in e.Properties)
+                                WriteObjectElement(obj, "Item");
                         }
                         finally { _writer.WriteEndElement(); }
                     }
@@ -408,19 +903,8 @@ namespace PsMsBuildHelper
                         _writer.WriteStartElement("Properties");
                         try
                         {
-                            _writer.WriteStartElement("Type");
-                            try { WriteTypeInfo(e.Properties.GetType());}
-                            finally { _writer.WriteEndElement(); }
                             foreach (object obj in e.Properties)
-                            {
-                                _writer.WriteStartElement("Property");
-                                try
-                                {
-                                    if (obj != null)
-                                        WriteTypeInfo(obj.GetType());
-                                }
-                                finally { _writer.WriteEndElement(); }
-                            }
+                                WriteObjectElement(obj, "Property");
                         }
                         finally { _writer.WriteEndElement(); }
                     }
@@ -512,8 +996,6 @@ namespace PsMsBuildHelper
                     if (e.ProjectFile != null)
                         _writer.WriteAttributeString("ProjectFile", e.ProjectFile);
                     _writer.WriteAttributeString("Duration", XmlConvert.ToString(_stopwatches.StopTarget(e.BuildEventContext)));
-                    if (e.ProjectFile != null)
-                        _writer.WriteAttributeString("File", e.ProjectFile);
                     WriteEventArgsProperties(e);
                 }
                 finally { _writer.WriteEndElement(); }
