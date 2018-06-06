@@ -1,121 +1,263 @@
-#Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.IOUtility') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.IOUtility') -ErrorAction Stop;
 
-# Describe 'Testing New-DataTable' {
-#     $EvalCode = {New-DataTable};
-#     It "(New-DataTable) should return a data table" {
-#         $Result = New-DataTable;
-#         ,$Result | Should BeOfType [System.Data.DataTable];
-#         $Result.CaseSensitive | Should BeFalse;
-#     }
-#     It "(New-DataTable -CaseSensitive) should return a case-sensitive data table" {
-#         $Result = New-DataTable -CaseSensitive;
-#         ,$Result | Should BeOfType [System.Data.DataTable];
-#         $Result.CaseSensitive | Should BeTrue;
-#     }
-#     $TestArgArr = @(@({'MyTable'}, {'AnotherOne'}) | ForEach-Object {
-#         @{
-#             Code = [scriptblock]::Create("New-DataTable $_");
-#             ExpectedTableName = $_;
-#             UseAllSwitches = $false;
-#         };
-#         @{
-#             Code = [scriptblock]::Create("New-DataTable -TableName $_");
-#             ExpectedTableName = $_;
-#             UseAllSwitches = $true;
-#         };
-#         @{
-#             Code = [scriptblock]::Create("New-DataTable -Name $_");
-#             ExpectedTableName = $_;
-#             UseAllSwitches = $true;
-#         };
-#     });
-#     $TestArgArr = $TestArgArr + @($TestArgArr | ForEach-Object {
-#         $a = $_;
-#         @({''}, {'http://www.erwinefamily.net/test/namespace'}, {'urn:erwinefamily.net:test/namespace'}) | ForEach-Object {
-#             if ($a.UseAllSwitches) {
-#                 @{
-#                     Code = [scriptblock]::Create("$($a.Code) -TableNamspace $_");
-#                     ExpectedTableName = $a.ExpectedTableName;
-#                     ExpectedNamespace = $_;
-#                     UseAllSwitches = $true;
-#                 };
-#                 @{
-#                     Code = [scriptblock]::Create("$($a.Code) -Namspace $_");
-#                     ExpectedTableName = $a.ExpectedTableName;
-#                     ExpectedNamespace = $_;
-#                     UseAllSwitches = $true;
-#                 };
-#             } else {
-#                 @{
-#                     Code = [scriptblock]::Create("$($a.Code) $_");
-#                     ExpectedTableName = $a.ExpectedTableName;
-#                     ExpectedNamespace = $_;
-#                     UseAllSwitches = $false;
-#                 };
-#             }
-#         }
-#     });
-#     $TestArgArr = $TestArgArr + @($TestArgArr | Where-Object { $_.ExpectedNamespace -ne $null } | ForEach-Object {
-#         $a = $_;
-#         @({''}, {'p1'}, {'myPrefix'}) | ForEach-Object {
-#             if ($a.UseAllSwitches) {
-#                 @{
-#                     Code = [scriptblock]::Create("$($a.Code) -Prefix $_");
-#                     ExpectedTableName = $a.ExpectedTableName;
-#                     ExpectedNamespace = $a.ExpectedNamespace;
-#                     ExpectedPrefix = $_;
-#                     UseAllSwitches = $true;
-#                 };
-#             } else {
-#                 @{
-#                     Code = [scriptblock]::Create("$($a.Code) $_");
-#                     ExpectedTableName = $a.ExpectedTableName;
-#                     ExpectedNamespace = $a.ExpectedNamespace;
-#                     ExpectedPrefix = $_;
-#                     UseAllSwitches = $false;
-#                 };
-#             }
-#         }
-#     });
-#     $TestArgArr.Count
-#     foreach ($TestArg in $TestArgArr) {
-#         $desc = "named data table";
-#         if ($TestArg.ExpectedNamespace -ne $null) {
-#             $desc = "$desc with namespace";
-#             if ($TestArg.ExpectedPrefix -ne $null) {
-#                 $desc = "$desc and prefix";
-#             }
-#         }
-#         It "($($TestArg.Code)) should return a $desc" {
-#             $Result = $TestArg.Code.InvokeReturnAsIs();
-#             ,$Result | Should BeOfType [System.Data.DataTable];
-#             $Result.TableName | Should BeExactly $TestArg.ExpectedTableName.InvokeReturnAsIs();
-#             $Result.CaseSensitive | Should BeFalse;
-#             if ($TestArg.ExpectedNamespace -ne $null) {
-#                 $Result.Namespace | Should BeExactly $TestArg.ExpectedNamespace.InvokeReturnAsIs();
-#                 if ($TestArg.ExpectedPrefix -ne $null) {
-#                     $Result.Prefix | Should BeExactly $TestArg.ExpectedPrefix.InvokeReturnAsIs();
-#                 }
-#             }
-#         }
-        
-#         $Code = [scriptblock]::Create("$($TestArg.Code) -CaseSensitive");
-#         It "($Code) should return a case-sensitive, $desc" {
+$DataTableTestData = @(
+@{ EvalCode = @({New-DataTable}); ResultProperties = {@{ CaseSensitive = $false }} },
+@{ EvalCode = @({New-DataTable -CaseSensitive}); ResultProperties = {@{ CaseSensitive = $true }} },
+@{ EvalCode = @({New-DataTable "MyTable"}, {New-DataTable -TableName "MyTable"}, {New-DataTable -Name "MyTable"}); ResultProperties = {@{
+    CaseSensitive = $false;
+    TableName = "MyTable";
+    Namespace = '';
+    Prefix = '';
+}} },
+@{ EvalCode = @({New-DataTable "X" -CaseSensitive}, {New-DataTable -TableName "X" -CaseSensitive}, {New-DataTable -Name "X" -CaseSensitive},
+                {New-DataTable "X" "" -CaseSensitive}, {New-DataTable -TableName "X" -Namespace "" -CaseSensitive},
+                {New-DataTable -Name "X" -Namespace "" -CaseSensitive}, {New-DataTable -TableName "X" -TableNamespace "" -CaseSensitive},
+                {New-DataTable -Name "X" -TableNamespace "" -CaseSensitive}); ResultProperties = {@{
+    CaseSensitive = $true;
+    TableName = "X";
+    Namespace = '';
+    Prefix = '';
+}} },
+@{ EvalCode = @({New-DataTable "X" "http://www.erwinefamily.net/test/namespace"},
+                {New-DataTable -TableName "X" -Namespace "http://www.erwinefamily.net/test/namespace"},
+                {New-DataTable -Name "X" -Namespace "http://www.erwinefamily.net/test/namespace"},
+                {New-DataTable -TableName "X" -TableNamespace "http://www.erwinefamily.net/test/namespace"},
+                {New-DataTable -Name "X" -TableNamespace "http://www.erwinefamily.net/test/namespace"}); ResultProperties = {@{
+    CaseSensitive = $false;
+    TableName = "X";
+    Namespace = 'http://www.erwinefamily.net/test/namespace';
+    Prefix = '';
+}} },
+@{ EvalCode = @({New-DataTable "X" "urn:erwinefamily.net:test/namespace" -CaseSensitive},
+                {New-DataTable -TableName "X" -Namespace "urn:erwinefamily.net:test/namespace" -CaseSensitive},
+                {New-DataTable -Name "X" -TableNamespace "urn:erwinefamily.net:test/namespace" -CaseSensitive},
+                {New-DataTable "X" "urn:erwinefamily.net:test/namespace" "" -CaseSensitive},
+                {New-DataTable -TableName "X" -Namespace "urn:erwinefamily.net:test/namespace" -Prefix "" -CaseSensitive},
+                {New-DataTable -Name "X" -TableNamespace "urn:erwinefamily.net:test/namespace" -Prefix "" -CaseSensitive}); ResultProperties = {@{
+    CaseSensitive = $true;
+    TableName = "X";
+    Namespace = '';
+    Prefix = '';
+}} },
+@{ EvalCode = @({New-DataTable "X.Y" "http://www.erwinefamily.net/test/namespace", "T"},
+                {New-DataTable -TableName "X.Y" -Namespace "http://www.erwinefamily.net/test/namespace" -Prefix "T"},
+                {New-DataTable -Name "X.Y" -Namespace "http://www.erwinefamily.net/test/namespace" -Prefix "T"},
+                {New-DataTable -TableName "X.Y" -TableNamespace "http://www.erwinefamily.net/test/namespace" -Prefix "T"},
+                {New-DataTable -Name "X.Y" -TableNamespace "http://www.erwinefamily.net/test/namespace" -Prefix "T"}); ResultProperties = {@{
+    CaseSensitive = $false;
+    TableName = "X.Y";
+    Namespace = 'http://www.erwinefamily.net/test/namespace';
+    Prefix = 'T';
+}} }
+);
+Describe 'Testing New-DataTable' {
+    $ReturnType = [System.Data.DataTable];
+    $ReturnName = [System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($ReturnType);
+    $DataTableTestData | ForEach-Object {
+        $ResultProperties = $_.ResultProperties;
+        $_.EvalCode | ForEach-Object {
+            It "($_) should return $ReturnName $ReturnProperties" {
+                $Result = $_.InvokeReturnAsIs();
+                ,$Result | Should BeOfType $ReturnType;
+                $Expected = $ResultProperties.InvokeReturnAsIs();
+                foreach ($pn in $Expected.Keys) {
+                    if ($Expected[$pn] -is [bool]) {
+                        if ($Expected[$pn]) {
+                            $Result.($pn) | Should BeTrue;
+                        } else {
+                            $Result.($pn) | Should BeFalse;
+                        }
+                    } else {
+                        if ($Expected[$pn] -is [string]) {
+                            $Result.($pn) | Should BeExactly $Expected[$pn];
+                        } else {
+                            $Result.($pn) | Should Be $Expected[$pn];
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-#             $Result = $Code.InvokeReturnAsIs();
-#             ,$Result | Should BeOfType [System.Data.DataTable];
-#             $Result.TableName | Should BeExactly $TestArg.ExpectedTableName.InvokeReturnAsIs();
-#             $Result.CaseSensitive | Should BeTrue;
-#             if ($TestArg.ExpectedNamespace -ne $null) {
-#                 $Result.Namespace | Should BeExactly $TestArg.ExpectedNamespace.InvokeReturnAsIs();
-#                 if ($TestArg.ExpectedPrefix -ne $null) {
-#                     $Result.Prefix | Should BeExactly $TestArg.ExpectedPrefix.InvokeReturnAsIs();
-#                 }
-#             }
-#         }
-#     }
-# }
+$AddColumnData = @(
+@{ EvalCode = @({Add-DataColumn $DataTable}); ResultProperties = {@{
+    Ordinal = 0;
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+}}; ReturnsTable = $false; },
+@{ EvalCode = @({Add-DataColumn "MyCol"}, {Add-DataColumn -Name "MyCol"}, {Add-DataColumn -ColumnName "MyCol"}); ResultProperties = {@{
+    Ordinal = 0;
+    ColumnName = "MyCol";
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+    Prefix = '';
+}}; ReturnsTable = $false; },
+@{ EvalCode = @({Add-DataColumn "Z" [bool]}, {Add-DataColumn -Name "Z" -DataType [bool]}, {Add-DataColumn -ColumnName "Z" -DataType [bool]}); ResultProperties = {@{
+    Ordinal = 0;
+    ColumnName = "Z";
+    DataType = [bool];
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+    Prefix = '';
+}}; ReturnsTable = $false; },
+@{ EvalCode = @({Add-DataColumn "Z" [string] [System.Data.MappingType]::SimpleContent },
+                {Add-DataColumn -Name "Z" -DataType [string] -Type SimpleContent},
+                {Add-DataColumn -ColumnName "Z" -DataType [string] -Type SimpleContent},
+                {Add-DataColumn -Name "Z" -DataType [string] -MappingType SimpleContent},
+                {Add-DataColumn -ColumnName "Z" -DataType [string] -MappingType SimpleContent}); ResultProperties = {@{
+    Ordinal = 0;
+    ColumnName = "Z";
+    DataType = [string];
+    ColumnMapping = [System.Data.MappingType]::SimpleContent;
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+    Prefix = '';
+}}; ReturnsTable = $false; },
+@{ EvalCode = @({Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn "C" [int] 'A+B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -Name "C" -DataType [string] -Expr 'A+B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -ColumnName "C" -DataType [string] -Expr 'A+B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -Name "C" -DataType [string] -Expression 'A+B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -ColumnName "C" -DataType [string] -Expression 'A+B'}); ResultProperties = {@{
+    Ordinal = 2;
+    ColumnName = "C";
+    DataType = [int];
+    Expression = 'A+B';
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+    Prefix = '';
+}}; ReturnsTable = $false; },
+@{ EvalCode = @({Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn "C" [int] 'A+B' Element}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -Name "C" -DataType [string] -Expr 'A+B' -Type Element}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -ColumnName "C" -DataType [string] -Expr 'A+B' -MappingType Element}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -Name "C" -DataType [string] -Expression 'A+B' -MappingType Element}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -ColumnName "C" -DataType [string] -Expression 'A+B' -Type Element}); ResultProperties = {@{
+    Ordinal = 2;
+    ColumnName = "C";
+    DataType = [int];
+    Expression = 'A+B';
+    ColumnMapping = [System.Data.MappingType]::Element;
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+    Prefix = '';
+}}; ReturnsTable = $false; },
+@{ EvalCode = @({Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn "C" [int] 'A+B' Attribute -Caption 'A plus B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -Name "C" -DataType [string] -Expr 'A+B' -Type Attribute -Caption 'A plus B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -ColumnName "C" -DataType [string] -Expr 'A+B' -MappingType Attribute -Caption 'A plus B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -Name "C" -DataType [string] -Expression 'A+B' -MappingType Attribute -Caption 'A plus B'}, {Add-DataColumn "A" [int]; Add-DataColumn "B" [int];
+    Add-DataColumn -ColumnName "C" -DataType [string] -Expression 'A+B' -Type Attribute -Caption 'A plus B'}); ResultProperties = {@{
+    Ordinal = 2;
+    ColumnName = "C";
+    DataType = [int];
+    Expression = 'A+B';
+    ColumnMapping = [System.Data.MappingType]::Attribute;
+    AutoIncrement = $false;
+    ReadOnly = $false;
+    Unique = $false;
+    Prefix = '';
+}}; ReturnsTable = $false; }
+);
+$AddColumnData = @($AddColumnData | ForEach-Object {
+    $h = $_.ResultProperties.InvokeReturnAsIs();
+    if ($h.ContainsKey('AllowDBNull')) {
+        $_ | Write-Output;
+    } else {
+        $c = $_.ResultProperties.ToString();
+        $i = $c.LastIndexOf('}');
+        if ($i -gt 0) { $c = $c.Substring(0, $i).TrimEnd(); }
+        if ($c.EndsWith(';')) { $c = $c.Substring(0, $c.Length - 1) }
+        @{ EvalCode = [scriptblock]::Create("$($_.EvalCode) -AllowDBNull"); ResultProperties = [scriptblock]::Create(@"
+$c;
+    AllowDBNull = `$false;
+}
+"@); ReturnsTable = $false }
+        $_ | Write-Output;
+        if ($h.ContainsKey('ColumnName') -and -not $h.ContainsKey('Expression')) {
+            @{ EvalCode = [scriptblock]::Create("$($_.EvalCode) -AllowDBNull"); ResultProperties = [scriptblock]::Create(@"
+$c;
+    AllowDBNull = `$true;
+}
+"@); ReturnsTable = $false }
+        }
+    }
+});
+$AddColumnData = @($AddColumnData | ForEach-Object {
+    $_ | Write-Output;
+    @{ EvalCode = [scriptblock]::Create("$($_.EvalCode) -PassThru"); ResultProperties = $_.ResultProperties; ReturnsTable = $true }
+});
+<#
+dataColumn.AllowDBNull;
+dataColumn.AutoIncrement;
+dataColumn.AutoIncrementSeed;
+dataColumn.AutoIncrementStep;
+dataColumn.Caption;
+dataColumn.ColumnMapping;
+dataColumn.ColumnName;
+dataColumn.DataType;
+dataColumn.DateTimeMode;
+dataColumn.DefaultValue;
+dataColumn.Expression;
+dataColumn.MaxLength;
+dataColumn.Ordinal;
+dataColumn.Prefix;
+dataColumn.ReadOnly;
+dataColumn.Unique;
+#>
+Describe 'Testing Add-DataColum' {
+    $ReturnType = [System.Data.DataTable];
+    $ReturnName = [System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($ReturnType);
+    $AddColumnData | ForEach-Object {
+        $ResultProperties = $_.ResultProperties;
+        $ReturnsTable = $_.ReturnsTable;
+        $_.EvalCode | ForEach-Object {
+            $Expected = $ResultProperties.InvokeReturnAsIs();
+            $Description = "column";
+            if ($Expected.Ordinal -gt 0) { $Description += "s" }
+            if ($ReturnsTable) { $Description = "$Description and return $ReturnName" } else { $Description = "$Description and return `$null" }
+            if ($Expected.Ordinal -gt 0) { $Description = "$Description with column $($Expected.Ordinal + 1)" } else { $Description = "$Description with column" }
+            It "($_) should add $($Expected.Ordinal) $Description Properties set to $ResultProperties" {
+                $EvalCode = [scriptblock]::Create("Param([System.Data.DataTable]`$DataTable) $_");
+                $DataTable = New-DataTable;
+                $Result = $EvalCode.InvokeReturnAsIs($DataTable);
+                if ($ReturnsTable) {
+                    ,$Result | Should BeOfType $ReturnType;
+                    [Object]::ReferenceEquals($Result, $DataTable) | Should BeTrue;
+                } else {
+                    ,$Result | Should Be $null;
+                }
+                $DataTable.Columns.Count | Should Be ($Expected.Ordinal + 1);
+                $Col = $DataTable.Columns[$Expected.Ordinal];
+                foreach ($pn in $Expected.Keys) {
+                    if ($Expected[$pn] -is [bool]) {
+                        if ($Expected[$pn]) {
+                            $Col.($pn) | Should BeTrue;
+                        } else {
+                            $Col.($pn) | Should BeFalse;
+                        }
+                    } else {
+                        if ($Expected[$pn] -is [string]) {
+                            $Col.($pn) | Should BeExactly $Expected[$pn];
+                        } else {
+                            $Col.($pn) | Should Be $Expected[$pn];
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
+
+<#
 Function ConvertTo-IndentedLines {
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -683,3 +825,4 @@ $counter = 0;
     
     New-AddDataColumnArgs -Clone $_ -IsPassThru;
 } | ForEach-Object { $_.Code; $_.Should }
+#>

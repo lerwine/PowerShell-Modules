@@ -64,6 +64,7 @@ namespace IOUtility.Commands
         /// <summary>
         /// One of the System.Data.MappingType values
         /// </summary>
+        [Parameter(Position = 3, ParameterSetName = ParameterSetName_Opt)]
         [Parameter(Position = 4, ParameterSetName = ParameterSetName_Expression)]
         [Alias("MappingType")]
         public MappingType Type
