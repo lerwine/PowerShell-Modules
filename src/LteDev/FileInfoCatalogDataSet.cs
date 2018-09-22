@@ -1,17 +1,11 @@
 using System;
-using System.Data;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Management.Automation;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Runtime.Serialization;
+using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Security.Cryptography;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace LteDev
 {
@@ -77,9 +71,9 @@ namespace LteDev
         /// <param name="caseSensitive">True if paths are case-sensitive; otherwise, false.</param>
         public FileInfoCatalogDataSet(bool caseSensitive) : base(FileInfoCatalog_Name)
         {
-            this.Namespace = FileInfoCatalog_Namespace;
-            this.Prefix = FileInfoCatalog_Prefix;
-            this.CaseSensitive = caseSensitive;
+            Namespace = FileInfoCatalog_Namespace;
+            Prefix = FileInfoCatalog_Prefix;
+            CaseSensitive = caseSensitive;
             _directoryStructure = new DirectoryStructureDataTable();
             _directoryStructure.CaseSensitive = caseSensitive;
             _files = new FileInfoDataTable();
@@ -90,6 +84,21 @@ namespace LteDev
             _fk_ParentDirectory.Nested = true;
             _fk_FileDirectory = Relations.Add("FK_FileDirectory", _directoryStructure.IDDataColumn, _files.IDDataColumn, true);
         }
+
+        /// <summary>
+        /// Deserialize instance of <see cref="FileInfoCatalogDataSet"/>.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected FileInfoCatalogDataSet(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        /// <summary>
+        /// Deserialize instance of <see cref="FileInfoCatalogDataSet"/>.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        /// <param name="ConstructSchema"></param>
+        protected FileInfoCatalogDataSet(SerializationInfo info, StreamingContext context, bool ConstructSchema) : base(info, context, ConstructSchema) { }
 
         /// <summary>
         /// Gets the <seealso cref="DirectoryStructureDataRow" /> associated with a <seealso cref="DirectoryInfo" /> object.
@@ -149,10 +158,7 @@ namespace LteDev
             if (dataRow != null)
             {
                 if (dataRow.Name != fileInfo.Name)
-                {
                     dataRow[Files.NameDataColumn] = fileInfo.Name;
-                    dataRow.AcceptChanges();
-                }
                 if (dataRow.Length != fileInfo.Length)
                     dataRow[Files.LengthDataColumn] = fileInfo.Length;
                 DateTime dateTime = FileInfoCatalogUtility.ToDataSetDateTime(fileInfo.CreationTimeUtc, Files.CreationTimeDataColumn.DateTimeMode);
@@ -161,10 +167,7 @@ namespace LteDev
                 dateTime = FileInfoCatalogUtility.ToDataSetDateTime(fileInfo.LastWriteTimeUtc, Files.LastWriteTimeDataColumn.DateTimeMode);
                 if (dataRow.LastWriteTime != dateTime)
                     dataRow[Files.LastWriteTimeDataColumn] = dateTime;
-                if (dataRow.ComparisonGroupID.HasValue && GetComparisonGroup(dataRow.ComparisonGroupID).Any(f => f.ID.Equals(dataRow.ID)))
-                {
-                    dataRow.SetParentRow(null, )
-                }
+
             }
             else if (!doNotAdd)
             {
@@ -180,29 +183,23 @@ namespace LteDev
             return dataRow;
         }
 
-        public string GetFullName(DirectoryStructureDataRow dataRow)
-        {
-            if (dataRow == null)
-                return "";
-
-            DirectoryStructureDataRow parentRow = (DirectoryStructureDataRow)(dataRow.GetParentRow(_fk_ParentDirectory));
-            if (parentRow == null)
-                return dataRow.Name;
-            return Path.Combine(GetFullName(parentRow), dataRow.Name);
-        }
-
-        public string GetFullName(FileInfoDataRow dataRow)
-        {
-            if (dataRow == null)
-                return "";
-
-            return Path.Combine(GetFullName((DirectoryStructureDataRow)(dataRow.GetParentRow(_fk_FileDirectory))), dataRow.Name);
-        }
-
+        /// <summary>
+        /// Gets all directory rows.
+        /// </summary>
+        /// <returns>All directory rows.</returns>
         public IEnumerable<DirectoryStructureDataRow> GetAllDirectories() { return DirectoryStructure.Rows.OfType<DirectoryStructureDataRow>(); }
 
+        /// <summary>
+        /// Gets all file rows.
+        /// </summary>
+        /// <returns>All file rows.</returns>
         public IEnumerable<FileInfoDataRow> GetAllFiles() { return Files.Rows.OfType<FileInfoDataRow>(); }
 
+        /// <summary>
+        /// Get child rows from a parent.
+        /// </summary>
+        /// <param name="parentID">ID of parent or null to get root-level directories.</param>
+        /// <returns>Child rows.</returns>
         public IEnumerable<IFileSystemDataRow> GetChildren(Guid? parentID)
         {
             if (parentID.HasValue)
@@ -211,68 +208,20 @@ namespace LteDev
             return GetAllDirectories().Where(d => !d.ParentID.HasValue).Cast<IFileSystemDataRow>();
         }
 
-        public IEnumerable<FileInfoDataRow> GetComparisonGroup(Guid? comparisonGroupID)
-        {
-            if (comparisonGroupID.HasValue)
-                return GetAllFiles().Where(f => f.ComparisonGroupID.HasValue && f.ComparisonGroupID.Value.Equals(comparisonGroupID.Value));
-            return GetAllFiles().Where(f => !f.ComparisonGroupID.HasValue);
-        }
-
-        public void SetFilesEqual(FileInfoDataRow x, FileInfoDataRow y)
-        {
-            if (x == null)
-            {
-                if (y == null)
-                    return;
-                x = y;
-                y = null;
-            }
-            else if (y != null)
-            {
-                if (x.ID.Equals(y.ID))
-                    y = null;
-                else
-                {
-                    if (x.Length != y.Length)
-                        throw new InvalidOperationException("Length does not match");
-                    if (x.MD5High != y.MD5High || x.MD5Low != y.MD5Low)
-                        throw new InvalidOperationException("MD5 hash does not match");
-                    if (x.ComparisonGroupID.HasValue)
-                    {
-                        if (y.ComparisonGroupID.HasValue)
-                        {
-                            if (x.ComparisonGroupID.Value.Equals(y.ComparisonGroupID.Value))
-                                return;
-                            throw new InvalidOperationException("Both files belong to other comparison groups");
-                        }
-                        y.ComparisonGroupID = x.ComparisonGroupID;
-                    }
-                    else
-                    {
-                        if (!y.ComparisonGroupID.HasValue)
-                            y.ComparisonGroupID = Guid.NewGuid();
-                        x.ComparisonGroupID = y.ComparisonGroupID;
-                    }
-                    return;
-                }
-            }
-
-            FileInfoDataRow[] comparisonGroup = GetComparisonGroup(x.ComparisonGroupID).Where(i => !i.ID.Equals(x.ID)).Take(2).ToArray();
-            x.ComparisonGroupID = null;
-            if (comparisonGroup.Length == 1)
-                comparisonGroup[0].ComparisonGroupID = null;
-        }
-
-        protected FileInfoCatalogDataSet(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        protected FileInfoCatalogDataSet(SerializationInfo info, StreamingContext context, bool ConstructSchema) : base(info, context, ConstructSchema) { }
-
+        /// <summary>
+        /// Prevents parent directory relationships from being removed.
+        /// </summary>
+        /// <param name="relation"></param>
         protected override void OnRemoveRelation(DataRelation relation)
         {
             if (relation != null && (ReferenceEquals(relation, _fk_ParentDirectory) || ReferenceEquals(relation, _fk_FileDirectory)))
                 throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Prevents file and directory structure tables from being removed.
+        /// </summary>
+        /// <param name="table"></param>
         protected override void OnRemoveTable(DataTable table)
         {
             if (table != null && (ReferenceEquals(table, _directoryStructure) || ReferenceEquals(table, _files)))
@@ -280,41 +229,105 @@ namespace LteDev
         }
     }
 
+    /// <summary>
+    /// Interface for file and directory rows.
+    /// </summary>
     public interface IFileSystemDataRow
     {
+        /// <summary>
+        /// Unique identifier.
+        /// </summary>
         Guid ID { get; }
+
+        /// <summary>
+        /// Unique identifier of parent.
+        /// </summary>
         Guid? ParentID { get; }
+
+        /// <summary>
+        /// Name of file or directory.
+        /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Current state of the row.
+        /// </summary>
         DataRowState RowState { get; }
+
+        /// <summary>
+        /// Row error.
+        /// </summary>
         string RowError { get; set; }
+
+        /// <summary>
+        /// Determines whether row has errors.
+        /// </summary>
         bool HasErrors { get; }
+
+        /// <summary>
+        /// Determines whether the row has a specific version
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
         bool HasVersion(DataRowVersion version);
     }
 
+    /// <summary>
+    /// Data table containing nested directory structure.
+    /// </summary>
     public class DirectoryStructureDataTable : DataTable
     {
         #region  Columns
 
         #region ID
+
         private DataColumn _idDataColumn = null;
+
+        /// <summary>
+        /// Data column for unique identifier.
+        /// </summary>
         public DataColumn IDDataColumn { get { return _idDataColumn; } }
 
         #endregion
 
         #region ParentID
+
         private DataColumn _parentIDDataColumn = null;
+
+        /// <summary>
+        /// Data column for the ID of the parent directory row.
+        /// </summary>
         public DataColumn ParentIDDataColumn { get { return _parentIDDataColumn; } }
 
         #endregion
 
         #region Name
+
         private DataColumn _nameDataColumn = null;
+
+        /// <summary>
+        /// Data column for the directory name.
+        /// </summary>
         public DataColumn NameDataColumn { get { return _nameDataColumn; } }
 
         #endregion
 
+        #region UpdatedOn
+
+        private DataColumn _updatedOnDataColumn = null;
+
+        /// <summary>
+        /// Data column for date/time when row was last updated.
+        /// </summary>
+        public DataColumn UpdatedOnDataColumn { get { return _updatedOnDataColumn; } }
+
         #endregion
 
+        #endregion
+
+        /// <summary>
+        /// Create new directory structure data table.
+        /// </summary>
         public DirectoryStructureDataTable() : base(FileInfoCatalogDataSet.TableName_DirectoryStructure, FileInfoCatalogDataSet.FileInfoCatalog_Namespace)
         {
             Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
@@ -339,39 +352,122 @@ namespace LteDev
             _parentIDDataColumn.Namespace = FileInfoCatalogDataSet.FileInfoCatalog_Namespace;
             _parentIDDataColumn.Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
             _parentIDDataColumn.ReadOnly = false;
+            _updatedOnDataColumn = Columns.Add("UpdatedOn", typeof(DateTime));
+            _updatedOnDataColumn.AllowDBNull = true;
+            _updatedOnDataColumn.Caption = "Updated";
+            _updatedOnDataColumn.ColumnMapping = MappingType.Attribute;
+            _updatedOnDataColumn.Namespace = FileInfoCatalogDataSet.FileInfoCatalog_Namespace;
+            _updatedOnDataColumn.Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
+            _updatedOnDataColumn.ReadOnly = false;
             Constraints.Add("PK_DirectoryStructureID", _idDataColumn, true);
         }
 
+        /// <summary>
+        /// Deserialize instance of <see cref="DirectoryStructureDataTable"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         protected DirectoryStructureDataTable(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        /// <summary>
+        /// Create new data row for a directory structure row.
+        /// </summary>
+        /// <returns></returns>
         public new DirectoryStructureDataRow NewRow() { return (DirectoryStructureDataRow)(base.NewRow()); }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectoryStructureDataTable"/>.
+        /// </summary>
+        /// <returns></returns>
         protected override DataTable CreateInstance() { return new DirectoryStructureDataTable(); }
 
+        /// <summary>
+        /// Gets the type of row for this table.
+        /// </summary>
+        /// <returns></returns>
         protected override Type GetRowType() { return typeof(DirectoryStructureDataRow); }
 
+        /// <summary>
+        /// Create new row.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder) { return new DirectoryStructureDataRow(builder); }
         
+        /// <summary>
+        /// Prevents required columns from being removed.
+        /// </summary>
+        /// <param name="column"></param>
         protected override void OnRemoveColumn(DataColumn column)
         {
             if (column != null && (Object.ReferenceEquals(column, _idDataColumn) || Object.ReferenceEquals(column, _nameDataColumn) || Object.ReferenceEquals(column, _parentIDDataColumn)))
                 throw new InvalidOperationException();
         }
         
+        /// <summary>
+        /// Initializes new data rows.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnTableNewRow(DataTableNewRowEventArgs e)
         {
             e.Row[_idDataColumn] = Guid.NewGuid();
         }
+
+        /// <summary>
+        /// Ensures new data/time values are normalized.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnColumnChanging(DataColumnChangeEventArgs e)
+        {
+            if ((typeof(DateTime)).IsAssignableFrom(e.Column.DataType) && e.ProposedValue != null && e.ProposedValue is DateTime)
+            {
+                DateTime dateTime = (DateTime)(e.ProposedValue);
+                if (e.Column.DateTimeMode == DataSetDateTime.Local)
+                {
+                    if (dateTime.Kind == DateTimeKind.Utc)
+                        dateTime = dateTime.ToLocalTime();
+                    else if (dateTime.Kind == DateTimeKind.Unspecified)
+                        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                }
+                else if (dateTime.Kind == DateTimeKind.Local)
+                    dateTime = dateTime.ToUniversalTime();
+                else if (dateTime.Kind == DateTimeKind.Unspecified)
+                    dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local).ToUniversalTime();
+                e.ProposedValue = (dateTime.Millisecond == 0) ? dateTime : new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0, dateTime.Kind);
+            }
+            base.OnColumnChanging(e);
+        }
+
+        /// <summary>
+        /// Updates row tracking variables.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnColumnChanged(DataColumnChangeEventArgs e)
+        {
+            base.OnColumnChanged(e);
+        }
     }
     
+    /// <summary>
+    /// Row representing a subdirectory.
+    /// </summary>
     public class DirectoryStructureDataRow : DataRow, IFileSystemDataRow
     {
         #region  Properties
 
+        /// <summary>
+        /// Parent data table.
+        /// </summary>
         public new DirectoryStructureDataTable Table { get { return (DirectoryStructureDataTable)(base.Table); } }
         
+        /// <summary>
+        /// Unique identifier.
+        /// </summary>
         public Guid ID { get { return (Guid)(this[Table.IDDataColumn]); } }
 
+        /// <summary>
+        /// Unique identifier of parent row.
+        /// </summary>
         public Guid? ParentID
         {
             get
@@ -382,79 +478,214 @@ namespace LteDev
             }
         }
 
+        /// <summary>
+        /// Name of subdirectory.
+        /// </summary>
         public string Name { get { return (string)(this[Table.NameDataColumn]); } }
 
+        /// <summary>
+        /// Date/time when row was last updated.
+        /// </summary>
+        public DateTime? UpdatedOn
+        {
+            get
+            {
+                DataColumn col = Table.UpdatedOnDataColumn;
+                if (IsNull(col))
+                    return null;
+                DateTime value = (DateTime)(this[col]);
+                if (col.DateTimeMode == DataSetDateTime.Local)
+                {
+                    if (value.Kind == DateTimeKind.Utc)
+                        value = value.ToLocalTime();
+                    else if (value.Kind == DateTimeKind.Unspecified)
+                        value = DateTime.SpecifyKind(value, DateTimeKind.Local);
+                }
+                else if (value.Kind == DateTimeKind.Utc)
+                    value = value.ToLocalTime();
+                else if (value.Kind == DateTimeKind.Unspecified)
+                    value = DateTime.SpecifyKind(value, DateTimeKind.Utc).ToLocalTime();
+                return (value.Millisecond == 0) ? value : new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, 0, value.Kind);
+            }
+            set
+            {
+                if (value.HasValue)
+                    this[Table.UpdatedOnDataColumn] = value;
+                else
+                    this.SetNull(Table.UpdatedOnDataColumn);
+            }
+        }
+
         #endregion
-        
+
+        /// <summary>
+        /// Initializes new <see cref="DirectoryStructureDataRow"/>.
+        /// </summary>
+        /// <param name="builder"></param>
         protected internal DirectoryStructureDataRow(DataRowBuilder builder) : base(builder) { }
+
+        /// <summary>
+        /// Gets parent directory.
+        /// </summary>
+        /// <returns></returns>
+        public DirectoryStructureDataRow GetParentDirectory()
+        {
+            DataSet dataSet = Table.DataSet;
+            if (dataSet != null && dataSet is FileInfoCatalogDataSet)
+                return (DirectoryStructureDataRow)(GetParentRow(((FileInfoCatalogDataSet)dataSet).FK_ParentDirectory));
+            return null;
+        }
+
+        /// <summary>
+        /// Sets parent directory.
+        /// </summary>
+        /// <param name="row"></param>
+        public void SetParentDirectory(DirectoryStructureDataRow row)
+        {
+            DataSet dataSet = Table.DataSet;
+            if (dataSet == null || !(dataSet is FileInfoCatalogDataSet))
+                throw new InvalidOperationException("Table does not belong to a FileInfoCatalogDataSet");
+            DataRelation dataRelation = ((FileInfoCatalogDataSet)dataSet).FK_ParentDirectory;
+            if (row != null)
+            {
+                DataRow r = GetParentRow(dataRelation);
+                if (r != null && ReferenceEquals(r, row))
+                    return;
+                r = row;
+                do
+                {
+                    if (ReferenceEquals(r, this))
+                        throw new InvalidOperationException("Circular directory references cannot be added.");
+                } while ((r = r.GetParentRow(dataRelation)) != null);
+            }
+            else if (!ParentID.HasValue)
+                return;
+            SetParentRow(row, dataRelation);
+        }
     }
     
+    /// <summary>
+    /// Data table containing file information.
+    /// </summary>
     public class FileInfoDataTable : DataTable
     {
         #region  Columns
 
         #region ID
+
         private DataColumn _idDataColumn = null;
+
+        /// <summary>
+        /// Data column for unique identifier.
+        /// </summary>
         public DataColumn IDDataColumn { get { return _idDataColumn; } }
 
         #endregion
 
-        #region ComparisonGroupID
-        private DataColumn _comparisonGroupIDDataColumn = null;
-        public DataColumn ComparisonGroupIDDataColumn { get { return _comparisonGroupIDDataColumn; } }
+        #region DuplicateID
+
+        private DataColumn _duplicateIDDataColumn = null;
+
+        /// <summary>
+        /// Data column for identifier of duplicate files
+        /// </summary>
+        public DataColumn DuplicateIDDataColumn { get { return _duplicateIDDataColumn; } }
 
         #endregion
 
         #region ParentID
+
         private DataColumn _parentIDDataColumn = null;
+
+        /// <summary>
+        /// Data column for the unique identifier of the parent directory row.
+        /// </summary>
         public DataColumn ParentIDDataColumn { get { return _parentIDDataColumn; } }
 
         #endregion
 
         #region Name
-        private DataColumn _nameDataColumn = null;
-        public DataColumn NameDataColumn { get { return _nameDataColumn; } }
 
+        private DataColumn _nameDataColumn = null;
+
+        /// <summary>
+        /// Data column for the file name.
+        /// </summary>
+        public DataColumn NameDataColumn { get { return _nameDataColumn; } }
+        
         #endregion
 
         #region CreationTime
+
         private DataColumn _creationTimeDataColumn = null;
+
+        /// <summary>
+        /// Data column for file creation date/time.
+        /// </summary>
         public DataColumn CreationTimeDataColumn { get { return _creationTimeDataColumn; } }
 
         #endregion
 
         #region LastWriteTime
+
         private DataColumn _lastWriteTimeDataColumn = null;
+
+        /// <summary>
+        /// Data column for the last file emodification date/time .
+        /// </summary>
         public DataColumn LastWriteTimeDataColumn { get { return _lastWriteTimeDataColumn; } }
 
         #endregion
 
         #region UpdatedOn
+
         private DataColumn _updatedOnDataColumn = null;
+
+        /// <summary>
+        /// Data column for the date/time when the data row was last updated.
+        /// </summary>
         public DataColumn UpdatedOnDataColumn { get { return _updatedOnDataColumn; } }
 
         #endregion
 
         #region Length
+
         private DataColumn _lengthDataColumn = null;
+
+        /// <summary>
+        /// Date column for file length.
+        /// </summary>
         public DataColumn LengthDataColumn { get { return _lengthDataColumn; } }
 
         #endregion
 
         #region MD5High
+
         private DataColumn _md5HighDataColumn = null;
+
+        /// <summary>
+        /// Data column for the upper 32 bits of the MD5 hash code.
+        /// </summary>
         public DataColumn MD5HighDataColumn { get { return _md5HighDataColumn; } }
 
         #endregion
 
         #region MD5Low
+
         private DataColumn _md5LowDataColumn = null;
+
+        /// <summary>
+        /// Data column for the lower 32 bits of the MD5 hash code.
+        /// </summary>
         public DataColumn MD5LowDataColumn { get { return _md5LowDataColumn; } }
 
         #endregion
 
         #endregion
 
+        /// <summary>
+        /// Create new data table for file information.
+        /// </summary>
         public FileInfoDataTable() : base(FileInfoCatalogDataSet.TableName_FileInfo, FileInfoCatalogDataSet.FileInfoCatalog_Namespace)
         {
             Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
@@ -479,13 +710,13 @@ namespace LteDev
             _parentIDDataColumn.Namespace = FileInfoCatalogDataSet.FileInfoCatalog_Namespace;
             _parentIDDataColumn.Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
             _parentIDDataColumn.ReadOnly = false;
-            _comparisonGroupIDDataColumn = Columns.Add("ComparisonGroupID", typeof(Guid));
-            _comparisonGroupIDDataColumn.AllowDBNull = true;
-            _comparisonGroupIDDataColumn.Caption = "Comparison Group ID";
-            _comparisonGroupIDDataColumn.ColumnMapping = MappingType.Attribute;
-            _comparisonGroupIDDataColumn.Namespace = FileInfoCatalogDataSet.FileInfoCatalog_Namespace;
-            _comparisonGroupIDDataColumn.Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
-            _comparisonGroupIDDataColumn.ReadOnly = false;
+            _duplicateIDDataColumn = Columns.Add("ComparisonGroupID", typeof(Guid));
+            _duplicateIDDataColumn.AllowDBNull = true;
+            _duplicateIDDataColumn.Caption = "Comparison Group ID";
+            _duplicateIDDataColumn.ColumnMapping = MappingType.Attribute;
+            _duplicateIDDataColumn.Namespace = FileInfoCatalogDataSet.FileInfoCatalog_Namespace;
+            _duplicateIDDataColumn.Prefix = FileInfoCatalogDataSet.FileInfoCatalog_Prefix;
+            _duplicateIDDataColumn.ReadOnly = false;
             _creationTimeDataColumn = Columns.Add("CreationTime", typeof(DateTime));
             _creationTimeDataColumn.AllowDBNull = false;
             _creationTimeDataColumn.Caption = "Created";
@@ -531,100 +762,245 @@ namespace LteDev
             Constraints.Add("PK_FileInfoID", _idDataColumn, true);
         }
 
+        /// <summary>
+        /// Deserialize instance of <see cref="FileInfoDataTable"/>.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         protected FileInfoDataTable(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        /// <summary>
+        /// Create new file information data row.
+        /// </summary>
+        /// <returns></returns>
         public new FileInfoDataRow NewRow() { return (FileInfoDataRow)(base.NewRow()); }
 
+        /// <summary>
+        /// Create new file information data table.
+        /// </summary>
+        /// <returns></returns>
         protected override DataTable CreateInstance() { return new FileInfoDataTable(); }
 
+        /// <summary>
+        /// Get data row type.
+        /// </summary>
+        /// <returns></returns>
         protected override Type GetRowType() { return typeof(FileInfoDataRow); }
 
+        /// <summary>
+        /// Create new data row.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder) { return new FileInfoDataRow(builder); }
         
+        /// <summary>
+        /// Prevents required columns from being removed.
+        /// </summary>
+        /// <param name="column"></param>
         protected override void OnRemoveColumn(DataColumn column)
         {
-            if (column != null && (Object.ReferenceEquals(column, _idDataColumn) || Object.ReferenceEquals(column, _comparisonGroupIDDataColumn) || Object.ReferenceEquals(column, _creationTimeDataColumn) || Object.ReferenceEquals(column, _lastWriteTimeDataColumn) || Object.ReferenceEquals(column, _lengthDataColumn) || Object.ReferenceEquals(column, _md5HighDataColumn) || Object.ReferenceEquals(column, _md5LowDataColumn) || Object.ReferenceEquals(column, _nameDataColumn) || Object.ReferenceEquals(column, _parentIDDataColumn)))
+            if (column != null && (Object.ReferenceEquals(column, _idDataColumn) || Object.ReferenceEquals(column, _duplicateIDDataColumn) || Object.ReferenceEquals(column, _creationTimeDataColumn) || Object.ReferenceEquals(column, _lastWriteTimeDataColumn) || Object.ReferenceEquals(column, _lengthDataColumn) || Object.ReferenceEquals(column, _md5HighDataColumn) || Object.ReferenceEquals(column, _md5LowDataColumn) || Object.ReferenceEquals(column, _nameDataColumn) || Object.ReferenceEquals(column, _parentIDDataColumn)))
                 throw new InvalidOperationException();
         }
-        
+
+        /// <summary>
+        /// Initializes new data rows.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnTableNewRow(DataTableNewRowEventArgs e)
         {
             e.Row[_idDataColumn] = Guid.NewGuid();
         }
+
+        /// <summary>
+        /// Ensures new data/time values are normalized.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnColumnChanging(DataColumnChangeEventArgs e)
+        {
+            if ((typeof(DateTime)).IsAssignableFrom(e.Column.DataType) && e.ProposedValue != null && e.ProposedValue is DateTime)
+            {
+                DateTime dateTime = (DateTime)(e.ProposedValue);
+                if (e.Column.DateTimeMode == DataSetDateTime.Local)
+                {
+                    if (dateTime.Kind == DateTimeKind.Utc)
+                        dateTime = dateTime.ToLocalTime();
+                    else if (dateTime.Kind == DateTimeKind.Unspecified)
+                        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                }
+                else if (dateTime.Kind == DateTimeKind.Local)
+                    dateTime = dateTime.ToUniversalTime();
+                else if (dateTime.Kind == DateTimeKind.Unspecified)
+                    dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local).ToUniversalTime();
+                e.ProposedValue = (dateTime.Millisecond == 0) ? dateTime : new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0, dateTime.Kind);
+            }
+            base.OnColumnChanging(e);
+        }
+
+        /// <summary>
+        /// Updates row tracking variables.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnColumnChanged(DataColumnChangeEventArgs e)
+        {
+            base.OnColumnChanged(e);
+        }
     }
     
+    /// <summary>
+    /// Data row containing file information.
+    /// </summary>
     public class FileInfoDataRow : DataRow, IFileSystemDataRow
     {
         #region  Properties
 
+        /// <summary>
+        /// Parent data table.
+        /// </summary>
         public new FileInfoDataTable Table { get { return (FileInfoDataTable)(base.Table); } }
 
+        /// <summary>
+        /// Unique identifier for file row.
+        /// </summary>
         public Guid ID { get { return (Guid)(this[Table.IDDataColumn]); } }
 
+        /// <summary>
+        /// Unique identifier of parent directory row.
+        /// </summary>
         public Guid ParentID  { get { return (Guid)(this[Table.ParentIDDataColumn]); } }
 
         Guid? IFileSystemDataRow.ParentID { get { return this.ParentID; } }
 
+        /// <summary>
+        /// Name of file.
+        /// </summary>
         public string Name { get { return (string)(this[Table.NameDataColumn]); } }
         
-        public Guid? ComparisonGroupID
+        /// <summary>
+        /// Unique identifier that is used to associate duplicate files.
+        /// </summary>
+        public Guid? DuplicateID
         {
             get
             {
-                if (IsNull(Table.ComparisonGroupIDDataColumn))
+                if (IsNull(Table.DuplicateIDDataColumn))
                     return null;
-                return (Guid)(this[Table.ComparisonGroupIDDataColumn]);
+                return (Guid)(this[Table.DuplicateIDDataColumn]);
             }
             set
             {
                 if (value.HasValue)
-                    this[Table.ComparisonGroupIDDataColumn] = value.Value;
+                    this[Table.DuplicateIDDataColumn] = value.Value;
                 else
-                    this.SetNull(Table.ComparisonGroupIDDataColumn);
+                    this.SetNull(Table.DuplicateIDDataColumn);
             }
         }
 
+        /// <summary>
+        /// Date/Time of file creation.
+        /// </summary>
         public DateTime CreationTime
         {
-            get { return FileInfoCatalogUtility.FromDataSetDateTime((DateTime)(this[Table.CreationTimeDataColumn]), Table.CreationTimeDataColumn.DateTimeMode); }
-            set { this[Table.CreationTimeDataColumn] = FileInfoCatalogUtility.ToDataSetDateTime(value, Table.CreationTimeDataColumn.DateTimeMode); }
+            get
+            {
+                DataColumn col = Table.CreationTimeDataColumn;
+                DateTime value = (DateTime)(this[col]);
+                if (col.DateTimeMode == DataSetDateTime.Local)
+                {
+                    if (value.Kind == DateTimeKind.Utc)
+                        value = value.ToLocalTime();
+                    else if (value.Kind == DateTimeKind.Unspecified)
+                        value = DateTime.SpecifyKind(value, DateTimeKind.Local);
+                }
+                else if (value.Kind == DateTimeKind.Utc)
+                    value = value.ToLocalTime();
+                else if (value.Kind == DateTimeKind.Unspecified)
+                    value = DateTime.SpecifyKind(value, DateTimeKind.Utc).ToLocalTime();
+                return (value.Millisecond == 0) ? value : new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, 0, value.Kind);
+            }
+            set { this[Table.CreationTimeDataColumn] = value; }
         }
 
+        /// <summary>
+        /// Date/time of lst file modification.
+        /// </summary>
         public DateTime LastWriteTime
         {
-            get { return FileInfoCatalogUtility.FromDataSetDateTime((DateTime)(this[Table.LastWriteTimeDataColumn]), Table.LastWriteTimeDataColumn.DateTimeMode); }
-            set { this[Table.LastWriteTimeDataColumn] = FileInfoCatalogUtility.ToDataSetDateTime(value, Table.LastWriteTimeDataColumn.DateTimeMode); }
+            get
+            {
+                DataColumn col = Table.LastWriteTimeDataColumn;
+                DateTime value = (DateTime)(this[col]);
+                if (col.DateTimeMode == DataSetDateTime.Local)
+                {
+                    if (value.Kind == DateTimeKind.Utc)
+                        value = value.ToLocalTime();
+                    else if (value.Kind == DateTimeKind.Unspecified)
+                        value = DateTime.SpecifyKind(value, DateTimeKind.Local);
+                }
+                else if (value.Kind == DateTimeKind.Utc)
+                    value = value.ToLocalTime();
+                else if (value.Kind == DateTimeKind.Unspecified)
+                    value = DateTime.SpecifyKind(value, DateTimeKind.Utc).ToLocalTime();
+                return (value.Millisecond == 0) ? value : new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, 0, value.Kind);
+            }
+            set { this[Table.LastWriteTimeDataColumn] = value; }
         }
-
+        
+        /// <summary>
+        /// Date/Time when row was last updated.
+        /// </summary>
         public DateTime? UpdatedOn
         {
             get
             {
-                if (IsNull(Table.UpdatedOnDataColumn))
+                DataColumn col = Table.UpdatedOnDataColumn;
+                if (IsNull(col))
                     return null;
-                return FileInfoCatalogUtility.FromDataSetDateTime((DateTime)(this[Table.UpdatedOnDataColumn]), Table.UpdatedOnDataColumn.DateTimeMode);
+                DateTime value = (DateTime)(this[col]);
+                if (col.DateTimeMode == DataSetDateTime.Local)
+                {
+                    if (value.Kind == DateTimeKind.Utc)
+                        value = value.ToLocalTime();
+                    else if (value.Kind == DateTimeKind.Unspecified)
+                        value = DateTime.SpecifyKind(value, DateTimeKind.Local);
+                }
+                else if (value.Kind == DateTimeKind.Utc)
+                    value = value.ToLocalTime();
+                else if (value.Kind == DateTimeKind.Unspecified)
+                    value = DateTime.SpecifyKind(value, DateTimeKind.Utc).ToLocalTime();
+                return (value.Millisecond == 0) ? value : new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, 0, value.Kind);
             }
             set
             {
                 if (value.HasValue)
-                    this[Table.UpdatedOnDataColumn] = FileInfoCatalogUtility.ToDataSetDateTime(value.Value, Table.UpdatedOnDataColumn.DateTimeMode);
+                    this[Table.UpdatedOnDataColumn] = value;
                 else
                     this.SetNull(Table.UpdatedOnDataColumn);
             }
         }
 
+        /// <summary>
+        /// Length of file
+        /// </summary>
         public long Length
         {
             get { return (long)(this[Table.LengthDataColumn]); }
             set { this[Table.LengthDataColumn] = value; }
         }
 
+        /// <summary>
+        /// Upper 32 bits of MD5 checksum or zero if no checksum was calculated.
+        /// </summary>
         public long MD5High
         {
             get { return (long)(this[Table.MD5HighDataColumn]); }
             set { this[Table.MD5HighDataColumn] = value; }
         }
 
+        /// <summary>
+        /// Lower 32 bits of MD5 checksum or zero if no checksum was calculated.
+        /// </summary>
         public long MD5Low
         {
             get { return (long)(this[Table.MD5LowDataColumn]); }
@@ -633,11 +1009,61 @@ namespace LteDev
 
         #endregion
 
+        /// <summary>
+        /// Initialize new <see cref="FileInfoDataRow"/>.
+        /// </summary>
+        /// <param name="builder"></param>
         protected internal FileInfoDataRow(DataRowBuilder builder) : base(builder) { }
+
+        /// <summary>
+        /// Get prent directory row.
+        /// </summary>
+        /// <returns></returns>
+        public DirectoryStructureDataRow GetParentDirectory()
+        {
+            DataSet dataSet = Table.DataSet;
+            if (dataSet != null && dataSet is FileInfoCatalogDataSet)
+                return (DirectoryStructureDataRow)(GetParentRow(((FileInfoCatalogDataSet)dataSet).FK_FileDirectory));
+            return null;
+        }
+
+        /// <summary>
+        /// Set parent directory row.
+        /// </summary>
+        /// <param name="row"></param>
+        public void SetParentDirectory(DirectoryStructureDataRow row)
+        {
+            DataSet dataSet = Table.DataSet;
+            if (dataSet == null || !(dataSet is FileInfoCatalogDataSet))
+                throw new InvalidOperationException("Table does not belong to a FileInfoCatalogDataSet");
+            DataRelation dataRelation = ((FileInfoCatalogDataSet)dataSet).FK_FileDirectory;
+            if (row != null)
+            {
+                DataRow r = GetParentRow(dataRelation);
+                if (r != null && ReferenceEquals(r, row))
+                    return;
+                r = row;
+                do
+                {
+                    if (ReferenceEquals(r, this))
+                        throw new InvalidOperationException("Circular directory references cannot be added.");
+                } while ((r = r.GetParentRow(dataRelation)) != null);
+            }
+            SetParentRow(row, dataRelation);
+        }
     }
     
+    /// <summary>
+    /// Utility methods
+    /// </summary>
     public static class FileInfoCatalogUtility
     {
+        /// <summary>
+        /// Parses file base name and extension.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
         public static string GetNameParts(string name, out string extension)
         {
             if (name == null)
@@ -652,6 +1078,12 @@ namespace LteDev
             extension = (i == name.Length - 1) ? "." : name.Substring(i + 1);
             return name.Substring(0, i);
         }
+
+        /// <summary>
+        /// Normalizes date/time value so it has zero milliseconds.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static DateTime NormalizeDateTime(DateTime value)
         {
             if (value.Millisecond == 0)
@@ -659,6 +1091,12 @@ namespace LteDev
             return new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, 0, value.Kind);
         }
 
+        /// <summary>
+        /// Convert to local time.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="assumeUnspecifiedIsLocal"></param>
+        /// <returns></returns>
         public static DateTime ToLocalTime(DateTime value, bool assumeUnspecifiedIsLocal = false)
         {
             if (value.Kind == DateTimeKind.Unspecified)
@@ -671,6 +1109,12 @@ namespace LteDev
             return NormalizeDateTime((value.Kind == DateTimeKind.Local) ? value : value.ToLocalTime());   
         }
 
+        /// <summary>
+        /// Converts from data set date/time
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="mode"></param>
+        /// <returns></returns>
         public static DateTime FromDataSetDateTime(DateTime value, DataSetDateTime mode)
         {
             if (value.Kind == DateTimeKind.Unspecified)
@@ -683,6 +1127,12 @@ namespace LteDev
             return NormalizeDateTime((value.Kind == DateTimeKind.Local) ? value : value.ToLocalTime());
         }
 
+        /// <summary>
+        /// Convert to universal time.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="assumeUnspecifiedIsUtc"></param>
+        /// <returns></returns>
         public static DateTime ToUniversalTime(DateTime value, bool assumeUnspecifiedIsUtc = false)
         {
             if (value.Kind == DateTimeKind.Unspecified)
@@ -695,6 +1145,13 @@ namespace LteDev
             return NormalizeDateTime((value.Kind == DateTimeKind.Utc) ? value : value.ToUniversalTime());   
         }
 
+        /// <summary>
+        /// Converts to data set date/time
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="mode"></param>
+        /// <param name="assumeUnspecifiedIsLocal"></param>
+        /// <returns></returns>
         public static DateTime ToDataSetDateTime(DateTime value, DataSetDateTime mode, bool assumeUnspecifiedIsLocal = false)
         {
             if (value.Kind == DateTimeKind.Unspecified)
@@ -717,9 +1174,26 @@ namespace LteDev
             return NormalizeDateTime((value.Kind == DateTimeKind.Utc) ? value : value.ToUniversalTime());
         }
 
+        /// <summary>
+        /// Determines whether a string needs to be encoded to be a valid column name.
+        /// </summary>
         public static readonly Regex ColumnEncodeNameTestRegex = new Regex(@"^\d|[~()#\\/=><+\-*%&|^'""\[\]]", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Characters to escape when encoding column names.
+        /// </summary>
         public static readonly Regex ColumnNameReplaceRegex = new Regex(@"[\\\[\]]", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Replace pattern for encoding LIKE statements.
+        /// </summary>
         public static readonly Regex LikeWCReplaceRegex = new Regex(@"[*%\[\]]", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Escapes text for inclusion in a LIKE statement.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static string EscapeLikeText(string text)
         {
             if (text == null)
@@ -727,6 +1201,11 @@ namespace LteDev
             return LikeWCReplaceRegex.Replace(text, m => "[" + m.Value + "]");
         }
 
+        /// <summary>
+        /// Encodes a string as a column name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static string EncodeColumnName(string name)
         {
             if (name == null)
@@ -735,70 +1214,187 @@ namespace LteDev
                 return "[" + ColumnNameReplaceRegex.Replace(name, e => "\\" + e.Value) + "]";
             return name;
         }
+
+        /// <summary>
+        /// Encodes a query string value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="noEnclosingQuotes"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(string value, bool noEnclosingQuotes)
         {
             if (value == null)
                 throw new ArgumentNullException("value");
             return (noEnclosingQuotes) ? value.Replace("'", "''") : "'" + value.Replace("'", "''") + "'";
         }
+
+        /// <summary>
+        /// Encodes a query string value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(string value) { return EncodeQueryValue(value, false); }
+
+        /// <summary>
+        /// Encodes a query byte value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(byte value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query signed byte value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(sbyte value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query short integer value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(short value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query unsigned short integer value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(ushort value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query integer value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(int value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query unsigned integer value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(uint value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query long value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(long value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query unsigned long value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(ulong value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture); 
         }
+
+        /// <summary>
+        /// Encodes a query single-precision value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(float value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query double-precision value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(double value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query decimal value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(decimal value)
         {
             return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Encodes a query boolean value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(bool value) { return (value) ? "true" : "false"; }
+
+        /// <summary>
+        /// Encodes a query character value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="noEnclosingQuotes"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(char value, bool noEnclosingQuotes)
         {
             if (value == '\'')
                 return (noEnclosingQuotes) ? "''" : "''''";
             return new String((noEnclosingQuotes) ? new char[] { value } : new char[] { '\'', value, '\''});
         }
+
+        /// <summary>
+        /// Encodes a query character value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(char value) { return EncodeQueryValue(value, false); }
+
+        /// <summary>
+        /// Encodes a query DateTime value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(DateTime value)
         {
             return ToUniversalTime(value).ToString("#yyyy-MM-dd HH:mm:ss#");
         }
+
+        /// <summary>
+        /// Encodes a convertible query value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(IConvertible value) { return EncodeQueryValue(value, false); }
+
+        /// <summary>
+        /// Encodes a query value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="noEnclosingQuotes"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(IConvertible value, bool noEnclosingQuotes)
         {
             if (value is string)
@@ -867,6 +1463,13 @@ namespace LteDev
             }
             return "";
         }
+
+        /// <summary>
+        /// Encodes a query byte value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="noEnclosingQuotes"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(object value, bool noEnclosingQuotes)
         {
             if (value == null)
@@ -875,18 +1478,40 @@ namespace LteDev
                 return EncodeQueryValue((IConvertible)value, noEnclosingQuotes);
             return EncodeQueryValue(value.ToString(), noEnclosingQuotes);
         }
+
+        /// <summary>
+        /// Encodes a query value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncodeQueryValue(object value) { return EncodeQueryValue(value, false); }
 
+        /// <summary>
+        /// Gets a query string to test of a value is null.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
         public static string GetIsNullQueryString(string column)
         {
             return "IsNull(" + EncodeColumnName(column) + ")";
         }
         
+        /// <summary>
+        /// Gets a query string to test whether a value is not null.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
         public static string GetIsNotNullQueryString(string column)
         {
             return "NOT IsNull(" + EncodeColumnName(column) + ")";
         }
 
+        /// <summary>
+        /// Gets a LIKE query string.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string GetLikeQueryString(string column, string value)
         {
             if (value == null)
@@ -895,6 +1520,14 @@ namespace LteDev
             return EncodeColumnName(column) + " LIKE '" + value.Replace("'", "''") + "'";
         }
 
+        /// <summary>
+        /// Gets a query string
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="op"></param>
+        /// <param name="value"></param>
+        /// <param name="isEscaped"></param>
+        /// <returns></returns>
         public static string GetQueryString(string column, QueryOperator op, string value, bool isEscaped)
         {
             if (value == null)
@@ -934,6 +1567,14 @@ namespace LteDev
             
             return EncodeColumnName(column) + "=" + EncodeQueryValue(value);
         }
+
+        /// <summary>
+        /// Gets a query string
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="op"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string GetQueryString(string column, QueryOperator op, object value)
         {
             if (value == null || value is DBNull)
@@ -956,13 +1597,39 @@ namespace LteDev
         }
     }
 
+    /// <summary>
+    /// Query operators
+    /// </summary>
     public enum QueryOperator
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Equals,
+
+        /// <summary>
+        /// 
+        /// </summary>
         LessThan,
+
+        /// <summary>
+        /// 
+        /// </summary>
         GreaterThan,
+
+        /// <summary>
+        /// 
+        /// </summary>
         NotEquals,
+
+        /// <summary>
+        /// 
+        /// </summary>
         NotLessThan,
+
+        /// <summary>
+        /// 
+        /// </summary>
         NotGreaterThan
     }
 }
