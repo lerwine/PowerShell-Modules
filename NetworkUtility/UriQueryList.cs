@@ -10,6 +10,7 @@ using System.Threading;
 
 namespace NetworkUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class UriQueryList : IList<UriQueryItem>, IDictionary<string, string>, IList, IDictionary, INotifyCollectionChanged, INotifyPropertyChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -583,4 +584,5 @@ namespace NetworkUtility
             bool ICollection<string>.Remove(string item) { throw new NotSupportedException(); }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

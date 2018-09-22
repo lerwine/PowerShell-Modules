@@ -8,6 +8,7 @@ using System.Xml;
 
 namespace XmlUtility.Commands
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Cmdlet(VerbsCommon.Open, "XmlSchema")]
     public class Open_XmlSchema : Cmdlet
     {
@@ -45,4 +46,5 @@ namespace XmlUtility.Commands
 
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

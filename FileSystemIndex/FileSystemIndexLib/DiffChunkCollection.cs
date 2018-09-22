@@ -178,41 +178,43 @@ namespace FileSystemIndexLib
 		protected DiffChunkCollection(IEnumerable<TValue> originalItems, string originalName, DateTime originalModified, IEnumerable<TValue> newItems, string newName, DateTime newModified)
 			: base(originalName, originalModified, newName, newModified)
 		{
-			if (originalItems != null || newItems != null)
-				Initialize(new CommonSequenceSearcher<TValue>(AsNonAbsent(originalItems)), new CommonSequenceSearcher<TValue>(AsNonAbsent(newItems)));
+			throw new NotImplementedException();
+
+			// if (originalItems != null || newItems != null)
+			// 	Initialize(new CommonSequenceSearcher<TValue>(AsNonAbsent(originalItems)), new CommonSequenceSearcher<TValue>(AsNonAbsent(newItems)));
 		}
 
-		private void Initialize(CommonSequenceSearcher<TValue> originalSearcher, CommonSequenceSearcher<TValue> newSearcher)
-		{
-			if (originalSearcher.Count == 0)
-			{
-				if (newSearcher.Count > 0)
-					_chunks.Add(CreateNewChunk(originalSearcher, originalSearcher.RelativeIndex, newSearcher, newSearcher.RelativeIndex + 1));
-				return;
-			}
-			else if (newSearcher.Count == 0)
-			{
-				_chunks.Add(CreateNewChunk(originalSearcher, originalSearcher.RelativeIndex + 1, newSearcher, newSearcher.RelativeIndex));
-				return;	
-			}
+		// private void Initialize(CommonSequenceSearcher<TValue> originalSearcher, CommonSequenceSearcher<TValue> newSearcher)
+		// {
+		// 	if (originalSearcher.Count == 0)
+		// 	{
+		// 		if (newSearcher.Count > 0)
+		// 			_chunks.Add(CreateNewChunk(originalSearcher, originalSearcher.RelativeIndex, newSearcher, newSearcher.RelativeIndex + 1));
+		// 		return;
+		// 	}
+		// 	else if (newSearcher.Count == 0)
+		// 	{
+		// 		_chunks.Add(CreateNewChunk(originalSearcher, originalSearcher.RelativeIndex + 1, newSearcher, newSearcher.RelativeIndex));
+		// 		return;	
+		// 	}
 	
-			int originalIndex, newIndex;
-			int length = originalSearcher.GetLongestCommonSequence(newSearcher, out originalIndex, out newIndex);
-			if (length == 0)
-			{
-				_chunks.Add(CreateNewChunk(originalSearcher, originalSearcher.RelativeIndex + 1, newSearcher, newSearcher.RelativeIndex + 1));
-				return;
-			}
+		// 	int originalIndex, newIndex;
+		// 	int length = originalSearcher.GetLongestCommonSequence(newSearcher, out originalIndex, out newIndex);
+		// 	if (length == 0)
+		// 	{
+		// 		_chunks.Add(CreateNewChunk(originalSearcher, originalSearcher.RelativeIndex + 1, newSearcher, newSearcher.RelativeIndex + 1));
+		// 		return;
+		// 	}
 			
-			CommonSequenceSearcher<TValue> oSearcher = originalSearcher.Take(originalIndex);
-			CommonSequenceSearcher<TValue> nSearcher = newSearcher.Take(newIndex);
-			if (oSearcher.Count > 0 || nSearcher.Count > 0)
-				Initialize( oSearcher, nSearcher);
-			oSearcher = originalSearcher.Skip(newIndex + length);
-			nSearcher = newSearcher.Skip(newIndex + length);
-			if (oSearcher.Count > 0 || nSearcher.Count > 0)
-				Initialize(oSearcher, nSearcher);
-		}
+		// 	CommonSequenceSearcher<TValue> oSearcher = originalSearcher.Take(originalIndex);
+		// 	CommonSequenceSearcher<TValue> nSearcher = newSearcher.Take(newIndex);
+		// 	if (oSearcher.Count > 0 || nSearcher.Count > 0)
+		// 		Initialize( oSearcher, nSearcher);
+		// 	oSearcher = originalSearcher.Skip(newIndex + length);
+		// 	nSearcher = newSearcher.Skip(newIndex + length);
+		// 	if (oSearcher.Count > 0 || nSearcher.Count > 0)
+		// 		Initialize(oSearcher, nSearcher);
+		// }
 		
 		/// <summary>
 		/// Create a new, empty <typeparamref name="TDiffChunk" /> object.

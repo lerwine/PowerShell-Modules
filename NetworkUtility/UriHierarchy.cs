@@ -7,6 +7,7 @@ using System.Threading;
 
 namespace NetworkUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class UriHierarchy : INotifyPropertyChanged, IEquatable<UriHierarchy>, IComparable<UriHierarchy>, IComparable
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -220,4 +221,5 @@ namespace NetworkUtility
 			finally { Monitor.Exit(_syncRoot); }
 		}
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

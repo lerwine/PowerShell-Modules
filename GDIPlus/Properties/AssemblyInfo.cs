@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GDIPlus PowerShell Module")]
-[assembly: AssemblyDescription("Module providing GDI Plus Graphics capabilities.")]
+[assembly: AssemblyTitle("GDIPlus CLR Library")]
+[assembly: AssemblyDescription("Supporting CLR Library for PowerShell Module Erwine.Leonard.T.GDIPlus")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Leonard T. Erwine")]
-[assembly: AssemblyProduct("GDIPlus")]
-[assembly: AssemblyCopyright("Copyright © Leonard T. Erwine 2015")]
+[assembly: AssemblyProduct("PowerShell Module Erwine.Leonard.T.GDIPlus")]
+[assembly: AssemblyCopyright("Copyright © Leonard Thomas Erwine 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

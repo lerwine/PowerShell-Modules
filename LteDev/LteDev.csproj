@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -158,6 +160,7 @@
     <Compile Include="QueryItemList.cs" />
     <Compile Include="Solution\ProjectRef.cs" />
     <Compile Include="Solution\SolutionInfo.cs" />
+    <Compile Include="Solution\ProjectNode.cs" />
     <Compile Include="Solution\SolutionNode.cs" />
     <Compile Include="TypeBrowser\AssemblyDetailVM.cs" />
     <Compile Include="TypeBrowser\AssemblyListItemVM.cs" />
@@ -256,7 +259,6 @@
     <Compile Include="XsdTypeGen\maml\token.cs" />
     <Compile Include="XsdTypeGen\maml\ui.cs" />
     <Compile Include="XsdTypeGen\maml\userInput.cs" />
-    <None Include="MSBuildLogHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -445,13 +447,7 @@
     <None Include="README.md" />
     <None Include="TypeBrowser\ClassDiagram1.cd" />
     <None Include="Untitled1.ps1" />
-    <None Include="Build.ps1" />
-    <None Include="build-debug.bat" />
-    <None Include="build-deploy.bat" />
-    <None Include="build-release.bat" />
-    <None Include="build-test.bat" />
     <None Include="TestScripts\Test-Find_ProjectTypeInfo.ps1" />
-    <None Include="Untitled11.ps1" />
     <None Include="WindowsFormsHelper.ps1" />
   </ItemGroup>
   <ItemGroup>
@@ -462,18 +458,11 @@
     <PostBuildEvent>del "$(TargetDir)/*.nlp"
 del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
   </PropertyGroup>
-  <!--<Target Name="BeforeBuild">
-    <ItemGroup>
-      <ExistingOutputItems Include="$(TargetDir)**\*.*" />
-    </ItemGroup>
-    <Delete Files="@(ExistingOutputItems)">
-    </Delete>
-    <RemoveDir Directories="$(TargetDir)Module" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-    <ItemGroup>
-      <TargetOutputItems Include="$(TargetDir)*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(TargetOutputItems)" DestinationFolder="$(TargetDir)Module" SkipUnchangedFiles="false" Condition=" '%(Identity.Substring(0, 7))' != '' and '%(Extension)' != '.tmp' " />
-  </Target>-->
+  </Target>
+  -->
 </Project>

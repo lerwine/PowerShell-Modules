@@ -21,7 +21,7 @@ namespace Deployment
     {
         public MainWindow()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }

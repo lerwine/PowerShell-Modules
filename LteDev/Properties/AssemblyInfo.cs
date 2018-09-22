@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LteDev")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("LteDev CLR Library")]
+[assembly: AssemblyDescription("Supporting CLR Library for PowerShell Module Erwine.Leonard.T.LteDev")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LteDev")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCompany("Leonard T. Erwine")]
+[assembly: AssemblyProduct("PowerShell Module Erwine.Leonard.T.LteDev")]
+[assembly: AssemblyCopyright("Copyright © Leonard Thomas Erwine 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

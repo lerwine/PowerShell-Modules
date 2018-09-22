@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VsProjectTypes>
+  <ProjectType Key="UniversalWindowsClassLibrary" Guid="a5a43c5b-de2a-4c0c-9213-0a381af9435a" Description="Universal Windows Class Library" />
+  <ProjectType Key="XnaZune" Guid="d399b71a-8929-442a-a9ac-8bec78bb2433" Description="XNA (Zune)" />
+  <ProjectType Key="Metro" Guid="bc8a1ffa-bee3-4634-8014-f334798102b3" Description="Windows Store (Metro) Apps &amp; Components" />
+  <ProjectType Key="WindowsPhone8Other" Guid="76f1466a-8b6d-4e39-a767-685a06062a39" Description="Windows Phone 8/8.1 Blank/Hub/Webview App" />
+  <ProjectType Key="JSharp" Guid="e6fdf86b-f3d1-11d4-8576-0002a516ece8" Description="J#" />
+  <ProjectType Key="WindowsVbNet" Guid="f184b08f-c81c-45f6-a57f-5abd9991f28f" Description="Windows (VB.NET)" Extension=".vbproj">
+    <AltDescription Key="VbNet">VB.NET</AltDescription>
+  </ProjectType>
+  <ProjectType Key="XnaXBox" Guid="2df5c3f4-5a5f-47a9-8e94-23b4456f55e2" Description="XNA (XBox)" />
+  <ProjectType Key="XamarinAndroid" Guid="efba0ad7-5a72-4c68-af49-83d382785dcf" Description="Xamarin.Android">
+    <AltDescription Key="MonoAndroid">Mono for Android</AltDescription>
+  </ProjectType>
+  <ProjectType Key="SmartDeviceCSharp" Guid="4d628b5b-2fbc-4aa6-8c16-197242aeb884" Description="Smart Device (C#)" />
+  <ProjectType Key="MicroFramework" Guid="b69e3092-b931-443c-abe7-7e7b65f2a37f" Description="Micro Framework" />
+  <ProjectType Key="MVC5" Guid="349c5851-65df-11da-9384-00065b846f21" Description="Model-View-Controller v5 (MVC 5)">
+    <AltDescription Key="AspNetMvc5">ASP.NET MVC 5</AltDescription>
+    <AltDescription Key="WebApplication">Web Application</AltDescription>
+  </ProjectType>
+  <ProjectType Key="MVC4" Guid="e3e379df-f4c6-4180-9b81-6769533abe47" Description="Model-View-Controller v4 (MVC 4)">
+    <AltDescription Key="AspNetMvc4">ASP.NET MVC 4</AltDescription>
+  </ProjectType>
+  <ProjectType Key="OfficeSharePointApp" Guid="c1cddadd-2546-481f-9697-4ea41081f2fc" Description="Office/SharePoint App" />
+  <ProjectType Key="Legacy2003SmartDeviceVbNet" Guid="cb4ce8c6-1bdb-4dc7-a4d3-65a1999772f8" Description="Legacy (2003) Smart Device (VB.NET)" />
+  <ProjectType Key="SolutionFolder" Guid="2150e333-8fdc-42a3-9474-1a3956d46de8" Description="Solution Folder" />
+  <ProjectType Key="VS2015InstallerProjectExtension" Guid="54435603-dbb4-11d2-8724-00a0c9a8b90c" Description="Visual Studio 2015 Installer Project Extension" />
+  <ProjectType Key="DeploymentCab" Guid="3ea9e505-35ac-4774-b492-ad1749c4943a" Description="Deployment Cab" />
+  <ProjectType Key="AspNet5" Guid="8bb2217d-0f2d-49d1-97bc-3654ed321f3b" Description="ASP.NET 5" />
+  <ProjectType Key="XnaWindows" Guid="6d335f3a-9d43-41b4-9d22-f6f17c4be596" Description="XNA (Windows)" />
+  <ProjectType Key="Dynamics2012AxCInAot" Guid="bf6f8e12-879d-49e7-adf0-5503146b24b8" Description="Dynamics 2012 AX C# in AOT" />
+  <ProjectType Key="SharePointVbNet" Guid="ec05e597-79d4-47f3-ada0-324c4f7c7484" Description="SharePoint (VB.NET)" />
+  <ProjectType Key="DeploymentSmartDeviceCab" Guid="ab322303-2255-48ef-a496-5904eb18da55" Description="Deployment Smart Device Cab" />
+  <ProjectType Key="VisualDatabaseTools" Guid="c252feb5-a946-4202-b1d4-9916a0590387" Description="Visual Database Tools" />
+  <ProjectType Key="MonoTouchBinding" Guid="f5b4f3bc-b597-4e2b-b552-ef5d8a32436f" Description="MonoTouch Binding" />
+  <ProjectType Key="MVC3" Guid="e53f8fea-eae0-44a6-8774-ffd645390401" Description="Model-View-Controller v3 (MVC 3)">
+    <AltDescription Key="AspNetMvc3">ASP.NET MVC 3</AltDescription>
+  </ProjectType>
+  <ProjectType Key="WindowsCSharp" Guid="fae04ec0-301f-11d3-bf4b-00c04f79efbc" Description="Windows (C#)" Extension=".csproj">
+    <AltDescription Key="CSharp">C#</AltDescription>
+  </ProjectType>
+  <ProjectType Key="WF" Guid="32f31d43-81cc-4c15-9de6-3fc5453562b6" Description="Workflow Foundation" />
+  <ProjectType Key="Windows_Phone8AppCSharp" Guid="c089c8c0-30e0-4e22-80c0-ce093f111a43" Description="Windows Phone 8/8.1 App (C#)" />
+  <ProjectType Key="FSharp" Guid="f2a71f9b-5d33-465a-a702-920d77279786" Description="F#" Extension=".fsproj" />
+  <ProjectType Key="DeploymentSetup" Guid="978c614f-708e-4e1a-b201-565925725dba" Description="Deployment Setup" />
+  <ProjectType Key="JScript" Guid="262852c6-cd72-467d-83fe-5eeb1973a190" Description="JScript" />
+  <ProjectType Key="LightSwitchProject" Guid="581633eb-b896-402f-8e60-36f3da191c85" Description="LightSwitch Project" />
+  <ProjectType Key="WCF" Guid="3d9ad99f-2412-4246-b90b-4eaa41c64699" Description="Windows Communication Foundation (WCF)" />
+  <ProjectType Key="MVC1" Guid="603c0e0b-db56-11dc-be95-000d561079b0" Description="ASP.NET MVC 1" />
+  <ProjectType Key="WebSite" Guid="e24c65dc-7377-472b-9aba-bc803b73c61a" Description="Web Site" />
+  <ProjectType Key="LightSwitch" Guid="8bb0c5e8-0616-4f60-8e55-a43933e57e9c" Description="LightSwitch" />
+  <ProjectType Key="SharePointWorkflow" Guid="f8810ec1-6754-47fc-a15f-dfabd2e3fa90" Description="SharePoint Workflow" />
+  <ProjectType Key="ProjectFolders" Guid="66a26720-8fb5-11d2-aa7e-00c04f688dde" Description="Project Folders" />
+  <ProjectType Key="UniversalStoreApp" Guid="d954291e-2a0b-460d-934e-dc6b0785db48" Description="Store App Universal" Extension=".shproj" />
+  <ProjectType Key="Test" Guid="3ac096d0-a1c2-e12c-1390-a8335801fdab" Description="Test" />
+  <ProjectType Key="DbOther" Guid="4f174c21-8c12-11d0-8340-0000f80270f8" Description="Database (other project types)" />
+  <ProjectType Key="WPF" Guid="60dc8134-eba5-43b8-bcc9-bb4bc16c2548" Description="Windows Presentation Foundation (WPF)" />
+  <ProjectType Key="VSTA" Guid="a860303f-1f3f-4691-b57e-529fc101a107" Description="Visual Studio Tools for Applications (VSTA)" />
+  <ProjectType Key="MVC2" Guid="f85e285d-a4e0-4152-9332-ab1d724d3325" Description="Model-View-Controller v2 (MVC 2)">
+    <AltDescription Key="AspNetMvc2">ASP.NET MVC 2</AltDescription>
+  </ProjectType>
+  <ProjectType Key="DistributedSystem" Guid="f135691a-bf7e-435d-8960-f99683d2d49c" Description="Distributed System" />
+  <ProjectType Key="WindowsVisualCPP" Guid="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Description="Windows (Visual C++)">
+    <AltDescription Key="CPP">C++</AltDescription>
+  </ProjectType>
+  <ProjectType Key="Windows_Phone8AppVbNet" Guid="db03555f-0c8b-43be-9ff9-57896b3c5e56" Description="Windows Phone 8/8.1 App (VB.NET)" />
+  <ProjectType Key="DeploymentMergeModule" Guid="06a35ccd-c46d-44d5-987b-cf40ff872267" Description="Deployment Merge Module" />
+  <ProjectType Key="XamarinIOS" Guid="6bc8ed88-2882-458c-8e55-dfd12b67127b" Description="Xamarin.iOS">
+    <AltDescription Key="MonoTouch">MonoTouch</AltDescription>
+  </ProjectType>
+  <ProjectType Key="Silverlight" Guid="a1591282-1198-4647-a2b1-27e5ff5f6f3b" Description="Silverlight" />
+  <ProjectType Key="SharePointCSharp" Guid="593b0543-81f6-4436-ba1e-4747859caae2" Description="SharePoint (C#)" />
+  <ProjectType Key="Node_js" Guid="9092aa53-fb77-4645-b42d-1ccca6bd08bd" Description="Node.js" Extension=".njsproj" />
+  <ProjectType Key="Extensibility" Guid="82b43b9b-a64c-4715-b499-d71e9ca2bd60" Description="Extensibility" />
+  <ProjectType Key="Legacy2003SmartDeviceCSharp" Guid="20d4826a-c6fa-45db-90f4-c717570b9f32" Description="Legacy (2003) Smart Device (C#)" />
+  <ProjectType Key="VSTO" Guid="baa0c2d2-18e2-41b9-852f-f413020caa33" Description="Visual Studio Tools for Office (VSTO)" />
+  <ProjectType Key="SmartDeviceVbNet" Guid="68b1623d-7fb9-47d8-8664-7ecea3297d4f" Description="Smart Device (VB.NET)" />
+  <ProjectType Key="WorkflowCSharp" Guid="14822709-b5a1-4724-98ca-57a101d1b079" Description="Workflow (C#)" />
+  <ProjectType Key="Database" Guid="a9ace9bb-cece-4e62-9aa4-c7e7c5bd2124" Description="Database" />
+  <ProjectType Key="WorkflowVbNet" Guid="d59be175-2ed0-4c54-be3d-cdaa9f3214c8" Description="Workflow (VB.NET)" />
+  <ProjectType Key="PortableClassLibrary" Guid="786c830f-07a1-408b-bd7f-6ee04809d6db" Description="Portable Class Library" />
+  <ProjectType Key="WindowsPowerShell" Guid="f5034706-568f-408a-b7b3-4d38c6db8a32" Description="Windows PowerShell Script" Extension=".pssproj" />
+</VsProjectTypes>

@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Erwine.Leonard.T.IOUtilityLib.XML</DocumentationFile>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Erwine.Leonard.T.IOUtilityLib.XML</DocumentationFile>
+    <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -56,13 +58,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DecodeRegexReplaceHandler.cs" />
     <Compile Include="EncodeRegexReplaceHandler.cs" />
     <Compile Include="IPSEventScriptHandler.cs" />
     <Compile Include="IPSInvocationContext.cs" />
     <Compile Include="LinqEmul.cs" />
-    <None Include="MSBuildLogHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSEventScriptHandler.cs" />
     <Compile Include="PSInvocationContext.cs" />
     <Compile Include="PSInvocationEventHandlerInvokedArgs.cs" />
@@ -74,7 +77,6 @@
     <Compile Include="ScriptRegexReplaceHandler.cs" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="TextHelper.cs" />
-    <None Include="UriHelper.cs" />
     <Compile Include="WindowOwner.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,12 +89,8 @@
     <Content Include="about_Erwine.Leonard.T.IOUtility.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="build-debug.bat" />
-    <None Include="build-deploy.bat" />
-    <None Include="build-release.bat" />
-    <None Include="build-test.bat" />
-    <None Include="Build.ps1" />
     <None Include="README.md" />
+    <None Include="UriHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="KnownMimeTypes.xml">
@@ -105,23 +103,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-      del "$(TargetDir)/*.nlp"
-      del "$(TargetDir)/mscorlib.dll"
-    </PostBuildEvent>
+    <PostBuildEvent>del "$(TargetDir)/*.nlp"
+del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
   </PropertyGroup>
-  <!--<Target Name="BeforeBuild">
-    <ItemGroup>
-      <ExistingOutputItems Include="$(TargetDir)Module\**\*.*" />
-    </ItemGroup>
-    <Delete Files="@(ExistingOutputItems)">
-    </Delete>
-    <RemoveDir Directories="$(TargetDir)Module" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-    <ItemGroup>
-      <TargetOutputItems Include="$(TargetDir)**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(TargetOutputItems)" DestinationFolder="$(TargetDir)Module" SkipUnchangedFiles="false" Condition=" '%(Identity.Substring(0, 7))' != 'Module\' and '%(Extension)' != '.tmp' " />
-  </Target>-->
+  </Target>
+  -->
 </Project>

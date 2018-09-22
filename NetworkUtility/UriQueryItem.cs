@@ -6,6 +6,7 @@ using System.Threading;
 
 namespace NetworkUtility
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class UriQueryItem : IEquatable<UriQueryItem>, IComparable<UriQueryItem>, IEquatable<KeyValuePair<string, string>>
     {
         private static StringComparer _comparer = StringComparer.InvariantCultureIgnoreCase;
@@ -104,4 +105,5 @@ namespace NetworkUtility
             throw new NotImplementedException();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -67,7 +67,6 @@
     <Compile Include="TokenList.cs" />
     <Compile Include="WebResourceLoadError.cs" />
     <Compile Include="XmlResourceLoadError.cs" />
-    <Compile Include="XmlUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GetWsdl.ps1" />

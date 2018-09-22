@@ -59,7 +59,6 @@
     <Compile Include="CryptKeyProvInfo.cs" />
     <Compile Include="CryptoApiBlob.cs" />
     <Compile Include="Externs.cs" />
-    <None Include="MSBuildLogHelper.cs" />
     <Compile Include="StreamHelper.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,11 +66,6 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="build-debug.bat" />
-    <None Include="build-deploy.bat" />
-    <None Include="build-release.bat" />
-    <None Include="build-test.bat" />
-    <None Include="Build.ps1" />
     <Content Include="Erwine.Leonard.T.CertificateCryptography.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

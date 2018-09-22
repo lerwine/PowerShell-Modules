@@ -353,8 +353,6 @@ Function Get-MethodUsage {
         [switch]$IncludeSpecialNamed
     )
     
-    Begin { $LastName = '' }
-    
     Process {
         if ($IncludeSpecialNamed -or -not $MethodInfo.IsSpecialName) {
             $ArgList = Get-ParameterUsage -Method $MethodInfo;
@@ -492,9 +490,8 @@ Function Get-TypeUsage {
             }
             break;
         } else {
-            $FullName = $InputType | Get-ClrSimpleName;
-            $FullName;
-            $SimpleName = $InputType | Get-ClrSimpleName -NameOnly;
+            # $FullName = $InputType | Get-ClrSimpleName;
+            # $SimpleName = $InputType | Get-ClrSimpleName -NameOnly;
             if ($Options.ShowbaseTypes) {
                 if ($InputType.BaseType.BaseType -ne $null) {
                     $Script:IndentText + 'Inherits From:';
