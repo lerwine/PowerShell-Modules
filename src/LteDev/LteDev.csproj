@@ -81,6 +81,8 @@
     <Compile Include="ValidateCsNameAttribute.cs" />
     <Compile Include="ValidateCsNamespaceAttribute.cs" />
     <Compile Include="ValidateTypeOrRefAttribute.cs" />
+    <Compile Include="BinaryHashData.cs" />
+    <Compile Include="FileInfoCatalogDataSet.cs" />
     <Compile Include="CodeDomProxy\INamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndNestedType.cs" />
