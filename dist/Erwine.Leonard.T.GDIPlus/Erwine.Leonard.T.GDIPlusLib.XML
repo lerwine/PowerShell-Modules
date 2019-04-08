@@ -39,6 +39,131 @@
             New-Image
             </summary>
         </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.Commands.HsbColor">
+            <summary>
+            Describes a color in terms of it's hue, saturation and brightness.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.HUE_MAXVALUE">
+            <summary>
+            Maximum hue value, which is equivalent to 0.0.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.H">
+            <summary>
+            The current color's hue in degrees, with values ranging from 0.0 to (but not including) 360.0.
+            </summary>
+            <remarks>0 = red; 60 = yellow; 120 = green; 180 = cyan; 240 = blue; 300 = magenta.</remarks>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.S">
+            <summary>
+            The current color's saturation as a percentage value, ranging from 0.0 to 1.0, with 0.0 being no saturation (gray scale).
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.B">
+            <summary>
+            The current color's brightness as a percentage value, ranging from 0.0 to 1.0, with 0.0 being completely dark (black) and 1.0 being white.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.HValue">
+            <summary>
+            The current color's hue as a byte value.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.SValue">
+            <summary>
+            The current color's saturation as a byte value, with 0 being no saturation (gray scale).
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.BValue">
+            <summary>
+            The current color's brightness as a byte value, with 0 being completely dark (black) and 255 being white.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.Commands.HsbColor"/> structure according to hue, saturation and brightness in byte values.
+            </summary>
+            <param name="hue">The color's hue.</param>
+            <param name="saturation">The saturation of the color.</param>
+            <param name="brightness">The color's brightness.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.Commands.HsbColor"/> structure according to hue in degrees, saturation and brightness in percentage values.
+            </summary>
+            <param name="hue">The color's hue.</param>
+            <param name="saturation">The saturation of the color.</param>
+            <param name="brightness">The color's brightness.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.#ctor(Erwine.Leonard.T.GDIPlus.Commands.RgbColor)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.Commands.HsbColor"/> structure from an RGB color model.
+            </summary>
+            <param name="other">RGB color model from which to derive the hue, saturation and brightness.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.#ctor(System.Drawing.Color)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.Commands.HsbColor"/> structure from a <seealso cref="T:System.Drawing.Color"/> object.
+            </summary>
+            <param name="color">RGB color model from which to derive the hue, saturation and brightness.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.RGBtoHSB(System.Byte,System.Byte,System.Byte,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            Converts the byte values of an RGB color model to a floating-point HSB color model.
+            </summary>
+            <param name="red">The intensity of red in the color.</param>
+            <param name="green">The intensity of green in the color.</param>
+            <param name="blue">The intensity of blue in the color</param>
+            <param name="h">Returns the color's hue in degreees.</param>
+            <param name="s">Returns the color's saturation percentage value.</param>
+            <param name="b">Returns the color's brightness value.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.RGBFtoHSB(System.Single,System.Single,System.Single,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            Converts the percentage values of an RGB color model to a floating-point HSB color model.
+            </summary>
+            <param name="red">The intensity of red in the color.</param>
+            <param name="green">The intensity of green in the color.</param>
+            <param name="blue">The intensity of blue in the color</param>
+            <param name="h">Returns the color's hue in degreees.</param>
+            <param name="s">Returns the color's saturation percentage value.</param>
+            <param name="b">Returns the color's brightness value.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.ToColor">
+            <summary>
+            Creates a new <seealso cref="T:System.Drawing.Color"/> object that is equivalent to the current HSB color model.
+            </summary>
+            <returns>A <seealso cref="T:System.Drawing.Color"/> object that is equivalent to the current HSB color model.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.Equals(Erwine.Leonard.T.GDIPlus.Commands.HsbColor)">
+            <summary>
+            Determins whether the current HSB color model values are equivalent to the values of another.
+            </summary>
+            <param name="other">The other HSB color values to compare to.</param>
+            <returns><c>true</c> if the <paramref name="other"/> <see cref="T:Erwine.Leonard.T.GDIPlus.Commands.HsbColor"/> values are equal to the current values; otherwise, false.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.Equals(Erwine.Leonard.T.GDIPlus.Commands.RgbColor)">
+            <summary>
+            Determines whether the color of the current HSB model is the same as the color represented by a RGB color model.
+            </summary>
+            <param name="other">The <seealso cref="T:Erwine.Leonard.T.GDIPlus.Commands.RgbColor"/> model to compare to.</param>
+            <returns><c>true</c> if the <see cref="T:Erwine.Leonard.T.GDIPlus.Commands.RgbColor"/> represents the same color as the current model; otherwise, false.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.Equals(System.Drawing.Color)">
+            <summary>
+            Determines whether the color of the current HSB model is the same as the color represented by a RGB <see cref="T:System.Drawing.Color"/> object.
+            </summary>
+            <param name="other">The <seealso cref="T:System.Drawing.Color"/> object to compare to.</param>
+            <returns><c>true</c> if the <see cref="T:System.Drawing.Color"/> represents the same color as the current model; otherwise, false.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.Commands.HsbColor.Equals(System.Object)">
+            <summary>
+            Determines whether another object is equivalent to the current model.
+            </summary>
+            <param name="obj">Other object to compare to.</param>
+            <returns><c>true</c> if the other object represents the same color as the current model; otherwise, false.</returns>
+        </member>
         <member name="T:Erwine.Leonard.T.GDIPlus.Collections.Synchronized.NonNullSynchronizedList`1">
             <summary>
             Represents a syncrhonized (thread-safe), strongly typed list of class objects whose elements are not permitted to have null values.

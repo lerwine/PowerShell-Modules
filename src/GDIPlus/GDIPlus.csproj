@@ -59,6 +59,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorExtensions.cs" />
     <Compile Include="Commands\New-Image.cs" />
     <Compile Include="Commands\Open-Image.cs" />
     <Compile Include="Commands\Enter-DrawingSurface.cs" />
@@ -77,6 +78,13 @@
     <Compile Include="Collections\Synchronized\TypedEnumeratorWrapper.cs" />
     <Compile Include="ColorSpaceType.cs" />
     <Compile Include="HsbColor.cs" />
+    <Compile Include="HsbColor32.cs" />
+    <Compile Include="HsbColor32Normalized.cs" />
+    <Compile Include="HsbColorF.cs" />
+    <Compile Include="HsbColorFNormalized.cs" />
+    <Compile Include="IColorModel.cs" />
+    <Compile Include="IHsbColorModel.cs" />
+    <Compile Include="IRgbColorModel.cs" />
     <Compile Include="RgbColor.cs" />
     <Compile Include="ExifItemDisplayNameAttribute.cs" />
     <Compile Include="ExifPropertyDescriptionAttribute.cs" />
@@ -171,6 +179,8 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RgbColor32.cs" />
+    <Compile Include="RgbColorF.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI\" />
