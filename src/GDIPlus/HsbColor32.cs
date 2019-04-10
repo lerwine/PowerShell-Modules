@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
@@ -9,18 +11,26 @@ namespace Erwine.Leonard.T.GDIPlus
     /// An HSB (Hue,Saturation,Brightness) color model using 32 bits.
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
-    public struct HsbColor32 : IEquatable<HsbColor32>, IEquatable<IHsbColorModel<float>>, IEquatable<IRgbColorModel<float>>, IHsbColorModel<byte>
+    public struct HsbColor32 : IEquatable<HsbColor32>, IEquatable<IHsbColorModel<float>>, IEquatable<IRgbColorModel<float>>, IHsbColorModel<byte>, IEquatable<int>, IConvertible
     {
+        #region Fields
+
+        public static readonly Regex ParseRegex = new Regex(@"^((?<h>[a-f\d]{3}([a-f\d]([a-f\d]{2}|[a-f\d]{4})?)?)|hs[lb]a?\(\s*((?<b>(?<h>\d+)\s*,\s*(?<s>\d+)\s*,\s*(?<l>\d+))|(?<p>(?<h>\d+(\.\d+)?)\s*,\s*(?<s>\d+(\.\d+)?)%\s*,\s*(?<l>\d+(\.\d+)?)%))(\s*,\s*(?<a>\d+(\.\d+)?%?))?\s*\))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         [FieldOffset(0)]
         private readonly int _value;
         [FieldOffset(0)]
-        private readonly byte _hue;
+        private readonly byte _brightness;
         [FieldOffset(1)]
         private readonly byte _saturation;
         [FieldOffset(2)]
-        private readonly byte _brightness;
+        private readonly byte _hue;
         [FieldOffset(3)]
         private readonly byte _alpha;
+
+        #endregion
+        
+        #region Properties
 
         /// <summary>
         /// The opaqueness of the color.
@@ -44,6 +54,19 @@ namespace Erwine.Leonard.T.GDIPlus
 
         bool IColorModel.IsNormalized { get { return false; } }
 
+        ColorStringFormat IColorModel.DefaultStringFormat { get { return ColorStringFormat.HSLAHex; } }
+
+        #endregion
+        
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new <see cref="HsbColor32" /> from HSB values and specified opaqueness.
+        /// </summary>
+        /// <param name="hue">Color hue in degrees, ranging from 0.0 to 360.0.</param>
+        /// <param name="saturation">Color saturation in pecentage, ranging from 0.0 to 1.0, where 0.0 is grayscale.</param>
+        /// <param name="brightness">Color brightness in percentage, ranging from 0.0 to 1.0, where 0.0 is completely dark (black) and 1.0 is completely light (white).</param>
+        /// <param name="alpha">Color opaqueness (alpha layer) in percentage, where 0.0 is transparent and 1.0 is opaque.</param>
         public HsbColor32(byte hue, byte saturation, byte brightness, byte alpha)
         {
             _value = 0;
@@ -53,8 +76,18 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = alpha;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="HsbColor32" /> from HSB values with no transparency.
+        /// </summary>
+        /// <param name="hue">Color hue in degrees, ranging from 0.0 to 360.0.</param>
+        /// <param name="saturation">Color saturation in pecentage, ranging from 0.0 to 1.0, where 0.0 is grayscale.</param>
+        /// <param name="brightness">Color brightness in percentage, ranging from 0.0 to 1.0, where 0.0 is completely dark (black) and 1.0 is completely light (white).</param>
         public HsbColor32(byte hue, byte saturation, byte brightness) : this(hue, saturation, brightness, 255) { }
 
+        /// <summary>
+        /// Creates a new <see cref="HsbColor32" /> from a <seealso cref="HsbColorF" /> value.
+        /// </summary>
+        /// <param name="value"></param>
         public HsbColor32(HsbColorF value)
         {
             _value = 0;
@@ -64,20 +97,46 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha.FromPercentage();
         }
 
+        public HsbColor32(int ahsb)
+        {
+            _brightness = _saturation = _hue = _alpha = 0;
+            _value = ahsb;
+        }
+
+        #endregion
+        
+        #region As* Methods
+
         IHsbColorModel<byte> IColorModel.AsHsb32() { return this; }
 
+        /// <summary>
+        /// Returns a <seealso cref="HsbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.
+        /// </summary>
+        /// <returns>A <seealso cref="HsbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.</returns>
         public HsbColorF AsHsbF() { return new HsbColorF(this); }
 
         IHsbColorModel<float> IColorModel.AsHsbF() { return AsHsbF(); }
 
+        /// <summary>
+        /// Returns a <seealso cref="RgbColor32" /> value representing the same color as the current <see cref="HsbColor32" />.
+        /// </summary>
+        /// <returns>A <seealso cref="RgbColor32" /> value representing the same color as the current <see cref="HsbColor32" />.</returns>
         public RgbColor32 AsRgb32() { return new RgbColor32(this); }
 
         IRgbColorModel<byte> IColorModel.AsRgb32() { return AsRgb32(); }
 
+        /// <summary>
+        /// Returns a <seealso cref="RgbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.
+        /// </summary>
+        /// <returns>A <seealso cref="RgbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.</returns>
         public RgbColorF AsRgbF() { return new RgbColorF(this); }
 
         IRgbColorModel<float> IColorModel.AsRgbF() { return AsRgbF(); }
 
+        /// <summary>
+        /// Returns a <seealso cref="HsbColor32Normalized" /> value representing the same color as the current <see cref="HsbColor32" /> with the color values normalized for accurate comparisons.
+        /// </summary>
+        /// <returns>A <seealso cref="RgbColorF" /> value representing the same color as the current <see cref="HsbColor32" /> with the color values normalized for accurate comparisons.</returns>
         public HsbColor32Normalized AsNormalized() { return new HsbColor32Normalized(this); }
 
         IHsbColorModel<byte> IHsbColorModel<byte>.AsNormalized() { return AsNormalized(); }
@@ -85,6 +144,10 @@ namespace Erwine.Leonard.T.GDIPlus
         IColorModel<byte> IColorModel<byte>.AsNormalized() { return AsNormalized(); }
 
         IColorModel IColorModel.AsNormalized() { return AsNormalized(); }
+
+        #endregion
+        
+        #region Equals Methods
 
         public bool Equals(IRgbColorModel<byte> other, bool exact)
         {
@@ -170,6 +233,8 @@ namespace Erwine.Leonard.T.GDIPlus
             return r.FromPercentage() == other.R && g.FromPercentage() == other.G && b.FromPercentage() == other.B;
         }
 
+        public bool Equals(int other) { return _value == other; }
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -187,7 +252,11 @@ namespace Erwine.Leonard.T.GDIPlus
             return obj is IRgbColorModel<float> && Equals((IRgbColorModel<float>)obj, false);
         }
 
+        #endregion
+        
         public override int GetHashCode() { return _value; }
+
+        #region MergeAverage Method
 
         public IHsbColorModel<byte> MergeAverage(IEnumerable<IHsbColorModel<byte>> other)
         {
@@ -225,49 +294,275 @@ namespace Erwine.Leonard.T.GDIPlus
 
         IColorModel IColorModel.MergeAverage(IEnumerable<IColorModel> other) { return MergeAverage(other); }
 
-        public IHsbColorModel<byte> ShiftHue(float percentage)
+        #endregion
+        
+        #region ShiftHue Method
+
+        /// <summary>
+        /// Returns a <see cref="IColorModel" /> value with the color hue adjusted.
+        /// </summary>
+        /// <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+        /// <returns>A <see cref="IColorModel" /> value with the color hue adjusted.</returns>
+        /// <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        public HsbColor32 ShiftHue(float degrees)
         {
+            if (degrees < -360f || degrees > 360f)
+                throw new ArgumentOutOfRangeException("degrees");
+            if (degrees == 0f || degrees == 360f || degrees == -360f)
+                return this;
+            float hue = _hue.ToDegrees() + degrees;
+            if (hue < 0f)
+                hue += 360f;
+            else if (hue >= 360f)
+                hue -= 360f;
+            return new HsbColor32(hue.FromDegrees(), _saturation, _brightness, _alpha);
+        }
+
+        IHsbColorModel<byte> IHsbColorModel<byte>.ShiftHue(float degrees) { return ShiftHue(degrees); }
+
+        IColorModel<byte> IColorModel<byte>.ShiftHue(float degrees) { return ShiftHue(degrees); }
+
+        IColorModel IColorModel.ShiftHue(float degrees) { return ShiftHue(degrees); }
+
+        #endregion
+        
+        #region ShiftSaturation Method
+
+        /// <summary>
+        /// Returns a <see cref="HsbColor32" /> value with the color saturation adjusted.
+        /// </summary>
+        /// <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+        /// <returns>A <see cref="HsbColor32" /> value with the color saturation adjusted.</returns>
+        /// <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+        /// <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        public HsbColor32 ShiftSaturation(float percentage)
+        {
+            if (percentage < -1f || percentage > 1f)
+                throw new ArgumentOutOfRangeException("percentage");
+            if (percentage == 0f || (percentage == 1f) ? _saturation == 255 : percentage == -1f && _saturation == 0)
+                return this;
+            float s = _saturation.ToPercentage();
+            return new HsbColor32(_hue, (s + ((percentage > 0f) ? (1f - s) : s) * percentage).FromPercentage(), _brightness, _alpha);
+        }
+
+        IHsbColorModel<byte> IHsbColorModel<byte>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+
+        IColorModel<byte> IColorModel<byte>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+
+        IColorModel IColorModel.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+
+        #endregion
+        
+        #region ShiftBrightness Method
+
+        /// <summary>
+        /// Returns a <see cref="HsbColor32" /> value with the color brightness adjusted.
+        /// </summary>
+        /// <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+        /// <returns>A <see cref="HsbColor32" /> value with the color brightness adjusted.</returns>
+        /// <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+        /// <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        public HsbColor32 ShiftBrightness(float percentage)
+        {
+            if (percentage < -1f || percentage > 1f)
+                throw new ArgumentOutOfRangeException("percentage");
+            if (percentage == 0f || (percentage == 1f) ? _brightness == 255 : percentage == -1f && _brightness == 0)
+                return this;
+            float b = _brightness.ToPercentage();
+            return new HsbColor32(_hue, _saturation, (b + ((percentage > 0f) ? (1f - b) : b) * percentage).FromPercentage(), _alpha);
+        }
+
+        IHsbColorModel<byte> IHsbColorModel<byte>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+
+        IColorModel<byte> IColorModel<byte>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+
+        IColorModel IColorModel.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+
+        #endregion
+
+        /// <summary>
+        /// Gets the AHSB integer value for the current <see cref="HsbColor32" /> value.
+        /// </summary>
+        /// <returns>The AHSB integer value for the current <see cref="HsbColor32" /> value.</returns>
+        public int ToAHSB() { return _value; }
+
+        #region ToString Methods
+
+        /// <summary>
+        /// Gets formatted string representing the current color value.
+        /// </summary>
+        /// <param name="format">The color string format to use.</param>
+        /// <returns>The formatted string representing the current color value.</returns>
+        public string ToString(ColorStringFormat format)
+        {
+            float r, g, b;
+            switch (format)
+            {
+                case ColorStringFormat.HSLAHexOpt:
+                    return ToHexidecimalString(_hue, _saturation, _brightness, _alpha, true);
+                case ColorStringFormat.HSLAPercent:
+                    return HsbColorF.ToPercentParameterString(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), _alpha.ToPercentage());
+                case ColorStringFormat.HSLAValues:
+                    return ToValueParameterString(_hue, _saturation, _brightness, _alpha);
+                case ColorStringFormat.HSLHex:
+                    return ToHexidecimalString(_hue, _saturation, _brightness, false);
+                case ColorStringFormat.HSLHexOpt:
+                    return ToHexidecimalString(_hue, _saturation, _brightness, true);
+                case ColorStringFormat.HSLPercent:
+                    return HsbColorF.ToPercentParameterString(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage());
+                case ColorStringFormat.HSLValues:
+                    return ToValueParameterString(_hue, _saturation, _brightness);
+                case ColorStringFormat.RGBAHex:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), _alpha, false);
+                case ColorStringFormat.RGBAHexOpt:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), _alpha, true);
+                case ColorStringFormat.RGBAPercent:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColorF.ToPercentParameterString(r, g, b, _alpha.ToPercentage());
+                case ColorStringFormat.RGBAValues:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColor32.ToValueParameterString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), _alpha);
+                case ColorStringFormat.RGBHex:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), false);
+                case ColorStringFormat.RGBHexOpt:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), true);
+                case ColorStringFormat.RGBPercent:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColorF.ToPercentParameterString(r, g, b);
+                case ColorStringFormat.RGBValues:
+                    ColorExtensions.HSBtoRGB(_hue.ToDegrees(), _saturation.ToPercentage(), _brightness.ToPercentage(), out r, out g, out b);
+                    return RgbColor32.ToValueParameterString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage());
+            }
             throw new NotImplementedException();
         }
 
-        public IHsbColorModel<byte> ShiftSaturation(float percentage)
+        public override string ToString() { return _value.ToString("X8"); }
+
+        public static string ToHexidecimalString(byte h, byte s, byte b, byte a, bool canShorten)
         {
-            throw new NotImplementedException();
+            string result = h.ToString("X2") + s.ToString("X2") + b.ToString("X2") + a.ToString("X2");
+            if (canShorten && result[0] == result[1] && result[2] == result[3] && result[4] == result[5] && result[6] == result[7])
+                return new string(new char[] { result[0], result[2], result[4], result[6] });
+            return result;
+        }
+        
+        public static string ToHexidecimalString(byte h, byte s, byte b, byte a) { return ToHexidecimalString(h, s, b, a, false); }
+        
+        public static string ToHexidecimalString(byte h, byte s, byte b, bool canShorten)
+        {
+            string result = h.ToString("X2") + s.ToString("X2") + b.ToString("X2");
+            if (canShorten && result[0] == result[1] && result[2] == result[3] && result[4] == result[5])
+                return new string(new char[] { result[0], result[2], result[4] });
+            return result;
         }
 
-        public IHsbColorModel<byte> ShiftBrightness(float percentage)
+        public static string ToHexidecimalString(byte h, byte s, byte b) { return ToHexidecimalString(h, s, b, false); }
+        
+        public static string ToValueParameterString(byte h, byte s, byte b, float a)
         {
-            throw new NotImplementedException();
+            return "hsla(" + h.ToString() + ", " + s.ToString() + ", " + b.ToString() + ", " + Math.Round(a, 2).ToString() + ")";
         }
 
-        IColorModel<byte> IColorModel<byte>.ShiftHue(float percentage)
+        public static string ToValueParameterString(byte h, byte s, byte b, byte a) { return ToValueParameterString(h, s, b, Convert.ToSingle(a) / 255f); }
+
+        public static string ToValueParameterString(byte h, byte s, byte b)
         {
-            throw new NotImplementedException();
+            return "hsl(" + h.ToString() + ", " + s.ToString() + ", " + b.ToString() + ")";
         }
 
-        IColorModel<byte> IColorModel<byte>.ShiftSaturation(float percentage)
+        #endregion
+        
+        public static bool TryParse(string text, out HsbColor32 result) { return TryParse(text, false, out result); }
+        internal static bool TryParse(string text, bool strict, out HsbColor32 result)
         {
-            throw new NotImplementedException();
+            if (text != null && (text = text.Trim()).Length > 0)
+            {
+                Match match = ParseRegex.Match(text);
+                if (match.Success)
+                {
+                    try
+                    {
+                        if (match.Groups["h"].Success)
+                        {
+                            switch (text.Length)
+                            {
+                                case 3:
+                                    result = new HsbColor32(int.Parse(new string(new char[] { text[0], text[0], text[1], text[1], text[2], text[2]}), NumberStyles.HexNumber) << 8);
+                                    break;
+                                case 4:
+                                    result = new HsbColor32(int.Parse(new string(new char[] { text[0], text[0], text[1], text[1], text[2], text[2]}), NumberStyles.HexNumber) << 8 | int.Parse(new string(new char[] { text[3], text[3] })));
+                                    break;
+                                case 8:
+                                    result = new HsbColor32(int.Parse(text.Substring(0, 6), NumberStyles.HexNumber) << 8 | int.Parse(text.Substring(6), NumberStyles.HexNumber));
+                                    break;
+                                default:
+                                    result = new HsbColor32(int.Parse(text, NumberStyles.HexNumber) << 8);
+                                    break;
+                            }
+                            return true;
+                        }
+                        
+                        float alpha = 100f;
+                        if (!match.Groups["a"].Success || (((match.Groups["a"].Value.EndsWith("%")) ? (float.TryParse(match.Groups["a"].Value.Substring(0, match.Groups["a"].Length - 1), out alpha) && (alpha = alpha / 100f) <= 1f) : (float.TryParse(match.Groups["a"].Value, out alpha) && alpha <= 1f)) && alpha >= 0f))
+                        {
+                            if (match.Groups["b"].Success)
+                            {
+                                int h, s, l;
+                                if (int.TryParse(match.Groups["h"].Value, out h) && h > -1 && h < 256 && int.TryParse(match.Groups["s"].Value, out s) && s > -1 && s < 256 &&
+                                    int.TryParse(match.Groups["l"].Value, out l) && l > -1 && l < 256)
+                                {
+                                    result = new HsbColor32((byte)h, (byte)s, (byte)l, alpha.FromPercentage());
+                                    return true;
+                                }
+                            }
+                            else if (float.TryParse(match.Groups["h"].Value, out float hF) && hF >= 0f && hF <= 360f && float.TryParse(match.Groups["s"].Value, out float sF) && sF >= 0f && sF <= 100f && float.TryParse(match.Groups["l"].Value, out float lF) && lF >= 0f && lF <= 100f)
+                            {
+                                result = new HsbColor32(hF.FromDegrees(), (sF / 100f).FromPercentage(), (lF / 100f).FromPercentage(), alpha.FromPercentage());
+                                return true;
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (!strict && RgbColorF.TryParse(text, true, out RgbColorF rgb))
+                {
+                    ColorExtensions.RGBtoHSB(rgb.Red, rgb.Blue, rgb.Green, out float h, out float s, out float b);
+                    result = new HsbColor32(h.FromDegrees(), s.FromPercentage(), b.FromPercentage(), rgb.Alpha.FromPercentage());
+                    return true;
+                }
+            }
+            
+            result = default(HsbColor32);
+            return false;
         }
 
-        IColorModel<byte> IColorModel<byte>.ShiftBrightness(float percentage)
-        {
-            throw new NotImplementedException();
-        }
+        #region  IConvertible Members
 
-        IColorModel IColorModel.ShiftHue(float percentage)
-        {
-            throw new NotImplementedException();
-        }
+        TypeCode IConvertible.GetTypeCode() { return TypeCode.Int32; }
+        bool IConvertible.ToBoolean(IFormatProvider provider) { return Convert.ToBoolean(_value, provider); }
+        char IConvertible.ToChar(IFormatProvider provider) { return Convert.ToChar(_value, provider); }
+        sbyte IConvertible.ToSByte(IFormatProvider provider) { return Convert.ToSByte(_value, provider); }
+        byte IConvertible.ToByte(IFormatProvider provider) { return Convert.ToByte(_value, provider); }
+        short IConvertible.ToInt16(IFormatProvider provider) { return Convert.ToInt16(_value, provider); }
+        ushort IConvertible.ToUInt16(IFormatProvider provider) { return Convert.ToUInt16(_value, provider); }
+        int IConvertible.ToInt32(IFormatProvider provider) { return _value; }
+        uint IConvertible.ToUInt32(IFormatProvider provider) { return Convert.ToUInt32(_value, provider); }
+        long IConvertible.ToInt64(IFormatProvider provider) { return _value; }
+        ulong IConvertible.ToUInt64(IFormatProvider provider) { return Convert.ToUInt64(_value, provider); }
+        float IConvertible.ToSingle(IFormatProvider provider) { return _value; }
+        double IConvertible.ToDouble(IFormatProvider provider) { return _value; }
+        decimal IConvertible.ToDecimal(IFormatProvider provider) { return _value; }
+        DateTime IConvertible.ToDateTime(IFormatProvider provider) { return Convert.ToDateTime(_value, provider); }
+        string IConvertible.ToString(IFormatProvider provider) { return Convert.ToString(_value, provider); }
+        object IConvertible.ToType(Type conversionType, IFormatProvider provider) { return Convert.ChangeType(_value, conversionType, provider); }
 
-        IColorModel IColorModel.ShiftSaturation(float percentage)
-        {
-            throw new NotImplementedException();
-        }
-
-        IColorModel IColorModel.ShiftBrightness(float percentage)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }
