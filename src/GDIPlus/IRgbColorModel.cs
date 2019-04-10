@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Erwine.Leonard.T.GDIPlus
@@ -40,10 +40,39 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <returns><c>true</c> if the <paramref name="other"/> is equivalent to the current <see cref="IRgbColorModel{T}"/>; otherwise, <c>false</c>.</returns>
         bool Equals(IHsbColorModel<T> other, bool exact);
 
-        new IRgbColorModel<T> ShiftHue(float percentage);
+        /// <summary>
+        /// Returns a <see cref="IRgbColorModel{T}" /> value with the color hue adjusted.
+        /// </summary>
+        /// <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+        /// <returns>A <see cref="IRgbColorModel{T}" /> value with the color hue adjusted.</returns>
+        /// <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        new IRgbColorModel<T> ShiftHue(float degrees);
 
+        /// <summary>
+        /// Returns a <see cref="IRgbColorModel{T}" /> value with the color saturation adjusted.
+        /// </summary>
+        /// <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+        /// <returns>A <see cref="IRgbColorModel{T}" /> value with the color saturation adjusted.</returns>
+        /// <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+        /// <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
         new IRgbColorModel<T> ShiftSaturation(float percentage);
 
+        /// <summary>
+        /// Returns a <see cref="IRgbColorModel{T}" /> value with the color brightness adjusted.
+        /// </summary>
+        /// <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+        /// <returns>A <see cref="IRgbColorModel{T}" /> value with the color brightness adjusted.</returns>
+        /// <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+        /// <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
         new IRgbColorModel<T> ShiftBrightness(float percentage);
+
+        /// <summary>
+        /// Gets the ARGB integer value for the current <see cref="IRgbColorModel{T}" /> value.
+        /// </summary>
+        /// <returns>The ARGB integer value for the current <see cref="IRgbColorModel{T}" /> value.</returns>
+        int ToARGB();
     }
 }
