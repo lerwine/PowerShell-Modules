@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
@@ -9,6 +9,8 @@ namespace Erwine.Leonard.T.GDIPlus
     public struct HsbColorFNormalized : IEquatable<HsbColorFNormalized>, IEquatable<IHsbColorModel<byte>>, IEquatable<IRgbColorModel<byte>>, IHsbColorModel<float>
     {
         private readonly float _alpha, _hue, _saturation, _brightness;
+
+        #region Properties
 
         /// <summary>
         /// The opaqueness of the color.
@@ -31,6 +33,12 @@ namespace Erwine.Leonard.T.GDIPlus
         public float Brightness { get { return _brightness; } }
 
         bool IColorModel.IsNormalized { get { return true; } }
+
+        ColorStringFormat IColorModel.DefaultStringFormat { get { return ColorStringFormat.HSLAPercent; } }
+
+        #endregion
+        
+        #region Constructors
 
         public HsbColorFNormalized(float hue, float saturation, float brightness, float alpha)
         {
@@ -73,10 +81,10 @@ namespace Erwine.Leonard.T.GDIPlus
         public HsbColorFNormalized(HsbColorF value)
         {
             ColorExtensions.HSBtoRGB(value.Hue, value.Saturation, value.Brightness, out float r, out float g, out float b);
-            ColorExtensions.RGBtoHSB(r, g, b, out float hue, out float saturation, out float brightness);
+            ColorExtensions.RGBtoHSB(r, g, b, out float hue, out float saturation, out b);
             _hue = hue;
             _saturation = saturation;
-            _brightness = brightness;
+            _brightness = b;
             _alpha = value.Alpha;
         }
 
@@ -100,6 +108,21 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha;
         }
 
+        public HsbColorFNormalized(int ahsb)
+        {
+            byte[] values = BitConverter.GetBytes(ahsb);
+            ColorExtensions.HSBtoRGB(values[2].ToDegrees(), values[1].ToPercentage(), values[0].ToPercentage(), out float r, out float g, out float b);
+            ColorExtensions.RGBtoHSB(r, g, b, out float hue, out float saturation, out float brightness);
+            _hue = hue;
+            _saturation = saturation;
+            _brightness = brightness;
+            _alpha = values[3].ToPercentage();
+        }
+
+        #endregion
+        
+        #region As* Methods
+
         public HsbColor32Normalized AsHsb32() { return new HsbColor32Normalized(this); }
 
         IHsbColorModel<byte> IColorModel.AsHsb32() { return AsHsb32(); }
@@ -119,6 +142,10 @@ namespace Erwine.Leonard.T.GDIPlus
         IColorModel<float> IColorModel<float>.AsNormalized() { return this; }
 
         IColorModel IColorModel.AsNormalized() { return this; }
+
+        #endregion
+        
+        #region Equals Methods
 
         public bool Equals(IRgbColorModel<float> other, bool exact)
         {
@@ -228,7 +255,11 @@ namespace Erwine.Leonard.T.GDIPlus
             return obj is IRgbColorModel<byte> && Equals((IRgbColorModel<byte>)obj, false);
         }
 
-        public override int GetHashCode() { return BitConverter.ToInt32(new byte[] { _hue.FromPercentage(), _saturation.FromPercentage(), _brightness.FromPercentage(), _alpha.FromPercentage() }, 0); }
+        #endregion
+        
+        public override int GetHashCode() { return ToAHSB(); }
+
+        #region MergeAverage Method
 
         public HsbColorFNormalized MergeAverage(IEnumerable<IHsbColorModel<float>> other)
         {
@@ -268,49 +299,149 @@ namespace Erwine.Leonard.T.GDIPlus
 
         IColorModel IColorModel.MergeAverage(IEnumerable<IColorModel> other) { return MergeAverage(other); }
 
-        public IHsbColorModel<float> ShiftHue(float percentage)
+        #endregion
+        
+        #region ShiftHue Method
+
+        /// <summary>
+        /// Returns a <see cref="IHsbColorModel{T}" /> with <seealso cref="float" /> component values with the color hue adjusted.
+        /// </summary>
+        /// <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+        /// <returns>A <see cref="IHsbColorModel{T}" /> with <seealso cref="float" /> with the color hue adjusted.</returns>
+        /// <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        public IHsbColorModel<float> ShiftHue(float degrees)
         {
-            throw new NotImplementedException();
+            if (degrees < -360f || degrees > 360f)
+                throw new ArgumentOutOfRangeException("degrees");
+            if (degrees == 0f || degrees == 360f || degrees == -360f)
+                return this;
+            float hue = _hue + degrees;
+            if (hue < 0f)
+                hue += 360f;
+            else if (hue >= 360f)
+                hue -= 360f;
+            return new HsbColorF(hue, _saturation, _brightness, _alpha);
         }
 
+        IColorModel<float> IColorModel<float>.ShiftHue(float degrees) { return ShiftHue(degrees); }
+
+        IColorModel IColorModel.ShiftHue(float degrees) { return ShiftHue(degrees); }
+
+        #endregion
+        
+        #region ShiftSaturation Method
+
+        /// <summary>
+        /// Returns a <see cref="IHsbColorModel{T}" /> with <seealso cref="float" /> with the color saturation adjusted.
+        /// </summary>
+        /// <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+        /// <returns>A <see cref="IHsbColorModel{T}" /> with <seealso cref="float" /> value with the color saturation adjusted.</returns>
+        /// <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (1.0 - saturation) * percentage</c>
+        /// <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
         public IHsbColorModel<float> ShiftSaturation(float percentage)
         {
-            throw new NotImplementedException();
+            if (percentage < -1f || percentage > 1f)
+                throw new ArgumentOutOfRangeException("percentage");
+            if (percentage == 0f || (percentage == 1f) ? _saturation == 1f : percentage == -1f && _saturation == 0f)
+                return this;
+            return new HsbColorF(_hue, _saturation + ((percentage > 0f) ? (1f - _saturation) : _saturation) * percentage, _brightness, _alpha);
         }
 
+        IColorModel<float> IColorModel<float>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+
+        IColorModel IColorModel.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+
+        #endregion
+        
+        #region ShiftBrightness Method
+
+        /// <summary>
+        /// Returns a <see cref="IHsbColorModel{T}" /> with <seealso cref="float" /> value with the color brightness adjusted.
+        /// </summary>
+        /// <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+        /// <returns>A <see cref="IHsbColorModel{T}" /> with <seealso cref="float" /> value with the color brightness adjusted.</returns>
+        /// <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (1.0 - brightness) * percentage</c>
+        /// <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
         public IHsbColorModel<float> ShiftBrightness(float percentage)
         {
-            throw new NotImplementedException();
+            if (percentage < -1f || percentage > 1f)
+                throw new ArgumentOutOfRangeException("percentage");
+            if (percentage == 0f || (percentage == 1f) ? _brightness == 1f : percentage == -1f && _brightness == 0f)
+                return this;
+            return new HsbColorF(_hue, _saturation, _brightness + ((percentage > 0f) ? (1f - _brightness) : _brightness) * percentage, _alpha);
         }
 
-        IColorModel<float> IColorModel<float>.ShiftHue(float percentage)
+        IColorModel<float> IColorModel<float>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+
+        IColorModel IColorModel.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+
+        #endregion
+
+        /// <summary>
+        /// Gets the AHSB integer value for the current <see cref="HsbColorFNormalized" /> value.
+        /// </summary>
+        /// <returns>The AHSB integer value for the current <see cref="HsbColorFNormalized" /> value.</returns>
+        public int ToAHSB() { return BitConverter.ToInt32(new byte[] { _brightness.FromPercentage(), _saturation.FromPercentage(), _hue.FromPercentage(), _alpha.FromPercentage() }, 0); }
+
+        #region ToString Methods
+
+        /// <summary>
+        /// Gets formatted string representing the current color value.
+        /// </summary>
+        /// <param name="format">The color string format to use.</param>
+        /// <returns>The formatted string representing the current color value.</returns>
+        public string ToString(ColorStringFormat format)
         {
-            throw new NotImplementedException();
+            float r, g, b;
+            switch (format)
+            {
+                case ColorStringFormat.HSLAHex:
+                    return HsbColor32.ToHexidecimalString(_hue.FromDegrees(), _saturation.FromPercentage(), _brightness.FromPercentage(), _alpha.FromPercentage(), false);
+                case ColorStringFormat.HSLAHexOpt:
+                    return HsbColor32.ToHexidecimalString(_hue.FromDegrees(), _saturation.FromPercentage(), _brightness.FromPercentage(), _alpha.FromPercentage(), true);
+                case ColorStringFormat.HSLAValues:
+                    return HsbColor32.ToValueParameterString(_hue.FromDegrees(), _saturation.FromPercentage(), _brightness.FromPercentage(), _alpha);
+                case ColorStringFormat.HSLHex:
+                    return HsbColor32.ToHexidecimalString(_hue.FromDegrees(), _saturation.FromPercentage(), _brightness.FromPercentage(), false);
+                case ColorStringFormat.HSLHexOpt:
+                    return HsbColor32.ToHexidecimalString(_hue.FromDegrees(), _saturation.FromPercentage(), _brightness.FromPercentage(), true);
+                case ColorStringFormat.HSLPercent:
+                    return HsbColorF.ToPercentParameterString(_hue, _saturation, _brightness);
+                case ColorStringFormat.HSLValues:
+                    return HsbColor32.ToValueParameterString(_hue.FromDegrees(), _saturation.FromPercentage(), _brightness.FromPercentage());
+                case ColorStringFormat.RGBAHex:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), _alpha.FromPercentage(), false);
+                case ColorStringFormat.RGBAHexOpt:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), _alpha.FromPercentage(), true);
+                case ColorStringFormat.RGBAPercent:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColorF.ToPercentParameterString(r, g, b, _alpha);
+                case ColorStringFormat.RGBAValues:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColor32.ToValueParameterString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), _alpha.FromPercentage());
+                case ColorStringFormat.RGBHex:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), false);
+                case ColorStringFormat.RGBHexOpt:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColor32.ToHexidecimalString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage(), true);
+                case ColorStringFormat.RGBPercent:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColorF.ToPercentParameterString(r, g, b);
+                case ColorStringFormat.RGBValues:
+                    ColorExtensions.HSBtoRGB(_hue, _saturation, _brightness, out r, out g, out b);
+                    return RgbColor32.ToValueParameterString(r.FromPercentage(), g.FromPercentage(), b.FromPercentage());
+            }
+            return HsbColorF.ToPercentParameterString(_hue, _saturation, _brightness, _alpha);
         }
 
-        IColorModel<float> IColorModel<float>.ShiftSaturation(float percentage)
-        {
-            throw new NotImplementedException();
-        }
+        public override string ToString() { return HsbColorF.ToPercentParameterString(_hue, _saturation, _brightness, _alpha); }
 
-        IColorModel<float> IColorModel<float>.ShiftBrightness(float percentage)
-        {
-            throw new NotImplementedException();
-        }
-
-        IColorModel IColorModel.ShiftHue(float percentage)
-        {
-            throw new NotImplementedException();
-        }
-
-        IColorModel IColorModel.ShiftSaturation(float percentage)
-        {
-            throw new NotImplementedException();
-        }
-
-        IColorModel IColorModel.ShiftBrightness(float percentage)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }
