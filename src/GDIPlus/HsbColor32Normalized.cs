@@ -56,6 +56,13 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region Constructors
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hue"></param>
+        /// <param name="saturation"></param>
+        /// <param name="brightness"></param>
+        /// <param name="alpha"></param>
         public HsbColor32Normalized(byte hue, byte saturation, byte brightness, byte alpha)
         {
             _value = 0;
@@ -67,8 +74,18 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = alpha;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hue"></param>
+        /// <param name="saturation"></param>
+        /// <param name="brightness"></param>
         public HsbColor32Normalized(byte hue, byte saturation, byte brightness) : this(hue, saturation, brightness, 255) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public HsbColor32Normalized(RgbColorF value)
         {
             ColorExtensions.RGBtoHSB(value.Red, value.Green, value.Blue, out float h, out float s, out float b);
@@ -78,6 +95,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha.FromPercentage();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public HsbColor32Normalized(RgbColor32 value)
         {
             ColorExtensions.RGBtoHSB(value.Red.ToPercentage(), value.Green.ToPercentage(), value.Blue.ToPercentage(), out float h, out float s, out float b);
@@ -87,6 +108,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public HsbColor32Normalized(IHsbColorModel<float> value)
         {
             if (value == null)
@@ -108,6 +133,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha.FromPercentage(); ;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public HsbColor32Normalized(HsbColor32 value)
         {
             _value = 0;
@@ -119,6 +148,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ahsb"></param>
         public HsbColor32Normalized(int ahsb)
         {
             byte[] values = BitConverter.GetBytes(ahsb);
@@ -136,14 +169,26 @@ namespace Erwine.Leonard.T.GDIPlus
 
         IHsbColorModel<byte> IColorModel.AsHsb32() { return this; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public HsbColorFNormalized AsHsbF() { return new HsbColorFNormalized(this); }
 
         IHsbColorModel<float> IColorModel.AsHsbF() { return AsHsbF(); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public RgbColor32 AsRgb32() { return new RgbColor32(this); }
 
         IRgbColorModel<byte> IColorModel.AsRgb32() { return AsRgb32(); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public RgbColorF AsRgbF() { return new RgbColorF(this); }
 
         IRgbColorModel<float> IColorModel.AsRgbF() { return AsRgbF(); }
@@ -155,9 +200,15 @@ namespace Erwine.Leonard.T.GDIPlus
         IColorModel IColorModel.AsNormalized() { return this; }
 
         #endregion
-        
+
         #region Equals Methods
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IRgbColorModel<byte> other, bool exact)
         {
             if (other == null || _alpha != other.Alpha)
@@ -172,6 +223,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return other.Red == r.FromPercentage() && other.Green == g.FromPercentage() && other.Blue == b.FromPercentage();
         }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IRgbColorModel<float> other, bool exact)
         {
             if (other == null)
@@ -192,6 +249,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return other.Red == r.FromPercentage() && other.Green == g.FromPercentage() && other.Blue == b.FromPercentage();
         }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IHsbColorModel<float> other, bool exact)
         {
             if (other == null)
@@ -203,6 +266,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return _alpha == other.Alpha.FromPercentage() && _hue == other.Hue.FromDegrees() && _saturation == other.Saturation.FromPercentage() && _brightness == other.Brightness.FromPercentage();
         }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IColorModel other, bool exact)
         {
             if (other == null)
@@ -218,18 +287,53 @@ namespace Erwine.Leonard.T.GDIPlus
             return other is IRgbColorModel<float> && Equals((IRgbColorModel<float>)other, exact);
         }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another <see cref="HsbColor32Normalized"/> values.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(HsbColor32Normalized other) { return _value == other._value; }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IHsbColorModel<float> other) { return Equals(other, false); }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IRgbColorModel<float> other) { return Equals(other, false); }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IHsbColorModel<byte> other) { return other.Alpha == _alpha && other.Hue == _hue && other.Saturation == _saturation && other.Brightness == _brightness; }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IRgbColorModel<byte> other) { return Equals(other, false); }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another color model object.
+        /// </summary>
+        /// <param name="other">A color model to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
         public bool Equals(IColorModel other) { return Equals(other, false); }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to a <seealso cref="System.Drawing.Color"/> object.
+        /// </summary>
+        /// <param name="other">A <seealso cref="System.Drawing.Color"/> object to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to the specified <seealso cref="System.Drawing.Color"/> object; otherwise, <c>false</c>.</returns>
         public bool Equals(System.Drawing.Color other)
         {
             if (other.A != _alpha)
@@ -238,6 +342,11 @@ namespace Erwine.Leonard.T.GDIPlus
             return r.FromPercentage() == other.R && g.FromPercentage() == other.G && b.FromPercentage() == other.B;
         }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to a <seealso cref="System.Windows.Media.Color"/> object.
+        /// </summary>
+        /// <param name="other">A <seealso cref="System.Windows.Media.Color"/> object to compare with this value.</param>
+        /// <returns><c>true</c> if the current value is equal to the specified <seealso cref="System.Windows.Media.Color"/> object; otherwise, <c>false</c>.</returns>
         public bool Equals(System.Windows.Media.Color other)
         {
             if (other.A != _alpha)
@@ -246,31 +355,66 @@ namespace Erwine.Leonard.T.GDIPlus
             return r.FromPercentage() == other.R && g.FromPercentage() == other.G && b.FromPercentage() == other.B;
         }
 
+        /// <summary>
+        /// Indicates whether the AHSB integer value for the current color is equal to an <seealso cref="int"/> value.
+        /// </summary>
+        /// <param name="other">An integer value to compare with the current color's AHSB value.</param>
+        /// <returns><c>true</c> the AHSB integer value for the current color is equal to an <seealso cref="int"/> value; otherwise, <c>false</c>.</returns>
         public bool Equals(int other) { return _value == other; }
 
+        /// <summary>
+        /// Indicates whether the current value is equal to another object.
+        /// </summary>
+        /// <param name="obj">An object to compare with the current value.</param>
+        /// <returns><c>true</c> if the current value is equal to object; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
-            if (obj is PSObject)
-                obj = ((PSObject)obj).BaseObject;
-            if (obj is HsbColor32Normalized)
-                return Equals((HsbColor32Normalized)obj);
-            if (obj is IHsbColorModel<byte>)
-                return Equals((IHsbColorModel<byte>)obj);
-            if (obj is IHsbColorModel<float>)
-                return Equals((IHsbColorModel<float>)obj, false);
-            if (obj is IRgbColorModel<byte>)
-                return Equals((IRgbColorModel<byte>)obj, false);
-            return obj is IRgbColorModel<float> && Equals((IRgbColorModel<float>)obj, false);
+            object value = (obj is PSObject) ? ((PSObject)obj).BaseObject : obj;
+            if (value is HsbColor32Normalized)
+                return Equals((HsbColor32Normalized)value);
+            if (value is IHsbColorModel<byte>)
+                return Equals((IHsbColorModel<byte>)value);
+            if (value is IHsbColorModel<float>)
+                return Equals((IHsbColorModel<float>)value, false);
+            if (value is IRgbColorModel<byte>)
+                return Equals((IRgbColorModel<byte>)value, false);
+            if (value is IRgbColorModel<float>)
+                return Equals((IRgbColorModel<float>)value, false);
+            if (value is int)
+                return Equals((int)value);
+            value = ColorExtensions.AsSimplestType(value);
+
+            if (value is string)
+                return (string)value == ToString();
+
+            if (value is int)
+                return ToAHSB() == (int)value;
+            
+            if (value is float)
+                return ToAHSB() == (float)value;
+            
+            if (obj is PSObject && ColorExtensions.TryGetColor((PSObject)obj, out IColorModel color))
+                return Equals(color.AsHsb32());
+            return false;
         }
 
         #endregion
-        
+
+        /// <summary>
+        /// Returns the hash code for this value.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode() { return _value; }
 
         #region MergeAverage Method
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public HsbColor32Normalized MergeAverage(IEnumerable<IHsbColorModel<byte>> other)
         {
             if (other == null)
@@ -302,6 +446,11 @@ namespace Erwine.Leonard.T.GDIPlus
 
         IHsbColorModel<byte> IHsbColorModel<byte>.MergeAverage(IEnumerable<IHsbColorModel<byte>> other) { return MergeAverage(other); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public HsbColor32Normalized MergeAverage(IEnumerable<IColorModel> other)
         {
             throw new NotImplementedException();
@@ -452,6 +601,10 @@ namespace Erwine.Leonard.T.GDIPlus
             return _value.ToString("X8");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() { return _value.ToString("X8"); }
 
         #endregion

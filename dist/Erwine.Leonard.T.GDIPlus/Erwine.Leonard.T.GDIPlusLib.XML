@@ -4,6 +4,120 @@
         <name>Erwine.Leonard.T.GDIPlusLib</name>
     </assembly>
     <members>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.TryGetColor(System.Management.Automation.PSObject,Erwine.Leonard.T.GDIPlus.IColorModel@)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.AsSimplestType(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorExtensions.HUE_MAXVALUE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.HSBtoRGB(System.Single,System.Single,System.Single,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.RGBtoHSB(System.Single,System.Single,System.Single,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            
+            </summary>
+            <param name="red"></param>
+            <param name="green"></param>
+            <param name="blue"></param>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.ToPercentage(System.Byte)">
+            <summary>
+            Converts 8-bit value to a percentage value.
+            </summary>
+            <param name="value">Byte value to convert.</param>
+            <returns>8-bit value converted to a value ranging from 0.0 to 1.0.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.FromPercentage(System.Single)">
+            <summary>
+            Converts a percentage value to an 8-bit value.
+            </summary>
+            <param name="value">Floating point value to convert.</param>
+            <returns>8-bit value representing a percentage value.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="value"/> is less than 0.0 or greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.ToDegrees(System.Byte)">
+            <summary>
+            Converts an 8-bit value to degrees.
+            </summary>
+            <param name="value">Byte value to convert.</param>
+            <returns>8-bit value converted to a value ranging from 0.0 to (but not including) 360.0.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.FromDegrees(System.Single)">
+            <summary>
+            Converts a degree value to an 8-bit value.
+            </summary>
+            <param name="value">Floating point value to convert.</param>
+            <returns>8-bit value representing a degree measurement.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="value"/> is less than 0.0 or greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.ToDrawingColor(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            Converts the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> as a <seealso cref="T:System.Drawing.Color"/> object.
+            </summary>
+            <returns>A <seealso cref="T:System.Drawing.Color"/> object that represents the same color as the current <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.ToMediaColor(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            Converts the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> as a <seealso cref="T:System.Windows.Media.Color"/> object.
+            </summary>
+            <returns>A <seealso cref="T:System.Windows.Media.Color"/> object that represents the same color as the current <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.MergeAverage``1(Erwine.Leonard.T.GDIPlus.IHsbColorModel{``0},Erwine.Leonard.T.GDIPlus.IHsbColorModel{``0},Erwine.Leonard.T.GDIPlus.IHsbColorModel{``0}[])">
+            <summary>
+            Merges a source <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> with 1 or more <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> objects by averaging average their values.
+            </summary>
+            <typeparam name="T">Value component type.</typeparam>
+            <param name="source"></param>
+            <param name="other"></param>
+            <param name="additionalColors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.MergeAverage``1(Erwine.Leonard.T.GDIPlus.IRgbColorModel{``0},Erwine.Leonard.T.GDIPlus.IRgbColorModel{``0},Erwine.Leonard.T.GDIPlus.IRgbColorModel{``0}[])">
+            <summary>
+            Merges a source <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> with 1 or more <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> objects by averaging average their values.
+            </summary>
+            <typeparam name="T">Value component type.</typeparam>
+            <param name="source"></param>
+            <param name="other"></param>
+            <param name="additionalColors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.MergeAverage``1(``0,Erwine.Leonard.T.GDIPlus.IColorModel,Erwine.Leonard.T.GDIPlus.IColorModel[])">
+            <summary>
+            Merges a source <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> of type <typeparamref name="T"/> with 1 or more <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> objects by averaging average their values.
+            </summary>
+            <typeparam name="T">Type of <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> value to merge into.</typeparam>
+            <param name="source">The <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> of type <typeparamref name="T"/> to be merged with other <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> objects.</param>
+            <param name="other">The <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> to merge with the source value.</param>
+            <param name="additionalColors">Additional <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> models to merge with the source value.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> of type <typeparamref name="T"/> representing the average of all the meged color models.</returns>
+        </member>
         <member name="T:Erwine.Leonard.T.GDIPlus.Commands.New_Image">
             <summary>
             New-Image
@@ -625,6 +739,1485 @@
             <param name="disposing">true if method has been called direclty or indirectly by user code;
             otherwise false to indicate that this has been called by the runtime inside the finalizer.</param>
             <remarks>If <paramref name="disposing"/> is false, then you should not reference any other objects.</remarks>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.ColorStringFormat">
+            <summary>
+            Represents a color string format.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBHex">
+            <summary>
+            Format contains 3 pairs of hexidecimal string values representing the Red, Green and Blue color values respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBHexOpt">
+            <summary>
+            Format contains 3 single-character hexidecimal string values or 3 pairs of hexidecimal string values representing the Red, Green and Blue color values respectively.
+            </summary>
+            <remarks>This is the same as <seealso cref="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBHex" />, except that if all 3 pairs are the same character repeated twice, then it is shortened to the first character of each pair.</remarks>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBAHex">
+            <summary>
+            Format contains 4 pairs of hexidecimal string values representing the Red, Green, Blue and Alpha Layer (transparency) color values respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBAHexOpt">
+            <summary>
+            Format contains 4 single-character hexidecimal string values or 4pairs of hexidecimal string values representing the Red, Green, Blue and Alpha Layer (transparency) color values respectively.
+            </summary>
+            <remarks>This is the same as <seealso cref="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBAHex" />, except that if all 4 pairs are the same character repeated twice, then it is shortened to the first character of each pair.</remarks>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLHex">
+            <summary>
+            Format contains 3 pairs of hexidecimal string values representing the Hue, Saturation and Lightness color values respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLHexOpt">
+            <summary>
+            Format contains 3 single-character hexidecimal string values or 3 pairs of hexidecimal string values representing the Hue, Saturation and Lightness color values respectively.
+            </summary>
+            <remarks>This is the same as <seealso cref="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLHex" />, except that if all 3 pairs are the same character repeated twice, then it is shortened to the first character of each pair.</remarks>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLAHex">
+            <summary>
+            Format contains 4 pairs of hexidecimal string values representing the Hue, Saturation, Lightness and Alpha Layer (transparency) color values respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLAHexOpt">
+            <summary>
+            Format contains 4 single-character hexidecimal string values or 4pairs of hexidecimal string values representing the Hue, Saturation, Lightness and Alpha Layer (transparency) color values respectively.
+            </summary>
+            <remarks>This is the same as <seealso cref="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLAHex" />, except that if all 4 pairs are the same character repeated twice, then it is shortened to the first character of each pair.</remarks>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBValues">
+            <summary>
+            Uses format &quot;rgb(<c>[0-255]</c>, <c>[0-255]</c>, <c>[0-255]</c>)&quot; where the numbers within the parenthesis represent the Red, Green and Blue color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBAValues">
+            <summary>
+            Uses format &quot;rgba(<c>[0-255]</c>, <c>[0-255]</c>, <c>[0-255]</c>, <c>[0.0-1.0]</c>)&quot; where the numbers within the parenthesis represent the Red, Green, Blue and Alpha Layer (transparency) color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLValues">
+            <summary>
+            Uses format &quot;rgb(<c>[0-255]</c>, <c>[0-255]</c>, <c>[0-255]</c>)&quot; where the numbers within the parenthesis represent the Hue, Saturation and Lightness color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLAValues">
+            <summary>
+            Uses format &quot;rgba(<c>[0-255]</c>, <c>[0-255]</c>, <c>[0-255]</c>, <c>[0.0-1.0]</c>)&quot; where the numbers within the parenthesis represent the Hue, Saturation, Lightness and Alpha Layer (transparency) color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBPercent">
+            <summary>
+            Uses format &quot;rgb(<c>[0-100]</c>%, <c>[0-100]</c>%, <c>[0-100]</c>%)&quot; where the numbers within the parenthesis represent the Red, Green and Blue color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.RGBAPercent">
+            <summary>
+            Uses format &quot;rgba(<c>[0-100]</c>%, <c>[0-100]</c>%, <c>[0-100]</c>%, <c>[0-100]</c>%)&quot; where the numbers within the parenthesis represent the Red, Green, Blue and Alpha Layer (transparency) color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLPercent">
+            <summary>
+            Uses format &quot;hsl(<c>[0-100]</c>%, <c>[0-100]</c>%, <c>[0-100]</c>%)&quot; where the numbers within the parenthesis represent the Hue, Saturation and Lightness color values, respectively.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.ColorStringFormat.HSLAPercent">
+            <summary>
+            Uses format &quot;hsla(<c>[0-100]</c>%, <c>[0-100]</c>%, <c>[0-100]</c>%, <c>[0-100]</c>%)&quot; where the numbers within the parenthesis represent the Hue, Saturation, Lightness and Alpha Layer (transparency) color values, respectively.
+            </summary>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.HsbColor32">
+            <summary>
+            An HSB (Hue,Saturation,Brightness) color model using 32 bits.
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.HsbColor32.ParseRegex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32.Hue">
+            <summary>
+            The hue of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32.Saturation">
+            <summary>
+            The color saturation.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32.Brightness">
+            <summary>
+            The brightness of the color.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> from HSB values and specified opaqueness.
+            </summary>
+            <param name="hue">Color hue in degrees, ranging from 0.0 to 360.0.</param>
+            <param name="saturation">Color saturation in pecentage, ranging from 0.0 to 1.0, where 0.0 is grayscale.</param>
+            <param name="brightness">Color brightness in percentage, ranging from 0.0 to 1.0, where 0.0 is completely dark (black) and 1.0 is completely light (white).</param>
+            <param name="alpha">Color opaqueness (alpha layer) in percentage, where 0.0 is transparent and 1.0 is opaque.</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> from HSB values with no transparency.
+            </summary>
+            <param name="hue">Color hue in degrees, ranging from 0.0 to 360.0.</param>
+            <param name="saturation">Color saturation in pecentage, ranging from 0.0 to 1.0, where 0.0 is grayscale.</param>
+            <param name="brightness">Color brightness in percentage, ranging from 0.0 to 1.0, where 0.0 is completely dark (black) and 1.0 is completely light (white).</param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.#ctor(Erwine.Leonard.T.GDIPlus.HsbColorF)">
+            <summary>
+            Creates a new <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> from a <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="ahsb"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.AsHsbF">
+            <summary>
+            Returns a <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" />.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" />.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.AsRgb32">
+            <summary>
+            Returns a <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" />.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" />.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.AsRgbF">
+            <summary>
+            Returns a <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" />.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" />.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.AsNormalized">
+            <summary>
+            Returns a <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> with the color values normalized for accurate comparisons.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value representing the same color as the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> with the color values normalized for accurate comparisons.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.HsbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(System.Windows.Media.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.GetHashCode">
+            <summary>
+            Returns the hash code for this value.
+            </summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte}})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToAHSB">
+            <summary>
+            Gets the AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> value.
+            </summary>
+            <returns>The AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32" /> value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <param name="canShorten"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <param name="canShorten"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToValueParameterString(System.Byte,System.Byte,System.Byte,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToValueParameterString(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.ToValueParameterString(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32.TryParse(System.String,Erwine.Leonard.T.GDIPlus.HsbColor32@)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized">
+            <summary>
+            A normalized HSB (Hue,Saturation,Brightness) color model using 32 bits.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Hue">
+            <summary>
+            The hue of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Saturation">
+            <summary>
+            The color saturation.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Brightness">
+            <summary>
+            The brightness of the color.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+            <param name="alpha"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(Erwine.Leonard.T.GDIPlus.RgbColorF)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(Erwine.Leonard.T.GDIPlus.RgbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(Erwine.Leonard.T.GDIPlus.HsbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="ahsb"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.AsHsbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.AsRgb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.AsRgbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single},System.Boolean)">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single},System.Boolean)">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <param name="exact"><c>true</c> to compare exact values; otherwise, <c>false</c> to compare normalized values.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.HsbColor32Normalized)">
+            <summary>
+            Indicates whether the current value is equal to another <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized"/> values.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single})">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte})">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            Indicates whether the current value is equal to another color model object.
+            </summary>
+            <param name="other">A color model to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to another color model object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(System.Drawing.Color)">
+            <summary>
+            Indicates whether the current value is equal to a <seealso cref="T:System.Drawing.Color"/> object.
+            </summary>
+            <param name="other">A <seealso cref="T:System.Drawing.Color"/> object to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to the specified <seealso cref="T:System.Drawing.Color"/> object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(System.Windows.Media.Color)">
+            <summary>
+            Indicates whether the current value is equal to a <seealso cref="T:System.Windows.Media.Color"/> object.
+            </summary>
+            <param name="other">A <seealso cref="T:System.Windows.Media.Color"/> object to compare with this value.</param>
+            <returns><c>true</c> if the current value is equal to the specified <seealso cref="T:System.Windows.Media.Color"/> object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(System.Int32)">
+            <summary>
+            Indicates whether the AHSB integer value for the current color is equal to an <seealso cref="T:System.Int32"/> value.
+            </summary>
+            <param name="other">An integer value to compare with the current color's AHSB value.</param>
+            <returns><c>true</c> the AHSB integer value for the current color is equal to an <seealso cref="T:System.Int32"/> value; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.Equals(System.Object)">
+            <summary>
+            Indicates whether the current value is equal to another object.
+            </summary>
+            <param name="obj">An object to compare with the current value.</param>
+            <returns><c>true</c> if the current value is equal to object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.GetHashCode">
+            <summary>
+            Returns the hash code for this value.
+            </summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte}})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Byte" /> component values with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Byte" /> component values with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Byte" /> component values with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Byte" /> component values with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Byte" /> component values with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Byte" /> component values with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.ToAHSB">
+            <summary>
+            Gets the AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized" /> value.
+            </summary>
+            <returns>The AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized" /> value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColor32Normalized.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.HsbColorF">
+            <summary>
+            Model representing a color in terms of hue, saturation and brightness as floating-point values.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorF.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorF.Hue">
+            <summary>
+            The hue of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorF.Saturation">
+            <summary>
+            The color saturation.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorF.Brightness">
+            <summary>
+            The brightness of the color.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+            <param name="alpha"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.#ctor(Erwine.Leonard.T.GDIPlus.HsbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="ahsb"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.AsHsb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.AsRgb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.AsRgbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.AsNormalized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.HsbColorF)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(System.Windows.Media.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.GetHashCode">
+            <summary>
+            Returns the hash code for this value.
+            </summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single}})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (1.0 - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (1.0 - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ToAHSB">
+            <summary>
+            Gets the AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value.
+            </summary>
+            <returns>The AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF" /> value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ToPercentParameterString(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.ToPercentParameterString(System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="h"></param>
+            <param name="s"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorF.TryParse(System.String,Erwine.Leonard.T.GDIPlus.HsbColorF@)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Hue">
+            <summary>
+            The hue of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Saturation">
+            <summary>
+            The color saturation.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Brightness">
+            <summary>
+            The brightness of the color.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+            <param name="alpha"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="hue"></param>
+            <param name="saturation"></param>
+            <param name="brightness"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(Erwine.Leonard.T.GDIPlus.RgbColorF)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(Erwine.Leonard.T.GDIPlus.RgbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(Erwine.Leonard.T.GDIPlus.HsbColorF)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="ahsb"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.AsHsb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.AsRgb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.AsRgbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.HsbColorFNormalized)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(System.Windows.Media.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.GetHashCode">
+            <summary>
+            Returns the hash code for this value.
+            </summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single}})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Single" /> component values with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Single" /> with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Single" /> with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Single" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (1.0 - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Single" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> with <seealso cref="T:System.Single" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (1.0 - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.ToAHSB">
+            <summary>
+            Gets the AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized" /> value.
+            </summary>
+            <returns>The AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized" /> value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.IColorModel">
+            <summary>
+            Interface for models representing a specific color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IColorModel.IsNormalized">
+            <summary>
+            Determines whether the current value contains normalized values.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IColorModel.DefaultStringFormat">
+            <summary>
+            Gets the default formatted string format.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.AsHsb32">
+            <summary>
+            Returns the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> as a <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32"/> value.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColor32"/> value that represents the same color as the current <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.AsHsbF">
+            <summary>
+            Returns the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> as a <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF"/> value.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.HsbColorF"/> value that represents the same color as the current <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.AsRgb32">
+            <summary>
+            Returns the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> as a <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32"/> value.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32"/> value that represents the same color as the current <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.AsRgbF">
+            <summary>
+            Returns the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> as a <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF"/> value.
+            </summary>
+            <returns>A <seealso cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF"/> value that represents the same color as the current <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.AsNormalized">
+            <summary>
+            Returns the current value as a value with its component values normalized for accurate comparison operations.
+            </summary>
+            <returns>The current value as a value with its component values normalized for accurate comparison operations.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            Merges the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> with other <seealso cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> objects by averaging average their values.
+            </summary>
+            <param name="other"><see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> models to merge with the current.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> model representing the average of all the meged color models.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            Determines whether the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> is equivalent to another <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> value.
+            </summary>
+            <param name="other">Other <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/> to compare.</param>
+            <param name="exact"><c>true</c> to perform an exact comparison; otherwise <c>false</c> to compare in terms of the lowest precision.</param>
+            <returns><c>true</c> if the <paramref name="other"/> is equivalent to the current <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel"/>; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.IColorModel`1">
+            <summary>
+            Interface for models representing a specific color.
+            </summary>
+            <typeparam name="T">The component value type.</typeparam>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IColorModel`1.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel`1.AsNormalized">
+            <summary>
+            Returns the current value as normalized.
+            </summary>
+            <returns>The current value with normalized component values.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel`1.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel`1" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel`1" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel`1.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel`1" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel`1" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IColorModel`1.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel`1" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IColorModel`1" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1">
+            <summary>
+            Represents a color as an HSB (Hue,Saturation,Brightness) color model.
+            </summary>
+            <typeparam name="T">The value type for the HSB componente values.</typeparam>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.Hue">
+            <summary>
+            The hue of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.Saturation">
+            <summary>
+            The color saturation.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.Brightness">
+            <summary>
+            The brightness of the color.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IHsbColorModel{`0}})">
+            <summary>
+            Merges the current <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> with other <seealso cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> objects by averaging average their values.
+            </summary>
+            <param name="other"><see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> models to merge with the current.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> model representing the average of all the meged color models.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{`0},System.Boolean)">
+            <summary>
+            Determines whether the current <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> is equivalent to another <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> value.
+            </summary>
+            <param name="other">Other <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/> to compare.</param>
+            <param name="exact"><c>true</c> to perform an exact comparison; otherwise <c>false</c> to compare in terms of the lowest precision.</param>
+            <returns><c>true</c> if the <paramref name="other"/> is equivalent to the current <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1"/>; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1.ToAHSB">
+            <summary>
+            Gets the AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value.
+            </summary>
+            <returns>The AHSB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.IHsbColorModel`1" /> value.</returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1">
+            <summary>
+            Represents a color as an RGB (Red,Green,Blue) color model.
+            </summary>
+            <typeparam name="T">The value type for the RGB component values.</typeparam>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.Red">
+            <summary>
+            The intensity of the red color layer.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.Green">
+            <summary>
+            The intensity of the green color layer.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.Blue">
+            <summary>
+            The intensity of the blue color layer.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IRgbColorModel{`0}})">
+            <summary>
+            Merges the current <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> with other <seealso cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> objects by averaging average their values.
+            </summary>
+            <param name="other"><see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> models to merge with the current.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> model representing the average of all the meged color models.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{`0},System.Boolean)">
+            <summary>
+            Determines whether the current <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> is equivalent to another <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> value.
+            </summary>
+            <param name="other">Other <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/> to compare.</param>
+            <param name="exact"><c>true</c> to perform an exact comparison; otherwise <c>false</c> to compare in terms of the lowest precision.</param>
+            <returns><c>true</c> if the <paramref name="other"/> is equivalent to the current <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1"/>; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1.ToARGB">
+            <summary>
+            Gets the ARGB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value.
+            </summary>
+            <returns>The ARGB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.IRgbColorModel`1" /> value.</returns>
         </member>
         <member name="P:Erwine.Leonard.T.GDIPlus.ExifPropertyTypeAttribute.Count">
             <summary>
@@ -4053,6 +5646,601 @@
             <summary>
             See <see cref="P:Erwine.Leonard.T.GDIPlus.Palette.Quantizers.IColorQuantizer.AllowParallel"/> for more details.
             </summary>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.RgbColor32">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Erwine.Leonard.T.GDIPlus.RgbColor32.ParseRegex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColor32.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColor32.Red">
+            <summary>
+            The intensity of the red layer.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColor32.Green">
+            <summary>
+            The intensity of the green layer.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColor32.Blue">
+            <summary>
+            The intensity of the blue layer.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="red"></param>
+            <param name="green"></param>
+            <param name="blue"></param>
+            <param name="alpha"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="red"></param>
+            <param name="green"></param>
+            <param name="blue"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.#ctor(Erwine.Leonard.T.GDIPlus.RgbColorF)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.#ctor(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.#ctor(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="argb"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.AsHsb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.AsHsbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.AsRgbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.RgbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(System.Windows.Media.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.GetHashCode">
+            <summary>
+            Returns the hash code for this value.
+            </summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte}})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToARGB">
+            <summary>
+            Gets the ARGB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value.
+            </summary>
+            <returns>The ARGB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColor32" /> value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <param name="canShorten"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <param name="canShorten"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToHexidecimalString(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToValueParameterString(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.ToValueParameterString(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColor32.TryParse(System.String,Erwine.Leonard.T.GDIPlus.RgbColor32@)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColorF.Alpha">
+            <summary>
+            The opaqueness of the color.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColorF.Red">
+            <summary>
+            The intensity of the red layer.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColorF.Green">
+            <summary>
+            The intensity of the green layer.
+            </summary>
+        </member>
+        <member name="P:Erwine.Leonard.T.GDIPlus.RgbColorF.Blue">
+            <summary>
+            The intensity of the blue layer.
+            </summary>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="red"></param>
+            <param name="green"></param>
+            <param name="blue"></param>
+            <param name="alpha"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="red"></param>
+            <param name="green"></param>
+            <param name="blue"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.#ctor(Erwine.Leonard.T.GDIPlus.RgbColor32)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.#ctor(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.#ctor(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="argb"></param>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.AsHsb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.AsHsbF">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.AsRgb32">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte},System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IColorModel,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <param name="exact"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.RgbColorF)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Byte})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IHsbColorModel{System.Single})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(Erwine.Leonard.T.GDIPlus.IColorModel)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(System.Windows.Media.Color)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.GetHashCode">
+            <summary>
+            Returns the hash code for this value.
+            </summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IRgbColorModel{System.Single}})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.MergeAverage(System.Collections.Generic.IEnumerable{Erwine.Leonard.T.GDIPlus.IColorModel})">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ShiftHue(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value with the color hue adjusted.
+            </summary>
+            <param name="degrees">The number of degrees to shift the hue value, ranging from -360.0 to 360.0. A positive value shifts the hue in the red-to-cyan direction, and a negative value shifts the hue in the cyan-to-red direction.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value with the color hue adjusted.</returns>
+            <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ShiftSaturation(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value with the color saturation adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases saturation, a negative value decreases saturation and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value with the color saturation adjusted.</returns>
+            <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (1.0 - saturation) * percentage</c>
+            <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ShiftBrightness(System.Single)">
+            <summary>
+            Returns a <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value with the color brightness adjusted.
+            </summary>
+            <param name="percentage">The percentage to saturate the color, ranging from -1.0 to 1.0. A positive value increases brightness, a negative value decreases brightness and a zero vale has no effect.</param>
+            <returns>A <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value with the color brightness adjusted.</returns>
+            <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (1.0 - brightness) * percentage</c>
+            <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ToARGB">
+            <summary>
+            Gets the ARGB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value.
+            </summary>
+            <returns>The ARGB integer value for the current <see cref="T:Erwine.Leonard.T.GDIPlus.RgbColorF" /> value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ToString(Erwine.Leonard.T.GDIPlus.ColorStringFormat)">
+            <summary>
+            Gets formatted string representing the current color value.
+            </summary>
+            <param name="format">The color string format to use.</param>
+            <returns>The formatted string representing the current color value.</returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ToPercentParameterString(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ToPercentParameterString(System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <param name="g"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Erwine.Leonard.T.GDIPlus.RgbColorF.TryParse(System.String,Erwine.Leonard.T.GDIPlus.RgbColorF@)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <param name="result"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

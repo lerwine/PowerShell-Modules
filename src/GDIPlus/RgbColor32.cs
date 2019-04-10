@@ -7,11 +7,17 @@ using System.Text.RegularExpressions;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     public class RgbColor32 : IEquatable<RgbColor32>, IEquatable<IRgbColorModel<float>>, IEquatable<IHsbColorModel<float>>, IRgbColorModel<byte>, IEquatable<int>, IConvertible
     {
         #region Fields
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly Regex ParseRegex = new Regex(@"^((?<h>[a-f\d]{3}([a-f\d]([a-f\d]{2}|[a-f\d]{4})?)?)|rgba?\(\s*((?<v>(?<r>\d+)\s*,\s*(?<g>\d+)\s*,\s*(?<b>\d+))|(?<p>(?<h>\d+(\.\d+)?)\s*,\s*(?<s>\d+(\.\d+)?)%\s*,\s*(?<l>\d+(\.\d+)?)%))(\s*,\s*(?<a>\d+(\.\d+)?%?))?\s*\))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         
         [FieldOffset(0)]
@@ -57,6 +63,13 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region Constructors
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        /// <param name="alpha"></param>
         public RgbColor32(byte red, byte green, byte blue, byte alpha)
         {
             _value = 0;
@@ -66,8 +79,18 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = alpha;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
         public RgbColor32(byte red, byte green, byte blue) : this(red, green, blue, 255) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public RgbColor32(RgbColorF value)
         {
             _red = value.Red.FromPercentage();
@@ -76,6 +99,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha.FromPercentage();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public RgbColor32(IHsbColorModel<float> value)
         {
             if (value == null)
@@ -93,6 +120,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha.FromPercentage();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public RgbColor32(IHsbColorModel<byte> value)
         {
             if (value == null)
@@ -104,6 +135,10 @@ namespace Erwine.Leonard.T.GDIPlus
             _alpha = value.Alpha;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argb"></param>
         public RgbColor32(int argb)
         {
             _red = _green = _blue = _alpha = 0;
@@ -114,16 +149,28 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region As* Methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public HsbColor32Normalized AsHsb32() { return new HsbColor32Normalized(this); }
 
         IHsbColorModel<byte> IColorModel.AsHsb32() { return AsHsb32(); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public HsbColorFNormalized AsHsbF() { return new HsbColorFNormalized(this); }
 
         IHsbColorModel<float> IColorModel.AsHsbF() { return AsHsbF(); }
 
         IRgbColorModel<byte> IColorModel.AsRgb32() { return this; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public RgbColorF AsRgbF() { return new RgbColorF(this); }
 
         IRgbColorModel<float> IColorModel.AsRgbF() { return AsRgbF(); }
@@ -136,6 +183,12 @@ namespace Erwine.Leonard.T.GDIPlus
         
         #region Equals Methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="exact"></param>
+        /// <returns></returns>
         public bool Equals(IHsbColorModel<byte> other, bool exact)
         {
             if (other == null || _alpha != other.Alpha)
@@ -154,6 +207,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return _red == r.FromPercentage() && _green == g.FromPercentage() && _blue == b.FromPercentage();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="exact"></param>
+        /// <returns></returns>
         public bool Equals(IHsbColorModel<float> other, bool exact)
         {
             if (other == null)
@@ -177,6 +236,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return _red == r.FromPercentage() && _green == g.FromPercentage() && _blue == b.FromPercentage();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="exact"></param>
+        /// <returns></returns>
         public bool Equals(IRgbColorModel<float> other, bool exact)
         {
             if (other == null)
@@ -187,6 +252,12 @@ namespace Erwine.Leonard.T.GDIPlus
             return _alpha == other.Alpha.FromPercentage() && _red == other.Red.FromPercentage() && _green == other.Green.FromPercentage() && _blue == other.Blue.FromPercentage();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="exact"></param>
+        /// <returns></returns>
         public bool Equals(IColorModel other, bool exact)
         {
             if (other == null)
@@ -202,47 +273,122 @@ namespace Erwine.Leonard.T.GDIPlus
             return other is IHsbColorModel<float> && Equals((IHsbColorModel<float>)other, exact);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(RgbColor32 other) { return _value == other._value; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(IRgbColorModel<float> other) { return Equals(other, false); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(IHsbColorModel<float> other) { return Equals(other, false); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(IRgbColorModel<byte> other) { return other.Alpha == _alpha && other.Red == _red && other.Green == _green && other.Blue == _blue; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(IHsbColorModel<byte> other) { return Equals(other, false); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(IColorModel other) { return Equals(other, false); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(System.Drawing.Color other) { return other.A == _alpha && other.R == _red && other.G == _green && other.B == _blue; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(System.Windows.Media.Color other) { return other.A == _alpha && other.R == _red && other.G == _green && other.B == _blue; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(int other) { return _value == other; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
-            if (obj is PSObject)
-                obj = ((PSObject)obj).BaseObject;
-            if (obj is RgbColor32)
-                return Equals((RgbColor32)obj);
-            if (obj is IRgbColorModel<byte>)
-                return Equals((IRgbColorModel<byte>)obj);
-            if (obj is IRgbColorModel<float>)
-                return Equals((IRgbColorModel<float>)obj, false);
-            if (obj is IHsbColorModel<byte>)
-                return Equals((IHsbColorModel<byte>)obj, false);
-            return obj is IHsbColorModel<float> && Equals((IHsbColorModel<float>)obj, false);
+            object value = (obj is PSObject) ? ((PSObject)obj).BaseObject : obj;
+            if (value is RgbColor32)
+                return Equals((RgbColor32)value);
+            if (value is IRgbColorModel<float>)
+                return Equals((IRgbColorModel<float>)value);
+            if (value is IRgbColorModel<byte>)
+                return Equals((IRgbColorModel<byte>)value);
+            if (value is IHsbColorModel<float>)
+                return Equals((IHsbColorModel<float>)value);
+            if (value is IHsbColorModel<float>)
+                return Equals((IHsbColorModel<float>)value, false);
+            if (value is int)
+                return Equals((int)value);
+            value = ColorExtensions.AsSimplestType(value);
+
+            if (value is string)
+                return (string)value == ToString();
+
+            if (value is int)
+                return ToARGB() == (int)value;
+
+            if (value is float)
+                return ToARGB() == (float)value;
+
+            if (obj is PSObject && ColorExtensions.TryGetColor((PSObject)obj, out IColorModel color))
+                return Equals(color.AsRgb32());
+            return false;
         }
 
         #endregion
-        
+
+        /// <summary>
+        /// Returns the hash code for this value.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode() { return _value; }
 
         #region MergeAverage Method
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public RgbColor32 MergeAverage(IEnumerable<IRgbColorModel<byte>> other)
         {
             if (other == null)
@@ -276,6 +422,11 @@ namespace Erwine.Leonard.T.GDIPlus
 
         IRgbColorModel<byte> IRgbColorModel<byte>.MergeAverage(IEnumerable<IRgbColorModel<byte>> other) { return MergeAverage(other); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public RgbColor32 MergeAverage(IEnumerable<IColorModel> other)
         {
             throw new NotImplementedException();
@@ -440,8 +591,21 @@ namespace Erwine.Leonard.T.GDIPlus
             return _value.ToString("X8");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() { return _value.ToString("X8"); }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        /// <param name="canShorten"></param>
+        /// <returns></returns>
         public static string ToHexidecimalString(byte r, byte g, byte b, byte a, bool canShorten)
         {
             string result = r.ToString("X2") + g.ToString("X2") + b.ToString("X2") + a.ToString("X2");
@@ -450,8 +614,24 @@ namespace Erwine.Leonard.T.GDIPlus
             return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public static string ToHexidecimalString(byte r, byte g, byte b, byte a) { return ToHexidecimalString(r, g, b, a, false); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="canShorten"></param>
+        /// <returns></returns>
         public static string ToHexidecimalString(byte r, byte g, byte b, bool canShorten)
         {
             string result = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
@@ -460,13 +640,35 @@ namespace Erwine.Leonard.T.GDIPlus
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static string ToHexidecimalString(byte r, byte g, byte b) { return ToHexidecimalString(r, g, b, false); }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public static string ToValueParameterString(byte r, byte g, byte b, byte a)
         {
             return "rgba(" + r.ToString() + ", " + g.ToString() + ", " + b.ToString() + ", " + Math.Round(Convert.ToDouble(a) / 255.0, 2).ToString() + ")";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static string ToValueParameterString(byte r, byte g, byte b)
         {
             return "rgb(" + r.ToString() + ", " + g.ToString() + ", " + b.ToString() + ")";
@@ -474,7 +676,14 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #endregion
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public static bool TryParse(string text, out RgbColor32 result) { return TryParse(text, false, out result); }
+
         internal static bool TryParse(string text, bool strict, out RgbColor32 result)
         {
             if (text != null && (text = text.Trim()).Length > 0)

@@ -1,15 +1,270 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Erwine.Leonard.T.GDIPlus
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ColorExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool TryGetColor(PSObject obj, out IColorModel result)
+        {
+            if (obj != null)
+            {
+                object baseObj = obj.BaseObject;
+                if (baseObj is IColorModel)
+                {
+                    result = (IColorModel)baseObj;
+                    return true;
+                }
+                string[] names = new string[] { "Hue", "Saturation", "Brightness" };
+                StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+                object alpha = obj.Properties.Where(p => comparer.Equals(p.Name, "Alpha") && p.IsInstance && p.IsGettable)
+                    .Select(p => AsSimplestType(p.Value)).Where(o => o != null && (o is float || o is byte)).ToArray();
+
+                object[] hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
+                    .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
+                if (hsb.Length != 3)
+                {
+                    names = new string[] { "Hue", "Saturation", "Lightness" };
+                    hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
+                        .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
+                    if (hsb.Length != 3)
+                    {
+                        names = new string[] { "H", "S", "L" };
+                        hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
+                            .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
+                        if (hsb.Length != 3)
+                        {
+                            names = new string[] { "H", "S", "B" };
+                            hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
+                                .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
+                        }
+                    }
+                }
+                if (hsb.Length == 3)
+                {
+                    if (hsb[0] is byte)
+                    {
+                        if (hsb[1] is byte && hsb[2] is byte)
+                        {
+                            if (alpha == null)
+                            {
+                                result = new HsbColor32((byte)hsb[0], (byte)hsb[1], (byte)hsb[2]);
+                                return true;
+                            }
+                            if (alpha is byte)
+                            {
+                                result = new HsbColor32((byte)hsb[0], (byte)hsb[1], (byte)hsb[2], (byte)alpha);
+                                return true;
+                            }
+                        }
+                    }
+                    else if (hsb[0] is float h && h >= 0f && h <= 360f && hsb[1] is byte s && s >= 0f && s <= 1f && hsb[2] is byte b && b >= 0f && b <= 1f)
+                    {
+                        if (alpha == null)
+                        {
+                            result = new HsbColorF(h, s, b);
+                            return true;
+                        }
+                        if (alpha is float && (float)alpha >= 0f && (float)alpha <= 1f)
+                        {
+                            result = new HsbColorF(h, s, b, (float)alpha);
+                            return true;
+                        }
+                    }
+                }
+                names = new string[] { "Red", "Green", "Blue" };
+                hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
+                    .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
+                if (hsb.Length != 3)
+                {
+                    names = new string[] { "R", "G", "B" };
+                    hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
+                        .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
+                }
+                if (hsb.Length == 3)
+                {
+                    if (hsb[0] is byte)
+                    {
+                        if (hsb[1] is byte && hsb[2] is byte)
+                        {
+                            if (alpha == null)
+                            {
+                                result = new RgbColor32((byte)hsb[0], (byte)hsb[1], (byte)hsb[2]);
+                                return true;
+                            }
+                            if (alpha is byte)
+                            {
+                                result = new RgbColor32((byte)hsb[0], (byte)hsb[1], (byte)hsb[2], (byte)alpha);
+                                return true;
+                            }
+                        }
+                    }
+                    else if (hsb[0] is float h && h >= 0f && h <= 360f && hsb[1] is byte s && s >= 0f && s <= 1f && hsb[2] is byte b && b >= 0f && b <= 1f)
+                    {
+                        if (alpha == null)
+                        {
+                            result = new RgbColorF(h, s, b);
+                            return true;
+                        }
+                        if (alpha is float && (float)alpha >= 0f && (float)alpha <= 1f)
+                        {
+                            result = new RgbColorF(h, s, b, (float)alpha);
+                            return true;
+                        }
+                    }
+                }
+            }
+            result = null;
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static object AsSimplestType(object value)
+        {
+            if (value == null)
+                return null;
+            object obj = (value is PSObject) ? ((PSObject)value).BaseObject : value;
+            if (obj is string || obj is bool || obj is char || obj is int || obj is DateTime || obj is DBNull)
+                return obj;
+
+            if (obj is double)
+                return ((double)obj <= Convert.ToDouble(float.MaxValue) && (double)obj >= Convert.ToSingle(float.MaxValue)) ? Convert.ToSingle((double)obj) : obj;
+
+            if (obj is long)
+                return ((long)obj < 256 && (long)obj > -1) ? (byte)((long)obj) : obj;
+
+            if (obj is float)
+                return (float)obj;
+
+            if (obj is decimal)
+                return ((decimal)obj <= Convert.ToDecimal(float.MaxValue) && (decimal)obj >= Convert.ToDecimal(float.MaxValue)) ? Convert.ToSingle((decimal)obj) : obj;
+
+            if (obj is byte)
+                return (byte)obj;
+
+            if (obj is char)
+                return new string(new char[] { (char)obj });
+
+            if (obj is uint)
+                return ((uint)obj < 256) ? (byte)((uint)obj) : obj;
+
+            if (obj is short)
+                return ((short)obj > -1 && (short)obj < 256) ? (byte)((short)obj) : obj;
+
+            if (obj is ushort)
+                return ((ushort)obj < 256) ? (byte)((ushort)obj) : obj;
+
+            if (obj is sbyte)
+                return ((sbyte)obj > -1) ? (byte)((sbyte)obj) : obj;
+
+            if (obj is IConvertible)
+            {
+                try
+                {
+                    object c;
+                    switch (((IConvertible)obj).GetTypeCode())
+                    {
+                        case TypeCode.Boolean:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is bool)
+                                return c;
+                            break;
+                        case TypeCode.Byte:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is byte)
+                                return (byte)c;
+                            break;
+                        case TypeCode.Char:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is char)
+                                return new string(new char[] { (char)c });
+                            break;
+                        case TypeCode.DateTime:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is DateTime)
+                                return c;
+                            break;
+                        case TypeCode.DBNull:
+                            return DBNull.Value;
+                        case TypeCode.Decimal:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is decimal)
+                                return ((decimal)c <= Convert.ToDecimal(float.MaxValue) && (decimal)c >= Convert.ToDecimal(float.MaxValue)) ? Convert.ToSingle((decimal)c) : obj;
+                            break;
+                        case TypeCode.Double:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is double)
+                                return ((double)c <= Convert.ToDouble(float.MaxValue) && (double)c >= Convert.ToDouble(float.MaxValue)) ? Convert.ToSingle((double)c) : obj;
+                            break;
+                        case TypeCode.Int16:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is short)
+                                return ((short)c > -1 && (short)c < 256) ? (byte)((short)c) : obj;
+                            break;
+                        case TypeCode.Int32:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is int)
+                                return ((int)c > -1 && (int)c < 256) ? (byte)((int)c) : obj;
+                            break;
+                        case TypeCode.Int64:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is long)
+                                return ((long)c > -1 && (long)c < 256) ? (byte)((long)c) : obj;
+                            break;
+                        case TypeCode.SByte:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is sbyte)
+                                return ((sbyte)c > -1) ? (byte)((sbyte)c) : obj;
+                            break;
+                        case TypeCode.Single:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is float)
+                                return (float)c;
+                            break;
+                        case TypeCode.String:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is string)
+                                return c;
+                            break;
+                        case TypeCode.UInt16:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is ushort)
+                                return ((ushort)c < 256) ? (byte)((ushort)c) : obj;
+                            break;
+                        case TypeCode.UInt32:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is uint)
+                                return ((uint)c < 256) ? (byte)((uint)c) : obj;
+                            break;
+                        case TypeCode.UInt64:
+                            if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is ulong)
+                                return ((ulong)c < 256) ? (byte)((ulong)c) : obj;
+                            break;
+                    }
+                }
+                catch { }
+            }
+            
+            return value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const float HUE_MAXVALUE = 360f;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hue"></param>
+        /// <param name="saturation"></param>
+        /// <param name="brightness"></param>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
         public static void HSBtoRGB(float hue, float saturation, float brightness, out float r, out float g, out float b)
         {
             if (hue < 0f || hue > HUE_MAXVALUE)
@@ -58,6 +313,15 @@ namespace Erwine.Leonard.T.GDIPlus
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        /// <param name="h"></param>
+        /// <param name="s"></param>
+        /// <param name="b"></param>
         public static void RGBtoHSB(float red, float green, float blue, out float h, out float s, out float b)
         {
             if (red < 0f || red > 1f)
