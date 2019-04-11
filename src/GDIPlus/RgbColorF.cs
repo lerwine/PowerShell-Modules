@@ -11,7 +11,7 @@ namespace Erwine.Leonard.T.GDIPlus
     /// 
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public class RgbColorF : IEquatable<RgbColorF>, IEquatable<IRgbColorModel<byte>>, IEquatable<IHsbColorModel<byte>>, IRgbColorModel<float>
+    public struct RgbColorF : IEquatable<RgbColorF>, IEquatable<IRgbColorModel<byte>>, IEquatable<IHsbColorModel<byte>>, IRgbColorModel<float>
     {
         private readonly float _alpha, _red, _green, _blue;
 

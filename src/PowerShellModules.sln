@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSDB", "PSDB\PSDB.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsMsBuildHelper", "PsMsBuildHelper\PsMsBuildHelper.csproj", "{495E7263-E73D-402C-93DB-0BE801F94FEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{5B71712C-6407-4B3E-A074-F6309DCA00FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -146,12 +148,24 @@ Global
 		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x64.Build.0 = Release|Any CPU
 		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x86.ActiveCfg = Release|Any CPU
 		{495E7263-E73D-402C-93DB-0BE801F94FEC}.Release|x86.Build.0 = Release|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Debug|x64.Build.0 = Debug|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Release|x64.Build.0 = Release|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B71712C-6407-4B3E-A074-F6309DCA00FE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
 		SolutionGuid = {4BF13CCC-ACF3-48AA-BA6B-F64F4D7CA42B}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal

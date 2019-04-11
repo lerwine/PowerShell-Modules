@@ -9,7 +9,7 @@ namespace Erwine.Leonard.T.GDIPlus
     /// A normalized HSB (Hue,Saturation,Brightness) color model using 32 bits.
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
-    public class HsbColor32Normalized : IEquatable<HsbColor32Normalized>, IEquatable<IHsbColorModel<float>>, IEquatable<IRgbColorModel<float>>, IHsbColorModel<byte>, IEquatable<int>, IConvertible
+    public struct HsbColor32Normalized : IEquatable<HsbColor32Normalized>, IEquatable<IHsbColorModel<float>>, IEquatable<IRgbColorModel<float>>, IHsbColorModel<byte>, IEquatable<int>, IConvertible
     {
         #region Fields
 

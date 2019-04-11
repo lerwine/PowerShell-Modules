@@ -11,7 +11,7 @@ namespace Erwine.Leonard.T.GDIPlus
     /// 
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
-    public class RgbColor32 : IEquatable<RgbColor32>, IEquatable<IRgbColorModel<float>>, IEquatable<IHsbColorModel<float>>, IRgbColorModel<byte>, IEquatable<int>, IConvertible
+    public struct RgbColor32 : IEquatable<RgbColor32>, IEquatable<IRgbColorModel<float>>, IEquatable<IHsbColorModel<float>>, IRgbColorModel<byte>, IEquatable<int>, IConvertible
     {
         #region Fields
 
