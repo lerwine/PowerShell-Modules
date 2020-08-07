@@ -81,17 +81,20 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Content Include="CertificateCryptography\Erwine.Leonard.T.CertificateCryptography.dll" />
+    <Content Include="CertificateCryptography\Erwine.Leonard.T.CertificateCryptography.pdb" />
+    <Content Include="CertificateCryptography\about_Erwine.Leonard.T.CertificateCryptography.help.txt" />
     <Content Include="GDIPlus\Erwine.Leonard.T.GDIPlus.dll" />
     <Content Include="GDIPlus\Erwine.Leonard.T.GDIPlus.pdb" />
     <Content Include="IOUtility\Erwine.Leonard.T.IOUtility.psd1" />
     <Content Include="IOUtility\Erwine.Leonard.T.IOUtility.psm1" />
     <Content Include="IOUtility\Erwine.Leonard.T.IOUtilityLib.dll" />
     <Content Include="IOUtility\Erwine.Leonard.T.IOUtilityLib.pdb" />
-    <None Include="GDIPlus\Erwine.Leonard.T.GDIPlus.psd1" />
-    <None Include="GDIPlus\Install.bat" />
-    <None Include="GDIPlus\Install.ps1" />
-    <None Include="GDIPlus\Uninstall.bat" />
-    <None Include="GDIPlus\Uninstall.ps1" />
+    <Content Include="GDIPlus\Erwine.Leonard.T.GDIPlus.psd1" />
+    <Content Include="GDIPlus\Install.bat" />
+    <Content Include="GDIPlus\Install.ps1" />
+    <Content Include="GDIPlus\Uninstall.bat" />
+    <Content Include="GDIPlus\Uninstall.ps1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
