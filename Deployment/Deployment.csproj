@@ -84,6 +84,8 @@
     <Content Include="CertificateCryptography\Erwine.Leonard.T.CertificateCryptography.dll" />
     <Content Include="CertificateCryptography\Erwine.Leonard.T.CertificateCryptography.pdb" />
     <Content Include="CertificateCryptography\about_Erwine.Leonard.T.CertificateCryptography.help.txt" />
+    <Content Include="CertificateCryptography\Erwine.Leonard.T.CertificateCryptography.psd1" />
+    <Content Include="CertificateCryptography\Erwine.Leonard.T.CertificateCryptography.psm1" />
     <Content Include="GDIPlus\Erwine.Leonard.T.GDIPlus.dll" />
     <Content Include="GDIPlus\Erwine.Leonard.T.GDIPlus.pdb" />
     <Content Include="IOUtility\Erwine.Leonard.T.IOUtility.psd1" />
