@@ -302,7 +302,6 @@ Function Get-X509Store {
         [System.Security.Cryptography.X509Certificates.StoreLocation]$Location
     )
     
-    $X509Store = $null;
     if ($PSBoundParameters.ContainsKey('Name')) {
         if ($PSBoundParameters.ContainsKey('Location')) {
             New-Object -TypeName 'System.Security.Cryptography.X509Certificates.X509Store' -ArgumentList $Name, $Location;
@@ -493,9 +492,9 @@ Function Select-X509Certificate {
     if ($PSBoundParameters.ContainsKey('From')) { $FromRange = $From }
     $ToRange = $null;
     if ($PSBoundParameters.ContainsKey('To')) {
-        $FromRange = $To
+        $ToRange = $To
     } else {
-        if ($ToRange -eq $null) {
+        if ($null -eq $FromRange) {
             $FromRange = [System.DateTime]::Now;
             $ToRange = $FromRange.AddSeconds(1.0);
         }
@@ -505,11 +504,11 @@ Function Select-X509Certificate {
         foreach ($X509Certificate2 in $X509Store.Certificates) {
             if (-not $AllDates) {
                 if ($Invalid) {
-                    if ($FromRange -le $X509Certificate2.NotAfter) { continue }
-                    if ($ToRange -ge $X509Certificate2.NotBefore) { continue }
+                    if ($null -ne $FromRange -and $FromRange -le $X509Certificate2.NotAfter) { continue }
+                    if ($null -ne $ToRange -and $ToRange -ge $X509Certificate2.NotBefore) { continue }
                 } else {
-                    if ($FromRange -gt $X509Certificate2.NotAfter) { continue }
-                    if ($ToRange -lt $X509Certificate2.NotBefore) { continue }
+                    if ($null -ne $FromRange -and $FromRange -gt $X509Certificate2.NotAfter) { continue }
+                    if ($null -ne $ToRange -and $ToRange -lt $X509Certificate2.NotBefore) { continue }
                 }
             }
             if ($PSBoundParameters.ContainsKey('UsageFlags')) {
@@ -522,8 +521,7 @@ Function Select-X509Certificate {
                 if ($UsageFlags -eq [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]::None) {
                     if ($X509KeyUsageFlags -ne $UsageFlags) { continue }
                 } else {
-                    $Flags = $X509KeyUsageFlags -band $UsageFlags;
-                    if ([System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]($X509KeyUsageFlags -band $UsageFlags) -eq `
+                    if (([System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]($X509KeyUsageFlags -band $UsageFlags)) -eq `
                         [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]::None) { continue }
                 }
             }
@@ -831,7 +829,7 @@ Function Protect-WithX509Certificate {
     Param(
         # The PKI certificate containing a public key to use for encryption.
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PublicKey -and $null -ne $_.PublicKey.Key -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # The data to be encrypted. 
@@ -896,10 +894,10 @@ Function New-ProgressWriterObject {
             [Parameter(Mandatory = $true, Position = 0)]
             [bool]$Completed
         )
-        if ($this.ProgressId -ne $null -and $this.HasChanges) {
+        if ($null -ne $this.ProgressId -and $this.HasChanges) {
             $splat = @{ Activity = $this.Activity; Status = $this.Status; Id = $this.ProgressId }
-            if ($this.PercentComplete -ne $null) { $splat.Add('PercentComplete', $this.PercentComplete) }
-            if ($this.ParentProgressId -ne $null) { $splat.Add('ParentId', $this.ParentProgressId) }
+            if ($null -ne $this.PercentComplete) { $splat.Add('PercentComplete', $this.PercentComplete) }
+            if ($null -ne $this.ParentProgressId) { $splat.Add('ParentId', $this.ParentProgressId) }
             if ($this.CurrentOperation -ne '') { $splat.Add('CurrentOperation', $this.CurrentOperation) }
             if ($Completed) { $splat.Add('Completed', [switch]$true) }
             Write-Progress @splat;
@@ -1030,7 +1028,7 @@ Function Protect-WithSymmetricAlgorithm {
         # The PKI certificate containing a public key to use for symmetric key encryption.
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
-        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PublicKey -and $null -ne $_.PublicKey.Key -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # Encryption provider to use for symmetric key encryption.
@@ -1208,7 +1206,7 @@ Function Unprotect-WithX509Certificate {
     Param(
         # The PKI certificate containing a private key to use for encryption.
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PrivateKey -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # The encryptd data.
@@ -1250,7 +1248,7 @@ Function Unprotect-WithSymmetricAlgorithm {
         # The PKI certificate containing a private key to use for symmetric key encryption.
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
-        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PrivateKey -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # Encryption provider to use for symmetric key encryption.
