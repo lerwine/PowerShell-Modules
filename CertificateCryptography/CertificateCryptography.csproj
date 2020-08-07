@@ -84,7 +84,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del "$(TargetDir)/*.nlp"
-del "$(TargetDir)/mscorlib.dll"</PostBuildEvent>
+del "$(TargetDir)/mscorlib.dll"
+copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"
+copy "$(TargetDir)about_$(TargetName).help.txt" "$(SolutionDir)Deployment\$(ProjectName)\about_$(TargetName).help.txt"</PostBuildEvent>
   </PropertyGroup>
   <!--<Target Name="BeforeBuild">
     <ItemGroup>
