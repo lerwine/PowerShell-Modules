@@ -81,8 +81,6 @@ The "C# for Visual Studio Code (powered by OmniSharp)" extension is required for
 This extension, as well as others which are recommended for development, are listed in the .vscode/extensions.json file, and
 should appear in the Recommended extension listing in Visual Studio Code. Alternatively, you can refer to <https://sites.google.com/erwinefamily.net/vscodedevcheatsheet> for an example script that you can use in the terminal window to install multiple extensions.
 
-To compile without Visual Studio, you will also need .
-
 ## Contributing ##
 
 This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, simply edit a file and propose a change, or propose a new file at [My Public GitHub Website](https://github.com/lerwine/PowerShell-Modules.git).
