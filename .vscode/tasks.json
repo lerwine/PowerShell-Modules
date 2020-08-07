@@ -6,13 +6,11 @@
         {
             "label": "Build Release",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe",
             "args": [
-                "/t:build",
-                "/p:GenerateFullPaths=true",
-                "/p:Configuration=Release",
-                "/p:Platform=\"Any CPU\"",
-                "PowerShellModules.sln"
+                "PowerShellModules.sln",
+                "/target:build",
+                "/property:GenerateFullPaths=true,Configuration=Release,Platform=\\\"Any CPU\\\""
             ],
             "group":{
                 "kind": "build",
@@ -27,13 +25,11 @@
         }, {
             "label": "Build Debug",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe",
             "args": [
-                "/t:build",
-                "/p:GenerateFullPaths=true",
-                "/p:Configuration=Debug",
-                "/p:Platform=\"Any CPU\"",
-                "PowerShellModules.sln"
+                "PowerShellModules.sln",
+                "/target:build",
+                "/property:GenerateFullPaths=true,Configuration=Debug,Platform=\\\"Any CPU\\\""
             ],
             "group": "build",
             "presentation": {
