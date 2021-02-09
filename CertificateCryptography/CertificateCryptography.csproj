@@ -66,28 +66,12 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Erwine.Leonard.T.CertificateCryptography.psd1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Erwine.Leonard.T.CertificateCryptography.psm1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="about_Erwine.Leonard.T.CertificateCryptography.help.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="TestScripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del "$(TargetDir)/*.nlp"
-del "$(TargetDir)/mscorlib.dll"
-copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
-copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"
-copy "$(TargetDir)about_$(TargetName).help.txt" "$(SolutionDir)Deployment\$(ProjectName)\about_$(TargetName).help.txt"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Deployment\$(ProjectName)\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
   <!--<Target Name="BeforeBuild">
     <ItemGroup>
