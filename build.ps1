@@ -26,7 +26,7 @@ try {
     $InformationPreference = [System.Management.Automation.ActionPreference]::Continue;
     Write-Information -MessageData "Host: $((Get-Host).Name)"
     $HostRawUI = (Get-Host).UI.RawUI;
-    if ($HostRawUI.BufferSize -eq $null) {
+    if ($null -eq $HostRawUI.BufferSize) {
         Write-Information -MessageData "Buffer size was null";
         $HostRawUI.BufferSize = New-Object -TypeName ''System.Management.Automation.Host.Size'' -ArgumentList $TermMinWidth, $TermMinHeight;
     } else {
@@ -35,7 +35,7 @@ try {
         if ($HostRawUI.BufferSize.Height -lt $TermMinHeight) { $HostRawUI.BufferSize.Height = $TermMinHeight }
         Write-Information -MessageData "Buffer size is now $($HostRawUI.BufferSize.Width), $($HostRawUI.BufferSize.Height)";
     }
-    if ($HostRawUI.MaxWindowSize -ne $null) {
+    if ($null -ne $HostRawUI.MaxWindowSize) {
         if ($HostRawUI.MaxWindowSize.Width -lt $HostRawUI.BufferSize.Width) {
             $HostRawUI.MaxWindowSize.Width = $HostRawUI.BufferSize.Width;
         }
@@ -50,13 +50,13 @@ try {
 $Script:SolutionFilePath = $PSScriptRoot | Join-Path -ChildPath $SolutionFile;
 $Script:SolutionDirectory = $Script:SolutionFilePath | Split-Path -Parent;
 $MSBuildExePath = $MsBuildBin | Join-Path -ChildPath 'MSBuild.exe';
-if ($Project -ne $null -and $Project.Trim().Length -gt 0) {
+if ($null -ne $Project -and $Project.Trim().Length -gt 0) {
     . $MSBuildExePath "/t:$($Targets -join ';')" "/verbosity:Detailed" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "/logger:XmlMsBuildLogger,PsMsBuildHelper.dll;BuildResult_$Project.xml" "src/$Project/$Project.csproj";
 #    . $MSBuildExePath "/t:$($Targets -join ';')" "/verbosity:Detailed" "/p:Configuration=`"$Configuration`"" "/p:Platform=`"$Platform`"" "src/$Project/$Project.csproj";
 #    "$MSBuildExePath `"/t:$($Targets -join ';')`" `"/verbosity:Detailed`" `"/p:Configuration=`"$Configuration`"`" `"/p:Platform=`"$Platform`"`" `"src/$Project/$Project.csproj`"";
 #    Add-Type -Path ($PSScriptRoot | Join-Path -ChildPath "PsMsBuildHelper.dll") -ErrorAction Stop;
 #    $Success = [PsMsBuildHelper.XmlMsBuildLogger]::BuildProject(($PSScriptRoot | Join-Path -ChildPath "src/$Project/$Project.csproj"), ($PSScriptRoot | Join-Path -ChildPath "BuildResult_$Project.xml"), $Configuration, $Platform, $Targets);
-#    if ($Success -eq $null) {
+#    if ($null -eq $Success) {
 #        $Host.SetShouldExit(1);
 #        exit;
 #    }
