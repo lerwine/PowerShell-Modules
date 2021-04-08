@@ -18,10 +18,6 @@ Encrypt and decrypt using PKI technology.
 
 Provides secure credential storage and retrieval.
 
-### CryptographyScripts ###
-
-Powershell scripts to support encrypting and decrypting data.
-
 ### GDIPlus ###
 
 Binary Module to support graphic file manipulation.
@@ -34,25 +30,11 @@ Utility functions to manage filesystem, console, and stream IO.
 
 PowerShell development utility functions.
 
-### LteUtils ###
-
-System and web admin utility functions.
-
 ### NetworkUtility ###
 
-Utility functions for network access.
+### PSDB ###
 
-### WindowsForms ###
-
-Script Module to support windows forms in Powershell.
-
-### WinForms ###
-
-Module providing GUI components.
-
-### WPF ###
-
-Display WPF windows.
+Database command utilities
 
 ### XmlUtility ###
 
@@ -81,6 +63,8 @@ The "C# for Visual Studio Code (powered by OmniSharp)" extension is required for
 This extension, as well as others which are recommended for development, are listed in the .vscode/extensions.json file, and
 should appear in the Recommended extension listing in Visual Studio Code. Alternatively, you can refer to <https://sites.google.com/erwinefamily.net/vscodedevcheatsheet> for an example script that you can use in the terminal window to install multiple extensions.
 
+To compile without Visual Studio, you will also need .
+
 ## Contributing ##
 
-This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, fork [this repository](https://github.com/lerwine/PowerShell-Modules.git) and generate a pull request.
+This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, simply edit a file and propose a change, or propose a new file at [My Public GitHub Website](<https://github.com/lerwine/PowerShell-Modules.git>).

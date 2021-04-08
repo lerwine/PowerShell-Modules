@@ -187,3 +187,10 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+*.lock
+*.ide
+*.ide-shm
+*.ide-wal
+*.p7s
+*.nupkg
+/src/packages/MSTest.TestFramework.1.3.2/lib
