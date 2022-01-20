@@ -4,6 +4,11 @@
         <name>Erwine.Leonard.T.GDIPlusLib</name>
     </assembly>
     <members>
+        <member name="T:Erwine.Leonard.T.GDIPlus.ColorExtensions">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Erwine.Leonard.T.GDIPlus.ColorExtensions.TryGetColor(System.Management.Automation.PSObject,Erwine.Leonard.T.GDIPlus.IColorModel@)">
             <summary>
             
@@ -1686,6 +1691,11 @@
             <param name="text"></param>
             <param name="result"></param>
             <returns></returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized">
+            <summary>
+            
+            </summary>
         </member>
         <member name="P:Erwine.Leonard.T.GDIPlus.HsbColorFNormalized.Alpha">
             <summary>
@@ -5972,6 +5982,11 @@
             <param name="text"></param>
             <param name="result"></param>
             <returns></returns>
+        </member>
+        <member name="T:Erwine.Leonard.T.GDIPlus.RgbColorF">
+            <summary>
+            
+            </summary>
         </member>
         <member name="P:Erwine.Leonard.T.GDIPlus.RgbColorF.Alpha">
             <summary>

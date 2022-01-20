@@ -93,6 +93,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="value"></param>
         public RgbColor32(RgbColorF value)
         {
+            _value = 0;
             _red = value.Red.FromPercentage();
             _green = value.Green.FromPercentage();
             _blue = value.Blue.FromPercentage();
@@ -105,6 +106,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="value"></param>
         public RgbColor32(IHsbColorModel<float> value)
         {
+            _value = 0;
             if (value == null)
                 throw new ArgumentNullException();
             if (value.Alpha < 0f || value.Alpha > 1f)
@@ -126,6 +128,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="value"></param>
         public RgbColor32(IHsbColorModel<byte> value)
         {
+            _value = 0;
             if (value == null)
                 throw new ArgumentNullException();
             ColorExtensions.HSBtoRGB(value.Hue.ToDegrees(), value.Saturation.ToPercentage(), value.Brightness.ToPercentage(), out float r, out float g, out float b);

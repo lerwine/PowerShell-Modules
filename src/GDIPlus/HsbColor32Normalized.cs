@@ -88,6 +88,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="value"></param>
         public HsbColor32Normalized(RgbColorF value)
         {
+            _value = 0;
             ColorExtensions.RGBtoHSB(value.Red, value.Green, value.Blue, out float h, out float s, out float b);
             _hue = h.FromDegrees();
             _saturation = s.FromPercentage();
@@ -101,6 +102,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="value"></param>
         public HsbColor32Normalized(RgbColor32 value)
         {
+            _value = 0;
             ColorExtensions.RGBtoHSB(value.Red.ToPercentage(), value.Green.ToPercentage(), value.Blue.ToPercentage(), out float h, out float s, out float b);
             _hue = h.FromDegrees();
             _saturation = s.FromPercentage();
@@ -154,13 +156,8 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="ahsb"></param>
         public HsbColor32Normalized(int ahsb)
         {
-            byte[] values = BitConverter.GetBytes(ahsb);
-            ColorExtensions.HSBtoRGB(values[2].ToDegrees(), values[1].ToPercentage(), values[0].ToPercentage(), out float r, out float g, out float b);
-            ColorExtensions.RGBtoHSB(r, g, b, out float hue, out float saturation, out float brightness);
-            _hue = hue.FromDegrees();
-            _saturation = saturation.FromPercentage();
-            _brightness = brightness.FromPercentage();
-            _alpha = values[3];
+            _hue = _saturation = _brightness = _alpha = 0;
+            _value = ahsb;
         }
 
         #endregion
