@@ -21,7 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Erwine.Leonard.T.LteDevLib.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <!-- <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -38,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -77,12 +79,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegexParsing\CharTokens.cs" />
+    <Compile Include="RegexParsing\CloseGroupToken.cs" />
+    <Compile Include="RegexParsing\IRegexPatternToken.cs" />
+    <Compile Include="RegexParsing\RegexTokenType.cs" />
+    <Compile Include="RegexParsing\NamedToken.cs" />
+    <Compile Include="RegexParsing\OpenGroupToken.cs" />
+    <Compile Include="RegexParsing\RegexParser.cs" />
     <Compile Include="TypeDetail.cs" />
     <Compile Include="ValidateCsNameAttribute.cs" />
     <Compile Include="ValidateCsNamespaceAttribute.cs" />
     <Compile Include="ValidateTypeOrRefAttribute.cs" />
     <Compile Include="BinaryHashData.cs" />
-    <Compile Include="FileInfoCatalogDataSet.cs" />
+    <Compile Include="FileInfoCatalogDataSet.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CodeDomProxy\INamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndType.cs" />
     <Compile Include="CodeDomProxy\NamespaceAndNestedType.cs" />
@@ -124,6 +135,7 @@
     <Content Include="Erwine.Leonard.T.LteDev.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Regex Characteristics Data.txt" />
     <Content Include="VsProjectTypes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
