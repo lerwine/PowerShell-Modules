@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.UI;
 
 namespace LteDev.RegexParsing
 {
@@ -48,6 +49,16 @@ namespace LteDev.RegexParsing
                 yield return c;
             foreach (char c in _followingValues)
                 yield return c;
+        }
+
+        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper)
+        {
+            foreach (char c in GetPrecedingPattern())
+                writer.Write(c);
+            string[] spanClassNames;
+            RegexParser.WriteSpanned(_name, writer, classNames, classMapper.TryGetNameClassNames(out spanClassNames) ? spanClassNames : null);
+            foreach (char c in GetFollowingPattern())
+                writer.Write(c);
         }
     }
 }

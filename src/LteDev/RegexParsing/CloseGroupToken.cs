@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.UI;
 
 namespace LteDev.RegexParsing
 {
@@ -17,9 +18,8 @@ namespace LteDev.RegexParsing
             _depth = depth;
         }
 
-        public IEnumerable<char> GetPattern()
-        {
-            yield return ')';
-        }
+        public IEnumerable<char> GetPattern() { yield return ')'; }
+
+        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper) { writer.Write(')'); }
     }
 }

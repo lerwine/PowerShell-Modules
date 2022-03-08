@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.UI;
 
 namespace LteDev.RegexParsing
 {
@@ -390,6 +393,8 @@ namespace LteDev.RegexParsing
         public static readonly Regex QuantifierRegex = new Regex(@"\G(
     (?<opt>\?)
 |
+    (?<rpt>\*)
+|
     (?<mlt>\+)
 |
     \{(?<min>\d+)(?<qr>,(?<max>\d+)?)?\}
@@ -516,7 +521,6 @@ namespace LteDev.RegexParsing
 
         private void ParseTokens(string pattern, Collection<IRegexPatternToken> collection, int groupLevel, Regex regex)
         {
-            Collection<IRegexPatternToken> result = new Collection<IRegexPatternToken>();
             int startIndex = 0;
             while (startIndex < pattern.Length)
             {
@@ -529,174 +533,165 @@ namespace LteDev.RegexParsing
                         while (!match.Success && ++endIndex < pattern.Length)
                             match = regex.Match(pattern, endIndex);
                     }
-                    result.Add(new CharTokens(RegexTokenType.Unknown, pattern.ToCharArray(startIndex, endIndex - startIndex)));
+                    collection.Add(new CharTokens(RegexTokenType.Unknown, pattern.ToCharArray(startIndex, endIndex - startIndex)));
                     if (!match.Success)
                         break;
                 }
 
-                if (match.Groups["grp"].Success) // A group pattern
-                {
-                    startIndex = match.Index + match.Length;
-                    string ptn = match.Groups["ptn"].Success ? match.Groups["ptn"].Value : "";
-                    if (ptn.Length > 0)
-                    {
-                        match = GroupTypeRegex.Match(ptn);
-                        if (match.Success)
-                        {
-                            if (match.Groups["ap"].Success)
-                            {
-                                result.Add(new OpenGroupToken(RegexTokenType.LookaheadOpen, groupLevel, '?', '=', null));
-                                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
-                                    ParseTokens(ptn, collection, groupLevel + 1, regex);
-                                result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                            }
-                            else if (match.Groups["an"].Success)
-                            {
-                                result.Add(new OpenGroupToken(RegexTokenType.LookaheadOpen, groupLevel, '?', '!', null));
-                                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
-                                    ParseTokens(ptn, collection, groupLevel + 1, regex);
-                                result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                            }
-                            else if (match.Groups["bp"].Success)
-                            {
-                                result.Add(new OpenGroupToken(RegexTokenType.LookbehindOpen, groupLevel, '?', '<', '=', null));
-                                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
-                                    ParseTokens(ptn, collection, groupLevel + 1, regex);
-                                result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                            }
-                            else if (match.Groups["bn"].Success)
-                            {
-                                result.Add(new OpenGroupToken(RegexTokenType.LookbehindOpen, groupLevel, '?', '<', '!', null));
-                                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
-                                    ParseTokens(ptn, collection, groupLevel + 1, regex);
-                                result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                            }
-                            else if (match.Groups["m"].Success && !match.Groups["x"].Success)
-                                result.Add(new CharTokens(RegexTokenType.ModeModifier, match.Value));
-                            else
-                            {
-                                if (match.Groups["at"].Success)
-                                    result.Add(new OpenGroupToken(RegexTokenType.AtomicGroupOpen, groupLevel, '?', '>', null));
-                                else if (match.Groups["ng"].Success)
-                                    result.Add(new OpenGroupToken(RegexTokenType.NamedGroupOpen, groupLevel, '?', match.Groups["d"].Value[0], match.Groups["ng"].Value, (match.Groups["d"].Value[0] == '<') ? '>' : '\''));
-                                else if (match.Groups["x"].Success)
-                                {
-                                    if (match.Groups["m"].Success)
-                                        result.Add(new OpenGroupToken(RegexTokenType.NonCapturingGroupOpen, groupLevel, match.Groups["m"].Value));
-                                    else
-                                        result.Add(new OpenGroupToken(RegexTokenType.NonCapturingGroupOpen, groupLevel, '?', ':', null));
-                                }
-                                else
-                                    result.Add(new OpenGroupToken(RegexTokenType.GroupOpen, groupLevel, '?', null));
-                                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
-                                    ParseTokens(ptn, collection, groupLevel + 1, regex);
-                                result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                                Match qm = QuantifierRegex.Match(pattern, startIndex);
-                                if (qm.Success)
-                                {
-                                    if (qm.Groups["opt"].Success)
-                                    {
-                                        if (match.Groups["lzy"].Success)
-                                            result.Add(new CharTokens(RegexTokenType.GreedyOptionalQuantifier, '?'));
-                                        else
-                                            result.Add(new CharTokens(RegexTokenType.LazyOptionalQuantifier, '?', '?'));
-                                    }
-                                    else if (qm.Groups["mlt"].Success)
-                                    {
-                                        if (match.Groups["lzy"].Success)
-                                            result.Add(new CharTokens(RegexTokenType.GreedyMultipleQuantifier, '+'));
-                                        else
-                                            result.Add(new CharTokens(RegexTokenType.LazyMultipleQuantifier, '+', '?'));
-                                    }
-                                    else
-                                    {
-                                        if (qm.Groups["max"].Success)
-                                        {
-                                            throw new NotImplementedException();
-                                        }
-                                        else if (qm.Groups["qr"].Success)
-                                        {
-                                            throw new NotImplementedException();
-                                        }
-                                        else
-                                        {
-                                            throw new NotImplementedException();
-                                        }
-                                    }
-                                    match = qm;
-                                }
-                            }
-                            //if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
-                            //    ParseTokens(ptn, collection, groupLevel + 1);
-                            //result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                        }
-                        else
-                        {
-                            result.Add(new OpenGroupToken(RegexTokenType.GroupOpen, groupLevel, null));
-                            ParseTokens(ptn, collection, groupLevel + 1, regex);
-                            result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                        }
-                    }
-                    else
-                    {
-                        result.Add(new OpenGroupToken(RegexTokenType.GroupOpen, groupLevel, null));
-                        result.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
-                    }
-                    continue;
-                }
-
+                startIndex = match.Index + match.Length;
+                
                 if (match.Groups["cmt"].Success) // Comment
-                    result.Add(new CharTokens(RegexTokenType.CommentType, match.Groups["t"].Success ? match.Groups["t"].Value : ""));
+                    collection.Add(new CharTokens(RegexTokenType.CommentType, match.Groups["t"].Success ? match.Groups["t"].Value : ""));
                 else if (match.Groups["anc"].Success) // One or more anchor sequences (<c>^</c>, <c>\A</c>)
-                    result.Add(new CharTokens(RegexTokenType.Anchor, match.Value));
+                    collection.Add(new CharTokens(RegexTokenType.Anchor, match.Value));
                 else if (match.Groups["alt"].Success) // One or more alternation characters (<c>|</c>)
-                    result.Add(new CharTokens(RegexTokenType.Alternation, match.Value));
+                    collection.Add(new CharTokens(RegexTokenType.Alternation, match.Value));
                 else
                 {
-                    if (match.Groups["any"].Success) // One or more Dot characters (<c>.</c>)
-                        result.Add(new CharTokens(RegexTokenType.AnyCharacters, match.Value));
+                    if (match.Groups["grp"].Success) // A group pattern
+                    {
+                        if (!ParseGroup(match.Groups["ptn"].Success ? match.Groups["ptn"].Value : "", groupLevel, regex, collection))
+                            continue;
+                    }
+                    else if (match.Groups["any"].Success) // One or more Dot characters (<c>.</c>)
+                        collection.Add(new CharTokens(RegexTokenType.AnyCharacters, match.Value));
                     else if (match.Groups["ce"].Success) // One or more character escape sequences (<c>\n</c>, <c>\t</c>, etc)
-                        result.Add(new CharTokens(RegexTokenType.CharacterEscape, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.CharacterEscape, match.Value));
                     else if (match.Groups["em"].Success) // One or more metacharacter escape sequences (<c>\{</c>, <c>\\</c>, etc)
-                        result.Add(new CharTokens(RegexTokenType.MetaCharacterEscape, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.MetaCharacterEscape, match.Value));
                     else if (match.Groups["oct"].Success) // One or more octal escape sequences
-                        result.Add(new CharTokens(RegexTokenType.OctalEscape, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.OctalEscape, match.Value));
                     else if (match.Groups["nul"].Success) // One or more NUL character escape sequences (<c>\0</c>)
-                        result.Add(new CharTokens(RegexTokenType.NullEscape, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.NullEscape, match.Value));
                     else if (match.Groups["ctl"].Success) // One or more control character escape sequence
-                        result.Add(new CharTokens(RegexTokenType.ControlCharacterEscape, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.ControlCharacterEscape, match.Value));
                     else if (match.Groups["hex"].Success) // One or more hexidecimal escape sequence
-                        result.Add(new CharTokens(RegexTokenType.HexidecimalEscape, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.HexidecimalEscape, match.Value));
                     else if (match.Groups["uni"].Success) // One or more unicode escape sequence
-                        result.Add(new CharTokens(RegexTokenType.UnicodeCategory, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.UnicodeCategory, match.Value));
                     else if (match.Groups["cat"].Success) // One unicode category sequence
-                        result.Add(new NamedToken(RegexTokenType.UnicodeCategory, match.Value.ToCharArray(0, 3), match.Groups["n"].Value, '}'));
+                        collection.Add(new NamedToken(RegexTokenType.UnicodeCategory, match.Value.ToCharArray(0, 3), match.Groups["n"].Value, '}'));
                     else if (match.Groups["nbr"].Success) // One named backreference sequences
-                        result.Add(new NamedToken(RegexTokenType.Backreference, match.Value.ToCharArray(0, 3), match.Groups["n"].Value, match.Value[match.Length - 1]));
+                        collection.Add(new NamedToken(RegexTokenType.Backreference, match.Value.ToCharArray(0, 3), match.Groups["n"].Value, match.Value[match.Length - 1]));
                     else if (match.Groups["dbr"].Success) // One or more numbered backreference sequences
                     {
                         if (match.Groups["n"].Success)
-                            result.Add(new NamedToken(RegexTokenType.Backreference, match.Value.ToCharArray(0, 3), match.Groups["n"].Value, match.Value[match.Length - 1]));
+                            collection.Add(new NamedToken(RegexTokenType.Backreference, match.Value.ToCharArray(0, 3), match.Groups["n"].Value, match.Value[match.Length - 1]));
                         else
-                            result.Add(new CharTokens(RegexTokenType.Backreference, match.Value));
+                            collection.Add(new CharTokens(RegexTokenType.Backreference, match.Value));
                     }
                     else if (match.Groups["esc"].Success) // One or more escaped literals
-                        result.Add(new CharTokens(RegexTokenType.EscapedLiteral, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.EscapedLiteral, match.Value));
                     else if (match.Groups["cc"].Success) // Character class
                     {
                         if (match.Groups["ptn"].Success)
-                            ParseCharacterClassTokens(match.Groups["ptn"].Value, result);
+                            ParseCharacterClassTokens(match.Groups["ptn"].Value, collection);
                         else
                         {
-                            result.Add(new CharTokens(RegexTokenType.CharacterClassOpen, '['));
-                            result.Add(new CharTokens(RegexTokenType.CharacterClassClose, ']'));
+                            collection.Add(new CharTokens(RegexTokenType.CharacterClassOpen, '['));
+                            collection.Add(new CharTokens(RegexTokenType.CharacterClassClose, ']'));
                         }
                     }
                     else // One or more one or more literal characters
-                        result.Add(new CharTokens(RegexTokenType.LiteralCharacter, match.Value));
+                        collection.Add(new CharTokens(RegexTokenType.LiteralCharacter, match.Value));
+                    if (TryParseQuantifier(pattern, startIndex, collection, out match))
+                        startIndex = match.Index + match.Length;
                 }
-                startIndex = match.Index + match.Length;
             }
+        }
+
+        private bool TryParseQuantifier(string pattern, int startIndex, Collection<IRegexPatternToken> collection, out Match qm)
+        {
+            if (string.IsNullOrEmpty(pattern) || startIndex >= pattern.Length)
+            {
+                qm = Match.Empty;
+                return false;
+            }
+            qm = QuantifierRegex.Match(pattern, startIndex);
+            if (!qm.Success)
+                return false;
+            if (qm.Groups["opt"].Success)
+                collection.Add(new SimpleQualifierToken(QuantifierType.Optional, qm.Groups["lzy"].Success));
+            else if (qm.Groups["rpt"].Success)
+                collection.Add(new SimpleQualifierToken(QuantifierType.OptionalRepeat, qm.Groups["lzy"].Success));
+            else if (qm.Groups["mlt"].Success)
+                collection.Add(new SimpleQualifierToken(QuantifierType.Multiple, qm.Groups["lzy"].Success));
+            else if (qm.Groups["max"].Success)
+                collection.Add(new ExplicitQuantifierToken(qm.Groups["min"].Value, qm.Groups["max"].Value, qm.Groups["lzy"].Success));
+            else if (qm.Groups["qr"].Success)
+                collection.Add(new ExplicitQuantifierToken(qm.Groups["min"].Value, null, qm.Groups["lzy"].Success));
+            else
+                collection.Add(new ExplicitQuantifierToken(qm.Groups["min"].Value, qm.Groups["lzy"].Success));
+            return true;
+        }
+
+        private bool ParseGroup(string ptn, int groupLevel, Regex regex, Collection<IRegexPatternToken> collection)
+        {
+            if (string.IsNullOrEmpty(ptn))
+            {
+                collection.Add(new OpenGroupToken(RegexTokenType.GroupOpen, groupLevel, null));
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+                return true;
+            }
+            Match match = GroupTypeRegex.Match(ptn);
+            if (!match.Success)
+            {
+                collection.Add(new OpenGroupToken(RegexTokenType.GroupOpen, groupLevel, null));
+                ParseTokens(ptn, collection, groupLevel + 1, regex);
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+                return true;
+            }
+            if (match.Groups["ap"].Success)
+            {
+                collection.Add(new OpenGroupToken(RegexTokenType.LookaheadOpen, groupLevel, '?', '=', null));
+                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
+                    ParseTokens(ptn, collection, groupLevel + 1, regex);
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+            }
+            else if (match.Groups["an"].Success)
+            {
+                collection.Add(new OpenGroupToken(RegexTokenType.LookaheadOpen, groupLevel, '?', '!', null));
+                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
+                    ParseTokens(ptn, collection, groupLevel + 1, regex);
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+            }
+            else if (match.Groups["bp"].Success)
+            {
+                collection.Add(new OpenGroupToken(RegexTokenType.LookbehindOpen, groupLevel, '?', '<', '=', null));
+                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
+                    ParseTokens(ptn, collection, groupLevel + 1, regex);
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+            }
+            else if (match.Groups["bn"].Success)
+            {
+                collection.Add(new OpenGroupToken(RegexTokenType.LookbehindOpen, groupLevel, '?', '<', '!', null));
+                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
+                    ParseTokens(ptn, collection, groupLevel + 1, regex);
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+            }
+            else if (match.Groups["m"].Success && !match.Groups["x"].Success)
+                collection.Add(new CharTokens(RegexTokenType.ModeModifier, match.Value));
+            else
+            {
+                if (match.Groups["at"].Success)
+                    collection.Add(new OpenGroupToken(RegexTokenType.AtomicGroupOpen, groupLevel, '?', '>', null));
+                else if (match.Groups["ng"].Success)
+                    collection.Add(new OpenGroupToken(RegexTokenType.NamedGroupOpen, groupLevel, '?', match.Groups["d"].Value[0], match.Groups["ng"].Value, (match.Groups["d"].Value[0] == '<') ? '>' : '\''));
+                else if (match.Groups["x"].Success)
+                {
+                    if (match.Groups["m"].Success)
+                        collection.Add(new OpenGroupToken(RegexTokenType.NonCapturingGroupOpen, groupLevel, match.Groups["m"].Value));
+                    else
+                        collection.Add(new OpenGroupToken(RegexTokenType.NonCapturingGroupOpen, groupLevel, '?', ':', null));
+                }
+                else
+                    collection.Add(new OpenGroupToken(RegexTokenType.GroupOpen, groupLevel, '?', null));
+                if (match.Groups["ptn"].Success && (ptn = match.Groups["ptn"].Value).Length > 0)
+                    ParseTokens(ptn, collection, groupLevel + 1, regex);
+                collection.Add(new CloseGroupToken(RegexTokenType.GroupClose, groupLevel));
+                return true;
+            }
+            return false;
         }
 
         public Collection<IRegexPatternToken> ParseTokens(string pattern, bool isMultiLine)
@@ -705,6 +700,64 @@ namespace LteDev.RegexParsing
             if (pattern != null)
                 ParseTokens(pattern, result, 0, isMultiLine ? MultilinePatternTokenRegex : SingleLinePatternTokenRegex);
             return result;
+        }
+
+        internal static void WriteSpanned(string text, Html32TextWriter writer, List<string> classNames, string[] spanClasses)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+            if (spanClasses != null && spanClasses.Length > 0 && (classNames.Count == 0 || (spanClasses = spanClasses.Where(c => !classNames.Contains(c)).ToArray()).Length > 0))
+            {
+                if (spanClasses.Length == 1)
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, spanClasses[0]);
+                else
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, string.Join(" ", spanClasses));
+                writer.RenderBeginTag(HtmlTextWriterTag.Span);
+                writer.WriteEncodedText(text);
+                writer.RenderEndTag();
+            }
+            else
+                writer.Write(text);
+        }
+
+        private static void WriteClassMapperSpan(RegexTokenType tokenType, Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper)
+        {
+            string[] cn;
+            if (!classMapper.TryGetValue(tokenType, out cn))
+                cn = Array.Empty<string>();
+            if (cn.Length > 0)
+            {
+                if (classNames.Count > 0)
+                {
+                    if (cn.Length == classNames.Count && classNames.OrderBy(n => n).SequenceEqual(cn.OrderBy(n => n)))
+                        return;
+                    writer.RenderEndTag();
+                    classNames.Clear();
+                }
+                classNames.AddRange(cn);
+                if (cn.Length == 1)
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, cn[0]);
+                else
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, string.Join(" ", cn));
+                writer.RenderBeginTag(HtmlTextWriterTag.Span);
+            }
+            else if (classNames.Count > 0)
+            {
+                classNames.Clear();
+                writer.RenderEndTag();
+            }
+        }
+
+        public static void WriteTo(Collection<IRegexPatternToken> tokens, Html32TextWriter writer, ICssClassMapper classMapper)
+        {
+            List<string> classNames = new List<string>();
+            foreach (IRegexPatternToken token in tokens.Where(t => t != null))
+            {
+                WriteClassMapperSpan(token.TokenType, writer, classNames, classMapper);
+                token.WriteTo(writer, classNames, classMapper);
+            }
+            if (classNames.Count > 0)
+                writer.RenderEndTag();
         }
     }
 }

@@ -1,50 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web.UI;
 
 namespace LteDev.RegexParsing
 {
-    //public interface IValidatableRegexItem : INotifyPropertyChanged, INotifyDataErrorInfo, IDataErrorInfo
-    //{
-    //    bool IsPropertyValid(string propertyName);
-
-    //    string GetErrorMessage(string propertyName);
-    //}
-
-    //public interface IRegexQuantifier : IRegexPatternToken//, IValidatableRegexItem
-    //{
-    //    QuantifierType Type { get; }
-    //}
-
-    //public interface IRegexMinQualifier : IRegexQuantifier
-    //{
-    //    int MinimumCount { get; }
-    //}
-
-    //public interface IRegexMaxQualifier : IRegexQuantifier
-    //{
-    //    int MaximumCount { get; }
-    //}
-
-    //public interface IRegexPatternElement //: IValidatableRegexItem, IEquatable<IRegexPatternElement>
-    //{
-    //    RegexElementType Type { get; }
-
-    //    IEnumerable<IRegexPatternToken> AllTokens { get; }
-    //}
-
-    //public interface IRegexPatternContainer : IRegexPatternElement
-    //{
-    //    IRegexPatternToken OpenToken { get; }
-
-    //    IRegexPatternToken CloseToken { get; }
-    //}
-
-    //public interface IRegexQualtifiable : IRegexPatternElement
-    //{
-    //    IRegexQuantifier Quantifier { get; }
-    //}
-
     public class CharTokens : IRegexPatternToken, IReadOnlyList<char>
     {
         private readonly IList<char> _values;
@@ -77,5 +38,7 @@ namespace LteDev.RegexParsing
         IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable)_values).GetEnumerator(); }
 
         IEnumerable<char> IRegexPatternToken.GetPattern() { return this; }
+
+        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper) { writer.WriteEncodedText(new string(_values.ToArray())); }
     }
 }
