@@ -79,18 +79,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegexParsing\CharacterStream.cs" />
     <Compile Include="RegexParsing\CharTokens.cs" />
     <Compile Include="RegexParsing\CloseGroupToken.cs" />
     <Compile Include="RegexParsing\ICssClassMapper.cs" />
+    <Compile Include="RegexParsing\IRegexParserSettings.cs" />
     <Compile Include="RegexParsing\IRegexPatternToken.cs" />
     <Compile Include="RegexParsing\ExplicitQuantifierToken.cs" />
+    <Compile Include="RegexParsing\ITokenParser.cs" />
     <Compile Include="RegexParsing\QuantifierToken.cs" />
     <Compile Include="RegexParsing\QuantifierType.cs" />
+    <Compile Include="RegexParsing\RegexPatternTokenObserable.cs" />
     <Compile Include="RegexParsing\RegexTokenType.cs" />
     <Compile Include="RegexParsing\NamedToken.cs" />
     <Compile Include="RegexParsing\OpenGroupToken.cs" />
     <Compile Include="RegexParsing\RegexParser.cs" />
     <Compile Include="RegexParsing\SimpleQualifierToken.cs" />
+    <Compile Include="RegexParsing\TryFunc.cs" />
     <Compile Include="TypeDetail.cs" />
     <Compile Include="ValidateCsNameAttribute.cs" />
     <Compile Include="ValidateCsNamespaceAttribute.cs" />
