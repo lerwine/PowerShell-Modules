@@ -87,6 +87,7 @@
     <Compile Include="RegexParsing\IRegexPatternToken.cs" />
     <Compile Include="RegexParsing\ExplicitQuantifierToken.cs" />
     <Compile Include="RegexParsing\ITokenParser.cs" />
+    <Compile Include="RegexParsing\PatternSourceReader.cs" />
     <Compile Include="RegexParsing\QuantifierToken.cs" />
     <Compile Include="RegexParsing\QuantifierType.cs" />
     <Compile Include="RegexParsing\RegexPatternTokenObserable.cs" />

@@ -7,6 +7,7 @@ using System.Threading;
 
 namespace LteDev.RegexParsing
 {
+    [Obsolete("Use PatternSourceReader")]
     public sealed class CharacterStream : IReadOnlyList<char>, IRevertibleChangeTracking
     {
         private readonly object _syncRoot = new object();
