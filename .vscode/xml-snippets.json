@@ -1,0 +1,61 @@
+{
+	"PowerShell Help XML": {
+		"prefix": "pshelpxml",
+		"body": [
+			"<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
+			"<helpItems xmlns=\"http://msh\" schema=\"maml\">",
+			"</helpItems>"
+		],
+		"description": "XML document with helpItems element root, including xml version and encoding",
+	},
+	"PowerShell Command MAML XML": {
+		"prefix": "pscmdmaml",
+		"body": [
+			"<command:command xmlns:maml=\"http://schemas.microsoft.com/maml/2004/10\" xmlns:command=\"http://schemas.microsoft.com/maml/dev/command/2004/10\" xmlns:dev=\"http://schemas.microsoft.com/maml/dev/2004/10\">",
+			"<command:details>",
+			"<command:name>CmdletName</command:name>",
+			"<command:verb>Verb</command:verb>",
+			"<command:verb>Verb</command:verb>",
+			"</command:details>",
+			"<maml:description>",
+			"<!--Add detailed description here-->",
+			"</maml:description>",
+			"<command:syntax>",
+			"<!--Add syntax information here-->",
+			"</command:syntax>",
+			"<command:parameters>",
+			"<!--Add parameter information here-->",
+			"</command:parameters>",
+			"<command:inputTypes>",
+			"<!--Add input type information here-->",
+			"</command:inputTypes>",
+			"<command:returnValues>",
+			"<!--Add return value information here-->",
+			"</command:returnValues>",
+			"<maml:alertSet>",
+			"<!--Add Note information here-->",
+			"</maml:alertSet>",
+			"<command:examples>",
+			"<!--Add cmdlet examples here-->",
+			"</command:examples>",
+			"<maml:relatedLinks>",
+			"<!--Add links to related content here-->",
+			"</maml:relatedLinks>",
+			"</command:command>"
+		],
+		"description": "XML element PowerShell command maml help"
+	}
+	// Place your snippets for xml here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+}
