@@ -22,8 +22,6 @@ namespace PwManager
         private DataGridViewTextBoxColumn _urlDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
         private DataGridViewButtonColumn _openDataGridViewButtonColumn = new DataGridViewButtonColumn();
         private DataGridViewButtonColumn _deleteDataGridViewButtonColumn = new DataGridViewButtonColumn();
-        private Button _newButton = new Button();
-        private Button _exitButton = new Button();
 
         public Guid? SelectedId { get { return _selectedId; } }
 
@@ -41,8 +39,8 @@ namespace PwManager
             // 
             _outerTableLayoutPanel.AutoSize = true;
             _outerTableLayoutPanel.ColumnCount = 2;
-            _outerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Auto));
             _outerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _outerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Auto));
             _outerTableLayoutPanel.Dock = DockStyle.Fill;
             _outerTableLayoutPanel.Margin = new Padding(0);
             _outerTableLayoutPanel.Name = "outerTableLayoutPanel";
@@ -128,7 +126,7 @@ namespace PwManager
             // exitButton
             // 
             CancelButton = new Button();
-            _outerTableLayoutPanel.Controls.Add(CancelButton, 0, 2);
+            _outerTableLayoutPanel.Controls.Add(CancelButton, 1, 1);
             CancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             AcceptButton.DialogResult = DialogResult.Cancel;
             CancelButton.Name = "exitButton";
