@@ -41,7 +41,7 @@ $DistPath = ((($SolutionDir | Join-Path -ChildPath '../dist') | Resolve-Path).Pa
 $PsdPath = Join-Path -Path $OutPath -ChildPath "Erwine.Leonard.T.$ProjectName.psd1";
 if (-not ($PsdPath | Test-Path -PathType Leaf)) { throw "Module manifest not found at $PsdPath." }
 $ModuleManifest = Test-ModuleManifest -Path $PsdPath;
-if ($ModuleManifest.RootModule -eq $null -or $ModuleManifest.RootModule.Trim().Length -eq 0) { throw "Module manifest not dfined for $PsdPath." }
+if ($null -eq $ModuleManifest.RootModule -or $ModuleManifest.RootModule.Trim().Length -eq 0) { throw "Module manifest not dfined for $PsdPath." }
 
 $FileList = @($PsdPath, ($OutPath | Join-Path -ChildPath $ModuleManifest.RootModule), (Join-Path -Path $OutPath -ChildPath "$TargetName$TargetExt")) + @($ModuleManifest.FileList) + @($ModuleManifest.NestedModules) + @($ModuleManifest.Scripts) + @($ModuleManifest.ScriptsToProcess) + @($ModuleManifest.ExportedFormatFiles) + @($ModuleManifest.ExportedTypeFiles);
 
@@ -51,7 +51,7 @@ $Path = Join-Path -Path $OutPath -ChildPath "$TargetName.XML";
 if ($Path | Test-Path -PathType Leaf) { $FileList = $FileList + @($Path); }
 if ($DistPath | Test-Path -PathType Container) { Remove-Item -Path $DistPath -Recurse -Force }
 (New-Item -ItemType Directory -Path $DistPath) | Out-Null;
-$FileList = @($FileList | ForEach-Object { if ($_ -ne $null -and $_.Length -gt 0) { ($_ | Resolve-Path).Path } } | Select-Object -Unique);
+$FileList = @($FileList | ForEach-Object { if ($null -ne $_ -and $_.Length -gt 0) { ($_ | Resolve-Path).Path } } | Select-Object -Unique);
 foreach ($SourcePath in $FileList) {
     if (-not ($SourcePath | Test-Path -PathType Leaf)) { throw "$SourcePath not found." }
     $ParentDir = $SourcePath | Split-Path -Parent;
