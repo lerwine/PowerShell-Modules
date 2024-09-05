@@ -5,7 +5,7 @@ using System.Management.Automation.Host;
 using System.Management.Automation.Runspaces;
 using System.Threading;
 
-namespace IOUtility
+namespace WinIOUtility
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IPSInvocationContext

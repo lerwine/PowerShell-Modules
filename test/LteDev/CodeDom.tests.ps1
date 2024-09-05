@@ -1,4 +1,5 @@
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.IOUtility') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.WinIOUtility') -ErrorAction Stop;
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.LteDev') -ErrorAction Stop;
 
 $ValidNames = @({'NormalName'}, {'lcFirst'}, {'has_underscore'}, {'_startsWithUndersore'}, {'hasNumber3'}, {'x'}, {'__'}, {'_'}, {'_123'},

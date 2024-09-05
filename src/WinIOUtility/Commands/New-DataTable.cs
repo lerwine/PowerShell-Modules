@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace IOUtility.Commands
+namespace WinIOUtility.Commands
 {
     /// <summary>
     /// Creates a new DataTable object.

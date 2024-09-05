@@ -6,7 +6,7 @@ using System.Linq;
 #endif
 using System.Text.RegularExpressions;
 
-namespace IOUtility
+namespace WinIOUtility
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class TextHelper

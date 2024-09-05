@@ -8,7 +8,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 
-namespace IOUtility
+namespace WinIOUtility
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class PSInvocationResult

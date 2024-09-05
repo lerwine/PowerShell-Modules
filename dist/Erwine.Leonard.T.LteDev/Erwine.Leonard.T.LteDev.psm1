@@ -1,4 +1,6 @@
-if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
+if ($null -eq (Get-Module -Name 'Erwine.Leonard.T.IOUtility')) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
+if ($null -eq (Get-Module -Name 'Erwine.Leonard.T.WinIOUtility')) { Import-Module -Name 'Erwine.Leonard.T.WinIOUtility' -ErrorAction Stop }
+
 $Script:IndentText = '  ';
 
 Function Get-ClrSimpleName {

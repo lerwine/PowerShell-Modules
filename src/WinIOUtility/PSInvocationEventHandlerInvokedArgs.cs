@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 
-namespace IOUtility
+namespace WinIOUtility
 {
     /// <summary>
     /// Base abstract event information class for accessing base <seealso cref="EventArgs"/> object.

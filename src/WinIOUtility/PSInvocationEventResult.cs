@@ -1,4 +1,4 @@
-﻿namespace IOUtility
+﻿namespace WinIOUtility
 {
     /// <summary>
     /// Result information about a handled event.

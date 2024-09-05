@@ -10,7 +10,7 @@ Param(
     [ValidateSet('Build', 'Resources', 'Compile', 'Rebuild', 'Clean', 'Publish')]
     [string[]]$Targets = @('Build'),
 
-    [ValidateSet('CertificateCryptography', 'CredentialStorage', 'GDIPlus', 'IOUtility', 'LteDev', 'NetworkUtility', 'PSDB', 'PsMsBuildHelper', 'XmlUtility')]
+    [ValidateSet('CertificateCryptography', 'CredentialStorage', 'GDIPlus', 'WinIOUtility', 'LteDev', 'NetworkUtility', 'PSDB', 'PsMsBuildHelper', 'XmlUtility')]
     [string]$Project,
 
     [int]$TermMinWidth = 2048,

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace IOUtility
+namespace WinIOUtility
 {
     /// <summary>
     /// Base class for replacing text based upon regular expression matches.

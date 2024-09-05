@@ -11,7 +11,7 @@ using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading;
 
-namespace IOUtility
+namespace WinIOUtility
 {
     /// <summary>
     /// Context under which ScriptBlock will be executed.
