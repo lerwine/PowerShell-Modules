@@ -1234,7 +1234,7 @@ namespace LteDev.RegexParsing
             return result;
         }
 
-        internal static void WriteSpanned(string text, Html32TextWriter writer, List<string> classNames, string[] spanClasses)
+        internal static void WriteSpanned(string text, HtmlTextWriter writer, List<string> classNames, string[] spanClasses)
         {
             if (string.IsNullOrEmpty(text))
                 return;
@@ -1252,7 +1252,7 @@ namespace LteDev.RegexParsing
                 writer.Write(text);
         }
 
-        private static void WriteClassMapperSpan(RegexTokenType tokenType, Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper)
+        private static void WriteClassMapperSpan(RegexTokenType tokenType, HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper)
         {
             string[] cn;
             if (!classMapper.TryGetValue(tokenType, out cn))
@@ -1280,7 +1280,7 @@ namespace LteDev.RegexParsing
             }
         }
 
-        public static void WriteTo(Collection<IRegexPatternToken> tokens, Html32TextWriter writer, ICssClassMapper classMapper)
+        public static void WriteTo(Collection<IRegexPatternToken> tokens, HtmlTextWriter writer, ICssClassMapper classMapper)
         {
             List<string> classNames = new List<string>();
             foreach (IRegexPatternToken token in tokens.Where(t => t != null))

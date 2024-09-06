@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms> 
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Properties\Resources.Designer.cs">
+    <!-- <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -16,11 +17,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    </Compile> -->
+    <!-- <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    </EmbeddedResource> -->
     <None Include="GenerateReadOnlyDependencyProperty.ps1" />
     <Content Include="Erwine.Leonard.T.LteDev.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -45,7 +46,14 @@
     <None Include="WindowsFormsHelper.ps1" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)PostBuild.ps1 -TargetName $(TargetName) -TargetExt $(TargetExt) -ProjectName $(ProjectName) -ProjectDir $(ProjectDir) -OutDir $(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlTextWriter" Version="3.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
+    <PackageReference Include="System.Management.Automation" Version="7.4.5" />
+  </ItemGroup>
+
+  <!-- <PropertyGroup>
+    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(ProjectDir)../PostBuild.ps1 -TargetName $(TargetName) -TargetExt $(TargetExt) -ProjectName $(ProjectName) -ProjectDir $(ProjectDir) -OutDir $(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
+  </PropertyGroup> -->
 </Project>

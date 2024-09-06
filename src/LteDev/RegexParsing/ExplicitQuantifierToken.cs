@@ -61,7 +61,7 @@ namespace LteDev.RegexParsing
                 yield return '?';
         }
 
-        public override void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper)
+        public override void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper)
         {
             writer.Write('{');
             string[] spanClassNames;

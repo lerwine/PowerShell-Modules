@@ -126,7 +126,7 @@ namespace WinIOUtility
             if (otherChars != null && otherChars.Any())
 #endif
             {
-                Regex regex;
+                Regex? regex;
                 if (patterns.Count == 1)
                     regex = new Regex(patterns[0], RegexOptions.Compiled);
                 else if (patterns.Count > 1)

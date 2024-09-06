@@ -4,126 +4,33 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build All Release",
-            "identifier": "buildAllRelease",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
+            "label": "Build WinIOUtility",
+            "command": "dotnet",
+            "type": "process",
             "args": [
-                "-Configuration",
-                "Release"
+                "build",
+                "${workspaceFolder}/src/WinIOUtility/WinIOUtility.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
             ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "Build LteDev",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/LteDev/LteDev.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Re-Build Release",
-            "identifier": "rebuildAllRelease",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
-            "args": [
-                "-Targets",
-                "Rebuild",
-                "-Configuration",
-                "Release"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build All Debug",
-            "identifier": "buildAllDebug",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
-            "args": [
-                "-Configuration",
-                "Debug"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Re-Build All Debug",
-            "identifier": "rebuildAllDebug",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
-            "args": [
-                "-Targets",
-                "Rebuild",
-                "-Configuration",
-                "Debug"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Re-Build LTEDev Debug",
-            "identifier": "rebuildLTEDevDebug",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
-            "args": [
-                "-Targets",
-                "Rebuild",
-                "-Configuration",
-                "Debug",
-                "-Project",
-                "LteDev"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build PsMsBuildHelper Debug",
-            "identifier": "buildPsMsBuildHelperDebug",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
-            "args": [
-                "-Configuration",
-                "Debug",
-                "-Project",
-                "PsMsBuildHelper"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "ReBuild PsMsBuildHelper Debug",
-            "identifier": "rebuildPsMsBuildHelperDebug",
-            "type": "shell",
-            "command": "${workspaceFolder}/build.bat",
-            "args": [
-                "-Targets",
-                "Rebuild",
-                "-Configuration",
-                "Debug",
-                "-Project",
-                "PsMsBuildHelper"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
+            }
         }
     ]
 }

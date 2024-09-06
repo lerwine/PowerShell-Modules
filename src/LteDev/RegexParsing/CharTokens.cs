@@ -39,6 +39,6 @@ namespace LteDev.RegexParsing
 
         IEnumerable<char> IRegexPatternToken.GetPattern() { return this; }
 
-        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper) { writer.WriteEncodedText(new string(_values.ToArray())); }
+        public void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper) { writer.WriteEncodedText(new string(_values.ToArray())); }
     }
 }

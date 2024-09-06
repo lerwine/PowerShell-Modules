@@ -51,7 +51,7 @@ namespace LteDev.RegexParsing
                 yield return c;
         }
 
-        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper)
+        public void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper)
         {
             foreach (char c in GetPrecedingPattern())
                 writer.Write(c);
