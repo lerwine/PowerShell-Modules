@@ -19,8 +19,8 @@ namespace LteDev.RegexParsing
 
         public CharTokens(RegexTokenType tokenType, params char[] values)
         {
-            if (values == null || values.Length < 1)
-                throw new ArgumentException("At least one character must be provided", "values");
+            if (values is null || values.Length < 1)
+                throw new ArgumentException("At least one character must be provided", nameof(values));
             _tokenType = tokenType;
             _values = values;
         }
@@ -28,7 +28,7 @@ namespace LteDev.RegexParsing
         public CharTokens(RegexTokenType tokenType, string value)
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("Value cannot be empty", "value");
+                throw new ArgumentException("Value cannot be empty", nameof(value));
             _tokenType = tokenType;
             _values = value.ToCharArray();
         }

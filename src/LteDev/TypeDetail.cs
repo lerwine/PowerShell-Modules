@@ -21,11 +21,11 @@ namespace LteDev
 
         public TypeDetail Owner { get; private set; }
 
-        public string QualifiedName { get { return (Type == null) ? FullName : Type.AssemblyQualifiedName; } }
+        public string? QualifiedName => (Type is null) ? FullName : Type.AssemblyQualifiedName;
 
-        private Collection<TypeDetail> _types = new Collection<TypeDetail>();
+        private readonly Collection<TypeDetail> _types = [];
 
-        private Collection<AssemblyName> _assemblies = new Collection<AssemblyName>();
+        private readonly Collection<AssemblyName> _assemblies = [];
 
         private TypeDetail(string name, string fullName, TypeDetail owner)
         {
@@ -34,10 +34,9 @@ namespace LteDev
             this.FullName = fullName;
         }
 
-        private TypeDetail(Type type, TypeDetail owner)
+        private TypeDetail(Type type, TypeDetail? owner)
         {
-            if (type == null)
-                throw new ArgumentNullException("type");
+            ArgumentNullException.ThrowIfNull(type);
             Type = (type is TypeInfo) ? (TypeInfo)(type) : type.GetTypeInfo();
             Name = GetName(type);
             FullName = GetFullName(type);
@@ -52,11 +51,10 @@ namespace LteDev
 
         public TypeDetail(Type type) : this(type, null) { }
 
-        public TypeDetail(Assembly assembly, bool byFullNamespace, TypeDetail owner)
+        public TypeDetail(Assembly assembly, bool byFullNamespace, TypeDetail? owner)
         {
-            if (assembly == null)
-                throw new ArgumentNullException("assembly");
-            
+            ArgumentNullException.ThrowIfNull(assembly);
+
             Type = null;
             AssemblyName assemblyName = assembly.GetName();
             _assemblies.Add(assemblyName);
@@ -72,7 +70,7 @@ namespace LteDev
             Type = null;
             Name = "";
             FullName = "";
-            if (assemblies == null)
+            if (assemblies is null)
                 return;
             IEnumerable<TypeDetail> aTypes = (assemblies.Select(a => new TypeDetail(a, byFullNamespace)));
             if (byAssembly)
@@ -87,10 +85,10 @@ namespace LteDev
             {
                 foreach (TypeDetail aT in aTypes)
                 {
-                    foreach (IGrouping<string, TypeDetail> g in aT._types.GroupBy(t => (t.Type == null) ? t.FullName : ""))
+                    foreach (IGrouping<string, TypeDetail> g in aT._types.GroupBy(t => (t.Type is null) ? t.FullName : ""))
                     {
                         TypeDetail td = _types.FirstOrDefault(d => d.FullName == g.Key);
-                        if (td == null)
+                        if (td is null)
                             td = new TypeDetail(g.Key, g.Key, this);
                         _types.Add(td);
                         td._assemblies.Add(aT._assemblies[0]);
@@ -116,8 +114,8 @@ namespace LteDev
                 return type.Name;
             string name = GetName(type);
             if (type.IsNested)
-                return GetFullName(type.DeclaringType) + "+" + name;
-            if (String.IsNullOrEmpty(type.Namespace))
+                return GetFullName(type.DeclaringType!) + "+" + name;
+            if (string.IsNullOrEmpty(type.Namespace))
                 return name;
             return type.Namespace + "." + name;
         }
@@ -127,15 +125,15 @@ namespace LteDev
             string name = type.Name;
             if (type.IsGenericParameter || !type.IsGenericType)
                 return name;
-            int i = name.LastIndexOf("~");
+            int i = name.LastIndexOf('~');
             if (i > 0)
-                name = name.Substring(0, i);
-            return name + "[" + String.Join(",", type.GetGenericArguments().Select(a => GetName(a))) + "]";
+                name = name[..i];
+            return name + "[" + string.Join(",", type.GetGenericArguments().Select(a => GetName(a))) + "]";
         }
 
-        public static IEnumerable<TypeInfo> AsTypeInfo(IEnumerable<Type> types) { return (types == null) ? new TypeInfo[0] : types.Select(t => AsTypeInfo(t)); }
+        public static IEnumerable<TypeInfo> AsTypeInfo(IEnumerable<Type> types) { return (types is null) ? [] : types.Select(t => AsTypeInfo(t)); }
 
-        public static TypeInfo AsTypeInfo(Type type) { return (type == null || type is TypeInfo) ? (TypeInfo)type : type.GetTypeInfo(); }
+        public static TypeInfo? AsTypeInfo(Type type) { return (type is null || type is TypeInfo) ? (TypeInfo?)type : type.GetTypeInfo(); }
     }
 
     public interface ITypeInfoNodeContainer
@@ -151,9 +149,9 @@ namespace LteDev
     public class ProxyEnumerator<TItem, TBase> : IEnumerator<TBase>
         where TItem : TBase
     {
-        private IEnumerator<TItem> _enumerator;
-        public TBase Current { get { return _enumerator.Current; } }
-        object IEnumerator.Current { get { return _enumerator.Current; } }
+        private readonly IEnumerator<TItem> _enumerator;
+        public TBase Current => _enumerator.Current;
+        object IEnumerator.Current => _enumerator.Current;
         public void Dispose() { _enumerator.Dispose(); }
         public bool MoveNext() { return _enumerator.MoveNext(); }
         public void Reset() { _enumerator.Reset(); }
@@ -162,8 +160,8 @@ namespace LteDev
 
     public class TypeInfoTreeNode : IList<TypeInfoTreeNode>, ITypeInfoTreeNode
     {
-        private TypeInfo _type;
-        private List<TypeInfoTreeNode> _innerList = new List<TypeInfoTreeNode>();
+        private readonly TypeInfo _type;
+        private readonly List<TypeInfoTreeNode> _innerList = new();
         internal TypeInfoTreeNode(Type type, ITypeInfoTreeNode parent)
         {
             Parent = parent;
@@ -175,16 +173,16 @@ namespace LteDev
         TypeInfoTreeNode IList<TypeInfoTreeNode>.this[int index] { get { return _innerList[index]; } set { throw new NotSupportedException(); } }
         ITypeInfoTreeNode IList<ITypeInfoTreeNode>.this[int index] { get { return _innerList[index]; } set { throw new NotSupportedException(); } }
         object IList.this[int index] { get { return _innerList[index]; } set { throw new NotSupportedException(); } }
-        public int Count { get { return _innerList.Count; } }
-        bool ICollection<TypeInfoTreeNode>.IsReadOnly { get { return true; } }
-        bool ICollection<ITypeInfoTreeNode>.IsReadOnly { get { return true; } }
-        bool IList.IsReadOnly { get { return false; } }
+        public int Count => _innerList.Count;
+        bool ICollection<TypeInfoTreeNode>.IsReadOnly => true;
+        bool ICollection<ITypeInfoTreeNode>.IsReadOnly => true;
+        bool IList.IsReadOnly => false;
         public string Name { get; private set; }
         public ITypeInfoTreeNode Parent { get; private set; }
-        ITypeInfoNodeContainer ITypeInfoNodeContainer.Parent { get { return Parent; } }
-        bool IList.IsFixedSize { get { return false; } }
-        object ICollection.SyncRoot { get { return ((IList)_innerList).SyncRoot; } }
-        bool ICollection.IsSynchronized { get { return ((IList)_innerList).IsSynchronized; } }
+        ITypeInfoNodeContainer ITypeInfoNodeContainer.Parent => Parent;
+        bool IList.IsFixedSize => false;
+        object ICollection.SyncRoot => ((IList)_innerList).SyncRoot;
+        bool ICollection.IsSynchronized => ((IList)_innerList).IsSynchronized;
         void ICollection<TypeInfoTreeNode>.Add(TypeInfoTreeNode item) { throw new NotSupportedException(); }
         void ICollection<ITypeInfoTreeNode>.Add(ITypeInfoTreeNode item) { throw new NotSupportedException(); }
         int IList.Add(object value) { throw new NotSupportedException(); }
@@ -192,8 +190,8 @@ namespace LteDev
         void ICollection<ITypeInfoTreeNode>.Clear() { throw new NotSupportedException(); }
         void IList.Clear() { throw new NotSupportedException(); }
         bool ICollection<TypeInfoTreeNode>.Contains(TypeInfoTreeNode item) { return _innerList.Contains(item); }
-        bool ICollection<ITypeInfoTreeNode>.Contains(ITypeInfoTreeNode item) { return item != null && item is TypeInfoTreeNode && _innerList.Contains(item); }
-        bool IList.Contains(object value) { return value != null && value is TypeInfoTreeNode && _innerList.Contains(value); }
+        bool ICollection<ITypeInfoTreeNode>.Contains(ITypeInfoTreeNode item) { return item is not null && item is TypeInfoTreeNode && _innerList.Contains(item); }
+        bool IList.Contains(object value) { return value is not null && value is TypeInfoTreeNode && _innerList.Contains(value); }
         public void CopyTo(TypeInfoTreeNode[] array, int arrayIndex) { _innerList.CopyTo(array, arrayIndex); }
         void ICollection<ITypeInfoTreeNode>.CopyTo(ITypeInfoTreeNode[] array, int arrayIndex) { ((IList)_innerList).CopyTo(array, arrayIndex); }
         void ICollection.CopyTo(Array array, int index) { ((IList)_innerList).CopyTo(array, index); }
@@ -203,13 +201,13 @@ namespace LteDev
         public TypeInfoNsTreeNode GetRoot()
         {
             TypeInfoTreeNode current = this;
-            while (current.Parent != null && current.Parent is TypeInfoTreeNode)
+            while (current.Parent is not null && current.Parent is TypeInfoTreeNode)
                 current = (TypeInfoTreeNode)(current.Parent);
             return current.Parent.GetRoot();
         }
         public int IndexOf(TypeInfoTreeNode item) { return _innerList.IndexOf(item); }
-        int IList<ITypeInfoTreeNode>.IndexOf(ITypeInfoTreeNode item) { return (item != null && item is TypeInfoTreeNode) ? IndexOf((TypeInfoTreeNode)item) : -1; }
-        int IList.IndexOf(object value) { return (value != null && value is TypeInfoTreeNode) ? IndexOf((TypeInfoTreeNode)value) : -1; }
+        int IList<ITypeInfoTreeNode>.IndexOf(ITypeInfoTreeNode item) { return (item is not null && item is TypeInfoTreeNode) ? IndexOf((TypeInfoTreeNode)item) : -1; }
+        int IList.IndexOf(object value) { return (value is not null && value is TypeInfoTreeNode) ? IndexOf((TypeInfoTreeNode)value) : -1; }
         void IList<TypeInfoTreeNode>.Insert(int index, TypeInfoTreeNode item) { throw new NotSupportedException(); }
         void IList<ITypeInfoTreeNode>.Insert(int index, ITypeInfoTreeNode item) { throw new NotSupportedException(); }
         void IList.Insert(int index, object value) { throw new NotSupportedException(); }
@@ -222,7 +220,7 @@ namespace LteDev
     }
     public class TypeInfoNsTreeNode : ITypeInfoTreeNode
     {
-        private List<ITypeInfoTreeNode> _innerList = new List<ITypeInfoTreeNode>();
+        private readonly List<ITypeInfoTreeNode> _innerList = new();
         public TypeInfoNsTreeNode(AssemblyTreeNode parent)
         {
             Name = "";
@@ -252,13 +250,13 @@ namespace LteDev
         public TypeInfoNsTreeNode GetNs(string ns)
         {
             TypeInfoNsTreeNode currentNode = GetRoot();
-            if (String.IsNullOrEmpty(ns))
+            if (string.IsNullOrEmpty(ns))
                 return currentNode;
             string[] names = ns.Split('.');
             for (int i = 0; i < names.Length; i++)
             {
                 TypeInfoNsTreeNode node = currentNode._innerList.OfType<TypeInfoNsTreeNode>().FirstOrDefault(n => n.Name == names[i]);
-                if (node != null)
+                if (node is not null)
                     currentNode = node;
                 else
                 {
@@ -273,18 +271,18 @@ namespace LteDev
         object IList.this[int index] { get { return _innerList[index]; } set { throw new NotSupportedException(); } }
         public string Name { get; private set; }
         public ITypeInfoNodeContainer Parent { get; private set; }
-        public int Count { get { return _innerList.Count; } }
-        bool ICollection<ITypeInfoTreeNode>.IsReadOnly { get { return true; } }
-        bool IList.IsReadOnly { get { return true; } }
-        bool IList.IsFixedSize { get { return false; } }
-        object ICollection.SyncRoot { get { return ((IList)_innerList).SyncRoot; } }
-        bool ICollection.IsSynchronized { get { return ((IList)_innerList).IsSynchronized; } }
+        public int Count => _innerList.Count;
+        bool ICollection<ITypeInfoTreeNode>.IsReadOnly => true;
+        bool IList.IsReadOnly => true;
+        bool IList.IsFixedSize => false;
+        object ICollection.SyncRoot => ((IList)_innerList).SyncRoot;
+        bool ICollection.IsSynchronized => ((IList)_innerList).IsSynchronized;
         void ICollection<ITypeInfoTreeNode>.Add(ITypeInfoTreeNode item) { throw new NotSupportedException(); }
         int IList.Add(object value) { throw new NotSupportedException(); }
         void ICollection<ITypeInfoTreeNode>.Clear() { throw new NotSupportedException(); }
         void IList.Clear() { throw new NotSupportedException(); }
         bool ICollection<ITypeInfoTreeNode>.Contains(ITypeInfoTreeNode item) { return _innerList.Contains(item); }
-        bool IList.Contains(object value) { return value != null && value is ITypeInfoTreeNode && _innerList.Contains((ITypeInfoTreeNode)value); }
+        bool IList.Contains(object value) { return value is not null && value is ITypeInfoTreeNode && _innerList.Contains((ITypeInfoTreeNode)value); }
         void ICollection<ITypeInfoTreeNode>.CopyTo(ITypeInfoTreeNode[] array, int arrayIndex) { _innerList.CopyTo(array, arrayIndex); }
         void ICollection.CopyTo(Array array, int index) { ((IList)_innerList).CopyTo(array, index); }
         IEnumerator<ITypeInfoTreeNode> IEnumerable<ITypeInfoTreeNode>.GetEnumerator() { return _innerList.GetEnumerator(); }
@@ -292,12 +290,12 @@ namespace LteDev
         public TypeInfoNsTreeNode GetRoot()
         {
             TypeInfoNsTreeNode current = this;
-            while (current.Parent != null && current.Parent is TypeInfoNsTreeNode)
+            while (current.Parent is not null && current.Parent is TypeInfoNsTreeNode)
                 current = (TypeInfoNsTreeNode)(current.Parent);
             return current;
         }
         int IList<ITypeInfoTreeNode>.IndexOf(ITypeInfoTreeNode item) { return _innerList.IndexOf(item); }
-        int IList.IndexOf(object value) { return (value != null && value is ITypeInfoTreeNode) ? _innerList.IndexOf((ITypeInfoTreeNode)value) : -1; }
+        int IList.IndexOf(object value) { return (value is not null && value is ITypeInfoTreeNode) ? _innerList.IndexOf((ITypeInfoTreeNode)value) : -1; }
         void IList<ITypeInfoTreeNode>.Insert(int index, ITypeInfoTreeNode item) { throw new NotSupportedException(); }
         void IList.Insert(int index, object value) { throw new NotSupportedException(); }
         bool ICollection<ITypeInfoTreeNode>.Remove(ITypeInfoTreeNode item) { throw new NotSupportedException(); }
@@ -308,16 +306,10 @@ namespace LteDev
 
     public class AssemblyTreeNode : ITypeInfoNodeContainer
     {
-        private Assembly _assembly;
-        public string Name { get { return _assembly.FullName; } }
+        private readonly Assembly _assembly;
+        public string Name => _assembly.FullName;
         public TypeInfoNsTreeNode NsRoot { get; private set; }
-        public ITypeInfoNodeContainer Parent
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public ITypeInfoNodeContainer Parent => throw new NotImplementedException();
 
         public Assembly GetAssembly() { return _assembly; }
         public AssemblyTreeNode(Assembly assembly)
@@ -329,7 +321,7 @@ namespace LteDev
 
     public class TypeInfoCollections
     {
-        private Collection<AssemblyTreeNode> _byAssembly = new Collection<AssemblyTreeNode>();
+        private readonly Collection<AssemblyTreeNode> _byAssembly = new();
         public TypeInfoNsTreeNode ByNamespace { get; private set; }
         public ReadOnlyCollection<AssemblyTreeNode> ByAssembly { get; private set; }
         public TypeInfoCollections(IEnumerable<Assembly> assemblies)

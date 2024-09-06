@@ -7,7 +7,7 @@ using System.Web.UI;
 
 namespace LteDev.RegexParsing
 {
-    class DotNetCharacterClassParser : RegexPatternTokenObserable, ITokenParser
+    partial class DotNetCharacterClassParser : RegexPatternTokenObserable, ITokenParser
     {
         /// <summary>Matches the first tokens of a character class pattern.</summary>
         /// <remarks>
@@ -19,7 +19,7 @@ namespace LteDev.RegexParsing
         ///   <item><c>r</c> = Matches range character (<c>-</c>) after a <c>lit</c> group match</item>
         /// </list>
         /// </remarks>
-        public static readonly Regex CharacterClassFirstTokenRegex = new Regex(@"\G(
+        public static readonly Regex CharacterClassFirstTokenRegex = new(@"\G(
     (?<neg>\^)
     (
         (
@@ -60,7 +60,19 @@ namespace LteDev.RegexParsing
         ///   <item><c>r</c> = Matches range character (<c>-</c>) after a <c>ce</c>, <c>em</c> or <c>esc</c> group match</item>
         /// </list>
         /// </remarks>
-        public static readonly Regex CharacterClassNextTokenRegex = new Regex(@"\G(
+        public static readonly Regex CharacterClassNextTokenRegex = MyRegex();
+
+        public int Parse(CharacterStream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable Subscribe(IObserver<IRegexPatternToken> observer)
+        {
+            throw new NotImplementedException();
+        }
+
+        [GeneratedRegex(@"\G(
     (
         (?<ce>(\\[rntabefv])+)
     |
@@ -88,17 +100,8 @@ namespace LteDev.RegexParsing
     )
 |
     (?<lit>(-[^\\-]*|[^\\-]+)(-(?=$))?)
-)(?<r>(?=-.)-)?", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-
-        public int Parse(CharacterStream stream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDisposable Subscribe(IObserver<IRegexPatternToken> observer)
-        {
-            throw new NotImplementedException();
-        }
+)(?<r>(?=-.)-)?", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace)]
+        private static partial Regex MyRegex();
     }
 
     class DotNetSingleLinePatternParser : RegexPatternTokenObserable, ITokenParser
@@ -158,7 +161,7 @@ namespace LteDev.RegexParsing
         ///   </item>
         /// </list>
         /// </remarks>
-        public static readonly Regex SingleLinePatternTokenRegex = new Regex(@"\G
+        public static readonly Regex SingleLinePatternTokenRegex = new(@"\G
 (
     (?<anc>([$^]+|\\[GAZz])+)
 |
@@ -307,7 +310,7 @@ namespace LteDev.RegexParsing
         ///   </item>
         /// </list>
         /// </remarks>
-        public static readonly Regex MultilinePatternTokenRegex = new Regex(@"\G
+        public static readonly Regex MultilinePatternTokenRegex = new(@"\G
 (
     (?<cmt>\#(?<t>[^\r\n]+)?(\r\n?|\n|$))
 |
@@ -429,7 +432,7 @@ namespace LteDev.RegexParsing
         ///     </item>
         ///   </list>
         /// </remarks>
-        public static readonly Regex GroupTypeRegex = new Regex(@"^\?(
+        public static readonly Regex GroupTypeRegex = new(@"^\?(
     (?<x>:)
 |
     (?=<?[=!])
@@ -504,7 +507,7 @@ namespace LteDev.RegexParsing
         /// </list>
         /// Additionally, the <c>lzy</c> group will match if it is a lazy quantifier.
         /// </remarks>
-        public static readonly Regex QuantifierRegex = new Regex(@"\G(
+        public static readonly Regex QuantifierRegex = new(@"\G(
     (?<opt>\?)
 |
     (?<rpt>\*)
@@ -559,7 +562,7 @@ namespace LteDev.RegexParsing
         ///   <item><c>r</c> = Matches range character (<c>-</c>) after a <c>lit</c> group match</item>
         /// </list>
         /// </remarks>
-        public static readonly Regex CharacterClassFirstTokenRegex = new Regex(@"\G(
+        public static readonly Regex CharacterClassFirstTokenRegex = new(@"\G(
     (?<neg>\^)
     (
         (
@@ -600,7 +603,7 @@ namespace LteDev.RegexParsing
         ///   <item><c>r</c> = Matches range character (<c>-</c>) after a <c>ce</c>, <c>em</c> or <c>esc</c> group match</item>
         /// </list>
         /// </remarks>
-        public static readonly Regex CharacterClassNextTokenRegex = new Regex(@"\G(
+        public static readonly Regex CharacterClassNextTokenRegex = new(@"\G(
     (
         (?<ce>(\\[rntabefv])+)
     |
@@ -685,7 +688,7 @@ namespace LteDev.RegexParsing
         ///   </item>
         /// </list>
         /// </remarks>
-        public static readonly Regex SingleLinePatternTokenRegex = new Regex(@"\G
+        public static readonly Regex SingleLinePatternTokenRegex = new(@"\G
 (
     (?<anc>([$^]+|\\[GAZz])+)
 |
@@ -821,7 +824,7 @@ namespace LteDev.RegexParsing
         ///   </item>
         /// </list>
         /// </remarks>
-        public static readonly Regex MultilinePatternTokenRegex = new Regex(@"\G
+        public static readonly Regex MultilinePatternTokenRegex = new(@"\G
 (
     (?<cmt>\#(?<t>[^\r\n]+)?(\r\n?|\n|$))
 |
@@ -922,7 +925,7 @@ namespace LteDev.RegexParsing
         /// </list>
         /// Additionally, the <c>lzy</c> group will match if it is a lazy quantifier.
         /// </remarks>
-        public static readonly Regex QuantifierRegex = new Regex(@"\G(
+        public static readonly Regex QuantifierRegex = new(@"\G(
     (?<opt>\?)
 |
     (?<rpt>\*)
@@ -958,7 +961,7 @@ namespace LteDev.RegexParsing
         ///     </item>
         ///   </list>
         /// </remarks>
-        public static readonly Regex GroupTypeRegex = new Regex(@"^\?(
+        public static readonly Regex GroupTypeRegex = new(@"^\?(
     (?<x>:)
 |
     (?=<?[=!])
@@ -1228,17 +1231,17 @@ namespace LteDev.RegexParsing
 
         public Collection<IRegexPatternToken> ParseTokens(string pattern, bool isMultiLine)
         {
-            Collection<IRegexPatternToken> result = new Collection<IRegexPatternToken>();
-            if (pattern != null)
+            Collection<IRegexPatternToken> result = new();
+            if (pattern is not null)
                 ParseTokens(pattern, result, 0, isMultiLine ? MultilinePatternTokenRegex : SingleLinePatternTokenRegex);
             return result;
         }
 
-        internal static void WriteSpanned(string text, HtmlTextWriter writer, List<string> classNames, string[] spanClasses)
+        internal static void WriteSpanned(string text, HtmlTextWriter writer, List<string> classNames, string[]? spanClasses)
         {
             if (string.IsNullOrEmpty(text))
                 return;
-            if (spanClasses != null && spanClasses.Length > 0 && (classNames.Count == 0 || (spanClasses = spanClasses.Where(c => !classNames.Contains(c)).ToArray()).Length > 0))
+            if (spanClasses is not null && spanClasses.Length > 0 && (classNames.Count == 0 || (spanClasses = spanClasses.Where(c => !classNames.Contains(c)).ToArray()).Length > 0))
             {
                 if (spanClasses.Length == 1)
                     writer.AddAttribute(HtmlTextWriterAttribute.Class, spanClasses[0]);
@@ -1254,9 +1257,8 @@ namespace LteDev.RegexParsing
 
         private static void WriteClassMapperSpan(RegexTokenType tokenType, HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper)
         {
-            string[] cn;
-            if (!classMapper.TryGetValue(tokenType, out cn))
-                cn = Array.Empty<string>();
+            if (!classMapper.TryGetValue(tokenType, out string[]? cn))
+                cn = [];
             if (cn.Length > 0)
             {
                 if (classNames.Count > 0)
@@ -1282,8 +1284,8 @@ namespace LteDev.RegexParsing
 
         public static void WriteTo(Collection<IRegexPatternToken> tokens, HtmlTextWriter writer, ICssClassMapper classMapper)
         {
-            List<string> classNames = new List<string>();
-            foreach (IRegexPatternToken token in tokens.Where(t => t != null))
+            List<string> classNames = new();
+            foreach (IRegexPatternToken token in tokens.Where(t => t is not null))
             {
                 WriteClassMapperSpan(token.TokenType, writer, classNames, classMapper);
                 token.WriteTo(writer, classNames, classMapper);

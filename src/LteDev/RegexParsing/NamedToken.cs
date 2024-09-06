@@ -17,12 +17,12 @@ namespace LteDev.RegexParsing
 
         public NamedToken(RegexTokenType tokenType, IList<char> precedingValues, string name, params char[] followingValues)
         {
-            if (precedingValues == null || precedingValues.Count < 1)
-                throw new ArgumentException("At least one preceding character must be provided", "precedingValues");
+            if (precedingValues is null || precedingValues.Count < 1)
+                throw new ArgumentException("At least one preceding character must be provided", nameof(precedingValues));
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Name cannot be empty", "name");
-            if (followingValues == null || followingValues.Length < 1)
-                throw new ArgumentException("At least one following character must be provided", "followingValues");
+                throw new ArgumentException("Name cannot be empty", nameof(name));
+            if (followingValues is null || followingValues.Length < 1)
+                throw new ArgumentException("At least one following character must be provided", nameof(followingValues));
             _tokenType = tokenType;
             _precedingValues = precedingValues;
             _name = name;
@@ -55,8 +55,7 @@ namespace LteDev.RegexParsing
         {
             foreach (char c in GetPrecedingPattern())
                 writer.Write(c);
-            string[] spanClassNames;
-            RegexParser.WriteSpanned(_name, writer, classNames, classMapper.TryGetNameClassNames(out spanClassNames) ? spanClassNames : null);
+            RegexParser.WriteSpanned(_name, writer, classNames, classMapper.TryGetNameClassNames(out string[]? spanClassNames) ? spanClassNames : null);
             foreach (char c in GetFollowingPattern())
                 writer.Write(c);
         }

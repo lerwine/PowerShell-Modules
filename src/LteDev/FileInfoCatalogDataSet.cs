@@ -39,10 +39,10 @@ namespace LteDev
         /// </summary>
         public const string TableName_FileInfo = "FileInfo";
 
-        private DirectoryStructureDataTable _directoryStructure;
-        private FileInfoDataTable _files;
-        private DataRelation _fk_ParentDirectory;
-        private DataRelation _fk_FileDirectory;
+        private readonly DirectoryStructureDataTable _directoryStructure;
+        private readonly FileInfoDataTable _files;
+        private readonly DataRelation _fk_ParentDirectory;
+        private readonly DataRelation _fk_FileDirectory;
         
         /// <summary>
         /// Table containing directory structure in information.
@@ -281,7 +281,7 @@ namespace LteDev
 
         #region ID
 
-        private DataColumn _idDataColumn = null;
+        private readonly DataColumn _idDataColumn;
 
         /// <summary>
         /// Data column for unique identifier.
@@ -292,7 +292,7 @@ namespace LteDev
 
         #region ParentID
 
-        private DataColumn _parentIDDataColumn = null;
+        private readonly DataColumn _parentIDDataColumn;
 
         /// <summary>
         /// Data column for the ID of the parent directory row.
@@ -303,7 +303,7 @@ namespace LteDev
 
         #region Name
 
-        private DataColumn _nameDataColumn = null;
+        private readonly DataColumn _nameDataColumn;
 
         /// <summary>
         /// Data column for the directory name.
@@ -314,7 +314,7 @@ namespace LteDev
 
         #region UpdatedOn
 
-        private DataColumn _updatedOnDataColumn = null;
+        private readonly DataColumn _updatedOnDataColumn;
 
         /// <summary>
         /// Data column for date/time when row was last updated.
@@ -528,7 +528,7 @@ namespace LteDev
         /// Gets parent directory.
         /// </summary>
         /// <returns></returns>
-        public DirectoryStructureDataRow GetParentDirectory()
+        public DirectoryStructureDataRow? GetParentDirectory()
         {
             DataSet dataSet = Table.DataSet;
             if (dataSet != null && dataSet is FileInfoCatalogDataSet)
@@ -573,7 +573,7 @@ namespace LteDev
 
         #region ID
 
-        private DataColumn _idDataColumn = null;
+        private readonly DataColumn _idDataColumn;
 
         /// <summary>
         /// Data column for unique identifier.
@@ -584,7 +584,7 @@ namespace LteDev
 
         #region DuplicateID
 
-        private DataColumn _duplicateIDDataColumn = null;
+        private readonly DataColumn _duplicateIDDataColumn;
 
         /// <summary>
         /// Data column for identifier of duplicate files
@@ -595,7 +595,7 @@ namespace LteDev
 
         #region ParentID
 
-        private DataColumn _parentIDDataColumn = null;
+        private readonly DataColumn _parentIDDataColumn;
 
         /// <summary>
         /// Data column for the unique identifier of the parent directory row.
@@ -606,7 +606,7 @@ namespace LteDev
 
         #region Name
 
-        private DataColumn _nameDataColumn = null;
+        private readonly DataColumn _nameDataColumn;
 
         /// <summary>
         /// Data column for the file name.
@@ -617,7 +617,7 @@ namespace LteDev
 
         #region CreationTime
 
-        private DataColumn _creationTimeDataColumn = null;
+        private readonly DataColumn _creationTimeDataColumn;
 
         /// <summary>
         /// Data column for file creation date/time.
@@ -628,7 +628,7 @@ namespace LteDev
 
         #region LastWriteTime
 
-        private DataColumn _lastWriteTimeDataColumn = null;
+        private readonly DataColumn _lastWriteTimeDataColumn;
 
         /// <summary>
         /// Data column for the last file emodification date/time .
@@ -639,7 +639,7 @@ namespace LteDev
 
         #region UpdatedOn
 
-        private DataColumn _updatedOnDataColumn = null;
+        private readonly DataColumn _updatedOnDataColumn;
 
         /// <summary>
         /// Data column for the date/time when the data row was last updated.
@@ -650,7 +650,7 @@ namespace LteDev
 
         #region Length
 
-        private DataColumn _lengthDataColumn = null;
+        private readonly DataColumn _lengthDataColumn;
 
         /// <summary>
         /// Date column for file length.
@@ -661,7 +661,7 @@ namespace LteDev
 
         #region MD5High
 
-        private DataColumn _md5HighDataColumn = null;
+        private readonly DataColumn _md5HighDataColumn;
 
         /// <summary>
         /// Data column for the upper 32 bits of the MD5 hash code.
@@ -672,7 +672,7 @@ namespace LteDev
 
         #region MD5Low
 
-        private DataColumn _md5LowDataColumn = null;
+        private readonly DataColumn _md5LowDataColumn;
 
         /// <summary>
         /// Data column for the lower 32 bits of the MD5 hash code.
@@ -1066,8 +1066,7 @@ namespace LteDev
         /// <returns></returns>
         public static string GetNameParts(string name, out string extension)
         {
-            if (name == null)
-                throw new ArgumentNullException("name");
+            ArgumentNullException.ThrowIfNull(name);
             int i = name.LastIndexOf('.');
             if (i < 1)
             {
@@ -1075,8 +1074,8 @@ namespace LteDev
                 return name;
             }
 
-            extension = (i == name.Length - 1) ? "." : name.Substring(i + 1);
-            return name.Substring(0, i);
+            extension = (i == name.Length - 1) ? "." : name[(i + 1)..];
+            return name[..i];
         }
 
         /// <summary>
@@ -1196,8 +1195,7 @@ namespace LteDev
         /// <returns></returns>
         public static string EscapeLikeText(string text)
         {
-            if (text == null)
-                throw new ArgumentNullException("text");
+            ArgumentNullException.ThrowIfNull(text);
             return LikeWCReplaceRegex.Replace(text, m => "[" + m.Value + "]");
         }
 
@@ -1208,8 +1206,7 @@ namespace LteDev
         /// <returns></returns>
         public static string EncodeColumnName(string name)
         {
-            if (name == null)
-                throw new ArgumentNullException("name");
+            ArgumentNullException.ThrowIfNull(name);
             if (name.Length == 0 || ColumnEncodeNameTestRegex.IsMatch(name))
                 return "[" + ColumnNameReplaceRegex.Replace(name, e => "\\" + e.Value) + "]";
             return name;
@@ -1223,8 +1220,7 @@ namespace LteDev
         /// <returns></returns>
         public static string EncodeQueryValue(string value, bool noEnclosingQuotes)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
             return (noEnclosingQuotes) ? value.Replace("'", "''") : "'" + value.Replace("'", "''") + "'";
         }
 
@@ -1362,7 +1358,7 @@ namespace LteDev
         {
             if (value == '\'')
                 return (noEnclosingQuotes) ? "''" : "''''";
-            return new String((noEnclosingQuotes) ? new char[] { value } : new char[] { '\'', value, '\''});
+            return new string((noEnclosingQuotes) ? new char[] { value } : new char[] { '\'', value, '\''});
         }
 
         /// <summary>
@@ -1472,11 +1468,10 @@ namespace LteDev
         /// <returns></returns>
         public static string EncodeQueryValue(object value, bool noEnclosingQuotes)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
-            if (value is IConvertible)
-                return EncodeQueryValue((IConvertible)value, noEnclosingQuotes);
-            return EncodeQueryValue(value.ToString(), noEnclosingQuotes);
+            ArgumentNullException.ThrowIfNull(value);
+            if (value is IConvertible convertible)
+                return EncodeQueryValue(convertible, noEnclosingQuotes);
+            return EncodeQueryValue(value.ToString() ?? "", noEnclosingQuotes);
         }
 
         /// <summary>
@@ -1514,9 +1509,8 @@ namespace LteDev
         /// <returns></returns>
         public static string GetLikeQueryString(string column, string value)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
-            
+            ArgumentNullException.ThrowIfNull(value);
+
             return EncodeColumnName(column) + " LIKE '" + value.Replace("'", "''") + "'";
         }
 
@@ -1530,8 +1524,7 @@ namespace LteDev
         /// <returns></returns>
         public static string GetQueryString(string column, QueryOperator op, string value, bool isEscaped)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
             if (isEscaped)
             {
                 switch (op)
@@ -1578,7 +1571,7 @@ namespace LteDev
         public static string GetQueryString(string column, QueryOperator op, object value)
         {
             if (value == null || value is DBNull)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             switch (op)
             {
                 case QueryOperator.LessThan:

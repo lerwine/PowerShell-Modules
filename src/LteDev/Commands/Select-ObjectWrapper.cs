@@ -137,7 +137,7 @@ namespace LteDev.Commands
                     types = (Recursive.IsPresent) ? types.Where(t => t.Type.Namespace is not null && t.Type.Namespace.StartsWith(Namespace)) :
                         types.Where(t => t.Type.Namespace is not null && t.Type.Namespace == Namespace);
                 else
-                    types = (Recursive.IsPresent) ? types : types.Where(t => String.IsNullOrEmpty(t.Type.Namespace));
+                    types = (Recursive.IsPresent) ? types : types.Where(t => string.IsNullOrEmpty(t.Type.Namespace));
             }
             if (Recursive.IsPresent)
                 return types.SelectMany(t => (new PSTypeName[] { t }).Concat(GetNestedTypes(t.Type)));

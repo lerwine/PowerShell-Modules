@@ -44,7 +44,7 @@ namespace LteDev.Commands
 
             foreach(string n in Name)
             {
-                if (String.IsNullOrEmpty(n) || !ValidateCsNameAttribute.NameRegex.IsMatch(n))
+                if (string.IsNullOrEmpty(n) || !ValidateCsNameAttribute.NameRegex.IsMatch(n))
                 {
                     _success = false;
                     break;

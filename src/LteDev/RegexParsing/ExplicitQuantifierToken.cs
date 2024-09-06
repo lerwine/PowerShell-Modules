@@ -14,24 +14,24 @@ namespace LteDev.RegexParsing
         public ExplicitQuantifierToken(string fixedValue, bool isLazy) : base(QuantifierType.Fixed, isLazy)
         {
             if (string.IsNullOrEmpty(fixedValue))
-                throw new ArgumentException("fixedValue cannot be null or empty", "fixedValue");
+                throw new ArgumentException("fixedValue cannot be null or empty", nameof(fixedValue));
             if (!fixedValue.All(char.IsNumber))
-                throw new ArgumentOutOfRangeException("fixedValue");
+                throw new ArgumentOutOfRangeException(nameof(fixedValue));
             MaxValue = "";
         }
 
-        public ExplicitQuantifierToken(string minValue, string maxValue, bool isLazy) : base(string.IsNullOrEmpty(maxValue) ? QuantifierType.MinRepeat : QuantifierType.Limited, isLazy)
+        public ExplicitQuantifierToken(string minValue, string? maxValue, bool isLazy) : base(string.IsNullOrEmpty(maxValue) ? QuantifierType.MinRepeat : QuantifierType.Limited, isLazy)
         {
             if (string.IsNullOrEmpty(minValue))
-                throw new ArgumentException("minValue cannot be null or empty", "minValue");
+                throw new ArgumentException("minValue cannot be null or empty", nameof(minValue));
             if (!minValue.All(char.IsNumber))
-                throw new ArgumentOutOfRangeException("minValue");
+                throw new ArgumentOutOfRangeException(nameof(minValue));
             if (string.IsNullOrEmpty(maxValue))
                 MaxValue = "";
             else
             {
                 if (!maxValue.All(char.IsNumber))
-                    throw new ArgumentOutOfRangeException("maxValue");
+                    throw new ArgumentOutOfRangeException(nameof(maxValue));
                 MaxValue = maxValue;
             }
         }
@@ -64,8 +64,7 @@ namespace LteDev.RegexParsing
         public override void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper)
         {
             writer.Write('{');
-            string[] spanClassNames;
-            if (!classMapper.TryGetNameClassNames(out spanClassNames))
+            if (!classMapper.TryGetNameClassNames(out string[]? spanClassNames))
                 spanClassNames = null;
             RegexParser.WriteSpanned(MinValue, writer, classNames, spanClassNames);
             switch (Type)
