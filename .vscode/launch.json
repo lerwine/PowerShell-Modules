@@ -9,7 +9,7 @@
             "type": "PowerShell",
             "request": "launch",
             "script": "Invoke-Pester",
-            "cwd": "${workspaceFolder}/src/IOUtility",
+            "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.IOUtility",
             "createTemporaryIntegratedConsole": true
         },
         {
@@ -17,7 +17,7 @@
             "type": "PowerShell",
             "request": "launch",
             "script": "Invoke-Pester",
-            "cwd": "${workspaceFolder}/src/SwPackage",
+            "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.SwPackage",
             "createTemporaryIntegratedConsole": true
         },
         //     {
