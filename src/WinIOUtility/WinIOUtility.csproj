@@ -6,7 +6,13 @@
     <UseWindowsForms>true</UseWindowsForms> 
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
+    <PackageReference Include="System.Management.Automation" Version="7.4.5" />
+  </ItemGroup>
+
   <ItemGroup>
     <Content Include="Erwine.Leonard.T.WinIOUtility.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -27,20 +33,4 @@
   <ItemGroup>
     <Folder Include="Commands\" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
-    <PackageReference Include="System.Management.Automation" Version="7.4.5" />
-  </ItemGroup>
-  
-  <!-- 
-dotnet add package Microsoft.CodeAnalysis.Workspaces.Common
-dotnet add package Microsoft.CodeAnalysis.CSharp.Workspaces
-dotnet add package System.Management.Automation
-dotnet add package System.Management.Automation.Runspaces.RunspaceConfiguration
-
-dotnet remove package Microsoft.CodeAnalysis.Workspaces.Common
-dotnet remove package Microsoft.CodeAnalysis.CSharp.Workspaces
-dotnet remove package System.Management.Automation
-   -->
 </Project>
