@@ -20,7 +20,7 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]
-        public CodeTypeReference[] Type { get; set; }
+        public CodeTypeReference[] Type { get; set; } = null!;
 
         #endregion
 
@@ -28,7 +28,7 @@ namespace LteDev.Commands
 
         public static string ToCodeTypeString(CodeTypeReference type)
         {
-            if (type == null)
+            if (type is null)
                 return "null";
             if (type.ArrayRank == 1)
                 return ToCodeTypeString(type.ArrayElementType) + "[]";

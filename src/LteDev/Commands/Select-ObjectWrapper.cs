@@ -21,16 +21,16 @@ namespace LteDev.Commands
         #region Properties
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_FromType)]
-        public Type[] Type { get; set; }
+        public Type[] Type { get; set; } = null!;
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_FromAssembly)]
-        public Assembly[] Assembly { get; set; }
+        public Assembly[] Assembly { get; set; } = null!;
 
         [Parameter(ParameterSetName = ParameterSetName_CurrentDomain)]
         [Parameter(ParameterSetName = ParameterSetName_FromAssembly)]
         [ValidateNotNull()]
         [AllowEmptyString()]
-        public string Namespace { get; set; }
+        public string? Namespace { get; set; }
 
         [Parameter(ParameterSetName = ParameterSetName_CurrentDomain)]
         public SwitchParameter CurrentDomain { get; set; }
@@ -130,12 +130,12 @@ namespace LteDev.Commands
 
         private IEnumerable<PSTypeName> FromAssembly(Assembly[] assembly)
         {
-            IEnumerable<PSTypeName> types = AsPSTypeName(Assembly.Where(a => a != null).SelectMany(a => a.ExportedTypes));
-            if (Namespace != null)
+            IEnumerable<PSTypeName> types = AsPSTypeName(Assembly.Where(a => a is not null).SelectMany(a => a.ExportedTypes));
+            if (Namespace is not null)
             {
                 if (Namespace.Length > 0)
-                    types = (Recursive.IsPresent) ? types.Where(t => t.Type.Namespace != null && t.Type.Namespace.StartsWith(Namespace)) :
-                        types.Where(t => t.Type.Namespace != null && t.Type.Namespace == Namespace);
+                    types = (Recursive.IsPresent) ? types.Where(t => t.Type.Namespace is not null && t.Type.Namespace.StartsWith(Namespace)) :
+                        types.Where(t => t.Type.Namespace is not null && t.Type.Namespace == Namespace);
                 else
                     types = (Recursive.IsPresent) ? types : types.Where(t => String.IsNullOrEmpty(t.Type.Namespace));
             }

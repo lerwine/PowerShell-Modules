@@ -19,7 +19,7 @@ namespace LteDev.Commands
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [AllowNull]
         [AllowEmptyString]
-        public string[] Name { get; set; }
+        public string[] Name { get; set; } = null!;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace LteDev.Commands
         {
             if (!_success)
                 return;
-            if (Name == null)
+            if (Name is null)
             {
                 _success = false;
                 return;

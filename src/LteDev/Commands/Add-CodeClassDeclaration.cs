@@ -24,22 +24,22 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNull()]
-        public CodeNamespace Namespace { get; set; }
+        public CodeNamespace Namespace { get; set; } = null!;
 
         [Parameter(Mandatory = true)]
         [ValidateNotNullOrEmpty()]
         [ValidateCsName()]
-        public string[] Name { get; set; }
+        public string[] Name { get; set; } = null!;
 
         [Parameter]
         [ValidateNotNullOrEmpty()]
         [ValidateCsName()]
-        public string[] GenericArg { get; set; }
+        public string[]? GenericArg { get; set; }
 
         [Parameter]
         [ValidateNotNullOrEmpty()]
         [ValidateTypeOrRef()]
-        public object[] Base { get; set; }
+        public object[]? Base { get; set; }
 
         [Parameter(ParameterSetName = ParameterSetName_NonAbstract)]
         public SwitchParameter IsPartial { get; set; }
@@ -78,13 +78,13 @@ namespace LteDev.Commands
                 if (IsSerializable.IsPresent)
                     item.TypeAttributes = TypeAttributes.Serializable;
 
-                if (GenericArg != null && GenericArg.Length > 0)
+                if (GenericArg is not null && GenericArg.Length > 0)
                 {
                     foreach (string a in GenericArg)
                         item.TypeParameters.Add(a);
                 }
 
-                if (Base != null && Base.Length > 0)
+                if (Base is not null && Base.Length > 0)
                 {
                     foreach (object obj in Base)
                     {
