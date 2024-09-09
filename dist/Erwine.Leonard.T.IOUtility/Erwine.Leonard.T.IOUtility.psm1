@@ -2411,3 +2411,467 @@ Function Use-TempFolder {
         Remove-Item -LiteralPath $DirectoryInfo.FullName -Recurse -Force;
     }
 }
+
+class AssertionFailTargetObject {
+    [int]$Position;
+
+    [AllowNull()]
+    [AllowEmptyString()]
+    [AllowEmptyCollection()]
+    [object]$Context;
+    
+    [AllowEmptyString()]
+    [string]$Name;
+}
+
+Function Assert-IsNotNull {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        [string]$Name,
+
+        [AllowNull()]
+        [AllowEmptyString()]
+        [AllowEmptyCollection()]
+        [object]$Context,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Indexed')]
+        [switch]$Indexed,
+
+        [Parameter(ParameterSetName = 'Indexed')]
+        [switch]$FailIfEmpty,
+
+        [switch]$PassThru
+    )
+    
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($Indexed.IsPresent) {
+                if ($PSBoundParameters.Containsk('Name')) {
+                    Write-Error -Message "$Name at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = $Position;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                } else {
+                    Write-Error -Message "Object at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = $Position;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                }
+            } else {
+                if ($PSBoundParameters.Containsk('Name')) {
+                    Write-Error -Message "$Name is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = -1;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                } else {
+                    Write-Error -Message "Object is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = -1;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                }
+            }
+        } else {
+            if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+        }
+    }
+
+    End {
+        if ($FailIfEmpty.IsPresent -and $Position -eq -1) {
+            if ($PSBoundParameters.Containsk('Name')) {
+                Write-Error -Message "$Name is empty" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                    Position = -1;
+                    Name = $Name;
+                    Context = $Context;
+                });
+            } else {
+                Write-Error -Message "No values" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                    Position = -1;
+                    Name = $Name;
+                    Context = $Context;
+                });
+            }
+        }
+    }
+}
+
+Function Assert-NotWhiteSpaceOrEmpty {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        [string]$Name,
+
+        [AllowNull()]
+        [AllowEmptyString()]
+        [AllowEmptyCollection()]
+        [object]$Context,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Indexed')]
+        [switch]$Indexed,
+
+        [Parameter(ParameterSetName = 'Indexed')]
+        [switch]$FailIfEmpty,
+
+        [switch]$PassThru
+    )
+    
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($Indexed.IsPresent) {
+                if ($PSBoundParameters.Containsk('Name')) {
+                    Write-Error -Message "$Name at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = $Position;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                } else {
+                    Write-Error -Message "Value at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = $Position;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                }
+            } else {
+                if ($PSBoundParameters.Containsk('Name')) {
+                    Write-Error -Message "$Name is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = -1;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                } else {
+                    Write-Error -Message "Value is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                        Position = -1;
+                        Name = $Name;
+                        Context = $Context;
+                    });
+                }
+            }
+        } else {
+            if ($InputObject -is [string]) {
+                if ($InputObject.Trim().Length -eq 0) {
+                    if ($Indexed.IsPresent) {
+                        if ($PSBoundParameters.Containsk('Name')) {
+                            Write-Error -Message "$Name at position $Position is empty" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                                Position = $Position;
+                                Name = $Name;
+                                Context = $Context;
+                            });
+                        } else {
+                            Write-Error -Message "Value at position $Position is empty" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                                Position = $Position;
+                                Name = $Name;
+                                Context = $Context;
+                            });
+                        }
+                    } else {
+                        if ($PSBoundParameters.Containsk('Name')) {
+                            Write-Error -Message "$Name is empty" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                                Position = -1;
+                                Name = $Name;
+                                Context = $Context;
+                            });
+                        } else {
+                            Write-Error -Message "Value is empty" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                                Position = -1;
+                                Name = $Name;
+                                Context = $Context;
+                            });
+                        }
+                    }
+                }
+            } else {
+                if ($Indexed.IsPresent) {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "Expected String for $Name at position $Position; Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Expected String at position $Position; Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                } else {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "Expected String for $Name; Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Expected String ; Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    End {
+        if ($FailIfEmpty.IsPresent -and $Position -eq -1) {
+            if ($PSBoundParameters.Containsk('Name')) {
+                Write-Error -Message "$Name is empty" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                    Position = -1;
+                    Name = $Name;
+                    Context = $Context;
+                });
+            } else {
+                Write-Error -Message "No values" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                    Position = -1;
+                    Name = $Name;
+                    Context = $Context;
+                });
+            }
+        }
+    }
+}
+
+Function Assert-IsType {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [Type[]]$Type,
+
+        [switch]$AllowNull,
+
+        [string]$Name,
+
+        [AllowNull()]
+        [AllowEmptyString()]
+        [AllowEmptyCollection()]
+        [object]$Context,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Indexed')]
+        [switch]$Indexed,
+
+        [Parameter(ParameterSetName = 'Indexed')]
+        [switch]$FailIfEmpty,
+
+        [switch]$PassThru
+    )
+    
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($AllowNull.IsPresent) {
+                if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+            } else {
+                if ($Indexed.IsPresent) {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "$Name at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Object at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                } else {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "$Name is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = -1;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Object is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = -1;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                }
+            }
+        } else {
+            if ($null -eq ($Type | Where-Object { $InputObject -is $Type } | Select-Object -First 1)) {
+                $TypeNames = [System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($Type[-1]);
+                if ($Type.Length -gt 1) {
+                    $TypeNames = "$((($Type | Select-Object -SkipLast 1) | ForEach-Object { [System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($_) }) -join ', ') or $TypeNames"
+                }
+                if ($Indexed.IsPresent) {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "Expected $TypeNames for $Name at position $Position; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Expected $TypeNames at position $Position; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                } else {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "Expected $TypeNames for $Name; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Expected $TypeNames; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                }
+            } else {
+                if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+            }
+        }
+    }
+
+    End {
+        if ($FailIfEmpty.IsPresent -and $Position -eq -1) {
+            Write-Error -Message "No objects" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                Position = -1;
+                Name = $Name;
+                Context = $Context;
+            });
+        }
+    }
+}
+
+Function Assert-PsEnumerable {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [Type[]]$Type,
+
+        [switch]$AllowNull,
+
+        [string]$Name,
+
+        [AllowNull()]
+        [AllowEmptyString()]
+        [AllowEmptyCollection()]
+        [object]$Context,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Indexed')]
+        [switch]$Indexed,
+
+        [Parameter(ParameterSetName = 'Indexed')]
+        [switch]$FailIfEmpty,
+
+        [switch]$PassThru
+    )
+    
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($AllowNull.IsPresent) {
+                if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+            } else {
+                if ($Indexed.IsPresent) {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "$Name at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Object at position $Position is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                } else {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "$Name is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = -1;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Object is null" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = -1;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                }
+            }
+        } else {
+            if ([System.Management.Automation.LanguagePrimitives]::IsObjectEnumerable($InputObject)) {
+                if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+            } else {
+                if ($Indexed.IsPresent) {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "Expected PS Enumerable for $Name at position $Position; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Expected PS Enumerable at position $Position; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                } else {
+                    if ($PSBoundParameters.Containsk('Name')) {
+                        Write-Error -Message "Expected PS Enumerable for $Name; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    } else {
+                        Write-Error -Message "Expected PS Enumerable; Actual $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                            Position = $Position;
+                            Name = $Name;
+                            Context = $Context;
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    End {
+        if ($FailIfEmpty.IsPresent -and $Position -eq -1) {
+            Write-Error -Message "No objects" -Category InvalidData -TargetObject ([AssertionFailTargetObject]@{
+                Position = -1;
+                Name = $Name;
+                Context = $Context;
+            });
+        }
+    }
+}
