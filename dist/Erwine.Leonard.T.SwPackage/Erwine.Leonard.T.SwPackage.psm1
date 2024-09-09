@@ -24,6 +24,9 @@ class VsCodeExtensionManifest {
     # [ValidateNotNull()]
     [string]$Description = '';
 
+    # [ValidateNotNull()]
+    [string]$Icon = '';
+
     static [VsCodeExtensionManifest] Create([string]$Publisher, [string]$Id, [string]$Version) {
         return [VsCodeExtensionManifest]@{
             ID = "$Publisher.$Id";
@@ -729,6 +732,38 @@ Function Read-VsixPackageInfo {
         } else {
             foreach ($P in $Path) {
                 if (Test-Path -LiteralPath $P -PathType Leaf) {
+                    $Manifest = (Use-TempFolder {
+                        Expand-Archive -LiteralPath $P -DestinationPath $_ -Force -ErrorAction Stop;
+                        $TempPath = $_ | Join-Path -ChildPath 'extension.vsixmanifest';
+                        if ($TempPath | Test-Path -PathType Leaf) {
+                            [Xml]$Xml = Get-Content -LiteralPath $MPath -Force;
+                            if ($null -ne $Xml) {
+                                $nsmgr = [System.Xml.XmlNamespaceManager]::new($Xml.NameTable);
+                                $nsmgr.AddNamespace('vsx', $Xml.DocumentElement.PSBase.NamespaceURI);
+                                $XmlElement = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:Identity', $nsmgr);
+                                if ($null -ne $XmlElement) {
+                                    $Manifest = [VsCodeExtensionManifest]::Create($IdentityElement.PSBase.GetAttribute('Publisher'), $IdentityElement.PSBase.GetAttribute('Id'), $IdentityElement.PSBase.GetAttribute('Version'));
+                                    $Manifest.Platform = $IdentityElement.PSBase.GetAttribute('TargetPlatform');
+                                    $XmlElement = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:DisplayName', $nsmgr);
+                                    if ($null -ne $XmlElement -and -not $XmlElement.IsEmpty) { $Manifest.DisplayName = $XmlElement.InnerText }
+                                    $XmlElement = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:Description', $nsmgr);
+                                    if ($null -ne $XmlElement -and -not $XmlElement.IsEmpty) { $Manifest.Description = $XmlElement.InnerText }
+                                    $XmlElement = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:Icon', $nsmgr);
+                                    if ($null -ne $XmlElement -and -not $XmlElement.IsEmpty) { $Manifest.Icon = $XmlElement.InnerText }
+                                    $TempPath = $_ | Join-Path -ChildPath 'extension/package.json';
+                                    if ($TempPath | Test-Path -PathType Leaf) {
+                                        $PackageJson = (Get-Content -LiteralPath $TempPath -Force) | ConvertFrom-Json -Depth 4;
+                                        if ($null -ne $PackageJson) {
+                                            if ([string]::IsNullOrWhiteSpace($Manifest.DisplayName)) { $Manifest.DisplayName = $PackageJson.displayName }
+                                            if ([string]::IsNullOrWhiteSpace($Manifest.Description)) { $Manifest.Description = $PackageJson.description }
+                                            if ([string]::IsNullOrWhiteSpace($Manifest.Icon)) { $Manifest.Icon = $PackageJson.icon }
+                                        }
+                                    }
+                                    $Manifest | Write-Output;
+                                }
+                            }
+                        }
+                    });
                     $DirName = [Guid]::NewGuid().ToString('n');
                     $TempPath = $TempRoot | Join-Path -ChildPath $DirName;
                     while ($TempPath | Test-Path) {
@@ -737,93 +772,6 @@ Function Read-VsixPackageInfo {
                     }
                     (New-Item -Path $TempRoot -Name $DirName -ItemType Directory) | Out-Null;
                     if (-not ($TempPath | Test-Path)) { continue }
-                    [Xml]$Xml = $null;
-                    $ArchivePath = $P | Join-Path -ChildPath 'extension.vsixmanifest';
-                    try {
-                        $ExpandComplete = $false;
-                        try {
-                            Expand-Archive -LiteralPath $P -DestinationPath $TempPath -Force -ErrorAction Stop;
-                            $ExpandComplete = $true;
-                        } catch {
-                            Write-Error -ErrorRecord $_ -CategoryReason "Error expanding $P" -CategoryTargetName 'Path';
-                            $Xml = $null;
-                        }
-                        if ($ExpandComplete) {
-                            $MPath = $TempPath | Join-Path -ChildPath 'extension.vsixmanifest';
-                            if (Test-Path -LiteralPath $MPath) {
-                                try { [Xml]$Xml = Get-Content -LiteralPath $MPath -Force -ErrorAction Stop }
-                                catch {
-                                    Write-Error -ErrorRecord $_ -CategoryReason "Error parsing XML from $ArchivePath" -CategoryTargetName 'Path';
-                                    $Xml = $null;
-                                }
-                            } else {
-                                Write-Error -Message "Manifest file not found: $ArchivePath" -Category ObjectNotFound -ErrorId 'ManifestNotFound' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                            }
-                        }
-                    } finally {
-                        Remove-Item -LiteralPath $TempPath -Recurse -Force;
-                    }
-                    if ($null -ne $Xml) {
-                        if ($null -eq $Xml.DocumentElement) {
-                            Write-Error -Message "Manifest file does not have a document element" -Category InvalidResult -ErrorId 'InvalidManifest' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                        } else {
-                            $nsmgr = [System.Xml.XmlNamespaceManager]::new($Xml.NameTable);
-                            $nsmgr.AddNamespace('vsx', $Xml.DocumentElement.PSBase.NamespaceURI);
-                            $Element = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:Identity', $nsmgr);
-                            if ($null -eq $Element) {
-                                Write-Error -Message "Element '/PackageManifest/Metadata/Identity' not found: $ArchivePath" -Category InvalidData -ErrorId 'NoIdentity' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                            } else {
-                                $PublisherAttribute = $Element.PSBase.SelectSingleNode('@Publisher');
-                                if ($null -eq $PublisherAttribute) {
-                                    Write-Error -Message "Attribute '/PackageManifest/Metadata/Identity/@Publisher' not found: $ArchivePath" -Category InvalidData -ErrorId 'NoPublisher' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                                } else {
-                                    if ([string]::IsNullOrWhiteSpace($PublisherAttribute.Value)) {
-                                        Write-Error -Message "Attribute '/PackageManifest/Metadata/Identity/@Publisher' is empty: $ArchivePath" -Category InvalidData -ErrorId 'EmptyPublisher' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                                    } else {
-                                        $IdAttribute = $Element.PSBase.SelectSingleNode('@Id');
-                                        if ($null -eq $IdAttribute) {
-                                            Write-Error -Message "Attribute '/PackageManifest/Metadata/Identity/@Id' not found: $ArchivePath" -Category InvalidData -ErrorId 'NoId' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                                        } else {
-                                            if ([string]::IsNullOrWhiteSpace($IdAttribute.Value)) {
-                                                Write-Error -Message "Attribute '/PackageManifest/Metadata/Identity/@Id' is empty: $ArchivePath" -Category InvalidData -ErrorId 'EmptyId' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                                            } else {
-                                                $Attribute = $Element.PSBase.SelectSingleNode('@Version');
-                                                if ($null -eq $Attribute) {
-                                                    Write-Error -Message "Attribute '/PackageManifest/Metadata/Identity/@Version' not found: $ArchivePath" -Category InvalidData -ErrorId 'NoVersion' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                                                } else {
-                                                    if ([string]::IsNullOrWhiteSpace($Attribute.Value)) {
-                                                        Write-Error -Message "Attribute '/PackageManifest/Metadata/Identity/@Version' is empty: $ArchivePath" -Category InvalidData -ErrorId 'EmptyVersion' -TargetObject $ArchivePath -CategoryTargetName 'Path';
-                                                    } else {
-                                                        $PackageInfo = [VsixPackageInfo]@{
-                                                            ID = "$($PublisherAttribute.Value).$($IdAttribute.Value)";
-                                                            Version = $Attribute.Value;
-                                                            Platform = '';
-                                                            Path = $P;
-                                                            DisplayName = '';
-                                                            Description = '';
-                                                        };
-                                                        $Attribute = $Element.PSBase.SelectSingleNode('@TargetPlatform');
-                                                        if ($null -ne $Attribute -and -not [string]::IsNullOrWhiteSpace($Attribute.Value)) {
-                                                            $PackageInfo.Platform = $Attribute.Value;
-                                                        }
-                                                        $Element = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:DisplayName', $nsmgr);
-                                                        if ($null -ne $Element -and -not ($Element.IsEmpty -or [string]::IsNullOrWhiteSpace($Element.InnerText))) {
-                                                            $PackageInfo.DisplayName = $Element.InnerText;
-                                                        }
-                                                        $Element = $Xml.SelectSingleNode('/vsx:PackageManifest/vsx:Metadata/vsx:Description', $nsmgr);
-                                                        if ($null -ne $Element -and -not ($Element.IsEmpty -or [string]::IsNullOrWhiteSpace($Element.InnerText))) {
-                                                            $PackageInfo.Description = $Element.InnerText;
-                                                        }
-                                                        $PackageInfo | Write-Output;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 } else {
                     Write-Error -Message "File $P not found" -Category ObjectNotFound -ErrorId 'FileNotFound' -TargetObject $P -CategoryTargetName 'Path';
                 }
