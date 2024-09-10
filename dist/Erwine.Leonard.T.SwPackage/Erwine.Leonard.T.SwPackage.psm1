@@ -11,7 +11,7 @@ class VersionStringElement {
 class VsCodeExtensionManifest {
     # [ValidateNotNullOrWhiteSpace()]
     [string]$ID = '';
-    
+
     # [ValidateNotNullOrWhiteSpace()]
     [string]$Version = '';
 
@@ -51,7 +51,7 @@ class VsCodeExtensionManifest {
         }
         return $diff;
     }
-    
+
     [string] ToPackageFileName() {
         if ([string]::IsNullOrWhiteSpace($this.Platform)) {
             return "$($this.ID)-$($this.Version).vsix";
@@ -76,7 +76,7 @@ class VsixExtensionVersion {
 
 class VsixExtensionInfo {
     [string]$DisplayName = '';
-    
+
     [string]$Description = '';
 
     [ValidateNotNull()]
@@ -86,7 +86,7 @@ class VsixExtensionInfo {
 
 class MarketplacePublisher {
     [string]$DisplayName = '';
-    
+
     [ValidateNotNull()]
     [AllowEmptyCollection()]
     [System.Collections.Generic.Dictionary[string,VsixExtensionInfo]]$Extensions = [System.Collections.Generic.Dictionary[string,VsixExtensionInfo]]::new([System.StringComparer]::OrdinalIgnoreCase);
@@ -136,7 +136,7 @@ Function Compare-VersionCore {
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true)]
         [string]$RVersion,
 
@@ -239,12 +239,12 @@ Function Compare-VersionCore {
                     if ($SegEnd -lt $LSegElements.Length) {
                         for ($i = $SegEnd; $i -lt $LSegElements.Length; $i++) {
                             $LWElements = $LSegElements[$i].Trim().Split(' ', 2);
-                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and ($LWElements[0] | Remove-ZeroPadding) -ne '0')) { return 1 } 
+                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and ($LWElements[0] | Remove-ZeroPadding) -ne '0')) { return 1 }
                         }
                     } else {
                         for ($i = $SegEnd; $i -lt $RSegElements.Length; $i++) {
                             $RWElements = $RSegElements[$i].Trim().Split(' ', 2);
-                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and ($RWElements[0] | Remove-ZeroPadding) -ne '0')) { return 1 } 
+                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and ($RWElements[0] | Remove-ZeroPadding) -ne '0')) { return 1 }
                         }
                     }
                 }
@@ -260,7 +260,7 @@ Function Compare-VersionCoreExact {
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true)]
         [string]$RVersion,
 
@@ -375,7 +375,7 @@ Function Compare-NonOrdinalVersionCore {
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true)]
         [string]$RVersion,
 
@@ -433,12 +433,12 @@ Function Compare-NonOrdinalVersionCore {
                     if ($SegEnd -lt $LSegElements.Length) {
                         for ($i = $SegEnd; $i -lt $LSegElements.Length; $i++) {
                             $LWElements = $LSegElements[$i].Trim().Split(' ', 2);
-                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and $LWElements[0] -ne '0')) { return 1 } 
+                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and $LWElements[0] -ne '0')) { return 1 }
                         }
                     } else {
                         for ($i = $SegEnd; $i -lt $RSegElements.Length; $i++) {
                             $RWElements = $RSegElements[$i].Trim().Split(' ', 2);
-                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and $RWElements[0] -ne '0')) { return 1 } 
+                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and $RWElements[0] -ne '0')) { return 1 }
                         }
                     }
                 }
@@ -454,7 +454,7 @@ Function Compare-NonOrdinalVersionCoreExact {
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true)]
         [string]$RVersion,
 
@@ -524,7 +524,7 @@ Function Compare-SemverVersionStrings {
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true)]
         [string]$RVersion,
 
@@ -542,7 +542,7 @@ Function Compare-SemverVersionStrings {
         if ($Diff -eq 0) { return -1 }
         return $Diff;
     }
-    
+
     if ($RIndex -lt 0) {
         $Diff = CompareElements -LVersion $LVersion.Substring(0, $LIndex) -RVersion $RVersion -Comparer $Comparer;
         if ($Diff -eq 0) { return 1 }
@@ -557,10 +557,10 @@ Function Compare-SemverVersionStrings {
     } else {
         if ($RVersion[$RIndex] -eq '-') { return -1 }
     }
-    
+
     $LText = $LVersion.Substring($LIndex + 1).Trim();
     $RText = $RVersion.Substring($RIndex + 1).Trim();
-    
+
     if ($LText.Length -eq 0) {
         if ($RText.Length -eq 0) { return 0 }
         return -1;
@@ -574,7 +574,7 @@ Function Compare-GenericVersionStrings {
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true)]
         [string]$RVersion,
 
@@ -592,7 +592,7 @@ Function Compare-GenericVersionStrings {
         if ($Diff -eq 0) { return -1 }
         return $Diff;
     }
-    
+
     if ($RIndex -lt 0) {
         $Diff = Compare-SemverVersionStrings -LVersion $LVersion.Substring(0, $LIndex) -RVersion $RVersion -Comparer $Comparer;
         if ($Diff -eq 0) { return 1 }
@@ -604,7 +604,7 @@ Function Compare-GenericVersionStrings {
 
     $LText = $LVersion.Substring($LIndex + 1).Trim();
     $RText = $RVersion.Substring($RIndex + 1).Trim();
-    
+
     if ($LText.Length -eq 0) {
         if ($RText.Length -eq 0) { return 0 }
         return -1;
@@ -627,7 +627,7 @@ Function Compare-VersionStrings {
         [AllowNull()]
         # The version string to be compared.
         [string]$LVersion,
-        
+
         [Parameter(Mandatory = $true, Position = 1)]
         [AllowEmptyString()]
         [AllowNull()]
@@ -791,7 +791,7 @@ Function Optimize-VsCodeManifestIndex {
 
     $LastIndex = $ManifestIndex.Count - 1;
     if ($LastIndex -lt 1) { return }
-    
+
     $Comparer = [System.StringComparer]::OrdinalIgnoreCase;
 
     while ($LastIndex -gt 0) {
@@ -942,7 +942,7 @@ Function Write-VsCodeManifestIndex {
 
     Optimize-VsCodeManifestIndex -ManifestIndex $ManifestIndex;
 
-    
+
     $IndexPath = $RepositoryPath | Join-Path -ChildPath 'index.json';
     try {
         (($ManifestIndex | ForEach-Object {
@@ -985,16 +985,16 @@ Function Write-VsCodeManifestIndex {
 #     Param(
 #         [Parameter(Mandatory = $true, Position = 0)]
 #         [string]$Publisher,
-        
+
 #         [Parameter(Mandatory = $true, Position = 1)]
 #         [string]$ID,
-        
+
 #         [Parameter(Mandatory = $true, Position = 2)]
 #         [string]$Version,
-        
+
 #         [Parameter(Mandatory = $true)]
 #         [string]$RepositoryFolder,
-        
+
 #         [string]$TargetPlatform
 #     )
 
@@ -1023,10 +1023,10 @@ Function Write-VsCodeManifestIndex {
 #     Param(
 #         [Parameter(Mandatory = $true, Position = 0)]
 #         [string]$Publisher,
-        
+
 #         [Parameter(Mandatory = $true, Position = 0)]
 #         [string]$ID,
-        
+
 #         [string]$TargetPlatform,
 
 #         [int]$MaxPage = 10000,
@@ -1082,7 +1082,7 @@ Function Write-VsCodeManifestIndex {
 #     if ($IncludeLatestVersionOnly.IsPresent) { $Flags = $Flags -bor 0x200 }
 #     if ($Unpublished.IsPresent) { $Flags = $Flags -bor 0x1000 }
 #     if ($IncludeNameConflictInfo.IsPresent) { $Flags = $Flags -bor 0x8000 }
-    
+
 #     $criteria = @([PSCustomObject]@{
 #         filterType = 7;
 #         value = "$Publisher.$ID";
@@ -1137,7 +1137,7 @@ Function Write-VsCodeManifestIndex {
 #                 if ($Versions.Count -eq 0) {
 #                     $Versions = @($_.versions);
 #                 }
-                
+
 #                 $Item.Versions = ([VsMarketPlaceExtensionVersion[]]@($Versions | ForEach-Object {
 #                     $v = [VsMarketPlaceExtensionVersion]@{
 #                         Version = $_.version;
@@ -1151,7 +1151,7 @@ Function Write-VsCodeManifestIndex {
 #                     }
 #                     $v | Write-Output;
 #                 }));
-                
+
 #                 $Item | Write-Output;
 #             }
 #         };

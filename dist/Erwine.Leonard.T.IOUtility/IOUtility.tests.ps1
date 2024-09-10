@@ -273,7 +273,7 @@ Describe 'Optimize-WhiteSpace Function' {
             }
         }
     }
-    
+
     Context 'Optimize-WhiteSpace -InputString <String> -NullToEmpty' {
         It "should return an unchanged value" {
             foreach ($InputString in @('', '.', 'Test', '? !', 'Test !', '? Data', 'Test !', 'Test Data')) {
@@ -471,7 +471,7 @@ Describe 'Optimize-WhiteSpace Function' {
             }
         }
     }
-    
+
     Context 'Optimize-WhiteSpace -InputString <String> -EmptyToNull' {
         It "should return an unchanged value" {
             foreach ($InputString in @($null, '.', 'Test', '? !', 'Test !', '? Data', 'Test !', 'Test Data')) {
@@ -769,7 +769,7 @@ Describe 'Remove-ZeroPadding Function' {
             }
         }
     }
-    
+
     Context 'Remove-ZeroPadding -InputString <string> -AllowNegativeSign' {
         It "should return an unchanged value" {
             foreach ($Value in @('0', '0.0', '0Z', '0x0', '0-1', '0+1')) {
@@ -836,7 +836,7 @@ Describe 'Remove-ZeroPadding Function' {
             }
         }
     }
-    
+
     Context 'Remove-ZeroPadding -InputString <string> -AllowPositiveSign -KeepPositiveSign' {
         It "should return an unchanged value" {
             foreach ($Value in @('0', '0.0', '0Z', '0x0', '0-1', '0+1', '1', '10', '1.0', '1Z')) {
@@ -892,7 +892,7 @@ Describe 'Remove-ZeroPadding Function' {
             }
         }
     }
-    
+
     Context 'Remove-ZeroPadding -InputString <string> -AllowNegativeSign -KeepNegativeSign' {
         It "should return an unchanged value" {
             foreach ($Value in @('0', '0.0', '0Z', '0x0', '0-1', '0+1', '1', '10', '1.0', '1Z')) {
@@ -1321,7 +1321,7 @@ Describe 'Remove-ZeroPadding Function' {
             }
         }
     }
-    
+
     Context 'Remove-ZeroPadding -InputString <string> -AllowNegativeSign -KeepPositiveSign' {
         It "should return an unchanged value" {
             foreach ($Value in @('0', '0.0', '0Z', '0x0', '0-1', '0+1')) {
@@ -1430,7 +1430,7 @@ Describe 'Remove-ZeroPadding Function' {
             }
         }
     }
-    
+
     Context 'Remove-ZeroPadding -InputString <string> -KeepNegativeSign' {
         It "should return an unchanged value" {
             foreach ($Value in @('0', '0.0', '0Z', '0x0', '0-1', '0+1', '1', '10', '1.0', '1Z')) {
@@ -1472,7 +1472,7 @@ Describe 'Remove-ZeroPadding Function' {
             }
         }
     }
-    
+
     Context 'Remove-ZeroPadding -InputString <string> -KeepPositiveSign' {
         It "should return an unchanged value" {
             foreach ($Value in @('0', '0.0', '0Z', '0x0', '0-1', '0+1', '1', '10', '1.0', '1Z')) {

@@ -8,7 +8,7 @@ if ($null -eq $Script:InvalidFileNameChars) {
         if ($FileSystemProvider.VolumeSeparatedByColon) { return ([string[]]@($FileSystemProvider.ItemSeparator, ':')); }
         return ([string[]]@($FileSystemProvider.ItemSeparator));
     });
-    
+
     New-Variable -Name 'Int16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int16]0).Length;
     New-Variable -Name 'UInt16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt16]0).Length;
     New-Variable -Name 'Int32ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([int]0).Length;
@@ -21,10 +21,10 @@ Function ConvertTo-SafeFileName {
 	<#
 		.SYNOPSIS
 			Converts a string to a usable file name / path.
- 
+
 		.DESCRIPTION
 			Encodes a string in a format which is compatible with a file name / path, and can be converted back to the original text.
-		
+
 		.OUTPUTS
 			System.String. Text encoded as a valid file name / path.
 
@@ -33,7 +33,7 @@ Function ConvertTo-SafeFileName {
 
 		.EXAMPLE
 			'c:\my*path\User.string' | ConvertTo-SafeFileName -FullPath;
-		
+
 		.LINK
 			ConvertFrom-SafeFileName
 	#>
@@ -43,20 +43,20 @@ Function ConvertTo-SafeFileName {
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# String to convert to file name
 		[string[]]$InputText,
-		
+
 		[Parameter(ParameterSetName = 'FileName')]
 		# Only allow file names. This is the default behavior.
 		[switch]$FileName,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'RelativePath')]
 		# Only allow relative paths
 		[switch]$RelativePath,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'FullPath')]
 		# Allow full path specification
 		[switch]$FullPath
 	)
-	
+
     Begin {
         Function ConvertChars([string]$Text) {
             [char[]]$Converted = ($Text.ToCharArray() | ForEach-Object {
@@ -102,7 +102,7 @@ Function Get-AppDataPath {
 	<#
 		.SYNOPSIS
 			Get path for application data storage.
- 
+
 		.DESCRIPTION
 			Constructs a path for application-specific data.
 
@@ -143,20 +143,20 @@ Function Get-AppDataPath {
 		# Create folder structure under common location.
 		[switch]$Common
 	)
-	
+
 	Process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'Common' { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::CommonApplicationData); break; }
 			'Local' { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::LocalApplicationData); break; }
 			default { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::ApplicationData); break; }
 		}
-		
+
 		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 			throw ('Unable to find {0} path "{1}".' -f $PSCmdlet.ParameterSetName, $AppDataPath);
 		}
 
 		$AppDataPath = $AppDataPath | Join-Path -ChildPath ($Company | ConvertTo-SafeFileName);
-		
+
 		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 			New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
 			if (-not ($AppDataPath | Test-Path -PathType Container)) {
@@ -167,7 +167,7 @@ Function Get-AppDataPath {
 		$N = $ProductName;
 		if ($PSBoundParameters.ContainsKey('Version')) { $N = '{0}_{1}_{2}' -f $N, $Version.Major, $Version.Minor }
 		$AppDataPath = $AppDataPath | Join-Path -ChildPath ($N | ConvertTo-SafeFileName);
-		
+
 		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 			New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
 			if (-not ($AppDataPath | Test-Path -PathType Container)) {
@@ -177,7 +177,7 @@ Function Get-AppDataPath {
 
 		if ($PSBoundParameters.ContainsKey('ComponentName')) {
 			$AppDataPath = $AppDataPath | Join-Path -ChildPath ($ComponentName | ConvertTo-SafeFileName -AllowExtension);
-		
+
 			if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 				New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
 				if (-not ($AppDataPath | Test-Path -PathType Container)) {
@@ -194,25 +194,25 @@ Function Read-ShortIntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an integer.
-			
+
 		.OUTPUTS
 			System.Int32. Integer value read from stream.
-		
+
 		.LINK
 			Write-ShortIntegerToStream
-		
+
 		.LINK
 			Read-UnsignedShortIntegerFromStream
-		
+
 		.LINK
 			Read-IntegerFromStream
-		
+
 		.LINK
 			Read-LongIntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -224,7 +224,7 @@ Function Read-ShortIntegerFromStream {
 		# Stream from which to read the bytes of an integer value.
 		[System.IO.Stream]$Stream
 	)
-	
+
     $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:Int16ByteLength;
     if ($Stream.CanSeek) {
         $Position = $Stream.Position;
@@ -243,25 +243,25 @@ Function Read-UnsignedShortIntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an integer.
-			
+
 		.OUTPUTS
 			System.Int32. Integer value read from stream.
-		
+
 		.LINK
 			Write-UnsignedShortIntegerToStream
-		
+
 		.LINK
 			Read-ShortIntegerFromStream
-		
+
 		.LINK
 			Read-UnsignedIntegerFromStream
-		
+
 		.LINK
 			Read-UnsignedLongIntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -273,7 +273,7 @@ Function Read-UnsignedShortIntegerFromStream {
 		# Stream from which to read the bytes of an integer value.
 		[System.IO.Stream]$Stream
 	)
-	
+
     $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:UInt16ByteLength;
     if ($Stream.CanSeek) {
         $Position = $Stream.Position;
@@ -292,25 +292,25 @@ Function Read-IntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an integer.
-			
+
 		.OUTPUTS
 			System.Int32. Integer value read from stream.
-		
+
 		.LINK
 			Write-IntegerToStream
-		
+
 		.LINK
 			Read-UnsignedIntegerFromStream
-		
+
 		.LINK
 			Read-ShortIntegerFromStream
-		
+
 		.LINK
 			Read-LongIntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -322,7 +322,7 @@ Function Read-IntegerFromStream {
 		# Stream from which to read the bytes of an integer value.
 		[System.IO.Stream]$Stream
 	)
-	
+
     $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:Int32ByteLength;
     if ($Stream.CanSeek) {
         $Position = $Stream.Position;
@@ -341,25 +341,25 @@ Function Read-UnsignedIntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read unsigned integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an unsigned integer.
-			
+
 		.OUTPUTS
 			System.Int32. Integer value read from stream.
-		
+
 		.LINK
 			Write-UnsignedIntegerToStream
-		
+
 		.LINK
 			Read-IntegerFromStream
-		
+
 		.LINK
 			Read-UnsignedShortIntegerFromStream
-		
+
 		.LINK
 			Read-UnsignedLongIntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -371,7 +371,7 @@ Function Read-UnsignedIntegerFromStream {
 		# Stream from which to read the bytes of an integer value.
 		[System.IO.Stream]$Stream
 	)
-	
+
     $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:UInt32ByteLength;
     if ($Stream.CanSeek) {
         $Position = $Stream.Position;
@@ -390,25 +390,25 @@ Function Read-LongIntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read long integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to a long integer.
-			
+
 		.OUTPUTS
 			System.Int64. Long Integer value read from stream.
-		
+
 		.LINK
 			Write-LongIntegerToStream
-		
+
 		.LINK
 			Read-UnsignedLongIntegerFromStream
-		
+
 		.LINK
 			Read-ShortIntegerFromStream
-		
+
 		.LINK
 			Read-IntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -420,7 +420,7 @@ Function Read-LongIntegerFromStream {
 		# Stream from which to read the bytes of a long integer value.
 		[System.IO.Stream]$Stream
 	)
-	
+
     $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:Int64ByteLength;
     if ($Stream.CanSeek) {
         $Position = $Stream.Position;
@@ -439,25 +439,25 @@ Function Read-UnsignedLongIntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read unsigned long integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an unsigned long integer.
-			
+
 		.OUTPUTS
 			System.UInt64. Unsigned Long Integer value read from stream.
-		
+
 		.LINK
 			Write-UnsignedLongIntegerToStream
-		
+
 		.LINK
 			Read-LongIntegerFromStream
-		
+
 		.LINK
 			Read-UnsignedShortIntegerFromStream
-		
+
 		.LINK
 			Read-UnsignedIntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -469,7 +469,7 @@ Function Read-UnsignedLongIntegerFromStream {
 		# Stream from which to read the bytes of a long integer value.
 		[System.IO.Stream]$Stream
 	)
-	
+
     $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:UInt64ByteLength;
     if ($Stream.CanSeek) {
         $Position = $Stream.Position;
@@ -488,22 +488,22 @@ Function Write-ShortIntegerToStream {
 	<#
 		.SYNOPSIS
 			Write integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes an integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-ShortIntegerFromStream
-		
+
 		.LINK
 			Write-UnsignedShortIntegerToStream
-		
+
 		.LINK
 			Write-IntegerToStream
-		
+
 		.LINK
 			Write-LongIntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -513,12 +513,12 @@ Function Write-ShortIntegerToStream {
         [ValidateScript({ $_.CanWrite })]
 		# Stream to write integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Integer value to be written
 		[Int16]$Value
 	)
-	
+
 	Process {
         $Buffer = [System.BitConverter]::GetBytes($Value);
         $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
@@ -529,22 +529,22 @@ Function Write-UnsignedShortIntegerToStream {
 	<#
 		.SYNOPSIS
 			Write unsigned integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes an unsigned integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-UnsignedShortIntegerFromStream
-		
+
 		.LINK
 			Write-ShortIntegerToStream
-		
+
 		.LINK
 			Write-UnsignedIntegerToStream
-		
+
 		.LINK
 			Write-UnsignedLongIntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -554,12 +554,12 @@ Function Write-UnsignedShortIntegerToStream {
         [ValidateScript({ $_.CanWrite })]
 		# Stream to write unsigned short integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Integer value to be written
 		[UInt16]$Value
 	)
-	
+
 	Process {
         $Buffer = [System.BitConverter]::GetBytes($Value);
         $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
@@ -570,22 +570,22 @@ Function Write-IntegerToStream {
 	<#
 		.SYNOPSIS
 			Write integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes an integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-IntegerFromStream
-		
+
 		.LINK
 			Write-UnsignedIntegerToStream
-		
+
 		.LINK
 			Write-ShortIntegerToStream
-		
+
 		.LINK
 			Write-LongIntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -595,12 +595,12 @@ Function Write-IntegerToStream {
         [ValidateScript({ $_.CanWrite })]
 		# Stream to write integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Integer value to be written
 		[int]$Value
 	)
-	
+
 	Process {
         $Buffer = [System.BitConverter]::GetBytes($Value);
         $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
@@ -611,22 +611,22 @@ Function Write-UnsignedIntegerToStream {
 	<#
 		.SYNOPSIS
 			Write unsigned integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes an unsigned integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-UnsignedIntegerFromStream
-		
+
 		.LINK
 			Write-IntegerToStream
-		
+
 		.LINK
 			Write-ShortIntegerToStream
-		
+
 		.LINK
 			Write-UnsignedLongIntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -636,12 +636,12 @@ Function Write-UnsignedIntegerToStream {
         [ValidateScript({ $_.CanWrite })]
 		# Stream to write unsigned integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Integer value to be written
 		[UInt32]$Value
 	)
-	
+
 	Process {
         $Buffer = [System.BitConverter]::GetBytes($Value);
         $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
@@ -652,22 +652,22 @@ Function Write-LongIntegerToStream {
 	<#
 		.SYNOPSIS
 			Write long integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes a long integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-LongIntegerFromStream
-		
+
 		.LINK
 			Write-UnsignedLongIntegerToStream
-		
+
 		.LINK
 			Write-ShortIntegerToStream
-		
+
 		.LINK
 			Write-IntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -677,12 +677,12 @@ Function Write-LongIntegerToStream {
         [ValidateScript({ $_.CanWrite })]
 		# Stream to write long integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Long Integer value to be written
 		[long]$Value
 	)
-	
+
 	Process {
         $Buffer = [System.BitConverter]::GetBytes($Value);
         $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
@@ -693,22 +693,22 @@ Function Write-UnsignedLongIntegerToStream {
 	<#
 		.SYNOPSIS
 			Write unsigned long integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes an unsigned long integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-UnsignedLongIntegerFromStream
-		
+
 		.LINK
 			Write-LongIntegerToStream
-		
+
 		.LINK
 			Write-ShortIntegerToStream
-		
+
 		.LINK
 			Write-UnsignedIntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -718,12 +718,12 @@ Function Write-UnsignedLongIntegerToStream {
         [ValidateScript({ $_.CanWrite })]
 		# Stream to write unsigned long integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Long Integer value to be written
 		[UInt64]$Value
 	)
-	
+
 	Process {
         $Buffer = [System.BitConverter]::GetBytes($Value);
         $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
@@ -734,16 +734,16 @@ Function Read-TinyLengthEncodedBytes {
 	<#
 		.SYNOPSIS
 			Read 8 bit length-encoded array of bytes from a stream.
- 
+
 		.DESCRIPTION
 			Reads a length value from the Stream, and then reads the associated number of bytes.
-			
+
 		.OUTPUTS
 			System.Byte[]. Array of length-encoded bytes read from stream.
-		
+
 		.LINK
 			Write-LengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -794,16 +794,16 @@ Function Read-ShortLengthEncodedBytes {
 	<#
 		.SYNOPSIS
 			Read 16 bit length-encoded array of bytes from a stream.
- 
+
 		.DESCRIPTION
 			Reads a length value from the Stream, and then reads the associated number of bytes.
-			
+
 		.OUTPUTS
 			System.Byte[]. Array of length-encoded bytes read from stream.
-		
+
 		.LINK
 			Write-LengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -854,16 +854,16 @@ Function Read-LengthEncodedBytes {
 	<#
 		.SYNOPSIS
 			Read length-encoded array of bytes from a stream.
- 
+
 		.DESCRIPTION
 			Reads a length value from the Stream, and then reads the associated number of bytes.
-			
+
 		.OUTPUTS
 			System.Byte[]. Array of length-encoded bytes read from stream.
-		
+
 		.LINK
 			Write-LengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -925,19 +925,19 @@ Function Write-TinyLengthEncodedBytes {
 	<#
 		.SYNOPSIS
 			Writes 8-bit length-encoded data a stream.
- 
+
 		.DESCRIPTION
 			Writes a 8-bit length-encoded byte array to the Stream.
-		
+
 		.LINK
 			Read-TinyLengthEncodedBytes
-		
+
 		.LINK
 			Write-ShortLengthEncodedBytes
-		
+
 		.LINK
 			Write-LengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -1026,19 +1026,19 @@ Function Write-ShortLengthEncodedBytes {
 	<#
 		.SYNOPSIS
 			Writes 16-bit length-encoded data a stream.
- 
+
 		.DESCRIPTION
 			Writes a 16-bit length-encoded byte array to the Stream.
-		
+
 		.LINK
 			Read-ShortLengthEncodedBytes
-		
+
 		.LINK
 			Write-TinyLengthEncodedBytes
-		
+
 		.LINK
 			Write-LengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -1127,19 +1127,19 @@ Function Write-LengthEncodedBytes {
 	<#
 		.SYNOPSIS
 			Writes length-encoded data a stream.
- 
+
 		.DESCRIPTION
 			Writes a 32-bit length-encoded byte array to the Stream.
-		
+
 		.LINK
 			Read-LengthEncodedBytes
-		
+
 		.LINK
 			Write-TinyLengthEncodedBytes
-		
+
 		.LINK
 			Write-ShortLengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -1229,17 +1229,17 @@ Function Get-MinBase64BlockSize {
 	<#
 		.SYNOPSIS
 			Get minimum base-64 encoding block size.
- 
+
 		.DESCRIPTION
 			Get minimum base-64 encoding block size when you intend on emitting line-separated chunks of base64-encoded data.
-			
+
 		.OUTPUTS
 			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
 	#>
 	[CmdletBinding()]
 	[OutputType([int])]
 	Param()
-	
+
     if ($null -ne $Script:MinBase64BlockSize) { return $Script:MinBase64BlockSize }
     $Regex = [System.Text.RegularExpressions.Regex]::new('\s');
     $MinSize = 0;
@@ -1257,13 +1257,13 @@ Function ConvertTo-Base64String {
 	<#
 		.SYNOPSIS
 			Convert data buffer to base-64 encoded text.
- 
+
 		.DESCRIPTION
 			Converts the contents of a data buffer to line-separated base64-encoded text.
 
 		.OUTPUTS
 			System.String. Line-separated base64-encoded data.
-		
+
 		.LINK
 			ConvertFrom-Base64String
 	#>
@@ -1273,22 +1273,22 @@ Function ConvertTo-Base64String {
 		[Parameter(Mandatory = $true)]
 		# Data buffer to be converted to base-64 encoded text.
 		[byte[]]$Buffer,
-		
+
 		[Parameter(Mandatory = $false)]
         [ValidateRange(0, [int]::MaxValue)]
 		# Offset within data buffer, in bytes, to begin encoding.
 		[int]$Offset,
-		
+
 		[Parameter(Mandatory = $false)]
         [ValidateRange(1, [int]::MaxValue)]
 		# Number of bytes to encode
 		[int]$Length,
-		
+
 		[Parameter(Mandatory = $false)]
 		# Whether to insert line breaks
 		[switch]$InsertLineBreaks
 	)
-	
+
 	if ($PSBoundParameters.ContainsKey('Length')) {
         if ($PSBoundParameters.ContainsKey('Offset')) {
             if (([long]$Offset) + ([long]$Length) -gt ([long]($Buffer.Length))) {
@@ -1340,13 +1340,13 @@ Function ConvertFrom-Base64String {
 	<#
 		.SYNOPSIS
 			Convert base-64 encoded text to a data buffer.
- 
+
 		.DESCRIPTION
 			Converts the base-64 encoded text to a data buffer object.
 
 		.OUTPUTS
 			System.Byte[]. Array of bytes decoded.
-		
+
 		.LINK
 			ConvertTo-Base64String
 	#>
@@ -1356,13 +1356,13 @@ Function ConvertFrom-Base64String {
 		[ValidatePattern('^\s*[a-zA-Z\d+/]*((\r\n?|\n)[a-zA-Z\d+/]*)*((\r\n?|\n)?==?)?')]
 		# Base-64 encoded text
 		[string]$InputString,
-		
+
 		[Parameter(Mandatory = $false)]
 		[ValidateRange(1, 2147483647)]
 		# Minimum capacity, in bytes, of the returned data buffer.
 		[int]$MinCapacity
 	)
-	
+
 	$Buffer = [System.Convert]::FromBase64String($InputString);
 	if ($PSBoundParameters.ContainsKey('MinCapacity') -and $MinCapacity -gt $Buffer.Length) {
 		[System.Array]::Resize([ref]$Buffer, $MinCapacity);
@@ -1375,13 +1375,13 @@ Function Get-TextEncoding {
 	<#
 		.SYNOPSIS
 			Gets an instance of the Encoding class.
- 
+
 		.DESCRIPTION
 			Gets an instance of the Encoding class, which represents a character encoding.
-		
+
 		.OUTPUTS
 			System.Text.Encoding. Represents the character encoding.
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.text.encoding.aspx
 	#>
@@ -1403,37 +1403,37 @@ Function Get-TextEncoding {
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'XmlDocument')]
 		# Get encoding from XML document's xml declaration.
 		[System.Xml.XmlDocument]$Xml,
-		
+
 		[Parameter(ParameterSetName = 'XmlDocument')]
 		[Parameter(ParameterSetName = 'ContentType')]
 		# Default encoding to use if the encoding could not be determined.
 		[System.Text.Encoding]$DefaultValue = [System.Text.Encoding]::UTF8,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'UTF8')]
 		# Gets an encoding for the UTF-8 format.
 		[switch]$UTF8,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'ASCII')]
 		# Gets an encoding for the ASCII (7-bit) character set.
 		[switch]$ASCII,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'BigEndianUnicode')]
 		# Gets an encoding for the UTF-16 format that uses the big endian byte order.
 		[switch]$BigEndianUnicode,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'Unicode')]
 		# Gets an encoding for the UTF-16 format using the little endian byte order.
 		[Alias('UTF16')]
 		[switch]$Unicode,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'UTF32')]
 		# Gets an encoding for the UTF-32 format using the little endian byte order.
 		[switch]$UTF32,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'UTF7')]
 		# Gets an encoding for the UTF-7 format.
 		[switch]$UTF7,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'Default')]
 		# Gets an encoding for the operating system's current ANSI code page.
 		[switch]$Default
@@ -1485,13 +1485,13 @@ Function New-MemoryStream {
 	<#
 		.SYNOPSIS
 			Creates a stream whose backing store is memory.
- 
+
 		.DESCRIPTION
 			Initializes a new instance of the MemoryStream class.
-		
+
 		.OUTPUTS
 			System.IO.MemoryStream. The stream whose backing store is memory.
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.memorystream.aspx
 	#>
@@ -1509,16 +1509,16 @@ Function New-MemoryStream {
         [ValidateRange(0, [int]::MaxValue)]
 		# The index into buffer at which the stream begins.
 		[int]$Index = 0,
-		
+
 		[Parameter(Position = 2, ParameterSetName = 'Buffer')]
         [ValidateRange(0, [int]::MaxValue)]
 		# The length of the stream in bytes.
 		[int]$Count,
-		
+
 		[Parameter(Position = 3, ParameterSetName = 'Buffer')]
 		# The setting of the CanWrite property, which determines whether the stream supports writing.
 		[bool]$CanWrite = $true,
-		
+
 		[Parameter(Position = 4, ParameterSetName = 'Buffer')]
 		# $true to enable GetBuffer, which returns the unsigned byte array from which the stream was created; otherwise, $false.
 		[bool]$PubliclyVisible
@@ -1531,7 +1531,7 @@ Function New-MemoryStream {
 			$Count = 0;
 		}
 	}
-	
+
 	if ($PSBoundParameters.ContainsKey('Buffer')) {
 		if ($PSBoundParameters.ContainsKey('CanWrite')) {
 			if ($PSBoundParameters.ContainsKey('PubliclyVisible')) {
@@ -1559,13 +1559,13 @@ Function Get-StringComparer {
 	<#
 		.SYNOPSIS
 			Gets a core string comparer object.
- 
+
 		.DESCRIPTION
 			Gets a core comparer object for comparing string values..
-		
+
 		.OUTPUTS
 			System.StringComparer. The string comparer object.
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.stringcomparer.aspx
 	#>
@@ -1904,22 +1904,22 @@ Function Out-IndentedText {
 	<#
 		.SYNOPSIS
 			Indents text.
- 
+
 		.DESCRIPTION
 			Prepends indent text to input text.
-		
+
 		.OUTPUTS
 			System.String. The indented text.
-		
+
 		.LINK
 			Out-UnindentedText
-		
+
 		.LINK
 			Get-IndentLevel
-		
+
 		.LINK
 			Out-NormalizedText
-		
+
 		.LINK
 			Split-DelimitedText
 	#>
@@ -1930,22 +1930,22 @@ Function Out-IndentedText {
 		[AllowEmptyString()]
 		# Text to be indented.
 		[string]$InputString,
-		
+
 		# Number of times to indent text
 		[int]$Level = 1,
-		
+
 		# Text to use for indenting. Default is 4 spaces.
 		[string]$IndentText = '    ',
-		
+
 		# Indicates that zero-length lines are to be indented as well.
 		[switch]$IndentEmptyLine
 	)
-	
+
 	Begin {
 		$Indent = $IndentText;
 		for ($i = 1; $i -lt $Level; $i++) { $Indent += $IndentText }
 	}
-	
+
 	Process {
 		if ($Level -gt 0 -and ($IndentEmptyLine -or $InputString -ne '')) {
 			($Indent + $InputString) | Write-Output;
@@ -1959,22 +1959,22 @@ Function Get-IndentLevel {
 	<#
 		.SYNOPSIS
 			Get number of times text is indented.
- 
+
 		.DESCRIPTION
 			Determines number of times text has been indented.
-		
+
 		.OUTPUTS
 			System.Int32. The number of indentations detected.
-		
+
 		.LINK
 			Out-IndentedText
-		
+
 		.LINK
 			Out-UnindentedText
-		
+
 		.LINK
 			Split-DelimitedText
-		
+
 		.LINK
 			Out-NormalizedText
 	#>
@@ -1985,22 +1985,22 @@ Function Get-IndentLevel {
 		[AllowEmptyString()]
 		# Text to be un-indented.
 		[string]$InputString,
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[AllowEmptyString()]
 		# Pattern to detect indentation. Default is tab or 1 to 4 whitespaces at the beginning of the text: '^(\t|[^\S\t]{1,4})'
 		[string]$Pattern = '^(\t|[^\S\t]{1,4})',
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[Alias('RegexOptions', 'RegexOption', 'Option')]
 		# Options for the indent detection pattern. Note: You can use "Compiled" to optimize for large pipelines.
 		[System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'ByString')]
 		# Text which represents an indentation.
 		[string]$IndentText
 	)
-	
+
 	Begin {
 		if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
 			if ($PSBoundParameters.ContainsKey('PatternOption')) {
@@ -2014,10 +2014,10 @@ Function Get-IndentLevel {
 			}
 		}
 	}
-	
+
 	Process {
 		$Level = 0;
-		
+
 		if ($InputString -ne '') {
 			if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
 				$M = $Regex.Match($InputString);
@@ -2036,7 +2036,7 @@ Function Get-IndentLevel {
 				}
 			}
 		}
-		
+
 		$Level | Write-Output;
 	}
 }
@@ -2045,22 +2045,22 @@ Function Out-UnindentedText {
 	<#
 		.SYNOPSIS
 			Un-indents text.
- 
+
 		.DESCRIPTION
 			Removes indentation from input text.
-		
+
 		.OUTPUTS
 			System.String[]. The text with indentation removed.
-		
+
 		.LINK
 			Get-IndentLevel
-		
+
 		.LINK
 			Out-IndentedText
-		
+
 		.LINK
 			Split-DelimitedText
-		
+
 		.LINK
 			Out-NormalizedText
 	#>
@@ -2071,26 +2071,26 @@ Function Out-UnindentedText {
 		[AllowEmptyString()]
 		# Text to be un-indented.
 		[string]$InputString,
-		
+
 		[Parameter(ParameterSetName = 'ByString')]
 		# Number of times to un-indent text
 		[int]$Level = 1,
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[AllowEmptyString()]
 		# Pattern to detect indentation. Default is tab or 1 to 4 whitespaces at the beginning of the text: '^(\t|[^\S\t]{1,4})'
 		[string]$Pattern = '^(\t|[^\S\t]{1,4})',
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[Alias('RegexOptions', 'RegexOption', 'Option')]
 		# Options for the indent detection pattern. Note: You can use "Compiled" to optimize for large pipelines.
 		[System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'ByString')]
 		# Text which represents an indentation.
 		[string]$IndentText
 	)
-	
+
 	Begin {
 		if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
 			if ($PSBoundParameters.ContainsKey('PatternOption')) {
@@ -2107,7 +2107,7 @@ Function Out-UnindentedText {
 			for ($i = 1; $i -lt $Level; $i++) { $Indent += $IndentText }
 		}
 	}
-	
+
 	Process {
 		if ($InputString -eq '') {
 			$InputString | Write-Output;
@@ -2149,16 +2149,16 @@ Function Expand-GZip {
         [SupportsWildcards()]
         # Path to one or more locations of files to decrypt. The default behavior is to expand all .gz, and .tgz files in the current directory.
         [string[]]$Path,
-    
+
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'LiteralItems')]
         [Alias("PSPath", "FullName")]
         # Literal path to one or more locations of files to decrypt.
         [string[]]$LiteralPath,
-    
+
         # Literal path of output directory. If not specified, it will use the current subdirectory as the output path.
         [ValidateScript({ $_ | Test-Path -PathType Container })]
         [string]$OutputDirectory,
-    
+
         [ValidateScript({ $_ | Test-ValidFileSystemFileName })]
         # Default output file extension if the input file doesn't have a compound extension.
         # If this is not specified, files without a compound extension will be given the '.data' extension.
@@ -2200,7 +2200,7 @@ Function Expand-GZip {
     End {
         $Buffer = New-Object 'System.Byte[]' -ArgumentList 32768;
         $InputFileItems = @($InputFileItems | Where-Object {
-            if ($_.PSIsContainer) { 
+            if ($_.PSIsContainer) {
                 if ($_.PSProvider.Name -eq $FileSystemProviderName -and $_.FullName -is [string] -and $_.FullName.Length -gt 0) {
                     Write-Error -Message "`"$($Item.FullName)`" does not refer to a file." -Category InvalidArgument -ErrorId 'NotAfile' -TargetObject $Item;
                 } else {
@@ -2443,7 +2443,7 @@ Function Assert-IsNotNull {
         # Returns the asserted object.
         [switch]$PassThru
     )
-    
+
     Begin { $Position = -1 }
 
     Process {
@@ -2533,7 +2533,7 @@ Function Assert-IsType {
         # Returns the asserted object.
         [switch]$PassThru
     )
-    
+
     Begin { $Position = -1 }
 
     Process {
@@ -2561,7 +2561,7 @@ Function Assert-IsType {
                 if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
                     if ($PSBoundParameters.ContainsKey('TargetObject')) {
                         Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
-                    } 
+                    }
                     Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
                 }
                 if ($PSBoundParameters.ContainsKey('TargetObject')) {
@@ -2654,7 +2654,7 @@ Function Assert-IsString {
         # Returns the asserted object.
         [switch]$PassThru
     )
-    
+
     Begin { $Position = -1 }
 
     Process {
@@ -2672,7 +2672,7 @@ Function Assert-IsString {
                     if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
                         if ($PSBoundParameters.ContainsKey('TargetObject')) {
                             Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
-                        } 
+                        }
                         Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
                     }
                     if ($PSBoundParameters.ContainsKey('TargetObject')) {
@@ -2799,7 +2799,7 @@ Function Assert-IsPsEnumerable {
         # Returns the asserted object.
         [switch]$PassThru
     )
-    
+
     Begin { $Position = -1 }
 
     Process {

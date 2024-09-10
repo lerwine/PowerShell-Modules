@@ -23,7 +23,7 @@ Describe 'No Optional Arguments' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = 'example-vendor.example-id-12.8.0'; RVersion = 'other-vendor.example-id-12.8.0'; },
@@ -45,7 +45,7 @@ Describe 'No Optional Arguments' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -68,7 +68,7 @@ Describe 'No Optional Arguments' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal;
@@ -87,7 +87,7 @@ Describe 'No Optional Arguments' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -109,7 +109,7 @@ Describe 'No Optional Arguments' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -132,7 +132,7 @@ Describe 'No Optional Arguments' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase;
@@ -151,7 +151,7 @@ Describe 'No Optional Arguments' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -173,7 +173,7 @@ Describe 'No Optional Arguments' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -239,7 +239,7 @@ Describe '-SemVer' {
                 $Actual | Should -Be 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -258,7 +258,7 @@ Describe '-SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -278,7 +278,7 @@ Describe '-SemVer' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -SemVer;
@@ -296,7 +296,7 @@ Describe '-SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -315,7 +315,7 @@ Describe '-SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -335,7 +335,7 @@ Describe '-SemVer' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -SemVer;
@@ -354,7 +354,7 @@ Describe '-SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -373,7 +373,7 @@ Describe '-SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -413,7 +413,7 @@ Describe '-DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -426,7 +426,7 @@ Describe '-DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -439,7 +439,7 @@ Describe '-DotSeparated' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -DotSeparated;
@@ -457,7 +457,7 @@ Describe '-DotSeparated' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -DotSeparated;
@@ -496,7 +496,7 @@ Describe '-DontAssumeZeroElement' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -518,7 +518,7 @@ Describe '-DontAssumeZeroElement' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -541,7 +541,7 @@ Describe '-DontAssumeZeroElement' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -DontAssumeZeroElement;
@@ -560,7 +560,7 @@ Describe '-DontAssumeZeroElement' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -582,7 +582,7 @@ Describe '-DontAssumeZeroElement' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -605,7 +605,7 @@ Describe '-DontAssumeZeroElement' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -DontAssumeZeroElement;
@@ -624,7 +624,7 @@ Describe '-DontAssumeZeroElement' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -646,7 +646,7 @@ Describe '-DontAssumeZeroElement' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -690,7 +690,7 @@ Describe '-NullNotSameAsEmpty' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -712,7 +712,7 @@ Describe '-NullNotSameAsEmpty' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -735,7 +735,7 @@ Describe '-NullNotSameAsEmpty' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -NullNotSameAsEmpty;
@@ -754,7 +754,7 @@ Describe '-NullNotSameAsEmpty' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -776,7 +776,7 @@ Describe '-NullNotSameAsEmpty' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -799,7 +799,7 @@ Describe '-NullNotSameAsEmpty' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -NullNotSameAsEmpty;
@@ -818,7 +818,7 @@ Describe '-NullNotSameAsEmpty' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -840,7 +840,7 @@ Describe '-NullNotSameAsEmpty' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -884,7 +884,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -903,7 +903,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -923,7 +923,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -DontAssumeZeroElement -SemVer;
@@ -942,7 +942,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -961,7 +961,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -981,7 +981,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -DontAssumeZeroElement -SemVer;
@@ -1000,7 +1000,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1019,7 +1019,7 @@ Describe '-DontAssumeZeroElement -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1059,7 +1059,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1072,7 +1072,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1085,7 +1085,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -DontAssumeZeroElement -DotSeparated;
@@ -1103,7 +1103,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1116,7 +1116,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1129,7 +1129,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null compared to empty should return 0" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -DontAssumeZeroElement -DotSeparated;
@@ -1147,7 +1147,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1160,7 +1160,7 @@ Describe '-DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1194,7 +1194,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1213,7 +1213,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1233,7 +1233,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -NullNotSameAsEmpty -SemVer;
@@ -1252,7 +1252,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1271,7 +1271,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1291,7 +1291,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -NullNotSameAsEmpty -SemVer;
@@ -1310,7 +1310,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1329,7 +1329,7 @@ Describe '-NullNotSameAsEmpty -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1369,7 +1369,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1382,7 +1382,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1395,7 +1395,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -NullNotSameAsEmpty -DotSeparated;
@@ -1413,7 +1413,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1426,7 +1426,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1439,7 +1439,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -NullNotSameAsEmpty -DotSeparated;
@@ -1457,7 +1457,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1470,7 +1470,7 @@ Describe '-NullNotSameAsEmpty -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1504,7 +1504,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1526,7 +1526,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1549,7 +1549,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -NullNotSameAsEmpty -DontAssumeZeroElement;
@@ -1568,7 +1568,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1590,7 +1590,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1613,7 +1613,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -NullNotSameAsEmpty -DontAssumeZeroElement;
@@ -1632,7 +1632,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1654,7 +1654,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1698,7 +1698,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1717,7 +1717,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1737,7 +1737,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -NullNotSameAsEmpty -DontAssumeZeroElement -SemVer;
@@ -1756,7 +1756,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
                 $Actual | Should -Be 0;
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1775,7 +1775,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1795,7 +1795,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -NullNotSameAsEmpty -DontAssumeZeroElement -SemVer;
@@ -1814,7 +1814,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
                 $Actual | Should -Be 0;
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha'; RVersion = '1.0.0-alpha.1'; },
@@ -1833,7 +1833,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -SemVer' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0-alpha.1'; RVersion = '1.0.0-alpha'; },
@@ -1873,7 +1873,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1886,7 +1886,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1899,7 +1899,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
             }
         }
     }
-    
+
     Context 'Ordinal ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType Ordinal -NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated;
@@ -1917,7 +1917,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1930,7 +1930,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
@@ -1943,7 +1943,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
             }
         }
     }
-    
+
     Context 'CurrentCultureIgnoreCase ComparisonType' {
         It "null should be less than empty" {
             $Actual = Compare-VersionStrings -LVersion $null -RVersion '' -ComparisonType CurrentCultureIgnoreCase -NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated;
@@ -1961,7 +1961,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -Be 0 -Because ($VersionString | ConvertTo-Json);
             }
         }
-        
+
         It "LVersion should be less than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '1.0.0'; RVersion = '2.0.0'; },
@@ -1974,7 +1974,7 @@ Describe '-NullNotSameAsEmpty -DontAssumeZeroElement -DotSeparated' {
                 $Actual | Should -BeLessThan 0 -Because "$($_.LVersion | ConvertTo-Json):$($_.RVersion | ConvertTo-Json)";
             }
         }
-        
+
         It "LVersion should be greater than RVersion" {
             foreach ($TestData in @(
                 [PSCustomObject]@{ LVersion = '2.0.0'; RVersion = '1.0.0'; },
