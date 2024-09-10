@@ -36,22 +36,22 @@ EXPORTED COMMANDS
 
     Write-ShortIntegerToStream
         Write 16-bit integer value to a stream.
-		
+
     Write-UnsignedShortIntegerToStream
         Write 16-bit unsigned integer value to a stream.
-		
+
     Write-IntegerToStream
         Write 32-bit integer value to a stream.
-		
+
     Write-UnsignedIntegerToStream
         Write 32-bit unsigned integer value to a stream.
-		
+
     Write-LongIntegerToStream
         Write 64-bit integer value to a stream.
-		
+
     Write-UnsignedLongIntegerToStream
         Write 64-bit unsigned integer value to a stream.
-		
+
     Read-TinyLengthEncodedBytes
         Read 8-bit length-encoded array of bytes from a stream.
 
@@ -109,6 +109,30 @@ EXPORTED COMMANDS
     Use-TempFolder
         Creates a temporary folder that is automatically deleted.
 
+    Assert-IsNotNull
+        Asserts that an object is not null.
+
+    Assert-IsType
+        Asserts that an object is of a specified type.
+
+    Assert-IsString
+        Asserts that an object is a string value.
+
+    Assert-IsPsEnumerable
+        Asserts that an object is an enumerable type (other than string and dictionary).
+
+    Invoke-WhenNotNull
+        Invokes a ScriptBlock when an object is not null.
+
+    Invoke-WhenIsType
+        Invokes a ScriptBlock when an object is of a specified type.
+
+    Invoke-WhenIsString
+        Invokes a ScriptBlock when an object is a string value.
+
+    Invoke-WhenIsPsEnumerable
+        Invokes a ScriptBlock when an object is an enumerable type (other than string and dictionary).
+
 SEE ALSO
     ConvertTo-SafeFileName
     Get-AppDataPath
@@ -143,3 +167,11 @@ SEE ALSO
     Out-UnindentedText
     Expand-GZip
     Use-TempFolder
+    Assert-IsNotNull
+    Assert-IsType
+    Assert-IsString
+    Assert-IsPsEnumerable
+    Invoke-WhenNotNull
+    Invoke-WhenIsType
+    Invoke-WhenIsString
+    Invoke-WhenIsPsEnumerable
