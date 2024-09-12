@@ -196,3 +196,12 @@ ModelManifest.xml
 *.nupkg
 /src/packages/MSTest.TestFramework.1.3.2/lib
 /src/.vs/
+
+# VS Code files for those working on multiple tools
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+*.code-workspace

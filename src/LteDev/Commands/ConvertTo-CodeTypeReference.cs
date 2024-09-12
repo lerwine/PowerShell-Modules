@@ -23,15 +23,15 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Type)]
         [ValidateNotNull()]
-        public CodeNamespace Namespace { get; set; }
+        public CodeNamespace Namespace { get; set; } = null!;
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Type)]
         [ValidateNotNullOrEmpty()]
-        public CodeTypeDeclaration[] Type { get; set; }
+        public CodeTypeDeclaration[] Type { get; set; } = null!;
 
         [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_NsType)]
         [ValidateNotNullOrEmpty()]
-        public CodeDomProxy.INamespaceAndType[] NsType { get; set; }
+        public CodeDomProxy.INamespaceAndType[] NsType { get; set; } = null!;
 
         #endregion
 
@@ -39,12 +39,12 @@ namespace LteDev.Commands
 
         protected override void ProcessRecord()
         {
-            if (NsType != null && NsType.Length > 0)
+            if (NsType is not null && NsType.Length > 0)
             {
                 foreach (CodeDomProxy.INamespaceAndType t in NsType)
                     WriteObject(t.ToTypeReference());
             }
-            else if (Namespace != null && Type != null && Type.Length > 0)
+            else if (Namespace is not null && Type is not null && Type.Length > 0)
             {
                 foreach (CodeTypeDeclaration t in Type)
                     (new CodeDomProxy.NamespaceAndType(Namespace, t)).ToTypeReference();

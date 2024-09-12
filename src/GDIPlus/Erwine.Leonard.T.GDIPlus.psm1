@@ -174,11 +174,3 @@ Function Convert-RgbToHsb {
     "Min: $Min; Max: $Max" | Write-Host;
     return @($Hue, $Saturation, $Brightness);
 }
-
-$Color = [System.Drawing.Color]::FromArgb(255, 200, 127, 64);
-$hsb = Convert-RgbToHsb -R ($Color.R / 255.0) -G ($Color.G / 255.0) -B ($Color.B / 255.0);
-"$($Color.R),$($Color.G),$($Color.B) ($($Color.R / 255.0),$($Color.G / 255.0),$($Color.B / 255.0))";
-"Expected: $($Color.GetHue()); Actual: $($hsb[0])";
-"Expected: $($Color.GetSaturation()); Actual: $($hsb[1])";
-"Expected: $($Color.GetBrightness()); Actual: $($hsb[2])";
-[System.Drawing.Color].IsValueType

@@ -19,7 +19,7 @@ namespace LteDev.Commands
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [AllowNull]
         [AllowEmptyString]
-        public string[] Name { get; set; }
+        public string[] Name { get; set; } = null!;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace LteDev.Commands
         {
             if (!_success)
                 return;
-            if (Name == null)
+            if (Name is null)
             {
                 _success = false;
                 return;
@@ -44,7 +44,7 @@ namespace LteDev.Commands
 
             foreach(string n in Name)
             {
-                if (String.IsNullOrEmpty(n) || !ValidateCsNameAttribute.NameRegex.IsMatch(n))
+                if (string.IsNullOrEmpty(n) || !ValidateCsNameAttribute.NameRegex.IsMatch(n))
                 {
                     _success = false;
                     break;

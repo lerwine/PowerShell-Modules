@@ -20,7 +20,7 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]
-        public CodeTypeReference[] Type { get; set; }
+        public CodeTypeReference[] Type { get; set; } = null!;
 
         #endregion
 
@@ -28,19 +28,19 @@ namespace LteDev.Commands
 
         public static string ToCodeTypeString(CodeTypeReference type)
         {
-            if (type == null)
+            if (type is null)
                 return "null";
             if (type.ArrayRank == 1)
                 return ToCodeTypeString(type.ArrayElementType) + "[]";
             if (type.ArrayRank == 2)
                 return ToCodeTypeString(type.ArrayElementType) + "[,]";
             if (type.ArrayRank > 2)
-                return ToCodeTypeString(type.ArrayElementType) + "[" + new String(',', type.ArrayRank - 1) + "]";
+                return ToCodeTypeString(type.ArrayElementType) + "[" + new string(',', type.ArrayRank - 1) + "]";
             string[] ga = type.TypeArguments.OfType<CodeTypeReference>().Select(t => ToCodeTypeString(t))
                 .Where(s => s.Length > 0).ToArray();
             if (ga.Length == 0)
                 return type.BaseType;
-            return type.BaseType + "." + '[' + String.Join(",", ga) + "]";
+            return type.BaseType + "." + '[' + string.Join(",", ga) + "]";
         }
         
         protected override void ProcessRecord()

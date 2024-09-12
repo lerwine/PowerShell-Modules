@@ -19,12 +19,12 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]
-        public CodeNamespace[] Namespace { get; set; }
+        public CodeNamespace[] Namespace { get; set; } = null!;
 
         [Parameter(Mandatory = true)]
         [ValidateNotNullOrEmpty()]
         [ValidateCsNamespace()]
-        public string[] Using { get; set; }
+        public string[] Using { get; set; } = null!;
 
         public SwitchParameter ReturnTarget { get; set; }
 
