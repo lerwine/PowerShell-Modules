@@ -30,7 +30,7 @@ CompanyName = 'Leonard T. Erwine'
 Copyright = '(c) 2024 Leonard Thomas Erwine. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Functions for working with software packages.'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''
@@ -69,7 +69,8 @@ RequiredModules = @('Erwine.Leonard.T.IOUtility')
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Compare-VersionStrings', 'Read-VsixPackageInfo', 'Optimize-VsCodeManifestIndex', 'Read-VsCodeManifestIndex', 'Write-VsCodeManifestIndex')
+FunctionsToExport = @('Compare-VersionStrings', 'New-ExtensionIdentity', 'Read-ExtensionVsixManifest', 'Compare-ExtensionIdentity', 'Optimize-ExtensionVsixManifestOrder', 'Read-VsixExtensionIndex',
+    'Write-VsixExtensionIndex', 'Select-VsixExtension', 'Skip-VsixExtension', 'Merge-VsixExtensions', 'Get-VsExtensionFromMarketPlace', 'Find-VsExtensionFromMarketPlace')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

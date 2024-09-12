@@ -1,0 +1,62 @@
+﻿TOPIC
+    about_Erwine.Leonard.T.SwPackage
+
+SHORT DESCRIPTION
+    Functions for working with software packages.
+
+LONG DESCRIPTION
+    Provides utility functions that are useful for working with software packages.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    Compare-VersionStrings
+        Compare version strings.
+
+    New-ExtensionIdentity
+        Create new ExtensionIdentity object.
+
+    Read-ExtensionVsixManifest
+        Gets package information from VSIX files.
+
+    Compare-ExtensionIdentity
+        Compares 2 ExtensionIdentity objects.
+
+    Optimize-ExtensionVsixManifestOrder
+        Sorts ExtensionVsixManifest objects.
+
+    Read-VsixExtensionIndex
+        Reads from the index file of an extension repository.
+
+    Write-VsixExtensionIndex
+        Writes to the index file of an extension repository.
+
+    Select-VsixExtension
+        Gets matching VSIX extensions according to identity.
+
+    Skip-VsixExtension
+        Gets VSIX extensions that do not match specifid identies.
+
+    Merge-VsixExtensions
+        Merges a VSIX extension objects.
+
+    Get-VsExtensionFromMarketPlace
+        Downloads a VSIX file from the marketplace.
+
+    Find-VsExtensionFromMarketPlace
+        Searches for VSIX file in the marketplace.
+
+SEE ALSO
+    Compare-VersionStrings
+    New-ExtensionIdentity
+    Read-ExtensionVsixManifest
+    Compare-ExtensionIdentity
+    Optimize-ExtensionVsixManifestOrder
+    Read-VsixExtensionIndex
+    Write-VsixExtensionIndex
+    Select-VsixExtension
+    Skip-VsixExtension
+    Merge-VsixExtensions
+    Get-VsExtensionFromMarketPlace
+    Find-VsExtensionFromMarketPlace
+    about_Erwine.Leonard.T.IOUtility
