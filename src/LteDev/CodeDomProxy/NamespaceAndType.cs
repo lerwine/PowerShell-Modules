@@ -17,16 +17,14 @@ namespace LteDev.CodeDomProxy
         
         public CodeTypeDeclaration Type { get; private set; }
 
-        INamespaceAndType INamespaceAndType.Parent { get { return null; } }
+        INamespaceAndType? INamespaceAndType.Parent { get { return null; } }
 
         public NamespaceAndType(CodeNamespace ns, string name, params string[] genericTypeNames)
         {
-            if (ns == null)
-                throw new ArgumentNullException("ns");
-            if (name == null)
-                throw new ArgumentNullException("name");
+            ArgumentNullException.ThrowIfNull(ns);
+            ArgumentNullException.ThrowIfNull(name);
             if (!ValidateCsNameAttribute.NameRegex.IsMatch(name))
-                throw new ArgumentException("Invalid type name", "name");
+                throw new ArgumentException("Invalid type name", nameof(name));
             
             Namespace = ns;
             Type = new CodeTypeDeclaration(name);
@@ -35,9 +33,9 @@ namespace LteDev.CodeDomProxy
                 foreach (string n in genericTypeNames)
                 {
                     if (n == null)
-                        throw new ArgumentNullException("genericTypeNames");
+                        throw new ArgumentNullException(nameof(genericTypeNames));
                     if (!ValidateCsNameAttribute.NameRegex.IsMatch(n))
-                        throw new ArgumentException("Invalid type name", "genericTypeNames");
+                        throw new ArgumentException("Invalid type name", nameof(genericTypeNames));
                     Type.TypeParameters.Add(new CodeTypeParameter(n));
                 }
             }
@@ -46,10 +44,8 @@ namespace LteDev.CodeDomProxy
 
         public NamespaceAndType(CodeNamespace ns, CodeTypeDeclaration type)
         {
-            if (ns == null)
-                throw new ArgumentNullException("ns");
-            if (type == null)
-                throw new ArgumentNullException("type");
+            ArgumentNullException.ThrowIfNull(ns);
+            ArgumentNullException.ThrowIfNull(type);
             Namespace = ns;
             Type = type;
             if (!ns.Types.OfType<CodeTypeDeclaration>().Any(t => ReferenceEquals(t, type)))
@@ -58,20 +54,20 @@ namespace LteDev.CodeDomProxy
 
         public CodeTypeReference ToTypeReference()
         {
-            CodeTypeReference[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !String.IsNullOrEmpty(n)).Select(n => new CodeTypeReference(n)).ToArray();
+            CodeTypeReference[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !string.IsNullOrEmpty(n)).Select(n => new CodeTypeReference(n)).ToArray();
             if (parameters.Length == 0)
-                return new CodeTypeReference((String.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name);
+                return new CodeTypeReference((string.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name);
 
-            return new CodeTypeReference((String.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name, parameters);
+            return new CodeTypeReference((string.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name, parameters);
         }
 
         public override string ToString()
         {
-            string[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !String.IsNullOrEmpty(n)).ToArray();
+            string[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !string.IsNullOrEmpty(n)).ToArray();
             if (parameters.Length == 0)
-                return (String.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name;
+                return (string.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name;
 
-            return ((String.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name) + "[" + String.Join(",", parameters) + "]";
+            return ((string.IsNullOrEmpty(this.Namespace.Name)) ? this.Type.Name : this.Namespace.Name + "." + this.Type.Name) + "[" + string.Join(",", parameters) + "]";
         }
     }
 #pragma warning restore 1591 // Missing XML comment for publicly visible type or member

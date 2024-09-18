@@ -10,47 +10,68 @@ LONG DESCRIPTION
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    Get-SpecialFolderNames
-        Get special folder names.
-
-    Get-SpecialFolder
-        Get special folder path.
-
     ConvertTo-SafeFileName
         Converts a string to a usable file name / path.
-
-    ConvertFrom-SafeFileName
-        Decodes a file name back to the original text.
 
     Get-AppDataPath
         Get path for application data storage.
 
-    New-WindowOwner
-        Create new window owner object.
+    Read-ShortIntegerFromStream
+        Read 16-bit integer value from a stream.
 
-    Read-FileDialog
-        Prompt user for filesystem path.
+    Read-UnsignedShortIntegerFromStream
+        Read 16-bit unsigned integer value from a stream.
+
+    Read-IntegerFromStream
+        Read 32-bit integer value from a stream.
+
+    Read-UnsignedIntegerFromStream
+        Read 32-bit unsigned integer value from a stream.
+
+    Read-LongIntegerFromStream
+        Read 64-bit integer value from a stream.
+
+    Read-UnsignedLongIntegerFromStream
+        Read 64-bit unsigned integer value from a stream.
+
+    Write-ShortIntegerToStream
+        Write 16-bit integer value to a stream.
+
+    Write-UnsignedShortIntegerToStream
+        Write 16-bit unsigned integer value to a stream.
+
+    Write-IntegerToStream
+        Write 32-bit integer value to a stream.
+
+    Write-UnsignedIntegerToStream
+        Write 32-bit unsigned integer value to a stream.
+
+    Write-LongIntegerToStream
+        Write 64-bit integer value to a stream.
+
+    Write-UnsignedLongIntegerToStream
+        Write 64-bit unsigned integer value to a stream.
+
+    Read-TinyLengthEncodedBytes
+        Read 8-bit length-encoded array of bytes from a stream.
+
+    Read-ShortLengthEncodedBytes
+        Read 16-bit length-encoded array of bytes from a stream.
+
+    Read-LengthEncodedBytes
+        Read 32-bit length-encoded array of bytes from a stream.
+
+    Write-TinyLengthEncodedBytes
+        Writes 8-bit length-encoded data a stream.
+
+    Write-ShortLengthEncodedBytes
+        Writes 16-bit length-encoded data a stream.
+
+    Write-LengthEncodedBytes
+        Writes 32-bit length-encoded data a stream.
 
     Get-MinBase64BlockSize
         Get minimum base-64 encoding block size.
-
-    Read-IntegerFromStream
-        Read integer value from a stream.
-
-    Read-LongIntegerFromStream
-        Read long integer value from a stream.
-
-    Write-IntegerToStream
-        Write integer value to a stream.
-		
-    Write-LongIntegerToStream
-        Write long integer value to a stream.
-
-    Read-LengthEncodedBytes
-        Read length-encoded array of bytes from a stream.
-
-    Write-LengthEncodedBytes
-        Writes length-encoded data a stream.
 
     ConvertTo-Base64String
         Convert data buffer to base-64 encoded text.
@@ -64,20 +85,14 @@ EXPORTED COMMANDS
     New-MemoryStream
         Creates a stream whose backing store is memory.
 
-    New-DataTable
-        Creates a new DataTable object.
+    Get-StringComparer
+        Gets a core string comparer object.
 
-    Add-DataColumn
-        Adds a new DataColumn object to a DataTable.
+    Optimize-WhiteSpace
+        Normalizes white space in strings.
 
-    Test-IsNullOrWhitespace
-        Tests if string is null or whitespace.
-
-    Split-DelimitedText
-        Splits text by delimiter.
-
-    Out-NormalizedText
-        Normalizes text.
+    Remove-ZeroPadding
+         Remove zero-padding from strings.
 
     Out-IndentedText
         Indents text.
@@ -88,38 +103,75 @@ EXPORTED COMMANDS
     Out-UnindentedText
         Removes indentation from input text.
 
-    Compare-FileSystemInfo
-        Compares 2 filesystem items.
+    Expand-GZip
+        Decompresses GZip files.
 
-    Test-PathsAreEqual
-        Determines if 2 paths are equal.
+    Use-TempFolder
+        Creates a temporary folder that is automatically deleted.
+
+    Assert-IsNotNull
+        Asserts that an object is not null.
+
+    Assert-IsType
+        Asserts that an object is of a specified type.
+
+    Assert-IsString
+        Asserts that an object is a string value.
+
+    Assert-IsPsEnumerable
+        Asserts that an object is an enumerable type (other than string and dictionary).
+
+    Invoke-WhenNotNull
+        Invokes a ScriptBlock when an object is not null.
+
+    Invoke-WhenIsType
+        Invokes a ScriptBlock when an object is of a specified type.
+
+    Invoke-WhenIsString
+        Invokes a ScriptBlock when an object is a string value.
+
+    Invoke-WhenIsPsEnumerable
+        Invokes a ScriptBlock when an object is an enumerable type (other than string and dictionary).
 
 SEE ALSO
-    Get-SpecialFolderNames
-    Get-SpecialFolder
     ConvertTo-SafeFileName
-    ConvertFrom-SafeFileName
     Get-AppDataPath
-    New-WindowOwner
-    Read-FileDialog
-    Get-MinBase64BlockSize
+    Read-ShortIntegerFromStream
+    Read-UnsignedShortIntegerFromStream
     Read-IntegerFromStream
+    Read-UnsignedIntegerFromStream
     Read-LongIntegerFromStream
+    Read-UnsignedLongIntegerFromStream
+    Write-ShortIntegerToStream
+    Write-UnsignedShortIntegerToStream
     Write-IntegerToStream
+    Write-UnsignedIntegerToStream
     Write-LongIntegerToStream
+    Write-UnsignedLongIntegerToStream
+    Read-TinyLengthEncodedBytes
+    Read-ShortLengthEncodedBytes
     Read-LengthEncodedBytes
+    Write-TinyLengthEncodedBytes
+    Write-ShortLengthEncodedBytes
     Write-LengthEncodedBytes
+    Get-MinBase64BlockSize
     ConvertTo-Base64String
     ConvertFrom-Base64String
     Get-TextEncoding
     New-MemoryStream
-    New-DataTable
-    Add-DataColumn
-    Test-IsNullOrWhitespace
-    Split-DelimitedText
-    Out-NormalizedText
+    Get-StringComparer
+    Optimize-WhiteSpace
+    Remove-ZeroPadding
     Out-IndentedText
     Get-IndentLevel
     Out-UnindentedText
-    Compare-FileSystemInfo
-    Test-PathsAreEqual
+    Expand-GZip
+    Use-TempFolder
+    Assert-IsNotNull
+    Assert-IsType
+    Assert-IsString
+    Assert-IsPsEnumerable
+    Invoke-WhenNotNull
+    Invoke-WhenIsType
+    Invoke-WhenIsString
+    Invoke-WhenIsPsEnumerable

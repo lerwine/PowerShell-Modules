@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace IOUtility.Commands
+namespace WinIOUtility.Commands
 {
     /// <summary>
     /// Adds a new DataColumn object to a DataTable.
@@ -34,7 +34,7 @@ namespace IOUtility.Commands
         [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
         [ValidateNotNull()]
         [Alias("DataTable")]
-        public DataTable Table { get; set; }
+        public DataTable Table { get; set; } = null!;
 
         /// <summary>
         /// A string that represents the name of the column to be added.
@@ -43,7 +43,7 @@ namespace IOUtility.Commands
         [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetName_Expression)]
         [ValidateNotNullOrEmpty()]
         [Alias("Name")]
-        public string ColumnName { get; set; }
+        public string ColumnName { get; set; } = null!;
 
         /// <summary>
         /// A supported column type.
@@ -51,7 +51,7 @@ namespace IOUtility.Commands
         [Parameter(Position = 2, ParameterSetName = ParameterSetName_Opt)]
         [Parameter(Mandatory = true, Position = 2, ParameterSetName = ParameterSetName_Expression)]
         [ValidateNotNull()]
-        public Type DataType { get; set; }
+        public Type DataType { get; set; } = null!;
 
         /// <summary>
         /// An expression to calculate the value of a column, or create an aggregate column. The return type of an expression is determined by the System.Data.DataColumn.DataType of the column
@@ -59,7 +59,7 @@ namespace IOUtility.Commands
         [Parameter(Mandatory = true, Position = 3, ParameterSetName = ParameterSetName_Expression)]
         [Alias("Expression")]
         [ValidateNotNullOrEmpty()]
-        public string Expr { get; set; }
+        public string Expr { get; set; } = null!;
 
         /// <summary>
         /// One of the System.Data.MappingType values
@@ -78,7 +78,7 @@ namespace IOUtility.Commands
         /// </summary>
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        public string Caption { get; set; }
+        public string Caption { get; set; } = null!;
 
         /// <summary>
         /// Indicates whether null values are allowed in this column for rows that belong to the table.
@@ -100,7 +100,7 @@ namespace IOUtility.Commands
         [Parameter(ParameterSetName = ParameterSetName_Opt)]
         public long AutoIncrementSeed
         {
-            get { return (_autoIncrementSeed.HasValue) ? _autoIncrementSeed.Value : 0; }
+            get { return (_autoIncrementSeed.HasValue) ? _autoIncrementSeed.Value : 0L; }
             set { _autoIncrementSeed = value; }
         }
 
@@ -112,7 +112,7 @@ namespace IOUtility.Commands
         [Parameter(ParameterSetName = ParameterSetName_Opt)]
         public long AutoIncrementStep
         {
-            get { return (_autoIncrementStep.HasValue) ? _autoIncrementStep.Value : 1; }
+            get { return (_autoIncrementStep.HasValue) ? _autoIncrementStep.Value : 1L; }
             set { _autoIncrementStep = value; }
         }
 
@@ -134,7 +134,7 @@ namespace IOUtility.Commands
         [Parameter(ParameterSetName = ParameterSetName_Opt)]
         [AllowNull()]
         [AllowEmptyString()]
-        public object DefaultValue { get; set; }
+        public object DefaultValue { get; set; } = null!;
 
         private int? _maxLength = null;
         
@@ -173,7 +173,7 @@ namespace IOUtility.Commands
 #pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
         {
-            DataColumn dataColumn;
+            DataColumn? dataColumn;
             if (String.IsNullOrEmpty(Expr))
             {
                 if (DataType != null)

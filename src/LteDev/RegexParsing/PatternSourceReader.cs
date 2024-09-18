@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace LteDev.RegexParsing
 {
     public sealed class PatternSourceReader : IRevertibleChangeTracking, IEnumerator<char>
     {
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private readonly string _pattern;
         private int _originalPosition = -1;
         private char _orignalValue;
@@ -27,7 +28,7 @@ namespace LteDev.RegexParsing
 
         public PatternSourceReader(string pattern)
         {
-            if (pattern == null) throw new ArgumentNullException("pattern");
+            ArgumentNullException.ThrowIfNull(pattern);
         }
 
         private bool TryIterateNext(int currentPosition, out char c, out bool isEscaped, out int nextPosition)
@@ -69,13 +70,13 @@ namespace LteDev.RegexParsing
             return true;
         }
 
-        private bool TryAggregateFollowing<T>(T seed, int count, int position, TryFunc<T, char, bool, T> evaluatedAggregator, out T result)
+        private bool TryAggregateFollowing<T>(T seed, int count, int position, TryFunc<T, char, bool, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             char c;
             bool isEscaped;
             int tested = 0;
             result = seed;
-            while (TryIterateNext(position, out c, out isEscaped, out position) && evaluatedAggregator(result, c, isEscaped, out seed))
+            while (TryIterateNext(position, out c, out isEscaped, out position) && evaluatedAggregator(result, c, isEscaped, out seed!))
             {
                 result = seed;
                 if (++tested == count)
@@ -87,12 +88,12 @@ namespace LteDev.RegexParsing
             return false;
         }
 
-        private bool TryAggregateFollowing<T>(T seed, int count, int position, TryFunc<T, char, T> evaluatedAggregator, out T result)
+        private bool TryAggregateFollowing<T>(T seed, int count, int position, TryFunc<T, char, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             char c;
             int tested = 0;
             result = seed;
-            while (TryIterateNext(position, out c, out position) && evaluatedAggregator(result, c, out seed))
+            while (TryIterateNext(position, out c, out position) && evaluatedAggregator(result, c, out seed!))
             {
                 result = seed;
                 if (++tested == count)
@@ -104,13 +105,13 @@ namespace LteDev.RegexParsing
             return false;
         }
 
-        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, T> evaluatedAggregator, out T result)
+        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             char c;
             result = seed;
             while (TryIterateNext(position, out c, out position))
             {
-                if (evaluatedAggregator(result, c, out seed))
+                if (evaluatedAggregator(result, c, out seed!))
                     result = seed;
                 else
                 {
@@ -121,14 +122,14 @@ namespace LteDev.RegexParsing
             return false;
         }
 
-        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, bool, T> evaluatedAggregator, out T result)
+        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, bool, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             char c;
             result = seed;
             bool isEscaped;
             while (TryIterateNext(position, out c, out isEscaped, out position))
             {
-                if (evaluatedAggregator(result, c, isEscaped, out seed))
+                if (evaluatedAggregator(result, c, isEscaped, out seed!))
                     result = seed;
                 else
                 {
@@ -139,14 +140,14 @@ namespace LteDev.RegexParsing
             return false;
         }
 
-        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, int, T> evaluatedAggregator, out T result)
+        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, int, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             char c;
             result = seed;
             int offset = -1;
             while (TryIterateNext(position, out c, out position))
             {
-                if (evaluatedAggregator(result, c, ++offset, out seed))
+                if (evaluatedAggregator(result, c, ++offset, out seed!))
                     result = seed;
                 else
                 {
@@ -157,7 +158,7 @@ namespace LteDev.RegexParsing
             return false;
         }
 
-        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, bool, int, T> evaluatedAggregator, out T result)
+        private bool TryAggregateFollowingWhile<T>(T seed, int position, TryFunc<T, char, bool, int, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             char c;
             result = seed;
@@ -165,7 +166,7 @@ namespace LteDev.RegexParsing
             int offset = -1;
             while (TryIterateNext(position, out c, out isEscaped, out position))
             {
-                if (evaluatedAggregator(result, c, isEscaped, ++offset, out seed))
+                if (evaluatedAggregator(result, c, isEscaped, ++offset, out seed!))
                     result = seed;
                 else
                 {
@@ -176,14 +177,14 @@ namespace LteDev.RegexParsing
             return false;
         }
 
-        public bool TryAggregateNext<T>(T seed, int count, TryFunc<T, char, T> evaluatedAggregator, out T result)
+        public bool TryAggregateNext<T>(T seed, int count, TryFunc<T, char, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluatedAggregator == null) throw new ArgumentNullException("evaluatedAggregator");
-                if (count < 0) throw new ArgumentOutOfRangeException("count");
+                ArgumentNullException.ThrowIfNull(evaluatedAggregator);
+                if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
                 int position = _position;
                 char c;
                 if (!EndOfPattern && count > 0 && TryIterateNext(position, out c, out position))
@@ -194,14 +195,14 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNext<T>(T seed, int count, TryFunc<T, char, bool, T> evaluatedAggregator, out T result)
+        public bool TryAggregateNext<T>(T seed, int count, TryFunc<T, char, bool, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluatedAggregator == null) throw new ArgumentNullException("evaluatedAggregator");
-                if (count < 0) throw new ArgumentOutOfRangeException("count");
+                ArgumentNullException.ThrowIfNull(evaluatedAggregator);
+                if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
                 int position = _position;
                 char c;
                 if (!EndOfPattern && count > 0 && TryIterateNext(position, out c, out position))
@@ -212,15 +213,15 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNext<T>(int count, TryFunc<char, T> firstEvaluatedAggregator, TryFunc<T, char, T> followingEvaluatedAggregator, out T result)
+        public bool TryAggregateNext<T>(int count, TryFunc<char, T> firstEvaluatedAggregator, TryFunc<T, char, T> followingEvaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (firstEvaluatedAggregator == null) throw new ArgumentNullException("firstEvaluatedAggregator");
-                if (followingEvaluatedAggregator == null) throw new ArgumentNullException("followingEvaluatedAggregator");
-                if (count < 0) throw new ArgumentOutOfRangeException("count");
+                ArgumentNullException.ThrowIfNull(firstEvaluatedAggregator);
+                ArgumentNullException.ThrowIfNull(followingEvaluatedAggregator);
+                if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
                 int position = _position;
                 char c;
                 if (!EndOfPattern && count > 0 && TryIterateNext(position, out c, out position) && TryIterateNext(position, out c, out position))
@@ -235,15 +236,15 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNext<T>(int count, TryFunc<char, bool, T> firstEvaluatedAggregator, TryFunc<T, char, bool, T> followingEvaluatedAggregator, out T result)
+        public bool TryAggregateNext<T>(int count, TryFunc<char, bool, T> firstEvaluatedAggregator, TryFunc<T, char, bool, T> followingEvaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (firstEvaluatedAggregator == null) throw new ArgumentNullException("firstEvaluatedAggregator");
-                if (followingEvaluatedAggregator == null) throw new ArgumentNullException("followingEvaluatedAggregator");
-                if (count < 0) throw new ArgumentOutOfRangeException("count");
+                ArgumentNullException.ThrowIfNull(firstEvaluatedAggregator);
+                ArgumentNullException.ThrowIfNull(followingEvaluatedAggregator);
+                if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
                 int position = _position;
                 char c;
                 bool isEscaped;
@@ -259,13 +260,13 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, T> evaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluatedAggregator == null) throw new ArgumentNullException("evaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(evaluatedAggregator);
                 int position = _position;
                 char c;
                 if (!EndOfPattern && TryIterateNext(position, out c, out position))
@@ -277,13 +278,13 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, bool, T> evaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, bool, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluatedAggregator == null) throw new ArgumentNullException("evaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(evaluatedAggregator);
                 int position = _position;
                 char c;
                 if (!EndOfPattern && TryIterateNext(position, out c, out position))
@@ -295,13 +296,13 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, int, T> evaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, int, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluatedAggregator == null) throw new ArgumentNullException("evaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(evaluatedAggregator);
                 result = seed;
                 int position = _position;
                 char c;
@@ -313,13 +314,13 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, bool, int, T> evaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(T seed, TryFunc<T, char, bool, int, T> evaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluatedAggregator == null) throw new ArgumentNullException("evaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(evaluatedAggregator);
                 result = seed;
                 int position = _position;
                 char c;
@@ -331,14 +332,14 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(TryFunc<char, T> firstEvaluatedAggregator, TryFunc<T, char, T> followingEvaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(TryFunc<char, T> firstEvaluatedAggregator, TryFunc<T, char, T> followingEvaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (firstEvaluatedAggregator == null) throw new ArgumentNullException("firstEvaluatedAggregator");
-                if (followingEvaluatedAggregator == null) throw new ArgumentNullException("followingEvaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(firstEvaluatedAggregator);
+                ArgumentNullException.ThrowIfNull(followingEvaluatedAggregator);
                 int position = _position;
                 char c;
                 if (!EndOfPattern && TryIterateNext(position, out c, out position) && TryIterateNext(position, out c, out position))
@@ -353,14 +354,14 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(TryFunc<char, bool, T> firstEvaluatedAggregator, TryFunc<T, char, bool, T> followingEvaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(TryFunc<char, bool, T> firstEvaluatedAggregator, TryFunc<T, char, bool, T> followingEvaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (firstEvaluatedAggregator == null) throw new ArgumentNullException("firstEvaluatedAggregator");
-                if (followingEvaluatedAggregator == null) throw new ArgumentNullException("followingEvaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(firstEvaluatedAggregator);
+                ArgumentNullException.ThrowIfNull(followingEvaluatedAggregator);
                 int position = _position;
                 char c;
                 bool isEscaped;
@@ -376,14 +377,14 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(TryFunc<char, T> firstEvaluatedAggregator, TryFunc<T, char, int, T> followingEvaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(TryFunc<char, T> firstEvaluatedAggregator, TryFunc<T, char, int, T> followingEvaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (firstEvaluatedAggregator == null) throw new ArgumentNullException("firstEvaluatedAggregator");
-                if (followingEvaluatedAggregator == null) throw new ArgumentNullException("followingEvaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(firstEvaluatedAggregator);
+                ArgumentNullException.ThrowIfNull(followingEvaluatedAggregator);
                 int position = _position;
                 char c;
                 if (!EndOfPattern && TryIterateNext(position, out c, out position) && TryIterateNext(position, out c, out position))
@@ -398,14 +399,14 @@ namespace LteDev.RegexParsing
             finally { Monitor.Exit(_syncRoot); }
         }
 
-        public bool TryAggregateNextWhile<T>(TryFunc<char, bool, T> firstEvaluatedAggregator, TryFunc<T, char, bool, int, T> followingEvaluatedAggregator, out T result)
+        public bool TryAggregateNextWhile<T>(TryFunc<char, bool, T> firstEvaluatedAggregator, TryFunc<T, char, bool, int, T> followingEvaluatedAggregator, [NotNullWhen(true)] out T? result)
         {
             Monitor.Enter(_syncRoot);
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (firstEvaluatedAggregator == null) throw new ArgumentNullException("firstEvaluatedAggregator");
-                if (followingEvaluatedAggregator == null) throw new ArgumentNullException("followingEvaluatedAggregator");
+                ArgumentNullException.ThrowIfNull(firstEvaluatedAggregator);
+                ArgumentNullException.ThrowIfNull(followingEvaluatedAggregator);
                 int position = _position;
                 char c;
                 bool isEscaped;
@@ -427,7 +428,7 @@ namespace LteDev.RegexParsing
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluator == null) throw new ArgumentNullException("evaluator");
+                ArgumentNullException.ThrowIfNull(evaluator);
                 int position;
                 char c;
                 if (count == 0 || EndOfPattern || !TryIterateNext(_position, out c, out position))
@@ -450,7 +451,7 @@ namespace LteDev.RegexParsing
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluator == null) throw new ArgumentNullException("evaluator");
+                ArgumentNullException.ThrowIfNull(evaluator);
                 int position;
                 char c;
                 if (count == 0 || EndOfPattern || !TryIterateNext(_position, out c, out position))
@@ -472,7 +473,7 @@ namespace LteDev.RegexParsing
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluator == null) throw new ArgumentNullException("evaluator");
+                ArgumentNullException.ThrowIfNull(evaluator);
                 if (evaluator.Length == 0) throw new ArgumentException("evaluator", "At least one aggregator function must be provided");
                 int position;
                 char c;
@@ -480,7 +481,7 @@ namespace LteDev.RegexParsing
                     return false;
                 foreach (Func<char, bool, bool> e in evaluator)
                 {
-                    if (e == null) throw new ArgumentNullException("evaluator");
+                    if (e is null) throw new ArgumentNullException(nameof(evaluator));
                     bool isEscaped;
                     if (!(TryIterateNext(position, out c, out isEscaped, out position) && e(c, isEscaped)))
                         return false;
@@ -497,7 +498,7 @@ namespace LteDev.RegexParsing
             try
             {
                 if (_position < -1) throw new ObjectDisposedException(GetType().FullName);
-                if (evaluator == null) throw new ArgumentNullException("evaluator");
+                ArgumentNullException.ThrowIfNull(evaluator);
                 if (evaluator.Length == 0) throw new ArgumentException("evaluator", "At least one aggregator function must be provided");
                 int position;
                 char c;
@@ -505,7 +506,7 @@ namespace LteDev.RegexParsing
                     return false;
                 foreach (Func<char, bool> e in evaluator)
                 {
-                    if (e == null) throw new ArgumentNullException("evaluator");
+                    if (e is null) throw new ArgumentNullException(nameof(evaluator));
                     if (!(TryIterateNext(position, out c, out position) && e(c)))
                         return false;
                 }

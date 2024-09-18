@@ -27,52 +27,52 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_CompileUnit)]
         [ValidateNotNullOrEmpty()]
-        public CodeCompileUnit[] CompileUnit { get; set; }
+        public CodeCompileUnit[] CompileUnit { get; set; } = null!;
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Expression)]
         [ValidateNotNullOrEmpty()]
-        public CodeExpression[] Expression { get; set; }
+        public CodeExpression[] Expression { get; set; } = null!;
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Member)]
         [ValidateNotNullOrEmpty()]
-        public CodeTypeMember[] Member { get; set; }
+        public CodeTypeMember[] Member { get; set; } = null!;
 
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_NS)]
         [ValidateNotNullOrEmpty()]
-        public CodeNamespace[] NS { get; set; }
+        public CodeNamespace[] NS { get; set; } = null!;
 
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Statement)]
         [ValidateNotNullOrEmpty()]
-        public CodeStatement[] Statement { get; set; }
+        public CodeStatement[] Statement { get; set; } = null!;
 
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_Type)]
         [ValidateNotNullOrEmpty()]
-        public CodeTypeDeclaration[] Type { get; set; }
+        public CodeTypeDeclaration[] Type { get; set; } = null!;
 
         [Parameter]
         [ValidateNotNull()]
-        public CodeDomProvider Provider { get; set; }
-        
+        public CodeDomProvider? Provider { get; set; }
+
         [Parameter]
         [ValidateNotNull()]
-        public TextWriter Writer { get; set; }
-        
+        public TextWriter? Writer { get; set; }
+
         [Parameter]
         [ValidateNotNull()]
-        public CodeGeneratorOptions Options { get; set; }
+        public CodeGeneratorOptions? Options { get; set; }
 
         #endregion
 
         #region fields
 
-        private CodeDomProvider _provider = null;
+        private CodeDomProvider _provider = null!;
 
-        private TextWriter _writer = null;
+        private TextWriter? _writer;
 
-        private IndentedTextWriter _indentedWriter = null;
+        private IndentedTextWriter _indentedWriter = null!;
 
         #endregion
 
@@ -81,65 +81,65 @@ namespace LteDev.Commands
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            _provider = (Provider == null) ? CodeDomProvider.CreateProvider(New_CodeDomProvider.ParameterSetName_CSharp) : Provider;
-            if (Writer == null)
+            _provider = (Provider is null) ? CodeDomProvider.CreateProvider(New_CodeDomProvider.ParameterSetName_CSharp) : Provider;
+            if (Writer is null)
             {
                 _writer = new StringWriter();
                 _indentedWriter = new IndentedTextWriter(_writer);
             }
-            else if (Writer is IndentedTextWriter)
-                _indentedWriter = (IndentedTextWriter)Writer;
+            else if (Writer is IndentedTextWriter indentedTextWriter)
+                _indentedWriter = indentedTextWriter;
             else
                 _indentedWriter = new IndentedTextWriter(Writer);
         }
 
         protected override void ProcessRecord()
         {
-            if (CompileUnit != null && CompileUnit.Length > 0)
+            if (CompileUnit is not null && CompileUnit.Length > 0)
             {
                 foreach (CodeCompileUnit compileUnit in CompileUnit)
                 {
-                    if (compileUnit != null)
+                    if (compileUnit is not null)
                         _provider.GenerateCodeFromCompileUnit(compileUnit, _indentedWriter, Options);
                 }
             }
-            else if (Expression != null && Expression.Length > 0)
+            else if (Expression is not null && Expression.Length > 0)
             {
                 foreach (CodeExpression expr in Expression)
                 {
-                    if (expr != null)
+                    if (expr is not null)
                         _provider.GenerateCodeFromExpression(expr, _indentedWriter, Options);
                 }   
             }
-            else if (Member != null && Member.Length > 0)
+            else if (Member is not null && Member.Length > 0)
             {
                 foreach (CodeTypeMember member in Member)
                 {
-                    if (member != null)
+                    if (member is not null)
                         _provider.GenerateCodeFromMember(member, _indentedWriter, Options);
                 }   
             }
-            else if (NS != null && NS.Length > 0)
+            else if (NS is not null && NS.Length > 0)
             {
                 foreach (CodeNamespace ns in NS)
                 {
-                    if (ns != null)
+                    if (ns is not null)
                         _provider.GenerateCodeFromNamespace(ns, _indentedWriter, Options);
                 }   
             }
-            else if (Statement != null && Statement.Length > 0)
+            else if (Statement is not null && Statement.Length > 0)
             {
                 foreach (CodeStatement st in Statement)
                 {
-                    if (st != null)
+                    if (st is not null)
                         _provider.GenerateCodeFromStatement(st, _indentedWriter, Options);
                 }   
             }
-            else if (Type != null && Type.Length > 0)
+            else if (Type is not null && Type.Length > 0)
             {
                 foreach (CodeTypeDeclaration t in Type)
                 {
-                    if (t != null)
+                    if (t is not null)
                         _provider.GenerateCodeFromType(t, _indentedWriter, Options);
                 }   
             }
@@ -152,24 +152,24 @@ namespace LteDev.Commands
             {
                 try
                 {
-                    if (Provider == null)
+                    if (Provider is null)
                         _provider.Dispose();
                 }
                 finally
                 {
-                    if (Writer == null)
+                    if (Writer is null)
                     {
                         try
                         {
                             try
                             {
                                 _indentedWriter.Flush();
-                                _writer.Flush();
+                                _writer!.Flush();
                                 _writer.ToString();
                             }
                             finally { _indentedWriter.Dispose(); }
                         }
-                        finally { _writer.Dispose(); }
+                        finally { _writer!.Dispose(); }
                     }
                     else if (!(Writer is IndentedTextWriter))
                     {

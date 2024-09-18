@@ -6,7 +6,7 @@ using System.Linq;
 #endif
 using System.Text.RegularExpressions;
 
-namespace IOUtility
+namespace WinIOUtility
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class TextHelper
@@ -126,7 +126,7 @@ namespace IOUtility
             if (otherChars != null && otherChars.Any())
 #endif
             {
-                Regex regex;
+                Regex? regex;
                 if (patterns.Count == 1)
                     regex = new Regex(patterns[0], RegexOptions.Compiled);
                 else if (patterns.Count > 1)

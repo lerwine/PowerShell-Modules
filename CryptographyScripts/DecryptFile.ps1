@@ -1,5 +1,5 @@
 ﻿#Requires –Version 2
-('Erwine.Leonard.T.IOUtility', 'Erwine.Leonard.T.CertificateCryptography') | ForEach-Object {
+('Erwine.Leonard.T.IOUtility', 'Erwine.Leonard.T.WinIOUtility', 'Erwine.Leonard.T.CertificateCryptography') | ForEach-Object {
 	if ($null -eq (Get-Module -Name $_)) { Import-Module -Name $_ -ErrorAction Stop }
 }
 

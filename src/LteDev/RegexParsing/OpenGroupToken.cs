@@ -19,49 +19,51 @@ namespace LteDev.RegexParsing
 
         public string Name { get { return _name; } }
 
-        public OpenGroupToken(RegexTokenType tokenType, int depth, string name, params char[] followingValues)
+        private static readonly char[] first = ['?'];
+
+        public OpenGroupToken(RegexTokenType tokenType, int depth, string? name, params char[] followingValues)
         {
             _tokenType = tokenType;
             _depth = depth;
             _precedingValues = Array.Empty<char>();
-            _name = (name == null) ? string.Empty : name;
-            _followingValues = (followingValues == null) ? Array.Empty<char>() : followingValues;
+            _name = name ?? string.Empty;
+            _followingValues = followingValues ?? ([]);
         }
 
-        public OpenGroupToken(RegexTokenType tokenType, int depth, char precedingChar, string name, params char[] followingValues)
+        public OpenGroupToken(RegexTokenType tokenType, int depth, char precedingChar, string? name, params char[] followingValues)
         {
             _tokenType = tokenType;
             _depth = depth;
-            _precedingValues = new char[] { precedingChar };
-            _name = (name == null) ? string.Empty : name;
-            _followingValues = (followingValues == null) ? Array.Empty<char>() : followingValues;
+            _precedingValues = [precedingChar];
+            _name = name ?? string.Empty;
+            _followingValues = followingValues ?? ([]);
         }
 
-        public OpenGroupToken(RegexTokenType tokenType, int depth, string precedingChars, string name, params char[] followingValues)
+        public OpenGroupToken(RegexTokenType tokenType, int depth, string precedingChars, string? name, params char[] followingValues)
         {
             _tokenType = tokenType;
             _depth = depth;
-            _precedingValues = new char[] { '?' }.Concat(precedingChars).ToArray();
-            _name = (name == null) ? string.Empty : name;
-            _followingValues = (followingValues == null) ? Array.Empty<char>() : followingValues;
+            _precedingValues = [.. first, .. precedingChars];
+            _name = name ?? string.Empty;
+            _followingValues = followingValues ?? ([]);
         }
 
-        public OpenGroupToken(RegexTokenType tokenType, int depth, char precedingChar1, char precedingChar2, string name, params char[] followingValues)
+        public OpenGroupToken(RegexTokenType tokenType, int depth, char precedingChar1, char precedingChar2, string? name, params char[] followingValues)
         {
             _tokenType = tokenType;
             _depth = depth;
-            _precedingValues = new char[] { precedingChar1, precedingChar2 };
-            _name = (name == null) ? string.Empty : name;
-            _followingValues = (followingValues == null) ? Array.Empty<char>() : followingValues;
+            _precedingValues = [precedingChar1, precedingChar2];
+            _name = name ?? string.Empty;
+            _followingValues = followingValues ?? [];
         }
 
-        public OpenGroupToken(RegexTokenType tokenType, int depth, char precedingChar1, char precedingChar2, char precedingChar3, string name, params char[] followingValues)
+        public OpenGroupToken(RegexTokenType tokenType, int depth, char precedingChar1, char precedingChar2, char precedingChar3, string? name, params char[] followingValues)
         {
             _tokenType = tokenType;
             _depth = depth;
-            _precedingValues = new char[] { precedingChar1, precedingChar2, precedingChar3 };
-            _name = (name == null) ? string.Empty : name;
-            _followingValues = (followingValues == null) ? Array.Empty<char>() : followingValues;
+            _precedingValues = [precedingChar1, precedingChar2, precedingChar3];
+            _name = name ?? string.Empty;
+            _followingValues = followingValues ?? [];
         }
 
         public IEnumerable<char> GetPrecedingPattern()
@@ -88,12 +90,11 @@ namespace LteDev.RegexParsing
                 yield return c;
         }
 
-        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper)
+        public void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper)
         {
             foreach (char c in GetPrecedingPattern())
                 writer.Write(c);
-            string[] spanClassNames;
-            RegexParser.WriteSpanned(_name, writer, classNames, classMapper.TryGetNameClassNames(out spanClassNames) ? spanClassNames : null);
+            RegexParser.WriteSpanned(_name, writer, classNames, classMapper.TryGetNameClassNames(out string[]? spanClassNames) ? spanClassNames : null);
             foreach (char c in GetFollowingPattern())
                 writer.Write(c);
         }

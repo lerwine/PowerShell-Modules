@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace IOUtility.Commands
+namespace WinIOUtility.Commands
 {
     /// <summary>
     /// Creates a new DataTable object.
@@ -33,7 +33,7 @@ namespace IOUtility.Commands
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterSetName_Namespace)]
         [ValidateNotNullOrEmpty()]
         [Alias("Name")]
-        public string TableName { get; set; }
+        public string TableName { get; set; } = null!;
 
         /// <summary>
         /// The namespace for the XML representation of the data stored in the DataTable.
@@ -42,7 +42,7 @@ namespace IOUtility.Commands
         [Alias("Namespace")]
         [ValidateNotNull()]
         [AllowEmptyString()]
-        public string TableNamespace { get; set; }
+        public string TableNamespace { get; set; } = null!;
 
         /// <summary>
         /// The namespace prefix for the XML representation of the data stored in the System.Data.DataTable
@@ -50,7 +50,7 @@ namespace IOUtility.Commands
         [Parameter(Position = 2, ParameterSetName = ParameterSetName_Namespace)]
         [ValidateNotNull()]
         [AllowEmptyString()]
-        public string Prefix { get; set; }
+        public string Prefix { get; set; } = null!;
 
         /// <summary>
         /// Indicates whether string comparisons within the table are case-sensitive
@@ -65,7 +65,7 @@ namespace IOUtility.Commands
 #pragma warning disable 1591 // Missing XML comment for publicly visible type or member
         protected override void ProcessRecord()
         {
-            DataTable table;
+            DataTable? table;
             
             if (TableNamespace == null)
             {
