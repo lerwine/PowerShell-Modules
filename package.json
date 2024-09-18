@@ -16,6 +16,6 @@
   },
   "homepage": "https://github.com/lerwine/PowerShell-Modules#readme",
   "dependencies": {
-    "npm": "^9.9.3"
+    "npm": "^10.8.3"
   }
 }
