@@ -3,23 +3,17 @@ using System.Web.UI;
 
 namespace LteDev.RegexParsing
 {
-    public class CloseGroupToken : IRegexPatternToken
+    public class CloseGroupToken(RegexTokenType tokenType, int depth) : IRegexPatternToken
     {
-        private readonly int _depth;
-        private readonly RegexTokenType _tokenType;
+        private readonly int _depth = depth;
+        private readonly RegexTokenType _tokenType = tokenType;
 
         public RegexTokenType TokenType { get { return _tokenType; } }
 
         public int Depth { get { return _depth; } }
 
-        public CloseGroupToken(RegexTokenType tokenType, int depth)
-        {
-            _tokenType = tokenType;
-            _depth = depth;
-        }
-
         public IEnumerable<char> GetPattern() { yield return ')'; }
 
-        public void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper) { writer.Write(')'); }
+        public void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper) { writer.Write(')'); }
     }
 }

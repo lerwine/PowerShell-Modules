@@ -9,6 +9,6 @@ namespace LteDev.RegexParsing
 
         IEnumerable<char> GetPattern();
 
-        void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper);
+        void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper);
     }
 }
