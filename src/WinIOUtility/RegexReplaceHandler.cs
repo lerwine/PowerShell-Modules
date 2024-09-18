@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace IOUtility
+namespace WinIOUtility
 {
     /// <summary>
     /// Base class for replacing text based upon regular expression matches.
@@ -13,7 +13,15 @@ namespace IOUtility
         /// <summary>
         /// Regular Expression object which matches text to encode.
         /// </summary>
-        public Regex Regex { get { return this._regex; } private set { this._regex = value; } }
+        public Regex Regex
+        {
+            get { return _regex; }
+            private set
+            {
+                ArgumentNullException.ThrowIfNull(value);
+                _regex = value;
+            }
+        }
 
         /// <summary>
         /// Initialize new <see cref="RegexReplaceHandler" />.
@@ -22,13 +30,9 @@ namespace IOUtility
         /// <param name="options">Regular expression pattern options.</param>
         protected RegexReplaceHandler(string pattern, RegexOptions options)
         {
-            if (pattern == null)
-                throw new ArgumentNullException("pattern");
-
-            if (pattern.Trim().Length == 0)
-                throw new ArgumentException("Pattern cannot be empty.", "pattern");
-
-            this.Regex = new Regex(pattern, options);
+            if (string.IsNullOrWhiteSpace(pattern))
+                throw new ArgumentException($"'{nameof(pattern)}' cannot be null or whitespace.", nameof(pattern));
+            _regex = new Regex(pattern, options);
         }
 
         /// <summary>
@@ -37,13 +41,9 @@ namespace IOUtility
         /// <param name="pattern">Regular Expression pattern of text to encode.</param>
         protected RegexReplaceHandler(string pattern)
         {
-            if (pattern == null)
-                throw new ArgumentNullException("pattern");
-
-            if (pattern.Trim().Length == 0)
-                throw new ArgumentException("Pattern cannot be empty.", "pattern");
-
-            this.Regex = new Regex(pattern);
+            if (string.IsNullOrWhiteSpace(pattern))
+                throw new ArgumentException($"'{nameof(pattern)}' cannot be null or whitespace.", nameof(pattern));
+            _regex = new Regex(pattern);
         }
 
         /// <summary>
@@ -52,10 +52,7 @@ namespace IOUtility
         /// <param name="regex">Regular Expression object which matches text to encode.</param>
         protected RegexReplaceHandler(Regex regex)
         {
-            if (regex == null)
-                throw new ArgumentNullException("regex");
-
-            this.Regex = regex;
+            _regex = regex ?? throw new ArgumentNullException(nameof(regex));
         }
 
         /// <summary>

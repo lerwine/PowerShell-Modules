@@ -1,96 +1,30 @@
-$Script:Regex = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
-	Whitespace = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
-	UrlEncodedItem = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '(^|&)(?<key>[^&=]*)(=(?<value>[^&]*))?', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
-};
+if ($null -eq $Script:InvalidFileNameChars) {
+    New-Variable -Name 'InvalidFileNameChars' -Option ReadOnly -Scope 'Script' -Value (&{
+        [System.Management.Automation.ProviderInfo]$FileSystemProvider = Get-PSProvider -PSProvider 'FileSystem';
+        if ($FileSystemProvider.AltItemSeparator -ine $FileSystemProvider.ItemSeparator -and -not [string]::IsNullOrEmpty($FileSystemProvider.AltItemSeparator)) {
+            if ($FileSystemProvider.VolumeSeparatedByColon) { return ([string[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator, ':')); }
+            return ([string[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator));
+        }
+        if ($FileSystemProvider.VolumeSeparatedByColon) { return ([string[]]@($FileSystemProvider.ItemSeparator, ':')); }
+        return ([string[]]@($FileSystemProvider.ItemSeparator));
+    });
 
-Function Get-SpecialFolderNames {
-	<#
-		.SYNOPSIS
-			Get special folder names.
-		 
-		.DESCRIPTION
-			Returns a list of names that can be used to refer to actual spcial folder paths.
-		
-		.OUTPUTS
-			System.String[]. List of non-empty string values.
-		
-		.LINK
-			Get-SpecialFolder
-		
-		.LINK
-			https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
-	#>
-	[CmdletBinding()]
-	[OutputType([string[]])]
-	Param()
-	if ($PSVersionTable.ClrVersion.Major -lt 4) {
-		[System.Enum]::GetNames([System.Environment+SpecialFolder]) + @('ProgramFilesX86', 'CommonProgramFilesX86', 'Windows');
-	} else {
-		[System.Enum]::GetNames([System.Environment+SpecialFolder])
-	}
-}
-
-Function Get-SpecialFolder {
-	<#
-		.SYNOPSIS
-			Get special folder path.
- 
-		.DESCRIPTION
-			Converts special folder enumerated value to string path.
-		
-		.OUTPUTS
-			System.String. Path of special folder.
-
-		.EXAMPLE
-			$WindowsPath = Get-SpecialFolder -Name 'Windows';
-
-		.EXAMPLE
-			$MyDocumentsPath = Get-SpecialFolder [System.Environment+SpecialFolder]::MyDocuments;
-		
-		.LINK
-			Get-SpecialFolderNames
-		
-		.LINK
-			https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'Enum')]
-	[OutputType([string])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'Enum')]
-		# Enumerated folder value.
-		[System.Environment+SpecialFolder]$Folder,
-		
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'String')]
-		[ValidateScript({(Get-SpecialFolderNames) -icontains $_})]
-		# Name of special folder.
-		[string]$Name
-	)
-	Process {
-		if ($PSBoundParameters.ContainsKey('Folder')) {
-			[System.Environment]::GetFolderPath($Folder);
-		} else {
-			if ($PSVersionTable.ClrVersion.Major -lt 4) {
-				switch ($Name) {
-					'CommonProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'); break; }
-					'ProgramFilesX86' { [System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'); break; }
-					'Windows' { [System.Environment]::GetEnvironmentVariable('SystemRoot'); break; }
-					default { [System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true)); break; }
-				}
-			} else {
-				[System.Environment]::GetFolderPath([System.Enum]::Parse([System.Environment+SpecialFolder], $Name, $true));
-			}
-		}
-	}
+    New-Variable -Name 'Int16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int16]0).Length;
+    New-Variable -Name 'UInt16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt16]0).Length;
+    New-Variable -Name 'Int32ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([int]0).Length;
+    New-Variable -Name 'UInt32ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt32]0).Length;
+    New-Variable -Name 'Int64ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int64]0).Length;
+    New-Variable -Name 'UInt64ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt64]0).Length;
 }
 
 Function ConvertTo-SafeFileName {
 	<#
 		.SYNOPSIS
 			Converts a string to a usable file name / path.
- 
+
 		.DESCRIPTION
 			Encodes a string in a format which is compatible with a file name / path, and can be converted back to the original text.
-		
+
 		.OUTPUTS
 			System.String. Text encoded as a valid file name / path.
 
@@ -99,7 +33,7 @@ Function ConvertTo-SafeFileName {
 
 		.EXAMPLE
 			'c:\my*path\User.string' | ConvertTo-SafeFileName -FullPath;
-		
+
 		.LINK
 			ConvertFrom-SafeFileName
 	#>
@@ -109,77 +43,66 @@ Function ConvertTo-SafeFileName {
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# String to convert to file name
 		[string[]]$InputText,
-		
+
 		[Parameter(ParameterSetName = 'FileName')]
 		# Only allow file names. This is the default behavior.
 		[switch]$FileName,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'RelativePath')]
 		# Only allow relative paths
 		[switch]$RelativePath,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'FullPath')]
 		# Allow full path specification
 		[switch]$FullPath
 	)
-	
-	Begin {
-		switch ($PSCmdlet.ParameterSetName){
-			'RelativePath' {
-				$EncodeRegexReplaceHandler = New-Object -TypeName 'IOUtility.EncodeRegexReplaceHandler' -ArgumentList ([IOUtility.RegularExpressions]::InvalidRelativePathChars);
-				break;
-			}
-			'FullPath' {
-				$EncodeRegexReplaceHandler = New-Object -TypeName 'IOUtility.EncodeRegexReplaceHandler' -ArgumentList ([IOUtility.RegularExpressions]::InvalidPathChars);
-				break;
-			}
-			default {
-				$EncodeRegexReplaceHandler = New-Object -TypeName 'IOUtility.EncodeRegexReplaceHandler' -ArgumentList ([IOUtility.RegularExpressions]::InvalidFileNameChars);
-				break;
-			}
-		}
-	}
-	
-	Process { foreach ($Text in $InputText) { $EncodeRegexReplaceHandler.Replace($Text) } }
-}
 
-Function ConvertFrom-SafeFileName {
-	<#
-		.SYNOPSIS
-			Decodes a file name back to the original text.
- 
-		.DESCRIPTION
-			If a file name was creating using 'ConvertTo-SafeFileName', this method will convert it back.
+    Begin {
+        Function ConvertChars([string]$Text) {
+            [char[]]$Converted = ($Text.ToCharArray() | ForEach-Object {
+                if ($Script:InvalidFileNameChars -icontains $_) {
+                    "_0x$(([int]$_).ToString('x4'))_".ToCharArray() | Write-Output;
+                } else {
+                    $_ | Write-Output;
+                }
+            });
+            if ($Converted.Length -eq $InputText.Length) { return $InputText }
+            return [string]::new($Converted);
+        }
+    }
 
-		.OUTPUTS
-			System.String. Encoded file name decoded to its original text.
-
-		.EXAMPLE
-			'File_0x005F_Name' | ConvertFrom-SafeFileName;
-
-		.LINK
-				ConvertTo-SafeFileName
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		# File name to decode
-		[string[]]$InputText
-	)
-	
-	Begin {
-		$DecodeRegexReplaceHandler = New-Object -TypeName 'IOUtility.DecodeRegexReplaceHandler';
-	}
-	
-	Process { foreach ($Text in $InputText) { $DecodeRegexReplaceHandler.Replace($Text) } }
+	Process {
+        foreach ($Text in $InputText) {
+            if ($Text[0] -eq ' ') {
+                if ($Text.Length -eq 1) {
+                    '_0020_' | Write-Output;
+                } else {
+                    if ($Text[-1] -eq ' ') {
+                        if ($Text.Length -eq 2) {
+                            '_0020__0020_' | Write-Output;
+                        } else {
+                            ('_0020_' + (ConvertChars($Text.Substring(1, $Text.Length - 2))) + '_0020_') | Write-Output;
+                        }
+                    } else {
+                        ('_0020_' + (ConvertChars($Text.Substring(1, $Text.Length - 2)))) | Write-Output;
+                    }
+                }
+            } else {
+                if ($Text[-1] -eq ' ') {
+                    ((ConvertChars($Text.Substring(0, $Text.Length - 1))) + '_0020_') | Write-Output;
+                } else {
+                    ConvertChars($Text) | Write-Output;
+                }
+            }
+        }
+    }
 }
 
 Function Get-AppDataPath {
 	<#
 		.SYNOPSIS
 			Get path for application data storage.
- 
+
 		.DESCRIPTION
 			Constructs a path for application-specific data.
 
@@ -220,20 +143,20 @@ Function Get-AppDataPath {
 		# Create folder structure under common location.
 		[switch]$Common
 	)
-	
+
 	Process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'Common' { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::CommonApplicationData); break; }
 			'Local' { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::LocalApplicationData); break; }
 			default { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::ApplicationData); break; }
 		}
-		
+
 		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 			throw ('Unable to find {0} path "{1}".' -f $PSCmdlet.ParameterSetName, $AppDataPath);
 		}
 
 		$AppDataPath = $AppDataPath | Join-Path -ChildPath ($Company | ConvertTo-SafeFileName);
-		
+
 		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 			New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
 			if (-not ($AppDataPath | Test-Path -PathType Container)) {
@@ -244,7 +167,7 @@ Function Get-AppDataPath {
 		$N = $ProductName;
 		if ($PSBoundParameters.ContainsKey('Version')) { $N = '{0}_{1}_{2}' -f $N, $Version.Major, $Version.Minor }
 		$AppDataPath = $AppDataPath | Join-Path -ChildPath ($N | ConvertTo-SafeFileName);
-		
+
 		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 			New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
 			if (-not ($AppDataPath | Test-Path -PathType Container)) {
@@ -254,7 +177,7 @@ Function Get-AppDataPath {
 
 		if ($PSBoundParameters.ContainsKey('ComponentName')) {
 			$AppDataPath = $AppDataPath | Join-Path -ChildPath ($ComponentName | ConvertTo-SafeFileName -AllowExtension);
-		
+
 			if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
 				New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
 				if (-not ($AppDataPath | Test-Path -PathType Container)) {
@@ -267,366 +190,127 @@ Function Get-AppDataPath {
 	}
 }
 
-Function New-WindowOwner {
+Function Read-ShortIntegerFromStream {
 	<#
 		.SYNOPSIS
-			Create new window owner object.
- 
+			Read integer value from a stream.
+
 		.DESCRIPTION
-			Initializes a new object which implements System.Windows.Forms.IWin32Window, representing an owner window.
+			Reads bytes from a stream and converts them to an integer.
 
 		.OUTPUTS
-			System.Windows.Forms.IWin32Window. Path to selected file or folder.
-			
+			System.Int32. Integer value read from stream.
+
 		.LINK
-			https://msdn.microsoft.com/en-us/library/system.windows.forms.iwin32window.aspx
-			
+			Write-ShortIntegerToStream
+
 		.LINK
-			https://msdn.microsoft.com/en-us/library/system.diagnostics.process.getcurrentprocess.aspx
-			
+			Read-UnsignedShortIntegerFromStream
+
 		.LINK
-			https://msdn.microsoft.com/en-us/library/system.diagnostics.process.mainwindowhandle.aspx
-			
+			Read-IntegerFromStream
+
 		.LINK
-			https://msdn.microsoft.com/en-us/library/system.windows.forms.control.handle.aspx
+			Read-LongIntegerFromStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
 	[CmdletBinding()]
-	[OutputType([System.Windows.Forms.IWin32Window])]
+	[OutputType([Int16])]
 	Param(
-		[Parameter(Position = 0, ValueFromPipeline = $true)]
-		[Alias('HWND', 'Handle')]
-		# The Win32 HWND handle of a window. If this is not specified, then the handle of the current process's main window is used.
-		[System.IntPtr]$WindowHandle
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
+		# Stream from which to read the bytes of an integer value.
+		[System.IO.Stream]$Stream
 	)
-	
-	Process {
-		if ($PSBoundParameters.ContainsKey('WindowHandle')) {
-			New-Object -TypeName 'IOUtility.WindowOwner' -ArgumentList $WindowHandle;
-		} else {
-			New-Object -TypeName 'IOUtility.WindowOwner' -ArgumentList ([System.Diagnostics.Process]::GetCurrentProcess().MainWindowHandle);
-		}
-	}
+
+    $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:Int16ByteLength;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Count = $Stream.Read($Buffer, 0, $Script:Int16ByteLength);
+        if ($Count -eq $Script:Int16ByteLength) { return [System.BitConverter]::ToInt16($Buffer, 0) }
+        $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+    } else {
+        $Count = $Stream.Read($Buffer, 0, $Script:Int16ByteLength);
+        if ($Count -eq $Script:Int16ByteLength) { return [System.BitConverter]::ToInt16($Buffer, 0) }
+    }
+    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Script:Int16ByteLength) returned $Count";
 }
 
-Function Test-FileDialogFilter {
-	[CmdletBinding()]
-	Param(
-		[Paramter(Mandatory = $true, ValueFromPipeline = $true)]
-        [AllowNull()]
-        [AllowEmptyString()]
-        [AllowEmptyCollection()]
-		[string[]]$InputText
-    )
-
-    Begin {
-        $Success = $true;
-        if ($Script:TestFileDialogFilterRegex -eq $null) {
-            $Script:TestFileDialogFilterRegex = [System.Text.RegularExpressions.Regex]::new('^[^|]+\|^[^|]+(\|[^|]+\|^[^|]+)*$', [System.Text.RegularExpressions.RegexOptions]::Compiled);
-        }
-    }
-    Process {
-        if ($Success) {
-            if ($InputText -eq $null -or $InputText.Length -eq 0) {
-                $Success = $false;
-            } else {
-                foreach ($Filter in $InputText) {
-                    if ($Filter -eq $null -or -not $Script:TestFileDialogFilterRegex.IsMatch($Filter)) {
-                        $Success = $false;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    End { $Success | Write-Output }
-}
-
-Function Read-FileDialog {
+Function Read-UnsignedShortIntegerFromStream {
 	<#
 		.SYNOPSIS
-			Prompt user for filesystem path.
- 
+			Read integer value from a stream.
+
 		.DESCRIPTION
-			Uses a dialog to prompt the user for the path to a file or folder.
+			Reads bytes from a stream and converts them to an integer.
 
 		.OUTPUTS
-			System.String. Path to selected file or folder.
-			
-		.LINK
-			https://msdn.microsoft.com/en-us/library/system.windows.forms.openfiledialog.aspx
-			
-		.LINK
-			https://msdn.microsoft.com/en-us/library/system.windows.forms.savefiledialog.aspx
-			
-		.LINK
-			https://msdn.microsoft.com/en-us/library/system.windows.forms.folderbrowserdialog.aspx
+			System.Int32. Integer value read from stream.
 
 		.LINK
-			New-WindowOwner
+			Write-UnsignedShortIntegerToStream
+
+		.LINK
+			Read-ShortIntegerFromStream
+
+		.LINK
+			Read-UnsignedIntegerFromStream
+
+		.LINK
+			Read-UnsignedLongIntegerFromStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
 	[CmdletBinding()]
+	[OutputType([UInt16])]
 	Param(
-		[Alias('FileName')]
-		# Path to initially selected file or folder.
-		[string]$SelectedPath,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box displays a warning if the user specifies a file name that does not exist.
-		[bool]$CheckFileExists,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box displays a warning if the user specifies a path that does not exist.
-		[bool]$CheckPathExists,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box returns the location of the file referenced by the shortcut or whether it returns the location of the shortcut (.lnk).
-		[bool]$DereferenceLinks,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box restores the directory to the previously selected directory before closing.
-		[bool]$RestoreDirectory,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Custom places to be added to the dialog.
-		[System.Windows.Forms.FileDialogCustomPlace[]]$CustomPlaces,
-		
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box allows multiple files to be selected.
-		[bool]$Multiselect,
-		
-		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
-		# Indicates whether the New Folder button appears in the folder browser dialog box.
-		[bool]$ShowNewFolderButton,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box supports displaying and saving files that have multiple file name extensions.
-		[bool]$SupportMultiDottedExtensions,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box accepts only valid Win32 file names.
-		[bool]$ValidateNames,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Sets the index of the filter currently selected in the file dialog box.
-		[int]$FilterIndex,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box automatically adds an extension to a file name if the user omits the extension.
-		[bool]$AddExtension,
-		
-		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
-		# Sets the descriptive text displayed above the tree view control in the dialog box.
-		[string]$Description,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Sets the file dialog box title
-		[string]$Title,
-		
-		# Indicates whether the Save As dialog box displays a warning if the user specifies a file name that already exists.
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[bool]$OverwritePrompt,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Sets the initial directory displayed by the file dialog box.
-		[string]$InitialDirectory,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-        [ValidateScript({
-            $sb = {
-                $s = $null;
-                if ($args[0] -eq $null) {
-                    if ($args[1] -eq $null -or $args[1] -is [string]) { return $args[1] }
-                    return "$($args[1])";
-                }
-                if ($args[0] -is [string]) { return $args[0] }
-                return "$($args[0])";
-            };
-            
-            foreach ($o in @($_)) {
-                if ($o -is [string]) {
-                    if (-not ($o | Test-FileDialogFilter)) { return $false }
-                } else {
-                    $s = &$sb $o.Pattern;
-                    if ($s -eq $null -or ($s = $s.Trim()).Length -eq 0 -or $s.Contains('|')) { return $false }
-                    $s = &$sb $o.Description $o.Label;
-                    if ($s -ne $null -and ($s = $s.Trim()).Length -gt 0 -and $s.Contains('|')) { return $false }
-                }
-            }
-            return $true;
-        })]
-		# Sets the current file name filter, which determines the choices that appear in the "Save as file type" or "Files of type" box in the dialog box. This can be a string containing pairs of descriptions and filters, each separated by a '|' character. This can also be a collection of Hashtable objects with a Key named 'Pattern' which contains the file matching pattern and an optional 'Description' or 'Label' key that represents the description of the pattern.
-		[object[]]$Filter,
-		
-		# Sets the root folder where the browsing starts from.
-		[Parameter(ParameterSetName = 'FolderBrowserDialog')]
-		[System.Environment+SpecialFolder]$RootFolder,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Sets the default file name extension.
-		[string]$DefaultExt,
-		
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the dialog box contains a read-only check box. 
-		[bool]$ShowReadOnly,
-		
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the read-only check box is selected.
-		[bool]$ReadOnlyChecked,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Indicates whether the Help button is displayed in the file dialog box.
-		[bool]$ShowHelp,
-		
-		[Parameter(ParameterSetName = 'SaveFileDialog')]
-		# Indicates whether the dialog box prompts the user for permission to create a file if the user specifies a file that does not exist.
-		[bool]$CreatePrompt,
-		
-		# Owner window. If this is not specified, then the current process's main window will be the owner.
-		[System.Windows.Forms.IWin32Window]$Owner,
-		
-		[Parameter(ParameterSetName = 'OpenFileDialog')]
-		# Use the 'Open File' dialog. This is the default, if 'Save' or 'Folder' is not specified.
-		[switch]$Open,
-		
-		[Parameter(Mandatory = $true, ParameterSetName = 'SaveFileDialog')]
-		# Use the 'Save File' dialog.
-		[switch]$Save,
-		
-		[Parameter(Mandatory = $true, ParameterSetName = 'FolderBrowserDialog')]
-		# Use the 'Folder Browser' dialog.
-		[switch]$Folder
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
+		# Stream from which to read the bytes of an integer value.
+		[System.IO.Stream]$Stream
 	)
-	
-	$Dialog = New-Object -TypeName ('System.Windows.Forms.{0}' -f $PSCmdlet.ParameterSetName);
-	try {
-		if ($PSBoundParameters.ContainsKey('SelectedPath')) {
-			if ($PSCmdlet.ParameterSetName -eq 'FolderBrowserDialog') {
-				$Dialog.SelectedPath = $SelectedPath
-			} else {
-				$Dialog.FileName = $SelectedPath
-			}
-		}
-		if ($PSCmdlet.ParameterSetName -eq 'FolderBrowserDialog') {
-			if ($PSBoundParameters.ContainsKey('ShowNewFolderButton')) { $Dialog.ShowNewFolderButton = $ShowNewFolderButton }
-			if ($PSBoundParameters.ContainsKey('RootFolder')) { $Dialog.RootFolder = $RootFolder }
-			if ($PSBoundParameters.ContainsKey('Description')) { $Dialog.Description = $Description }
-		} else {
-			if ($PSBoundParameters.ContainsKey('CheckFileExists')) { $Dialog.CheckFileExists = $CheckFileExists }
-			if ($PSBoundParameters.ContainsKey('DereferenceLinks')) { $Dialog.DereferenceLinks = $DereferenceLinks }
-			if ($PSBoundParameters.ContainsKey('CheckPathExists')) { $Dialog.CheckPathExists = $CheckPathExists }
-			if ($PSBoundParameters.ContainsKey('RestoreDirectory')) { $Dialog.RestoreDirectory = $RestoreDirectory }
-			if ($PSBoundParameters.ContainsKey('CustomPlaces')) {
-				foreach ($c in $CustomPlaces) { $Dialog.CustomPlaces.Add($c) }
-			}
-			if ($PSBoundParameters.ContainsKey('SupportMultiDottedExtensions')) { $Dialog.SupportMultiDottedExtensions = $SupportMultiDottedExtensions }
-			if ($PSBoundParameters.ContainsKey('ValidateNames')) { $Dialog.ValidateNames = $ValidateNames }
-			if ($PSBoundParameters.ContainsKey('FilterIndex')) { $Dialog.FilterIndex = $FilterIndex }
-			if ($PSBoundParameters.ContainsKey('DefaultExt')) { $Dialog.DefaultExt = $DefaultExt }
-			if ($PSBoundParameters.ContainsKey('ShowHelp')) { $Dialog.ShowHelp = $ShowHelp }
-			if ($PSBoundParameters.ContainsKey('Title')) { $Dialog.Title = $Title }
-			if ($PSBoundParameters.ContainsKey('InitialDirectory')) { $Dialog.InitialDirectory = $InitialDirectory }
-			if ($PSBoundParameters.ContainsKey('Filter')) {
-                $Dialog.Filter = (@($Filter) | ForEach-Object {
-                    if ($_ -is [string]) {
-                        $_
-                    } else {
-                        $d = $_.Description;
-                        if ($d -eq $null) { $d = $_.Label }
-                        if ($d -isnot [string]) { $d = $d.ToString() }
-                        $e = $_.Pattern;
-                        if ($e -isnot [string]) { $e = $e.ToString() }
-                        "$d|$e"
-                    }
-                }) -join '|';
-            }
-			if ($PSBoundParameters.ContainsKey('AddExtension')) { $Dialog.AddExtension = $AddExtension }
-			if ($PSCmdlet.ParameterSetName -eq 'OpenFileDialog') {
-				if ($PSBoundParameters.ContainsKey('Multiselect')) { $Dialog.Multiselect = $Multiselect }
-				if ($PSBoundParameters.ContainsKey('ShowReadOnly')) { $Dialog.ShowReadOnly = $ShowReadOnly }
-				if ($PSBoundParameters.ContainsKey('ReadOnlyChecked')) { $Dialog.ReadOnlyChecked = $ReadOnlyChecked }
-			} else {
-				if ($PSBoundParameters.ContainsKey('OverwritePrompt')) { $Dialog.OverwritePrompt = $OverwritePrompt }
-			}
-		}
-		
-		if (-not $PSBoundParameters.ContainsKey('Owner')) { $Owner = New-WindowOwner }
 
-		if ($Dialog.ShowDialog($Owner) -eq [System.Windows.Forms.DialogResult]::OK) {
-			switch ($PSCmdlet.ParameterSetName) {
-				'FolderBrowserDialog' {
-					$Dialog.SelectedPath | Write-Output;
-					break;
-				}
-				'SaveFileDialog' {
-					$Dialog.FileName | Write-Output;
-					break;
-				}
-				default {
-					if ($Dialog.Multiselect) {
-						$Dialog.FileNames | Write-Output;
-					} else {
-						$Dialog.FileName | Write-Output;
-					}
-					break;
-				}
-			}
-		}
-	} catch {
-		throw;
-	} finally {
-		$Dialog.Dispose();
-	}
-}
-
-Function Get-MinBase64BlockSize {
-	<#
-		.SYNOPSIS
-			Get minimum base-64 encoding block size.
- 
-		.DESCRIPTION
-			Get minimum base-64 encoding block size when you intend on emitting line-separated chunks of base64-encoded data.
-			
-		.OUTPUTS
-			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
-	#>
-	[CmdletBinding()]
-	[OutputType([int])]
-	Param()
-	
-	return [IOUtility.StreamHelper]::MinBase64BlockSize;
+    $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:UInt16ByteLength;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Count = $Stream.Read($Buffer, 0, $Script:UInt16ByteLength);
+        if ($Count -eq $Script:UInt16ByteLength) { return [System.BitConverter]::ToUInt16($Buffer, 0) }
+        $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+    } else {
+        $Count = $Stream.Read($Buffer, 0, $Script:UInt16ByteLength);
+        if ($Count -eq $Script:Int16ByteLength) { return [System.BitConverter]::ToUInt16($Buffer, 0) }
+    }
+    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Script:UInt16ByteLength) returned $Count";
 }
 
 Function Read-IntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to an integer.
-			
+
 		.OUTPUTS
 			System.Int32. Integer value read from stream.
-		
+
 		.LINK
 			Write-IntegerToStream
-		
+
+		.LINK
+			Read-UnsignedIntegerFromStream
+
+		.LINK
+			Read-ShortIntegerFromStream
+
 		.LINK
 			Read-LongIntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -634,30 +318,97 @@ Function Read-IntegerFromStream {
 	[OutputType([int])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
 		# Stream from which to read the bytes of an integer value.
 		[System.IO.Stream]$Stream
 	)
-	
-	return [IOUtility.StreamHelper]::ReadInteger($Stream);
+
+    $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:Int32ByteLength;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Count = $Stream.Read($Buffer, 0, $Script:Int32ByteLength);
+        if ($Count -eq $Script:Int32ByteLength) { return [System.BitConverter]::ToInt32($Buffer, 0) }
+        $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+    } else {
+        $Count = $Stream.Read($Buffer, 0, $Script:Int32ByteLength);
+        if ($Count -eq $Script:Int32ByteLength) { return [System.BitConverter]::ToInt32($Buffer, 0) }
+    }
+    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Script:Int32ByteLength) returned $Count";
+}
+
+Function Read-UnsignedIntegerFromStream {
+	<#
+		.SYNOPSIS
+			Read unsigned integer value from a stream.
+
+		.DESCRIPTION
+			Reads bytes from a stream and converts them to an unsigned integer.
+
+		.OUTPUTS
+			System.Int32. Integer value read from stream.
+
+		.LINK
+			Write-UnsignedIntegerToStream
+
+		.LINK
+			Read-IntegerFromStream
+
+		.LINK
+			Read-UnsignedShortIntegerFromStream
+
+		.LINK
+			Read-UnsignedLongIntegerFromStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	[OutputType([UInt32])]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
+		# Stream from which to read the bytes of an integer value.
+		[System.IO.Stream]$Stream
+	)
+
+    $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:UInt32ByteLength;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Count = $Stream.Read($Buffer, 0, $Script:UInt32ByteLength);
+        if ($Count -eq $Script:UInt32ByteLength) { return [System.BitConverter]::ToUInt32($Buffer, 0) }
+        $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+    } else {
+        $Count = $Stream.Read($Buffer, 0, $Script:UInt32ByteLength);
+        if ($Count -eq $Script:UInt32ByteLength) { return [System.BitConverter]::ToUInt32($Buffer, 0) }
+    }
+    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Script:UInt32ByteLength) returned $Count";
 }
 
 Function Read-LongIntegerFromStream {
 	<#
 		.SYNOPSIS
 			Read long integer value from a stream.
- 
+
 		.DESCRIPTION
 			Reads bytes from a stream and converts them to a long integer.
-			
+
 		.OUTPUTS
 			System.Int64. Long Integer value read from stream.
-		
+
 		.LINK
 			Write-LongIntegerToStream
-		
+
+		.LINK
+			Read-UnsignedLongIntegerFromStream
+
+		.LINK
+			Read-ShortIntegerFromStream
+
 		.LINK
 			Read-IntegerFromStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -665,89 +416,334 @@ Function Read-LongIntegerFromStream {
 	[OutputType([long])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
 		# Stream from which to read the bytes of a long integer value.
 		[System.IO.Stream]$Stream
 	)
-	
-	return [IOUtility.StreamHelper]::ReadLongInteger($Stream);
+
+    $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:Int64ByteLength;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Count = $Stream.Read($Buffer, 0, $Script:Int64ByteLength);
+        if ($Count -eq $Script:Int64ByteLength) { return [System.BitConverter]::ToInt64($Buffer, 0) }
+        $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+    } else {
+        $Count = $Stream.Read($Buffer, 0, $Script:Int64ByteLength);
+        if ($Count -eq $Script:Int64ByteLength) { return [System.BitConverter]::ToInt64($Buffer, 0) }
+    }
+    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Script:Int64ByteLength) returned $Count";
+}
+
+Function Read-UnsignedLongIntegerFromStream {
+	<#
+		.SYNOPSIS
+			Read unsigned long integer value from a stream.
+
+		.DESCRIPTION
+			Reads bytes from a stream and converts them to an unsigned long integer.
+
+		.OUTPUTS
+			System.UInt64. Unsigned Long Integer value read from stream.
+
+		.LINK
+			Write-UnsignedLongIntegerToStream
+
+		.LINK
+			Read-LongIntegerFromStream
+
+		.LINK
+			Read-UnsignedShortIntegerFromStream
+
+		.LINK
+			Read-UnsignedIntegerFromStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	[OutputType([UInt64])]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
+		# Stream from which to read the bytes of a long integer value.
+		[System.IO.Stream]$Stream
+	)
+
+    $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Script:UInt64ByteLength;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Count = $Stream.Read($Buffer, 0, $Script:UInt64ByteLength);
+        if ($Count -eq $Script:UInt64ByteLength) { return [System.BitConverter]::ToUInt64($Buffer, 0) }
+        $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+    } else {
+        $Count = $Stream.Read($Buffer, 0, $Script:UInt64ByteLength);
+        if ($Count -eq $Script:UInt64ByteLength) { return [System.BitConverter]::ToUInt64($Buffer, 0) }
+    }
+    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Script:UInt64ByteLength) returned $Count";
+}
+
+Function Write-ShortIntegerToStream {
+	<#
+		.SYNOPSIS
+			Write integer value to a stream.
+
+		.DESCRIPTION
+			Writes an integer value to the Stream as an array of bytes.
+
+		.LINK
+			Read-ShortIntegerFromStream
+
+		.LINK
+			Write-UnsignedShortIntegerToStream
+
+		.LINK
+			Write-IntegerToStream
+
+		.LINK
+			Write-LongIntegerToStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanWrite })]
+		# Stream to write integer value to
+		[System.IO.Stream]$Stream,
+
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		# Integer value to be written
+		[Int16]$Value
+	)
+
+	Process {
+        $Buffer = [System.BitConverter]::GetBytes($Value);
+        $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
+    }
+}
+
+Function Write-UnsignedShortIntegerToStream {
+	<#
+		.SYNOPSIS
+			Write unsigned integer value to a stream.
+
+		.DESCRIPTION
+			Writes an unsigned integer value to the Stream as an array of bytes.
+
+		.LINK
+			Read-UnsignedShortIntegerFromStream
+
+		.LINK
+			Write-ShortIntegerToStream
+
+		.LINK
+			Write-UnsignedIntegerToStream
+
+		.LINK
+			Write-UnsignedLongIntegerToStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanWrite })]
+		# Stream to write unsigned short integer value to
+		[System.IO.Stream]$Stream,
+
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		# Integer value to be written
+		[UInt16]$Value
+	)
+
+	Process {
+        $Buffer = [System.BitConverter]::GetBytes($Value);
+        $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
+    }
 }
 
 Function Write-IntegerToStream {
 	<#
 		.SYNOPSIS
 			Write integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes an integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-IntegerFromStream
-		
+
+		.LINK
+			Write-UnsignedIntegerToStream
+
+		.LINK
+			Write-ShortIntegerToStream
+
 		.LINK
 			Write-LongIntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
 	[CmdletBinding()]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanWrite })]
 		# Stream to write integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Integer value to be written
 		[int]$Value
 	)
-	
-	Process { [IOUtility.StreamHelper]::WriteInteger($Stream, $Value) }
+
+	Process {
+        $Buffer = [System.BitConverter]::GetBytes($Value);
+        $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
+    }
+}
+
+Function Write-UnsignedIntegerToStream {
+	<#
+		.SYNOPSIS
+			Write unsigned integer value to a stream.
+
+		.DESCRIPTION
+			Writes an unsigned integer value to the Stream as an array of bytes.
+
+		.LINK
+			Read-UnsignedIntegerFromStream
+
+		.LINK
+			Write-IntegerToStream
+
+		.LINK
+			Write-ShortIntegerToStream
+
+		.LINK
+			Write-UnsignedLongIntegerToStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanWrite })]
+		# Stream to write unsigned integer value to
+		[System.IO.Stream]$Stream,
+
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		# Integer value to be written
+		[UInt32]$Value
+	)
+
+	Process {
+        $Buffer = [System.BitConverter]::GetBytes($Value);
+        $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
+    }
 }
 
 Function Write-LongIntegerToStream {
 	<#
 		.SYNOPSIS
 			Write long integer value to a stream.
- 
+
 		.DESCRIPTION
 			Writes a long integer value to the Stream as an array of bytes.
-		
+
 		.LINK
 			Read-LongIntegerFromStream
-		
+
+		.LINK
+			Write-UnsignedLongIntegerToStream
+
+		.LINK
+			Write-ShortIntegerToStream
+
 		.LINK
 			Write-IntegerToStream
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
 	[CmdletBinding()]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanWrite })]
 		# Stream to write long integer value to
 		[System.IO.Stream]$Stream,
-		
+
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
 		# Long Integer value to be written
 		[long]$Value
 	)
-	
-	Process { [IOUtility.StreamHelper]::WriteLongInteger($Stream, $Value) }
+
+	Process {
+        $Buffer = [System.BitConverter]::GetBytes($Value);
+        $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
+    }
 }
 
-Function Read-LengthEncodedBytes {
+Function Write-UnsignedLongIntegerToStream {
 	<#
 		.SYNOPSIS
-			Read length-encoded array of bytes from a stream.
- 
+			Write unsigned long integer value to a stream.
+
+		.DESCRIPTION
+			Writes an unsigned long integer value to the Stream as an array of bytes.
+
+		.LINK
+			Read-UnsignedLongIntegerFromStream
+
+		.LINK
+			Write-LongIntegerToStream
+
+		.LINK
+			Write-ShortIntegerToStream
+
+		.LINK
+			Write-UnsignedIntegerToStream
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanWrite })]
+		# Stream to write unsigned long integer value to
+		[System.IO.Stream]$Stream,
+
+		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+		# Long Integer value to be written
+		[UInt64]$Value
+	)
+
+	Process {
+        $Buffer = [System.BitConverter]::GetBytes($Value);
+        $Stream.Write($Buffer, 0, $Buffer.Length) | Out-Null;
+    }
+}
+
+Function Read-TinyLengthEncodedBytes {
+	<#
+		.SYNOPSIS
+			Read 8 bit length-encoded array of bytes from a stream.
+
 		.DESCRIPTION
 			Reads a length value from the Stream, and then reads the associated number of bytes.
-			
+
 		.OUTPUTS
 			System.Byte[]. Array of length-encoded bytes read from stream.
-		
+
 		.LINK
 			Write-LengthEncodedBytes
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -755,24 +751,193 @@ Function Read-LengthEncodedBytes {
 	[OutputType([System.Byte[]])]
 	Param(
 		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
 		# Stream to read length-encoded data from.
 		[System.IO.Stream]$Stream
 	)
 
-	return ,[IOUtility.StreamHelper]::ReadLengthEncodedBytes($Stream);
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        [int]$Length = $Stream.GetByte();
+        $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList ($Length);
+        if ($Length -gt 0) {
+            $Count = $Stream.Read($Buffer, 0, $Length);
+            if ($Count -ne $Length) {
+                $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+                Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+                        -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Length) returned $Count";
+            } else {
+                Write-Output -InputObject $Buffer -NoEnumerate;
+            }
+        } else {
+            Write-Output -InputObject $Buffer -NoEnumerate;
+        }
+    } else {
+        [int]$Length = $Stream.GetByte();
+        if ($Length -lt 0) {
+            Write-Error -Message 'Invalid length value' -Category InvalidOperation -ErrorId 'InvalidLength' `
+                    -CategoryReason "Read-IntegerFromStream returned $Length";
+        } else {
+            $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Length;
+            $Count = $Stream.Read($Buffer, 0, $Length);
+            if ($Count -ne $Length) {
+                Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+                        -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Length) returned $Count";
+            } else {
+                Write-Output -InputObject $Buffer -NoEnumerate;
+            }
+        }
+    }
 }
 
-Function Write-LengthEncodedBytes {
+Function Read-ShortLengthEncodedBytes {
 	<#
 		.SYNOPSIS
-			Writes length-encoded data a stream.
- 
+			Read 16 bit length-encoded array of bytes from a stream.
+
 		.DESCRIPTION
-			Writes a length-encoded byte array to the Stream.
-		
+			Reads a length value from the Stream, and then reads the associated number of bytes.
+
+		.OUTPUTS
+			System.Byte[]. Array of length-encoded bytes read from stream.
+
 		.LINK
-			Read-LengthEncodedBytes
-		
+			Write-LengthEncodedBytes
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Byte[]])]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
+		# Stream to read length-encoded data from.
+		[System.IO.Stream]$Stream
+	)
+
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        [int]$Length = Read-UnsignedShortIntegerFromStream -Stream $Stream;
+        $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList ($Length);
+        if ($Length -gt 0) {
+            $Count = $Stream.Read($Buffer, 0, $Length);
+            if ($Count -ne $Length) {
+                $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+                Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+                        -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Length) returned $Count";
+            } else {
+                Write-Output -InputObject $Buffer -NoEnumerate;
+            }
+        } else {
+            Write-Output -InputObject $Buffer -NoEnumerate;
+        }
+    } else {
+        [int]$Length = Read-UnsignedShortIntegerFromStream -Stream $Stream;
+        if ($Length -lt 0) {
+            Write-Error -Message 'Invalid length value' -Category InvalidOperation -ErrorId 'InvalidLength' `
+                    -CategoryReason "Read-IntegerFromStream returned $Length";
+        } else {
+            $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Length;
+            $Count = $Stream.Read($Buffer, 0, $Length);
+            if ($Count -ne $Length) {
+                Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+                        -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Length) returned $Count";
+            } else {
+                Write-Output -InputObject $Buffer -NoEnumerate;
+            }
+        }
+    }
+}
+
+Function Read-LengthEncodedBytes {
+	<#
+		.SYNOPSIS
+			Read length-encoded array of bytes from a stream.
+
+		.DESCRIPTION
+			Reads a length value from the Stream, and then reads the associated number of bytes.
+
+		.OUTPUTS
+			System.Byte[]. Array of length-encoded bytes read from stream.
+
+		.LINK
+			Write-LengthEncodedBytes
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	[OutputType([System.Byte[]])]
+	Param(
+		[Parameter(Mandatory = $true, Position = 0)]
+        [ValidateScript({ $_.CanRead })]
+		# Stream to read length-encoded data from.
+		[System.IO.Stream]$Stream
+	)
+
+    $Length = 0;
+    if ($Stream.CanSeek) {
+        $Position = $Stream.Position;
+        $Length = Read-IntegerFromStream -Stream $Stream;
+        if ($Length -lt 0) {
+            $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+            Write-Error -Message 'Invalid length value' -Category InvalidOperation -ErrorId 'InvalidLength' `
+                    -CategoryReason "Read-IntegerFromStream returned $Length";
+        } else {
+            $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Length;
+            if ($Length -gt 0) {
+                $Count = $Stream.Read($Buffer, 0, $Length);
+                if ($Count -ne $Length) {
+                    $Stream.Seek($Position, [System.IO.SeekOrigin]::Begin) | Out-Null;
+                    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+                            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Length) returned $Count";
+                } else {
+                    Write-Output -InputObject $Buffer -NoEnumerate;
+                }
+            } else {
+                Write-Output -InputObject $Buffer -NoEnumerate;
+            }
+        }
+    } else {
+        $Length = Read-IntegerFromStream -Stream $Stream;
+        if ($Length -lt 0) {
+            Write-Error -Message 'Invalid length value' -Category InvalidOperation -ErrorId 'InvalidLength' `
+                    -CategoryReason "Read-IntegerFromStream returned $Length";
+        } else {
+            $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $Length;
+            if ($Length -gt 0) {
+                $Count = $Stream.Read($Buffer, 0, $Length);
+                if ($Count -ne $Length) {
+                    Write-Error -Message 'Unexpected end of stream' -Category InvalidOperation -ErrorId 'UnexpectedEOF' `
+                            -CategoryReason "[System.IO.Stream].Read(byte[], 0, $Length) returned $Count";
+                } else {
+                    Write-Output -InputObject $Buffer -NoEnumerate;
+                }
+            } else {
+                Write-Output -InputObject $Buffer -NoEnumerate;
+            }
+        }
+    }
+}
+
+Function Write-TinyLengthEncodedBytes {
+	<#
+		.SYNOPSIS
+			Writes 8-bit length-encoded data a stream.
+
+		.DESCRIPTION
+			Writes a 8-bit length-encoded byte array to the Stream.
+
+		.LINK
+			Read-TinyLengthEncodedBytes
+
+		.LINK
+			Write-ShortLengthEncodedBytes
+
+		.LINK
+			Write-LengthEncodedBytes
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
 	#>
@@ -783,40 +948,322 @@ Function Write-LengthEncodedBytes {
 		[System.IO.Stream]$Stream,
 
 		[Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
 		# Bytes to write
 		[byte[]]$Bytes,
 
 		[Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
 		# Offset within the array of bytes to be writing
 		[int]$Offset = 0,
 
 		[Parameter(Mandatory = $false)]
 		# Number of bytes to write
+		[byte]$Count
+	)
+
+    if ($PSBoundParameters.ContainsKey('Offset') -and $Offset -gt 0) {
+        if ($PSBoundParameters.ContainsKey('Count')) {
+            if (([long]$Offset) + ([long]$Count) -gt ([long]($Bytes.Length))) {
+                Write-Error -Message 'Offset + Count is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset + Count $Count is greater than $($Bytes.Length)";
+            } else {
+                $Stream.WriteByte($Count);
+                if ($Count -gt 0) {
+                    $Written = $Stream.Write($Bytes, $Offset, $Count);
+                    if ($Written -ne $Count) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], $Offset, $Count) returned $Written";
+                    }
+                }
+            }
+        } else {
+            $c = $Bytes.Length - $Offset;
+            if ($c -lt 0) {
+                Write-Error -Message 'Offset is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset is greater than $($Bytes.Length)";
+            } else {
+                $Stream.WriteByte(([byte]$c));
+                if ($c -gt 0) {
+                    $Written = $Stream.Write($Bytes, $Offset, $c);
+                    if ($Written -ne $c) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], $Offset, $c) returned $Written";
+                    }
+                }
+            }
+        }
+    } else {
+        if ($PSBoundParameters.ContainsKey($Count)) {
+            if ($Count -gt $Bytes.Length) {
+                Write-Error -Message 'Count is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Count $Count is greater than $($Bytes.Length)";
+            } else {
+                $Stream.WriteByte($Count);
+                if ($Count -gt 0) {
+                    $Written = $Stream.Write($Bytes, 0, $Count);
+                    if ($Written -ne $Count) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], 0, $Count) returned $Written";
+                    }
+                }
+            }
+        } else {
+            $c = $Bytes.Length;
+            $Stream.WriteByte(([byte]$c));
+            if ($c -gt 0) {
+                $Written = $Stream.Write($Bytes, 0, $c);
+                if ($Written -ne $c) {
+                    Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                            -CategoryReason "[System.IO.Stream].Write(byte[], 0, $c) returned $Written";
+                }
+            }
+        }
+    }
+}
+
+Function Write-ShortLengthEncodedBytes {
+	<#
+		.SYNOPSIS
+			Writes 16-bit length-encoded data a stream.
+
+		.DESCRIPTION
+			Writes a 16-bit length-encoded byte array to the Stream.
+
+		.LINK
+			Read-ShortLengthEncodedBytes
+
+		.LINK
+			Write-TinyLengthEncodedBytes
+
+		.LINK
+			Write-LengthEncodedBytes
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true)]
+		# Stream to write length-encoded data from
+		[System.IO.Stream]$Stream,
+
+		[Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+		# Bytes to write
+		[byte[]]$Bytes,
+
+		[Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
+		# Offset within the array of bytes to be writing
+		[int]$Offset = 0,
+
+		[Parameter(Mandatory = $false)]
+		# Number of bytes to write
+		[UInt16]$Count
+	)
+
+    if ($PSBoundParameters.ContainsKey('Offset') -and $Offset -gt 0) {
+        if ($PSBoundParameters.ContainsKey('Count')) {
+            if (([long]$Offset) + ([long]$Count) -gt ([long]($Bytes.Length))) {
+                Write-Error -Message 'Offset + Count is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset + Count $Count is greater than $($Bytes.Length)";
+            } else {
+                Write-UnsignedShortIntegerToStream -Stream $Stream -Value $Count;
+                if ($Count -gt 0) {
+                    $Written = $Stream.Write($Bytes, $Offset, $Count);
+                    if ($Written -ne $Count) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], $Offset, $Count) returned $Written";
+                    }
+                }
+            }
+        } else {
+            $c = $Bytes.Length - $Offset;
+            if ($c -lt 0) {
+                Write-Error -Message 'Offset is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset is greater than $($Bytes.Length)";
+            } else {
+                Write-UnsignedShortIntegerToStream -Stream $Stream -Value ([UInt16]$c);
+                if ($c -gt 0) {
+                    $Written = $Stream.Write($Bytes, $Offset, $c);
+                    if ($Written -ne $c) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], $Offset, $c) returned $Written";
+                    }
+                }
+            }
+        }
+    } else {
+        if ($PSBoundParameters.ContainsKey($Count)) {
+            if ($Count -gt $Bytes.Length) {
+                Write-Error -Message 'Count is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Count $Count is greater than $($Bytes.Length)";
+            } else {
+                Write-UnsignedShortIntegerToStream -Stream $Stream -Value $Count;
+                if ($Count -gt 0) {
+                    $Written = $Stream.Write($Bytes, 0, $Count);
+                    if ($Written -ne $Count) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], 0, $Count) returned $Written";
+                    }
+                }
+            }
+        } else {
+            $c = $Bytes.Length;
+            Write-UnsignedShortIntegerToStream -Stream $Stream -Value ([UInt16]$c);
+            if ($c -gt 0) {
+                $Written = $Stream.Write($Bytes, 0, $c);
+                if ($Written -ne $c) {
+                    Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                            -CategoryReason "[System.IO.Stream].Write(byte[], 0, $c) returned $Written";
+                }
+            }
+        }
+    }
+}
+
+Function Write-LengthEncodedBytes {
+	<#
+		.SYNOPSIS
+			Writes length-encoded data a stream.
+
+		.DESCRIPTION
+			Writes a 32-bit length-encoded byte array to the Stream.
+
+		.LINK
+			Read-LengthEncodedBytes
+
+		.LINK
+			Write-TinyLengthEncodedBytes
+
+		.LINK
+			Write-ShortLengthEncodedBytes
+
+		.LINK
+			https://msdn.microsoft.com/en-us/library/system.io.stream.aspx
+	#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory = $true)]
+		# Stream to write length-encoded data from
+		[System.IO.Stream]$Stream,
+
+		[Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+		# Bytes to write
+		[byte[]]$Bytes,
+
+		[Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
+		# Offset within the array of bytes to be writing
+		[int]$Offset = 0,
+
+		[Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
+		# Number of bytes to write
 		[int]$Count
 	)
 
-	if ($PSBoundParameters.ContainsKey('Offset') -or $PSBoundParameters.ContainsKey('Count')) {
-		if ($PSBoundParameters.ContainsKey('Count')) {
-			[IOUtility.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes, $Offset, $Count);
-		} else {
-			[IOUtility.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes, $Offset, $Bytes.Length - $Offset);
-		}
-	} else {
-		[IOUtility.StreamHelper]::WriteLengthEncodedBytes($Stream, $Bytes);
-	}
+    if ($PSBoundParameters.ContainsKey('Offset') -and $Offset -gt 0) {
+        if ($PSBoundParameters.ContainsKey('Count')) {
+            if (([long]$Offset) + ([long]$Count) -gt ([long]($Bytes.Length))) {
+                Write-Error -Message 'Offset + Count is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset + Count $Count is greater than $($Bytes.Length)";
+            } else {
+                Write-IntegerToStream -Stream $Stream -Value $Count;
+                if ($Count -gt 0) {
+                    $Written = $Stream.Write($Bytes, $Offset, $Count);
+                    if ($Written -ne $Count) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], $Offset, $Count) returned $Written";
+                    }
+                }
+            }
+        } else {
+            $c = $Bytes.Length - $Offset;
+            if ($c -lt 0) {
+                Write-Error -Message 'Offset is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset is greater than $($Bytes.Length)";
+            } else {
+                Write-IntegerToStream -Stream $Stream -Value $c;
+                if ($c -gt 0) {
+                    $Written = $Stream.Write($Bytes, $Offset, $c);
+                    if ($Written -ne $c) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], $Offset, $c) returned $Written";
+                    }
+                }
+            }
+        }
+    } else {
+        if ($PSBoundParameters.ContainsKey($Count)) {
+            if ($Count -gt $Bytes.Length) {
+                Write-Error -Message 'Count is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Count $Count is greater than $($Bytes.Length)";
+            } else {
+                Write-IntegerToStream -Stream $Stream -Value $Count;
+                if ($Count -gt 0) {
+                    $Written = $Stream.Write($Bytes, 0, $Count);
+                    if ($Written -ne $Count) {
+                        Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                                -CategoryReason "[System.IO.Stream].Write(byte[], 0, $Count) returned $Written";
+                    }
+                }
+            }
+        } else {
+            $c = $Bytes.Length;
+            Write-IntegerToStream -Stream $Stream -Value $c;
+            if ($c -gt 0) {
+                $Written = $Stream.Write($Bytes, 0, $c);
+                if ($Written -ne $c) {
+                    Write-Error -Message 'Not all bytes were written' -Category InvalidOperation -ErrorId 'BytesNotWritten' `
+                            -CategoryReason "[System.IO.Stream].Write(byte[], 0, $c) returned $Written";
+                }
+            }
+        }
+    }
+}
+
+Function Get-MinBase64BlockSize {
+	<#
+		.SYNOPSIS
+			Get minimum base-64 encoding block size.
+
+		.DESCRIPTION
+			Get minimum base-64 encoding block size when you intend on emitting line-separated chunks of base64-encoded data.
+
+		.OUTPUTS
+			System.Int32. Minimum block size for line-separated chunks of base64-encoded data.
+	#>
+	[CmdletBinding()]
+	[OutputType([int])]
+	Param()
+
+    if ($null -ne $Script:MinBase64BlockSize) { return $Script:MinBase64BlockSize }
+    $Regex = [System.Text.RegularExpressions.Regex]::new('\s');
+    $MinSize = 0;
+    $e = '';
+    do {
+        $MinSize++;
+        $Buffer = New-Object -TypeName 'System.Byte' -ArgumentList $MinSize;
+        $e = [System.Convert]::ToBase64String($Buffer, 0, $MinSize, [System.Base64FormattingOptions]::InsertLineBreaks).Trim();
+    } while (-not $Regex.IsMatch($e));
+    Set-Variable -Name '' -Scope 'Script' -Option Constant -Value $MinSize;
+	return $MinSize;
 }
 
 Function ConvertTo-Base64String {
 	<#
 		.SYNOPSIS
 			Convert data buffer to base-64 encoded text.
- 
+
 		.DESCRIPTION
 			Converts the contents of a data buffer to line-separated base64-encoded text.
 
 		.OUTPUTS
 			System.String. Line-separated base64-encoded data.
-		
+
 		.LINK
 			ConvertFrom-Base64String
 	#>
@@ -826,30 +1273,66 @@ Function ConvertTo-Base64String {
 		[Parameter(Mandatory = $true)]
 		# Data buffer to be converted to base-64 encoded text.
 		[byte[]]$Buffer,
-		
+
 		[Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
 		# Offset within data buffer, in bytes, to begin encoding.
-		[int]$Offset = 0,
-		
+		[int]$Offset,
+
 		[Parameter(Mandatory = $false)]
+        [ValidateRange(1, [int]::MaxValue)]
 		# Number of bytes to encode
 		[int]$Length,
-		
+
 		[Parameter(Mandatory = $false)]
 		# Whether to insert line breaks
 		[switch]$InsertLineBreaks
 	)
-	
-	$l = $Length;
+
 	if ($PSBoundParameters.ContainsKey('Length')) {
-		$l = $Length;
+        if ($PSBoundParameters.ContainsKey('Offset')) {
+            if (([long]$Offset) + ([long]$Length) -gt ([long]($Buffer.Length))) {
+                Write-Error -Message 'Offset + Length is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset + Length $Length is greater than $($Buffer.Length)";
+            } else {
+                if ($InsertLineBreaks.IsPresent) {
+                    [System.Convert]::ToBase64String($Buffer, $Offset, $Length, [System.Base64FormattingOptions]::InsertLineBreaks);
+                } else {
+                    [System.Convert]::ToBase64String($Buffer, $Offset, $Length, [System.Base64FormattingOptions]::None);
+                }
+            }
+        } else {
+            if ($Length -gt $Buffer.Length) {
+                Write-Error -Message 'Length is greater than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Length $Length is greater than $($Buffer.Length)";
+            } else {
+                if ($InsertLineBreaks.IsPresent) {
+                    [System.Convert]::ToBase64String($Buffer, 0, $Length, [System.Base64FormattingOptions]::InsertLineBreaks);
+                } else {
+                    [System.Convert]::ToBase64String($Buffer, 0, $Length, [System.Base64FormattingOptions]::None);
+                }
+            }
+        }
 	} else {
-		$l = $Buffer.Length - $Offset;
-	}
-	if ($InsertLineBreaks) {
-		[System.Convert]::ToBase64String($Buffer, $Offset, $Length, [System.Base64FormattingOptions]::InsertLineBreaks);
-	} else {
-		[System.Convert]::ToBase64String($Buffer, $Offset, $Length, [System.Base64FormattingOptions]::None);
+        if ($PSBoundParameters.ContainsKey('Offset')) {
+            $Count = $Buffer.Length - $Offset;
+            if ($Count -lt 1) {
+                Write-Error -Message 'Offset is not less than than the number of bytes' -Category InvalidOperation -ErrorId 'OutOfRange' `
+                        -CategoryReason "Offset $Offset is not less than $($Buffer.Length)";
+            } else {
+                if ($InsertLineBreaks.IsPresent) {
+                    [System.Convert]::ToBase64String($Buffer, $Offset, $Count, [System.Base64FormattingOptions]::InsertLineBreaks);
+                } else {
+                    [System.Convert]::ToBase64String($Buffer, $Offset, $Count, [System.Base64FormattingOptions]::None);
+                }
+            }
+        } else {
+            if ($InsertLineBreaks.IsPresent) {
+                [System.Convert]::ToBase64String($Buffer, 0, $Buffer.Length, [System.Base64FormattingOptions]::InsertLineBreaks);
+            } else {
+                [System.Convert]::ToBase64String($Buffer, 0, $Buffer.Length, [System.Base64FormattingOptions]::None);
+            }
+        }
 	}
 }
 
@@ -857,13 +1340,13 @@ Function ConvertFrom-Base64String {
 	<#
 		.SYNOPSIS
 			Convert base-64 encoded text to a data buffer.
- 
+
 		.DESCRIPTION
 			Converts the base-64 encoded text to a data buffer object.
 
 		.OUTPUTS
 			System.Byte[]. Array of bytes decoded.
-		
+
 		.LINK
 			ConvertTo-Base64String
 	#>
@@ -873,13 +1356,13 @@ Function ConvertFrom-Base64String {
 		[ValidatePattern('^\s*[a-zA-Z\d+/]*((\r\n?|\n)[a-zA-Z\d+/]*)*((\r\n?|\n)?==?)?')]
 		# Base-64 encoded text
 		[string]$InputString,
-		
+
 		[Parameter(Mandatory = $false)]
 		[ValidateRange(1, 2147483647)]
 		# Minimum capacity, in bytes, of the returned data buffer.
 		[int]$MinCapacity
 	)
-	
+
 	$Buffer = [System.Convert]::FromBase64String($InputString);
 	if ($PSBoundParameters.ContainsKey('MinCapacity') -and $MinCapacity -gt $Buffer.Length) {
 		[System.Array]::Resize([ref]$Buffer, $MinCapacity);
@@ -892,13 +1375,13 @@ Function Get-TextEncoding {
 	<#
 		.SYNOPSIS
 			Gets an instance of the Encoding class.
- 
+
 		.DESCRIPTION
 			Gets an instance of the Encoding class, which represents a character encoding.
-		
+
 		.OUTPUTS
 			System.Text.Encoding. Represents the character encoding.
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.text.encoding.aspx
 	#>
@@ -920,37 +1403,37 @@ Function Get-TextEncoding {
 		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ParameterSetName = 'XmlDocument')]
 		# Get encoding from XML document's xml declaration.
 		[System.Xml.XmlDocument]$Xml,
-		
+
 		[Parameter(ParameterSetName = 'XmlDocument')]
 		[Parameter(ParameterSetName = 'ContentType')]
 		# Default encoding to use if the encoding could not be determined.
 		[System.Text.Encoding]$DefaultValue = [System.Text.Encoding]::UTF8,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'UTF8')]
 		# Gets an encoding for the UTF-8 format.
 		[switch]$UTF8,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'ASCII')]
 		# Gets an encoding for the ASCII (7-bit) character set.
 		[switch]$ASCII,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'BigEndianUnicode')]
 		# Gets an encoding for the UTF-16 format that uses the big endian byte order.
 		[switch]$BigEndianUnicode,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'Unicode')]
 		# Gets an encoding for the UTF-16 format using the little endian byte order.
 		[Alias('UTF16')]
 		[switch]$Unicode,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'UTF32')]
 		# Gets an encoding for the UTF-32 format using the little endian byte order.
 		[switch]$UTF32,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'UTF7')]
 		# Gets an encoding for the UTF-7 format.
 		[switch]$UTF7,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'Default')]
 		# Gets an encoding for the operating system's current ANSI code page.
 		[switch]$Default
@@ -975,13 +1458,13 @@ Function Get-TextEncoding {
 			}
 			'XmlDocument' {
 				$XmlDeclaration = $null;
-				for ($Node = $Xml.FirstChild; $Node -ne $null; $Node = $Node.NextSibling) {
+				for ($Node = $Xml.FirstChild; $null -ne $Node; $Node = $Node.NextSibling) {
 					if ($Node.NodeType -eq [System.Xml.XmlNodeType]::XmlDeclaration) {
 						$XmlDeclaration = $Node;
 						break;
 					}
 				}
-				if ($XmlDeclaration -eq $null) {
+				if ($null -eq $XmlDeclaration) {
 					$DefaultValue | Write-Output;
 				} else {
 					Get-TextEncoding -Name $XmlDeclaration.Encoding;
@@ -1002,13 +1485,13 @@ Function New-MemoryStream {
 	<#
 		.SYNOPSIS
 			Creates a stream whose backing store is memory.
- 
+
 		.DESCRIPTION
 			Initializes a new instance of the MemoryStream class.
-		
+
 		.OUTPUTS
 			System.IO.MemoryStream. The stream whose backing store is memory.
-		
+
 		.LINK
 			https://msdn.microsoft.com/en-us/library/system.io.memorystream.aspx
 	#>
@@ -1023,17 +1506,19 @@ Function New-MemoryStream {
 		[byte[]]$Buffer,
 
 		[Parameter(Position = 1, ParameterSetName = 'Buffer')]
+        [ValidateRange(0, [int]::MaxValue)]
 		# The index into buffer at which the stream begins.
 		[int]$Index = 0,
-		
+
 		[Parameter(Position = 2, ParameterSetName = 'Buffer')]
+        [ValidateRange(0, [int]::MaxValue)]
 		# The length of the stream in bytes.
 		[int]$Count,
-		
+
 		[Parameter(Position = 3, ParameterSetName = 'Buffer')]
 		# The setting of the CanWrite property, which determines whether the stream supports writing.
 		[bool]$CanWrite = $true,
-		
+
 		[Parameter(Position = 4, ParameterSetName = 'Buffer')]
 		# $true to enable GetBuffer, which returns the unsigned byte array from which the stream was created; otherwise, $false.
 		[bool]$PubliclyVisible
@@ -1046,7 +1531,7 @@ Function New-MemoryStream {
 			$Count = 0;
 		}
 	}
-	
+
 	if ($PSBoundParameters.ContainsKey('Buffer')) {
 		if ($PSBoundParameters.ContainsKey('CanWrite')) {
 			if ($PSBoundParameters.ContainsKey('PubliclyVisible')) {
@@ -1070,242 +1555,371 @@ Function New-MemoryStream {
 	}
 }
 
-Function Test-IsNullOrWhitespace {
+Function Get-StringComparer {
 	<#
 		.SYNOPSIS
-			Tests if string is null or whitespace.
- 
+			Gets a core string comparer object.
+
 		.DESCRIPTION
-			This is intended to act the same as [System.String]::IsNullOrWhitespace() from later .NET versions.
-		
+			Gets a core comparer object for comparing string values..
+
 		.OUTPUTS
-			System.Boolean. Indicates whether the input text was null, empty or whitespace.
-		
+			System.StringComparer. The string comparer object.
+
 		.LINK
-			Out-NormalizedText
-		
-		.LINK
-			Split-DelimitedText
-		
-		.LINK
-			Out-IndentedText
-		
-		.LINK
-			Out-UnindentedText
-		
-		.LINK
-			Get-IndentLevel
+			https://msdn.microsoft.com/en-us/library/system.stringcomparer.aspx
 	#>
-	[CmdletBinding()]
-	[OutputType([bool])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[AllowEmptyString()]
-		[AllowNull()]
-		# String to be tested whether it is null, empty or consists only of whitespace.
-		[string]$InputString
-	)
-	
-	Process {
-		if ($InputString -eq $null -or $InputString -eq '') {
-			$false | Write-Output;
-		} else {
-			$IsWhiteSpace = $true;
-			foreach ($c in $InputString.ToCharArray()) {
-				if (-not [System.Char]::IsWhiteSpace($c)) {
-					$IsWhiteSpace = $false;
-					break;
-				}
-			}
-			$IsWhiteSpace | Write-Output;
-		}
-	}               
+    [CmdletBinding()]
+    [OutputType([System.StringComparer])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        # The string comparer type
+        [System.StringComparison]$Type
+    )
+    switch ($Type) {
+        CurrentCulture {
+            [System.StringComparer]::CurrentCulture | Write-Output;
+            break;
+        }
+        InvariantCulture {
+            [System.StringComparer]::InvariantCulture | Write-Output;
+            break;
+        }
+        InvariantCultureIgnoreCase {
+            [System.StringComparer]::InvariantCultureIgnoreCase | Write-Output;
+            break;
+        }
+        Ordinal {
+            [System.StringComparer]::Ordinal | Write-Output;
+            break;
+        }
+        OrdinalIgnoreCase {
+            [System.StringComparer]::Ordinal | Write-Output;
+            break;
+        }
+        default {
+            [System.StringComparer]::CurrentCultureIgnoreCase | Write-Output;
+            break;
+        }
+    }
 }
 
-Function Split-DelimitedText {
-	<#
-		.SYNOPSIS
-			Splits text by delimiter.
- 
-		.DESCRIPTION
-			Splits text according to a delimiter pattern.
-		
-		.OUTPUTS
-			System.String[]. The text separated by delimiters.
-		
-		.LINK
-			Out-NormalizedText
-		
-		.LINK
-			Out-IndentedText
-		
-		.LINK
-			Out-UnindentedText
-		
-		.LINK
-			Get-IndentLevel
-		
-		.LINK
-			Test-IsNullOrWhitespace
-	#>
-	[CmdletBinding()]
-	[OutputType([string[]])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[AllowEmptyString()]
-		# Text to be split by delimiter pattern.
-		[string[]]$InputString,
-		
-		[ValidateScript({
-			try {
-				$Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $_;
-			} catch {
-				$Regex = $null;
-			}
-			$Regex -ne $null
-		})]
-		[Alias('DelimiterPattern', 'Delimiter')]
-		# Pattern to use for detecting newlines. Default is newline ('\r\n?|\n').
-		[string]$Pattern = '\r\n?|\n',
-		
-		[Alias('RegexOptions', 'RegexOption', 'Option')]
-		# Options for the delimiter pattern. Note: You can use "Compiled" to optimize for large pipelines.
-		[System.Text.RegularExpressions.RegexOptions[]]$PatternOption
-	)
-	
-	Begin {
-		if ($PSBoundParameters.ContainsKey('PatternOption')) {
-			$RegexOptions = $PatternOption[0];
-			for ($i = 1; $i -lt $PatternOption.Length; $i++) {
-				[System.Text.RegularExpressions.RegexOptions]$RegexOptions = $RegexOptions -bor  $PatternOption[$i];
-			}
-			$Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern, $RegexOptions;
-		} else {
-			$Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern;
-		}
-	}
-	
-	Process { $InputString | ForEach-Object { if ($_ -eq '') { $_ | Write-Output } else { $Regex.Split($_) | Write-Output } } }
+Function Optimize-WhiteSpace {
+    <#
+    .SYNOPSIS
+        Normalizes white space in strings.
+    .DESCRIPTION
+        Normalizes consecutive white space characters and white space characters that are not the space character (32) to a single space character.
+    #>
+    [CmdletBinding(DefaultParameterSetName = "NullToEmpty")]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [AllowEmptyCollection()]
+        [AllowNull()]
+        # The string to normalize.
+        [string[]]$InputString,
+
+        [Parameter(ParameterSetName = "NullToEmpty")]
+        # Convert null input strings to empty strings.
+        [switch]$NullToEmpty,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "EmptyToNull")]
+        # Convert strings that were normalized to empty strings to null values.
+        [switch]$EmptyToNull,
+
+        # Whitespace is not trimmed before normalizing.
+        [switch]$DoNotTrim
+    )
+
+    Begin {
+        if ($null -eq $Script:Optimize_WhiteSpace_Regex) {
+            New-Variable -Name 'Optimize_WhiteSpace_Regex' -Option ReadOnly -Scope 'Script' -Value ([System.Text.RegularExpressions.Regex]::new('(?! )\s+| \s+', [System.Text.RegularExpressions.RegexOptions]::Compiled))
+        }
+        $NullResult = $null;
+        if ($NullToEmpty.IsPresent) {
+            $NullResult = '';
+            if ($DoNotTrim.IsPresent) {
+                function OptimizeWhiteSpace ([string]$Value) {
+                    if ($Value.Length -eq 0) {
+                        $Value | Write-Output;
+                    } else {
+                        $Script:Optimize_WhiteSpace_Regex.Replace($Value, ' ') | Write-Output;
+                    }
+                }
+            } else {
+                function OptimizeWhiteSpace ([string]$Value) {
+                    if (($Value = $Value.Trim()).Length -eq 0) {
+                        $Value | Write-Output;
+                    } else {
+                        $Script:Optimize_WhiteSpace_Regex.Replace($Value, ' ') | Write-Output;
+                    }
+                }
+            }
+        } else {
+
+            if ($EmptyToNull.IsPresent) {
+                if ($DoNotTrim.IsPresent) {
+                    function OptimizeWhiteSpace ([string]$Value) {
+                        if ($Value.Length -eq 0) {
+                            Write-Output -InputObject $null;
+                        } else {
+                            $Result = $Script:Optimize_WhiteSpace_Regex.Replace($Value, ' ');
+                            if ($Result -eq ' ') {
+                                Write-Output -InputObject $null;
+                            } else {
+                                $Result | Write-Output;
+                            }
+                        }
+                    }
+                } else {
+                    function OptimizeWhiteSpace ([string]$Value) {
+                        if (($Value = $Value.Trim()).Length -eq 0) {
+                            Write-Output -InputObject $null;
+                        } else {
+                            $Script:Optimize_WhiteSpace_Regex.Replace($Value, ' ') | Write-Output;
+                        }
+                    }
+                }
+            } else {
+                if ($DoNotTrim.IsPresent) {
+                    function OptimizeWhiteSpace ([string]$Value) {
+                        if ($Value.Length -eq 0) {
+                            Write-Output -InputObject $Value;
+                        } else {
+                            $Script:Optimize_WhiteSpace_Regex.Replace($Value, ' ') | Write-Output;
+                        }
+                    }
+                } else {
+                    function OptimizeWhiteSpace ([AllowNull()][string]$Value) {
+                        if (($Value = $Value.Trim()).Length -eq 0) {
+                            Write-Output -InputObject $Value;
+                        } else {
+                            $Script:Optimize_WhiteSpace_Regex.Replace($Value, ' ') | Write-Output;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Process {
+        if ($null -eq $InputString) {
+            Write-Output -InputObject $NullResult;
+        } else {
+            $InputString | ForEach-Object {
+                if ($null -eq $_) {
+                    Write-Output -InputObject $NullResult;
+                } else {
+                    OptimizeWhiteSpace $_;
+                }
+            }
+        }
+    }
 }
 
-Function Out-NormalizedText {
-	<#
-		.SYNOPSIS
-			Normalizes text.
- 
-		.DESCRIPTION
-			Normalizes input strings.
-		
-		.OUTPUTS
-			System.String. The normalized text.
-		
-		.LINK
-			Split-DelimitedText
-		
-		.LINK
-			Out-IndentedText
-		
-		.LINK
-			Out-UnindentedText
-		
-		.LINK
-			Get-IndentLevel
-		
-		.LINK
-			Test-IsNullOrWhitespace
-	#>
-	[CmdletBinding()]
-	[OutputType([string])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[AllowEmptyString()]
-		# Text to be split by delimiter pattern.
-		[string]$InputString,
-		
-		[Parameter(Position = 1, ParameterSetName = 'ByPattern')]
-		[ValidateScript({
-			try {
-				$Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $_;
-			} catch {
-				$Regex = $null;
-			}
-			$Regex -ne $null
-		})]
-		[Alias('DelimiterPattern', 'Delimiter')]
-		# Pattern to use for normalizing text. Default is multi-whitespace: '(?(?= )\s{2,}|\s+)'.
-		[string]$Pattern = '(?(?= )\s{2,}|\s+)',
-		
-		[Parameter(Position = 2, ParameterSetName = 'ByPattern')]
-		[Alias('Replace')]
-		# Text to replace where Pattern matches
-		[string]$ReplaceWith = ' ',
-		
-		[Parameter(ParameterSetName = 'ByPattern')]
-		[Alias('RegexOptions', 'RegexOption', 'Option')]
-		# Options for the normalization pattern. Note: You can use "Compiled" to optimize for large pipelines.
-		[System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
-		
-		[Parameter(Mandatory = $true, ParameterSetName = 'Trim')]
-		[switch]$Trim,
-		
-		[Parameter(Mandatory = $true, ParameterSetName = 'TrimStart')]
-		[switch]$TrimStart,
-		
-		[Parameter(Mandatory = $true, ParameterSetName = 'TrimEnd')]
-		[switch]$TrimEnd
-	)
-	
-	Begin {
-		if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
-			if ($PSBoundParameters.ContainsKey('PatternOption')) {
-				$RegexOptions = $PatternOption[0];
-				for ($i = 1; $i -lt $PatternOption.Length; $i++) {
-					[System.Text.RegularExpressions.RegexOptions]$RegexOptions = $RegexOptions -bor  $PatternOption[$i];
-				}
-				$Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern, $RegexOptions;
-			} else {
-				$Regex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList $NewLinePattern;
-			}
-		}
-	}
-	
-	Process {
-		if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
-			$Regex.Replace($InputString, $ReplaceWith) | Write-Output
-		} else {
-			if ($InputString -eq '') { 
-				$InputString | Write-Output;
-			} else {
-				if ($Trim) {
-					$InputString.Trim() | Write-Output;
-				} else {
-					if ($TrimStart) { $InputString.TrimStart() | Write-Output } else {  $InputString.TrimEnd() | Write-Output }
-				}
-			}
-		}
-	}
+Function Remove-ZeroPadding {
+    <#
+    .SYNOPSIS
+        Remove zero-padding from strings.
+    .DESCRIPTION
+        Removes extra leading zeroes from strings representing numerical values.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, Position = 1, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [string]$InputString,
+
+        [switch]$AllowNegativeSign,
+
+        [switch]$KeepNegativeSign,
+
+        [switch]$AllowPositiveSign,
+
+        [switch]$KeepPositiveSign,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$StartIndex = 0
+    )
+
+    Process {
+        $LastIndex = $InputString.Length - 1;
+        if ($StartIndex -ge $LastIndex) {
+            $InputString | Write-Output;
+        } else {
+            $Index = $StartIndex;
+            $First = $Current = $InputString[$StartIndex];
+            switch ($Current) {
+                '-' {
+                    if ($AllowNegativeSign.IsPresent) {
+                        $Current = $InputString[++$Index];
+                    }
+                    break;
+                }
+                '+' {
+                    if ($AllowPositiveSign.IsPresent) {
+                        $Current = $InputString[++$Index];
+                    }
+                    break;
+                }
+            }
+            if ($Current -eq '0') {
+                while ($Index -lt $LastIndex) {
+                    $Index++;
+                    $Current = $InputString[$Index];
+                    if ($Current -ne '0') { break }
+                }
+                if ($Current -eq '0') {
+                    $KeepSign = $false;
+                    switch ($First) {
+                        '-' { $KeepSign = $KeepNegativeSign.IsPresent; break }
+                        '+' { $KeepSign = $KeepPositiveSign.IsPresent; break }
+                    }
+                    if ($KeepSign) {
+                        if ($StartIndex -gt 0) {
+                            "$($InputString.Substring(0, $StartIndex))$First$($InputString.Substring($Index))";
+                        } else {
+                            if ($Index -eq 1) {
+                                $InputString | Write-Output;
+                            } else {
+                                "$First$($InputString.Substring($Index))" | Write-Output;
+                            }
+                        }
+                    } else {
+                        if ($StartIndex -gt 0) {
+                            "$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))";
+                        } else {
+                            $InputString.Substring($Index) | Write-Output;
+                        }
+                    }
+                } else {
+                    if ([char]::IsAsciiDigit($Current)) {
+                        if ($First -eq '+') {
+                            if ($KeepPositiveSign.IsPresent) {
+                                if ($StartIndex -gt 0) {
+                                    "$($InputString.Substring(0, $StartIndex))+$($InputString.Substring($Index))" | Write-Output;
+                                } else {
+                                    if ($Index -eq 1) {
+                                        $InputString | Write-Output;
+                                    } else {
+                                        "+$($InputString.Substring($Index))" | Write-Output;
+                                    }
+                                }
+                            } else {
+                                if ($StartIndex -gt 0) {
+                                    "$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))" | Write-Output;
+                                } else {
+                                    $InputString.Substring($Index) | Write-Output;
+                                }
+                            }
+                        } else {
+                            if ($First -eq '-') {
+                                if ($StartIndex -gt 0) {
+                                    "$($InputString.Substring(0, $StartIndex))-$($InputString.Substring($Index))" | Write-Output;
+                                } else {
+                                    if ($Index -eq 1) {
+                                        $InputString | Write-Output;
+                                    } else {
+                                        "-$($InputString.Substring($Index))" | Write-Output;
+                                    }
+                                }
+                            } else {
+                                if ($StartIndex -gt 0) {
+                                    ($InputString.Substring(0, $StartIndex) + $InputString.Substring($Index)) | Write-Output;
+                                } else {
+                                    $InputString.Substring($Index) | Write-Output;
+                                }
+                            }
+                        }
+                    } else {
+                        if ($First -eq '+') {
+                            if ($KeepPositiveSign.IsPresent) {
+                                if ($StartIndex -gt 0) {
+                                    "+0$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))";
+                                } else {
+                                    "+0$($InputString.Substring($Index))" | Write-Output;
+                                }
+                            } else {
+                                if ($StartIndex -gt 0) {
+                                    "0$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))";
+                                } else {
+                                    "0$($InputString.Substring($Index))" | Write-Output;
+                                }
+                            }
+                        } else {
+                            if ($First -eq '-') {
+                                if ($KeepNegativeSign.IsPresent) {
+                                    if ($StartIndex -gt 0) {
+                                        "-0$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))";
+                                    } else {
+                                        "-0$($InputString.Substring($Index))" | Write-Output;
+                                    }
+                                } else {
+                                    if ($StartIndex -gt 0) {
+                                        "0$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))";
+                                    } else {
+                                        "0$($InputString.Substring($Index))" | Write-Output;
+                                    }
+                                }
+                            } else {
+                                if ($StartIndex -gt 0) {
+                                    "0$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))";
+                                } else {
+                                    "0$($InputString.Substring($Index))" | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if ([char]::IsAsciiDigit($Current)) {
+                    if ($First -eq '-') {
+                        $InputString | Write-Output;
+                    } else {
+                        if ($First -eq '+') {
+                            # Index = $StartIndex + 1
+                            if ($KeepPositiveSign.IsPresent) {
+                                $InputString | Write-Output;
+                            } else {
+                                if ($StartIndex -gt 0) {
+                                    "$($InputString.Substring(0, $StartIndex))$($InputString.Substring($Index))" | Write-Output;
+                                } else {
+                                    $InputString.Substring($Index) | Write-Output;
+                                }
+                            }
+                        } else {
+                            $InputString | Write-Output;
+                        }
+                    }
+                } else {
+                    $InputString | Write-Output;
+                }
+            }
+        }
+    }
 }
 
 Function Out-IndentedText {
 	<#
 		.SYNOPSIS
 			Indents text.
- 
+
 		.DESCRIPTION
 			Prepends indent text to input text.
-		
+
 		.OUTPUTS
 			System.String. The indented text.
-		
+
 		.LINK
 			Out-UnindentedText
-		
+
 		.LINK
 			Get-IndentLevel
-		
+
 		.LINK
 			Out-NormalizedText
-		
+
 		.LINK
 			Split-DelimitedText
 	#>
@@ -1316,22 +1930,22 @@ Function Out-IndentedText {
 		[AllowEmptyString()]
 		# Text to be indented.
 		[string]$InputString,
-		
+
 		# Number of times to indent text
 		[int]$Level = 1,
-		
+
 		# Text to use for indenting. Default is 4 spaces.
 		[string]$IndentText = '    ',
-		
+
 		# Indicates that zero-length lines are to be indented as well.
 		[switch]$IndentEmptyLine
 	)
-	
+
 	Begin {
 		$Indent = $IndentText;
 		for ($i = 1; $i -lt $Level; $i++) { $Indent += $IndentText }
 	}
-	
+
 	Process {
 		if ($Level -gt 0 -and ($IndentEmptyLine -or $InputString -ne '')) {
 			($Indent + $InputString) | Write-Output;
@@ -1345,22 +1959,22 @@ Function Get-IndentLevel {
 	<#
 		.SYNOPSIS
 			Get number of times text is indented.
- 
+
 		.DESCRIPTION
 			Determines number of times text has been indented.
-		
+
 		.OUTPUTS
 			System.Int32. The number of indentations detected.
-		
+
 		.LINK
 			Out-IndentedText
-		
+
 		.LINK
 			Out-UnindentedText
-		
+
 		.LINK
 			Split-DelimitedText
-		
+
 		.LINK
 			Out-NormalizedText
 	#>
@@ -1371,22 +1985,22 @@ Function Get-IndentLevel {
 		[AllowEmptyString()]
 		# Text to be un-indented.
 		[string]$InputString,
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[AllowEmptyString()]
 		# Pattern to detect indentation. Default is tab or 1 to 4 whitespaces at the beginning of the text: '^(\t|[^\S\t]{1,4})'
 		[string]$Pattern = '^(\t|[^\S\t]{1,4})',
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[Alias('RegexOptions', 'RegexOption', 'Option')]
 		# Options for the indent detection pattern. Note: You can use "Compiled" to optimize for large pipelines.
 		[System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'ByString')]
 		# Text which represents an indentation.
 		[string]$IndentText
 	)
-	
+
 	Begin {
 		if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
 			if ($PSBoundParameters.ContainsKey('PatternOption')) {
@@ -1400,10 +2014,10 @@ Function Get-IndentLevel {
 			}
 		}
 	}
-	
+
 	Process {
 		$Level = 0;
-		
+
 		if ($InputString -ne '') {
 			if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
 				$M = $Regex.Match($InputString);
@@ -1422,7 +2036,7 @@ Function Get-IndentLevel {
 				}
 			}
 		}
-		
+
 		$Level | Write-Output;
 	}
 }
@@ -1431,22 +2045,22 @@ Function Out-UnindentedText {
 	<#
 		.SYNOPSIS
 			Un-indents text.
- 
+
 		.DESCRIPTION
 			Removes indentation from input text.
-		
+
 		.OUTPUTS
 			System.String[]. The text with indentation removed.
-		
+
 		.LINK
 			Get-IndentLevel
-		
+
 		.LINK
 			Out-IndentedText
-		
+
 		.LINK
 			Split-DelimitedText
-		
+
 		.LINK
 			Out-NormalizedText
 	#>
@@ -1457,26 +2071,26 @@ Function Out-UnindentedText {
 		[AllowEmptyString()]
 		# Text to be un-indented.
 		[string]$InputString,
-		
+
 		[Parameter(ParameterSetName = 'ByString')]
 		# Number of times to un-indent text
 		[int]$Level = 1,
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[AllowEmptyString()]
 		# Pattern to detect indentation. Default is tab or 1 to 4 whitespaces at the beginning of the text: '^(\t|[^\S\t]{1,4})'
 		[string]$Pattern = '^(\t|[^\S\t]{1,4})',
-		
+
 		[Parameter(ParameterSetName = 'ByPattern')]
 		[Alias('RegexOptions', 'RegexOption', 'Option')]
 		# Options for the indent detection pattern. Note: You can use "Compiled" to optimize for large pipelines.
 		[System.Text.RegularExpressions.RegexOptions[]]$PatternOption,
-		
+
 		[Parameter(Mandatory = $true, ParameterSetName = 'ByString')]
 		# Text which represents an indentation.
 		[string]$IndentText
 	)
-	
+
 	Begin {
 		if ($PSCmdlet.ParameterSetName -eq 'ByPattern') {
 			if ($PSBoundParameters.ContainsKey('PatternOption')) {
@@ -1493,7 +2107,7 @@ Function Out-UnindentedText {
 			for ($i = 1; $i -lt $Level; $i++) { $Indent += $IndentText }
 		}
 	}
-	
+
 	Process {
 		if ($InputString -eq '') {
 			$InputString | Write-Output;
@@ -1522,271 +2136,1005 @@ Function Out-UnindentedText {
 	}
 }
 
-Function Compare-FileSystemInfo {
-	<#
-		.SYNOPSIS
-			Compares 2 filesystem items.
- 
-		.DESCRIPTION
-			Compares 2 file system items by paths.
-		
-		.OUTPUTS
-			System.Management.Automation.PSObject. Comparison results.
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'Optional')]
-	[OutputType([System.Management.Automation.PSObject])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipelineByPropertyName = $true)]
-		# Path used as a reference for comparison.
-		[string]$ReferencePath,
-		
-		[Parameter(Mandatory = $true, Position = 1, ValueFromPipelineByPropertyName = $true)]
-		# Specifies the path that is compared to the reference path.
-		[string]$DifferencePath,
-		
-		# Indicates that the comparison should recurse into subdirectories.
-		[switch]$DoNotRecurse,
-		
-		[Parameter(Mandatory = $true, ParameterSetName = 'ExcludeDifferent')]
-		#  Displays only the compared items that are equal.
-		[switch]$ExcludeDifferent,
-		
-		[Parameter(ParameterSetName = 'Optional')]
-		#  Displays compared items that are equal. By default, only reference and difference items that differ are displayed.
-		[switch]$IncludeEqual
-	)
-	
-	Process {
-		$Properties = @{
-			ReferencePath = $ReferencePath;
-			ReferenceInfo = $null;
-			DifferencePath = $DifferencePath;
-			DifferenceInfo = $null;
-			AreEqual = $false;
-			Message = '';
-			Type = [Microsoft.PowerShell.Commands.TestPathType]::Any;
-		};
-		
-		if ([System.IO.Directory]::Exists($ReferencePath)) {
-			$Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $ReferencePath;
-			$Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Container;
-			if ([System.IO.File]::Exists($DifferencePath)) {
-				$Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $DifferencePath;
-				$Properties['Message'] = 'Reference is a subdirectory, but difference path is a file.';
-			} else {
-				$Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $DifferencePath;
-				$Properties['AreEqual'] = $Properties['DifferenceInfo'].Exists;
-				if (-not $Properties['AreEqual']) {
-					$Properties['Message'] = 'Difference subdirectory does not exist';
-				}
-			}
-		} else {
-			if ([System.IO.File]::Exists($ReferencePath)) {
-				$Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $ReferencePath;
-				$Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Leaf;
-				if ([System.IO.Directory]::Exists($DifferencePath)) {
-					$Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $DifferencePath;
-					$Properties['Message'] = 'Reference is a file, but difference path is a subdirectory.';
-				} else {
-					$Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $DifferencePath;
-					$Properties['AreEqual'] = $Properties['DifferenceInfo'].Exists;
-					if (-not $Properties['AreEqual']) {
-						$Properties['Message'] = 'Difference file does not exist';
-					}
-				}
-			} else {
-				if ([System.IO.Directory]::Exists($DifferencePath)) {
-					$Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Container;
-					$Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $DifferencePath;
-					$Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.DirectoryInfo' -ArgumentList $ReferencePath;
-					$Properties['Message'] = 'Reference subdirectory does not exist.';
-				} else {
-					$Properties['ReferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $ReferencePath;
-					$Properties['DifferenceInfo'] = New-Object -TypeName 'System.IO.FileInfo' -ArgumentList $DifferencePath;
-					$Properties['AreEqual'] = -not $Properties['DifferenceInfo'].Exists;
-					if ($Properties['AreEqual']) {
-						$Properties['Message'] = 'Neither reference nor difference paths exist.';
-					} else {
-						$Properties['Type'] = [Microsoft.PowerShell.Commands.TestPathType]::Container;
-						$Properties['Message'] = 'Reference file does not exist.';
-					}
-				}
-			}
-		}
-		
-		if ($Properties['Type'] -eq [Microsoft.PowerShell.Commands.TestPathType]::Leaf) {
-			if ($Properties['AreEqual']) {
-				[System.Management.Automation.PSObject[]]$Differences = @(Compare-Object -ReferenceObject (Get-Content $Properties['ReferenceInfo'].FullName) -DifferenceObject (Get-Content $Properties['DifferenceInfo'].FullName));
-				if ($Differences.Count -gt 0) {
-					$Properties['AreEqual'] = $false;
-					$Properties['Message'] = '{0} differences found.' -f $Differences.Count;
-				}
-			} else {
-				[System.Management.Automation.PSObject[]]$Differences = @();
-			}
-			$Properties.Add('Differences', $Differences);
-		}
-		
-		if ($Properties['AreEqual']) {
-			if ($IncludeEqual) {
-				$Properties['Message'] = 'Both paths are equal.';
-				(New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties) | Write-Output;
-			}
-		} else {
-			if (-not $ExcludeDifferent) {
-				(New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties) | Write-Output;
-			}
-		}
-		
-		if ($Properties['AreEqual'] -and $Properties['ReferenceInfo'] -is [System.IO.DirectoryInfo] -and $Properties['ReferenceInfo'].Exists -and -not $DoNotRecurse) {
-			$ReferenceContents = $Properties['ReferenceInfo'].GetFileSystemInfos();
-			$DifferenceContents = $Properties['DifferenceInfo'].GetFileSystemInfos();
-			$AllNames = @(($ReferenceContents + $DifferenceContents) | ForEach-Object { $_.Name.ToLower() } | Select-Object -Unique | Sort-Object);
-			$AllNames | ForEach-Object {
-				$Name = $_;
-				$r = $ReferenceContents | Where-Object { $_.Name -ieq $Name };
-				$d = $DifferenceContents | Where-Object { $_.Name -ieq $Name };
-				if ($d -eq $null) {
-					$d = [System.IO.Path]::Combine($Properties['DifferenceInfo'].FullName, $r.Name);
-					$r = $r.FullName;
-				} else {
-					if ($r -eq $null) {
-						$r = [System.IO.Path]::Combine($Properties['ReferenceInfo'].FullName, $d.Name);
-					} else {
-						$r = $r.FullName;
-					}
-					$d = $d.FullName;
-				}
-				if ($IncludeEqual) {
-					Compare-FileSystemInfo -ReferencePath $r -DifferencePath $d -IncludeEqual | Write-Output;
-				} else {
-					if ($ExcludeDifferent) {
-						Compare-FileSystemInfo -ReferencePath $r -DifferencePath $d -ExcludeDifferent | Write-Output;
-					} else {
-						Compare-FileSystemInfo -ReferencePath $r -DifferencePath $d | Write-Output;
-					}
-				}
-			}
-		}
-	}
+Function Expand-GZip {
+    <#
+    .SYNOPSIS
+        Decompresses GZip files.
+    .DESCRIPTION
+        Decompresses the specified GZip-compressed file(s).
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Items')]
+    Param(
+        [Parameter(Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Items')]
+        [SupportsWildcards()]
+        # Path to one or more locations of files to decrypt. The default behavior is to expand all .gz, and .tgz files in the current directory.
+        [string[]]$Path,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'LiteralItems')]
+        [Alias("PSPath", "FullName")]
+        # Literal path to one or more locations of files to decrypt.
+        [string[]]$LiteralPath,
+
+        # Literal path of output directory. If not specified, it will use the current subdirectory as the output path.
+        [ValidateScript({ $_ | Test-Path -PathType Container })]
+        [string]$OutputDirectory,
+
+        [ValidateScript({ $_ | Test-ValidFileSystemFileName })]
+        # Default output file extension if the input file doesn't have a compound extension.
+        # If this is not specified, files without a compound extension will be given the '.data' extension.
+        # Files with the extension '.tgz' are treated as though they have a '.tar.gz' compound extension.
+        [string]$DefaultExt = '.data',
+
+        # Force overwrite of existing files.
+        [switch]$Force
+    )
+
+    Begin {
+        $FileSystemProviderName = [Microsoft.PowerShell.Commands.FileSystemProvider]::ProviderName;
+        $InputFileItems = @();
+        $Ext = $DefaultExt;
+        if ($PSBoundParameters.ContainsKey('DefaultExt') -and -not $Ext.StartsWith('.')) { $Ext = ".$Ext" }
+        $OutputPathInfo = $null;
+        $OutputDirectoryInfo = $null;
+        if ($PSBoundParameters.ContainsKey('OutputDirectory')) {
+            $OutputPathInfo = Resolve-Path -LiteralPath $OutputDirectory;
+        } else {
+            $OutputPathInfo = Resolve-Path -LiteralPath (Get-Location).Path;
+        }
+        if ($null -eq $OutputPathInfo) { break }
+        if ($OutputPathInfo.Provider.Name -eq $FileSystemProviderName) {
+            $OutputDirectoryInfo = [System.IO.DirectoryInfo]::new($OutputPathInfo.Path);
+            if ($null -ne $OutputDirectoryInfo -and -not $OutputDirectoryInfo.Exists) { $OutputDirectoryInfo = $null }
+        }
+    }
+
+    Process {
+        if ($null -eq $OutputContainer) { continue }
+        if ($PSCmdlet.ParameterSetName -eq 'LiteralItems') {
+            $InputFileItems += @((Resolve-Path -LiteralPath $LiteralPath) | ForEach-Object { Get-Item -LiteralPath $_.Path });
+        } else {
+            $InputFileItems += @((Resolve-Path -Path $Path) | ForEach-Object { Get-Item -LiteralPath $_.Path });
+        }
+    }
+
+    End {
+        $Buffer = New-Object 'System.Byte[]' -ArgumentList 32768;
+        $InputFileItems = @($InputFileItems | Where-Object {
+            if ($_.PSIsContainer) {
+                if ($_.PSProvider.Name -eq $FileSystemProviderName -and $_.FullName -is [string] -and $_.FullName.Length -gt 0) {
+                    Write-Error -Message "`"$($Item.FullName)`" does not refer to a file." -Category InvalidArgument -ErrorId 'NotAfile' -TargetObject $Item;
+                } else {
+                    Write-Error -Message "`"$($Item.PSPath)`" does not refer to a file." -Category InvalidArgument -ErrorId 'NotAfile' -TargetObject $Item;
+                }
+                return $false;
+            }
+            return $true;
+        });
+        $TotalBytes = 0.0;
+        foreach ($Item in $InputFileItems) {
+            if ($Item.Length -is [long] -and $Item.Length -gt 0) {
+                $TotalBytes += ([double]($Item.Length));
+            }
+        }
+
+        $BytesDecompressed = 0.0;
+        $Buffer = New-Object 'System.Byte[]' -ArgumentList 32768;
+        $PercentComplete = -1;
+        $ActivityName = 'Decompressing GZIP Files';
+        if ($ResolvedItems.Count -eq 1) { $ActivityName = 'Decompressing GZIP File' }
+        $FileNumber = 0;
+        foreach ($OriginalSourceFile in $InputFileItems) {
+            $PercentComplete = 0;
+            if ($TotalBytes -eq 0.0) {
+                $PercentComplete = $FileNumber * 100 / $InputFileItems.Count;
+            } else {
+                $PercentComplete = [int](($BytesDecompressed * 100.0) / $TotalBytes);
+            }
+            $FileNumber++;
+            $StatusMessage = "$FileNumber of $($InputFileItems.Count) files";
+            $CurrentOperation = $null;
+            if ($OriginalSourceFile.PSProvider.Name -eq $FileSystemProviderName -and $OriginalSourceFile.FullName -is [string] -and $OriginalSourceFile.FullName.Length -gt 0) {
+                $CurrentOperation = $OriginalSourceFile.FullName;
+            } else {
+                $CurrentOperation = $OriginalSourceFile.PSPath;
+            }
+            Write-Progress -Activity $ActivityName -Status $StatusMessage -CurrentOperation $CurrentOperation -PercentComplete $PercentComplete;
+            $NextBytesDecompressed = $BytesDecompressed;
+            if ($OriginalSourceFile.Length -is [long] -and $OriginalSourceFile.Length -gt 0) { $NextBytesDecompressed += ([double]($OriginalSourceFile.Length)) }
+
+            $FinalOutputPath = $null;
+            $InputExtension = $null;
+            if ($OriginalSourceFile.BaseName -is [string] -and $OriginalSourceFile.BaseName.Length -gt 0 -and $OriginalSourceFile.Extension -is [string]) {
+                $FinalOutputPath = $OriginalSourceFile.BaseName;
+                $InputExtension = $OriginalSourceFile.Extension;
+            } else {
+                $FinalOutputPath = $OriginalSourceFile.PSPath | Split-Path -LeafBase;
+                $InputExtension = $OriginalSourceFile.PSPath | Split-Path -Extension;
+            }
+            if ($InputExtension -ieq '.tgz') {
+                $FinalOutputPath = "$FinalOutputPath.tar";
+            } else {
+                if ([string]::IsNullOrEmpty(($FinalOutputPath | Split-Path -Extension))) { $FinalOutputPath += $Ext }
+            }
+            $InFileInfo = $null;
+            if ($OriginalSourceFile -is [System.IO.FileInfo]) {
+                $InFileInfo = $OriginalSourceFile;
+            } else {
+                $InFileInfo = [System.IO.FileInfo]::new([System.IO.Path]::GetTempFileName());
+                $InFileInfo.Delete();
+                Copy-Item -LiteralPath $OriginalSourceFile.PSPath -Destination $InFileInfo.FullName -Force;
+                $InFileInfo.Refresh();
+                if (-not $InFileInfo.Exists) {
+                    $BytesDecompressed = $NextBytesDecompressed;
+                    continue;
+                }
+            }
+            try {
+                $FinalOutputPath = $OutputPathInfo.Path | Join-Path -ChildPath $FinalOutputPath;
+                $IntermediateOutputPath = $FinalOutputPath;
+                if ($null -eq $OutputDirectoryInfo) {
+                    $IntermediateOutputPath = [System.IO.Path]::GetTempFileName();
+                    [System.IO.File]::Delete($IntermediateOutputPath);
+                }
+                try {
+                    $InputStream = [System.IO.FileStream]::new($InFileInfo.FullName, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::Read);
+                    try {
+                        $OutputStream = $null;
+                        if ($null -ne ($OutputStream = [System.IO.FileStream]::new($IntermediateOutputPath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None))) {
+                            try {
+                                $GzipStream = [System.IO.Compression.GzipStream]::new($InputStream, [System.IO.Compression.CompressionMode]::Decompress);
+                                try {
+                                    $Count = $GzipStream.Read($Buffer, 0, $Buffer.Length);
+                                    if ($TotalBytes -gt 0.0) {
+                                        $LastPc = $PercentComplete;
+                                        while ($Count -gt 0) {
+                                            $OutputStream.Write($Buffer, 0, $Count);
+                                            $Position = $BytesDecompressed + ([double]$InputStream.Position);
+                                            if ($Position -gt $NextBytesDecompressed) { $Position = $NextBytesDecompressed }
+                                            [int]$p = ($BytesDecompressed * 100.0) / $TotalBytes;
+                                            if ($p -ne $LastPc) {
+                                                $LastPc = $p;
+                                                Write-Progress -Activity $ActivityName -Status $StatusMessage -CurrentOperation $CurrentOperation -PercentComplete $p;
+                                            }
+                                            $Count = $GzipStream.Read($Buffer, 0, $Buffer.Length);
+                                        }
+                                    } else {
+                                        while ($Count -gt 0) {
+                                            $OutputStream.Write($Buffer, 0, $Count);
+                                            $Count = $GzipStream.Read($Buffer, 0, $Buffer.Length);
+                                        }
+                                    }
+                                }
+                                finally { $GzipStream.Close() }
+                                $OutputStream.Flush();
+                            }
+                            finally { $OutputStream.Close() }
+                            $OutFileInfo = [System.IO.FileInfo]::new($IntermediateOutputPath);
+                            if ($null -ne $OutFileInfo -and $OutFileInfo.Exists) {
+                                if ($IntermediateOutputPath -ne $FinalOutputPath) {
+                                    try {
+                                        Copy-Item -LiteralPath $OutFileInfo.FullName -Destination $FinalOutputPath -Force;
+                                        Write-Information -MessageData "Decompressed $($OutFileInfo.Length) bytes from: $($OriginalSourceFile.FullName)`n    to: $FinalOutputPath" -InformationAction Continue;
+                                    } catch {
+                                        Write-Error -ErrorRecord $_ -CategoryReason "Exception copying $($OutFileInfo.FullName) to $FinalOutputPath";
+                                    }
+                                } else {
+                                    Write-Information -MessageData "Decompressed $($OutFileInfo.Length) bytes from: $($OriginalSourceFile.FullName)`n    to: $FinalOutputPath" -InformationAction Continue;
+                                }
+                            }
+                        }
+                    } finally {
+                        $InputStream.Close();
+                    }
+                } finally {
+                    if ($IntermediateOutputPath -ne $FinalOutputPath) {
+                        [System.IO.File]::Delete($IntermediateOutputPath);
+                    }
+                }
+            } finally {
+                if ($OriginalSourceFile -isnot [System.IO.FileInfo]) { $InFileInfo.Delete() }
+            }
+            $BytesDecompressed = $NextBytesDecompressed;
+        }
+    }
 }
 
-Function Test-PathsAreEqual {
-	<#
-		.SYNOPSIS
-			Determines if 2 paths are equal.
- 
-		.DESCRIPTION
-			Determines if 2 paths point to the same location.
-		
-		.INPUTS
-			System.String. The path being compared.
-		
-		.OUTPUTS
-			System.Boolean. True if TargetPath is equal to SourcePath; otherwise, false.
-	#>
-	[OutputType([bool])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-		[ValidateScript({ $_ | Test-Path -IsValid })]
-		# Path being compared.
-		[string[]]$TargetPath,
-		
-		[Parameter(Mandatory = $true, Position = 1)]
-		[ValidateScript({ $_ | Test-Path -IsValid })]
-		# Path being compared to.
-		[string]$SourcePath,
-		
-		#  Specifies a user account that has permission to perform this action. The default is the current user.
-		[PSCredential]$Credential,
-		
-		#  Includes the command in the active transaction. This parameter is valid only when a transaction is in progress. For more information, see about_Transactions.
-		[switch]$UseTransaction
-	)
-	
-	Begin {
-		$Success = $true;
-		$FullSourcePath = @($SourcePath);
-		if ($SourcePath | Test-Path) {
-			if ($PSBoundParameters.ContainsKey('Credential')) {
-				if ($UseTransaction) {
-					$FullSourcePath = @($SourcePath | Resolve-Path -Credential $Credential -UseTransaction);
-				} else {
-					$FullSourcePath = @($SourcePath | Resolve-Path -Credential $Credential);
-				}
-			} else {
-				if ($UseTransaction) {
-					$FullSourcePath = @($SourcePath | Resolve-Path -UseTransaction);
-				} else {
-					$FullSourcePath = @($SourcePath | Resolve-Path);
-				}
-			}
-		}
-		$SourceSegments = @();
-		$FullSourcePath | ForEach-Object {
-			$Parent = $_;
-			$Arr = @();
-			while ($Parent.Length -gt 0) {
-				$Arr = @($Parent | Split-Path -Leaf) + $Arr;
-				$Parent = $Parent | Split-Path -Parent;
-			}
-			$SourceSegments += (, $Arr);
-		}
-	}
-	
-	Process {
-		if ($Success) {
-			foreach ($Path in $TargetPath) {
-				$FullTargetPath = @($Path);
-				if ($Path | Test-Path) {
-					if ($PSBoundParameters.ContainsKey('Credential')) {
-						if ($UseTransaction) {
-							$FullTargetPath = @($Path | Resolve-Path -Credential $Credential -UseTransaction);
-						} else {
-							$FullTargetPath = @($Path | Resolve-Path -Credential $Credential);
-						}
-					} else {
-						if ($UseTransaction) {
-							$FullTargetPath = @($Path | Resolve-Path -UseTransaction);
-						} else {
-							$FullTargetPath = @($Path | Resolve-Path);
-						}
-					}
-				}
-				$TargetSegments = @();
-				$FullTargetPath | ForEach-Object {
-					$Parent = $_;
-					$Arr = @();
-					while ($Parent.Length -gt 0) {
-						$Arr = @($Parent | Split-Path -Leaf) + $Arr;
-						$Parent = $Parent | Split-Path -Parent;
-					}
-					$TargetSegments += (, $Arr);
-				}
-				if ($TargetSegments.Count -eq $SourceSegments.Count) {
-					for ($p = 0; $p -lt $SourceSegments.Count; $p++) {
-						$SrcArr = $SourceSegments[$p];
-						$TgtArr = $TargetSegments[$p];
-						if ($SrcArr.Count -eq $TgtArr.Count) {
-							for ($i = 0; $i -lt $SrcArr.Count; $i++) {
-								if ($SrcArr[$i] -ine $TgtArr[$i]) {
-									$Success = $false;
-									break;
-								}
-							}
-						} else {
-							$Success = $false;
-							break;
-						}
-					}
-					if (-not $Success) { break }
-				} else {
-					$Success = $false;
-					break;
-				}
-			}
-		}
-	}
-	
-	End { $Success | Write-Output }
+Function Use-TempFolder {
+    <#
+    .SYNOPSIS
+        Creates a temporary folder that is automatically deleted.
+    .DESCRIPTION
+        Creates a temporary folder and runs scripts, deleting the temp folder when complete.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'TempPathVar')]
+    Param (
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        # The script block(s) to run.
+        [ScriptBlock[]]$Process,
+
+        # The name of the variable containing the temp folder path (without the leading '$'). The default is _.
+        [Parameter(ParameterSetName = 'TempPathVar')]
+        [ValidatePattern('^[_a-z]\w*$')]
+        [string]$TempPathVar = '_',
+
+        [Parameter(ParameterSetName = 'TempPathVar')]
+        [PSVariable[]]$ContextVariables,
+
+        # The temp folder path variable will contain the DirectoryInfo object. If this is not specified, it will contain the full path string.
+        [switch]$TempPathItem,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'PassAsArg')]
+        # Passes the folder path as the first argument.
+        [switch]$PassAsArg
+    )
+
+    Begin {
+        $TempPath = [System.IO.Path]::GetTempPath();
+        $FolderName = [Guid]::NewGuid().ToString('n');
+        $FullPath = $TempPath | Join-Path -ChildPath $FolderName;
+        while ($FullPath | Test-Path) {
+            $FolderName = [Guid]::NewGuid().ToString('n');
+            $FullPath = $TempPath | Join-Path -ChildPath $FolderName;
+        }
+        $DirectoryInfo = New-Item -Path $TempPath -Name $FolderName -ItemType Directory -Force;
+        $TempValue = $null;
+        if ($TempPathItem.IsPresent) {
+            $TempValue = $DirectoryInfo;
+        } else {
+            $TempValue = $DirectoryInfo.FullName;
+        }
+        [System.Collections.Generic.List[PSVariable]]$Variables = $null;
+        if (-not $PassAsArg.IsPresent) {
+            $Variables = [System.Collections.Generic.List[PSVariable]]::new();
+            $Variables.Add([PSVariable]::new($TempPathVar, $TempValue, [System.Management.Automation.ScopedItemOptions]::ReadOnly));
+            if ($PSBoundParameters.ContainsKey('ContextVariables')) {
+                foreach ($v in $ContextVariables) {
+                    if ($v.Name -ine $TempPathVar) { $Variables.Add($v) }
+                }
+            }
+        }
+    }
+
+    Process {
+        if ($PassAsArg.IsPresent) {
+            foreach ($sb in $Process) {
+                $sb.Invoke($TempValue);
+            }
+        } else {
+            foreach ($sb in $Process) {
+                $sb.InvokeWithContext($null, $Variables);
+            }
+        }
+    }
+
+    End {
+        Remove-Item -LiteralPath $DirectoryInfo.FullName -Recurse -Force;
+    }
+}
+
+Function Assert-IsNotNull {
+    <#
+    .SYNOPSIS
+        Asserts that an object is not null.
+    .DESCRIPTION
+        Throws an error if an object is null.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyCollection()]
+        [AllowEmptyString()]
+        # The object to assert.
+        [object]$InputObject,
+
+        # The error message for insertion failure, where '{0}' is a placeholder for the pipeline position.
+        [string]$ErrorMessage,
+
+        # Specifies the action that requires the assertion.
+        [string]$CategoryActivity,
+
+        # Specifies the name of the object that is being asserted.
+        [string]$CategoryTargetName,
+
+        # Specifies the object that is being processed during the assertion.
+        [object]$TargetObject,
+
+        # Returns the asserted object.
+        [switch]$PassThru
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message ($ErrorMessage -f $Position) -Category InvalidArgument -ErrorAction Stop;
+            }
+            if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message 'Value is null' -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message 'Value is null' -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message 'Value is null' -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message 'Value is null' -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+            }
+            if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message 'Value is null' -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message 'Value is null' -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+            }
+            if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                Write-Error -Message 'Value is null' -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+            }
+            Write-Error -Message 'Value is null' -Category InvalidArgument -ErrorAction Stop;
+        }
+        if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+    }
+}
+
+Function Assert-IsType {
+    <#
+    .SYNOPSIS
+        Asserts that an object is of a specified type.
+    .DESCRIPTION
+        Throws an error if an object is of a specified type.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [Type[]]$Type,
+
+        # Allow null values
+        [switch]$AllowNull,
+
+        # The error message for insertion failure, where '{0}' is a placeholder for the invalid value, and {1} is the placeholder for the pipeline position.
+        [string]$ErrorMessage,
+
+        # Specifies the action that requires the assertion.
+        [string]$CategoryActivity,
+
+        # Specifies the name of the object that is being asserted.
+        [string]$CategoryTargetName,
+
+        # Specifies the object that is being processed during the assertion.
+        [object]$TargetObject,
+
+        # Returns the asserted object.
+        [switch]$PassThru
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if (-not $AllowNull.IsPresent) {
+                $Msg = $null;
+                if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                    $Msg = $ErrorMessage -f $InputObject, $Position;
+                } else {
+                    $Msg = 'Value is null';
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+            }
+        } else {
+            $Failed = $true;
+            foreach ($t in $Type) {
+                if ($InputObject -is $t) {
+                    $Failed = $false;
+                    break;
+                }
+            }
+            if ($Failed) {
+                $Msg = $null;
+                if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                    $Msg = $ErrorMessage -f $InputObject, $Position;
+                } else {
+                    $Msg = [System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($Type[-1]);
+                    if ($Type.Length -eq 2) {
+                        $Msg = "$([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($Type[0])) or $Msg"
+                    } else {
+                        $Msg = "$((($Type | Select-Object -SkipLast 1) | ForEach-Object { [System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($_) }) -join ', '), or $Msg"
+                    }
+                    $Msg = "Expected: $Msg; Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))"
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+            }
+        }
+        if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+    }
+}
+
+Function Assert-IsString {
+    <#
+    .SYNOPSIS
+        Asserts that an object is a string value.
+    .DESCRIPTION
+        Throws an error if an object is not an acceptable string value.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        # Allow null values
+        [switch]$AllowNull,
+
+        # Allow null values
+        [switch]$AllowEmpty,
+
+        # Allow null values
+        [switch]$AllowWhiteSpace,
+
+        # The error message for insertion failure, where '{0}' is a placeholder for the invalid value, and {1} is the placeholder for the pipeline position.
+        [string]$ErrorMessage,
+
+        # Specifies the action that requires the assertion.
+        [string]$CategoryActivity,
+
+        # Specifies the name of the object that is being asserted.
+        [string]$CategoryTargetName,
+
+        # Specifies the object that is being processed during the assertion.
+        [object]$TargetObject,
+
+        # Returns the asserted object.
+        [switch]$PassThru
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+
+        if ($null -eq $InputObject) {
+            if (-not $AllowNull.IsPresent) {
+                $Msg = $null;
+                if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                    $msg = ($ErrorMessage -f $InputObject, $Position);
+                } else {
+                    $Msg = 'Value is null';
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+            }
+        } else {
+            if ($InputObject -is [string]) {
+                $IsEmpty = $InputObject.Length -eq 0;
+                if ($IsEmpty -and $AllowEmpty.IsPresent) {
+                    $IsEmpty = (-not $AllowWhiteSpace.IsPresent) -and [string]::IsNullOrWhiteSpace($InputObject);
+                } else {
+                    if (-not $IsEmpty) {
+                        $IsEmpty = (-not $AllowWhiteSpace.IsPresent) -and [string]::IsNullOrWhiteSpace($InputObject);
+                    }
+                }
+                if ($IsEmpty) {
+                    $Msg = $null;
+                    if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                        $msg = ($ErrorMessage -f $InputObject, $Position);
+                    } else {
+                        $Msg = 'Value is empty';
+                    }
+                    if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                        if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                            if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                                Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                            }
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                        }
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+                }
+            } else {
+                $Msg = $null;
+                if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                    $msg = ($ErrorMessage -f $InputObject, $Position);
+                } else {
+                    $Msg = "Expected: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName([string])); Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))";
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+            }
+        }
+        if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+    }
+}
+
+Function Assert-IsPsEnumerable {
+    <#
+    .SYNOPSIS
+        Asserts that an object is an enumerable type (other than string and dictionary).
+    .DESCRIPTION
+        Throws an error if an [System.Management.Automation.LanguagePrimitives]::IsObjectEnumerable return false.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [object]$InputObject,
+
+        # Allow null values
+        [switch]$AllowNull,
+
+        # Allow null values
+        [switch]$AllowEmpty,
+
+        # The error message for insertion failure, where '{0}' is a placeholder for the invalid value, and {1} is the placeholder for the pipeline position.
+        [string]$ErrorMessage,
+
+        # Specifies the action that requires the assertion.
+        [string]$CategoryActivity,
+
+        # Specifies the name of the object that is being asserted.
+        [string]$CategoryTargetName,
+
+        # Specifies the object that is being processed during the assertion.
+        [object]$TargetObject,
+
+        # Returns the asserted object.
+        [switch]$PassThru
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+
+        if ($null -eq $InputObject) {
+            if (-not $AllowNull.IsPresent) {
+                $Msg = $null;
+                if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                    $msg = ($ErrorMessage -f $InputObject, $Position);
+                } else {
+                    $Msg = 'Value is null';
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+            }
+        } else {
+            if ([System.Management.Automation.LanguagePrimitives]::IsObjectEnumerable($InputObject)) {
+                if (-not ($AllowEmpty.IsPresent -or [System.Management.Automation.LanguagePrimitives]::GetEnumerator($InputObject).MoveNext())) {
+                    $Msg = $null;
+                    if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                        $msg = ($ErrorMessage -f $InputObject, $Position);
+                    } else {
+                        $Msg = 'Value is empty';
+                    }
+                    if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                        if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                            if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                                Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                            }
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                        }
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+                }
+            } else {
+                $Msg = $null;
+                if ($PSBoundParameters.ContainsKey('ErrorMessage')) {
+                    $msg = ($ErrorMessage -f $InputObject, $Position);
+                } else {
+                    $Msg = "Expected: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName([System.Collections.IEnumerable])); Actual: $([System.Management.Automation.LanguagePrimitives]::ConvertTypeNameToPSTypeName($InputObject.GetType()))"
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryActivity')) {
+                    if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                        if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                            Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                        }
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                    }
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryActivity $CategoryActivity -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('CategoryTargetName')) {
+                    if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                        Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -TargetObject $TargetObject -ErrorAction Stop;
+                    }
+                    Write-Error -Message $Msg -Category InvalidArgument -CategoryTargetName $CategoryTargetName -ErrorAction Stop;
+                }
+                if ($PSBoundParameters.ContainsKey('TargetObject')) {
+                    Write-Error -Message $Msg -Category InvalidArgument -TargetObject $TargetObject -ErrorAction Stop;
+                }
+                Write-Error -Message $Msg -Category InvalidArgument -ErrorAction Stop;
+            }
+        }
+        if ($PassThru.IsPresent) { Write-Output -InputObject $InputObject -NoEnumerate }
+    }
+}
+
+Function Invoke-WhenNotNull {
+    <#
+    .SYNOPSIS
+        Invokes a ScriptBlock when an object is not null.
+    .DESCRIPTION
+        Invokes a ScriptBlock when the current input object is not null, optionally invoking an alternate ScriptBlock when null.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyCollection()]
+        [AllowEmptyString()]
+        # The object to assert.
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true, Position = 0)]
+        # Script that gets invoked when the value is not null, with the first argument being the non-null value, and the second argument is the pipeline position.
+        [ScriptBlock]$WhenNotNull,
+
+        [Parameter(Position = 1)]
+        # Script that gets invoked when the is not null, with the first argument being the pipeline position.
+        [ScriptBlock]$WhenNull
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($PSBoundParameters.ContainsKey('WhenNull')) {
+                $WhenNull.Invoke($Position) | Write-Output;
+            }
+        } else {
+            $WhenNotNull.Invoke($InputObject, $Position) | Write-Output;
+        }
+    }
+}
+
+Function Invoke-WhenIsType {
+    <#
+    .SYNOPSIS
+        Invokes a ScriptBlock when an object is of a specified type.
+    .DESCRIPTION
+        Invokes a ScriptBlock when the current input object is of a specified type, optionally invoking an alternate ScriptBlock otherwise.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyCollection()]
+        [AllowEmptyString()]
+        # The object to assert.
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [Type[]]$Type,
+
+        # Pass null values to 'WhenIsType'
+        [switch]$AllowNull,
+
+        [Parameter(Mandatory = $true, Position = 0)]
+        # Script that gets invoked when the value is a matching type, with the first argument being the current value, the second argument is the pipeline position, and the third is the first matched type.
+        [ScriptBlock]$WhenIsType,
+
+        [Parameter(Position = 1)]
+        # Script that gets invoked when the value is not a matching type, with the first argument being the current value, and the second argument is the pipeline position.
+        [ScriptBlock]$WhenNotType
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($AllowNull) {
+                $WhenIsType.Invoke($InputObject, $Position, $null) | Write-Output;
+            } else {
+                if ($PSBoundParameters.ContainsKey('WhenNotType')) {
+                    $WhenNotType.Invoke($InputObject, $Position) | Write-Output;
+                }
+            }
+        } else {
+            $NoMatch = $true;
+            foreach ($t in $Type) {
+                if ($InputObject -is $t) {
+                    $NoMatch = $false;
+                    $WhenIsType.Invoke($InputObject, $Position, $t) | Write-Output;
+                    break;
+                }
+            }
+            if ($NoMatch) {
+                if ($PSBoundParameters.ContainsKey('WhenNotType')) {
+                    $WhenNotType.Invoke($InputObject, $Position) | Write-Output;
+                }
+            }
+        }
+    }
+}
+
+Function Invoke-WhenIsString {
+    <#
+    .SYNOPSIS
+        Invokes a ScriptBlock when an object is a string value.
+    .DESCRIPTION
+        Invokes a ScriptBlock when the current input object is an acceptable string value, optionally invoking an alternate ScriptBlock otherwise.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyCollection()]
+        [AllowEmptyString()]
+        # The object to assert.
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [Type[]]$Type,
+
+        # Pass null values to 'WhenString'
+        [switch]$AllowNull,
+
+        # Pass emnpty strings to 'WhenString'
+        [switch]$AllowEmpty,
+
+        # Pass strings with only whitespace to 'WhenString'
+        [switch]$AllowWhiteSpace,
+
+        [Parameter(Mandatory = $true, Position = 0)]
+        # Script that gets invoked when the value is an acceptable string value, with the first argument being the current value, and the second argument is the pipeline position.
+        [ScriptBlock]$WhenString,
+
+        [Parameter(Position = 1)]
+        # Script that gets invoked when the value is not an acceptable string value, with the first argument being the current value, and the second argument is the pipeline position.
+        [ScriptBlock]$WhenNotString
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($AllowNull) {
+                $WhenString.Invoke($InputObject, $Position) | Write-Output;
+            } else {
+                if ($PSBoundParameters.ContainsKey('WhenNotString')) {
+                    $WhenNotString.Invoke($InputObject, $Position) | Write-Output;
+                }
+            }
+        } else {
+            $IsValid = $InputObject -is [string];
+            if ($IsValid) {
+                $IsValid = $InputObject.Length -gt 0;
+                if ((-not $IsValid) -and $AllowEmpty.IsPresent) {
+                    $IsValid = $AllowWhiteSpace.IsPresent -or -not [string]::IsNullOrWhiteSpace($InputObject);
+                } else {
+                    if ($IsValid) {
+                        $IsValid = $AllowWhiteSpace.IsPresent -or -not [string]::IsNullOrWhiteSpace($InputObject);
+                    }
+                }
+            }
+            if ($IsValid) {
+                $WhenString.Invoke($InputObject, $Position) | Write-Output;
+            } else {
+                if ($PSBoundParameters.ContainsKey('WhenNotString')) {
+                    $WhenNotString.Invoke($InputObject, $Position) | Write-Output;
+                }
+            }
+        }
+    }
+}
+
+Function Invoke-WhenIsPsEnumerable {
+    <#
+    .SYNOPSIS
+        Invokes a ScriptBlock when an object is an enumerable type (other than string and dictionary).
+    .DESCRIPTION
+        Invokes a ScriptBlock whe [System.Management.Automation.LanguagePrimitives]::IsObjectEnumerable returns true for the current input object, optionally invoking an alternate ScriptBlock otherwise.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyCollection()]
+        [AllowEmptyString()]
+        # The object to assert.
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [Type[]]$Type,
+
+        # Pass null values to 'WhenEnumerable'
+        [switch]$AllowNull,
+
+        # Pass emnpty enumerables to 'WhenEnumerable'
+        [switch]$AllowEmpty,
+
+        [Parameter(Mandatory = $true, Position = 0)]
+        # Script that gets invoked when the value is an acceptable enumerable value, with the first argument being the current value, and the second argument is the pipeline position.
+        [ScriptBlock]$WhenEnumerable,
+
+        [Parameter(Position = 1)]
+        # Script that gets invoked when the value is not an acceptable enumerable value, with the first argument being the current value, and the second argument is the pipeline position.
+        [ScriptBlock]$WhenNotEnumerable
+    )
+
+    Begin { $Position = -1 }
+
+    Process {
+        $Position++;
+        if ($null -eq $InputObject) {
+            if ($AllowNull) {
+                $WhenEnumerable.Invoke($InputObject, $Position, $null) | Write-Output;
+            } else {
+                if ($PSBoundParameters.ContainsKey('WhenNotEnumerable')) {
+                    $WhenNotEnumerable.Invoke($InputObject, $Position) | Write-Output;
+                }
+            }
+        } else {
+            if ([System.Management.Automation.LanguagePrimitives]::IsObjectEnumerable($InputObject)) {
+                if ($AllowEmpty.IsPresent -or [System.Management.Automation.LanguagePrimitives]::GetEnumerator($InputObject).MoveNext()) {
+                    $WhenEnumerable.Invoke($InputObject, $Position, $t) | Write-Output;
+                } else {
+                    if ($PSBoundParameters.ContainsKey('WhenNotEnumerable')) {
+                        $WhenNotEnumerable.Invoke($InputObject, $Position) | Write-Output;
+                    }
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('WhenNotEnumerable')) {
+                    $WhenNotEnumerable.Invoke($InputObject, $Position) | Write-Output;
+                }
+            }
+        }
+    }
 }

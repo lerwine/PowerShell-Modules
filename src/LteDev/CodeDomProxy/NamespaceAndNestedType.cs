@@ -21,12 +21,10 @@ namespace LteDev.CodeDomProxy
 
         public NamespaceAndNestedType(INamespaceAndType parent, string name, params string[] genericTypeNames)
         {
-            if (parent == null)
-                throw new ArgumentNullException("parent");
-            if (name == null)
-                throw new ArgumentNullException("name");
+            ArgumentNullException.ThrowIfNull(parent);
+            ArgumentNullException.ThrowIfNull(name);
             if (!ValidateCsNameAttribute.NameRegex.IsMatch(name))
-                throw new ArgumentException("Invalid type name", "name");
+                throw new ArgumentException("Invalid type name", nameof(name));
             
             Parent = parent;
             Type = new CodeTypeDeclaration(name);
@@ -35,9 +33,9 @@ namespace LteDev.CodeDomProxy
                 foreach (string n in genericTypeNames)
                 {
                     if (n == null)
-                        throw new ArgumentNullException("genericTypeNames");
+                        throw new ArgumentNullException(nameof(genericTypeNames));
                     if (!ValidateCsNameAttribute.NameRegex.IsMatch(n))
-                        throw new ArgumentException("Invalid type name", "genericTypeNames");
+                        throw new ArgumentException("Invalid type name", nameof(genericTypeNames));
                     Type.TypeParameters.Add(new CodeTypeParameter(n));
                 }
             }
@@ -46,10 +44,8 @@ namespace LteDev.CodeDomProxy
 
         public NamespaceAndNestedType(INamespaceAndType parent, CodeTypeDeclaration type)
         {
-            if (parent == null)
-                throw new ArgumentNullException("parent");
-            if (type == null)
-                throw new ArgumentNullException("type");
+            ArgumentNullException.ThrowIfNull(parent);
+            ArgumentNullException.ThrowIfNull(type);
             Parent = parent;
             Type = type;
             if (!parent.Type.Members.OfType<CodeTypeDeclaration>().Any(t => ReferenceEquals(t, type)))
@@ -58,7 +54,7 @@ namespace LteDev.CodeDomProxy
 
         public CodeTypeReference ToTypeReference()
         {
-            CodeTypeReference[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !String.IsNullOrEmpty(n)).Select(n => new CodeTypeReference(n)).ToArray();
+            CodeTypeReference[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !string.IsNullOrEmpty(n)).Select(n => new CodeTypeReference(n)).ToArray();
             if (parameters.Length == 0)
                 return new CodeTypeReference(Parent.ToString() + "." + this.Type.Name);
 
@@ -67,11 +63,11 @@ namespace LteDev.CodeDomProxy
 
         public override string ToString()
         {
-            string[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !String.IsNullOrEmpty(n)).ToArray();
+            string[] parameters = Type.TypeParameters.OfType<CodeTypeParameter>().Select(p => p.Name).Where(n => !string.IsNullOrEmpty(n)).ToArray();
             if (parameters.Length == 0)
                 return Parent.ToString() + "." + this.Type.Name;
 
-            return Parent.ToString() + "." + this.Type.Name + "[" + String.Join(",", parameters) + "]";
+            return Parent.ToString() + "." + this.Type.Name + "[" + string.Join(",", parameters) + "]";
         }
     }
 #pragma warning restore 1591 // Missing XML comment for publicly visible type or member

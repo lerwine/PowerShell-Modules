@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace IOUtility
+namespace WinIOUtility
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class RegularExpressions

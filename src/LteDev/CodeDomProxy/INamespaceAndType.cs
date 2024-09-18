@@ -17,7 +17,7 @@ namespace LteDev.CodeDomProxy
         
         CodeTypeDeclaration Type { get; }
 
-        INamespaceAndType Parent { get; }
+        INamespaceAndType? Parent { get; }
 
         CodeTypeReference ToTypeReference();
     }

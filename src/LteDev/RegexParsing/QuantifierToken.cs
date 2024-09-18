@@ -40,6 +40,6 @@ namespace LteDev.RegexParsing
 
         public abstract IEnumerable<char> GetPattern();
 
-        public abstract void WriteTo(Html32TextWriter writer, List<string> classNames, ICssClassMapper classMapper);
+        public abstract void WriteTo(HtmlTextWriter writer, List<string> classNames, ICssClassMapper classMapper);
     }
 }

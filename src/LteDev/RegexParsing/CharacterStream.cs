@@ -10,7 +10,7 @@ namespace LteDev.RegexParsing
     [Obsolete("Use PatternSourceReader")]
     public sealed class CharacterStream : IReadOnlyList<char>, IRevertibleChangeTracking
     {
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private string _value;
         private int _originalStartIndex;
         private int _originalEndIndex;
@@ -51,10 +51,10 @@ namespace LteDev.RegexParsing
 
         public CharacterStream(string value, int startIndex, int length)
         {
-            if ((_startIndex = startIndex) < 0 || startIndex > (_value = (value == null) ? "" : value).Length)
-                throw new ArgumentOutOfRangeException("startIndex");
-            if ((Count = length) < 0 || (_endIndex = startIndex + length) > value.Length)
-                throw new ArgumentOutOfRangeException("length");
+            if ((_startIndex = startIndex) < 0 || startIndex > (_value = value ?? "").Length)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if ((Count = length) < 0 || (_endIndex = startIndex + length) > _value.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
             _originalStartIndex = _startIndex;
             _originalEndIndex = _endIndex;
         }
@@ -62,13 +62,12 @@ namespace LteDev.RegexParsing
         public CharacterStream(string value)
         {
             _originalStartIndex = _startIndex = 0;
-            _originalEndIndex = _endIndex = (_value = (value == null) ? "" : value).Length;
+            _originalEndIndex = _endIndex = (_value = value ?? "").Length;
         }
 
         public Match GetMatch(Regex regex)
         {
-            if (regex == null)
-                throw new ArgumentNullException("regex");
+            ArgumentNullException.ThrowIfNull(regex);
             Monitor.Enter(_syncRoot);
             try { return regex.Match(_value, _startIndex, Count); }
             finally { Monitor.Exit(_syncRoot); }
@@ -76,13 +75,12 @@ namespace LteDev.RegexParsing
 
         public Match GetMatch(Regex regex, int startAt)
         {
-            if (regex == null)
-                throw new ArgumentNullException("regex");
+            ArgumentNullException.ThrowIfNull(regex);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (startAt < 0 || startAt > Count)
-                    throw new ArgumentOutOfRangeException("startAt");
+                    throw new ArgumentOutOfRangeException(nameof(startAt));
                 return regex.Match(_value, _startIndex + startAt, Count - startAt);
             }
             finally { Monitor.Exit(_syncRoot); }
@@ -90,15 +88,14 @@ namespace LteDev.RegexParsing
 
         public Match GetMatch(Regex regex, int startAt, int length)
         {
-            if (regex == null)
-                throw new ArgumentNullException("regex");
+            ArgumentNullException.ThrowIfNull(regex);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (startAt < 0 || startAt > Count)
-                    throw new ArgumentOutOfRangeException("startAt");
+                    throw new ArgumentOutOfRangeException(nameof(startAt));
                 if (length < 0 || (length + startAt) > Count)
-                    throw new ArgumentOutOfRangeException("length");
+                    throw new ArgumentOutOfRangeException(nameof(length));
                 return regex.Match(_value, _startIndex + startAt, length);
             }
             finally { Monitor.Exit(_syncRoot); }
@@ -121,9 +118,9 @@ namespace LteDev.RegexParsing
             try
             {
                 if (startIndex < 0 || startIndex > Count)
-                    throw new ArgumentOutOfRangeException("startIndex");
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
                 if (length < 0 || (length + startIndex) > Count)
-                    throw new ArgumentOutOfRangeException("length");
+                    throw new ArgumentOutOfRangeException(nameof(length));
                 return _value.Substring(_startIndex + startIndex, length);
             }
             finally { Monitor.Exit(_syncRoot); }
@@ -132,7 +129,7 @@ namespace LteDev.RegexParsing
         public override string ToString()
         {
             Monitor.Enter(_syncRoot);
-            try { return (_endIndex < _value.Length) ? _value.Substring(_startIndex, Count) : (_startIndex > 0) ? _value.Substring(_startIndex) : _value; }
+            try { return (_endIndex < _value.Length) ? _value.Substring(_startIndex, Count) : (_startIndex > 0) ? _value[_startIndex..] : _value; }
             finally { Monitor.Exit(_syncRoot); }
         }
 
@@ -153,9 +150,9 @@ namespace LteDev.RegexParsing
             try
             {
                 if (startIndex < 0 || startIndex > Count)
-                    throw new ArgumentOutOfRangeException("startIndex");
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
                 if (length < 0 || (length + startIndex) > Count)
-                    throw new ArgumentOutOfRangeException("length");
+                    throw new ArgumentOutOfRangeException(nameof(length));
                 return _value.ToCharArray(_startIndex + startIndex, length);
             }
             finally { Monitor.Exit(_syncRoot); }
@@ -184,8 +181,8 @@ namespace LteDev.RegexParsing
             try
             {
                 if (length < 0 || length > Count)
-                    throw new ArgumentOutOfRangeException("length");
-                CharacterStream result = new CharacterStream((length < Count) ? _value.Substring(_startIndex + length, Count - length) : string.Empty);
+                    throw new ArgumentOutOfRangeException(nameof(length));
+                CharacterStream result = new((length < Count) ? _value.Substring(_startIndex + length, Count - length) : string.Empty);
                 _startIndex += length;
                 Count -= length;
                 return result;
@@ -203,13 +200,12 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than zero or greater than <see cref="Count"/>.</exception>
         public bool Test(Func<char, bool> predicate, int count)
         {
-            if (predicate == null)
-                throw new ArgumentNullException("predicate");
+            ArgumentNullException.ThrowIfNull(predicate);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (count < 0 || count > Count)
-                    throw new ArgumentOutOfRangeException("count");
+                    throw new ArgumentOutOfRangeException(nameof(count));
                 if (count > 0)
                 {
                     count += _startIndex;
@@ -233,8 +229,7 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
         public bool TestWithEach(params Func<char, bool>[] predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException("predicate");
+            ArgumentNullException.ThrowIfNull(predicate);
             Monitor.Enter(_syncRoot);
             try
             {
@@ -243,8 +238,8 @@ namespace LteDev.RegexParsing
                 for (int i = _startIndex; i < predicate.Length; i++)
                 {
                     Func<char, bool> p = predicate[i];
-                    if (p == null)
-                        throw new ArgumentNullException("predicate");
+                    if (p is null)
+                        throw new ArgumentNullException(nameof(predicate));
                     if (!p(_value[_startIndex + i]))
                         return false;
                 }
@@ -282,13 +277,12 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than zero or greater than <see cref="Count"/>.</exception>
         public bool TryRead(Func<char, bool> predicate, int count, out char[] values)
         {
-            if (predicate == null)
-                throw new ArgumentNullException("predicate");
+            ArgumentNullException.ThrowIfNull(predicate);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (count < 0 || count > Count)
-                    throw new ArgumentOutOfRangeException("count");
+                    throw new ArgumentOutOfRangeException(nameof(count));
                 values = new char[count];
                 if (count == 0)
                     return false;
@@ -297,7 +291,7 @@ namespace LteDev.RegexParsing
                     char c = _value[_startIndex + i];
                     if (!predicate(c))
                     {
-                        values = Array.Empty<char>();
+                        values = [];
                         return false;
                     }
                     values[i] = c;
@@ -319,23 +313,21 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
         public char[] ReadWhile(Func<char, bool> predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException("predicate");
+            ArgumentNullException.ThrowIfNull(predicate);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (Count == 0)
-                    return Array.Empty<char>();
+                    return [];
                 int position = _startIndex;
                 char c = _value[position];
                 if (!predicate(c))
-                    return Array.Empty<char>();
-                List<char> result = new List<char>();
-                result.Add(c);
+                    return [];
+                List<char> result = [c];
                 while (++position < _endIndex && predicate(c))
                     result.Add(c);
                 Count = _endIndex - (_startIndex = position);
-                return result.ToArray();
+                return [.. result];
             }
             finally { Monitor.Exit(_syncRoot); }
         }
@@ -354,13 +346,12 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxCount"/> is less than zero.</exception>
         public bool ReadWhile(int maxCount, Func<char, bool> predicate, out char[] result)
         {
-            if (predicate == null)
-                throw new ArgumentNullException("predicate");
+            ArgumentNullException.ThrowIfNull(predicate);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (maxCount < 0)
-                    throw new ArgumentOutOfRangeException("maxCount");
+                    throw new ArgumentOutOfRangeException(nameof(maxCount));
                 if (maxCount > Count)
                     maxCount = Count;
                 if (maxCount > 0)
@@ -369,8 +360,7 @@ namespace LteDev.RegexParsing
                     char c = _value[position];
                     if (predicate(c))
                     {
-                        List<char> list = new List<char>();
-                        list.Add(c);
+                        List<char> list = [c];
                         while (++position < _endIndex)
                         {
                             if (predicate(c))
@@ -378,16 +368,16 @@ namespace LteDev.RegexParsing
                             else
                             {
                                 Count = _endIndex - (_startIndex = position);
-                                result = list.ToArray();
+                                result = [.. list];
                                 return false;
                             }
                         }
                         Count = _endIndex - (_startIndex = position);
-                        result = list.ToArray();
+                        result = [.. list];
                         return true;
                     }
                 }
-                result = Array.Empty<char>();
+                result = [];
                 return false;
             }
             finally { Monitor.Exit(_syncRoot); }
@@ -403,33 +393,32 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
         public char[] ReadEachWhile(params Func<char, bool>[] predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException("predicate");
+            ArgumentNullException.ThrowIfNull(predicate);
             Monitor.Enter(_syncRoot);
             try
             {
                 if (predicate.Length == 0 || predicate.Length > Count)
-                    return Array.Empty<char>();
+                    return [];
                 Func<char, bool> p = predicate[0];
-                if (p == null)
-                    throw new ArgumentNullException("predicate");
+                if (p is null)
+                    throw new ArgumentNullException(nameof(predicate));
                 int position = _startIndex;
                 char c = _value[position];
                 if (!p(c))
-                    return Array.Empty<char>();
+                    return [];
                 List<char> result = new List<char>();
                 result.Add(c);
                 while (++position < predicate.Length)
                 {
                     p = predicate[position];
-                    if (p == null)
-                        throw new ArgumentNullException("predicate");
+                    if (p is null)
+                        throw new ArgumentNullException(nameof(predicate));
                     if (!p(_value[_startIndex + position]))
                         break;
                     result.Add(c);
                 }
                 Count = _endIndex - (_startIndex = position);
-                return result.ToArray();
+                return [.. result];
             }
             finally { Monitor.Exit(_syncRoot); }
         }
@@ -445,8 +434,7 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentNullException"><paramref name="predicatedAccumulator"/> is <see langword="null"/>.</exception>
         public T AccumulateWhile<T>(T seed, TryFunc<T, char, T> predicatedAccumulator)
         {
-            if (predicatedAccumulator == null)
-                throw new ArgumentNullException("predicatedAccumulator");
+            ArgumentNullException.ThrowIfNull(predicatedAccumulator);
             Monitor.Enter(_syncRoot);
             try
             {
@@ -455,8 +443,7 @@ namespace LteDev.RegexParsing
                 int position = _startIndex;
                 do
                 {
-                    T accumulated;
-                    if (predicatedAccumulator(seed, _value[position], out accumulated))
+                    if (predicatedAccumulator(seed, _value[position], out T accumulated))
                         seed = accumulated;
                     else
                         break;
@@ -476,12 +463,10 @@ namespace LteDev.RegexParsing
         /// <param name="predicatedAccumulator">The function that evaluates each subsequent <see cref="char"/> value, updating the accumulated value if a <see langword="true"/> value is returned.</param>
         /// <param name="result">The accumulated value derived from the character values removed from the current <see cref="CharacterStream"/>.</param>
         /// <returns><see langword="true"/> if at least one <see cref="char"/> value was evaluated successfully; otherwise <see langword="false"/> if <see cref="Count"/> was zero.</returns>
-        public bool AccumulateWhile<T>(TryFunc<char, T> predicatedSeedFunc, TryFunc<T, char, T> predicatedAccumulator, out T result)
+        public bool AccumulateWhile<T>(TryFunc<char, T> predicatedSeedFunc, TryFunc<T, char, T> predicatedAccumulator, out T? result)
         {
-            if (predicatedSeedFunc == null)
-                throw new ArgumentNullException("predicatedSeedFunc");
-            if (predicatedAccumulator == null)
-                throw new ArgumentNullException("predicatedAccumulator");
+            ArgumentNullException.ThrowIfNull(predicatedSeedFunc);
+            ArgumentNullException.ThrowIfNull(predicatedAccumulator);
             Monitor.Enter(_syncRoot);
             try
             {
@@ -522,8 +507,7 @@ namespace LteDev.RegexParsing
         /// <exception cref="ArgumentNullException"><paramref name="predicatedAccumulator"/> is <see langword="null"/>.</exception>
         public T AccumulateEachWhile<T>(T seed, params TryFunc<T, char, T>[] predicatedAccumulator)
         {
-            if (predicatedAccumulator == null)
-                throw new ArgumentNullException("predicatedAccumulator");
+            ArgumentNullException.ThrowIfNull(predicatedAccumulator);
             Monitor.Enter(_syncRoot);
             try
             {
@@ -532,8 +516,8 @@ namespace LteDev.RegexParsing
                 for (int i = 0; i < predicatedAccumulator.Length; i++)
                 {
                     TryFunc<T, char, T> p = predicatedAccumulator[i];
-                    if (p == null)
-                        throw new ArgumentNullException("predicatedAccumulator");
+                    if (p is null)
+                        throw new ArgumentNullException(nameof(predicatedAccumulator));
                     T accumulated;
                     if (p(seed, _value[_startIndex + i], out accumulated))
                         seed = accumulated;
@@ -554,7 +538,7 @@ namespace LteDev.RegexParsing
         public int RemoveFirst(int count)
         {
             if (count < 0)
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             if (count < 1)
                 return 0;
             Monitor.Enter(_syncRoot);
@@ -579,7 +563,7 @@ namespace LteDev.RegexParsing
         public int RemoveLast(int count)
         {
             if (count < 0)
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             if (count < 1)
                 return 0;
             Monitor.Enter(_syncRoot);
@@ -621,9 +605,9 @@ namespace LteDev.RegexParsing
             try
             {
                 if (sourceIndex < 0 || sourceIndex > Count)
-                    throw new ArgumentOutOfRangeException("sourceIndex");
+                    throw new ArgumentOutOfRangeException(nameof(sourceIndex));
                 if (count < 0 || (count + sourceIndex) > Count)
-                    throw new ArgumentOutOfRangeException("count");
+                    throw new ArgumentOutOfRangeException(nameof(count));
                 _value.CopyTo(sourceIndex + _startIndex, destination, destinationIndex, count);
             }
             finally { Monitor.Exit(_syncRoot); }
@@ -687,13 +671,14 @@ namespace LteDev.RegexParsing
 
             internal Enumerator(CharacterStream target)
             {
-                Monitor.Enter(_target._syncRoot);
+                ArgumentNullException.ThrowIfNull(target);
+                Monitor.Enter(target._syncRoot);
                 try
                 {
+                    _position = (_startIndex = (_target = target)._startIndex) - 1;
+                    _endIndex = target._endIndex;
                 }
-                finally { Monitor.Exit(_target._syncRoot); }
-                _position = (_startIndex = (_target = target)._startIndex) - 1;
-                _endIndex = target._endIndex;
+                finally { Monitor.Exit(target._syncRoot); }
             }
 
             public void Dispose() { _position = -2; }

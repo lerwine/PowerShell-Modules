@@ -21,11 +21,11 @@ namespace LteDev.Commands
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_ByAssemblyFromTypes)]
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_ByNsFromTypes)]
-        public Type[] Type { get; set; }
+        public Type[] Type { get; set; } = null!;
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_ByAssemblyFromAssembly)]
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = ParameterSetName_ByNsFromAssembly)]
-        public Assembly[] Assembly { get; set; }
+        public Assembly[] Assembly { get; set; } = null!;
 
         [Parameter(ParameterSetName = ParameterSetName_ByNsFromTypes)]
         [Parameter(ValueFromPipeline = true, ParameterSetName = ParameterSetName_ByNsFromAssembly)]

@@ -16,7 +16,7 @@ namespace LteDev
         private List<byte> _data = new List<byte>();
         public void AddString(string value)
         {
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 _data.AddRange(Encoding.GetBytes(value.ToUpper()));
             _data.Add(0);
         }
@@ -41,11 +41,11 @@ namespace LteDev
             if (value == null || (value = value.Trim()).Length == 0)
                 return result;
             for (int i = 0; i < value.Length; i++) {
-                if (Char.IsControl(value[i]) || Char.IsWhiteSpace(value[i]) || value[i] == ':' || value[i] == '-' || value[i] == '{' || value[i] == '}')
+                if (char.IsControl(value[i]) || char.IsWhiteSpace(value[i]) || value[i] == ':' || value[i] == '-' || value[i] == '{' || value[i] == '}')
                     continue;
                 if (i == value.Length - 1)
                     throw new FormatException("Input string was not in a correct format.");
-                byte b = Byte.Parse(value.Substring(i, 2));
+                byte b = byte.Parse(value.Substring(i, 2));
                 i++;
                 if (b < 16 && value[i] != '0')
                     throw new FormatException("Input string was not in a correct format.");
