@@ -3,11 +3,6 @@ if ($null -eq $Script:VersionPathSeparatorChars) {
     Set-Variable -Name 'SemverComponentSeparatorChars' -Scope 'Script' -Option ReadOnly -Value ([char[]]@('-', '+'));
 }
 
-class VersionStringElement {
-    [Nullable[char]]$Separator;
-    [string]$Value;
-}
-
 class ExtensionIdentity {
     [string]$ID = '';
     [string]$Version = '';
@@ -73,8 +68,774 @@ Function Test-IsStringComparisonOrdinal {
     }
 }
 
-Function Compare-VersionCore {
+Enum CharClassType {
+    Symbol;
+    Punctuation;
+    WhiteSpaceOrControl;
+    Digit;
+    NonDigitNumber;
+    Other;
+}
+
+Function Get-CharClassType {
     [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [string]$InputString,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$Index
+    )
+
+    Process {
+        if ($Index -ge $InputString.Length) {
+            [CharClassType]::Other | Write-Output;
+        } else {
+            $Char = $InputString[$Index];
+            if ([char]::IsSymbol($Char)) {
+                [CharClassType]::Symbol | Write-Output;
+            } else {
+                if ([char]::IsPunctuation($Char)) {
+                    [CharClassType]::Punctuation | Write-Output;
+                } else {
+                    if ([char]::IsDigit($Char)) {
+                        [CharClassType]::Digit | Write-Output;
+                    } else {
+                        if ([char]::IsNumber($Char)) {
+                            [CharClassType]::NonDigitNumber | Write-Output;
+                        } else {
+                            if ([char]::IsWhiteSpace($Char) -or [char]::IsControl($Char)) {
+                                [CharClassType]::WhiteSpaceOrControl | Write-Output;
+                            } else {
+                                [CharClassType]::Other | Write-Output;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+class IndexedCharClassType {
+    [ValidateRange(-1, [int]::MaxValue)]
+    [int]$Index = -1;
+
+    [CharClassType]$Type;
+}
+
+Function Get-IndexOfCharType {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [string]$InputString,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$StartIndex = 0,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Symbol')]
+        [switch]$Symbol,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Punctuation')]
+        [switch]$Punctuation,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'WhiteSpaceOrControl')]
+        [switch]$WhiteSpaceOrControl,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Digit')]
+        [switch]$Digit,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'NonDigitNumber')]
+        [switch]$NonDigitNumber,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Other')]
+        [switch]$Other,
+
+        [switch]$IsNot,
+
+        [switch]$GetNextClass,
+
+        [char[]]$NotMatching
+    )
+    
+    Begin {
+        if ($PSBoundParameters.ContainsKey('NotMatching')) {
+            # TODO: Implement NotMatching
+        } else {
+            if ($GetNextClass.IsPresent) {
+                if ($IsNot.IsPresent) {
+                    switch ($PSCmdlet.ParameterSetName) {
+                        'Symbol' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -ne [CharClassType]::Symbol) {
+                                        [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $NextType = $Value | Get-CharClassType -Index $Index
+                                            if ($NextType -ne [CharClassType]::Symbol) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                        } else {
+                                            [IndexedCharClassType]@{ Type = $NextType } | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    [IndexedCharClassType]@{ Type = [CharClassType]::Symbol} | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'Punctuation' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -ne [CharClassType]::Punctuation) {
+                                        [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $NextType = $Value | Get-CharClassType -Index $Index
+                                            if ($NextType -ne [CharClassType]::Punctuation) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                        } else {
+                                            [IndexedCharClassType]@{ Type = $NextType } | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    [IndexedCharClassType]@{ Type = [CharClassType]::Punctuation} | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'WhiteSpaceOrControl' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -ne [CharClassType]::WhiteSpaceOrControl) {
+                                        [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $NextType = $Value | Get-CharClassType -Index $Index
+                                            if ($NextType -ne [CharClassType]::WhiteSpaceOrControl) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                        } else {
+                                            [IndexedCharClassType]@{ Type = $NextType } | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    [IndexedCharClassType]@{ Type = [CharClassType]::WhiteSpaceOrControl} | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'Digit' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -ne [CharClassType]::Digit) {
+                                        [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $NextType = $Value | Get-CharClassType -Index $Index
+                                            if ($NextType -ne [CharClassType]::Digit) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                        } else {
+                                            [IndexedCharClassType]@{ Type = $NextType } | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    [IndexedCharClassType]@{ Type = [CharClassType]::Digit} | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'NonDigitNumber' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -ne [CharClassType]::NonDigitNumber) {
+                                        [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $NextType = $Value | Get-CharClassType -Index $Index
+                                            if ($NextType -ne [CharClassType]::NonDigitNumber) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                        } else {
+                                            [IndexedCharClassType]@{ Type = $NextType } | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    [IndexedCharClassType]@{ Type = [CharClassType]::NonDigitNumber} | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        default {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -ne [CharClassType]::Other) {
+                                        [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $NextType = $Value | Get-CharClassType -Index $Index
+                                            if ($NextType -ne [CharClassType]::Other) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            [IndexedCharClassType]@{ Index = $Index; Type = $NextType } | Write-Output;
+                                        } else {
+                                            [IndexedCharClassType]@{ Type = $NextType } | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    [IndexedCharClassType]@{ Type = [CharClassType]::Other} | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    switch ($PSCmdlet.ParameterSetName) {
+                        'Symbol' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -eq [CharClassType]::Symbol) {
+                                        ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            if ([char]::IsSymbol($Value[$Index])) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                        } else {
+                                            (-1, $NextType) | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    (-1, [CharClassType]::Other) | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'Punctuation' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -eq [CharClassType]::Symbol) {
+                                        ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            if ([char]::IsPunctuation($Value[$Index])) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                        } else {
+                                            (-1, $NextType) | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    (-1, [CharClassType]::Other) | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'WhiteSpaceOrControl' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -eq [CharClassType]::Symbol) {
+                                        ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $Char = $Value[$Index];
+                                            if ([char]::IsWhiteSpace($Char) -or [char]::IsControl($Char)) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                        } else {
+                                            (-1, $NextType) | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    (-1, [CharClassType]::Other) | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'Digit' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -eq [CharClassType]::Symbol) {
+                                        ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            if ([char]::IsDigit($Value[$Index])) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                        } else {
+                                            (-1, $NextType) | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    (-1, [CharClassType]::Other) | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        'NonDigitNumber' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -eq [CharClassType]::Symbol) {
+                                        ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $Char = $Value[$Index];
+                                            if ([char]::IsNumber($Char) -and -not [char]::IsDigit($Char)) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                        } else {
+                                            (-1, $NextType) | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    (-1, [CharClassType]::Other) | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                        default {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    [CharClassType]$NextType = $Value | Get-CharClassType -Index $Index;
+                                    if ($NextType -eq [CharClassType]::Symbol) {
+                                        ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                    } else {
+                                        while (++$Index -lt $Len) {
+                                            $Char = $Value[$Index];
+                                            if (-not ([char]::IsSymbol($Char) -or [char]::IsPunctuation($Char) -or [char]::IsWhiteSpace($Char) -or [char]::IsControl($Char) -or [char]::IsNumber($Char))) { break }
+                                        }
+                                        if ($Index -lt $Len) {
+                                            ($Index, ($Value | Get-CharClassType -Index ($Index + 1))) | Write-Output;
+                                        } else {
+                                            (-1, $NextType) | Write-Output;
+                                        }
+                                    }
+                                } else {
+                                    (-1, [CharClassType]::Other) | Write-Output;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            } else {
+                if ($IsNot.IsPresent) {
+                    switch ($PSCmdlet.ParameterSetName) {
+                        'Symbol' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        if (-not [char]::IsSymbol($Value[$Index])) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'Punctuation' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        if (-not [char]::IsPunctuation($Value[$Index])) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'WhiteSpaceOrControl' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        $Char = $Value[$Index];
+                                        if (-not ([char]::IsWhiteSpace($Char) -or [char]::IsControl($Char))) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'Digit' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        if (-not [char]::IsDigit($Value[$Index])) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'NonDigitNumber' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        $Char = $Value[$Index];
+                                        if (-not ([char]::IsNumber($Char) -and -not [char]::IsDigit($Char))) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        default {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        $Char = $Value[$Index];
+                                        if ([char]::IsSymbol($Char) -or [char]::IsPunctuation($Char) -or [char]::IsWhiteSpace($Char) -or [char]::IsControl($Char) -or [char]::IsNumber($Char)) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    switch ($PSCmdlet.ParameterSetName) {
+                        'Symbol' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        if ([char]::IsSymbol($Value[$Index])) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'Punctuation' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        if ([char]::IsPunctuation($Value[$Index])) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'WhiteSpaceOrControl' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        $Char = $Value[$Index];
+                                        if ([char]::IsWhiteSpace($Char) -or [char]::IsControl($Char)) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'Digit' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        if ([char]::IsDigit($Value[$Index])) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        'NonDigitNumber' {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        $Char = $Value[$Index];
+                                        if ([char]::IsNumber($Char) -and -not [char]::IsDigit($Char)) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                        default {
+                            Function GetIndexOfCharType($Value) {
+                                $Len = $Value.Length;
+                                $Index = $StartIndex;
+                                if ($Index -lt $Len) {
+                                    do {
+                                        $Char = $Value[$Index];
+                                        if (-not ([char]::IsSymbol($Char) -or [char]::IsPunctuation($Char) -or [char]::IsWhiteSpace($Char) -or [char]::IsControl($Char) -or [char]::IsNumber($Char))) { return $Index }
+                                    } while (++$Index -lt $Len);
+                                }
+                                return -1;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    Process {
+        (GetIndexOfCharType $InputString) | Write-Output;
+    }
+}
+
+class CharClassSeparatedValue {
+    [ValidateNotNull()]
+    [AllowEmptyString()]
+    [string]$Separator = '';
+    
+    [ValidateNotNull()]
+    [AllowEmptyString()]
+    [string]$Value = '';
+}
+
+Function Get-CharClassSeparatedValues {
+    [CmdletBinding()]
+    [OutputType([CharClassSeparatedValue[]])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowEmptyString()]
+        [string]$InputString,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$StartIndex = 0,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Symbol')]
+        [switch]$Symbol,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Punctuation')]
+        [switch]$Punctuation,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'WhiteSpaceOrControl')]
+        [switch]$WhiteSpaceOrControl,
+
+        [char[]]$NotMatching
+    )
+    
+    Begin {
+        if ($PSBoundParameters.ContainsKey('NotMatching')) {
+            # TODO: Implement NotMatching
+        } else {
+            switch ($PSCmdlet.ParameterSetName) {
+                'Symbol' {
+                    Function GetCharClassSeparatedValues($Value) {
+                        $SepIdx = $Value | Get-IndexOfCharType -StartIndex $StartIndex -Symbol;
+                        if ($SepIdx -lt 0) {
+                            if ($StartIndex -gt 0) {
+                                if ($StartIndex -lt $Value.Length) {
+                                    [CharClassSeparatedValue]@{ Value = $Value.Substring($StartIndex) } | Write-Output;
+                                } else {
+                                    [CharClassSeparatedValue]::new() | Write-Output;
+                                }
+                            } else {
+                                [CharClassSeparatedValue]@{ Value = $Value } | Write-Output;
+                            }
+                        } else {
+                            if ($SepIdx -gt $StartIndex) {
+                                [CharClassSeparatedValue]@{ Value = $Value.Substring($StartIndex, $SepIdx - $StartIndex) } | Write-Output;
+                            }
+                            $NextIndex = $ValIdx = $Value | Get-IndexOfCharType -StartIndex ($SepIdx + 1) -IsNot -Symbol;
+                            while ($ValIdx -gt 0) {
+                                # Separator = $Value.Substring($SepIdx, $ValIdx - $SepIdx)
+                                $NextIdx = $Value | Get-IndexOfCharType -StartIndex $PrevIdx -Symbol;
+                                if ($NextIdx -lt 0) { break }
+                                [CharClassSeparatedValue]@{
+                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                    Value = $Value.Substring($ValIdx, $ValIdx - $NextIdx);
+                                } | Write-Output;
+                                $SepIdx = $NextIndex;
+                                $ValIdx = $Value | Get-IndexOfCharType -StartIndex ($SepIdx + 1) -IsNot -Symbol;
+                            }
+                            if ($NextIndex -gt 0) {
+                                [CharClassSeparatedValue]@{ Separator = $Value.Substring($SepIdx) } | Write-Output;
+                                # $ValIdx -lt 0
+                            } else {
+                                if ($ValIdx -gt 0) {
+                                    [CharClassSeparatedValue]@{
+                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                        Value = $Value.Substring($ValIdx);
+                                    } | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                'Punctuation' {
+                    Function GetCharClassSeparatedValues($Value) {
+                        $SepIdx = $Value | Get-IndexOfCharType -StartIndex $StartIndex -Punctuation;
+                        if ($SepIdx -lt 0) {
+                            if ($StartIndex -gt 0) {
+                                if ($StartIndex -lt $Value.Length) {
+                                    [CharClassSeparatedValue]@{ Value = $Value.Substring($StartIndex) } | Write-Output;
+                                } else {
+                                    [CharClassSeparatedValue]::new() | Write-Output;
+                                }
+                            } else {
+                                [CharClassSeparatedValue]@{ Value = $Value } | Write-Output;
+                            }
+                        } else {
+                            if ($SepIdx -gt $StartIndex) {
+                                [CharClassSeparatedValue]@{ Value = $Value.Substring($StartIndex, $SepIdx - $StartIndex) } | Write-Output;
+                            }
+                            $NextIndex = $ValIdx = $Value | Get-IndexOfCharType -StartIndex ($SepIdx + 1) -IsNot -Punctuation;
+                            while ($ValIdx -gt 0) {
+                                # Separator = $Value.Substring($SepIdx, $ValIdx - $SepIdx)
+                                $NextIdx = $Value | Get-IndexOfCharType -StartIndex $PrevIdx -Punctuation;
+                                if ($NextIdx -lt 0) { break }
+                                [CharClassSeparatedValue]@{
+                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                    Value = $Value.Substring($ValIdx, $ValIdx - $NextIdx);
+                                } | Write-Output;
+                                $SepIdx = $NextIndex;
+                                $ValIdx = $Value | Get-IndexOfCharType -StartIndex ($SepIdx + 1) -IsNot -Punctuation;
+                            }
+                            if ($NextIndex -gt 0) {
+                                [CharClassSeparatedValue]@{ Separator = $Value.Substring($SepIdx) } | Write-Output;
+                                # $ValIdx -lt 0
+                            } else {
+                                if ($ValIdx -gt 0) {
+                                    [CharClassSeparatedValue]@{
+                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                        Value = $Value.Substring($ValIdx);
+                                    } | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                default {
+                    Function GetCharClassSeparatedValues($Value) {
+                        $SepIdx = $Value | Get-IndexOfCharType -StartIndex $StartIndex -WhiteSpaceOrControl;
+                        if ($SepIdx -lt 0) {
+                            if ($StartIndex -gt 0) {
+                                if ($StartIndex -lt $Value.Length) {
+                                    [CharClassSeparatedValue]@{ Value = $Value.Substring($StartIndex) } | Write-Output;
+                                } else {
+                                    [CharClassSeparatedValue]::new() | Write-Output;
+                                }
+                            } else {
+                                [CharClassSeparatedValue]@{ Value = $Value } | Write-Output;
+                            }
+                        } else {
+                            if ($SepIdx -gt $StartIndex) {
+                                [CharClassSeparatedValue]@{ Value = $Value.Substring($StartIndex, $SepIdx - $StartIndex) } | Write-Output;
+                            }
+                            $NextIndex = $ValIdx = $Value | Get-IndexOfCharType -StartIndex ($SepIdx + 1) -IsNot -WhiteSpaceOrControl;
+                            while ($ValIdx -gt 0) {
+                                # Separator = $Value.Substring($SepIdx, $ValIdx - $SepIdx)
+                                $NextIdx = $Value | Get-IndexOfCharType -StartIndex $PrevIdx -WhiteSpaceOrControl;
+                                if ($NextIdx -lt 0) { break }
+                                [CharClassSeparatedValue]@{
+                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                    Value = $Value.Substring($ValIdx, $ValIdx - $NextIdx);
+                                } | Write-Output;
+                                $SepIdx = $NextIndex;
+                                $ValIdx = $Value | Get-IndexOfCharType -StartIndex ($SepIdx + 1) -IsNot -WhiteSpaceOrControl;
+                            }
+                            if ($NextIndex -gt 0) {
+                                [CharClassSeparatedValue]@{ Separator = $Value.Substring($SepIdx) } | Write-Output;
+                                # $ValIdx -lt 0
+                            } else {
+                                if ($ValIdx -gt 0) {
+                                    [CharClassSeparatedValue]@{
+                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                        Value = $Value.Substring($ValIdx);
+                                    } | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    
+    Process {
+        (GetCharClassSeparatedValues $InputString) | Write-Output;
+    }
+}
+
+# :#&?|/\;,=!
+
+if ($null -eq $Script:VersionCoreSeparators) {
+    New-Variable -Name 'VersionCoreSeparators' -Option Constant -Value ':#&?|/\;,.=!';
+}
+
+Function Compare-VersionCore {
+    [CmdletBinding(DefaultParameterSetName = 'CharSeparated')]
     Param(
         [Parameter(Mandatory = $true)]
         [string]$LVersion,
@@ -83,118 +844,79 @@ Function Compare-VersionCore {
         [string]$RVersion,
 
         [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
+        [System.StringComparer]$Comparer,
+
+        [Parameter(ParameterSetName = 'CharSeparated')]
+        [ValidateScript({ $_ -ge -2 -and $_ -le $Script:VersionCoreSeparators.Length + 2 })]
+        [int]$SeparatorIndex = 0,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'SymbolSeparated')]
+        [switch]$SymbolSeparated,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'PunctuationSeparated')]
+        [switch]$PunctuationSeparated,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'WhiteSpaceOrControlSeparated')]
+        [switch]$WhiteSpaceOrControlSeparated
     )
 
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
-        } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
-                } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    if ($SegEnd -gt $RSegElements.Length) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $L = $L | Remove-ZeroPadding;
-                            $R = $R | Remove-ZeroPadding;
-                            if ($L[0] -eq '0') {
-                                if ($R[0] -ne '0') { return -1 }
-                                if ($L.Length -eq 1) {
-                                    if ($R.Length -ne 1) { return -1 }
-                                } else {
-                                    if ($R.Length -eq 1) { return 1 }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                }
-                            } else {
-                                if ($R[0] -eq '0') { return 1 }
-                                if ([char]::IsAsciiDigit($L[0])) {
-                                    if (-not [char]::IsAsciiDigit($R[0])) { return -1 }
-                                    $i = 1;
-                                    while ($i -lt $L.Length) {
-                                        if ($i -eq $R.Length) {
-                                            if (-not [char]::IsAsciiDigit($L[$i])) {
-                                                $Diff = $Comparer.Compare($L.Substring(0, $i), $R);
-                                                if ($Diff -ne 0) { return $Diff }
-                                            }
-                                            return 1;
-                                        }
-                                        if ([char]::IsAsciiDigit($L[$i])) {
-                                            if (-not [char]::IsAsciiDigit($R[$i])) { return 1 }
-                                        } else {
-                                            if ([char]::IsAsciiDigit($R[$i])) { return -1 }
-                                            break;
-                                        }
-                                        $i++;
-                                    }
+    if ($SymbolSeparated.IsPresent) {
+        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -NotMatching '+' -Symbol);
+        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -NotMatching '+' -Symbol);
+        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
+            $Diff = $LSepValues[$i].Separator.CompareTo($RSepValues[$i].Separator);
+            if ($Diff -ne 0) { return $Diff }
+            $Diff = Compare-VersionCore -LVersion $LSepValues[$i].Value -RVersion $LSepValues[$i].Value -Comparer $Comparer -PunctuationSeparated;
+            if ($Diff -ne 0) { return $Diff }
+        }
+        return $LSepValues.Length - $RSepValues.Length;
+    }
 
-                                    if ($i -eq $l.Length -and $i -lt $R.Length) {
-                                        if ([char]::IsAsciiDigit($R[$i])) { return -1 }
-                                        $Diff = $Comparer.Compare($L, $R.Substring(0, $i));
-                                        if ($Diff -ne 0) { return $Diff }
-                                        return -1;
-                                    }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                } else {
-                                    if ([char]::IsAsciiDigit($R[0])) { return 1 }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                }
-                            }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegEnd -lt $LSegElements.Length) {
-                        for ($i = $SegEnd; $i -lt $LSegElements.Length; $i++) {
-                            $LWElements = $LSegElements[$i].Trim().Split(' ', 2);
-                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and ($LWElements[0] | Remove-ZeroPadding) -ne '0')) { return 1 }
-                        }
-                    } else {
-                        for ($i = $SegEnd; $i -lt $RSegElements.Length; $i++) {
-                            $RWElements = $RSegElements[$i].Trim().Split(' ', 2);
-                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and ($RWElements[0] | Remove-ZeroPadding) -ne '0')) { return 1 }
-                        }
-                    }
-                }
+    if ($PunctuationSeparated.IsPresent) {
+        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -NotMatching '-' -Punctuation);
+        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -NotMatching '-' -Punctuation);
+        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
+            $Diff = $LSepValues[$i].Separator.CompareTo($RSepValues[$i].Separator);
+            if ($Diff -ne 0) { return $Diff }
+            $Diff = Compare-VersionCore -LVersion $LSepValues[$i].Value -RVersion $LSepValues[$i].Value -Comparer $Comparer -WhiteSpaceOrControlSeparated;
+            if ($Diff -ne 0) { return $Diff }
+        }
+        return $LSepValues.Length - $RSepValues.Length;
+    }
+
+    if ($WhiteSpaceOrControlSeparated.IsPresent) {
+        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -WhiteSpaceOrControl);
+        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -WhiteSpaceOrControl);
+        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
+            if ($LSepValues[$i].Separator.Length -eq 0) {
+                if ($RSepValues[$i].Separator -gt 0) { return -1 }
+            } else {
+                if ($RSepValues[$i].Separator -eq 0) { return 1 }
             }
-            if ($PDiff -ne 0) { return $PDiff }
+            $Lv = $LSepValues[$i].Value | Remove-ZeroPadding -AllowNegativeSign -AllowPositiveSign;
+            $Rv = $LSepValues[$i].Value | Remove-ZeroPadding -AllowNegativeSign -AllowPositiveSign;
+            $NumIdx = Get-IndexOfCharType -StartIndex
+            $Diff = $Comparer.Compare($LSepValues[$i].Value, $LSepValues[$i].Value);
+            if ($Diff -ne 0) { return $Diff }
+        }
+        return $LSepValues.Length - $RSepValues.Length;
+    }
+
+    $LElements = $LVersion.Split($Script:VersionCoreSeparators[$SeparatorIndex]);
+    $RElements = $RVersion.Split($Script:VersionCoreSeparators[$SeparatorIndex]);
+    $NextIndex = $SeparatorIndex + 1;
+    if ($NextIndex -lt $Script:VersionCoreSeparators.Length) {
+        for ($i = 0; $i -lt $LElements.Length -and $i -lt $RElements.Length; $i++) {
+            $Diff = Compare-VersionCore -LVersion $LElements[$i] -RVersion $RElements[$i] -Comparer $Comparer -SeparatorIndex $NextIndex;
+            if ($Diff -ne 0) { return $Diff }
+        }
+    } else {
+        for ($i = 0; $i -lt $LElements.Length -and $i -lt $RElements.Length; $i++) {
+            $Diff = Compare-VersionCore -LVersion $LElements[$i] -RVersion $RElements[$i] -Comparer $Comparer -SymbolSeparated;
+            if ($Diff -ne 0) { return $Diff }
         }
     }
-    return $NDiff;
+    return $LElements.Length - $RElements.Length;
 }
 
 Function Compare-VersionCoreExact {
