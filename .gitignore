@@ -205,3 +205,6 @@ ModelManifest.xml
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 *.code-workspace
+
+temp/*
+resources/VsCodeExtensions/**/*
