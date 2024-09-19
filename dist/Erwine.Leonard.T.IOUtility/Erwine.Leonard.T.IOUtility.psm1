@@ -1861,6 +1861,7 @@ Function Test-CharacterClassFlags {
 
     [ulong]$ProcessedFlags = 0;
     [ulong]$Fv = $Flags;
+    $Category = [char]::GetUnicodeCategory($Value);
     if ($IsNot.IsPresent) {
         foreach ($Ccf in ([Enum]::GetValues([CharacterClassFlags]) | Sort-Object -Descending)) {
             [ulong]$Ccv = $Ccf;
@@ -1871,39 +1872,39 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     ModifierSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierSymbol) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierSymbol) { return $false; }
                         break;
                     }
                     NonAsciiModifierSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiModifierSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     CurrencySymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::CurrencySymbol) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::CurrencySymbol) { return $false; }
                         break;
                     }
                     NonAsciiCurrencySymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiCurrencySymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     MathSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::MathSymbol) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::MathSymbol) { return $false; }
                         break;
                     }
                     OtherSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherSymbol) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherSymbol) { return $false; }
                         break;
                     }
                     NonAsciiMathSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::MathSymbol -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::MathSymbol -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     Punctuation {
@@ -1911,35 +1912,35 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     OtherPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherPunctuation) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherPunctuation) { return $false; }
                         break;
                     }
                     OtherNonAsciiPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     OtherAsciiPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     FinalQuotePunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::FinalQuotePunctuation) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::FinalQuotePunctuation) { return $false; }
                         break;
                     }
                     InitialQuotePunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::InitialQuotePunctuation) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::InitialQuotePunctuation) { return $false; }
                         break;
                     }
                     NonAsciiClosePunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiMathSymbol {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::MathSymbol -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::MathSymbol -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiClosePunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     Symbol {
@@ -1947,7 +1948,7 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     EnclosingMark {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::EnclosingMark) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::EnclosingMark) { return $false; }
                         break;
                     }
                     Surrogate {
@@ -1963,7 +1964,7 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     Format {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::Format) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::Format) { return $false; }
                         break;
                     }
                     WhiteSpace {
@@ -1979,7 +1980,7 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     NonSpacingMark {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::NonSpacingMark) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::NonSpacingMark) { return $false; }
                         break;
                     }
                     NonAsciiControl {
@@ -1991,27 +1992,27 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     ParagraphSeparator {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ParagraphSeparator) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ParagraphSeparator) { return $false; }
                         break;
                     }
                     LineSeparator {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::LineSeparator) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::LineSeparator) { return $false; }
                         break;
                     }
                     SpaceSeparator {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpaceSeparator) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::SpaceSeparator) { return $false; }
                         break;
                     }
                     NonAsciiSpaceSeparator {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiSpaceSeparator {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     SpacingCombiningMark {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpacingCombiningMark) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::SpacingCombiningMark) { return $false; }
                         break;
                     }
                     AsciiControl {
@@ -2019,23 +2020,23 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     OpenPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OpenPunctuation) { return $false; }
                         break;
                     }
                     NonAsciiOpenPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiOpenPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     OtherNumber {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherNumber) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherNumber) { return $false; }
                         break;
                     }
                     LetterNumber {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::LetterNumber) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::LetterNumber) { return $false; }
                         break;
                     }
                     AsciiHexDigit {
@@ -2067,7 +2068,7 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     DecimalDigitNumber {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DecimalDigitNumber) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::DecimalDigitNumber) { return $false; }
                         break;
                     }
                     Digit {
@@ -2111,27 +2112,27 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     ConnectorPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation) { return $false; }
                         break;
                     }
                     NonAsciiConnectorPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiConnectorPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     DashPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DashPunctuation) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::DashPunctuation) { return $false; }
                         break;
                     }
                     NonAsciiDashPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and -not [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and -not [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     AsciiDashPunctuation {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and [char]::IsAscii($Value)) { return $false }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and [char]::IsAscii($Value)) { return $false }
                         break;
                     }
                     LetterOrDigit {
@@ -2147,15 +2148,15 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     OtherLetter {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherLetter) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherLetter) { return $false; }
                         break;
                     }
                     ModifierLetter {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierLetter) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierLetter) { return $false; }
                         break;
                     }
                     TitlecaseLetter {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::TitlecaseLetter) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::TitlecaseLetter) { return $false; }
                         break;
                     }
                     AsciiLetter {
@@ -2179,11 +2180,11 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                     PrivateUse {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::PrivateUse) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::PrivateUse) { return $false; }
                         break;
                     }
                     OtherNotAssigned {
-                        if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherNotAssigned) { return $false; }
+                        if ($Category -eq [System.Globalization.UnicodeCategory]::OtherNotAssigned) { return $false; }
                         break;
                     }
                 }
@@ -2201,39 +2202,39 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 ModifierSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierSymbol) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierSymbol) { return $true; }
                     break;
                 }
                 NonAsciiModifierSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiModifierSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierSymbol -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 CurrencySymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::CurrencySymbol) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::CurrencySymbol) { return $true; }
                     break;
                 }
                 NonAsciiCurrencySymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiCurrencySymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::CurrencySymbol -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 MathSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::MathSymbol) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::MathSymbol) { return $true; }
                     break;
                 }
                 OtherSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherSymbol) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherSymbol) { return $true; }
                     break;
                 }
                 NonAsciiMathSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::MathSymbol -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::MathSymbol -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 Punctuation {
@@ -2241,35 +2242,35 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 OtherPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherPunctuation) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherPunctuation) { return $true; }
                     break;
                 }
                 OtherNonAsciiPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 OtherAsciiPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherPunctuation -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 FinalQuotePunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::FinalQuotePunctuation) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::FinalQuotePunctuation) { return $true; }
                     break;
                 }
                 InitialQuotePunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::InitialQuotePunctuation) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::InitialQuotePunctuation) { return $true; }
                     break;
                 }
                 NonAsciiClosePunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiMathSymbol {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::MathSymbol -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::MathSymbol -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiClosePunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 Symbol {
@@ -2277,7 +2278,7 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 EnclosingMark {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::EnclosingMark) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::EnclosingMark) { return $true; }
                     break;
                 }
                 Surrogate {
@@ -2293,7 +2294,7 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 Format {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::Format) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::Format) { return $true; }
                     break;
                 }
                 WhiteSpace {
@@ -2309,7 +2310,7 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 NonSpacingMark {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::NonSpacingMark) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::NonSpacingMark) { return $true; }
                     break;
                 }
                 NonAsciiControl {
@@ -2321,27 +2322,27 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 ParagraphSeparator {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ParagraphSeparator) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ParagraphSeparator) { return $true; }
                     break;
                 }
                 LineSeparator {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::LineSeparator) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::LineSeparator) { return $true; }
                     break;
                 }
                 SpaceSeparator {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpaceSeparator) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::SpaceSeparator) { return $true; }
                     break;
                 }
                 NonAsciiSpaceSeparator {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiSpaceSeparator {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::SpaceSeparator -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 SpacingCombiningMark {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::SpacingCombiningMark) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::SpacingCombiningMark) { return $true; }
                     break;
                 }
                 AsciiControl {
@@ -2349,23 +2350,23 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 OpenPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OpenPunctuation) { return $true; }
                     break;
                 }
                 NonAsciiOpenPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiOpenPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 OtherNumber {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherNumber) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherNumber) { return $true; }
                     break;
                 }
                 LetterNumber {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::LetterNumber) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::LetterNumber) { return $true; }
                     break;
                 }
                 AsciiHexDigit {
@@ -2397,7 +2398,7 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 DecimalDigitNumber {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DecimalDigitNumber) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::DecimalDigitNumber) { return $true; }
                     break;
                 }
                 Digit {
@@ -2441,27 +2442,27 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 ConnectorPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation) { return $true; }
                     break;
                 }
                 NonAsciiConnectorPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiConnectorPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 DashPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DashPunctuation) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::DashPunctuation) { return $true; }
                     break;
                 }
                 NonAsciiDashPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and -not [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and -not [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 AsciiDashPunctuation {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and [char]::IsAscii($Value)) { return $true }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and [char]::IsAscii($Value)) { return $true }
                     break;
                 }
                 LetterOrDigit {
@@ -2477,15 +2478,15 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 OtherLetter {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherLetter) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherLetter) { return $true; }
                     break;
                 }
                 ModifierLetter {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::ModifierLetter) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::ModifierLetter) { return $true; }
                     break;
                 }
                 TitlecaseLetter {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::TitlecaseLetter) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::TitlecaseLetter) { return $true; }
                     break;
                 }
                 AsciiLetter {
@@ -2509,11 +2510,11 @@ Function Test-CharacterClassFlags {
                     break;
                 }
                 PrivateUse {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::PrivateUse) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::PrivateUse) { return $true; }
                     break;
                 }
                 default {
-                    if ([char]::GetUnicodeCategory($Value) -eq [System.Globalization.UnicodeCategory]::OtherNotAssigned) { return $true; }
+                    if ($Category -eq [System.Globalization.UnicodeCategory]::OtherNotAssigned) { return $true; }
                     break;
                 }
             }
