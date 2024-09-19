@@ -21,7 +21,7 @@ Describe 'Test-CharacterClassFlags -Flags BinaryDigitNumber' {
         }
 
         It 'Non-Digits should return false' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', 'A', '^', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
+            foreach ($Value in ("`t", "`n", ' ', '_', '-', '¡', '„', '«', '»', '(', ')', '₎', '‿', '־', '^', '˅', '+', '±', '|', '¦', '$', '£', '¼', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags BinaryDigitNumber -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
@@ -44,128 +44,8 @@ Describe 'Test-CharacterClassFlags -Flags BinaryDigitNumber' {
         }
 
         It 'Non-Digits should return true' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', 'A', '^', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
+            foreach ($Value in ("`t", "`n", ' ', '_', '-', '¡', '„', '«', '»', '(', ')', '₎', '‿', '־', '^', '˅', '+', '±', '|', '¦', '$', '£', '¼', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags BinaryDigitNumber -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
-            }
-        }
-    }
-}
-
-Describe 'Test-CharacterClassFlags -Flags ModifierSymbol' {
-    Context 'IsNot.Present = $false' {
-        It '"^" should return true' {
-            $Actual = Test-CharacterClassFlags -Value "^" -Flags ModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"^"';
-        }
-
-        It '"˅" should return true' {
-            $Actual = Test-CharacterClassFlags -Value "˅" -Flags ModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"˅"';
-        }
-
-        It 'Non-Modifiers should return false' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
-            }
-        }
-    }
-
-    Context 'IsNot.Present = $true' {
-        It '"^" should return false' {
-            $Actual = Test-CharacterClassFlags -Value "^" -IsNot -Flags ModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"^"';
-        }
-
-        It '"˅" should return false' {
-            $Actual = Test-CharacterClassFlags -Value "˅" -IsNot -Flags ModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"˅"';
-        }
-
-        It 'Non-Modifiers should return true' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
-            }
-        }
-    }
-}
-
-Describe 'Test-CharacterClassFlags -Flags NonAsciiModifierSymbol' {
-    Context 'IsNot.Present = $false' {
-        It '"˅" should return true' {
-            $Actual = Test-CharacterClassFlags -Value "˅" -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"˅"';
-        }
-
-        It '"^" should return false' {
-            $Actual = Test-CharacterClassFlags -Value "^" -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"^"';
-        }
-
-        It 'Non-NonAsciiModifierSymbol should return false' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
-            }
-        }
-    }
-
-    Context 'IsNot.Present = $true' {
-        It '"˅" should return false' {
-            $Actual = Test-CharacterClassFlags -Value "˅" -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"˅"';
-        }
-
-        It '"^" should return true' {
-            $Actual = Test-CharacterClassFlags -Value "^" -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"^"';
-        }
-
-        It 'Non-NonAsciiModifierSymbol should return true' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
-            }
-        }
-    }
-}
-
-Describe 'Test-CharacterClassFlags -Flags AsciiModifierSymbol' {
-    Context 'IsNot.Present = $false' {
-        It '"^" should return true' {
-            $Actual = Test-CharacterClassFlags -Value "^" -Flags AsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"^"';
-        }
-
-        It '"˅" should return false' {
-            $Actual = Test-CharacterClassFlags -Value "˅" -Flags AsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"˅"';
-        }
-
-        It 'Non-AsciiModifierSymbol should return false' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
-            }
-        }
-    }
-
-    Context 'IsNot.Present = $true' {
-        It '"^" should return false' {
-            $Actual = Test-CharacterClassFlags -Value "^" -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"^"';
-        }
-
-        It '"˅" should return true' {
-            $Actual = Test-CharacterClassFlags -Value "˅" -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"˅"';
-        }
-
-        It 'Non-AsciiModifierSymbol should return true' {
-            foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
                 $Actual | Should -BeTrue -Because "`"$Value`"";
             }
         }
@@ -174,22 +54,175 @@ Describe 'Test-CharacterClassFlags -Flags AsciiModifierSymbol' {
 
 Describe 'Test-CharacterClassFlags -Flags Symbol' {
     Context 'IsNot.Present = $false' {
-        It 'Symbols should return true' {
+        It 'Symbol characters should return true' {
             foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±', '˅')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags Symbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
             }
         }
-
-        It 'Non-Symbols should return true' {
-            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
-                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+        
+        It 'Non-Symbol characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags Symbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
             }
         }
     }
 
     Context 'IsNot.Present = $true' {
+        It 'Symbol characters should return false' {
+            foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±', '˅')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags Symbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags Symbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags ModifierSymbol' {
+    Context 'IsNot.Present = $false' {
+        It '"^" and "^" should return true' {
+            foreach ($Value in ('^', '˅')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Other Symbol characters should return false' {
+            foreach ($Value in ('$', '+', '|', '£', '¦', '±')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '"^" and "^" should return true' {
+            foreach ($Value in ('^', '˅')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Other Symbol characters should return true' {
+            foreach ($Value in ('$', '+', '|', '£', '¦', '±')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags AsciiModifierSymbol' {
+    Context 'IsNot.Present = $false' {
+
+        It '"^" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '^' -Flags AsciiModifierSymbol -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"^"';
+        }
+
+        It 'Other Symbol characters should return false' {
+            foreach ($Value in ('$', '+', '|', '£', '¦', '±', '˅')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+
+        It '"^" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '^' -Flags AsciiModifierSymbol -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"^"';
+        }
+
+        It 'Other Symbol characters should return true' {
+            foreach ($Value in ('$', '+', '|', '£', '¦', '±', '˅')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags NonAsciiModifierSymbol' {
+    Context 'IsNot.Present = $false' {
+
+        It '"˅" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '˅' -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"˅"';
+        }
+
+        It 'Other Symbol characters should return false' {
+            foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+
+        It '"˅" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '˅' -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"˅"';
+        }
+
+        It 'Other Symbol characters should return true' {
+            foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Symbol characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
     }
 }
 
@@ -478,7 +511,7 @@ Describe 'Test-CharacterClassFlags -Flags OtherSymbol' {
 Describe 'Test-CharacterClassFlags -Flags Punctuation' {
     Context 'IsNot.Present = $false' {
         It 'Punctuation characters should return true' {
-            foreach ($Value in ('(', ')', '-', '_', '¡', '«', '»', '־')) {
+            foreach ($Value in ('(', ')', '-', '_', '¡', '„', '«', '»', '₎', '־')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags Punctuation -ErrorAction Stop;
                 $Actual | Should -BeTrue -Because "`"$Value`"";
             }
@@ -494,7 +527,7 @@ Describe 'Test-CharacterClassFlags -Flags Punctuation' {
 
     Context 'IsNot.Present = $true' {
         It 'Punctuation characters should return false' {
-            foreach ($Value in ('(', ')', '-', '_', '¡', '«', '»', '־')) {
+            foreach ($Value in ('(', ')', '-', '_', '¡', '„', '«', '»', '₎', '־')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags Punctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
@@ -517,7 +550,7 @@ Describe 'Test-CharacterClassFlags -Flags InitialQuotePunctuation' {
         }
 
         It 'Other Punctuation should return false' {
-            foreach ($Value in '(', ')', '-', '_', '¡', '»', '־') {
+            foreach ($Value in '(', ')', '-', '_', '¡', '„', '»', '₎', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
@@ -538,7 +571,7 @@ Describe 'Test-CharacterClassFlags -Flags InitialQuotePunctuation' {
         }
 
         It 'Other Punctuation should return false' {
-            foreach ($Value in '(', ')', '-', '_', '¡', '»', '־') {
+            foreach ($Value in '(', ')', '-', '_', '¡', '„', '»', '₎', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
@@ -561,7 +594,7 @@ Describe 'Test-CharacterClassFlags -Flags FinalQuotePunctuation' {
         }
 
         It 'Other Punctuation should return false' {
-            foreach ($Value in '(', ')', '-', '_', '¡', '«', '־') {
+            foreach ($Value in '(', ')', '-', '_', '¡', '„', '«', '₎', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
@@ -582,7 +615,7 @@ Describe 'Test-CharacterClassFlags -Flags FinalQuotePunctuation' {
         }
 
         It 'Other Punctuation should return true' {
-            foreach ($Value in '(', ')', '-', '_', '¡', '«', '־') {
+            foreach ($Value in '(', ')', '-', '_', '¡', '„', '«', '₎', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeTrue -Because "`"$Value`"";
             }
@@ -597,95 +630,459 @@ Describe 'Test-CharacterClassFlags -Flags FinalQuotePunctuation' {
     }
 }
 
-# Describe 'Test-CharacterClassFlags -Flags OpenPunctuation' {
-#     # [System.Globalization.UnicodeCategory]::OpenPunctuation
-#     Context 'IsNot.Present = $false' {
-#     }
+Describe 'Test-CharacterClassFlags -Flags OpenPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"(" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '(' -Flags OpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"("';
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags OpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
 
-# Describe 'Test-CharacterClassFlags -Flags NonAsciiOpenPunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and -not [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags OpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+    Context 'IsNot.Present = $true' {
+        It '"(" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '(' -IsNot -Flags OpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"("';
+        }
 
-# Describe 'Test-CharacterClassFlags -Flags AsciiOpenPunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::OpenPunctuation -and [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags OpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags OpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
 
-# Describe 'Test-CharacterClassFlags -Flags NonAsciiClosePunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and -not [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+Describe 'Test-CharacterClassFlags -Flags NonAsciiOpenPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"„" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '„' -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"„"';
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
 
-# Describe 'Test-CharacterClassFlags -Flags AsciiClosePunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::ClosePunctuation -and [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+    Context 'IsNot.Present = $true' {
+        It '"„" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '„' -IsNot -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"„"';
+        }
 
-# Describe 'Test-CharacterClassFlags -Flags ConnectorPunctuation' {
-#     # [System.Globalization.UnicodeCategory]::ConnectorPunctuation
-#     Context 'IsNot.Present = $false' {
-#     }
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
 
-# Describe 'Test-CharacterClassFlags -Flags NonAsciiConnectorPunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and -not [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+Describe 'Test-CharacterClassFlags -Flags AsciiOpenPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"(" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '(' -Flags AsciiOpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"("';
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '„', '«', '»', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
 
-# Describe 'Test-CharacterClassFlags -Flags AsciiConnectorPunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::ConnectorPunctuation -and [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+    Context 'IsNot.Present = $true' {
+        It '"(" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '(' -IsNot -Flags AsciiOpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"("';
+        }
 
-# Describe 'Test-CharacterClassFlags -Flags DashPunctuation' {
-#     # [System.Globalization.UnicodeCategory]::DashPunctuation
-#     Context 'IsNot.Present = $false' {
-#     }
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags AsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags AsciiOpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
 
-# Describe 'Test-CharacterClassFlags -Flags NonAsciiDashPunctuation' {
-#     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and -not [char]::IsAscii($args[0])
-#     Context 'IsNot.Present = $false' {
-#     }
+Describe 'Test-CharacterClassFlags -Flags NonAsciiClosePunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"₎" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '₎' -Flags NonAsciiClosePunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"₎"';
+        }
 
-#     Context 'IsNot.Present = $true' {
-#     }
-# }
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '"₎" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '₎' -IsNot -Flags NonAsciiClosePunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"₎"';
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags AsciiClosePunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '")" should return true' {
+            $Actual = Test-CharacterClassFlags -Value ')' -Flags AsciiClosePunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '")"';
+        }
+
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags AsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '")" should return false' {
+            $Actual = Test-CharacterClassFlags -Value ')' -IsNot -Flags AsciiClosePunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '")"';
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags AsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags AsciiClosePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags ConnectorPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"_" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '_' -Flags ConnectorPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"_"';
+        }
+
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '"_" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '_' -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"_"';
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags NonAsciiConnectorPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It 'ConnectorPunctuation characters should return false' {
+            foreach ($Value in ()) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It 'ConnectorPunctuation characters should return true' {
+            foreach ($Value in ()) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags ConnectorPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"_" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '_' -Flags ConnectorPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"_"';
+        }
+
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '"_" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '_' -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"_"';
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags DashPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"-" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '-' -Flags DashPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"-"';
+        }
+
+        It '"־" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '־' -Flags DashPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"־"';
+        }
+
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '¡', '„', '«', '»', '(', '₎', ')')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags DashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags DashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '"-" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '-' -IsNot -Flags DashPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"-"';
+        }
+
+        It '"־" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '־' -IsNot -Flags DashPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"־"';
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '¡', '„', '«', '»', '(', '₎', ')')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags DashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags DashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
+
+Describe 'Test-CharacterClassFlags -Flags NonAsciiDashPunctuation' {
+    Context 'IsNot.Present = $false' {
+        It '"־" should return true' {
+            $Actual = Test-CharacterClassFlags -Value '־' -Flags NonAsciiDashPunctuation -ErrorAction Stop;
+            $Actual | Should -BeTrue -Because '"־"';
+        }
+
+        It 'Other Punctuation characters should return false' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiDashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return false' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiDashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+
+    Context 'IsNot.Present = $true' {
+        It '"־" should return false' {
+            $Actual = Test-CharacterClassFlags -Value '־' -IsNot -Flags NonAsciiDashPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because '"־"';
+        }
+
+        It 'Other Punctuation characters should return true' {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiDashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ""$Value"";
+            }
+        }
+
+        It 'Non-Punctuation characters should return true' {
+            foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
+                $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiDashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ""$Value"";
+            }
+        }
+    }
+}
 
 # Describe 'Test-CharacterClassFlags -Flags AsciiDashPunctuation' {
 #     # [char]::GetUnicodeCategory($args[0]) -eq [System.Globalization.UnicodeCategory]::DashPunctuation -and [char]::IsAscii($args[0])
