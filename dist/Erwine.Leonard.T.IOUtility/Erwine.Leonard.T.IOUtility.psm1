@@ -1846,7 +1846,6 @@ Function Get-StringComparer {
     }
 }
 
-
 Function Test-CharacterClassFlags {
     [CmdletBinding()]
     Param(

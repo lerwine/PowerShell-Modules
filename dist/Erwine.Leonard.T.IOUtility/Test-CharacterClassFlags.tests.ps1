@@ -58,7 +58,7 @@ Describe 'Test-CharacterClassFlags -Flags ModifierSymbol' {
             $Actual = Test-CharacterClassFlags -Value "^" -Flags ModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"^"';
         }
-        
+
         It '"˅" should return true' {
             $Actual = Test-CharacterClassFlags -Value "˅" -Flags ModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"˅"';
@@ -77,7 +77,7 @@ Describe 'Test-CharacterClassFlags -Flags ModifierSymbol' {
             $Actual = Test-CharacterClassFlags -Value "^" -IsNot -Flags ModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"^"';
         }
-        
+
         It '"˅" should return false' {
             $Actual = Test-CharacterClassFlags -Value "˅" -IsNot -Flags ModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"˅"';
@@ -103,7 +103,7 @@ Describe 'Test-CharacterClassFlags -Flags NonAsciiModifierSymbol' {
             $Actual = Test-CharacterClassFlags -Value "^" -Flags NonAsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"^"';
         }
-        
+
         It 'Non-NonAsciiModifierSymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
@@ -122,7 +122,7 @@ Describe 'Test-CharacterClassFlags -Flags NonAsciiModifierSymbol' {
             $Actual = Test-CharacterClassFlags -Value "^" -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"^"';
         }
-        
+
         It 'Non-NonAsciiModifierSymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
@@ -138,7 +138,7 @@ Describe 'Test-CharacterClassFlags -Flags AsciiModifierSymbol' {
             $Actual = Test-CharacterClassFlags -Value "^" -Flags AsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"^"';
         }
-        
+
         It '"˅" should return false' {
             $Actual = Test-CharacterClassFlags -Value "˅" -Flags AsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"˅"';
@@ -157,7 +157,7 @@ Describe 'Test-CharacterClassFlags -Flags AsciiModifierSymbol' {
             $Actual = Test-CharacterClassFlags -Value "^" -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"^"';
         }
-        
+
         It '"˅" should return true' {
             $Actual = Test-CharacterClassFlags -Value "˅" -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"˅"';
@@ -180,7 +180,7 @@ Describe 'Test-CharacterClassFlags -Flags Symbol' {
                 $Actual | Should -BeTrue -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-Symbols should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
@@ -199,7 +199,7 @@ Describe 'Test-CharacterClassFlags -Flags CurrencySymbol' {
             $Actual = Test-CharacterClassFlags -Value "$" -Flags CurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"$"';
         }
-        
+
         It '"£" should return true' {
             $Actual = Test-CharacterClassFlags -Value "£" -Flags CurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"£"';
@@ -218,7 +218,7 @@ Describe 'Test-CharacterClassFlags -Flags CurrencySymbol' {
             $Actual = Test-CharacterClassFlags -Value "$" -IsNot -Flags CurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"$"';
         }
-        
+
         It '"£" should return false' {
             $Actual = Test-CharacterClassFlags -Value "£" -IsNot -Flags CurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"£"';
@@ -244,7 +244,7 @@ Describe 'Test-CharacterClassFlags -Flags NonAsciiCurrencySymbol' {
             $Actual = Test-CharacterClassFlags -Value "$" -Flags NonAsciiCurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"$"';
         }
-        
+
         It 'Non-CurrencySymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiCurrencySymbol -ErrorAction Stop;
@@ -263,7 +263,7 @@ Describe 'Test-CharacterClassFlags -Flags NonAsciiCurrencySymbol' {
             $Actual = Test-CharacterClassFlags -Value "$" -IsNot -Flags NonAsciiCurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"$"';
         }
-        
+
         It 'Non-CurrencySymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiCurrencySymbol -ErrorAction Stop;
@@ -279,7 +279,7 @@ Describe 'Test-CharacterClassFlags -Flags AsciiCurrencySymbol' {
             $Actual = Test-CharacterClassFlags -Value "$" -Flags AsciiCurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"$"';
         }
-        
+
         It '"£" should return false' {
             $Actual = Test-CharacterClassFlags -Value "£" -Flags AsciiCurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"£"';
@@ -298,7 +298,7 @@ Describe 'Test-CharacterClassFlags -Flags AsciiCurrencySymbol' {
             $Actual = Test-CharacterClassFlags -Value "$" -IsNot -Flags AsciiCurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"$"';
         }
-        
+
         It '"£" should return true' {
             $Actual = Test-CharacterClassFlags -Value "£" -IsNot -Flags AsciiCurrencySymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"£"';
@@ -321,7 +321,7 @@ Describe 'Test-CharacterClassFlags -Flags MathSymbol' {
             $Actual = Test-CharacterClassFlags -Value "|" -Flags MathSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"|"';
         }
-        
+
         It '"±" should return true' {
             $Actual = Test-CharacterClassFlags -Value "±" -Flags MathSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"±"';
@@ -342,7 +342,7 @@ Describe 'Test-CharacterClassFlags -Flags MathSymbol' {
             $Actual = Test-CharacterClassFlags -Value "|" -IsNot -Flags MathSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"|"';
         }
-        
+
         It '"±" should return false' {
             $Actual = Test-CharacterClassFlags -Value "±" -IsNot -Flags MathSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"±"';
@@ -370,7 +370,7 @@ Describe 'Test-CharacterClassFlags -Flags NonAsciiMathSymbol' {
             $Actual = Test-CharacterClassFlags -Value "|" -Flags NonAsciiMathSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"|"';
         }
-        
+
         It 'Non-MathSymbols should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags NonAsciiMathSymbol -ErrorAction Stop;
@@ -391,7 +391,7 @@ Describe 'Test-CharacterClassFlags -Flags NonAsciiMathSymbol' {
             $Actual = Test-CharacterClassFlags -Value "|" -IsNot -Flags NonAsciiMathSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"|"';
         }
-        
+
         It 'Non-MathSymbols should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags NonAsciiMathSymbol -ErrorAction Stop;
@@ -409,7 +409,7 @@ Describe 'Test-CharacterClassFlags -Flags AsciiMathSymbol' {
             $Actual = Test-CharacterClassFlags -Value "|" -Flags AsciiMathSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"|"';
         }
-        
+
         It '"±" should return false' {
             $Actual = Test-CharacterClassFlags -Value "±" -Flags AsciiMathSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"±"';
@@ -430,7 +430,7 @@ Describe 'Test-CharacterClassFlags -Flags AsciiMathSymbol' {
             $Actual = Test-CharacterClassFlags -Value "|" -IsNot -Flags AsciiMathSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"|"';
         }
-        
+
         It '"±" should return true' {
             $Actual = Test-CharacterClassFlags -Value "±" -IsNot -Flags AsciiMathSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"±"';
@@ -451,7 +451,7 @@ Describe 'Test-CharacterClassFlags -Flags OtherSymbol' {
             $Actual = Test-CharacterClassFlags -Value "¦" -Flags OtherSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"¦"';
         }
-        
+
         It 'Non-OtherSymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags OtherSymbol -ErrorAction Stop;
@@ -465,7 +465,7 @@ Describe 'Test-CharacterClassFlags -Flags OtherSymbol' {
             $Actual = Test-CharacterClassFlags -Value "¦" -IsNot -Flags OtherSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"¦"';
         }
-        
+
         It 'Non-OtherSymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags OtherSymbol -ErrorAction Stop;
@@ -483,7 +483,7 @@ Describe 'Test-CharacterClassFlags -Flags Punctuation' {
                 $Actual | Should -BeTrue -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags Punctuation -ErrorAction Stop;
@@ -499,7 +499,7 @@ Describe 'Test-CharacterClassFlags -Flags Punctuation' {
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags Punctuation -ErrorAction Stop;
@@ -515,14 +515,14 @@ Describe 'Test-CharacterClassFlags -Flags InitialQuotePunctuation' {
             $Actual = Test-CharacterClassFlags -Value "«" -Flags InitialQuotePunctuation -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"«"';
         }
-        
+
         It 'Other Punctuation should return false' {
             foreach ($Value in '(', ')', '-', '_', '¡', '»', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-InitialQuotePunctuation should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
@@ -536,14 +536,14 @@ Describe 'Test-CharacterClassFlags -Flags InitialQuotePunctuation' {
             $Actual = Test-CharacterClassFlags -Value "«" -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"«"';
         }
-        
+
         It 'Other Punctuation should return false' {
             foreach ($Value in '(', ')', '-', '_', '¡', '»', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-InitialQuotePunctuation should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
@@ -559,14 +559,14 @@ Describe 'Test-CharacterClassFlags -Flags FinalQuotePunctuation' {
             $Actual = Test-CharacterClassFlags -Value "»" -Flags InitialQuotePunctuation -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"»"';
         }
-        
+
         It 'Other Punctuation should return false' {
             foreach ($Value in '(', ')', '-', '_', '¡', '«', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeFalse -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-InitialQuotePunctuation should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
@@ -580,14 +580,14 @@ Describe 'Test-CharacterClassFlags -Flags FinalQuotePunctuation' {
             $Actual = Test-CharacterClassFlags -Value "»" -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"»"';
         }
-        
+
         It 'Other Punctuation should return true' {
             foreach ($Value in '(', ')', '-', '_', '¡', '«', '־') {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
                 $Actual | Should -BeTrue -Because "`"$Value`"";
             }
         }
-        
+
         It 'Non-InitialQuotePunctuation should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClassFlags -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;

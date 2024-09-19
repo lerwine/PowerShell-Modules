@@ -160,7 +160,7 @@ Function Get-IndexOfCharType {
 
         [char[]]$NotMatching
     )
-    
+
     Begin {
         if ($PSBoundParameters.ContainsKey('NotMatching')) {
             # TODO: Implement NotMatching
@@ -643,7 +643,7 @@ Function Get-IndexOfCharType {
             }
         }
     }
-    
+
     Process {
         (GetIndexOfCharType $InputString) | Write-Output;
     }
@@ -653,7 +653,7 @@ class CharClassSeparatedValue {
     [ValidateNotNull()]
     [AllowEmptyString()]
     [string]$Separator = '';
-    
+
     [ValidateNotNull()]
     [AllowEmptyString()]
     [string]$Value = '';
@@ -681,7 +681,7 @@ Function Get-CharClassSeparatedValues {
 
         [char[]]$NotMatching
     )
-    
+
     Begin {
         if ($PSBoundParameters.ContainsKey('NotMatching')) {
             # TODO: Implement NotMatching
@@ -710,7 +710,7 @@ Function Get-CharClassSeparatedValues {
                                 $NextIdx = $Value | Get-IndexOfCharType -StartIndex $PrevIdx -Symbol;
                                 if ($NextIdx -lt 0) { break }
                                 [CharClassSeparatedValue]@{
-                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx);
                                     Value = $Value.Substring($ValIdx, $ValIdx - $NextIdx);
                                 } | Write-Output;
                                 $SepIdx = $NextIndex;
@@ -722,7 +722,7 @@ Function Get-CharClassSeparatedValues {
                             } else {
                                 if ($ValIdx -gt 0) {
                                     [CharClassSeparatedValue]@{
-                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx);
                                         Value = $Value.Substring($ValIdx);
                                     } | Write-Output;
                                 }
@@ -754,7 +754,7 @@ Function Get-CharClassSeparatedValues {
                                 $NextIdx = $Value | Get-IndexOfCharType -StartIndex $PrevIdx -Punctuation;
                                 if ($NextIdx -lt 0) { break }
                                 [CharClassSeparatedValue]@{
-                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx);
                                     Value = $Value.Substring($ValIdx, $ValIdx - $NextIdx);
                                 } | Write-Output;
                                 $SepIdx = $NextIndex;
@@ -766,7 +766,7 @@ Function Get-CharClassSeparatedValues {
                             } else {
                                 if ($ValIdx -gt 0) {
                                     [CharClassSeparatedValue]@{
-                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx);
                                         Value = $Value.Substring($ValIdx);
                                     } | Write-Output;
                                 }
@@ -798,7 +798,7 @@ Function Get-CharClassSeparatedValues {
                                 $NextIdx = $Value | Get-IndexOfCharType -StartIndex $PrevIdx -WhiteSpaceOrControl;
                                 if ($NextIdx -lt 0) { break }
                                 [CharClassSeparatedValue]@{
-                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                    Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx);
                                     Value = $Value.Substring($ValIdx, $ValIdx - $NextIdx);
                                 } | Write-Output;
                                 $SepIdx = $NextIndex;
@@ -810,7 +810,7 @@ Function Get-CharClassSeparatedValues {
                             } else {
                                 if ($ValIdx -gt 0) {
                                     [CharClassSeparatedValue]@{
-                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx); 
+                                        Separator = $Value.Substring($SepIdx, $SepIdx - $ValIdx);
                                         Value = $Value.Substring($ValIdx);
                                     } | Write-Output;
                                 }
@@ -822,7 +822,7 @@ Function Get-CharClassSeparatedValues {
             }
         }
     }
-    
+
     Process {
         (GetCharClassSeparatedValues $InputString) | Write-Output;
     }
@@ -1634,14 +1634,14 @@ Function Compare-ExtensionIdentity {
         [Parameter(Mandatory = $true, Position = 0)]
         # The ExtensionIdentity to be compared.
         [ExtensionIdentity]$Current,
-        
+
         [Parameter(Mandatory = $true, Position = 1)]
         # The ExtensionIdentity to compare to.
         [ExtensionIdentity]$Other
     )
 
     if ([object]::ReferenceEquals($Current, $Other)) { return 0 }
-    
+
     $diff = Compare-VersionStrings -LVersion $Current.ID -RVersion $Other.ID;
     if ($diff -ne 0 -or ($diff = Compare-VersionStrings -LVersion $Current.Version -RVersion $Other.Version) -ne 0) { return $diff }
     return [System.StringComparer]::OrdinalIgnoreCase.Compare($Current.Platform, $Other.Platform);
@@ -1967,7 +1967,7 @@ Function Select-VsixExtension {
 
         [ExtensionIdentity[]]$Identity
     )
-    
+
     Process {
         foreach ($Item in $InputObject) {
             foreach ($Id in $Identity) {
@@ -1996,7 +1996,7 @@ Function Skip-VsixExtension {
 
         [ExtensionIdentity[]]$Identity
     )
-    
+
     Process {
         foreach ($Item in $InputObject) {
             $NoMatch = $true;
@@ -2311,7 +2311,7 @@ Function Merge-VsixExtensions {
             }
         }
     }
-    
+
     End {
         $Node = $ToRemove.First;
         if ($null -ne $Node) {
