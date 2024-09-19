@@ -74,7 +74,8 @@ FunctionsToExport = @('ConvertTo-SafeFileName', 'Get-AppDataPath', 'Read-ShortIn
     'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes', 'Write-TinyLengthEncodedBytes',
     'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'Get-TextEncoding', 'New-MemoryStream',
     'Get-StringComparer', 'Optimize-WhiteSpace', 'Remove-ZeroPadding', 'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText', 'Expand-GZip', 'Use-TempFolder',
-    'Assert-IsNotNull', 'Assert-IsType', 'Assert-IsString', 'Assert-IsPsEnumerable', 'Invoke-WhenNotNull', 'Invoke-WhenIsType', 'Invoke-WhenIsString', 'Invoke-WhenIsPsEnumerable')
+    'Assert-IsNotNull', 'Assert-IsType', 'Assert-IsString', 'Assert-IsPsEnumerable', 'Invoke-WhenNotNull', 'Invoke-WhenIsType', 'Invoke-WhenIsString', 'Invoke-WhenIsPsEnumerable',
+    'Test-CharacterClassFlags')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
