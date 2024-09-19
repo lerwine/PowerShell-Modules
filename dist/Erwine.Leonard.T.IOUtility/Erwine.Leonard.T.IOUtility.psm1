@@ -1844,7 +1844,7 @@ Function Get-StringComparer {
 }
 
 if ($null -eq $Script:UnicodeCategoryCharacterClassFlags) {
-    New-Variable -Name 'UnicodeCategoryCharacterClassFlags' -Value ([int]([CharacterClassFlags]::ModifierSymbol -bor [CharacterClassFlags]::NonAsciiModifierSymbol -bor `
+    New-Variable -Name 'UnicodeCategoryCharacterClassFlags' -Value ([ulong]([CharacterClassFlags]::ModifierSymbol -bor [CharacterClassFlags]::NonAsciiModifierSymbol -bor `
         [CharacterClassFlags]::AsciiModifierSymbol -bor [CharacterClassFlags]::CurrencySymbol -bor [CharacterClassFlags]::NonAsciiCurrencySymbol  -bor [CharacterClassFlags]::AsciiCurrencySymbol -bor `
         [CharacterClassFlags]::MathSymbol -bor [CharacterClassFlags]::OtherSymbol -bor [CharacterClassFlags]::NonAsciiMathSymbol -bor [CharacterClassFlags]:: OtherPunctuation -bor `
         [CharacterClassFlags]::OtherNonAsciiPunctuation -bor [CharacterClassFlags]::OtherAsciiPunctuation -bor [CharacterClassFlags]::FinalQuotePunctuation -bor `
