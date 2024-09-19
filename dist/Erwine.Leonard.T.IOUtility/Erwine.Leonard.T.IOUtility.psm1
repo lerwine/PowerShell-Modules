@@ -1872,11 +1872,13 @@ Function Test-CharacterClassFlags {
 
     [ulong]$ProcessedFlags = 0;
     [ulong]$Fv = $Flags;
+
     if (($Script:UnicodeCategoryCharacterClassFlags -band $Fv) -ne 0) {
         $Category = [char]::GetUnicodeCategory($Value);
         if ($IsNot.IsPresent) {
             foreach ($Ccf in ([Enum]::GetValues([CharacterClassFlags]) | Sort-Object -Descending)) {
                 [ulong]$Ccv = $Ccf;
+
                 if ($Fv -band $Ccv -eq $Ccv -and $ProcessedFlags -band $Ccv -ne $Ccv) {
                     switch ($Ccf) {
                         BinaryDigitNumber {
@@ -2196,13 +2198,17 @@ Function Test-CharacterClassFlags {
                             break;
                         }
                     }
+
                     $ProcessedFlags = $ProcessedFlags -bor $Ccv;
                 }
             }
+
             return $true;
         }
+
         foreach ($Ccf in ([Enum]::GetValues([CharacterClassFlags]) | Sort-Object -Descending)) {
             [ulong]$Ccv = $Ccf;
+
             if ($Fv -band $Ccv -eq $Ccv -and $ProcessedFlags -band $Ccv -ne $Ccv) {
                 switch ($Ccf) {
                     BinaryDigitNumber {
@@ -2522,14 +2528,18 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                 }
+
                 $ProcessedFlags = $ProcessedFlags -bor $Ccv;
             }
         }
+
         return $false;
     }
+
     if ($IsNot.IsPresent) {
         foreach ($Ccf in ([Enum]::GetValues([CharacterClassFlags]) | Sort-Object -Descending)) {
             [ulong]$Ccv = $Ccf;
+
             if ($Fv -band $Ccv -eq $Ccv -and $ProcessedFlags -band $Ccv -ne $Ccv) {
                 switch ($Ccf) {
                     BinaryDigitNumber {
@@ -2681,13 +2691,17 @@ Function Test-CharacterClassFlags {
                         break;
                     }
                 }
+
                 $ProcessedFlags = $ProcessedFlags -bor $Ccv;
             }
         }
+
         return $true;
     }
+
     foreach ($Ccf in ([Enum]::GetValues([CharacterClassFlags]) | Sort-Object -Descending)) {
         [ulong]$Ccv = $Ccf;
+
         if ($Fv -band $Ccv -eq $Ccv -and $ProcessedFlags -band $Ccv -ne $Ccv) {
             switch ($Ccf) {
                 BinaryDigitNumber {
@@ -2839,9 +2853,11 @@ Function Test-CharacterClassFlags {
                     break;
                 }
             }
+
             $ProcessedFlags = $ProcessedFlags -bor $Ccv;
         }
     }
+
     return $false;
 }
 
