@@ -10,5 +10,8 @@
 		"k--kato.docomment",
 		"ms-vscode.csharp",
 		"ms-vscode.PowerShell"
+	],
+	"unwantedRecommendations": [
+		"ms-vscode-remote.remote-wsl"
 	]
 }
