@@ -1885,19 +1885,70 @@ Function Get-StringComparer {
     }
 }
 
-if ($null -eq $Script:UnicodeCategoryCharacterClass) {
-    New-Variable -Name 'UnicodeCategoryCharacterClass' -Value ([ulong]([CharacterClass]::ModifierSymbol -bor [CharacterClass]::NonAsciiModifierSymbol -bor `
-        [CharacterClass]::AsciiModifierSymbol -bor [CharacterClass]::CurrencySymbol -bor [CharacterClass]::NonAsciiCurrencySymbol  -bor [CharacterClass]::AsciiCurrencySymbol -bor `
-        [CharacterClass]::MathSymbol -bor [CharacterClass]::OtherSymbol -bor [CharacterClass]::NonAsciiMathSymbol -bor [CharacterClass]:: OtherPunctuation -bor `
-        [CharacterClass]::OtherNonAsciiPunctuation -bor [CharacterClass]::OtherAsciiPunctuation -bor [CharacterClass]::FinalQuotePunctuation -bor `
-        [CharacterClass]::InitialQuotePunctuation -bor [CharacterClass]::NonAsciiClosePunctuation -bor [CharacterClass]::AsciiMathSymbol -bor `
-        [CharacterClass]::AsciiClosePunctuation -bor [CharacterClass]::EnclosingMark -bor [CharacterClass]::Format -bor [CharacterClass]::NonSpacingMark -bor `
-        [CharacterClass]::ParagraphSeparator -bor [CharacterClass]::LineSeparator -bor [CharacterClass]::SpaceSeparator -bor [CharacterClass]::NonAsciiSpaceSeparator -bor `
-        [CharacterClass]::AsciiSpaceSeparator -bor [CharacterClass]::SpacingCombiningMark -bor [CharacterClass]::OpenPunctuation -bor [CharacterClass]::NonAsciiOpenPunctuation -bor `
-        [CharacterClass]::AsciiOpenPunctuation -bor [CharacterClass]::OtherNumber -bor [CharacterClass]::LetterNumber -bor [CharacterClass]::ConnectorPunctuation -bor `
-        [CharacterClass]::NonAsciiConnectorPunctuation -bor [CharacterClass]::AsciiConnectorPunctuation -bor [CharacterClass]::DashPunctuation -bor `
-        [CharacterClass]::NonAsciiDashPunctuation -bor [CharacterClass]::AsciiDashPunctuation -bor [CharacterClass]::OtherLetter -bor [CharacterClass]::ModifierLetter -bor `
-        [CharacterClass]::TitlecaseLetter -bor [CharacterClass]::PrivateUse -bor [CharacterClass]::OtherNotAssigned));
+Function Get-IndexOfCharacter {
+    [CmdletBinding(DefaultParameterSetName = 'ClassOnly')]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
+        [AllowEmptyString()]
+        [string]$InputString,
+
+        [Parameter(ParameterSetName = 'ByChar')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClassOnly')]
+        [CharacterClass[]]$CharClass,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'ByChar')]
+        [char[]]$Value,
+
+        [Parameter(ParameterSetName = 'ByChar')]
+        [switch]$CaseInsensitive
+    )
+
+    Process {
+        if ($InputString.Length -eq 0) {
+            -1 | Write-Output;
+        } else {
+            $Index = 0;
+            if ($PSCmdlet.ParameterSetName -eq 'ByChar') {
+                if ($CaseInsensitive.IsPresent) {
+                    if ($PSBoundParameters.ContainsKey('CharClass')) {
+                        do {
+                            $c = $InputString[$Index];
+                            if ($Value -icontains $c -or ($c | Test-CharacterClass -Flags $CharClass)) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    } else {
+                        do {
+                            if ($InputString[$Index] -icontains $c) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    }
+                } else {
+                    if ($PSBoundParameters.ContainsKey('CharClass')) {
+                        do {
+                            $c = $InputString[$Index];
+                            if ($Value -ccontains $c -or ($c | Test-CharacterClass -Flags $CharClass)) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    } else {
+                        do {
+                            if ($InputString[$Index] -ccontains $c) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    }
+                }
+            } else {
+                do {
+                    if ($InputString[$Index] | Test-CharacterClass -Flags $CharClass) { break }
+                    $Index++;
+                } while ($Index -lt $InputString.Length);
+            }
+            if ($Index -lt $InputString.Length) {
+                $Index | Write-Output;
+            } else {
+                -1 | Write-Output;
+            }
+        }
+    }
 }
 
 Function Get-CharacterClass {
