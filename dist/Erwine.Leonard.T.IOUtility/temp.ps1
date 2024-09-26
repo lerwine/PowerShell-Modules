@@ -222,40 +222,40 @@ if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
     New-Variable -Name 'SingleQuoteIncompatibleRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('[\x00-0x19\x7f-\u2017\u201a-\u201b\u201e-\uffff]'));
     New-Variable -Name 'EscapeChar' -Option Constant -Scope 'Script' -Value ([char]"`e");
     New-Variable -Name 'DeleteChar' -Option Constant -Scope 'Script' -Value ([char]"`u{7f}");
-    New-Variable -Name 'IntegerBase10PadFormats' -Option ReadOnly -Scope 'Script' -Value ( @{
-        [byte] = "d$([byte]::MaxValue().ToString().Length)";
-        [sbyte] = "d$([sbyte]::MaxValue().ToString().Length)";
-        [short] = "d$([short]::MaxValue().ToString().Length)";
-        [ushort] = "d$([ushort]::MaxValue().ToString().Length)";
-        [int] = "d$([int]::MaxValue().ToString().Length)";
-        [uint] = "d$([uint]::MaxValue().ToString().Length)";
-        [long] = "d$([long]::MaxValue().ToString().Length)";
-        [ulong] = "d$([ulong]::MaxValue().ToString().Length)";
-    });
-    New-Variable -Name 'IntegerHexPadFormats' -Option ReadOnly -Scope 'Script' -Value (@{
-        [byte] = "x$([byte]::MaxValue('x').ToString().Length)";
-        [sbyte] = "x$([sbyte]::MaxValue('x').ToString().Length)";
-        [short] = "x$([short]::MaxValue('x').ToString().Length)";
-        [ushort] = "x$([ushort]::MaxValue('x').ToString().Length)";
-        [int] = "x$([int]::MaxValue().ToString('x').Length)";
-        [uint] = "x$([uint]::MaxValue().ToString('x').Length)";
-        [long] = "x$([long]::MaxValue().ToString('x').Length)";
-        [ulong] = "x$([ulong]::MaxValue().ToString('x').Length)";
-    });
-    New-Variable -Name 'IntegerBinaryPadFormats' -Option ReadOnly -Scope 'Script' -Value (@{
-        [byte] = "b$([byte]::MaxValue('b').ToString().Length)";
-        [sbyte] = "b$([sbyte]::MaxValue('b').ToString().Length)";
-        [short] = "b$([short]::MaxValue('b').ToString().Length)";
-        [ushort] = "b$([ushort]::MaxValue('b').ToString().Length)";
-        [int] = "b$([int]::MaxValue().ToString('b').Length)";
-        [uint] = "b$([uint]::MaxValue().ToString('b').Length)";
-        [long] = "b$([long]::MaxValue().ToString('b').Length)";
-        [ulong] = "b$([ulong]::MaxValue().ToString('b').Length)";
-    });
-    New-Variable -Name 'CommonCharacters' -Option ReadOnly -Scope 'Script' -Value ([char[]]@("`t", "`n", ' ', '0', '9', 'A', 'F', 'N', 'Z', 'a', 'f', 'n', 'z', '_', '(', '[', ']', '}', '+', '=', '$','^', '`', '˅',
-        '˥',  '¢', '£', '⁀', '︴', '٤', '߁', 'À', 'Ç', 'µ', 'ß', 'ǅ', 'ᾫ', '©', '°', 'ʺ', 'ˇ', 'ǂ', 'ח', "`u{2160}", 'Ⅱ', '²', '¾', '֊', '־', '〰', '„', '⁅', '⁆', '⁾', '«', '“', '»', '”', '¡', '§',
-        '±', '⅀', "`u{008c}", "`u{0090}", "`u{d806}", "`u{dc14}", "`u{0308}", "`u{0310}", "`u{0982}", "`u{09be}", "`u{20e2}", "`u{20e3}", "`u{2000}", "`u{3000}", "`u{2028}", "`u{2029}", "`u{0605}",
-        "`u{fffb}", "`u{e00b}", "`u{e00e}", "`u{05ce}", "`u{05ec}"));
+    $InnerDict = [System.Collections.Generic.Dictionary[Type,string]]::new();
+    $InnerDict.Add([byte], "d$([byte]::MaxValue.ToString().Length)");
+    $InnerDict.Add([sbyte], "d$([sbyte]::MaxValue.ToString().Length)");
+    $InnerDict.Add([short], "d$([short]::MaxValue.ToString().Length)");
+    $InnerDict.Add([ushort], "d$([ushort]::MaxValue.ToString().Length)");
+    $InnerDict.Add([int], "d$([int]::MaxValue.ToString().Length)");
+    $InnerDict.Add([uint], "d$([uint]::MaxValue.ToString().Length)");
+    $InnerDict.Add([long], "d$([long]::MaxValue.ToString().Length)");
+    $InnerDict.Add([ulong], "d$([ulong]::MaxValue.ToString().Length)");
+    New-Variable -Name 'IntegerBase10PadFormats' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyDictionary[Type,string]]::new($InnerDict));
+    $InnerDict = [System.Collections.Generic.Dictionary[Type,string]]::new();
+    $InnerDict.Add([byte], "x$([byte]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([sbyte], "x$([sbyte]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([short], "x$([short]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([ushort], "x$([ushort]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([int], "x$([int]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([uint], "x$([uint]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([long], "x$([long]::MaxValue.ToString('x').Length)");
+    $InnerDict.Add([ulong], "x$([ulong]::MaxValue.ToString('x').Length)");
+    New-Variable -Name 'IntegerHexPadFormats' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyDictionary[Type,string]]::new($InnerDict));
+    $InnerDict = [System.Collections.Generic.Dictionary[Type,string]]::new();
+    $InnerDict.Add([byte], "b$([byte]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([sbyte], "b$([sbyte]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([short], "b$([short]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([ushort], "b$([ushort]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([int], "b$([int]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([uint], "b$([uint]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([long], "b$([long]::MaxValue.ToString('b').Length)");
+    $InnerDict.Add([ulong], "b$([ulong]::MaxValue.ToString('b').Length)");
+    New-Variable -Name 'IntegerBinaryPadFormats' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyDictionary[Type,string]]::new($InnerDict));
+    New-Variable -Name 'CommonCharacters' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(([char[]]@("`t", "`n", ' ', '0', '9', 'A', 'F', 'N', 'Z',
+        'a', 'f', 'n', 'z', '_', '(', '[', ']', '}', '+', '=', '$','^', '`', '˅', '˥',  '¢', '£', '⁀', '︴', '٤', '߁', 'À', 'Ç', 'µ', 'ß', 'ǅ', 'ᾫ', '©', '°', 'ʺ', 'ˇ', 'ǂ', 'ח', "`u{2160}", 'Ⅱ', '²',
+        '¾', '֊', '־', '〰', '„', '⁅', '⁆', '⁾', '«', '“', '»', '”', '¡', '§', '±', '⅀', "`u{008c}", "`u{0090}", "`u{d806}", "`u{dc14}", "`u{0308}", "`u{0310}", "`u{0982}", "`u{09be}", "`u{20e2}",
+        "`u{20e3}", "`u{2000}", "`u{3000}", "`u{2028}", "`u{2029}", "`u{0605}", "`u{fffb}", "`u{e00b}", "`u{e00e}", "`u{05ce}", "`u{05ec}"))));
 }
 
 Function ConvertTo-PsStringLiteral {
