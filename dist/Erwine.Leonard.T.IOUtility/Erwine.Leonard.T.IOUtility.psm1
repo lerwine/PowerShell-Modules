@@ -1,13 +1,13 @@
 if ($null -eq $Script:InvalidFileNameChars) {
-    New-Variable -Name 'InvalidFileNameChars' -Option ReadOnly -Scope 'Script' -Value (&{
+    New-Variable -Name 'InvalidFileNameChars' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(@(&{
         [System.Management.Automation.ProviderInfo]$FileSystemProvider = Get-PSProvider -PSProvider 'FileSystem';
-        if ($FileSystemProvider.AltItemSeparator -ine $FileSystemProvider.ItemSeparator -and -not [string]::IsNullOrEmpty($FileSystemProvider.AltItemSeparator)) {
-            if ($FileSystemProvider.VolumeSeparatedByColon) { return ([string[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator, ':')); }
-            return ([string[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator));
+        if ($FileSystemProvider.AltItemSeparator -ine $FileSystemProvider.ItemSeparator -and $null -ne $FileSystemProvider.AltItemSeparator) {
+            if ($FileSystemProvider.VolumeSeparatedByColon) { return ([char[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator, ':')); }
+            return ([char[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator));
         }
-        if ($FileSystemProvider.VolumeSeparatedByColon) { return ([string[]]@($FileSystemProvider.ItemSeparator, ':')); }
-        return ([string[]]@($FileSystemProvider.ItemSeparator));
-    });
+        if ($FileSystemProvider.VolumeSeparatedByColon) { return ([char[]]@($FileSystemProvider.ItemSeparator, ':')); }
+        return ([char[]]@($FileSystemProvider.ItemSeparator));
+    })));
 
     New-Variable -Name 'Int16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int16]0).Length;
     New-Variable -Name 'UInt16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt16]0).Length;
