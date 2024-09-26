@@ -1,62 +1,59 @@
-# Powershell-Modules #
+# Powershell-Modules
 
 This project is a collection of various PowerShell modules, which I have been developing during personal studies and research.
 Please reference the appropriate version-named branch for versions which are deemed releasable.
 
-This is a development branch, not intended to be releasable.
+The PowerShell modules contained in this project were targeted for PowerShell Core 7.0 or later.
 
-The modules in this branch have been targeted for PowerShell 4.0 or greater.
-Branches which start with the name 'legacy', are intended to be compatible with systems which only have PowerShell 2.0 and supports only c# 2.0 for custom types and assemblies.
+## Contents
 
-## Contents ##
-
-### CertificateCryptography ###
+### CertificateCryptography
 
 Encrypt and decrypt using PKI technology.
 
-### CredentialStorage ###
+### CredentialStorage
 
 Provides secure credential storage and retrieval.
 
-### GDIPlus ###
+### GDIPlus
 
 Binary Module to support graphic file manipulation.
 
-### IOUtility ###
+### IOUtility
 
 Utility functions to manage filesystem, console, and stream IO.
 
-### LteDev ###
+### LteDev
 
 PowerShell development utility functions.
 
-### NetworkUtility ###
+### NetworkUtility
 
-### PSDB ###
+### PSDB
 
 Database command utilities
 
-### XmlUtility ###
+### XmlUtility
 
 Provides advanced XML functionality.
 
-## Dev Environment Setup ##
+## Requirements
 
-### Compiling manually or with VS Code ###
+PowerShell
+: PowerShell Core 7.0+
 
-To compile using Visual Studio Code or the build.ps1 script, will need install the .NET Framework 4.6 SDK Developer Pack, which can be obtained from <https://www.microsoft.com/net/download/visual-studio-sdks>. You will also
-need to install Microsoft Build Tools (<https://www.microsoft.com/en-us/download/details.aspx?id=48159>).
+## Dev Environment Setup
 
-### PowerShell 4.0+ ###
+### Development Dependencies
 
-The PowerShell modules contained in this project were targeted for PowerShell 4.0 or later.
+To compile using Visual Studio Code or the build.ps1 script, will need install the .NET Core 8.0 SDK, which can be obtained from <https://www.microsoft.com/net/download/visual-studio-sdks>.
 
-### Visual Studio Code ###
+### Visual Studio Code
 
 This project was recently converted from being developed from Visual Studio Ultimate to Visual Studio Code (<https://code.visualstudio.com/download>).
 Additional environment configuration may be necessary for development, or to compile the projects.
 
-#### Extensions ####
+#### Extensions
 
 The "C# for Visual Studio Code (powered by OmniSharp)" extension is required for development.
 
@@ -65,6 +62,6 @@ should appear in the Recommended extension listing in Visual Studio Code. Altern
 
 To compile without Visual Studio, you will also need .
 
-## Contributing ##
+## Contributing
 
 This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, simply edit a file and propose a change, or propose a new file at [My Public GitHub Website](<https://github.com/lerwine/PowerShell-Modules.git>).
