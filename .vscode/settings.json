@@ -17,5 +17,15 @@
     "powershell.bugReporting.project": "https://github.com/lerwine/PowerShell-Modules",
     "powershell.debugging.createTemporaryIntegratedConsole": true,
     "powershell.developer.editorServicesLogLevel": "Diagnostic",
-    "omnisharp.loggingLevel": "trace"
+    "omnisharp.loggingLevel": "trace",
+    "xml.fileAssociations": [
+        {
+            "systemId": "https://raw.githubusercontent.com/PowerShell/PowerShell/master/src/Schemas/Format.xsd",
+            "pattern": "**/*.Format.ps1xml"
+        },
+        {
+            "systemId": "https://raw.githubusercontent.com/PowerShell/PowerShell/master/src/Schemas/Types.xsd",
+            "pattern": "**/*.Types.ps1xml"
+        }
+    ]
 }
