@@ -1,11 +1,11 @@
 if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
-    New-Variable -Name 'SingleQuotedLiteralToEscapeRegex' -Option ReadOnly -Value ([regex]::new("['‘’]"));
-    New-Variable -Name 'DoubleQuotedLiteralToEscapeRegex' -Option ReadOnly -Value ([regex]::new('[\x00-0x19\$"`\x7f-\u2017\u201a-\uffff]'));
-    New-Variable -Name 'AnyLiteralToEscapeRegex' -Option ReadOnly -Value ([regex]::new('([\$"`“”''‘‘’’])'));
-    New-Variable -Name 'SingleQuoteIncompatibleRegex' -Option ReadOnly -Value ([regex]::new('[\x00-0x19\x7f-\u2017\u201a-\u201b\u201e-\uffff]'));
-    New-Variable -Name 'EscapeChar' -Option Constant -Value ([char]"`e");
-    New-Variable -Name 'DeleteChar' -Option Constant -Value ([char]"`u{7f}");
-    New-Variable -Name 'IntegerBase10PadFormats' -Option ReadOnly -Value ( @{
+    New-Variable -Name 'SingleQuotedLiteralToEscapeRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new("['‘’]"));
+    New-Variable -Name 'DoubleQuotedLiteralToEscapeRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('[\x00-0x19\$"`\x7f-\u2017\u201a-\uffff]'));
+    New-Variable -Name 'AnyLiteralToEscapeRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('([\$"`“”''‘‘’’])'));
+    New-Variable -Name 'SingleQuoteIncompatibleRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('[\x00-0x19\x7f-\u2017\u201a-\u201b\u201e-\uffff]'));
+    New-Variable -Name 'EscapeChar' -Option Constant -Scope 'Script' -Value ([char]"`e");
+    New-Variable -Name 'DeleteChar' -Option Constant -Scope 'Script' -Value ([char]"`u{7f}");
+    New-Variable -Name 'IntegerBase10PadFormats' -Option ReadOnly -Scope 'Script' -Value ( @{
         [byte] = "d$([byte]::MaxValue().ToString().Length)";
         [sbyte] = "d$([sbyte]::MaxValue().ToString().Length)";
         [short] = "d$([short]::MaxValue().ToString().Length)";
@@ -15,7 +15,7 @@ if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
         [long] = "d$([long]::MaxValue().ToString().Length)";
         [ulong] = "d$([ulong]::MaxValue().ToString().Length)";
     });
-    New-Variable -Name 'IntegerHexPadFormats' -Option ReadOnly -Value (@{
+    New-Variable -Name 'IntegerHexPadFormats' -Option ReadOnly -Scope 'Script' -Value (@{
         [byte] = "x$([byte]::MaxValue('x').ToString().Length)";
         [sbyte] = "x$([sbyte]::MaxValue('x').ToString().Length)";
         [short] = "x$([short]::MaxValue('x').ToString().Length)";
@@ -25,7 +25,7 @@ if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
         [long] = "x$([long]::MaxValue().ToString('x').Length)";
         [ulong] = "x$([ulong]::MaxValue().ToString('x').Length)";
     });
-    New-Variable -Name 'IntegerBinaryPadFormats' -Option ReadOnly -Value (@{
+    New-Variable -Name 'IntegerBinaryPadFormats' -Option ReadOnly -Scope 'Script' -Value (@{
         [byte] = "b$([byte]::MaxValue('b').ToString().Length)";
         [sbyte] = "b$([sbyte]::MaxValue('b').ToString().Length)";
         [short] = "b$([short]::MaxValue('b').ToString().Length)";
@@ -35,7 +35,7 @@ if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
         [long] = "b$([long]::MaxValue().ToString('b').Length)";
         [ulong] = "b$([ulong]::MaxValue().ToString('b').Length)";
     });
-    New-Variable -Name 'MamlSchema' -Option ReadOnly -Value ( New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
+    New-Variable -Name 'MamlSchema' -Option ReadOnly -Scope 'Script' -Value ( New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
         msh = New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
             ns = 'http://msh';
             rootElement = 'helpItems';
@@ -46,7 +46,7 @@ if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
         command = 'http://schemas.microsoft.com/maml/dev/command/2004/10';
         dev = 'http://schemas.microsoft.com/maml/dev/2004/10';
     });
-    New-Variable -Name 'IndentText' -Option Constant -Value '  ';
+    New-Variable -Name 'IndentText' -Option Constant -Scope 'Script' -Value '  ';
 }
 
 Function Get-ClrSimpleName {

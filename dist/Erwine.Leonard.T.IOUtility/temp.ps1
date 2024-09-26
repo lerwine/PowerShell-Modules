@@ -215,42 +215,48 @@ class AggregateCharacterClass : CharacterClass {
     }
 }
 
-$Script:SingleQuotedLiteralToEscapeRegex = [regex]::new("['‘’]");
-$Script:DoubleQuotedLiteralToEscapeRegex = [regex]::new('[\x00-0x19\$"`\x7f-\u2017\u201a-\uffff]');
-$Script:AnyLiteralToEscapeRegex = [regex]::new('([\$"`“”''‘‘’’])');
-$Script:SingleQuoteIncompatibleRegex = [regex]::new('[\x00-0x19\x7f-\u2017\u201a-\u201b\u201e-\uffff]');
-$Script:EscapeChar = ([char]"`e");
-$Script:DeleteChar = ([char]"`u{7f}");
-$Script:IntegerBase10PadFormats = @{
-    [byte] = "d$([byte]::MaxValue().ToString().Length)";
-    [sbyte] = "d$([sbyte]::MaxValue().ToString().Length)";
-    [short] = "d$([short]::MaxValue().ToString().Length)";
-    [ushort] = "d$([ushort]::MaxValue().ToString().Length)";
-    [int] = "d$([int]::MaxValue().ToString().Length)";
-    [uint] = "d$([uint]::MaxValue().ToString().Length)";
-    [long] = "d$([long]::MaxValue().ToString().Length)";
-    [ulong] = "d$([ulong]::MaxValue().ToString().Length)";
-};
-$Script:IntegerHexPadFormats = @{
-    [byte] = "x$([byte]::MaxValue('x').ToString().Length)";
-    [sbyte] = "x$([sbyte]::MaxValue('x').ToString().Length)";
-    [short] = "x$([short]::MaxValue('x').ToString().Length)";
-    [ushort] = "x$([ushort]::MaxValue('x').ToString().Length)";
-    [int] = "x$([int]::MaxValue().ToString('x').Length)";
-    [uint] = "x$([uint]::MaxValue().ToString('x').Length)";
-    [long] = "x$([long]::MaxValue().ToString('x').Length)";
-    [ulong] = "x$([ulong]::MaxValue().ToString('x').Length)";
-};
-$Script:IntegerBinaryPadFormats = @{
-    [byte] = "b$([byte]::MaxValue('b').ToString().Length)";
-    [sbyte] = "b$([sbyte]::MaxValue('b').ToString().Length)";
-    [short] = "b$([short]::MaxValue('b').ToString().Length)";
-    [ushort] = "b$([ushort]::MaxValue('b').ToString().Length)";
-    [int] = "b$([int]::MaxValue().ToString('b').Length)";
-    [uint] = "b$([uint]::MaxValue().ToString('b').Length)";
-    [long] = "b$([long]::MaxValue().ToString('b').Length)";
-    [ulong] = "b$([ulong]::MaxValue().ToString('b').Length)";
-};
+if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
+    New-Variable -Name 'SingleQuotedLiteralToEscapeRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new("['‘’]"));
+    New-Variable -Name 'DoubleQuotedLiteralToEscapeRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('[\x00-0x19\$"`\x7f-\u2017\u201a-\uffff]'));
+    New-Variable -Name 'AnyLiteralToEscapeRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('([\$"`“”''‘‘’’])'));
+    New-Variable -Name 'SingleQuoteIncompatibleRegex' -Option ReadOnly -Scope 'Script' -Value ([regex]::new('[\x00-0x19\x7f-\u2017\u201a-\u201b\u201e-\uffff]'));
+    New-Variable -Name 'EscapeChar' -Option Constant -Scope 'Script' -Value ([char]"`e");
+    New-Variable -Name 'DeleteChar' -Option Constant -Scope 'Script' -Value ([char]"`u{7f}");
+    New-Variable -Name 'IntegerBase10PadFormats' -Option ReadOnly -Scope 'Script' -Value ( @{
+        [byte] = "d$([byte]::MaxValue().ToString().Length)";
+        [sbyte] = "d$([sbyte]::MaxValue().ToString().Length)";
+        [short] = "d$([short]::MaxValue().ToString().Length)";
+        [ushort] = "d$([ushort]::MaxValue().ToString().Length)";
+        [int] = "d$([int]::MaxValue().ToString().Length)";
+        [uint] = "d$([uint]::MaxValue().ToString().Length)";
+        [long] = "d$([long]::MaxValue().ToString().Length)";
+        [ulong] = "d$([ulong]::MaxValue().ToString().Length)";
+    });
+    New-Variable -Name 'IntegerHexPadFormats' -Option ReadOnly -Scope 'Script' -Value (@{
+        [byte] = "x$([byte]::MaxValue('x').ToString().Length)";
+        [sbyte] = "x$([sbyte]::MaxValue('x').ToString().Length)";
+        [short] = "x$([short]::MaxValue('x').ToString().Length)";
+        [ushort] = "x$([ushort]::MaxValue('x').ToString().Length)";
+        [int] = "x$([int]::MaxValue().ToString('x').Length)";
+        [uint] = "x$([uint]::MaxValue().ToString('x').Length)";
+        [long] = "x$([long]::MaxValue().ToString('x').Length)";
+        [ulong] = "x$([ulong]::MaxValue().ToString('x').Length)";
+    });
+    New-Variable -Name 'IntegerBinaryPadFormats' -Option ReadOnly -Scope 'Script' -Value (@{
+        [byte] = "b$([byte]::MaxValue('b').ToString().Length)";
+        [sbyte] = "b$([sbyte]::MaxValue('b').ToString().Length)";
+        [short] = "b$([short]::MaxValue('b').ToString().Length)";
+        [ushort] = "b$([ushort]::MaxValue('b').ToString().Length)";
+        [int] = "b$([int]::MaxValue().ToString('b').Length)";
+        [uint] = "b$([uint]::MaxValue().ToString('b').Length)";
+        [long] = "b$([long]::MaxValue().ToString('b').Length)";
+        [ulong] = "b$([ulong]::MaxValue().ToString('b').Length)";
+    });
+    New-Variable -Name 'CommonCharacters' -Option ReadOnly -Scope 'Script' -Value ([char[]]@("`t", "`n", ' ', '0', '9', 'A', 'F', 'N', 'Z', 'a', 'f', 'n', 'z', '_', '(', '[', ']', '}', '+', '=', '$','^', '`', '˅',
+        '˥',  '¢', '£', '⁀', '︴', '٤', '߁', 'À', 'Ç', 'µ', 'ß', 'ǅ', 'ᾫ', '©', '°', 'ʺ', 'ˇ', 'ǂ', 'ח', "`u{2160}", 'Ⅱ', '²', '¾', '֊', '־', '〰', '„', '⁅', '⁆', '⁾', '«', '“', '»', '”', '¡', '§',
+        '±', '⅀', "`u{008c}", "`u{0090}", "`u{d806}", "`u{dc14}", "`u{0308}", "`u{0310}", "`u{0982}", "`u{09be}", "`u{20e2}", "`u{20e3}", "`u{2000}", "`u{3000}", "`u{2028}", "`u{2029}", "`u{0605}",
+        "`u{fffb}", "`u{e00b}", "`u{e00e}", "`u{05ce}", "`u{05ec}"));
+}
 
 Function ConvertTo-PsStringLiteral {
     [CmdletBinding(DefaultParameterSetName = 'PreferSingle')]
@@ -908,7 +914,7 @@ Function ConvertTo-PsScriptLiteral {
         [AllowEmptyString()]
         [ValidateScript({ $_ -is [string] -or $_ -is [char] -or $_ -is [byte] -or $_ -is [sbyte] -or $_ -is [short]  -or $_ -is [ushort] -or $_ -is [int] -or $_ -is [uint] -or $_ -is [long] -or `
             $_ -is [ulong] -or $_ -is [bigint] -or $_ -is [float] -or  $_ -is [double] -or $_ -is [decimal] -or $_ -is [bool] -or $_ -is [DateTime] -or $_ -is [DateOnly] -or $_ -is [TimeOnly] -or `
-            $_ -is [Guid] -or $_ -is [TimeSpan] -or $_ -is [Uri] -or $_ -is [System.Management.Automation.SemanticVersion] -or $_ -is [Version] -or $_ -is [enum] })]
+            $_ -is [Guid] -or $_ -is [TimeSpan] -or $_ -is [Uri] -or $_ -is [System.Management.Automation.SemanticVersion] -or $_ -is [Version] -or $_ -is [ScriptBlock] -or $_ -is [enum] })]
         [object]$InputObject,
 
         [ValidateSet('PreferSingle', 'PreferDouble', 'AlwaysDouble')]
@@ -1371,6 +1377,10 @@ Function ConvertTo-PsScriptLiteral {
                     } else {
                         "[semver]::new($($InputObject.Major), $($InputObject.Minor), $($InputObject.Patch), $($InputObject.PreReleaseLabel | ConvertTo-PsStringLiteral), $($InputObject.BuildLabel | ConvertTo-PsStringLiteral))" | Write-Output;
                     }
+                    break;
+                }
+                { $_ -is [ScriptBlock] } {
+                    "{$InputObject}" | Write-Output;
                     break;
                 }
                 { $_ -is [enum] } {
@@ -2462,10 +2472,6 @@ Function Write-CharacterClassTestCode {
         ($AllItems | Sort-Object -Property @{ Expression = { $_.GetFlags() } }) | Write-PesterDescribeStatement -Writer $Writer;
     }
 }
-
-$Script:CommonCharacters = ([char[]]@("`t", "`n", ' ', '0', '9', 'A', 'F', 'N', 'Z', 'a', 'f', 'n', 'z', '_', '(', '[', ']', '}', '+', '=', '$','^', '`', '˅', '˥',  '¢', '£', '⁀', '︴', '٤', '߁', 'À', 'Ç', 'µ',
-    'ß', 'ǅ', 'ᾫ', '©', '°', 'ʺ', 'ˇ', 'ǂ', 'ח', "`u{2160}", 'Ⅱ', '²', '¾', '֊', '־', '〰', '„', '⁅', '⁆', '⁾', '«', '“', '»', '”', '¡', '§', '±', '⅀', "`u{008c}", "`u{0090}", "`u{d806}", "`u{dc14}",
-    "`u{0308}", "`u{0310}", "`u{0982}", "`u{09be}", "`u{20e2}", "`u{20e3}", "`u{2000}", "`u{3000}", "`u{2028}", "`u{2029}", "`u{0605}", "`u{fffb}", "`u{e00b}", "`u{e00e}", "`u{05ce}", "`u{05ec}"));
 
 [CharacterClass[]]$AllCharacterClasses = Initialize-CharacterClasses;
 
