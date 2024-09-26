@@ -1,9 +1,9 @@
 ('System.Core', 'mscorlib', 'System.Security') | ForEach-Object {
-	if ((Add-Type -AssemblyName $_ -PassThru -ErrorAction Stop) -eq $null) { throw ('Cannot load assembly "{0}".' -f $_) }
+	if ($null -eq (Add-Type -AssemblyName $_ -PassThru -ErrorAction Stop)) { throw ('Cannot load assembly "{0}".' -f $_) }
 }
 
 <#
-if ((Get-Module -Name 'Erwine.Leonard.T.IOUtility') -eq $null) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
+if ($null -eq (Get-Module -Name 'Erwine.Leonard.T.IOUtility')) { Import-Module -Name 'Erwine.Leonard.T.IOUtility' -ErrorAction Stop }
 
 Function New-CryptographyOid {
     < #
@@ -495,7 +495,7 @@ Function Select-X509Certificate {
     if ($PSBoundParameters.ContainsKey('To')) {
         $FromRange = $To
     } else {
-        if ($ToRange -eq $null) {
+        if ($null -eq $ToRange) {
             $FromRange = [System.DateTime]::Now;
             $ToRange = $FromRange.AddSeconds(1.0);
         }
@@ -584,12 +584,12 @@ Function Read-X509Certificate {
             # Prompt user to select certificate to use for encryption.
             $X509Certificate2Collection = Select-X509Certificate -UsageFlags (New-X509KeyUsageFlags -KeyEncipherment);
             $X509Certificate2 = Read-X509Certificate -Message 'Select certificate for encryption' -CertificateCollection $X509Certificate2Collection;
-            if ($X509Certificate2.Count -eq $null) { 'No certificate was selected.' | Write-Warning }
+            if ($null -eq $X509Certificate2.Count) { 'No certificate was selected.' | Write-Warning }
             
         .EXAMPLE
             # Select certificates which the user might want to export.
             $CertificateCollection = Read-X509Certificate -Message 'Select certificates to export' -MultiSelection;
-            if ($CertificateCollection -eq $null) {
+            if ($null -eq $CertificateCollection) {
                 'Certificate selection was canceled' | Write-Warning;
                 return;
             }
@@ -831,7 +831,7 @@ Function Protect-WithX509Certificate {
     Param(
         # The PKI certificate containing a public key to use for encryption.
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PublicKey -and $null -ne $_.PublicKey.Key -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # The data to be encrypted. 
@@ -896,10 +896,10 @@ Function New-ProgressWriterObject {
             [Parameter(Mandatory = $true, Position = 0)]
             [bool]$Completed
         )
-        if ($this.ProgressId -ne $null -and $this.HasChanges) {
+        if ($null -ne $this.ProgressId -and $this.HasChanges) {
             $splat = @{ Activity = $this.Activity; Status = $this.Status; Id = $this.ProgressId }
-            if ($this.PercentComplete -ne $null) { $splat.Add('PercentComplete', $this.PercentComplete) }
-            if ($this.ParentProgressId -ne $null) { $splat.Add('ParentId', $this.ParentProgressId) }
+            if ($null -ne $this.PercentComplete) { $splat.Add('PercentComplete', $this.PercentComplete) }
+            if ($null -ne $this.ParentProgressId) { $splat.Add('ParentId', $this.ParentProgressId) }
             if ($this.CurrentOperation -ne '') { $splat.Add('CurrentOperation', $this.CurrentOperation) }
             if ($Completed) { $splat.Add('Completed', [switch]$true) }
             Write-Progress @splat;
@@ -1030,7 +1030,7 @@ Function Protect-WithSymmetricAlgorithm {
         # The PKI certificate containing a public key to use for symmetric key encryption.
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
-        [ValidateScript({ $_.PublicKey -ne $null -and $_.PublicKey.Key -ne $null -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PublicKey -and $null -ne $_.PublicKey.Key -and $_.PublicKey.Key -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # Encryption provider to use for symmetric key encryption.
@@ -1208,7 +1208,7 @@ Function Unprotect-WithX509Certificate {
     Param(
         # The PKI certificate containing a private key to use for encryption.
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PrivateKey -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # The encryptd data.
@@ -1250,7 +1250,7 @@ Function Unprotect-WithSymmetricAlgorithm {
         # The PKI certificate containing a private key to use for symmetric key encryption.
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'CertificateExplicit')]
-        [ValidateScript({ $_.PrivateKey -ne $null -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
+        [ValidateScript({ $null -ne $_.PrivateKey -and $_.PrivateKey -is [System.Security.Cryptography.RSACryptoServiceProvider]})]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
         
         # Encryption provider to use for symmetric key encryption.

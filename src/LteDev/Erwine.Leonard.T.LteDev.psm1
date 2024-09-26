@@ -108,7 +108,7 @@ Function Get-ClrSimpleName {
                     $InputType.Name;
                 } else {
                     $n = $InputType.Namespace;
-                    if ($NameOnly -or $n -eq $null) {
+                    if ($NameOnly -or $null -eq $n) {
                         $n = '';
                     } else {
                         $n += '.';
@@ -226,8 +226,8 @@ Function Get-PropertyUsage {
             '{0}: {1}' -f $PropertyInfo.Name, ($PropertyInfo.PropertyType | Get-ClrSimpleName);
             $CanRead = $PropertyInfo.CanRead;
             $CanWrite = $PropertyInfo.CanWrite;
-            if ($CanRead -and $PropertyInfo.GetGetMethod($false) -eq $null) { $CanRead = $false }
-            if ($CanWrite -and $PropertyInfo.GetSetMethod($false) -eq $null) { $CanWrite = $false }
+            if ($CanRead -and $null -eq $null -eq $PropertyInfo.GetGetMethod($false)) { $CanRead = $false }
+            if ($CanWrite -and $null -eq $PropertyInfo.GetSetMethod($false)) { $CanWrite = $false }
             if ($PropertyInfo.IsStatic) {
                 $FullName = $PropertyInfo.DeclaringType | Get-ClrSimpleName;
                 if ($CanRead) {
@@ -468,9 +468,9 @@ Function Get-TypeUsage {
             # $FullName = $InputType | Get-ClrSimpleName;
             # $SimpleName = $InputType | Get-ClrSimpleName -NameOnly;
             if ($Options.ShowbaseTypes) {
-                if ($InputType.BaseType.BaseType -ne $null) {
+                if ($null -ne $InputType.BaseType.BaseType) {
                     $Script:IndentText + 'Inherits From:';
-                    for ($t = $InputType.BaseType; $t.BaseType -ne $null; $t = $t.BaseType) { '{0}{0}$obj -is [{1}]' -f $Script:IndentText, ($t | Get-ClrSimpleName) };
+                    for ($t = $InputType.BaseType; $null -ne $t.BaseType; $t = $t.BaseType) { '{0}{0}$obj -is [{1}]' -f $Script:IndentText, ($t | Get-ClrSimpleName) };
                 }
                 $InterfaceArray = $InputType.GetInterfaces();
                 if ($InterfaceArray.Length -gt 0) {
@@ -547,7 +547,7 @@ Function Find-ProjectTypeInfo {
     )
 
     Begin {
-        if ($Script:ProjectTypesDocument -eq $null) {
+        if ($null -eq $Script:ProjectTypesDocument) {
 			$Script:ProjectTypesDocument = [System.Xml.XmlDocument]::new();
 			$Script:ProjectTypesDocument.Load(($PSScriptRoot | Join-Path -ChildPath 'VsProjectTypes.xml'));
         }
@@ -581,7 +581,7 @@ Function Find-ProjectTypeInfo {
 					$Properties['Guid']  = $e.SelectSingleNode('@Guid').Value;
 					$Properties['Key'] = $_.SelectSingleNode('@Key').Value;
 					$a = $_.SelectSingleNode('@Extension');
-					if ($a -eq $null) { $Properties['Extension'] = '' } else { $Properties['Extension'] = $a.Value }
+					if ($null -eq $a) { $Properties['Extension'] = '' } else { $Properties['Extension'] = $a.Value }
 					$Properties['Description'] = $_.InnerText;
 					$Properties['AltExtensions'] = @($_.SelectNodes('AltExt') | ForEach-Object { $_.InnerText });
 					$Properties['AltDescriptions'] = @(@{
@@ -616,7 +616,7 @@ Function Find-ProjectTypeInfo {
 					$Properties['Guid'] = $_.InnerText;
 					$Properties['Key']  = $e.SelectSingleNode('@Key').Value;
 					$a = $_.SelectSingleNode('@Extension');
-					if ($a -eq $null) { $Properties['Extension'] = '' } else { $Properties['Extension'] = $a.Value }
+					if ($null -eq $a) { $Properties['Extension'] = '' } else { $Properties['Extension'] = $a.Value }
 					$Properties['Description'] = $e.SelectSingleNode('@Description').Value;
 					$Properties['AltExtensions'] = @($_.SelectNodes('AltExt') | ForEach-Object { $_.InnerText });
 					$Properties['AltDescriptions'] = @($_.SelectNodes('AltDescription') | ForEach-Object {@{
@@ -631,7 +631,7 @@ Function Find-ProjectTypeInfo {
 					$Properties['Guid']  = $e.SelectSingleNode('@Guid').Value;
 					$Properties['Key'] = $_.SelectSingleNode('@Key').Value;
 					$a = $_.SelectSingleNode('@Extension');
-					if ($a -eq $null) { $Properties['Extension'] = '' } else { $Properties['Extension'] = $a.Value }
+					if ($null -eq $a) { $Properties['Extension'] = '' } else { $Properties['Extension'] = $a.Value }
 					$Properties['Description'] = $e.SelectSingleNode('@Description').Value;
 					$Properties['AltExtensions'] = @($_.SelectNodes('AltExt') | ForEach-Object { $_.InnerText });
 					$Properties['AltDescriptions'] = @($_.SelectNodes('AltDescription') | ForEach-Object {@{
@@ -643,9 +643,9 @@ Function Find-ProjectTypeInfo {
 				}
 			}
 			$a = $_.SelectSingleNode('@Language');
-			if ($a -eq $null) { $Properties['Language'] = '' } else { $Properties['Language'] = $a.Value }
+			if ($null -eq $a) { $Properties['Language'] = '' } else { $Properties['Language'] = $a.Value }
 			$a = $_.SelectSingleNode('@Package');
-			if ($a -eq $null) { $Properties['Package'] = $null } else { $Properties['Package'] = [Guid]::Parse($a.Value) }
+			if ($null -eq $a) { $Properties['Package'] = $null } else { $Properties['Package'] = [Guid]::Parse($a.Value) }
 			$Properties['Guid'] = [Guid]::Parse($Properties['Guid']);
 			$Properties['AltGuids'] = @($Properties['AltGuids'] | ForEach-Object { [Guid]::Parse($_) });
 			New-Object -TypeName 'System.Management.Automation.PSObject' -Property $Properties;
@@ -765,7 +765,7 @@ Function Test-PSMaml {
     Process {
         if ($Success) {
             foreach ($x in $PSMaml) {
-                if ($x -eq $null -or $PSMaml.DocumentElement -eq $null -or $PSMaml.DocumentElement.LocalName -ne $Script:MamlSchema.msh.rootElement -or $PSMaml.DocumentElement.NamespaceURI -ne $Script:MamlSchema.msh.ns) {
+                if ($null -eq $x -or $null -eq $PSMaml.DocumentElement -or $PSMaml.DocumentElement.LocalName -ne $Script:MamlSchema.msh.rootElement -or $PSMaml.DocumentElement.NamespaceURI -ne $Script:MamlSchema.msh.ns) {
                     $Success = $false;
                     break;
                 }
@@ -792,7 +792,7 @@ Function Test-CommandVerb {
         .EXAMPLE
             $VerbText = Read-Host -Prompt 'Enter verb';
             $VerbText = $VerbText | Test-CommandVerb -GetMatching;
-            if ($VerbText -eq $null) {
+            if ($null -eq $VerbText) {
                 Write-Warning -Message "'$VerbText' is not a valid verb.";
             }
     #>
@@ -808,7 +808,7 @@ Function Test-CommandVerb {
     )
 
     Begin {
-        if ($Script:__Test_CommandVerb -eq $null) {
+        if ($null -eq $Script:__Test_CommandVerb) {
             $Script:__Test_CommandVerb = @(Get-Verb | ForEach-Object { $_.Verb })
         }
         $Success = $true;
@@ -816,7 +816,7 @@ Function Test-CommandVerb {
     Process {
         if ($GetMatching) {
             foreach ($v in $Verb) {
-                if ($v -ne $null) {
+                if ($null -ne $v) {
                     $s = $v.Trim();
                     $Script:__Test_CommandVerb | Where-Object { $_ -ieq $s }
                 }
@@ -824,7 +824,7 @@ Function Test-CommandVerb {
         } else {
             if ($Success) {
                 foreach ($v in $Verb) {
-                    if ($v -eq $null -or $Script:__Test_CommandVerb -inotcontains $v) {
+                    if ($null -eq $v -or $Script:__Test_CommandVerb -inotcontains $v) {
                         $Success = $false;
                         break;
                     }
