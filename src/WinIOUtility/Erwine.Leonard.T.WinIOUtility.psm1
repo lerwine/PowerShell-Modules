@@ -228,17 +228,17 @@ Function Test-FileDialogFilter {
 
     Begin {
         $Success = $true;
-        if ($Script:TestFileDialogFilterRegex -eq $null) {
+        if ($null -eq $Script:TestFileDialogFilterRegex) {
             $Script:TestFileDialogFilterRegex = [System.Text.RegularExpressions.Regex]::new('^[^|]+\|^[^|]+(\|[^|]+\|^[^|]+)*$', [System.Text.RegularExpressions.RegexOptions]::Compiled);
         }
     }
     Process {
         if ($Success) {
-            if ($InputText -eq $null -or $InputText.Length -eq 0) {
+            if ($null -eq $InputText -or $InputText.Length -eq 0) {
                 $Success = $false;
             } else {
                 foreach ($Filter in $InputText) {
-                    if ($Filter -eq $null -or -not $Script:TestFileDialogFilterRegex.IsMatch($Filter)) {
+                    if ($null -eq $Filter -or -not $Script:TestFileDialogFilterRegex.IsMatch($Filter)) {
                         $Success = $false;
                         break;
                     }
@@ -354,8 +354,8 @@ Function Read-FileDialog {
         [ValidateScript({
             $sb = {
                 $s = $null;
-                if ($args[0] -eq $null) {
-                    if ($args[1] -eq $null -or $args[1] -is [string]) { return $args[1] }
+                if ($null -eq $args[0]) {
+                    if ($null -eq $args[1] -or $args[1] -is [string]) { return $args[1] }
                     return "$($args[1])";
                 }
                 if ($args[0] -is [string]) { return $args[0] }
@@ -367,9 +367,9 @@ Function Read-FileDialog {
                     if (-not ($o | Test-FileDialogFilter)) { return $false }
                 } else {
                     $s = &$sb $o.Pattern;
-                    if ($s -eq $null -or ($s = $s.Trim()).Length -eq 0 -or $s.Contains('|')) { return $false }
+                    if ($null -eq $s -or ($s = $s.Trim()).Length -eq 0 -or $s.Contains('|')) { return $false }
                     $s = &$sb $o.Description $o.Label;
-                    if ($s -ne $null -and ($s = $s.Trim()).Length -gt 0 -and $s.Contains('|')) { return $false }
+                    if ($null -ne $s -and ($s = $s.Trim()).Length -gt 0 -and $s.Contains('|')) { return $false }
                 }
             }
             return $true;
@@ -453,7 +453,7 @@ Function Read-FileDialog {
                         $_
                     } else {
                         $d = $_.Description;
-                        if ($d -eq $null) { $d = $_.Label }
+                        if ($null -eq $d) { $d = $_.Label }
                         if ($d -isnot [string]) { $d = $d.ToString() }
                         $e = $_.Pattern;
                         if ($e -isnot [string]) { $e = $e.ToString() }
@@ -623,11 +623,11 @@ Function Compare-FileSystemInfo {
 				$Name = $_;
 				$r = $ReferenceContents | Where-Object { $_.Name -ieq $Name };
 				$d = $DifferenceContents | Where-Object { $_.Name -ieq $Name };
-				if ($d -eq $null) {
+				if ($null -eq $d) {
 					$d = [System.IO.Path]::Combine($Properties['DifferenceInfo'].FullName, $r.Name);
 					$r = $r.FullName;
 				} else {
-					if ($r -eq $null) {
+					if ($null -eq $r) {
 						$r = [System.IO.Path]::Combine($Properties['ReferenceInfo'].FullName, $d.Name);
 					} else {
 						$r = $r.FullName;

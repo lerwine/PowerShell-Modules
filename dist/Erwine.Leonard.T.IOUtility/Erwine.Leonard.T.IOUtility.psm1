@@ -1885,6 +1885,72 @@ Function Get-StringComparer {
     }
 }
 
+Function Get-IndexOfCharacter {
+    [CmdletBinding(DefaultParameterSetName = 'ClassOnly')]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
+        [AllowEmptyString()]
+        [string]$InputString,
+
+        [Parameter(ParameterSetName = 'ByChar')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClassOnly')]
+        [CharacterClass[]]$CharClass,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'ByChar')]
+        [char[]]$Value,
+
+        [Parameter(ParameterSetName = 'ByChar')]
+        [switch]$CaseInsensitive
+    )
+
+    Process {
+        if ($InputString.Length -eq 0) {
+            -1 | Write-Output;
+        } else {
+            $Index = 0;
+            if ($PSCmdlet.ParameterSetName -eq 'ByChar') {
+                if ($CaseInsensitive.IsPresent) {
+                    if ($PSBoundParameters.ContainsKey('CharClass')) {
+                        do {
+                            $c = $InputString[$Index];
+                            if ($Value -icontains $c -or ($c | Test-CharacterClass -Flags $CharClass)) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    } else {
+                        do {
+                            if ($InputString[$Index] -icontains $c) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    }
+                } else {
+                    if ($PSBoundParameters.ContainsKey('CharClass')) {
+                        do {
+                            $c = $InputString[$Index];
+                            if ($Value -ccontains $c -or ($c | Test-CharacterClass -Flags $CharClass)) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    } else {
+                        do {
+                            if ($InputString[$Index] -ccontains $c) { break }
+                            $Index++;
+                        } while ($Index -lt $InputString.Length);
+                    }
+                }
+            } else {
+                do {
+                    if ($InputString[$Index] | Test-CharacterClass -Flags $CharClass) { break }
+                    $Index++;
+                } while ($Index -lt $InputString.Length);
+            }
+            if ($Index -lt $InputString.Length) {
+                $Index | Write-Output;
+            } else {
+                -1 | Write-Output;
+            }
+        }
+    }
+}
+
 Function Get-CharacterClass {
     [CmdletBinding()]
     [OutputType([CharacterClass])]

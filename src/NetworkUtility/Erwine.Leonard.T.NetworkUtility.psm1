@@ -647,7 +647,7 @@ Function Trace-Route {
                 break;
             }
             $Splat.Options.Ttl++;
-            if ($PingReply.Address -ne $null) {
+            if ($null -ne $PingReply.Address) {
                 if ($PSBoundParameters.ContainsKey('Timeout')) {
                     Send-Ping -Address $PingReply.Address -Count 1 -Options $Splat.Options -Timeout $Timeout -Pinger $Ping;
                 } else {
@@ -677,7 +677,7 @@ Function Get-TraceRouteStatus {
     }
 
     Process {
-        if ($LastTtl -ne $null -and $PingReply.Options.Ttl -le $LastTtl) { $LastStatus | Write-Output }
+        if ($null -ne $LastTtl -and $PingReply.Options.Ttl -le $LastTtl) { $LastStatus | Write-Output }
         $LastTtl = $PingReply.Options.Ttl;
         $LastStatus = $PingReply.Status;
     }
@@ -1309,7 +1309,7 @@ Function Test-ContentType {
                 $AllowEmpty.IsPresent | Write-Output;
             } else {
                 try { $c = New-Object -TypeName 'System.Net.Mime.ContentType' -ArgumentList $InputString } catch { $c = $null }
-                ($c -ne $null) | Write-Output;
+                ($null -ne $c) | Write-Output;
             }
         } else {
             if ($PSBoundParameters.ContainsKey('Expected')) {
@@ -1317,7 +1317,7 @@ Function Test-ContentType {
             }
             $success = $true;
             if ($PSBoundParameters.ContainsKey('InputString')) {
-                if ($InputString -eq $null -or $InputString.Length -eq 0) {
+                if ($null -eq $InputString -or $InputString.Length -eq 0) {
                     $success = $false;
                 } else {$ContentType = New-Object -TypeName 'System.Net.Mime.ContentType' -ArgumentList $str
                     if ($MediaTypeOnly) {
@@ -1325,28 +1325,28 @@ Function Test-ContentType {
                             if ([System.String]::IsNullOrEmpty($str)) { $success = $false; break; }
                             $c = $null;
                             try { $c = New-Object -TypeName 'System.Net.Mime.ContentType' -ArgumentList $str } catch { }
-                            if ($c -eq $null -or -not (Test-ContentType -InputObject $c -ContentType $ContentType -MediaTypeOnly)) { $success = $false; break; }
+                            if ($null -eq $c -or -not (Test-ContentType -InputObject $c -ContentType $ContentType -MediaTypeOnly)) { $success = $false; break; }
                         }
                     } else {
                         foreach ($str in $InputString) {
                             if ([System.String]::IsNullOrEmpty($str)) { $success = $false; break; }
                             $c = $null;
                             try { $c = New-Object -TypeName 'System.Net.Mime.ContentType' -ArgumentList $str } catch { }
-                            if ($c -eq $null -or -not (Test-ContentType -InputObject $c -ContentType $ContentType)) { $success = $false; break; }
+                            if ($null -eq $c -or -not (Test-ContentType -InputObject $c -ContentType $ContentType)) { $success = $false; break; }
                         }
                     }
                 }
             } else {
-                if ($InputObject -eq $null -or $InputObject.Length -eq 0) {
+                if ($null -eq $InputObject -or $InputObject.Length -eq 0) {
                     $success = $false;
                 } else {
                     if ($MediaTypeOnly) {
                         foreach ($c in $InputObject) {
-                            if ($c -eq $null -or $c.MediaType -ne $ContentType.MediaType) { $success = $false; break; }
+                            if ($null -eq $c -or $c.MediaType -ne $ContentType.MediaType) { $success = $false; break; }
                         }
                     } else {
                         foreach ($c in $InputObject) {
-                            if ($c -eq $null -or $c.MediaType -ne $ContentType.MediaType) { $success = $false; break; }
+                            if ($null -eq $c -or $c.MediaType -ne $ContentType.MediaType) { $success = $false; break; }
                             if ([System.String]::IsNullOrEmpty($ContentType.CharSet)) {
                                 if (-not [System.String]::IsNullOrEmpty($c.CharSet)) { $success = $false; break; }
                             } else {
@@ -1435,7 +1435,7 @@ Function New-WebRequest {
 
     Process {
         $WebRequest = [System.Net.WebRequest]::Create($Uri);
-        if ($WebRequest -ne $null) {
+        if ($null -ne $WebRequest) {
             $WebRequest.UseDefaultCredentials = $UseDefaultCredentials;
             if ($PSBoundParameters.ContainsKey('CachePolicy')) { $WebRequest.CachePolicy = New-Object -TypeName 'System.Net.Cache.RequestCachePolicy' -ArgumentList $CachePolicy }
             if ($PSBoundParameters.ContainsKey('Method')) { $WebRequest.Method = $Method }
@@ -1450,7 +1450,7 @@ Function New-WebRequest {
             if ($PSBoundParameters.ContainsKey('Headers') -and $Headers.Count -gt 0) {
                 $Headers.Keys | ForEach-Object {
                     if ($_ -is [string]) { $Key = $_ } else { $Key = $Script:Regex.EndingNewline.Replace(($_ | Out-String), '') }
-                    if ($Headers[$_] -eq $null) {
+                    if ($null -eq $Headers[$_]) {
                         $WebRequest.Headers.Add($Key, '');
                     } else {
                         if ($Headers[$_] -is [string]) {
@@ -1819,7 +1819,7 @@ Function Write-FormUrlEncoded {
                 } else {
                     $k = $Key.ToString();
                 }
-                if ($Value -ne $null) {
+                if ($null -ne $Value) {
                     $NameValueCollection.Add($k, $null);
                 } else {
                     $Value = @($Value);
@@ -1827,7 +1827,7 @@ Function Write-FormUrlEncoded {
                         $NameValueCollection.Add($k, '');
                     } else {
                         $Value | ForEach-Object {
-                            if ($_ -eq $null -or $_ -is [string]) {
+                            if ($null -eq $_ -or $_ -is [string]) {
                                 $NameValueCollection.Add($k, $_);
                             } else {
                                 $NameValueCollection.Add($k, $_.ToString());
@@ -1843,7 +1843,7 @@ Function Write-FormUrlEncoded {
                 } else {
                     $k = $Key.ToString();
                 }
-                if ($Value -eq $null) {
+                if ($null -eq $Value) {
                     $NameValueCollection.Add($k, $null);
                 } else {
                     $v = @($Value);
@@ -1851,7 +1851,7 @@ Function Write-FormUrlEncoded {
                         $NameValueCollection.Add($k, '');
                     } else {
                         $v | ForEach-Object {
-                            if ($_ -eq $null -or $_ -is [string]) {
+                            if ($null -eq $_ -or $_ -is [string]) {
                                 $NameValueCollection.Add($k, $_);
                             } else {
                                 $NameValueCollection.Add($k, $_.ToString());
@@ -1944,7 +1944,7 @@ Function Write-FormUrlEncoded2 {
 		if ($ParameterSetParts[0] -eq 'Hashtable') {
             foreach ($Key in $Data.Keys) {
                 $Value = $Data[$Key];
-                if ($Value -ne $null) {
+                if ($null -ne $Value) {
                     $AllItems += New-Object -TypeName 'System.Management.Automation.PSObject' -Property @{
                         Key = $Key;
                         Value = $null;
@@ -2012,9 +2012,9 @@ Function Write-FormUrlEncoded2 {
                 }
             }
         
-            $IndexedItems = $AllItems | Where-Object { $_.Index -ne $null }
-            if ($IndexedItems -ne $null) {
-                $AllItems = @($IndexedItems | Sort-Object -Property 'Index') + @($AllItems | Where-Object { $_.Index -eq $null });
+            $IndexedItems = $AllItems | Where-Object { $null -ne $_.Index }
+            if ($null -ne $IndexedItems) {
+                $AllItems = @($IndexedItems | Sort-Object -Property 'Index') + @($AllItems | Where-Object { $null -eq $_.Index });
             }
             
             try {
@@ -2024,7 +2024,7 @@ Function Write-FormUrlEncoded2 {
                         if ($ParameterSetParts[1] -eq 'WebRequest') { [long]$TotalLength = $TotalLength + ([long]($Encoding.GetByteCount('&'))) }
                         $TextWriter.Write('&');
                     }
-                    if ($AllItems[$i].Key -ne $null) {
+                    if ($null -ne $AllItems[$i].Key) {
                         if ($AllItems[$i].Key -is [string]) {
                             $Key = $AllItems[$i].Key;
                         } else {
@@ -2036,7 +2036,7 @@ Function Write-FormUrlEncoded2 {
                             $TextWriter.Write($Key) | Out-Null;
                         }
                     }
-                    if ($AllItems[$i].Value -ne $null) {
+                    if ($null -ne $AllItems[$i].Value) {
                         $TextWriter.Write('=') | Out-Null;
                         if ($ParameterSetParts[1] -eq 'WebRequest') { [long]$TotalLength = $TotalLength + ([long]($Encoding.GetByteCount('='))) }
                         if ($AllItems[$i].Value -is [string]) {
@@ -2079,7 +2079,7 @@ Function Write-XmlResponseData {
     [OutputType([string], ParameterSetName = 'String')]
     Param(
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ ($_.NodeType -eq [System.Xml.XmlNodeType]::Document -and $_.DocumentElement -ne $null) -or $_.NodeType -eq [System.Xml.XmlNodeType]::Element })]
+        [ValidateScript({ ($_.NodeType -eq [System.Xml.XmlNodeType]::Document -and $null -ne $_.DocumentElement) -or $_.NodeType -eq [System.Xml.XmlNodeType]::Element })]
         [System.Xml.XmlNode]$XmlData,
         
         [Parameter(Mandatory = $true, ParameterSetName = 'Stream')]
@@ -2145,7 +2145,7 @@ Function Write-XmlResponseData {
             if (-not [System.String]::IsNullOrEmpty($ContentType.CharSet)) {
                 try { $Encoding = [System.Text.Encoding]::GetEncoding($ContentType.CharSet) } catch { }
             }
-            if ($Encoding -eq $null) { $Encoding = [System.Text.Encoding]::UTF8 }
+            if ($null -eq $Encoding) { $Encoding = [System.Text.Encoding]::UTF8 }
             $Settings = New-Object -TypeName 'System.Xml.XmlWriterSettings' -Property @{
                 Indent = $Indent;
                 CloseOutput = $true;
@@ -2155,7 +2155,7 @@ Function Write-XmlResponseData {
         }
     }
     
-    if ($Writer -ne $null) {
+    if ($null -ne $Writer) {
         try {
             $XmlData.WriteTo($Writer);
             $Writer.Flush();
@@ -2174,7 +2174,7 @@ Function Write-XmlResponseData {
             throw;
         } finally {
             if (-not $PSBoundParameters.ContainsKey('Writer')) { $Writer.Dispose() }
-            if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Close() }
+            if ($null -ne $Stream -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Close() }
         }
     }
 }
@@ -2265,7 +2265,7 @@ Function Initialize-WebRequestPostXml {
         } catch {
             throw;
         } finally {
-            if ($Stream -ne $null) { $Stream.Dispose() }
+            if ($null -ne $Stream) { $Stream.Dispose() }
         }
         if ($GetResponse) {
             if ($PSBoundParameters.ContainsKey('AllowRedirect')) { $WebRequest.AllowRedirect = $AllowRedirect }
@@ -2359,19 +2359,19 @@ Function Get-WebResponse {
         try {
             $Response['Response'] = $WebRequest.GetResponse();
             $Response['ErrorStatus'] = [System.Net.WebExceptionStatus]::Success;
-            if ($Response['Response'].StatusCode -ne $null) {
+            if ($null -ne $Response['Response'].StatusCode) {
                 $Response['StatusCode'] = $Response['Response'].StatusCode;
                 $Response['Success'] = $SuccessCodes -contains $Response['StatusCode'];
             } else {
                 $Response['StatusCode'] = [System.Management.Automation.PSInvocationState]::Completed;
                 $Response['Success'] = $true;
             }
-            if ($Response['Response'].StatusDescription -eq $null -or $Response['Response'].StatusDescription.Trim() -eq '') {
+            if ($null -eq $Response['Response'].StatusDescription -or $Response['Response'].StatusDescription.Trim() -eq '') {
                 $Response['StatusDescription'] = $Response['StatusCode'].ToString('F');
             } else {
                 $Response['StatusDescription'] = $Response['Response'].StatusDescription;
             }
-            if ($Response['Response'] -ne $null -and $Response['Response'].ContentType -ne $null -and $Response['Response'].ContentType.Trim().Length -gt 0) {
+            if ($null -ne $Response['Response'] -and $null -ne $Response['Response'].ContentType -and $Response['Response'].ContentType.Trim().Length -gt 0) {
                 try { $Response['ContentType'] = New-Object -TypeName 'System.Net.Mime.ContentType' -ArgumentList $Response['Response'].ContentType }
                 catch { }
             }
@@ -2379,14 +2379,14 @@ Function Get-WebResponse {
             $Response['ErrorStatus'] = $_.Exception.Status;
             $Response['Response'] = $_.Exception.Response;
             $Response['Error'] = $_;
-            if ($Response['Response'] -ne $null -and $Response['Response'].StatusCode -ne $null) {
+            if ($null -ne $Response['Response'] -and $null -ne $Response['Response'].StatusCode) {
                 $Response['StatusCode'] = $Response['Response'].StatusCode;
             } else {
                 $Response['StatusCode'] = [System.Management.Automation.PSInvocationState]::Failed;
             }
-            if ($Response['Response'] -eq $null -or $Response['Response'].StatusDescription -eq $null -or $Response['Response'].StatusDescription.Trim() -eq '') {
-                if ($_.ErrorDetails -eq $null -or $_.ErrorDetails.Message -eq $null -or $_.ErrorDetails.Message.Trim() -eq '') {
-                    if ($_.Exception -eq $null -or $_.Exception.Message -eq $null -or $_.Exception.Message.Trim() -eq '') {
+            if ($null -eq $Response['Response'] -or $null -eq $Response['Response'].StatusDescription -or $Response['Response'].StatusDescription.Trim() -eq '') {
+                if ($null -eq $_.ErrorDetails -or $null -eq $_.ErrorDetails.Message -or $_.ErrorDetails.Message.Trim() -eq '') {
+                    if ($null -eq $_.Exception -or $null -eq $_.Exception.Message -or $_.Exception.Message.Trim() -eq '') {
                         $Response['StatusDescription'] = $Response['StatusCode'].ToString('F');
                     } else {
                         $Response['StatusDescription'] = $_.Exception.Message;
@@ -2400,8 +2400,8 @@ Function Get-WebResponse {
         } catch [System.Net.Sockets.SocketException] {
             $Response['StatusCode'] = $_.SocketErrorCode;
             $Response['Error'] = $_;
-            if ($_.ErrorDetails -eq $null -or $_.ErrorDetails.Message -eq $null -or $_.ErrorDetails.Message.Trim() -eq '') {
-                if ($_.Exception -eq $null -or $_.Exception.Message -eq $null -or $_.Exception.Message.Trim() -eq '') {
+            if ($null -eq $_.ErrorDetails -or $null -eq $_.ErrorDetails.Message -or $_.ErrorDetails.Message.Trim() -eq '') {
+                if ($null -eq $_.Exception -or $null -eq $_.Exception.Message -or $_.Exception.Message.Trim() -eq '') {
                     $Response['StatusDescription'] = $Response['StatusCode'].ToString('F');
                 } else {
                     $Response['StatusDescription'] = $_.Exception.Message;
@@ -2411,13 +2411,13 @@ Function Get-WebResponse {
             }
         } catch {
             $Response['StatusCode'] = [System.Management.Automation.PSInvocationState]::Failed;
-            if ($_.Exception -ne $null -and $_.Exception -is [System.Management.Automation.MethodException]) {
-                if ($_.Exception.ErrorRecord -ne $null) {
+            if ($null -ne $_.Exception -and $_.Exception -is [System.Management.Automation.MethodException]) {
+                if ($null -ne $_.Exception.ErrorRecord) {
                     $Response['Error'] = $_.Exception.ErrorRecord;
                 } else {
                     $Response['Error'] = $_;
                 }
-                if ($_.Exception.InnerException -ne $null) {
+                if ($null -ne $_.Exception.InnerException) {
                     $e = $_.Exception.InnerException;
                 } else {
                     $e = $null;
@@ -2425,11 +2425,11 @@ Function Get-WebResponse {
             } else {
                 $e = $null;
             }
-            if ($e -ne $null -and $e.Message -ne $null -and $e.Message.Trim() -ne '') {
+            if ($null -ne $e -and $null -ne $e.Message -and $e.Message.Trim() -ne '') {
                 $Response['StatusDescription'] = $e.Message;
             } else {
-                if ($Response['Error'].ErrorDetails -eq $null -or $Response['Error'].ErrorDetails.Message -eq $null -or $Response['Error'].ErrorDetails.Message.Trim() -eq '') {
-                    if ($Response['Error'].Exception -eq $null -or $Response['Error'].Exception.Message -eq $null -or $Response['Error'].Exception.Message.Trim() -eq '') {
+                if ($null -eq $Response['Error'].ErrorDetails -or $null -eq $Response['Error'].ErrorDetails.Message -or $Response['Error'].ErrorDetails.Message.Trim() -eq '') {
+                    if ($null -eq $Response['Error'].Exception -or $null -eq $Response['Error'].Exception.Message -or $Response['Error'].Exception.Message.Trim() -eq '') {
                         $Response['StatusDescription'] = $Response['StatusCode'].ToString('F');
                     } else {
                         $Response['StatusDescription'] = $Response['Error'].Exception.Message;
@@ -2480,7 +2480,7 @@ Function Test-SoapEnvelope {
     Process {
         switch ($PSCmdlet.ParameterSetName) {
             'PSObject' {
-                if ($SoapEnvelope.XmlDocument -eq $null) { $false } else { $SoapEnvelope.XmlDocument | Test-SoapEnvelope }
+                if ($null -eq $SoapEnvelope.XmlDocument) { $false } else { $SoapEnvelope.XmlDocument | Test-SoapEnvelope }
                 break;
             }
             'Properties' {
