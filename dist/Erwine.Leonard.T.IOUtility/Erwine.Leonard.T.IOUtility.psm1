@@ -1885,21 +1885,6 @@ Function Get-StringComparer {
     }
 }
 
-if ($null -eq $Script:UnicodeCategoryCharacterClass) {
-    New-Variable -Name 'UnicodeCategoryCharacterClass' -Value ([ulong]([CharacterClass]::ModifierSymbol -bor [CharacterClass]::NonAsciiModifierSymbol -bor `
-        [CharacterClass]::AsciiModifierSymbol -bor [CharacterClass]::CurrencySymbol -bor [CharacterClass]::NonAsciiCurrencySymbol  -bor [CharacterClass]::AsciiCurrencySymbol -bor `
-        [CharacterClass]::MathSymbol -bor [CharacterClass]::OtherSymbol -bor [CharacterClass]::NonAsciiMathSymbol -bor [CharacterClass]:: OtherPunctuation -bor `
-        [CharacterClass]::OtherNonAsciiPunctuation -bor [CharacterClass]::OtherAsciiPunctuation -bor [CharacterClass]::FinalQuotePunctuation -bor `
-        [CharacterClass]::InitialQuotePunctuation -bor [CharacterClass]::NonAsciiClosePunctuation -bor [CharacterClass]::AsciiMathSymbol -bor `
-        [CharacterClass]::AsciiClosePunctuation -bor [CharacterClass]::EnclosingMark -bor [CharacterClass]::Format -bor [CharacterClass]::NonSpacingMark -bor `
-        [CharacterClass]::ParagraphSeparator -bor [CharacterClass]::LineSeparator -bor [CharacterClass]::SpaceSeparator -bor [CharacterClass]::NonAsciiSpaceSeparator -bor `
-        [CharacterClass]::AsciiSpaceSeparator -bor [CharacterClass]::SpacingCombiningMark -bor [CharacterClass]::OpenPunctuation -bor [CharacterClass]::NonAsciiOpenPunctuation -bor `
-        [CharacterClass]::AsciiOpenPunctuation -bor [CharacterClass]::OtherNumber -bor [CharacterClass]::LetterNumber -bor [CharacterClass]::ConnectorPunctuation -bor `
-        [CharacterClass]::NonAsciiConnectorPunctuation -bor [CharacterClass]::AsciiConnectorPunctuation -bor [CharacterClass]::DashPunctuation -bor `
-        [CharacterClass]::NonAsciiDashPunctuation -bor [CharacterClass]::AsciiDashPunctuation -bor [CharacterClass]::OtherLetter -bor [CharacterClass]::ModifierLetter -bor `
-        [CharacterClass]::TitlecaseLetter -bor [CharacterClass]::PrivateUse -bor [CharacterClass]::OtherNotAssigned));
-}
-
 Function Get-CharacterClass {
     [CmdletBinding()]
     [OutputType([CharacterClass])]
