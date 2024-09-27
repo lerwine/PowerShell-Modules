@@ -1,13 +1,58 @@
 if ($null -eq $Script:InvalidFileNameChars) {
-    New-Variable -Name 'InvalidFileNameChars' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(@(&{
-        [System.Management.Automation.ProviderInfo]$FileSystemProvider = Get-PSProvider -PSProvider 'FileSystem';
-        if ($FileSystemProvider.AltItemSeparator -ine $FileSystemProvider.ItemSeparator -and $null -ne $FileSystemProvider.AltItemSeparator) {
-            if ($FileSystemProvider.VolumeSeparatedByColon) { return ([char[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator, ':')); }
-            return ([char[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator));
+    [System.Management.Automation.ProviderInfo]$FileSystemProvider = Get-PSProvider -PSProvider 'FileSystem';
+    if ($FileSystemProvider.AltItemSeparator -ine $FileSystemProvider.ItemSeparator -and $null -ne $FileSystemProvider.AltItemSeparator) {
+        New-Variable -Name 'PathSeparatorChars' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(([char[]]@($FileSystemProvider.ItemSeparator, $FileSystemProvider.AltItemSeparator))));
+    } else {
+        New-Variable -Name 'PathSeparatorChars' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(([char[]]@($FileSystemProvider.ItemSeparator))));
+    }
+    if ($FileSystemProvider.VolumeSeparatedByColon) {
+        Function Test-IsPathRooted {
+            [CmdletBinding()]
+            [OutputType([string])]
+            Param(
+                # Specifies a path to one or more locations. Wildcards are permitted.
+                [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Path to one or more locations.')]
+                [ValidateNotNullOrEmpty()]
+                [Alias('PSPath', 'FullName')]
+                [string]$Path
+            )
+            
+            Process {
+                $Top = $Path;
+                $Parent = $Path | Split-Path -Parent;
+                while (-not [string]::IsNullOrEmpty($Parent)) {
+                    $Top = $Parent;
+                    $Parent = $Top | Split-Path -Parent;
+                }
+                ($Top.Contains(':') -or $Script:PathSeparatorChars -ccontains $Top[0]) | Write-Output;
+            }
         }
-        if ($FileSystemProvider.VolumeSeparatedByColon) { return ([char[]]@($FileSystemProvider.ItemSeparator, ':')); }
-        return ([char[]]@($FileSystemProvider.ItemSeparator));
-    })));
+        New-Variable -Name 'InvalidFileNameChars' -Option ReadOnly -Scope 'Script' -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(@(@(':') + @($Script:PathSeparatorChars))));
+    } else {
+        Function Test-IsPathRooted {
+            [CmdletBinding()]
+            [OutputType([string])]
+            Param(
+                # Specifies a path to one or more locations. Wildcards are permitted.
+                [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Path to one or more locations.')]
+                [ValidateNotNullOrEmpty()]
+                [Alias('PSPath', 'FullName')]
+                [string]$Path
+            )
+            
+            Process {
+                $PSCmdlet.SessionState.Path.IsPSAbsolute($Path)
+                $Top = $Path;
+                $Parent = $Path | Split-Path -Parent;
+                while (-not [string]::IsNullOrEmpty($Parent)) {
+                    $Top = $Parent;
+                    $Parent = $Top | Split-Path -Parent;
+                }
+                ($Script:PathSeparatorChars -ccontains $Top[0]) | Write-Output;
+            }
+        }
+        New-Variable -Name 'InvalidFileNameChars' -Option ReadOnly -Scope 'Script' -Value $Script:PathSeparatorChars;
+    }
 
     New-Variable -Name 'Int16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int16]0).Length;
     New-Variable -Name 'UInt16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt16]0).Length;
@@ -375,6 +420,386 @@ Function ConvertTo-SafeFileName {
                     ConvertChars($Text) | Write-Output;
                 }
             }
+        }
+    }
+}
+
+Function Resolve-BasePath {
+    <#
+    .SYNOPSIS
+        Resolves a path string, regardless of whether it exists.
+    .DESCRIPTION
+        Resolves the first base path that exists to return a consistent path string, suitable for comparison.
+    .NOTES
+        This uses the "Resolve-Path" command on the first parent path that exists, and then uses the "Join-Path" command on the remaining path elements.
+        Unlike the "Resolve-Path" command, this always returns a string value.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    [OutputType([string])]
+    Param(
+        # Specifies a path to one or more locations. Wildcards are permitted.
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Path', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Path to one or more locations.')]
+        [ValidateNotNullOrEmpty()]
+        [SupportsWildcards()]
+        [string[]]$Path,
+
+        # Specifies the path(s) to be resolved. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, ParameterSetName = 'LiteralPath', ValueFromPipelineByPropertyName = $true, HelpMessage = 'Specifies the path to be resolved.')]
+        [Alias('PSPath', 'LP', 'FullName')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$LiteralPath,
+
+        # Indicates that this cmdlet returns a relative path.
+        [switch]$Relative,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, HelpMessage = 'Specifies a user account that has permission to perform this action. The default is the current user.')]
+        # Specifies a user account that has permission to perform this action. The default is the current user.
+        [PSCredential]$Credential
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
+            if ($Relative.IsPresent) {
+                if ($PSBoundParameters.ContainsKey('Credential')) {
+                    foreach ($LP in $LiteralPath) {
+                        if (Test-Path -LiteralPath $LP -Credential $Credential) {
+                            (Resolve-Path -LiteralPath $LP -Credential $Credential -Relative) | Write-Output;
+                        } else {
+                            $Parent = $LP | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $LP | Write-Output;
+                            } else {
+                                $Leaf = $LP | Split-Path -Leaf;
+                                (Resolve-BasePath -LiteralPath $Parent -Credential $Credential -Relative) | ForEach-Object {
+                                    ($_ | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($LP in $LiteralPath) {
+                        if (Test-Path -LiteralPath $LP) {
+                            (Resolve-Path -LiteralPath $LP -Relative) | Write-Output;
+                        } else {
+                            $Parent = $LP | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $LP | Write-Output;
+                            } else {
+                                $Leaf = $LP | Split-Path -Leaf;
+                                (Resolve-BasePath -LiteralPath $Parent -Relative) | ForEach-Object {
+                                    ($_ | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('Credential')) {
+                    foreach ($LP in $LiteralPath) {
+                        if (Test-Path -LiteralPath $LP -Credential $Credential) {
+                            (Resolve-Path -LiteralPath $LP -Credential $Credential) | ForEach-Object { $_.Path | Write-Output };
+                        } else {
+                            $Parent = $LP | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $LP | Write-Output;
+                            } else {
+                                $Leaf = $LP | Split-Path -Leaf;
+                                (Resolve-BasePath -LiteralPath $Parent -Credential $Credential) | ForEach-Object {
+                                    ($_.Path | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($LP in $LiteralPath) {
+                        if (Test-Path -LiteralPath $LP) {
+                            (Resolve-Path -LiteralPath $LP) | ForEach-Object { $_.Path | Write-Output };
+                        } else {
+                            $Parent = $LP | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $LP | Write-Output;
+                            } else {
+                                $Leaf = $LP | Split-Path -Leaf;
+                                (Resolve-BasePath -LiteralPath $Parent) | ForEach-Object {
+                                    ($_.Path | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if ($Relative.IsPresent) {
+                if ($PSBoundParameters.ContainsKey('Credential')) {
+                    foreach ($P in $Path) {
+                        if (Test-Path -Path $P -Credential $Credential) {
+                            (Resolve-Path -Path $P -Credential $Credential -Relative) | Write-Output;
+                        } else {
+                            $Parent = $P | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $P | Write-Output;
+                            } else {
+                                $Leaf = $P | Split-Path -Leaf;
+                                (Resolve-BasePath -Path $Parent -Credential $Credential -Relative) | ForEach-Object {
+                                    ($_ | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($P in $Path) {
+                        if (Test-Path -Path $P) {
+                            (Resolve-Path -Path $P -Relative) | Write-Output;
+                        } else {
+                            $Parent = $P | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $P | Write-Output;
+                            } else {
+                                $Leaf = $P | Split-Path -Leaf;
+                                (Resolve-BasePath -Path $Parent -Relative) | ForEach-Object {
+                                    ($_ | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('Credential')) {
+                    foreach ($P in $Path) {
+                        if (Test-Path -Path $P -Credential $Credential) {
+                            (Resolve-Path -Path $P -Credential $Credential) | ForEach-Object { $_.Path | Write-Output };
+                        } else {
+                            $Parent = $P | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $P | Write-Output;
+                            } else {
+                                $Leaf = $P | Split-Path -Leaf;
+                                (Resolve-BasePath -Path $Parent -Credential $Credential) | ForEach-Object {
+                                    ($_.Path | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($P in $Path) {
+                        if (Test-Path -Path $P) {
+                            (Resolve-Path -Path $P) | ForEach-Object { $_.Path | Write-Output };
+                        } else {
+                            $Parent = $P | Split-Path -Parent;
+                            if ([string]::IsNullOrEmpty($Parent)) {
+                                $P | Write-Output;
+                            } else {
+                                $Leaf = $P | Split-Path -Leaf;
+                                (Resolve-BasePath -Path $Parent) | ForEach-Object {
+                                    ($_.Path | Join-Path -ChildPath $Leaf) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+Function Use-Location {
+    <#
+    .SYNOPSIS
+        Runs ScriptBlock(s) using a specified location.
+    .DESCRIPTION
+        Changes to a specified location, executes the ScriptBlock(s), and restores the previous location when complete.
+        If more than one path is specified, each of the ScriptBlock will be executed for each path.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    Param(
+        # ScriptBlock(s) will be executed for each path.
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, HelpMessage = 'ScriptBlock to run.')]
+        [ScriptBlock[]]$Process,
+
+        # Specifies a path to one or more locations to temporarily change to. If more than one path is specified, the Process ScriptBlock will be executed for each path.
+        [Parameter(Mandatory = $true, ParameterSetName = 'Path', HelpMessage = 'Path to one or more locations.')]
+        [ValidateNotNullOrEmpty()]
+        [SupportsWildcards()]
+        [string[]]$Path,
+
+        # Specifies the locations(s) to temporarily change to. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences. If more than one path is specified, the Process ScriptBlock will be executed for each path.
+        [Parameter(Mandatory = $true, ParameterSetName = 'LiteralPath', HelpMessage = 'Path to one or more locations.')]
+        [Alias('PSPath', 'LP', 'FullName')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$LiteralPath
+    )
+
+    Process {
+        $IsValidLocation = $true;
+        $StackName = "Use-Location$([Guid]::NewGuid())";
+        try { Push-Location -StackName $StackName -ErrorAction Stop }
+        catch {
+            Write-Error -ErrorRecord $_;
+            $IsValidLocation = $false;
+        }
+        if ($IsValidLocation) {
+            try {
+                if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
+                    foreach ($LP in $LiteralPath) {
+                        $IsValidLocation = $true;
+                        try { Set-Location -LiteralPath $LP -ErrorAction Stop }
+                        catch {
+                            Write-Error -ErrorRecord $_;
+                            $IsValidLocation = $false;
+                        }
+                        if ($IsValidLocation) {
+                            foreach ($ScriptBlock in $Process) { &$Process }
+                        }
+                    }
+                } else {
+                    foreach ($P in $Path) {
+                        $IsValidLocation = $true;
+                        try { Set-Location -Path $P -ErrorAction Stop }
+                        catch {
+                            Write-Error -ErrorRecord $_;
+                            $IsValidLocation = $false;
+                        }
+                        if ($IsValidLocation) {
+                            foreach ($ScriptBlock in $Process) { &$Process }
+                        }
+                    }
+                }
+            } finally {
+                Pop-Location -StackName $StackName;
+            }
+        }
+    }
+}
+
+Function Test-PathContainedBy {
+    <#
+    .SYNOPSIS
+        Resolves a path string, regardless of whether it exists.
+    .DESCRIPTION
+        Resolves the first base path that exists to return a consistent path string, suitable for comparison.
+    .NOTES
+        This uses the "Resolve-Path" command on the first parent path that exists, and then uses the "Join-Path" command on the remaining path elements.
+        Unlike the "Resolve-Path" command, this always returns a string value.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    [OutputType([string])]
+    Param(
+        # Specifies a path to one or more locations to test. Wildcards are permitted.
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Path', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = 'Specifies a path to one or more locations to test.')]
+        [ValidateNotNullOrEmpty()]
+        [SupportsWildcards()]
+        [Alias('Child', 'ChildPath')]
+        [string[]]$Path,
+
+        # Specifies the path(s) to be tested. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, ParameterSetName = 'LiteralPath', ValueFromPipelineByPropertyName = $true, HelpMessage = 'Specifies the path to be tested.')]
+        [Alias('PSPath', 'LP', 'FullName', 'LiteralChild')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$LiteralPath,
+
+        # Specifies a path to one or more parent locations. The value of the ParentPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Specifies a path to one or more parent locations.')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Parent,
+
+        [Parameter(HelpMessage = 'Specifies a user account that has permission to perform this action. The default is the current user.')]
+        # Specifies a user account that has permission to perform this action. The default is the current user.
+        [PSCredential]$Credential,
+
+        [switch]$AsComparisonResult,
+
+        [switch]$OrSameAs
+    )
+
+    Begin {
+        $ResolvedParents = @();
+        if ($PSBoundParameters.ContainsKey('Credential')) {
+            $ResolvedParents = @($Parent | ForEach-Object {
+                $Result = [PSCustomObject]@{ Path = $_ }
+                try {
+                    $P = Resolve-BasePath -LiteralPath $Result.Path -Credential $Credential -ErrorAction Stop;
+                    $Result | Add-Member -MemberType NoteProperty -Name 'ResolvedPath' -Value $P;
+                } catch {
+                    Write-Error -Exception $_.Exception -Message "Unable to resolve parent path $($Result.Path)" -Category InvalidArgument -ErrorId 'InvalidParent' -TargetObject $Result.Path `
+                        -CategoryReason "{ Resolve-BasePath -LiteralPath $($Result.Path | ConvertTo-Json) -Credential $($Credential.UserName | ConvertTo-Json) } threw error: $_";
+                }
+                $Result | Write-Output;
+            });
+        } else {
+            $ResolvedParents = @($Parent | ForEach-Object {
+                $Result = [PSCustomObject]@{ Path = $_ }
+                try {
+                    $P = Resolve-BasePath -LiteralPath $Result.Path -ErrorAction Stop;
+                    $Result | Add-Member -MemberType NoteProperty -Name 'ResolvedPath' -Value $P;
+                } catch {
+                    Write-Error -Exception $_.Exception -Message "Unable to resolve parent path $($Result.Path)" -Category InvalidArgument -ErrorId 'InvalidParent' -TargetObject $Result.Path `
+                        -CategoryReason "{ Resolve-BasePath -LiteralPath $($Result.Path | ConvertTo-Json) } threw error: $_";
+                }
+                $Result | Write-Output;
+            });
+        }
+    }
+    Process {
+        if ($AsComparisonResult.IsPresent) {
+            if ($OrSameAs.IsPresent) {
+                if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
+                    if ($PSBoundParameters.ContainsKey('Credential')) {
+                        foreach ($RP in $ResolvedParents) {
+                            foreach ($LP in $LiteralPath) {
+                                $Result = [PSCustomObject]@{
+                                    Path = $_;
+                                    ParentPath = $RP.Path;
+                                };
+                                try {
+                                    $P = Resolve-BasePath -LiteralPath $Result.Path -Credential $Credential -ErrorAction Stop;
+                                    $Result | Add-Member -MemberType NoteProperty -Name 'ResolvedPath' -Value $P;
+                                } catch {
+                                    Write-Error -Exception $_.Exception -Message "Unable to resolve path $($Result.Path)" -Category InvalidArgument -ErrorId 'InvalidPath' -TargetObject $Result.Path `
+                                        -CategoryReason "{ Resolve-BasePath -LiteralPath $($Result.Path | ConvertTo-Json) -Credential $($Credential.UserName | ConvertTo-Json) } threw error: $_";
+                                }
+                                if ($null -eq $Result.ResolvedPath) {
+                                    $Result | Add-Member -MemberType NoteProperty -Name 'ContainedBy' -Value $false;
+                                    if ($null -ne $RP.ResolvedPath) {
+                                        $Result | Add-Member -MemberType NoteProperty -Name 'ResolvedParentPath' -Value $RP.ResolvedPath;
+                                    }
+                                } else {
+                                    if ($null -eq $RP.ResolvedPath -or $Result.ResolvedPath.Length -gt $RP.ResolvedPath.Length) {
+                                        $Result | Add-Member -MemberType NoteProperty -Name 'ContainedBy' -Value $false;
+                                    } else {
+                                        $Result | Add-Member -MemberType NoteProperty -Name 'ResolvedParentPath' -Value $RP.ResolvedPath;
+                                        if ($Result.ResolvedPath.Length -gt $RP.ResolvedPath.Length) {
+                                            $Result | Add-Member -MemberType NoteProperty -Name 'ContainedBy' -Value $false;
+                                        } else {
+                                            
+                                        }
+                                    }
+                                }
+                                $Result | Write-Output;
+                            }
+                        }
+                    } else {
+
+                    }
+                } else {
+
+                }
+            } else {
+
+            }
+        } else {
+
         }
     }
 }

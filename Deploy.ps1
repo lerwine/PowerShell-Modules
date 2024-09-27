@@ -173,6 +173,8 @@ Function Get-FilesToDeploy {
         [string]$ModuleManifestPath
     )
 
+    $ModuleManifestPath = $Script:SourceModulePath | Join-Path "$Script:ModuleName.psd1"
+
     $ModuleManifestData = Import-PowerShellDataFile -LiteralPath $ModuleManifestPath -ErrorAction Stop;
     $ModuleManifestRoot = ($ModuleManifestPath | Resolve-Path -ErrorAction Stop).Path | Split-Path -Parent;
     $AllFiles = @();
@@ -192,7 +194,7 @@ Function Get-FilesToDeploy {
                     Setting = 'RootModule';
                 });
             } else {
-                Write-Warning -Message "RootModule Setting in $ModuleManifestPath is empty and not default module could be found.";
+                Write-Warning -Message "RootModule Setting in $ModuleManifestPath is empty, and neither $Script:ModuleName.psm1, nor $Script:ModuleName.dll was found.";
             }
         }
     } else {
