@@ -880,6 +880,7 @@ Function Get-CommandMaml {
         }
     }
 }
+
 Function Add-CommandMaml {
     [CmdletBinding()]
     [OutputType([System.Xml.XmlElement])]

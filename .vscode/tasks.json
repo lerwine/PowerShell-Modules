@@ -4,6 +4,21 @@
     "version": "2.0.0",
     "tasks": [
         {
+          "label": "Publish IOUtility",
+          "type": "shell",
+          "command": "${workspaceFolder}/Deploy.ps1",
+          "args": [
+            "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
+            "-DeploymentRoot", "${workspaceFolder}/dist",
+            "-PublishLocalRepo"
+          ],
+          "group": "build",
+          "presentation": {
+            "reveal": "always",
+            "panel": "new"
+          }
+        },
+        {
             "label": "Build WinIOUtility",
             "command": "dotnet",
             "type": "process",
@@ -20,6 +35,21 @@
             }
         },
         {
+          "label": "Publish WinIOUtility",
+          "type": "shell",
+          "command": "${workspaceFolder}/Deploy.ps1",
+          "args": [
+            "-ModuleManifestPath", "${workspaceFolder}/src/WinIOUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.WinIOUtility.psd1",
+            "-DeploymentRoot", "${workspaceFolder}/dist",
+            "-PublishLocalRepo"
+          ],
+          "group": "build",
+          "presentation": {
+            "reveal": "always",
+            "panel": "new"
+          }
+        },
+        {
             "label": "Build LteDev",
             "command": "dotnet",
             "type": "process",
@@ -31,6 +61,21 @@
             ],
             "problemMatcher": "$msCompile",
             "group": "build"
+        },
+        {
+          "label": "Publish LteDev",
+          "type": "shell",
+          "command": "${workspaceFolder}/Deploy.ps1",
+          "args": [
+            "-ModuleManifestPath", "${workspaceFolder}/src/LteDev/bin/Debug/net8.0-windows/Erwine.Leonard.T.LteDev.psd1",
+            "-DeploymentRoot", "${workspaceFolder}/dist",
+            "-PublishLocalRepo"
+          ],
+          "group": "build",
+          "presentation": {
+            "reveal": "always",
+            "panel": "new"
+          }
         }
     ]
 }

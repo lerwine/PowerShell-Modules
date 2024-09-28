@@ -13,6 +13,9 @@ EXPORTED COMMANDS
     ConvertTo-SafeFileName
         Converts a string to a usable file name / path.
 
+    Use-Location
+        Runs ScriptBlock(s) using a specified location.
+
     Get-AppDataPath
         Get path for application data storage.
 
@@ -135,6 +138,7 @@ EXPORTED COMMANDS
 
 SEE ALSO
     ConvertTo-SafeFileName
+    Use-Location
     Get-AppDataPath
     Read-ShortIntegerFromStream
     Read-UnsignedShortIntegerFromStream

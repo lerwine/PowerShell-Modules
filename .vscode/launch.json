@@ -10,9 +10,9 @@
             "name": "Test IOUtility",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.IOUtility/Erwine.Leonard.T.IOUtility.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
                 "-DeploymentRoot", "${workspaceFolder}/dist",
-                "-PublishLocalRepo -Test"
+                "-PublishLocalRepo", "-Test"
             ],
             "cwd": "${workspaceRoot}"
         },
@@ -22,7 +22,7 @@
             "name": "Test IOUtility (no publish)",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.IOUtility/Erwine.Leonard.T.IOUtility.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "--Test"
             ],
@@ -34,7 +34,7 @@
             "name": "Publish IOUtility",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.IOUtility/Erwine.Leonard.T.IOUtility.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "-PublishLocalRepo"
             ],
@@ -46,7 +46,7 @@
             "name": "Deploy IOUtility Local",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.IOUtility/Erwine.Leonard.T.IOUtility.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
                 "-DeployPSModulePath"
             ],
             "cwd": "${workspaceRoot}"
@@ -57,7 +57,7 @@
             "name": "Test SwPackage",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "-PublishLocalRepo -Test"
             ],
@@ -69,7 +69,7 @@
             "name": "Test SwPackage (no publish)",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "--Test"
             ],
@@ -81,7 +81,7 @@
             "name": "Publish SwPackage",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "-PublishLocalRepo"
             ],
@@ -93,7 +93,7 @@
             "name": "Deploy SwPackage Local",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/Erwine.Leonard.T.SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
                 "-DeployPSModulePath"
             ],
             "cwd": "${workspaceRoot}"

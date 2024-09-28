@@ -96,12 +96,50 @@ Function Clear-TargetPsModule {
     
     Process {
         $DistributionPath = $DeploymentRoot | Join-Path -ChildPath $Script:ModuleName;
-        if ($DistributionPath | Test-Path -PathType Container) {
+        if (Test-Path -LiteralPath $DistributionPath -PathType Container) {
             $ModuleManifestFileName = "$Script:ModuleName.psd1";
-            if ($null -ne ((Get-ChildItem -LiteralPath $DistributionPath -Filter '*.psd1' -Force) | Where-Object { $_.Name -ine $ModuleManifestFileName } | Select-Object -First 1)) {
+            if (
+                (Test-Path -LiteralPath ($DistributionPath | Join-Path -ChildPath $ModuleManifestFileName)) -or `
+                $null -eq ((Get-ChildItem -LiteralPath $DistributionPath -Filter '*.psd1' -Force) | Where-Object { $_.Name -ine $ModuleManifestFileName } | Select-Object -First 1)
+            ) {
+                Remove-Item $DistributionPath/* -Recurse -Force -ErrorAction Stop;
+            } else {
                 throw "Manifest file from one or more other modules found in $DistributionPath";
             }
-            Remove-Item $DistributionPath/* -Recurse -Force -ErrorAction Stop;
+        }
+    }
+}
+
+Function Assert-TargetDirectory {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]$RelativePath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$TargetContainerPath,
+
+        [switch]$PassThru
+    )
+
+    Process {
+        $TargetPath = $TargetContainerPath | Join-Path -ChildPath $RelativePath;
+        if (Test-Path -LiteralPath $TargetPath) {
+            if ($PassThru.IsPresent) {(Resolve-Path -LiteralPath $TargetPath).Path | Write-Output }
+        } else {
+            $Parent = $RelativePath | Split-Path -Parent;
+            $Leaf = $RelativePath | Split-Path -Leaf;
+            if ($Parent -eq '.') {
+                $Parent = $TargetContainerPath;
+            } else {
+                $Parent = Assert-TargetDirectory -RelativePath $Parent -TargetContainerPath $TargetContainerPath -PassThru -ErrorAction Stop;
+            }
+            Write-Information -MessageData "Create: `"$($Parent | Join-Path -ChildPath $Leaf)`"";
+            if ($PassThru.IsPresent) {
+                (New-Item -Path $Parent -Name $Leaf -ItemType Directory -Force -ErrorAction Stop)?.FullName;
+            } else {
+                (New-Item -Path $Parent -Name $Leaf -ItemType Directory -Force -ErrorAction Stop) | Out-Null;
+            }
         }
     }
 }
@@ -114,14 +152,101 @@ Function Install-TargetPsModule {
     )
     
     Process {
-        $FullPath = $ModulePath;
-        if ($ModulePath | Test-Path) {
-            $FullPath = (Resolve-Path -LiteralPath $ModulePath -ErrorAction Stop).Path;
-            Clear-TargetPsModule -ModulePath $FullPath -ErrorAction Stop;
+        $TargetContainerPath = $DeploymentRoot | Join-Path -ChildPath $Script:ModuleName;
+        if ($TargetContainerPath | Test-Path) {
+            $TargetContainerPath = (Resolve-Path -LiteralPath $DeploymentRoot -ErrorAction Stop).Path;
+            Clear-TargetPsModule -DeploymentRoot $DeploymentRoot -ErrorAction Stop;
         } else {
-            $FullPath = (New-Item -Path $ModulePath -Name ($ModulePath | Split-Path -Leaf) -ItemType Directory -ErrorAction Stop -Force).FullName;
+            $TargetContainerPath = (New-Item -Path $DeploymentRoot -Name $Script:ModuleName -ItemType Directory -ErrorAction Stop -Force).FullName;
         }
-        Copy-Item -Path $Script:SourceModulePath\* -Destination $FullPath -Recurse -Exclude $Exclude 'PSScriptAnalyzerSettings.psd', 'temp.*' -Force -ErrorAction Stop;
+        $ManifestFileName = "$Script:ModuleName.psd1";
+        $ModuleManifestPath = $Script:SourceModulePath | Join-Path -ChildPath $ManifestFileName;
+        $ModuleManifestData = Import-PowerShellDataFile -LiteralPath $ModuleManifestPath -ErrorAction Stop;
+        $AllFiles = @();
+        $FileName = $ModuleManifestData['RootModule'];
+        if ([string]::IsNullOrWhiteSpace($FileName)) {
+            $FileName = "$Script:ModuleName.psm1";
+            if (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf) {
+                $AllFiles = @([PSCustomObject]@{
+                    Name = $FileName;
+                    Setting = 'RootModule';
+                });
+            } else {
+                $FileName = "$Script:ModuleName.dll";
+                if (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf) {
+                    $AllFiles = @([PSCustomObject]@{
+                        Name = $FileName;
+                        Setting = 'RootModule';
+                    });
+                } else {
+                    Write-Warning -Message "RootModule Setting in $ModuleManifestPath is empty, and neither $Script:ModuleName.psm1, nor $Script:ModuleName.dll was found.";
+                }
+            }
+        } else {
+            $AllFiles = @([PSCustomObject]@{
+                Name = $FileName;
+                Setting = 'RootModule';
+            });
+        }
+
+        ('ScriptsToProcess', 'TypesToProcess', 'FormatsToProcess', 'NestedModules', 'ModuleList', 'FileList') | ForEach-Object {
+            if ($ModuleManifestData.ContainsKey($_)) {
+                foreach ($FileName in $ModuleManifestData[$_] | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) {
+                    $AllFiles += @([PSCustomObject]@{
+                        Name = $FileName;
+                        Setting = $_;
+                    });
+                }
+            }
+        }
+    
+        $AllRelativePaths = @((@('.' | Join-Path -ChildPath $ManifestFileName) + ($AllFiles | ForEach-Object {
+            $RP = $null;
+            try { $RP = $_.Name | Resolve-Path -Relative -RelativeBasePath $Script:SourceModulePath -ErrorAction Stop }
+            catch {
+                Write-Warning -Message "$($_.Setting) setting in $ModuleManifestPath contains an file that could not be resolved: $($_.Name)";
+            }
+            if ($null -ne $RP) {
+                if ($RP[0] -ne '.' -or $RP.Length -gt 1 -and $RP[1] -eq '.') {
+                    Write-Warning -Message "$($_.Setting) setting in $ModuleManifestPath contains a path outside of the source module folder: $($_.Name)";
+                } else {
+                    $RP | Write-Output;
+                }
+            }
+        })) | Select-Object -Unique);
+        
+        $FileName = '.' | Join-Path -ChildPath "about_$Script:ModuleName.help.txt";
+        if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf)) {
+            $AllRelativePaths += @($FileName);
+        }
+        $FileName = '.' | Join-Path -ChildPath 'README.md';
+        if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf)) {
+            $AllRelativePaths += @($FileName);
+        }
+        $FileName = '.' | Join-Path -ChildPath 'ReleaseNotes.md';
+        if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf)) {
+            $AllRelativePaths += @($FileName);
+        }
+        @($AllRelativePaths | Where-Object { ($_ | Split-Path -Extension) -ieq '.dll' }) | ForEach-Object {
+            ($_ | Split-Path -Parent) | Join-Path -ChildPath "$($_ | Split-Path -LeafBase).pdb";
+        }
+        @($AllRelativePaths | Where-Object { ($_ | Split-Path -Extension) -ieq '.dll' }) | ForEach-Object {
+            $FileName = ($_ | Split-Path -Parent) | Join-Path -ChildPath "$($_ | Split-Path -LeafBase).pdb";
+            if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf)) {
+                $AllRelativePaths += @($FileName);
+            }
+        };
+        
+        foreach ($RelativePath in $AllRelativePaths) {
+            $Parent = $RelativePath | Split-Path -Parent;
+            if ($Parent -ne '.') {
+                Assert-TargetDirectory -RelativePath $Parent -TargetContainerPath $TargetContainerPath -ErrorAction Stop;
+            }
+            $SourcePath = $Script:SourceModulePath | Join-Path -ChildPath $RelativePath;
+            $TargetPath = $TargetContainerPath | Join-Path -ChildPath $RelativePath;
+            Write-Information -MessageData "Copy: `"$SourcePath`" => `"$TargetPath`"";
+            Copy-Item -Path $SourcePath -Destination $TargetPath -Force -ErrorAction Stop;
+        }
     }
 }
 
@@ -166,101 +291,16 @@ Function Invoke-TestTask {
     Invoke-Pester $DistributionPath;
 }
 
-Function Get-FilesToDeploy {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$ModuleManifestPath
-    )
-
-    $ModuleManifestPath = $Script:SourceModulePath | Join-Path "$Script:ModuleName.psd1"
-
-    $ModuleManifestData = Import-PowerShellDataFile -LiteralPath $ModuleManifestPath -ErrorAction Stop;
-    $ModuleManifestRoot = ($ModuleManifestPath | Resolve-Path -ErrorAction Stop).Path | Split-Path -Parent;
-    $AllFiles = @();
-    $FileName = $ModuleManifestData['RootModule'];
-    if ([string]::IsNullOrWhiteSpace($FileName)) {
-        $FileName = "$Script:ModuleName.psm1";
-        if (Test-Path -LiteralPath ($ModuleManifestRoot | Join-Path -ChildPath $FileName) -PathType Leaf) {
-            $AllFiles = @([PSCustomObject]@{
-                Name = $FileName;
-                Setting = 'RootModule';
-            });
-        } else {
-            $FileName = "$Script:ModuleName.dll";
-            if (Test-Path -LiteralPath ($ModuleManifestRoot | Join-Path -ChildPath $FileName) -PathType Leaf) {
-                $AllFiles = @([PSCustomObject]@{
-                    Name = $FileName;
-                    Setting = 'RootModule';
-                });
-            } else {
-                Write-Warning -Message "RootModule Setting in $ModuleManifestPath is empty, and neither $Script:ModuleName.psm1, nor $Script:ModuleName.dll was found.";
-            }
-        }
-    } else {
-        $AllFiles = @([PSCustomObject]@{
-            Name = $FileName;
-            Setting = 'RootModule';
-        });
-    }
-    ('ScriptsToProcess', 'TypesToProcess', 'FormatsToProcess', 'NestedModules', 'ModuleList', 'FileList') | ForEach-Object {
-        if ($ModuleManifestData.ContainsKey($_)) {
-            foreach ($FileName in $ModuleManifestData[$_] | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) {
-                $AllFiles += @([PSCustomObject]@{
-                    Name = $FileName;
-                    Setting = $_;
-                });
-            }
-        }
-    }
-    
-    $AllRelativePaths = @(@('.' | Join-Path -ChildPath ($ModuleManifestPath | Split-Path -Leaf)) + ($AllFiles | ForEach-Object {
-        if (Test-Path -LiteralPath $_.Name -IsValid) {
-            $FullPath = $ModuleManifestRoot | Join-Path -ChildPath $FileName;
-            if (Test-Path -LiteralPath $FullPath -PathType Leaf) {
-                $RelativePath = $FullPath | Resolve-Path -Relative -RelativeBasePath $ModuleManifestRoot -ErrorAction Stop;
-                $P = $RelativePath | Split-Path -Parent;
-                while ($p -ne '.') {
-                    if ([string]::IsNullOrEmpty($p) -or $p -eq '..') {
-                        Write-Warning -Message "$($_.Setting) setting in $ModuleManifestPath contains a path outside of the source module folder: $($_.OriginalName)";
-                        break;
-                    }
-                }
-                if ($p -eq '.') { $RelativePath | Write-Output; }
-            } else {
-                Write-Warning -Message "$($_.Setting) setting in $ModuleManifestPath contains an file that doesn't exit: $($_.Name)";
-            }
-        } else {
-            Write-Warning -Message "$($_.Setting) setting in $ModuleManifestPath contains an invalid file name: $($_.Name)";
-        }
-    })) | Select-Object -Unique;
-    $FileName = '.' | Join-Path -ChildPath "about_$Script:ModuleName.help.txt";
-    if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($ModuleManifestRoot | Join-Path -ChildPath $FileName) -PathType Leaf)) {
-        $AllRelativePaths += @($FileName);
-    }
-    $FileName = '.' | Join-Path -ChildPath 'README.md';
-    if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($ModuleManifestRoot | Join-Path -ChildPath $FileName) -PathType Leaf)) {
-        $AllRelativePaths += @($FileName);
-    }
-    $FileName = '.' | Join-Path -ChildPath 'ReleaseNotes.md';
-    if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($ModuleManifestRoot | Join-Path -ChildPath $FileName) -PathType Leaf)) {
-        $AllRelativePaths += @($FileName);
-    }
-    $AllRelativePaths | Write-Output;
-}
-
 $Script:SourceModulePath = (Resolve-Path -LiteralPath ($ModuleManifestPath | Split-Path -Parent)).Path;
 $Script:ModuleName = $ModuleManifestPath | Split-Path -LeafBase;
-
 
 <#
 $ModuleManifestData = Import-PowerShellDataFile -LiteralPath 'C:\Users\lerwine\source\repositories\PowerShell-Modules\dist\Erwine.Leonard.T.IOUtility\Erwine.Leonard.T.IOUtility.psd1' -ErrorAction Stop;
 #>
 
 if ($PublishLocalRepo.IsPresent) {
-    Get-FilesToDeploy -ModuleManifestPath $ModuleManifestPath;
-    # Install-TargetPsModule -ModulePath ($DeploymentRoot | Join-Path -ChildPath $Script:ModuleName) -ErrorAction Stop;
-    # if ($Test.IsPresent) { Invoke-TestTask -DeploymentRoot $DeploymentRoot -ErrorAction Stop }
+    Install-TargetPsModule -DeploymentRoot $DeploymentRoot -ErrorAction Stop;
+    if ($Test.IsPresent) { Invoke-TestTask -DeploymentRoot $DeploymentRoot -ErrorAction Stop }
 } else {
     if ($CleanLocalRepo.IsPresent) {
         Clear-TargetPsModule -DeploymentRoot $DeploymentRoot -ErrorAction Stop;

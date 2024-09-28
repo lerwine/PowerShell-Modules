@@ -69,11 +69,11 @@ Description = 'Provides utility functions that are useful for advanced input/out
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('ConvertTo-SafeFileName', 'Get-AppDataPath', 'Read-ShortIntegerFromStream', 'Read-UnsignedShortIntegerFromStream', 'Read-IntegerFromStream', 'Read-UnsignedIntegerFromStream',
-    'Read-LongIntegerFromStream', 'Read-UnsignedLongIntegerFromStream', 'Write-ShortIntegerToStream', 'Write-UnsignedShortIntegerToStream', 'Write-IntegerToStream', 'Write-UnsignedIntegerToStream',
-    'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes', 'Write-TinyLengthEncodedBytes',
-    'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'Get-TextEncoding', 'New-MemoryStream',
-    'Get-StringComparer', 'Optimize-WhiteSpace', 'Remove-ZeroPadding', 'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText', 'Expand-GZip', 'Use-TempFolder',
+FunctionsToExport = @('ConvertTo-SafeFileName', 'Use-Location', 'Get-AppDataPath', 'Read-ShortIntegerFromStream', 'Read-UnsignedShortIntegerFromStream', 'Read-IntegerFromStream',
+    'Read-UnsignedIntegerFromStream', 'Read-LongIntegerFromStream', 'Read-UnsignedLongIntegerFromStream', 'Write-ShortIntegerToStream', 'Write-UnsignedShortIntegerToStream', 'Write-IntegerToStream',
+    'Write-UnsignedIntegerToStream', 'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes',
+    'Write-TinyLengthEncodedBytes', 'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'Get-TextEncoding',
+    'New-MemoryStream', 'Get-StringComparer', 'Optimize-WhiteSpace', 'Remove-ZeroPadding', 'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText', 'Expand-GZip', 'Use-TempFolder',
     'Assert-IsNotNull', 'Assert-IsType', 'Assert-IsString', 'Assert-IsPsEnumerable', 'Invoke-WhenNotNull', 'Invoke-WhenIsType', 'Invoke-WhenIsString', 'Invoke-WhenIsPsEnumerable',
     'Get-CharacterClassFlags', 'Test-CharacterClassFlags')
 
@@ -93,7 +93,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-# FileList = @()
+FileList = @('README.md', 'about_Erwine.Leonard.T.IOUtility.help.txt', 'IOUtility.tests.ps1', 'Test-CharacterClass.tests.ps1')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
