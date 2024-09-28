@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Commands
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// New-Image
@@ -15,7 +12,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Bitmap))]
     public class New_Image : PSCmdlet
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_New = "New";
         public const string ParameterSetName_FromImage = "FromImage";
 
@@ -62,6 +58,5 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 WriteError(new ErrorRecord(e, "New_Image.New", ErrorCategory.InvalidArgument, new Size(Width, Height)));    
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

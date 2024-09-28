@@ -1,12 +1,10 @@
-using System;
-using System.Drawing;
-using System.Collections.Generic;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorCacheQuantizer : BaseColorQuantizer
     {
         #region | Fields |
@@ -20,10 +18,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseColorCacheQuantizer"/> class.
         /// </summary>
-        protected BaseColorCacheQuantizer()
-        {
-            colorCache = null;
-        }
+        protected BaseColorCacheQuantizer() => colorCache = null;
 
         #endregion
 
@@ -33,19 +28,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// Changes the cache provider.
         /// </summary>
         /// <param name="colorCache">The color cache.</param>
-        public void ChangeCacheProvider(IColorCache colorCache)
-        {
-            this.colorCache = colorCache;
-        }
+        public void ChangeCacheProvider(IColorCache colorCache) => this.colorCache = colorCache;
 
         /// <summary>
         /// Caches the palette.
         /// </summary>
         /// <param name="palette">The palette.</param>
-        public void CachePalette(IList<Color> palette)
-        {
-            GetColorCache().CachePalette(palette);
-        }
+        public void CachePalette(IList<Color> palette) => GetColorCache().CachePalette(palette);
 
         #endregion
 
@@ -59,8 +48,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
             // if the cache exists; or default one was created for these purposes.. use it
             if (result == null)
             {
-                String message = string.Format("The color cache is not initialized! Please use SetColorCache() method on quantizer.");
-                throw new ArgumentNullException(message);
+                string message = string.Format("The color cache is not initialized! Please use SetColorCache() method on quantizer.");
+                throw new ArgumentNullException(nameof(result), message);
             }
 
             // cache is fine, return it
@@ -80,7 +69,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// Redirection to retrieve palette to be cached, if palette is not available yet.
         /// </summary>
-        protected abstract List<Color> OnGetPaletteToCache(Int32 colorCount);
+        protected abstract List<Color> OnGetPaletteToCache(int colorCount);
 
         #endregion
 
@@ -99,7 +88,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPalette"/> for more details.
         /// </summary>
-        protected sealed override List<Color> OnGetPalette(Int32 colorCount)
+        protected sealed override List<Color> OnGetPalette(int colorCount)
         {
             // use optimization, or calculate new palette if color count is lower than unique color count
             List<Color> palette = base.OnGetPalette(colorCount) ?? OnGetPaletteToCache(colorCount);
@@ -110,7 +99,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPaletteIndex"/> for more details.
         /// </summary>
-        protected override void OnGetPaletteIndex(Color color, Int32 key, Int32 x, Int32 y, out int paletteIndex)
+        protected override void OnGetPaletteIndex(Color color, int key, int x, int y, out int paletteIndex)
         {
             base.OnGetPaletteIndex(color, key, x, y, out paletteIndex);
 
@@ -123,5 +112,4 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

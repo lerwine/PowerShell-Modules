@@ -1,15 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Text.RegularExpressions;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class FractionUtil
     {
         #region Generic Methods
@@ -186,9 +181,8 @@ namespace Erwine.Leonard.T.GDIPlus
 					n2 = valueHelper.Multiply(n2, d1);
 				else if (!d1.Equals(d2))
 				{
-					T m2;
-					T m1 = GetLCM<T>(valueHelper, d1, d2, out m2);
-					n1 = valueHelper.Multiply(n1, m1);
+                    T m1 = GetLCM<T>(valueHelper, d1, d2, out T m2);
+                    n1 = valueHelper.Multiply(n1, m1);
 					d1 = valueHelper.Multiply(d1, m1);
 					n2 = valueHelper.Multiply(n2, m1);
 					d2 = valueHelper.Multiply(d2, m1);
@@ -214,18 +208,18 @@ namespace Erwine.Leonard.T.GDIPlus
             {
                 try
                 {
-                    value = (T)(Convert.ChangeType(b, typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                    value = (T)Convert.ChangeType(b, typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                     return true;
                 } catch { }
                 try
                 {
-                    value = (T)(Convert.ChangeType(obj, typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                    value = (T)Convert.ChangeType(obj, typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                     return true;
                 } catch { }
             }
             try
             {
-                value = (T)(Convert.ChangeType(obj.ToString(), typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                value = (T)Convert.ChangeType(obj.ToString(), typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                 return true;
             } catch { }
 
@@ -236,9 +230,8 @@ namespace Erwine.Leonard.T.GDIPlus
         private static T ConvertValue<T>(object obj)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
-            
+            ArgumentNullException.ThrowIfNull(obj);
+
             if (obj is PSObject)
             {
                 object b = (obj as PSObject).BaseObject;
@@ -246,19 +239,19 @@ namespace Erwine.Leonard.T.GDIPlus
                     return (T)b;
                 try
                 {
-                    return (T)(Convert.ChangeType(b, typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                    return (T)Convert.ChangeType(b, typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                 }
                 catch
                 {
                     try
                     {
-                        return (T)(Convert.ChangeType(obj, typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                        return (T)Convert.ChangeType(obj, typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                     }
                     catch
                     {
                         try
                         {
-                            return (T)(Convert.ChangeType(obj.ToString(), typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                            return (T)Convert.ChangeType(obj.ToString(), typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                         }
                         catch { }
                     }
@@ -270,13 +263,13 @@ namespace Erwine.Leonard.T.GDIPlus
                 return (T)obj;
             try
             {
-                return (T)(Convert.ChangeType(obj, typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                return (T)Convert.ChangeType(obj, typeof(T), System.Globalization.CultureInfo.CurrentCulture);
             }
             catch
             {
                 try
                 {
-                    return (T)(Convert.ChangeType(obj.ToString(), typeof(T), System.Globalization.CultureInfo.CurrentCulture));
+                    return (T)Convert.ChangeType(obj.ToString(), typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                 }
                 catch { }
                 throw;
@@ -295,14 +288,13 @@ namespace Erwine.Leonard.T.GDIPlus
             return w.ToString() + " " + n.ToString() + "/" + d.ToString();
         }
 
-        private static readonly Regex FractionParseRegex = new Regex(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
+        private static readonly Regex FractionParseRegex = new(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
 
         private static T Parse<T>(IValueHelper<T> valueHelper, string s, out T n, out T d)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
-            if (s == null)
-                throw new ArgumentNullException("s");
-            
+            ArgumentNullException.ThrowIfNull(s);
+
             if (s.Length == 0)
                 throw new FormatException("Input string was empty.");
             
@@ -337,7 +329,7 @@ namespace Erwine.Leonard.T.GDIPlus
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
             Match m;
-            if (String.IsNullOrEmpty(s) || !(m = FractionParseRegex.Match(s)).Success)
+            if (string.IsNullOrEmpty(s) || !(m = FractionParseRegex.Match(s)).Success)
             {
                 w = valueHelper.Zero;
                 n = valueHelper.Zero;
@@ -403,32 +395,21 @@ namespace Erwine.Leonard.T.GDIPlus
             if (b is IConvertible)
             {
                 TypeCode typeCode = ((IConvertible)b).GetTypeCode();
-                switch (typeCode)
+                return typeCode switch
                 {
-                    case TypeCode.Decimal:
-                        return EqualTo<T>(fraction, Convert.ToDecimal(b));
-                    case TypeCode.Double:
-                        return EqualTo<T>(fraction, Convert.ToDouble(b));
-                    case TypeCode.Single:
-                        return EqualTo<T>(fraction, Convert.ToSingle(b));
-                    case TypeCode.Int16:
-                        return EqualTo<T>(fraction, Convert.ToInt16(b));
-                    case TypeCode.Int32:
-                        return EqualTo<T>(fraction, Convert.ToInt32(b));
-                    case TypeCode.Int64:
-                        return EqualTo<T>(fraction, Convert.ToInt64(b));
-                    case TypeCode.Byte:
-                        return EqualTo<T>(fraction, Convert.ToByte(b));
-                    case TypeCode.SByte:
-                        return EqualTo<T>(fraction, Convert.ToSByte(b));
-                    case TypeCode.UInt32:
-                        return EqualTo<T>(fraction, Convert.ToUInt32(b));
-                    case TypeCode.UInt64:
-                        return EqualTo<T>(fraction, Convert.ToUInt64(b));
-                    case TypeCode.UInt16:
-                        return EqualTo<T>(fraction, Convert.ToUInt16(b));
-                }
-                return fraction.ToString().Equals(obj.ToString());
+                    TypeCode.Decimal => EqualTo<T>(fraction, Convert.ToDecimal(b)),
+                    TypeCode.Double => EqualTo<T>(fraction, Convert.ToDouble(b)),
+                    TypeCode.Single => EqualTo<T>(fraction, Convert.ToSingle(b)),
+                    TypeCode.Int16 => EqualTo<T>(fraction, Convert.ToInt16(b)),
+                    TypeCode.Int32 => EqualTo<T>(fraction, Convert.ToInt32(b)),
+                    TypeCode.Int64 => EqualTo<T>(fraction, Convert.ToInt64(b)),
+                    TypeCode.Byte => EqualTo<T>(fraction, Convert.ToByte(b)),
+                    TypeCode.SByte => EqualTo<T>(fraction, Convert.ToSByte(b)),
+                    TypeCode.UInt32 => EqualTo<T>(fraction, Convert.ToUInt32(b)),
+                    TypeCode.UInt64 => EqualTo<T>(fraction, Convert.ToUInt64(b)),
+                    TypeCode.UInt16 => EqualTo<T>(fraction, Convert.ToUInt16(b)),
+                    _ => fraction.ToString().Equals(obj.ToString()),
+                };
             }
 
             return false;
@@ -463,32 +444,21 @@ namespace Erwine.Leonard.T.GDIPlus
             if (b is IConvertible)
             {
                 TypeCode typeCode = ((IConvertible)b).GetTypeCode();
-                switch (typeCode)
+                return typeCode switch
                 {
-                    case TypeCode.Decimal:
-                        return Compare<T>(fraction, Convert.ToDecimal(b));
-                    case TypeCode.Double:
-                        return Compare<T>(fraction, Convert.ToDouble(b));
-                    case TypeCode.Single:
-                        return Compare<T>(fraction, Convert.ToSingle(b));
-                    case TypeCode.Int16:
-                        return Compare<T>(fraction, Convert.ToInt16(b));
-                    case TypeCode.Int32:
-                        return Compare<T>(fraction, Convert.ToInt32(b));
-                    case TypeCode.Int64:
-                        return Compare<T>(fraction, Convert.ToInt64(b));
-                    case TypeCode.Byte:
-                        return Compare<T>(fraction, Convert.ToByte(b));
-                    case TypeCode.SByte:
-                        return Compare<T>(fraction, Convert.ToSByte(b));
-                    case TypeCode.UInt32:
-                        return Compare<T>(fraction, Convert.ToUInt32(b));
-                    case TypeCode.UInt64:
-                        return Compare<T>(fraction, Convert.ToUInt64(b));
-                    case TypeCode.UInt16:
-                        return Compare<T>(fraction, Convert.ToUInt16(b));
-                }
-                return fraction.ToString().CompareTo(obj.ToString());
+                    TypeCode.Decimal => Compare<T>(fraction, Convert.ToDecimal(b)),
+                    TypeCode.Double => Compare<T>(fraction, Convert.ToDouble(b)),
+                    TypeCode.Single => Compare<T>(fraction, Convert.ToSingle(b)),
+                    TypeCode.Int16 => Compare<T>(fraction, Convert.ToInt16(b)),
+                    TypeCode.Int32 => Compare<T>(fraction, Convert.ToInt32(b)),
+                    TypeCode.Int64 => Compare<T>(fraction, Convert.ToInt64(b)),
+                    TypeCode.Byte => Compare<T>(fraction, Convert.ToByte(b)),
+                    TypeCode.SByte => Compare<T>(fraction, Convert.ToSByte(b)),
+                    TypeCode.UInt32 => Compare<T>(fraction, Convert.ToUInt32(b)),
+                    TypeCode.UInt64 => Compare<T>(fraction, Convert.ToUInt64(b)),
+                    TypeCode.UInt16 => Compare<T>(fraction, Convert.ToUInt16(b)),
+                    _ => fraction.ToString().CompareTo(obj.ToString()),
+                };
             }
 
             return -1;
@@ -506,8 +476,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         internal static long ToInt64(object obj, long defaultValue)
         {
-            long value;
-            if (TryConvertToInt64(obj, out value))
+            if (TryConvertToInt64(obj, out long value))
                 return value;
             return defaultValue;
         }
@@ -538,8 +507,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         internal static int ToInt32(object obj, int defaultValue)
         {
-            int value;
-            if (TryConvertToInt32(obj, out value))
+            if (TryConvertToInt32(obj, out int value))
                 return value;
             return defaultValue;
         }
@@ -570,8 +538,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         internal static short ToInt16(object obj, short defaultValue)
         {
-            short value;
-            if (TryConvertToInt16(obj, out value))
+            if (TryConvertToInt16(obj, out short value))
                 return value;
             return defaultValue;
         }
@@ -602,8 +569,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         internal static sbyte ToSByte(object obj, sbyte defaultValue)
         {
-            sbyte value;
-            if (TryConvertToSByte(obj, out value))
+            if (TryConvertToSByte(obj, out sbyte value))
                 return value;
             return defaultValue;
         }
@@ -653,21 +619,21 @@ namespace Erwine.Leonard.T.GDIPlus
 
         class ValueHelper8 : IValueHelper<sbyte>
         {
-            internal static readonly ValueHelper8 Instance = new ValueHelper8();
+            internal static readonly ValueHelper8 Instance = new();
 
             private ValueHelper8() { }
 
-            public sbyte Zero { get { return 0; } }
+            public sbyte Zero => 0;
 
-            public sbyte PositiveOne { get { return 1; } }
+            public sbyte PositiveOne => 1;
 
-            public sbyte NegativeOne { get { return -1; } }
+            public sbyte NegativeOne => -1;
 
             public sbyte Parse(string s) { return sbyte.Parse(s); }
 
             public bool TryParse(string s, out sbyte value) { return sbyte.TryParse(s, out value); }
 
-            public sbyte Abs(sbyte value) { return (sbyte)(Math.Abs(value)); }
+            public sbyte Abs(sbyte value) { return (sbyte)Math.Abs(value); }
             
             public sbyte Add(sbyte x, sbyte y) { return (sbyte)(x + y); }
 
@@ -682,15 +648,15 @@ namespace Erwine.Leonard.T.GDIPlus
 
         class ValueHelper16 : IValueHelper<short>
         {
-            internal static readonly ValueHelper16 Instance = new ValueHelper16();
+            internal static readonly ValueHelper16 Instance = new();
 
             private ValueHelper16() { }
-            
-            public short Zero { get { return 0; } }
 
-            public short PositiveOne { get { return 1; } }
+            public short Zero => 0;
 
-            public short NegativeOne { get { return -1; } }
+            public short PositiveOne => 1;
+
+            public short NegativeOne => -1;
 
             public short Parse(string s) { return short.Parse(s); }
 
@@ -711,15 +677,15 @@ namespace Erwine.Leonard.T.GDIPlus
 
         class ValueHelper32 : IValueHelper<int>
         {
-            internal static readonly ValueHelper32 Instance = new ValueHelper32();
+            internal static readonly ValueHelper32 Instance = new();
 
             private ValueHelper32() { }
-            
-            public int Zero { get { return 0; } }
 
-            public int PositiveOne { get { return 1; } }
+            public int Zero => 0;
 
-            public int NegativeOne { get { return -1; } }
+            public int PositiveOne => 1;
+
+            public int NegativeOne => -1;
 
             public int Parse(string s) { return int.Parse(s); }
 
@@ -740,15 +706,15 @@ namespace Erwine.Leonard.T.GDIPlus
 
         class ValueHelper64 : IValueHelper<long>
         {
-            internal static readonly ValueHelper64 Instance = new ValueHelper64();
+            internal static readonly ValueHelper64 Instance = new();
 
             private ValueHelper64() { }
-            
-            public long Zero { get { return 0L; } }
 
-            public long PositiveOne { get { return 1L; } }
+            public long Zero => 0L;
 
-            public long NegativeOne { get { return -1L; } }
+            public long PositiveOne => 1L;
+
+            public long NegativeOne => -1L;
 
             public long Parse(string s) { return long.Parse(s); }
 
@@ -769,5 +735,4 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

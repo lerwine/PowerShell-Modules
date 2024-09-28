@@ -1,8 +1,8 @@
-using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Name |          Blue         |        Green          |           Red         | 
@@ -13,33 +13,25 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
     public struct PixelDataRgb888 : INonIndexedPixel
     {
         // raw component values
-        [FieldOffset(0)] private Byte blue;    // 00 - 07
-        [FieldOffset(1)] private Byte green;   // 08 - 15
-        [FieldOffset(2)] private Byte red;     // 16 - 23
+        [FieldOffset(0)] private byte blue;    // 00 - 07
+        [FieldOffset(1)] private byte green;   // 08 - 15
+        [FieldOffset(2)] private byte red;     // 16 - 23
 
         // processed component values
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public Int32 Alpha { get { return 0xFF; } }
-        public Int32 Red { get { return red; } }
-        public Int32 Green { get { return green; } }
-        public Int32 Blue { get { return blue; } }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        public readonly int Alpha => 0xFF;
+        public readonly int Red => red;
+        public readonly int Green => green;
+        public readonly int Blue => blue;
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.Argb"/> for more details.
         /// </summary>
-        public Int32 Argb
-        {
-            get { return Pixel.AlphaMask | Red << Pixel.RedShift | Green << Pixel.GreenShift | Blue; }
-        }
+        public readonly int Argb => Pixel.AlphaMask | Red << Pixel.RedShift | Green << Pixel.GreenShift | Blue;
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.GetColor"/> for more details.
         /// </summary>
-        public Color GetColor()
-        {
-            return Color.FromArgb(Argb);
-        }
+        public readonly Color GetColor() => Color.FromArgb(Argb);
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.SetColor"/> for more details.
@@ -54,14 +46,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
         /// <summary>
         /// See <see cref="INonIndexedPixel.Value"/> for more details.
         /// </summary>
-        public UInt64 Value
+        public ulong Value
         {
-            get { return (UInt32) Argb; }
+            readonly get => (uint)Argb;
             set
             {
-                red = (Byte) ((value >> Pixel.RedShift) & 0xFF);
-                green = (Byte) ((value >> Pixel.GreenShift) & 0xFF);
-                blue = (Byte) ((value >> Pixel.BlueShift) & 0xFF);
+                red = (byte)((value >> Pixel.RedShift) & 0xFF);
+                green = (byte)((value >> Pixel.GreenShift) & 0xFF);
+                blue = (byte)((value >> Pixel.BlueShift) & 0xFF);
             }
         }
     }

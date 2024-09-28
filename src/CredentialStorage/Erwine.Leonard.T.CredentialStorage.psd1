@@ -63,7 +63,7 @@
     # FormatsToProcess = @()
     
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules = @('Erwine.Leonard.T.CredentialStorageLib.dll')
+    NestedModules = @('CredentialStorage.dll')
     
     # Functions to export from this module
     FunctionsToExport = @('New-CredentialStorageFile', 'Read-CredentialStorageFile', 'Write-CredentialStorageFile', 'Get-CredentialRealm', 'Add-CredentialRealm',

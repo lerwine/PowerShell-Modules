@@ -1,45 +1,40 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
 using System.Runtime.InteropServices;
-using System.Threading;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [StructLayout(LayoutKind.Sequential)]
     public struct Fraction32 : IEquatable<Fraction32>, IComparable<Fraction32>, IFraction<int>
     {
         #region Fields
 
-        public static readonly Fraction32 Zero = new Fraction32(0, 0, 1);
+        public static readonly Fraction32 Zero = new(0, 0, 1);
 
-        private int _wholeNumber;
-        private int _numerator;
-        private int _denominator;
+        private readonly int _wholeNumber;
+        private readonly int _numerator;
+        private readonly int _denominator;
 
         #endregion
 
         #region Properties
 
-        public int WholeNumber { get { return _wholeNumber; } }
+        public readonly int WholeNumber => _wholeNumber;
 
-        IConvertible IFraction.WholeNumber { get { return _wholeNumber; } }
+        readonly IConvertible IFraction.WholeNumber => _wholeNumber;
 
-        public int Numerator { get { return _numerator; } }
+        public readonly int Numerator => _numerator;
 
-        IConvertible IFraction.Numerator { get { return _numerator; } }
+        readonly IConvertible IFraction.Numerator => _numerator;
 
-        public int Denominator { get { return _denominator; } }
+        public readonly int Denominator => _denominator;
 
-        IConvertible IFraction.Denominator { get { return _denominator; } }
+        readonly IConvertible IFraction.Denominator => _denominator;
 
         #endregion
 
         #region Constructors
-        
+
         public Fraction32(int wholeNumber, int numerator, int denominator)
         {
             _wholeNumber = FractionUtil.GetNormalizedRational(wholeNumber, numerator, denominator, out numerator, out denominator);
@@ -56,8 +51,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         public Fraction32(IFraction fraction)
         {
-            int numerator, denominator;
-            _wholeNumber = FractionUtil.GetNormalizedRational(FractionUtil.ToInt32(fraction.WholeNumber), FractionUtil.ToInt32(fraction.Numerator), FractionUtil.ToInt32(fraction.Denominator, 1), out numerator, out denominator);
+            _wholeNumber = FractionUtil.GetNormalizedRational(FractionUtil.ToInt32(fraction.WholeNumber), FractionUtil.ToInt32(fraction.Numerator), FractionUtil.ToInt32(fraction.Denominator, 1), out int numerator, out int denominator);
             _numerator = numerator;
             _denominator = denominator;
         }
@@ -75,16 +69,14 @@ namespace Erwine.Leonard.T.GDIPlus
         
         public static Fraction32 Parse(string s)
         {
-            int numerator, denominator;
-            int wholeNumber = FractionUtil.Parse32(s, out numerator, out denominator);
+            int wholeNumber = FractionUtil.Parse32(s, out int numerator, out int denominator);
             return new Fraction32(wholeNumber, numerator, denominator);
             
         }
 
         public static bool TryParse(string s, out Fraction32 value)
         {
-            int wholeNumber, numerator, denominator;
-            if (FractionUtil.TryParse32(s, out wholeNumber, out numerator, out denominator))
+            if (FractionUtil.TryParse32(s, out int wholeNumber, out int numerator, out int denominator))
             {
                 value = new Fraction32(wholeNumber, numerator, denominator);
                 return true;
@@ -122,7 +114,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #region Add
         
-        public Fraction32 Add(int wholeNumber, int numerator, int denominator)
+        public readonly Fraction32 Add(int wholeNumber, int numerator, int denominator)
         {
             if (_numerator == 0 && _wholeNumber == 0)
                 return new Fraction32(wholeNumber, numerator, denominator);
@@ -137,13 +129,13 @@ namespace Erwine.Leonard.T.GDIPlus
             return new Fraction32((int)w1, (int)n1, (int)d1);
         }
 
-        IFraction<int> IFraction<int>.Add(int wholeNumber, int numerator, int denominator) { return Add(wholeNumber, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Add(int wholeNumber, int numerator, int denominator) { return Add(wholeNumber, numerator, denominator); }
 
-        public Fraction32 Add(int numerator, int denominator) { return Add(0, numerator, denominator); }
-        
-        IFraction<int> IFraction<int>.Add(int numerator, int denominator) { return Add(0, numerator, denominator); }
+        public readonly Fraction32 Add(int numerator, int denominator) { return Add(0, numerator, denominator); }
 
-        public Fraction32 Add(Fraction32 other)
+        readonly IFraction<int> IFraction<int>.Add(int numerator, int denominator) { return Add(0, numerator, denominator); }
+
+        public readonly Fraction32 Add(Fraction32 other)
         {
             if (_numerator == 0 && _wholeNumber == 0)
                 return (other._denominator == 0) ? Fraction32.Zero : other;
@@ -156,27 +148,25 @@ namespace Erwine.Leonard.T.GDIPlus
             w1 = FractionUtil.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
             return new Fraction32((int)w1, (int)n1, (int)d1);
         }
-        
-        IFraction<int> IFraction<int>.Add(IFraction<int> other)
+
+        readonly IFraction<int> IFraction<int>.Add(IFraction<int> other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other is Fraction32)
                 return Add((Fraction32)other);
             
             return Add(other.WholeNumber, other.Numerator, other.Denominator);
         }
 
-        public Fraction32 Add(int wholeNumber) { return Add(wholeNumber, 0, 1); }
+        public readonly Fraction32 Add(int wholeNumber) { return Add(wholeNumber, 0, 1); }
 
-        IFraction<int> IFraction<int>.Add(int wholeNumber) { return Add(wholeNumber, 0, 1); }
+        readonly IFraction<int> IFraction<int>.Add(int wholeNumber) { return Add(wholeNumber, 0, 1); }
 
-        public IFraction Add(IFraction other)
+        public readonly IFraction Add(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other is IFraction<int>)
                 return Add((IFraction<int>)other);
 
@@ -189,14 +179,14 @@ namespace Erwine.Leonard.T.GDIPlus
             if (other.GetMaxUnderlyingValue().CompareTo(int.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(int.MinValue) >= 0)
                 return Add(Convert.ToInt32(other.WholeNumber), Convert.ToInt32(other.Numerator), Convert.ToInt32(other.Denominator));
                 
-            return (new Fraction64(this)).Add(other);
+            return new Fraction64(this).Add(other);
         }
 
         #endregion
 
         #region AsInverted
 
-        public Fraction32 AsInverted()
+        public readonly Fraction32 AsInverted()
         {
             if (_numerator == 0)
             {
@@ -211,13 +201,13 @@ namespace Erwine.Leonard.T.GDIPlus
             return new Fraction32(0, _denominator, _numerator + (_wholeNumber * _denominator));
         }
 
-        IFraction<int> IFraction<int>.AsInverted() { return AsInverted(); }
+        readonly IFraction<int> IFraction<int>.AsInverted() { return AsInverted(); }
 
-        IFraction IFraction.AsInverted() { return AsInverted(); }
+        readonly IFraction IFraction.AsInverted() { return AsInverted(); }
 
         #endregion
 
-        public int AsRoundedValue()
+        public readonly int AsRoundedValue()
         {
             if (_numerator == 0 || _numerator < (_denominator >> 1))
                 return _wholeNumber;
@@ -227,7 +217,7 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #region CompareTo
         
-        public int CompareTo(Fraction32 other)
+        public readonly int CompareTo(Fraction32 other)
         {
             int i = _wholeNumber.CompareTo(other._wholeNumber);
             if (i != 0)
@@ -250,17 +240,16 @@ namespace Erwine.Leonard.T.GDIPlus
             return n1.CompareTo(n2);
         }
 
-        private int CompareTo(IFraction<int> other)
+        private readonly int CompareTo(IFraction<int> other)
         {
             if (other == null)
                 return 1;
             
             if (other is Fraction32)
                 return CompareTo((Fraction32)other);
-            
-            int n, d;
-            int w = FractionUtil.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out n, out d);
-            
+
+            int w = FractionUtil.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out int n, out int d);
+
             int i = _wholeNumber.CompareTo(w);
             if (i != 0)
                 return i;
@@ -282,9 +271,9 @@ namespace Erwine.Leonard.T.GDIPlus
             return n1.CompareTo(n2);
         }
 
-        int IComparable<IFraction<int>>.CompareTo(IFraction<int> other) { return CompareTo(other); }
+        readonly int IComparable<IFraction<int>>.CompareTo(IFraction<int> other) { return CompareTo(other); }
 
-        public int CompareTo(IFraction other)
+        public readonly int CompareTo(IFraction other)
         {
             if (other == null)
                 return 1;
@@ -295,16 +284,16 @@ namespace Erwine.Leonard.T.GDIPlus
             if (other.GetMaxUnderlyingValue().CompareTo(int.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(int.MinValue) >= 0)
                 return CompareTo(new Fraction32(Convert.ToInt32(other.WholeNumber), Convert.ToInt32(other.Numerator), Convert.ToInt32(other.Denominator)));
                 
-            return (new Fraction64(this)).CompareTo(other);
+            return new Fraction64(this).CompareTo(other);
         }
 
-        public int CompareTo(object obj) { return FractionUtil.Compare<int>(this, obj); }
+        public readonly int CompareTo(object obj) { return FractionUtil.Compare<int>(this, obj); }
 
         #endregion
 
         #region Divide
         
-        public Fraction32 Divide(int wholeNumber, int numerator, int denominator)
+        public readonly Fraction32 Divide(int wholeNumber, int numerator, int denominator)
         {
             if (_numerator == 0 && _wholeNumber == 0)
                 return Fraction32.Zero;
@@ -312,8 +301,8 @@ namespace Erwine.Leonard.T.GDIPlus
             if (numerator == 0 && wholeNumber == 0)
                 throw new DivideByZeroException();
 
-            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2, n2, d2;
-            w2 = FractionUtil.GetInvertedRational64(wholeNumber, numerator, denominator, out n2, out d2);
+            long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
+            w2 = FractionUtil.GetInvertedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
             
             if (n2 == 0 && w2 == 0)
                 throw new DivideByZeroException();
@@ -322,13 +311,13 @@ namespace Erwine.Leonard.T.GDIPlus
             return new Fraction32((int)w1, (int)n1, (int)d1);
         }
 
-        IFraction<int> IFraction<int>.Divide(int wholeNumber, int numerator, int denominator) { return Divide(wholeNumber, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Divide(int wholeNumber, int numerator, int denominator) { return Divide(wholeNumber, numerator, denominator); }
 
-        public Fraction32 Divide(int numerator, int denominator) { return Divide(0, numerator, denominator); }
+        public readonly Fraction32 Divide(int numerator, int denominator) { return Divide(0, numerator, denominator); }
 
-        IFraction<int> IFraction<int>.Divide(int numerator, int denominator) { return Divide(0, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Divide(int numerator, int denominator) { return Divide(0, numerator, denominator); }
 
-        public Fraction32 Divide(Fraction32 other)
+        public readonly Fraction32 Divide(Fraction32 other)
         {
             if (other._numerator == 0 && other._wholeNumber == 0)
                 throw new DivideByZeroException();
@@ -336,11 +325,10 @@ namespace Erwine.Leonard.T.GDIPlus
             return Multiply(other.AsInverted());
         }
 
-        IFraction<int> IFraction<int>.Divide(IFraction<int> other)
+        readonly IFraction<int> IFraction<int>.Divide(IFraction<int> other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other.Numerator == 0 && other.WholeNumber == 0)
                 throw new DivideByZeroException();
             
@@ -350,11 +338,10 @@ namespace Erwine.Leonard.T.GDIPlus
             return Multiply(other.WholeNumber, other.Numerator, other.Denominator);
         }
 
-        public IFraction Divide(IFraction other)
+        public readonly IFraction Divide(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other is IFraction<int>)
                 return Add((IFraction<int>)other);
 
@@ -367,18 +354,18 @@ namespace Erwine.Leonard.T.GDIPlus
             if (other.GetMaxUnderlyingValue().CompareTo(int.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(int.MinValue) >= 0)
                 return Divide(Convert.ToInt32(other.WholeNumber), Convert.ToInt32(other.Numerator), Convert.ToInt32(other.Denominator));
                 
-            return (new Fraction64(this)).Divide(other);
+            return new Fraction64(this).Divide(other);
         }
 
-        public Fraction32 Divide(int wholeNumber) { return Divide(wholeNumber, 0, 1); }
+        public readonly Fraction32 Divide(int wholeNumber) { return Divide(wholeNumber, 0, 1); }
 
-        IFraction<int> IFraction<int>.Divide(int wholeNumber) { return Divide(wholeNumber, 0, 1); }
+        readonly IFraction<int> IFraction<int>.Divide(int wholeNumber) { return Divide(wholeNumber, 0, 1); }
 
         #endregion
 
         #region Equals
         
-        public bool Equals(Fraction32 other)
+        public readonly bool Equals(Fraction32 other)
         {
             if (_numerator == 0)
                 return other._numerator == 0 && _wholeNumber == other._wholeNumber;
@@ -386,26 +373,25 @@ namespace Erwine.Leonard.T.GDIPlus
             return _numerator == other._numerator && _denominator == other._denominator && _wholeNumber == other._wholeNumber;
         }
 
-        private bool Equals(IFraction<int> other)
+        private readonly bool Equals(IFraction<int> other)
         {
             if (other == null)
                 return false;
             
             if (other is Fraction32)
                 return Equals((Fraction32)other);
-            
-            int n, d;
-            int w = FractionUtil.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out n, out d);
-            
+
+            int w = FractionUtil.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out int n, out int d);
+
             if (_numerator == 0)
                 return n == 0 && _wholeNumber == w;
             
             return _numerator == n && _denominator == d && _wholeNumber == w;
         }
 
-        bool IEquatable<IFraction<int>>.Equals(IFraction<int> other) { return Equals(other); }
+        readonly bool IEquatable<IFraction<int>>.Equals(IFraction<int> other) { return Equals(other); }
 
-        public bool Equals(IFraction other)
+        public readonly bool Equals(IFraction other)
         {
             if (other == null)
                 return false;
@@ -416,24 +402,24 @@ namespace Erwine.Leonard.T.GDIPlus
             if (other.GetMaxUnderlyingValue().CompareTo(int.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(int.MinValue) >= 0)
                 return Equals(new Fraction32(Convert.ToInt32(other.WholeNumber), Convert.ToInt32(other.Numerator), Convert.ToInt32(other.Denominator)));
                 
-            return (new Fraction64(this)).Equals(other);
+            return new Fraction64(this).Equals(other);
         }
 
-        public override bool Equals(object obj) { return FractionUtil.EqualTo<int>(this, obj); }
+        public override readonly bool Equals(object obj) { return FractionUtil.EqualTo<int>(this, obj); }
 
         #endregion
         
-        public override int GetHashCode() { return ToSingle().GetHashCode(); }
+        public override readonly int GetHashCode() { return ToSingle().GetHashCode(); }
 
-        IComparable IFraction.GetMinUnderlyingValue() { return int.MinValue; }
-        
-        IComparable IFraction.GetMaxUnderlyingValue() { return int.MaxValue; }
+        readonly IComparable IFraction.GetMinUnderlyingValue() { return int.MinValue; }
 
-        TypeCode IConvertible.GetTypeCode() { return TypeCode.Double; }
+        readonly IComparable IFraction.GetMaxUnderlyingValue() { return int.MaxValue; }
+
+        readonly TypeCode IConvertible.GetTypeCode() { return TypeCode.Double; }
 
         #region Multiply
         
-        public Fraction32 Multiply(int wholeNumber, int numerator, int denominator)
+        public readonly Fraction32 Multiply(int wholeNumber, int numerator, int denominator)
         {
             if ((_numerator == 0 && _wholeNumber == 0) || (numerator == 0 && wholeNumber == 0))
                 return Fraction32.Zero;
@@ -448,13 +434,13 @@ namespace Erwine.Leonard.T.GDIPlus
             return new Fraction32((int)w1, (int)n1, (int)d1);
         }
 
-        IFraction<int> IFraction<int>.Multiply(int wholeNumber, int numerator, int denominator) { return Multiply(wholeNumber, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Multiply(int wholeNumber, int numerator, int denominator) { return Multiply(wholeNumber, numerator, denominator); }
 
-        public Fraction32 Multiply(int numerator, int denominator) { return Multiply(0, numerator, denominator); }
+        public readonly Fraction32 Multiply(int numerator, int denominator) { return Multiply(0, numerator, denominator); }
 
-        IFraction<int> IFraction<int>.Multiply(int numerator, int denominator) { return Multiply(0, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Multiply(int numerator, int denominator) { return Multiply(0, numerator, denominator); }
 
-        public Fraction32 Multiply(Fraction32 other)
+        public readonly Fraction32 Multiply(Fraction32 other)
         {
             if ((_numerator == 0 && _wholeNumber == 0) || (other._numerator == 0 && other._wholeNumber == 0))
                 return Fraction32.Zero;
@@ -465,26 +451,24 @@ namespace Erwine.Leonard.T.GDIPlus
             return new Fraction32((int)w1, (int)n1, (int)d1);
         }
 
-        IFraction<int> IFraction<int>.Multiply(IFraction<int> other)
+        readonly IFraction<int> IFraction<int>.Multiply(IFraction<int> other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other is Fraction32)
                 return Multiply((Fraction32)other);
             
             return Multiply(other.WholeNumber, other.Numerator, other.Denominator);
         }
 
-        public Fraction32 Multiply(int wholeNumber) { return Multiply(wholeNumber, 0, 1); }
+        public readonly Fraction32 Multiply(int wholeNumber) { return Multiply(wholeNumber, 0, 1); }
 
-        IFraction<int> IFraction<int>.Multiply(int wholeNumber) { return Multiply(wholeNumber, 0, 1); }
+        readonly IFraction<int> IFraction<int>.Multiply(int wholeNumber) { return Multiply(wholeNumber, 0, 1); }
 
-        public IFraction Multiply(IFraction other)
+        public readonly IFraction Multiply(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other is IFraction<int>)
                 return Add((IFraction<int>)other);
 
@@ -497,14 +481,14 @@ namespace Erwine.Leonard.T.GDIPlus
             if (other.GetMaxUnderlyingValue().CompareTo(int.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(int.MinValue) >= 0)
                 return Multiply(Convert.ToInt32(other.WholeNumber), Convert.ToInt32(other.Numerator), Convert.ToInt32(other.Denominator));
                 
-            return (new Fraction64(this)).Multiply(other);
+            return new Fraction64(this).Multiply(other);
         }
 
         #endregion
 
         #region Subtract
         
-        public Fraction32 Subtract(int wholeNumber, int numerator, int denominator)
+        public readonly Fraction32 Subtract(int wholeNumber, int numerator, int denominator)
         {
             if (numerator == 0 && wholeNumber == 0)
                 return (_denominator == 0) ? Fraction32.Zero : this;
@@ -516,93 +500,91 @@ namespace Erwine.Leonard.T.GDIPlus
             return new Fraction32((int)w1, (int)n1, (int)d1);
         }
 
-        IFraction<int> IFraction<int>.Subtract(int wholeNumber, int numerator, int denominator) { return Subtract(wholeNumber, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Subtract(int wholeNumber, int numerator, int denominator) { return Subtract(wholeNumber, numerator, denominator); }
 
-        public Fraction32 Subtract(int numerator, int denominator) { return Subtract(0, numerator, denominator); }
+        public readonly Fraction32 Subtract(int numerator, int denominator) { return Subtract(0, numerator, denominator); }
 
-        IFraction<int> IFraction<int>.Subtract(int numerator, int denominator) { return Subtract(0, numerator, denominator); }
+        readonly IFraction<int> IFraction<int>.Subtract(int numerator, int denominator) { return Subtract(0, numerator, denominator); }
 
-        public Fraction32 Subtract(Fraction32 other)
+        public readonly Fraction32 Subtract(Fraction32 other)
         {
             if (other._denominator == 0)
                 return Subtract(0, 0, 1);
             return Subtract(other._wholeNumber, other._numerator, other._denominator);
         }
 
-        IFraction<int> IFraction<int>.Subtract(IFraction<int> other)
+        readonly IFraction<int> IFraction<int>.Subtract(IFraction<int> other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
+            ArgumentNullException.ThrowIfNull(other);
 
             return Subtract(other.WholeNumber, other.Numerator, other.Denominator);
         }
 
-        public Fraction32 Subtract(int wholeNumber) { return Subtract(wholeNumber, 0, 1); }
+        public readonly Fraction32 Subtract(int wholeNumber) { return Subtract(wholeNumber, 0, 1); }
 
-        IFraction<int> IFraction<int>.Subtract(int wholeNumber) { return Subtract(wholeNumber, 0, 1); }
+        readonly IFraction<int> IFraction<int>.Subtract(int wholeNumber) { return Subtract(wholeNumber, 0, 1); }
 
-        public IFraction Subtract(IFraction other)
+        public readonly IFraction Subtract(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException("other");
-            
+            ArgumentNullException.ThrowIfNull(other);
+
             if (other is IFraction<int>)
                 return Subtract((IFraction<int>)other);
 
             if (other.GetMaxUnderlyingValue().CompareTo(int.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(int.MinValue) >= 0)
                 return Subtract(Convert.ToInt32(other.WholeNumber), Convert.ToInt32(other.Numerator), Convert.ToInt32(other.Denominator));
                 
-            return (new Fraction64(this)).Subtract(other);
+            return new Fraction64(this).Subtract(other);
         }
 
         #endregion
 
         #region To*
-        
-        bool IConvertible.ToBoolean(IFormatProvider provider) { return Convert.ToBoolean(ToDouble(), provider); }
 
-        byte IConvertible.ToByte(IFormatProvider provider) { return Convert.ToByte(AsRoundedValue(), provider); }
+        readonly bool IConvertible.ToBoolean(IFormatProvider provider) { return Convert.ToBoolean(ToDouble(), provider); }
 
-        char IConvertible.ToChar(IFormatProvider provider) { return Convert.ToChar(AsRoundedValue(), provider); }
+        readonly byte IConvertible.ToByte(IFormatProvider provider) { return Convert.ToByte(AsRoundedValue(), provider); }
 
-        DateTime IConvertible.ToDateTime(IFormatProvider provider) { return Convert.ToDateTime(ToDouble(), provider); }
+        readonly char IConvertible.ToChar(IFormatProvider provider) { return Convert.ToChar(AsRoundedValue(), provider); }
 
-        public decimal ToDecimal()
+        readonly DateTime IConvertible.ToDateTime(IFormatProvider provider) { return Convert.ToDateTime(ToDouble(), provider); }
+
+        public readonly decimal ToDecimal()
         {
             if (_numerator == 0)
                 return Convert.ToDecimal(_wholeNumber);
             return Convert.ToDecimal(_wholeNumber) + (Convert.ToDecimal(_numerator) / Convert.ToDecimal(_denominator));
         }
 
-        decimal IConvertible.ToDecimal(IFormatProvider provider) { return ToDecimal(); }
+        readonly decimal IConvertible.ToDecimal(IFormatProvider provider) { return ToDecimal(); }
 
-        public double ToDouble()
+        public readonly double ToDouble()
         {
             if (_numerator == 0)
                 return Convert.ToDouble(_wholeNumber);
             return Convert.ToDouble(_wholeNumber) + (Convert.ToDouble(_numerator) / Convert.ToDouble(_denominator));
         }
 
-        double IConvertible.ToDouble(IFormatProvider provider) { return ToDouble(); }
+        readonly double IConvertible.ToDouble(IFormatProvider provider) { return ToDouble(); }
 
-        short IConvertible.ToInt16(IFormatProvider provider) { return Convert.ToInt16(AsRoundedValue(), provider); }
+        readonly short IConvertible.ToInt16(IFormatProvider provider) { return Convert.ToInt16(AsRoundedValue(), provider); }
 
-        int IConvertible.ToInt32(IFormatProvider provider) { return Convert.ToInt32(AsRoundedValue(), provider); }
+        readonly int IConvertible.ToInt32(IFormatProvider provider) { return Convert.ToInt32(AsRoundedValue(), provider); }
 
-        long IConvertible.ToInt64(IFormatProvider provider) { return Convert.ToInt64(AsRoundedValue(), provider); }
+        readonly long IConvertible.ToInt64(IFormatProvider provider) { return Convert.ToInt64(AsRoundedValue(), provider); }
 
-        sbyte IConvertible.ToSByte(IFormatProvider provider) { return Convert.ToSByte(AsRoundedValue(), provider); }
+        readonly sbyte IConvertible.ToSByte(IFormatProvider provider) { return Convert.ToSByte(AsRoundedValue(), provider); }
 
-        public float ToSingle()
+        public readonly float ToSingle()
         {
             if (_numerator == 0)
                 return Convert.ToSingle(_wholeNumber);
             return Convert.ToSingle(_wholeNumber) + (Convert.ToSingle(_numerator) / Convert.ToSingle(_denominator));
         }
 
-        float IConvertible.ToSingle(IFormatProvider provider) { return ToSingle(); }
+        readonly float IConvertible.ToSingle(IFormatProvider provider) { return ToSingle(); }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             if (_numerator == 0)
                 return _wholeNumber.ToString();
@@ -613,51 +595,50 @@ namespace Erwine.Leonard.T.GDIPlus
             return _wholeNumber.ToString() + " " + _numerator.ToString() + "/" + _denominator.ToString();
         }
 
-        string IConvertible.ToString(IFormatProvider provider) { return ToString(); }
+        readonly string IConvertible.ToString(IFormatProvider provider) { return ToString(); }
 
-        object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+        readonly object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            if (conversionType == null || conversionType.AssemblyQualifiedName == (typeof(double)).AssemblyQualifiedName)
+            if (conversionType == null || conversionType.AssemblyQualifiedName == typeof(double).AssemblyQualifiedName)
                 return ToDouble();
             IConvertible c = this;
-            if (conversionType.AssemblyQualifiedName == (typeof(float)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(float).AssemblyQualifiedName)
                 c.ToSingle(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(int)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(int).AssemblyQualifiedName)
                 c.ToInt32(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(string)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(string).AssemblyQualifiedName)
                 c.ToString(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(long)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(long).AssemblyQualifiedName)
                 c.ToInt64(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(decimal)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(decimal).AssemblyQualifiedName)
                 c.ToDecimal(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(uint)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(uint).AssemblyQualifiedName)
                 c.ToUInt32(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(ulong)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(ulong).AssemblyQualifiedName)
                 c.ToUInt64(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(short)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(short).AssemblyQualifiedName)
                 c.ToInt16(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(ushort)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(ushort).AssemblyQualifiedName)
                 c.ToUInt16(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(sbyte)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(sbyte).AssemblyQualifiedName)
                 c.ToSByte(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(byte)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(byte).AssemblyQualifiedName)
                 c.ToByte(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(DateTime)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(DateTime).AssemblyQualifiedName)
                 c.ToDateTime(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(bool)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(bool).AssemblyQualifiedName)
                 c.ToBoolean(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(char)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(char).AssemblyQualifiedName)
                 c.ToChar(provider);
             return Convert.ChangeType(ToDouble(), conversionType);
         }
 
-        ushort IConvertible.ToUInt16(IFormatProvider provider) { return Convert.ToUInt16(AsRoundedValue(), provider); }
+        readonly ushort IConvertible.ToUInt16(IFormatProvider provider) { return Convert.ToUInt16(AsRoundedValue(), provider); }
 
-        uint IConvertible.ToUInt32(IFormatProvider provider) { return Convert.ToUInt32(AsRoundedValue(), provider); }
+        readonly uint IConvertible.ToUInt32(IFormatProvider provider) { return Convert.ToUInt32(AsRoundedValue(), provider); }
 
-        ulong IConvertible.ToUInt64(IFormatProvider provider) { return Convert.ToUInt64(AsRoundedValue(), provider); }
+        readonly ulong IConvertible.ToUInt64(IFormatProvider provider) { return Convert.ToUInt64(AsRoundedValue(), provider); }
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

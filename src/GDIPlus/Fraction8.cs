@@ -1,67 +1,60 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
 using System.Runtime.InteropServices;
-using System.Threading;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [StructLayout(LayoutKind.Explicit)]
     public struct Fraction8 : IEquatable<Fraction8>, IComparable<Fraction8>, IFraction<sbyte>
     {
         #region Fields
 
-        public static readonly Fraction8 Zero = new Fraction8(0, 0, 1);
+        public static readonly Fraction8 Zero = new(0, 0, 1);
         
         [FieldOffset(0)]
-        private int _hashCode;
+        private readonly int _hashCode;
 
         [FieldOffset(0)]
-        private sbyte _wholeNumber;
+        private readonly sbyte _wholeNumber;
 
         [FieldOffset(1)]
-        private sbyte _numerator;
+        private readonly sbyte _numerator;
         
         [FieldOffset(2)]
-        private sbyte _denominator;
+        private readonly sbyte _denominator;
 
         #endregion
 
         #region Properties
 
-        public sbyte WholeNumber { get { return _wholeNumber; } }
+        public readonly sbyte WholeNumber => _wholeNumber;
 
-        public sbyte Numerator { get { return _numerator; } }
+        public readonly sbyte Numerator => _numerator;
 
-        public sbyte Denominator { get { return _denominator; } }
+        public readonly sbyte Denominator => _denominator;
 
-        IConvertible IFraction.WholeNumber { get { return _wholeNumber; } }
+        readonly IConvertible IFraction.WholeNumber => _wholeNumber;
 
-        IConvertible IFraction.Numerator { get { return _numerator; } }
+        readonly IConvertible IFraction.Numerator => _numerator;
 
-        IConvertible IFraction.Denominator { get { return _denominator; } }
+        readonly IConvertible IFraction.Denominator => _denominator;
 
         #endregion
 
         #region Constructors
-        
+
         public Fraction8(sbyte wholeNumber, sbyte numerator, sbyte denominator)
         {
-            int n, d;
             _hashCode = 0;
-            _wholeNumber = (sbyte)(FractionUtil.GetNormalizedRational(wholeNumber, numerator, denominator, out n, out d));
+            _wholeNumber = (sbyte)FractionUtil.GetNormalizedRational(wholeNumber, numerator, denominator, out int n, out int d);
             _numerator = (sbyte)n;
             _denominator = (sbyte)d;
         }
 
         public Fraction8(sbyte numerator, sbyte denominator)
         {
-            int n, d;
             _hashCode = 0;
-            _wholeNumber = (sbyte)(FractionUtil.GetNormalizedRational(0, numerator, denominator, out n, out d));
+            _wholeNumber = (sbyte)FractionUtil.GetNormalizedRational(0, numerator, denominator, out int n, out int d);
             _numerator = (sbyte)n;
             _denominator = (sbyte)d;
         }
@@ -69,8 +62,7 @@ namespace Erwine.Leonard.T.GDIPlus
         public Fraction8(IFraction other)
         {
             _hashCode = 0;
-            sbyte numerator, denominator;
-            _wholeNumber = FractionUtil.GetNormalizedRational8(FractionUtil.ToSByte(other.WholeNumber), FractionUtil.ToSByte(other.Numerator), FractionUtil.ToSByte(other.Denominator, 1), out numerator, out denominator);
+            _wholeNumber = FractionUtil.GetNormalizedRational8(FractionUtil.ToSByte(other.WholeNumber), FractionUtil.ToSByte(other.Numerator), FractionUtil.ToSByte(other.Denominator, 1), out sbyte numerator, out sbyte denominator);
             _numerator = numerator;
             _denominator = denominator;
         }
@@ -284,15 +276,15 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #region To*
 
-        public float ToSingle() { return (_denominator == 0) ? 0.0f : Convert.ToSingle(_wholeNumber) + (Convert.ToSingle(_numerator) / Convert.ToSingle(_denominator)); }
+        public readonly float ToSingle() { return (_denominator == 0) ? 0.0f : Convert.ToSingle(_wholeNumber) + (Convert.ToSingle(_numerator) / Convert.ToSingle(_denominator)); }
         
-        public double ToDouble() { return (_denominator == 0) ? 0.0 : Convert.ToDouble(_wholeNumber) + (Convert.ToDouble(_numerator) / Convert.ToDouble(_denominator)); }
+        public readonly double ToDouble() { return (_denominator == 0) ? 0.0 : Convert.ToDouble(_wholeNumber) + (Convert.ToDouble(_numerator) / Convert.ToDouble(_denominator)); }
 
-        public decimal ToDecimal() { return (_denominator == 0) ? 0.0M : Convert.ToDecimal(_wholeNumber) + (Convert.ToDecimal(_numerator) / Convert.ToDecimal(_denominator)); }
+        public readonly decimal ToDecimal() { return (_denominator == 0) ? 0.0M : Convert.ToDecimal(_wholeNumber) + (Convert.ToDecimal(_numerator) / Convert.ToDecimal(_denominator)); }
         
-        public override string ToString() { return ToString(null); }
+        public override readonly string ToString() { return ToString(null); }
 
-        private string ToString(IFormatProvider provider)
+        private readonly string ToString(IFormatProvider provider)
         {
             if (provider == null)
                 provider = System.Globalization.CultureInfo.CurrentCulture;
@@ -304,81 +296,79 @@ namespace Erwine.Leonard.T.GDIPlus
         #endregion
 
         public override int GetHashCode() { throw new NotImplementedException(); }
-        
+
         #region IConvertible Explicit Implementation
 
-        TypeCode IConvertible.GetTypeCode() { return TypeCode.Double; }
+        readonly TypeCode IConvertible.GetTypeCode() { return TypeCode.Double; }
 
-        bool IConvertible.ToBoolean(IFormatProvider provider)
+        readonly bool IConvertible.ToBoolean(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToBoolean(provider);
         }
 
-        char IConvertible.ToChar(IFormatProvider provider)
+        readonly char IConvertible.ToChar(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToChar(provider);
         }
 
-        sbyte IConvertible.ToSByte(IFormatProvider provider)
+        readonly sbyte IConvertible.ToSByte(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToSByte(provider);
         }
 
-        byte IConvertible.ToByte(IFormatProvider provider)
+        readonly byte IConvertible.ToByte(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToByte(provider);
         }
 
-        short IConvertible.ToInt16(IFormatProvider provider)
+        readonly short IConvertible.ToInt16(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToInt16(provider);
         }
 
-        ushort IConvertible.ToUInt16(IFormatProvider provider)
+        readonly ushort IConvertible.ToUInt16(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToUInt16(provider);
         }
 
-        int IConvertible.ToInt32(IFormatProvider provider)
+        readonly int IConvertible.ToInt32(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToInt32(provider);
         }
 
-        uint IConvertible.ToUInt32(IFormatProvider provider)
+        readonly uint IConvertible.ToUInt32(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToUInt32(provider);
         }
 
-        long IConvertible.ToInt64(IFormatProvider provider)
+        readonly long IConvertible.ToInt64(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToInt64(provider);
         }
 
-        ulong IConvertible.ToUInt64(IFormatProvider provider)
+        readonly ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToUInt64(provider);
         }
 
-        float IConvertible.ToSingle(IFormatProvider provider) { return ToSingle(); }
+        readonly float IConvertible.ToSingle(IFormatProvider provider) { return ToSingle(); }
 
-        double IConvertible.ToDouble(IFormatProvider provider) { return ToDouble(); }
+        readonly double IConvertible.ToDouble(IFormatProvider provider) { return ToDouble(); }
 
-        decimal IConvertible.ToDecimal(IFormatProvider provider) { return ToDecimal(); }
+        readonly decimal IConvertible.ToDecimal(IFormatProvider provider) { return ToDecimal(); }
 
-        DateTime IConvertible.ToDateTime(IFormatProvider provider)
+        readonly DateTime IConvertible.ToDateTime(IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToDateTime(provider);
         }
 
-        string IConvertible.ToString(IFormatProvider provider) { return ToString(provider); }
+        readonly string IConvertible.ToString(IFormatProvider provider) { return ToString(provider); }
 
-        object IConvertible.ToType(Type conversionType, IFormatProvider provider)
+        readonly object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
             return ((IConvertible)ToDouble()).ToType(conversionType, provider);
         }
 
         #endregion
     }
-    
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

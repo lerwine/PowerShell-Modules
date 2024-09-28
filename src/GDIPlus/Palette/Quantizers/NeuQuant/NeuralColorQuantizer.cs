@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// The NeuQuant Neural-Net image quantization algorithm (© Anthony Dekker 1994) 
@@ -17,48 +16,48 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
     {
         #region | Constants |
 
-        private const Byte DefaultQuality = 10; // 10
+        private const byte DefaultQuality = 10; // 10
 
-        private const Int32 AlphaBiasShift = 10;
-        private const Int32 AlphaRadiusBias = 1 << AlphaRadiusBetaShift;
-        private const Int32 AlphaRadiusBetaShift = AlphaBiasShift + RadiusBiasShift;
-        private const Int32 Beta = (InitialBias >> BetaShift);
-        private const Int32 BetaShift = 10;
-        private const Int32 BetaGamma = (InitialBias << (GammaShift - BetaShift));
-        private const Int32 DefaultRadius = NetworkSize >> 3;
-        private const Int32 DefaultRadiusBiasShift = 6;
-        private const Int32 DefaultRadiusBias = 1 << DefaultRadiusBiasShift;
-        private const Int32 GammaShift = 10;
-        private const Int32 InitialAlpha = 1 << AlphaBiasShift;
-        private const Int32 InitialBias = 1 << InitialBiasShift;
-        private const Int32 InitialBiasShift = 16;
-        private const Int32 InitialRadius = (DefaultRadius * DefaultRadiusBias);
-        private const Int32 MaximalNetworkPosition = NetworkSize - 1;
-        private const Int32 NetworkSize = 256;
-        private const Int32 NetworkBiasShift = 4;
-        private const Int32 RadiusBiasShift = 8;
-        private const Int32 RadiusDecrease = 30;
-        private const Int32 RadiusBias = 1 << RadiusBiasShift;
+        private const int AlphaBiasShift = 10;
+        private const int AlphaRadiusBias = 1 << AlphaRadiusBetaShift;
+        private const int AlphaRadiusBetaShift = AlphaBiasShift + RadiusBiasShift;
+        private const int Beta = InitialBias >> BetaShift;
+        private const int BetaShift = 10;
+        private const int BetaGamma = InitialBias << (GammaShift - BetaShift);
+        private const int DefaultRadius = NetworkSize >> 3;
+        private const int DefaultRadiusBiasShift = 6;
+        private const int DefaultRadiusBias = 1 << DefaultRadiusBiasShift;
+        private const int GammaShift = 10;
+        private const int InitialAlpha = 1 << AlphaBiasShift;
+        private const int InitialBias = 1 << InitialBiasShift;
+        private const int InitialBiasShift = 16;
+        private const int InitialRadius = DefaultRadius * DefaultRadiusBias;
+        private const int MaximalNetworkPosition = NetworkSize - 1;
+        private const int NetworkSize = 256;
+        private const int NetworkBiasShift = 4;
+        private const int RadiusBiasShift = 8;
+        private const int RadiusDecrease = 30;
+        private const int RadiusBias = 1 << RadiusBiasShift;
 
         #endregion
 
         #region | Fields |
 
         private readonly FastRandom random;
-        private readonly ConcurrentDictionary<Int32, Boolean> uniqueColors;
+        private readonly ConcurrentDictionary<int, bool> uniqueColors;
 
-        private Int32[] bias;
-        private Int32[] frequency;
-        private Int32[] networkIndexLookup;
-        private Int32[] radiusPower;
+        private int[] bias;
+        private int[] frequency;
+        private int[] networkIndexLookup;
+        private int[] radiusPower;
         
-        private Byte quality;
-        private Int32 delta;
-        private Int32 radius;
-        private Int32 alpha;
-        private Int32 initialRadius;
-        private Int32 alphaDecrease;
-        private Int32[][] network;
+        private byte quality;
+        private int delta;
+        private int radius;
+        private int alpha;
+        private int initialRadius;
+        private int alphaDecrease;
+        private int[][] network;
 
         #endregion
 
@@ -68,11 +67,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
         /// Gets or sets the quality.
         /// </summary>
         /// <value>The quality.</value>
-        public Byte Quality
+        public byte Quality
         {
-            get { return quality; }
-            set 
-            { 
+            get => quality;
+            set
+            {
                 quality = value;
                 alphaDecrease = 30 + (quality - 1);
             }
@@ -90,38 +89,35 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
             Quality = DefaultQuality;
 
             random = new FastRandom(0);
-            uniqueColors = new ConcurrentDictionary<Int32, Boolean>();
+            uniqueColors = new ConcurrentDictionary<int, bool>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NeuralColorQuantizer"/> class.
         /// </summary>
         /// <param name="quality">The quality.</param>
-        public NeuralColorQuantizer(Byte quality) : this()
-        {
-            Quality = quality;
-        }
+        public NeuralColorQuantizer(byte quality) : this() => Quality = quality;
 
         #endregion
 
         #region | Helper methods |
 
-        private Int32 FindClosestNeuron(Int32 red, Int32 green, Int32 blue)
+        private int FindClosestNeuron(int red, int green, int blue)
         {
             // initializes the search variables
-            Int32 bestIndex = -1;
-            Int32 bestDistance = ~(1 << 31);
-            Int32 bestBiasIndex = bestIndex;
-            Int32 bestBiasDistance = bestDistance;
+            int bestIndex = -1;
+            int bestDistance = ~(1 << 31);
+            int bestBiasIndex = bestIndex;
+            int bestBiasDistance = bestDistance;
 
-            for (Int32 index = 0; index < NetworkSize; index++)
+            for (int index = 0; index < NetworkSize; index++)
             {
-                Int32[] neuron = network[index];
-                
+                int[] neuron = network[index];
+
                 // computes differences between neuron (color), and provided color
-                Int32 deltaRed = neuron[2] - red;
-                Int32 deltaGreen = neuron[1] - green;
-                Int32 deltaBlue = neuron[0] - blue;
+                int deltaRed = neuron[2] - red;
+                int deltaGreen = neuron[1] - green;
+                int deltaBlue = neuron[0] - blue;
 
                 // makes values absolute
                 if (deltaRed < 0) deltaRed = -deltaRed;
@@ -129,7 +125,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                 if (deltaBlue < 0) deltaBlue = -deltaBlue;
 
                 // sums the distance
-                Int32 distance = deltaRed + deltaGreen + deltaBlue;
+                int distance = deltaRed + deltaGreen + deltaBlue;
 
                 // if best so far, store it
                 if (distance < bestDistance)
@@ -139,7 +135,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                 }
 
                 // calculates biase distance
-                Int32 biasDistance = distance - ((bias[index]) >> (InitialBiasShift - NetworkBiasShift));
+                int biasDistance = distance - ((bias[index]) >> (InitialBiasShift - NetworkBiasShift));
 
                 // if best so far, store it
                 if (biasDistance < bestBiasDistance)
@@ -148,9 +144,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                     bestBiasIndex = index;
                 }
 
-                Int32 betaFrequency = (frequency[index] >> BetaShift);
+                int betaFrequency = frequency[index] >> BetaShift;
                 frequency[index] -= betaFrequency;
-                bias[index] += (betaFrequency << GammaShift);
+                bias[index] += betaFrequency << GammaShift;
             }
 
             frequency[bestIndex] += Beta;
@@ -161,53 +157,53 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
         /// <summary>
         /// Forces the strength of bias of the neuron towards certain color.
         /// </summary>
-        private void LearnNeuron(Int32 alpha, Int32 red, Int32 green, Int32 blue, Int32 networkIndex)
+        private void LearnNeuron(int alpha, int red, int green, int blue, int networkIndex)
         {
             /* alter hit neuron */
-            Int32[] neuron = network[networkIndex];
-            neuron[2] -= (alpha*(neuron[2] - red))/InitialAlpha;
-            neuron[1] -= (alpha*(neuron[1] - green))/InitialAlpha;
-            neuron[0] -= (alpha*(neuron[0] - blue))/InitialAlpha;
+            int[] neuron = network[networkIndex];
+            neuron[2] -= alpha * (neuron[2] - red) / InitialAlpha;
+            neuron[1] -= alpha * (neuron[1] - green) / InitialAlpha;
+            neuron[0] -= alpha * (neuron[0] - blue) / InitialAlpha;
         }
 
         /// <summary>
         /// Spread the bias to neuron neighbors.
         /// </summary>
-        protected void LearnNeuronNeighbors(Int32 red, Int32 green, Int32 blue, Int32 networkIndex, Int32 radius)
+        protected void LearnNeuronNeighbors(int red, int green, int blue, int networkIndex, int radius)
         {
             // detects lower border
-            Int32 lowBound = networkIndex - radius;
+            int lowBound = networkIndex - radius;
             if (lowBound < -1) lowBound = -1;
 
             // detects high border
-            Int32 highBound = networkIndex + radius;
+            int highBound = networkIndex + radius;
             if (highBound > NetworkSize) highBound = NetworkSize;
 
             // initializes the variables
-            Int32 increaseIndex = networkIndex + 1;
-            Int32 decreaseIndex = networkIndex - 1;
-            Int32 radiusStep = 1;
+            int increaseIndex = networkIndex + 1;
+            int decreaseIndex = networkIndex - 1;
+            int radiusStep = 1;
 
             // learns neurons in a given radius
             while (increaseIndex < highBound || decreaseIndex > lowBound)
             {
-                Int32[] neuron;
-                Int32 alphaMultiplicator = radiusPower[radiusStep++];
+                int[] neuron;
+                int alphaMultiplicator = radiusPower[radiusStep++];
 
                 if (increaseIndex < highBound)
                 {
                     neuron = network[increaseIndex++];
-                    neuron[0] -= (alphaMultiplicator*(neuron[0] - blue))/AlphaRadiusBias;
-                    neuron[1] -= (alphaMultiplicator*(neuron[1] - green))/AlphaRadiusBias;
-                    neuron[2] -= (alphaMultiplicator*(neuron[2] - red))/AlphaRadiusBias;
+                    neuron[0] -= alphaMultiplicator * (neuron[0] - blue) / AlphaRadiusBias;
+                    neuron[1] -= alphaMultiplicator * (neuron[1] - green) / AlphaRadiusBias;
+                    neuron[2] -= alphaMultiplicator * (neuron[2] - red) / AlphaRadiusBias;
                 }
 
                 if (decreaseIndex > lowBound)
                 {
                     neuron = network[decreaseIndex--];
-                    neuron[0] -= (alphaMultiplicator*(neuron[0] - blue))/AlphaRadiusBias;
-                    neuron[1] -= (alphaMultiplicator*(neuron[1] - green))/AlphaRadiusBias;
-                    neuron[2] -= (alphaMultiplicator*(neuron[2] - red))/AlphaRadiusBias;
+                    neuron[0] -= alphaMultiplicator * (neuron[0] - blue) / AlphaRadiusBias;
+                    neuron[1] -= alphaMultiplicator * (neuron[1] - green) / AlphaRadiusBias;
+                    neuron[2] -= alphaMultiplicator * (neuron[2] - red) / AlphaRadiusBias;
                 }
             }
         }
@@ -218,7 +214,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
 
         private void UnbiasNetwork()
         {
-            for (Int32 index = 0; index < NetworkSize; index++)
+            for (int index = 0; index < NetworkSize; index++)
             {
                 network[index][0] >>= NetworkBiasShift;
                 network[index][1] >>= NetworkBiasShift;
@@ -229,19 +225,19 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
 
         private void SortNetwork()
         {
-            Int32 startIndex = 0;
-            Int32 previousValue = 0;
+            int startIndex = 0;
+            int previousValue = 0;
 
-            for (Int32 index = 0; index < NetworkSize; index++)
+            for (int index = 0; index < NetworkSize; index++)
             {
-                Int32 [] neuron = network[index];
+                int[] neuron = network[index];
 
-                Int32 bestIndex = index;
-                Int32 bestValue = neuron[1];
+                int bestIndex = index;
+                int bestValue = neuron[1];
 
-                for (Int32 subIndex = index + 1; subIndex < NetworkSize; subIndex++)
+                for (int subIndex = index + 1; subIndex < NetworkSize; subIndex++)
                 {
-                    Int32[] subNeuron = network[subIndex];
+                    int[] subNeuron = network[subIndex];
 
                     if (subNeuron[1] < bestValue)
                     {
@@ -253,11 +249,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                 // swaps the neuron components
                 if (index != bestIndex)
                 {
-                    Int32[] neuronB = network[bestIndex];
+                    int[] neuronB = network[bestIndex];
 
-                    for (Int32 subIndex = 0; subIndex < 4; subIndex++)
+                    for (int subIndex = 0; subIndex < 4; subIndex++)
                     {
-                        Int32 swap = neuronB[subIndex];
+                        int swap = neuronB[subIndex];
                         neuronB[subIndex] = neuron[subIndex];
                         neuron[subIndex] = swap;
                     }
@@ -268,7 +264,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                 {
                     networkIndexLookup[previousValue] = (startIndex + index) >> 1;
 
-                    for (Int32 subIndex = previousValue + 1; subIndex < bestValue; subIndex++)
+                    for (int subIndex = previousValue + 1; subIndex < bestValue; subIndex++)
                     {
                         networkIndexLookup[subIndex] = index;
                     }
@@ -281,7 +277,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
             networkIndexLookup[previousValue] = (startIndex + MaximalNetworkPosition) >> 1;
 
             // resets certain portion of the index lookup
-            for (Int32 index = previousValue + 1; index < 256; index++)
+            for (int index = previousValue + 1; index < 256; index++)
             {
                 networkIndexLookup[index] = MaximalNetworkPosition;
             }
@@ -289,11 +285,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
 
         private void LearnSampleColor(Color color)
         {
-            Int32 red = color.R << NetworkBiasShift;
-            Int32 green = color.G << NetworkBiasShift;
-            Int32 blue = color.B << NetworkBiasShift;
+            int red = color.R << NetworkBiasShift;
+            int green = color.G << NetworkBiasShift;
+            int blue = color.B << NetworkBiasShift;
 
-            Int32 neuronIndex = FindClosestNeuron(red, green, blue);
+            int neuronIndex = FindClosestNeuron(red, green, blue);
 
             LearnNeuron(alpha, red, green, blue, neuronIndex);
 
@@ -309,12 +305,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
             radius = initialRadius >> DefaultRadiusBiasShift;
 
             if (radius <= 1) radius = 0;
-            Int32 radiusSquared = radius * radius;
+            int radiusSquared = radius * radius;
 
-            for (Int32 index = 0; index < radius; index++)
+            for (int index = 0; index < radius; index++)
             {
-                Int32 indexSquared = index * index;
-                radiusPower[index] = alpha * (((radiusSquared - indexSquared) * RadiusBias) / radiusSquared);
+                int indexSquared = index * index;
+                radiusPower[index] = alpha * ((radiusSquared - indexSquared) * RadiusBias / radiusSquared);
             }
         }
 
@@ -331,16 +327,16 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
 
             OnFinish();
 
-            network = new Int32[NetworkSize][];
+            network = new int[NetworkSize][];
             uniqueColors.Clear();
             
             // initializes all the neurons in the network
-            for (Int32 neuronIndex = 0; neuronIndex < NetworkSize; neuronIndex++)
+            for (int neuronIndex = 0; neuronIndex < NetworkSize; neuronIndex++)
             {
-                Int32[] neuron = new Int32[4];
+                int[] neuron = new int[4];
 
                 // calculates the base value for all the components
-                Int32 baseValue = (neuronIndex << (NetworkBiasShift + 8)) / NetworkSize;
+                int baseValue = (neuronIndex << (NetworkBiasShift + 8)) / NetworkSize;
                 neuron[0] = baseValue;
                 neuron[1] = baseValue;
                 neuron[2] = baseValue;
@@ -356,22 +352,22 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
             initialRadius = InitialRadius;
 
             // determines the radius
-            Int32 potentialRadius = InitialRadius >> DefaultRadiusBiasShift;
+            int potentialRadius = InitialRadius >> DefaultRadiusBiasShift;
             radius = potentialRadius <= 1 ? 0 : potentialRadius;
-            Int32 radiusSquared = radius * radius;
+            int radiusSquared = radius * radius;
 
             // precalculates the powers for all the radiuses
-            for (Int32 index = 0; index < radius; index++)
+            for (int index = 0; index < radius; index++)
             {
-                Int32 indexSquared = index * index;
-                radiusPower[index] = alpha * (((radiusSquared - indexSquared) * RadiusBias) / radiusSquared);
+                int indexSquared = index * index;
+                radiusPower[index] = alpha * ((radiusSquared - indexSquared) * RadiusBias / radiusSquared);
             }
         }
 
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnAddColor"/> for more details.
         /// </summary>
-        protected override void OnAddColor(Color color, Int32 key, Int32 x, Int32 y)
+        protected override void OnAddColor(Color color, int key, int x, int y)
         {
             base.OnAddColor(color, key, x, y);
 
@@ -384,32 +380,32 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPalette"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPalette(Int32 colorCount)
+        protected override List<Color> OnGetPalette(int colorCount)
         {
             // post-process the neural network
             UnbiasNetwork();
             SortNetwork();
 
             // initialize the index cache
-            Int32[] indices = new Int32[NetworkSize];
+            int[] indices = new int[NetworkSize];
 
             // re-index the network cache
-            for (Int32 index = 0; index < NetworkSize; index++)
+            for (int index = 0; index < NetworkSize; index++)
             {
                 indices[network[index][3]] = index;
             }
 
             // initializes the empty palette
-            List<Color> result = new List<Color>();
+            List<Color> result = [];
 
             // grabs the best palette, from the neurons
-            for (Int32 index = 0; index < NetworkSize; index++)
+            for (int index = 0; index < NetworkSize; index++)
             {
-                Int32 neuronIndex = indices[index];
+                int neuronIndex = indices[index];
 
-                Int32 red = network[neuronIndex][2];
-                Int32 green = network[neuronIndex][1];
-                Int32 blue = network[neuronIndex][0];
+                int red = network[neuronIndex][2];
+                int green = network[neuronIndex][1];
+                int blue = network[neuronIndex][0];
 
                 Color color = Color.FromArgb(255, red, green, blue);
                 result.Add(color);
@@ -421,23 +417,23 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
         /// <summary>
         /// See <see cref="IColorQuantizer.GetPaletteIndex"/> for more details.
         /// </summary>
-        protected override void OnGetPaletteIndex(Color color, Int32 key, Int32 x, Int32 y, out Int32 paletteIndex)
+        protected override void OnGetPaletteIndex(Color color, int key, int x, int y, out int paletteIndex)
         {
-            Int32 bestDistance = 1000;
-            Int32 increaseIndex = networkIndexLookup[color.G];
-            Int32 decreaseIndex = increaseIndex - 1;
+            int bestDistance = 1000;
+            int increaseIndex = networkIndexLookup[color.G];
+            int decreaseIndex = increaseIndex - 1;
             paletteIndex = -1;
 
             while (increaseIndex < NetworkSize || decreaseIndex >= 0)
             {
                 if (increaseIndex < NetworkSize)
                 {
-                    Int32[] neuron = network[increaseIndex];
+                    int[] neuron = network[increaseIndex];
 
                     // add green delta
-                    Int32 deltaG = neuron[1] - color.G;
+                    int deltaG = neuron[1] - color.G;
                     if (deltaG < 0) deltaG = -deltaG;
-                    Int32 distance = deltaG;
+                    int distance = deltaG;
 
                     if (distance >= bestDistance)
                     {
@@ -448,14 +444,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                         increaseIndex++;
 
                         // add blue delta
-                        Int32 deltaB = neuron[0] - color.B;
+                        int deltaB = neuron[0] - color.B;
                         if (deltaB < 0) deltaB = -deltaB;
                         distance += deltaB;
 
                         if (distance < bestDistance)
                         {
                             // add red delta
-                            Int32 deltaR = neuron[2] - color.R;
+                            int deltaR = neuron[2] - color.R;
                             if (deltaR < 0) deltaR = -deltaR;
                             distance += deltaR;
 
@@ -470,12 +466,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
 
                 if (decreaseIndex >= 0)
                 {
-                    Int32[] neuron = network[decreaseIndex];
+                    int[] neuron = network[decreaseIndex];
 
                     // add green delta
-                    Int32 deltaG = color.G - neuron[1];
+                    int deltaG = color.G - neuron[1];
                     if (deltaG < 0) deltaG = -deltaG;
-                    Int32 distance = deltaG;
+                    int distance = deltaG;
 
                     if (distance >= bestDistance)
                     {
@@ -486,14 +482,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
                         decreaseIndex--;
 
                         // add blue delta
-                        Int32 deltaBlue = neuron[0] - color.B;
+                        int deltaBlue = neuron[0] - color.B;
                         if (deltaBlue < 0) deltaBlue = -deltaBlue;
                         distance += deltaBlue;
 
                         if (distance < bestDistance)
                         {
                             // add red delta
-                            Int32 deltaRed = neuron[2] - color.R;
+                            int deltaRed = neuron[2] - color.R;
                             if (deltaRed < 0) deltaRed = -deltaRed;
                             distance += deltaRed;
 
@@ -515,10 +511,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
         {
             base.OnFinish();
 
-            bias = new Int32[NetworkSize];
-            frequency = new Int32[NetworkSize];
-            networkIndexLookup = new Int32[256];
-            radiusPower = new Int32[DefaultRadius];
+            bias = new int[NetworkSize];
+            frequency = new int[NetworkSize];
+            networkIndexLookup = new int[256];
+            radiusPower = new int[DefaultRadius];
             network = null;
         }
 
@@ -529,10 +525,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.NeuQuant
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return true; }
-        }
+        public override bool AllowParallel => true;
 
         #endregion
     }

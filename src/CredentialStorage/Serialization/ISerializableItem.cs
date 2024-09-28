@@ -4,9 +4,7 @@ using System.Runtime.Serialization;
 
 namespace CredentialStorage.Serialization
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface ISerializableItem
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// String representing a unique identifier GUID

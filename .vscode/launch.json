@@ -14,7 +14,8 @@
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "-PublishLocalRepo", "-Test"
             ],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish IOUtility"
         },
         {
             "type": "PowerShell",
@@ -31,25 +32,14 @@
         {
             "type": "PowerShell",
             "request": "launch",
-            "name": "Publish IOUtility",
-            "script": "${workspaceRoot}/Deploy.ps1",
-            "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
-                "-DeploymentRoot", "${workspaceFolder}/dist",
-                "-PublishLocalRepo"
-            ],
-            "cwd": "${workspaceRoot}"
-        },
-        {
-            "type": "PowerShell",
-            "request": "launch",
             "name": "Deploy IOUtility Local",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
                 "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
                 "-DeployPSModulePath"
             ],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish IOUtility"
         },
         {
             "type": "PowerShell",
@@ -61,7 +51,8 @@
                 "-DeploymentRoot", "${workspaceFolder}/dist",
                 "-PublishLocalRepo -Test"
             ],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish SwPackage"
         },
         {
             "type": "PowerShell",
@@ -78,50 +69,15 @@
         {
             "type": "PowerShell",
             "request": "launch",
-            "name": "Publish SwPackage",
-            "script": "${workspaceRoot}/Deploy.ps1",
-            "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
-                "-DeploymentRoot", "${workspaceFolder}/dist",
-                "-PublishLocalRepo"
-            ],
-            "cwd": "${workspaceRoot}"
-        },
-        {
-            "type": "PowerShell",
-            "request": "launch",
             "name": "Deploy SwPackage Local",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
                 "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
                 "-DeployPSModulePath"
             ],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish SwPackage"
         },
-        //     {
-        //         "name": "Merge-LogFiles",
-        //         "type": "PowerShell",
-        //         "request": "launch",
-        //         "script": "${workspaceFolder}/PowerShell/Scripts/Merge-LogFiles.ps1",
-        //         "cwd": "${workspaceFolder}/PowerShell/LogFileParsing/Test"
-        //     },
-        // {
-        //     "type": "PowerShell",
-        //     "request": "launch",
-        //     "name": "Build and Test",
-        //     "script": "Invoke-Pester",
-        //     "args": [],
-        //     "cwd": "${workspaceRoot}/test",
-        //     "preLaunchTask": "buildAllDebug"
-        // },
-        // {
-        //     "type": "PowerShell",
-        //     "request": "launch",
-        //     "name": "Re-run Test",
-        //     "script": "Invoke-Pester",
-        //     "args": [],
-        //     "cwd": "${workspaceRoot}/test"
-        // },
         {
             "type": "PowerShell",
             "request": "launch",

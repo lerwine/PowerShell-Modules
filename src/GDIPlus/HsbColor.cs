@@ -1,9 +1,9 @@
-using System;
-using System.Drawing;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 
-namespace Erwine.Leonard.T.GDIPlus.Commands
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Describes a color in terms of it's hue, saturation and brightness.
@@ -23,11 +23,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             [FieldOffset(2)]
             private readonly byte _b;
 
-            internal byte H { get { return _h; } }
+            internal readonly byte H => _h;
 
-            internal byte S { get { return _s; } }
+            internal readonly byte S => _s;
 
-            internal byte B { get { return _b; } }
+            internal readonly byte B => _b;
 
             internal HsbHash(byte h, byte s, byte b)
             {
@@ -40,14 +40,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             internal HsbHash(float h, float s, float b)
             {
                 _hashCode = (byte)0;
-                _h = Convert.ToByte(Math.Round((h * 25.5f) / 36f));
-                _s = Convert.ToByte(Math.Round((s * 25.5f) / 36f));
-                _b = Convert.ToByte(Math.Round((b * 25.5f) / 36f));
+                _h = Convert.ToByte(Math.Round(h * 25.5f / 36f));
+                _s = Convert.ToByte(Math.Round(s * 25.5f / 36f));
+                _b = Convert.ToByte(Math.Round(b * 25.5f / 36f));
             }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-            public override int GetHashCode() { return _hashCode; }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+            public override readonly int GetHashCode() { return _hashCode; }
         }
 
         /// <summary>
@@ -64,33 +61,33 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// The current color's hue in degrees, with values ranging from 0.0 to (but not including) 360.0.
         /// </summary>
         /// <remarks>0 = red; 60 = yellow; 120 = green; 180 = cyan; 240 = blue; 300 = magenta.</remarks>
-        public float H { get { return _h; } }
-        
+        public readonly float H => _h;
+
         /// <summary>
         /// The current color's saturation as a percentage value, ranging from 0.0 to 1.0, with 0.0 being no saturation (gray scale).
         /// </summary>
-        public float S { get { return _s; } }
+        public readonly float S => _s;
 
         /// <summary>
         /// The current color's brightness as a percentage value, ranging from 0.0 to 1.0, with 0.0 being completely dark (black) and 1.0 being white.
         /// </summary>
-        public float B { get { return _b; } }
-        
+        public readonly float B => _b;
+
         /// <summary>
         /// The current color's hue as a byte value.
         /// </summary>
-        public byte HValue { get { return _hsb.H; } }
+        public readonly byte HValue => _hsb.H;
 
         /// <summary>
         /// The current color's saturation as a byte value, with 0 being no saturation (gray scale).
         /// </summary>
-        public byte SValue { get { return _hsb.S; } }
+        public readonly byte SValue => _hsb.S;
 
         /// <summary>
         /// The current color's brightness as a byte value, with 0 being completely dark (black) and 255 being white.
         /// </summary>
-        public byte BValue { get { return _hsb.B; } }
-        
+        public readonly byte BValue => _hsb.B;
+
         /// <summary>
         /// Creates a new <see cref="HsbColor"/> structure according to hue, saturation and brightness in byte values.
         /// </summary>
@@ -106,7 +103,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             }
 
             _hsb = new HsbHash(hue, saturation, brightness);
-            _h = (Convert.ToSingle(hue) * 36f) / 25.5f;
+            _h = Convert.ToSingle(hue) * 36f / 25.5f;
             _s = Convert.ToSingle(saturation) / 255f;
             _b = Convert.ToSingle(brightness) / 255f;
         }
@@ -120,11 +117,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         public HsbColor(float hue, float saturation, float brightness)
         {
             if (hue < 0f || hue > 360f)
-                throw new ArgumentOutOfRangeException("Hue scale must be a value from 0.0 to 360.0");
+                throw new ArgumentOutOfRangeException(nameof(hue), "Hue scale must be a value from 0.0 to 360.0");
             if (saturation < 0f || saturation > 1f)
-                throw new ArgumentOutOfRangeException("Saturation scale must be a value from 0.0 to 1.0");
+                throw new ArgumentOutOfRangeException(nameof(saturation), "Saturation scale must be a value from 0.0 to 1.0");
             if (brightness < 0f || brightness > 1f)
-                throw new ArgumentOutOfRangeException("Brightness scale must be a value from 0.0 to 1.0");
+                throw new ArgumentOutOfRangeException(nameof(brightness), "Brightness scale must be a value from 0.0 to 1.0");
             if (brightness == 0f)
             {
                 hue = 0f;
@@ -144,8 +141,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// <param name="other">RGB color model from which to derive the hue, saturation and brightness.</param>
         public HsbColor(RgbColor other)
         {
-            float h, s, b;
-            RGBFtoHSB(other.RScale, other.GScale, other.BScale, out h, out s, out b);
+            RGBFtoHSB(other.RScale, other.GScale, other.BScale, out float h, out float s, out float b);
             _h = h;
             _s = s;
             _b = b;
@@ -158,8 +154,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// <param name="color">RGB color model from which to derive the hue, saturation and brightness.</param>
         public HsbColor(Color color)
         {
-            float h, s, b;
-            RGBtoHSB(color.R, color.G, color.B, out h, out s, out b);
+            RGBtoHSB(color.R, color.G, color.B, out float h, out float s, out float b);
             _h = h;
             _s = s;
             _b = b;
@@ -249,14 +244,14 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// Creates a new <seealso cref="Color"/> object that is equivalent to the current HSB color model.
         /// </summary>
         /// <returns>A <seealso cref="Color"/> object that is equivalent to the current HSB color model.</returns>
-        public Color ToColor() { return (new RgbColor(this)).ToColor(); }
+        public readonly Color ToColor() { return new RgbColor(this).ToColor(); }
 
         /// <summary>
         /// Determins whether the current HSB color model values are equivalent to the values of another.
         /// </summary>
         /// <param name="other">The other HSB color values to compare to.</param>
         /// <returns><c>true</c> if the <paramref name="other"/> <see cref="HsbColor"/> values are equal to the current values; otherwise, false.</returns>
-        public bool Equals(HsbColor other)
+        public readonly bool Equals(HsbColor other)
         {
             return _h == other._h && _s == other._s && _b == other._b;
         }
@@ -266,10 +261,9 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// </summary>
         /// <param name="other">The <seealso cref="RgbColor"/> model to compare to.</param>
         /// <returns><c>true</c> if the <see cref="RgbColor"/> represents the same color as the current model; otherwise, false.</returns>
-        public bool Equals(RgbColor other)
+        public readonly bool Equals(RgbColor other)
         {
-            float h, s, b;
-            RGBFtoHSB(other.RScale, other.GScale, other.BScale, out h, out s, out b);
+            RGBFtoHSB(other.RScale, other.GScale, other.BScale, out float h, out float s, out float b);
             return _h == h && _s == s && _b == b;
         }
 
@@ -278,10 +272,9 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// </summary>
         /// <param name="other">The <seealso cref="Color"/> object to compare to.</param>
         /// <returns><c>true</c> if the <see cref="Color"/> represents the same color as the current model; otherwise, false.</returns>
-        public bool Equals(Color other)
+        public readonly bool Equals(Color other)
         {
-            float h, s, b;
-            RGBtoHSB(other.R, other.G, other.B, out h, out s, out b);
+            RGBtoHSB(other.R, other.G, other.B, out float h, out float s, out float b);
             return _h == h && _s == s && _b == b;
         }
 
@@ -290,7 +283,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         /// </summary>
         /// <param name="obj">Other object to compare to.</param>
         /// <returns><c>true</c> if the other object represents the same color as the current model; otherwise, false.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null)
                 return false;
@@ -338,9 +331,9 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
         //    throw new NotImplementedException();
         //}
 
-        public override int GetHashCode() { return _hsb.GetHashCode(); }
+        public override readonly int GetHashCode() { return _hsb.GetHashCode(); }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return "HSB(" + Math.Round(_h, 2).ToString() + "°, " + Math.Round(_s * 100f, 2).ToString() +"%, " +
                 Math.Round(_b * 100f, 2).ToString() + "%)";

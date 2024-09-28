@@ -1,59 +1,49 @@
-using System;
-using System.Drawing;
-using System.Management.Automation;
 using System.Runtime.InteropServices;
 
-namespace Erwine.Leonard.T.GDIPlus.Commands
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public struct RgbColor : IEquatable<RgbColor>, IEquatable<HsbColor>, IEquatable<Color>,
         IComparable<RgbColor>, IComparable<HsbColor>, IComparable<Color>, IComparable
     {
         [StructLayout(LayoutKind.Explicit)]
-        struct RgbHash
+        struct RgbHash(byte r, byte g, byte b)
         {
             [FieldOffset(0)]
-            private int _hashCode;
+            private readonly int _hashCode = (byte)0;
             [FieldOffset(0)]
-            private byte _r;
+            private readonly byte _r = r;
             [FieldOffset(1)]
-            private byte _g;
+            private readonly byte _g = g;
             [FieldOffset(2)]
-            private byte _b;
+            private readonly byte _b = b;
 
-            public byte R { get { return _r; } }
-            
-            public byte G { get { return _g; } }
-            
-            public byte B { get { return _b; } }
-            
-            public RgbHash(byte r, byte g, byte b)
-            {
-                _hashCode = (byte)0;
-                _r = r;
-                _g = g;
-                _b = b;
-            }
+            public readonly byte R => _r;
 
-            public override int GetHashCode() { return _hashCode; }
+            public readonly byte G => _g;
+
+            public readonly byte B => _b;
+
+            public override readonly int GetHashCode() { return _hashCode; }
         }
         
         private RgbHash _rgb;
-        private float _rScale;
-        private float _gScale;
-        private float _bScale;
+        private readonly float _rScale;
+        private readonly float _gScale;
+        private readonly float _bScale;
 
-        public byte R { get { return _rgb.R; } }
-        
-        public byte G { get { return _rgb.G; } }
-        
-        public byte B { get { return _rgb.B; } }
-        
-        public float RScale { get { return _rScale; } }
-        
-        public float GScale { get { return _gScale; } }
-        
-        public float BScale { get { return _bScale; } }
+        public readonly byte R => _rgb.R;
+
+        public readonly byte G => _rgb.G;
+
+        public readonly byte B => _rgb.B;
+
+        public readonly float RScale => _rScale;
+
+        public readonly float GScale => _gScale;
+
+        public readonly float BScale => _bScale;
 
         public RgbColor(byte red, byte green, byte blue)
         {
@@ -139,11 +129,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             }
         }
 
-        public Color ToColor() { return Color.FromArgb(255, _rgb.R, _rgb.G, _rgb.B); }
+        public readonly Color ToColor() { return Color.FromArgb(255, _rgb.R, _rgb.G, _rgb.B); }
 
-        public bool Equals(RgbColor other) { return _rScale == other._rScale && _gScale == other._gScale && _bScale == other._bScale; }
+        public readonly bool Equals(RgbColor other) { return _rScale == other._rScale && _gScale == other._gScale && _bScale == other._bScale; }
 
-        public bool Equals(HsbColor other) { return other.Equals(this); }
+        public readonly bool Equals(HsbColor other) { return other.Equals(this); }
 
         public bool Equals(Color other) { throw new NotImplementedException(); }
 
@@ -157,12 +147,11 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
 
         public int CompareTo(object obj) { throw new NotImplementedException(); }
 
-        public override int GetHashCode() { return _rgb.GetHashCode(); }
+        public override readonly int GetHashCode() { return _rgb.GetHashCode(); }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return "#" + _rgb.R.ToString("x2") + _rgb.G.ToString("x2") + _rgb.B.ToString("x2");
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

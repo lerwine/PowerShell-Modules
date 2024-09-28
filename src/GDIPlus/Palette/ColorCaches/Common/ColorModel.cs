@@ -1,8 +1,8 @@
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum ColorModel
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// The RGB color model is an additive color model in which red, green, and blue light is added together 
@@ -16,9 +16,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common
         /// the geometry of RGB in an attempt to be more perceptually relevant than the cartesian representation.
         /// </summary>
         HueSaturationBrightness = 1,
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         HueSaturationLuminance = 1,
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// A Lab color space is a color-opponent space with dimension L for lightness and a and b for the 

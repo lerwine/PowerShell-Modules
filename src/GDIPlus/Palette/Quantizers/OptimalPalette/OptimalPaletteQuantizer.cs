@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.OptimalPalette
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class OptimalPaletteQuantizer : BaseColorCacheQuantizer
     {
         #region | Fields |
@@ -90,7 +88,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.OptimalPalette
             Register(204, 204, 204); Register(153, 153, 153); Register(102, 102, 102); Register(051, 051, 051);
         }
 
-        private static void Register(Int32 red, Int32 green, Int32 blue)
+        private static void Register(int red, int green, int blue)
         {
             Color color = Color.FromArgb(255, red, green, blue);
             OptimalPalette.Add(color);
@@ -103,20 +101,16 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.OptimalPalette
         /// <summary>
         /// See <see cref="BaseColorCacheQuantizer.OnCreateDefaultCache"/> for more details.
         /// </summary>
-        protected override IColorCache OnCreateDefaultCache()
-        {
+        protected override IColorCache OnCreateDefaultCache() =>
             // use OctreeColorCache best performance/quality
-            return new OctreeColorCache();
-        }
+            new OctreeColorCache();
 
         /// <summary>
         /// See <see cref="BaseColorCacheQuantizer.OnGetPaletteToCache"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPaletteToCache(Int32 colorCount)
-        {
+        protected override List<Color> OnGetPaletteToCache(int colorCount) =>
             // otherwise -> job done, luckily we already have one.. yeah, you guessed correctly -> Optimal Palette (TM)
-            return OptimalPalette;
-        }
+            OptimalPalette;
 
         #endregion
 
@@ -125,12 +119,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.OptimalPalette
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return true; }
-        }
+        public override bool AllowParallel => true;
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

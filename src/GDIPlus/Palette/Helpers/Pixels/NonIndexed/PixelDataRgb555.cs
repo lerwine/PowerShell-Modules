@@ -1,8 +1,8 @@
-using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Name |     Blue     |    Green     |     Red      | Unused
@@ -13,54 +13,46 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
     public struct PixelDataRgb555 : INonIndexedPixel
     {
         // raw component values
-        [FieldOffset(0)] private Byte blue;     // 00 - 04
-        [FieldOffset(0)] private UInt16 green;  // 05 - 09
-        [FieldOffset(1)] private Byte red;      // 10 - 14
+        [FieldOffset(0)] private byte blue;     // 00 - 04
+        [FieldOffset(0)] private ushort green;  // 05 - 09
+        [FieldOffset(1)] private byte red;      // 10 - 14
 
         // raw high-level values
-        [FieldOffset(0)] private UInt16 raw;    // 00 - 15
+        [FieldOffset(0)] private ushort raw;    // 00 - 15
 
         // processed component values
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public Int32 Alpha { get { return 0xFF; } }
-        public Int32 Red { get { return (red >> 2) & 0xF; } }
-        public Int32 Green { get { return (green >> 5) & 0xF; } }
-        public Int32 Blue { get { return blue & 0xF; } }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        public readonly int Alpha => 0xFF;
+        public readonly int Red => (red >> 2) & 0xF;
+        public readonly int Green => (green >> 5) & 0xF;
+        public readonly int Blue => blue & 0xF;
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.Argb"/> for more details.
         /// </summary>
-        public Int32 Argb
-        {
-            get { return Pixel.AlphaMask | raw; }
-        }
+        public readonly int Argb => Pixel.AlphaMask | raw;
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.GetColor"/> for more details.
         /// </summary>
-        public Color GetColor()
-        {
-            return Color.FromArgb(Argb);
-        }
+        public readonly Color GetColor() => Color.FromArgb(Argb);
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.SetColor"/> for more details.
         /// </summary>
         public void SetColor(Color color)
         {
-            red = (Byte) (color.R >> 3);
-            green = (Byte) (color.G >> 3);
-            blue = (Byte) (color.B >> 3);
+            red = (byte) (color.R >> 3);
+            green = (byte) (color.G >> 3);
+            blue = (byte) (color.B >> 3);
         }
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.Value"/> for more details.
         /// </summary>
-        public UInt64 Value
+        public ulong Value
         {
-            get { return raw; }
-            set { raw = (UInt16)(value & 0xFFFF); }
+            readonly get => raw;
+            set => raw = (ushort)(value & 0xFFFF);
         }
     }
 }

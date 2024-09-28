@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Wraps an <see cref="IEnumerator"/> as a strongly-typed enumerator.
@@ -10,7 +10,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
     /// <typeparam name="T">Type of value expected to be returned from <see cref="IEnumerable"/> object.</typeparam>
     public class TypedEnumeratorWrapper<T> : IEnumerator<T>
     {
-        private IEnumerator _innerEnumerator;
+        private readonly IEnumerator _innerEnumerator;
 
         /// <summary>
         /// Initializes a new instance of <see cref="TypedEnumeratorWrapper{T}"/> to enumerate results from
@@ -20,10 +20,9 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="ArgumentNullException"><paramref name="obj"/> is null.</exception>
         public TypedEnumeratorWrapper(IEnumerable obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
+            ArgumentNullException.ThrowIfNull(obj);
 
-            this._innerEnumerator = obj.GetEnumerator();
+            _innerEnumerator = obj.GetEnumerator();
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="InvalidOperationException">The enumeration has not started or the enumeration was finished.</exception>
         /// <exception cref="InvalidCastException">Enumerated item could not be cast to.</exception>
         /// <exception cref="NullReferenceException">Enumerated item was null and type <typeparamref name="T"/> is a value type.</exception>
-        public T Current { get { return (T)(this._innerEnumerator.Current); } }
+        public T Current => (T)_innerEnumerator.Current;
 
         /// <summary>
         /// Gets the current element in the collection.
@@ -40,7 +39,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="InvalidOperationException">The enumeration has not started or the enumeration was finished.</exception>
         /// <exception cref="InvalidCastException">Enumerated item could not be cast to.</exception>
         /// <exception cref="NullReferenceException">Enumerated item was null and type <typeparamref name="T"/> is a value type.</exception>
-        object IEnumerator.Current { get { return this._innerEnumerator.Current; } }
+        object IEnumerator.Current => _innerEnumerator.Current;
 
         /// <summary>
         /// Advances the enumerator to the next element of the collection.
@@ -48,20 +47,20 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <returns>true if the enumerator was successfully advanced to the next element;
         /// false if the enumerator has passed the end of the collection.</returns>
         /// <exception cref="InvalidOperationException">The collection was modified after the enumerator was created.</exception>
-        public bool MoveNext() { return this._innerEnumerator.MoveNext(); }
+        public bool MoveNext() => _innerEnumerator.MoveNext();
 
         /// <summary>
         /// Advances the enumerator to the next element of the collection.
         /// </summary>
         /// <exception cref="InvalidOperationException">The collection was modified after the enumerator was created.</exception>
-        public void Reset() { this._innerEnumerator.Reset(); }
+        public void Reset() => _innerEnumerator.Reset();
 
         /// <summary>
         /// Disposes the internal <see cref="IEnumerator"/> if applicable.
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -73,8 +72,8 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <remarks>If <paramref name="disposing"/> is false, then you should not reference any other objects.</remarks>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing && this._innerEnumerator is IDisposable)
-                (this._innerEnumerator as IDisposable).Dispose();
+            if (disposing && _innerEnumerator is IDisposable)
+                (_innerEnumerator as IDisposable).Dispose();
         }
     }
 }

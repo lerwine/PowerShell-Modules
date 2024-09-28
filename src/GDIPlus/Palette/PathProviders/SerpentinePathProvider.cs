@@ -1,22 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.PathProviders
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SerpentinePathProvider : IPathProvider
     {
-        public IList<Point> GetPointPath(Int32 width, Int32 height)
+        public IList<Point> GetPointPath(int width, int height)
         {
-            Boolean leftToRight = true;
-            List<Point> result = new List<Point>(width * height);
+            bool leftToRight = true;
+            List<Point> result = new(width * height);
 
-            for (Int32 y = 0; y < height; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (Int32 x = leftToRight ? 0 : width - 1; leftToRight ? x < width : x >= 0; x += leftToRight ? 1 : -1)
+                for (int x = leftToRight ? 0 : width - 1; leftToRight ? x < width : x >= 0; x += leftToRight ? 1 : -1)
                 {
-                    Point point = new Point(x, y);
+                    Point point = new(x, y);
                     result.Add(point);
                 }
 
@@ -26,5 +23,4 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.PathProviders
             return result;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

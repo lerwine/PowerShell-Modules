@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Commands
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// New-Image
@@ -15,7 +13,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Bitmap))]
     public class ConvertTo_ResizedImage : PSCmdlet
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty()]        
         public Image[] Source { get; set; }
@@ -54,13 +51,14 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                             continue;
                         }
                     }
-                    Bitmap target = new Bitmap(Width, Height, (MyInvocation.BoundParameters.ContainsKey("Format")) ? Format : image.PixelFormat);
+                    Bitmap target = new(Width, Height, MyInvocation.BoundParameters.ContainsKey("Format") ? Format : image.PixelFormat);
                     using (Graphics g = Graphics.FromImage(target))
                     {
                         if (MyInvocation.BoundParameters.ContainsKey("BackgroundColor"))
                             g.FillRectangle(new SolidBrush(BackgroundColor), new Rectangle(0, 0, Width, Height));
                         else if (MyInvocation.BoundParameters.ContainsKey("Background"))
                             g.FillRectangle(Background, new Rectangle(0, 0, Width, Height));
+                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                         if (KeepAspectRatio.IsPresent)
                         {
                             float sw = Convert.ToSingle(Width);
@@ -90,6 +88,5 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 }
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

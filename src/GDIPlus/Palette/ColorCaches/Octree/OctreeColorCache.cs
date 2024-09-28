@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class OctreeColorCache : BaseColorCache
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region | Fields |
 
@@ -25,10 +21,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
         /// <value>
         /// 	<c>true</c> if this instance is color model supported; otherwise, <c>false</c>.
         /// </value>
-        public override Boolean IsColorModelSupported
-        {
-            get { return false; }
-        }
+        public override bool IsColorModelSupported => false;
 
         #endregion
 
@@ -61,7 +54,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
         /// </summary>
         protected override void OnCachePalette(IList<Color> palette)
         {
-            Int32 index = 0;
+            int index = 0;
 
             foreach (Color color in palette)
             {
@@ -72,15 +65,15 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
         /// <summary>
         /// See <see cref="BaseColorCache.OnGetColorPaletteIndex"/> for more details.
         /// </summary>
-        protected override void OnGetColorPaletteIndex(Color color, out Int32 paletteIndex)
+        protected override void OnGetColorPaletteIndex(Color color, out int paletteIndex)
         {
-            Dictionary<Int32, Color> candidates = root.GetPaletteIndex(color, 0);
+            Dictionary<int, Color> candidates = root.GetPaletteIndex(color, 0);
 
             paletteIndex = 0;
-            Int32 index = 0;
-            Int32 colorIndex = ColorModelHelper.GetEuclideanDistance(color, ColorModel, candidates.Values.ToList());
+            int index = 0;
+            int colorIndex = ColorModelHelper.GetEuclideanDistance(color, ColorModel, candidates.Values.ToList());
 
-            foreach (Int32 colorPaletteIndex in candidates.Keys)
+            foreach (int colorPaletteIndex in candidates.Keys)
             {
                 if (index == colorIndex)
                 {

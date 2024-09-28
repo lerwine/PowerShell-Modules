@@ -1,15 +1,13 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Provider;
 using System.Text;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Commands
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Open-Image
@@ -18,7 +16,6 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
     [OutputType(typeof(Image))]
     public class Open_Image : PSCmdlet
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string ParameterSetName_Path = "Path";
         public const string ParameterSetName_LiteralPath = "LiteralPath";
 
@@ -43,13 +40,12 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                     continue;
                 if (item[0] is byte)
                 {
-                    stream.WriteByte((byte)(item[0]));
+                    stream.WriteByte((byte)item[0]);
                     FromBinaryContentReader(reader, stream);
                 }
                 else
                 {
-                    UTF8Encoding binaryEncoding = new UTF8Encoding(false);
-
+                    UTF8Encoding binaryEncoding = new(false);
                     WriteContent(item, stream, binaryEncoding);
                     FromContentReader(reader, stream, binaryEncoding);
                 }
@@ -66,47 +62,47 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
             else if (item is char[])
             {
                 char[] c = (char[])item;
-                buffer = (c.Length == 0) ? new byte[0] : binaryEncoding.GetBytes(c, 0, c.Length);
+                buffer = (c.Length == 0) ? [] : binaryEncoding.GetBytes(c, 0, c.Length);
             }
             else if (item is IEnumerable<char>)
             {
                 char[] c = ((IEnumerable<char>)item).ToArray();
-                buffer = (c.Length == 0) ? new byte[0] : binaryEncoding.GetBytes(c, 0, c.Length);
+                buffer = (c.Length == 0) ? [] : binaryEncoding.GetBytes(c, 0, c.Length);
             }
             else
             {
                 foreach (object obj in item)
                 {
-                    if (obj is byte)
+                    if (obj is byte v)
                     {
-                        stream.WriteByte((byte)obj);
+                        stream.WriteByte(v);
                         continue;
                     }
                     if (obj is byte[])
                         buffer = (byte[])item;
-                    else if (obj is IEnumerable<byte>)
-                        buffer = ((IEnumerable<byte>)obj).ToArray();
+                    else if (obj is IEnumerable<byte> enumerable)
+                        buffer = enumerable.ToArray();
                     else if (obj is string)
                     {
                         string s = obj as string;
-                        buffer = (s.Length == 0) ? new byte[0] : binaryEncoding.GetBytes(s);
+                        buffer = (s.Length == 0) ? [] : binaryEncoding.GetBytes(s);
                     }
-                    else if (obj is char)
-                        buffer = binaryEncoding.GetBytes(new char[] { (char)obj }, 0, 1);
+                    else if (obj is char v1)
+                        buffer = binaryEncoding.GetBytes(new char[] { v1 }, 0, 1);
                     else if (obj is char[])
                     {
                         char[] c = (char[])obj;
-                        buffer = (c.Length == 0) ? new byte[0] : binaryEncoding.GetBytes(c, 0, c.Length);
+                        buffer = (c.Length == 0) ? [] : binaryEncoding.GetBytes(c, 0, c.Length);
                     }
-                    else if (obj is IEnumerable<char>)
+                    else if (obj is IEnumerable<char> enumerable1)
                     {
-                        char[] c = ((IEnumerable<char>)obj).ToArray();
-                        buffer = (c.Length == 0) ? new byte[0] : binaryEncoding.GetBytes(c, 0, c.Length);
+                        char[] c = enumerable1.ToArray();
+                        buffer = (c.Length == 0) ? [] : binaryEncoding.GetBytes(c, 0, c.Length);
                     }
                     else
                     {
                         string s = LanguagePrimitives.ConvertTo(obj, typeof(string)) as string;
-                        buffer = (String.IsNullOrEmpty(s)) ? new byte[0] : binaryEncoding.GetBytes(s);
+                        buffer = string.IsNullOrEmpty(s) ? [] : binaryEncoding.GetBytes(s);
                     }
                     if (buffer.Length > 0)
                         stream.Write(buffer, 0, buffer.Length);
@@ -132,10 +128,10 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                     for (int i = 0; i < item.Count; i++)
                     {
                         if (item[i] is byte)
-                            stream.WriteByte((byte)(item[i]));
+                            stream.WriteByte((byte)item[i]);
                         else
                         {
-                            UTF8Encoding binaryEncoding = new UTF8Encoding(false);
+                            UTF8Encoding binaryEncoding = new(false);
                             if (i == 0)
                                 WriteContent(item, stream, binaryEncoding);
                             else
@@ -166,7 +162,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                     return;
                 foreach (string psPath in Path)
                 {
-                    if (String.IsNullOrEmpty(psPath))
+                    if (string.IsNullOrEmpty(psPath))
                         continue;
 
                     try
@@ -218,7 +214,7 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
                 try
                 {
                     path = SessionState.Path.GetUnresolvedProviderPathFromPSPath(LiteralPath);
-                    if (String.IsNullOrEmpty(path))
+                    if (string.IsNullOrEmpty(path))
                         throw new ItemNotFoundException("\"" + LiteralPath + "\" not found.");
                 }
                 catch (ItemNotFoundException e)
@@ -260,44 +256,41 @@ namespace Erwine.Leonard.T.GDIPlus.Commands
 
         private void ProcessPSPath(string path)
         {
-            using (MemoryStream stream = new MemoryStream())
+            using MemoryStream stream = new();
+            Collection<IContentReader> readerCollection = null;
+            try
             {
-                Collection<IContentReader> readerCollection = null;
-                try
-                {
-                    readerCollection = InvokeProvider.Content.GetReader(path);
-                }
-                catch (PSNotSupportedException ex)
-                {
-                    WriteError(new ErrorRecord(ex, "ContentAccessNotSupported", ErrorCategory.NotImplemented, path));
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    WriteError(new ErrorRecord(ex, "Open_Image.OpenError", ErrorCategory.OpenError, path));
-                    return;
-                }
+                readerCollection = InvokeProvider.Content.GetReader(path);
+            }
+            catch (PSNotSupportedException ex)
+            {
+                WriteError(new ErrorRecord(ex, "ContentAccessNotSupported", ErrorCategory.NotImplemented, path));
+                return;
+            }
+            catch (Exception ex)
+            {
+                WriteError(new ErrorRecord(ex, "Open_Image.OpenError", ErrorCategory.OpenError, path));
+                return;
+            }
 
-                try { FromContentReader(readerCollection, stream); }
-                catch (Exception ex)
-                {
-                    WriteError(new ErrorRecord(ex, "Open_Image.ReadError", ErrorCategory.ReadError, path));
-                    return;
-                }
+            try { FromContentReader(readerCollection, stream); }
+            catch (Exception ex)
+            {
+                WriteError(new ErrorRecord(ex, "Open_Image.ReadError", ErrorCategory.ReadError, path));
+                return;
+            }
 
-                try
-                {
-                    if (stream.Length == 0L)
-                        throw new FormatException("Item is empty.");
-                    stream.Seek(0L, SeekOrigin.Begin);
-                    WriteObject(Image.FromStream(stream));
-                }
-                catch (Exception ex)
-                {
-                    WriteError(new ErrorRecord(ex, "Open_Image.InvalidData", ErrorCategory.InvalidData, path));
-                }
+            try
+            {
+                if (stream.Length == 0L)
+                    throw new FormatException("Item is empty.");
+                stream.Seek(0L, SeekOrigin.Begin);
+                WriteObject(Image.FromStream(stream));
+            }
+            catch (Exception ex)
+            {
+                WriteError(new ErrorRecord(ex, "Open_Image.InvalidData", ErrorCategory.InvalidData, path));
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

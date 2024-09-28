@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Interface for models representing a specific color.

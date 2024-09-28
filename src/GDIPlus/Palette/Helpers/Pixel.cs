@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
@@ -7,7 +5,9 @@ using Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.Indexed;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// This is a pixel format independent pixel.
@@ -16,30 +16,30 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
     {
         #region | Constants |
 
-        internal const Byte Zero = 0;
-        internal const Byte One = 1;
-        internal const Byte Two = 2;
-        internal const Byte Four = 4;
-        internal const Byte Eight = 8;
+        internal const byte Zero = 0;
+        internal const byte One = 1;
+        internal const byte Two = 2;
+        internal const byte Four = 4;
+        internal const byte Eight = 8;
 
-        internal const Byte NibbleMask = 0xF;
-        internal const Byte ByteMask = 0xFF;
+        internal const byte NibbleMask = 0xF;
+        internal const byte ByteMask = 0xFF;
 
-        internal const Int32 AlphaShift = 24;
-        internal const Int32 RedShift = 16;
-        internal const Int32 GreenShift = 8;
-        internal const Int32 BlueShift = 0;
+        internal const int AlphaShift = 24;
+        internal const int RedShift = 16;
+        internal const int GreenShift = 8;
+        internal const int BlueShift = 0;
 
-        internal const Int32 AlphaMask = ByteMask << AlphaShift;
-        internal const Int32 RedGreenBlueMask = 0xFFFFFF;
+        internal const int AlphaMask = ByteMask << AlphaShift;
+        internal const int RedGreenBlueMask = 0xFFFFFF;
 
         #endregion
 
         #region | Fields |
 
         private Type pixelType;
-        private Int32 bitOffset;
-        private Object pixelData;
+        private int bitOffset;
+        private object pixelData;
         private IntPtr pixelDataPointer;
 
         #endregion
@@ -49,12 +49,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <summary>
         /// Gets the X.
         /// </summary>
-        public Int32 X { get; private set; }
+        public int X { get; private set; }
 
         /// <summary>
         /// Gets the Y.
         /// </summary>
-        public Int32 Y { get; private set; }
+        public int Y { get; private set; }
 
         /// <summary>
         /// Gets the parent buffer.
@@ -69,10 +69,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// Gets or sets the index.
         /// </summary>
         /// <value>The index.</value>
-        public Byte Index
+        public byte Index
         {
-            get { return ((IIndexedPixel) pixelData).GetIndex(bitOffset); }
-            set { ((IIndexedPixel) pixelData).SetIndex(bitOffset, value); }
+            get => ((IIndexedPixel)pixelData).GetIndex(bitOffset);
+            set => ((IIndexedPixel)pixelData).SetIndex(bitOffset, value);
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <value>The color.</value>
         public Color Color
         {
-            get { return ((INonIndexedPixel) pixelData).GetColor(); }
-            set { ((INonIndexedPixel) pixelData).SetColor(value); }
+            get => ((INonIndexedPixel)pixelData).GetColor();
+            set => ((INonIndexedPixel)pixelData).SetColor(value);
         }
 
         /// <summary>
@@ -91,10 +91,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <value>
         /// 	<c>true</c> if this instance is indexed; otherwise, <c>false</c>.
         /// </value>
-        public Boolean IsIndexed
-        {
-            get { return Parent.IsIndexed; }    
-        }
+        public bool IsIndexed => Parent.IsIndexed;
 
         #endregion
 
@@ -115,8 +112,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             // creates pixel data
             pixelType = IsIndexed ? GetIndexedType(Parent.PixelFormat) : GetNonIndexedType(Parent.PixelFormat);
             NewExpression newType = Expression.New(pixelType);
-            UnaryExpression convertNewType = Expression.Convert(newType, typeof (Object));
-            Expression<Func<Object>> indexedExpression = Expression.Lambda<Func<Object>>(convertNewType);
+            UnaryExpression convertNewType = Expression.Convert(newType, typeof (object));
+            Expression<Func<object>> indexedExpression = Expression.Lambda<Func<object>>(convertNewType);
             pixelData = indexedExpression.Compile().Invoke();
             pixelDataPointer = MarshalToPointer(pixelData);
         }
@@ -128,7 +125,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <summary>
         /// Gets the type of the indexed pixel format.
         /// </summary>
-        internal Type GetIndexedType(PixelFormat pixelFormat)
+        internal static Type GetIndexedType(PixelFormat pixelFormat)
         {
             switch (pixelFormat)
             {
@@ -137,7 +134,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                 case PixelFormat.Format8bppIndexed: return typeof(PixelData8Indexed);
 
                 default:
-                    String message = String.Format("This pixel format '{0}' is either non-indexed, or not supported.", pixelFormat);
+                    string message = string.Format("This pixel format '{0}' is either non-indexed, or not supported.", pixelFormat);
                     throw new NotSupportedException(message);
             }
         }
@@ -145,7 +142,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <summary>
         /// Gets the type of the non-indexed pixel format.
         /// </summary>
-        internal Type GetNonIndexedType(PixelFormat pixelFormat)
+        internal static Type GetNonIndexedType(PixelFormat pixelFormat)
         {
             switch (pixelFormat)
             {
@@ -160,14 +157,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                 case PixelFormat.Format64bppArgb: return typeof(PixelDataArgb64);
 
                 default:
-                    String message = String.Format("This pixel format '{0}' is either indexed, or not supported.", pixelFormat);
+                    string message = string.Format("This pixel format '{0}' is either indexed, or not supported.", pixelFormat);
                     throw new NotSupportedException(message);
             }
         }
 
-        private static IntPtr MarshalToPointer(Object data)
+        private static IntPtr MarshalToPointer(object data)
         {
-            Int32 size = Marshal.SizeOf(data);
+            int size = Marshal.SizeOf(data);
             IntPtr pointer = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr(data, pointer, false);
             return pointer;
@@ -179,7 +176,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         /// <param name="x">The X coordinate.</param>
         /// <param name="y">The Y coordinate.</param>
-        public void Update(Int32 x, Int32 y)
+        public void Update(int x, int y)
         {
             X = x; 
             Y = y; 
@@ -190,17 +187,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// Reads the raw data.
         /// </summary>
         /// <param name="imagePointer">The image pointer.</param>
-        public void ReadRawData(IntPtr imagePointer)
-        {
-            pixelData = Marshal.PtrToStructure(imagePointer, pixelType);
-        }
+        public void ReadRawData(IntPtr imagePointer) => pixelData = Marshal.PtrToStructure(imagePointer, pixelType);
 
         /// <summary>
         /// Reads the data.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
         /// <param name="offset">The offset.</param>
-        public void ReadData(Byte[] buffer, Int32 offset)
+        public void ReadData(byte[] buffer, int offset)
         {
             Marshal.Copy(buffer, offset, pixelDataPointer, Parent.BytesPerPixel);
             pixelData = Marshal.PtrToStructure(pixelDataPointer, pixelType);
@@ -210,20 +204,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// Writes the raw data.
         /// </summary>
         /// <param name="imagePointer">The image pointer.</param>
-        public void WriteRawData(IntPtr imagePointer)
-        {
-            Marshal.StructureToPtr(pixelData, imagePointer, false);
-        }
+        public void WriteRawData(IntPtr imagePointer) => Marshal.StructureToPtr(pixelData, imagePointer, false);
 
         /// <summary>
         /// Writes the data.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
         /// <param name="offset">The offset.</param>
-        public void WriteData(Byte[] buffer, Int32 offset)
-        {
-            Marshal.Copy(pixelDataPointer, buffer, offset, Parent.BytesPerPixel);
-        }
+        public void WriteData(byte[] buffer, int offset) => Marshal.Copy(pixelDataPointer, buffer, offset, Parent.BytesPerPixel);
 
         #endregion
 
@@ -232,10 +220,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
-        {
-            Marshal.FreeHGlobal(pixelDataPointer);
-        }
+        public void Dispose() => Marshal.FreeHGlobal(pixelDataPointer);
 
         #endregion
     }

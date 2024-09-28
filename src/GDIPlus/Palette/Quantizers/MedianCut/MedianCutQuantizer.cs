@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// The premise behind median cut algorithms is to have every entry in the color map represent 
@@ -38,10 +37,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
         /// Splits all the cubes on the list.
         /// </summary>
         /// <param name="colorCount">The color count.</param>
-        private void SplitCubes(Int32 colorCount)
+        private void SplitCubes(int colorCount)
         {
             // creates a holder for newly added cubes
-            List<MedianCutCube> newCubes = new List<MedianCutCube>();
+            List<MedianCutCube> newCubes = [];
 
             foreach (MedianCutCube cube in cubeList)
             {
@@ -71,13 +70,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
             }
 
             // clears the old cubes
-            cubeList = new ConcurrentBag<MedianCutCube>();
-
-            // adds the new cubes to the official cube list
-            foreach (MedianCutCube medianCutCube in newCubes)
-            {
-                cubeList.Add(medianCutCube);
-            }
+            cubeList =
+            [
+                // adds the new cubes to the official cube list
+                .. newCubes,
+            ];
         }
 
         #endregion
@@ -106,24 +103,24 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
         /// <summary>
         /// See <see cref="BaseColorCacheQuantizer.OnGetPaletteToCache"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPaletteToCache(Int32 colorCount)
+        protected override List<Color> OnGetPaletteToCache(int colorCount)
         {
             // creates the initial cube covering all the pixels in the image
-            MedianCutCube initalMedianCutCube = new MedianCutCube(UniqueColors.Keys);
+            MedianCutCube initalMedianCutCube = new(UniqueColors.Keys);
             cubeList.Add(initalMedianCutCube);
 
             // finds the minimum iterations needed to achieve the cube count (color count) we need
-            Int32 iterationCount = 1;
+            int iterationCount = 1;
             while ((1 << iterationCount) < colorCount) { iterationCount++; }
 
-            for (Int32 iteration = 0; iteration < iterationCount; iteration++)
+            for (int iteration = 0; iteration < iterationCount; iteration++)
             {
                 SplitCubes(colorCount);
             }
 
             // initializes the result palette
-            List<Color> result = new List<Color>();
-            Int32 paletteIndex = 0;
+            List<Color> result = [];
+            int paletteIndex = 0;
 
             // adds all the cubes' colors to the palette, and mark that cube with palette index for later use
             foreach (MedianCutCube cube in cubeList)
@@ -143,7 +140,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
         {
             base.OnFinish();
 
-            cubeList = new ConcurrentBag<MedianCutCube>();
+            cubeList = [];
         }
 
         #endregion
@@ -153,15 +150,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.MedianCut
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return true; }
-        }
+        public override bool AllowParallel => true;
 
         /// <summary>
         /// See <see cref="IColorQuantizer.GetPaletteIndex"/> for more details.
         /// </summary>
-        public void GetPaletteIndex(Color color, out Int32 paletteIndex)
+        public void GetPaletteIndex(Color color, out int paletteIndex)
         {
             paletteIndex = 0;
             color = QuantizationHelper.ConvertAlpha(color);

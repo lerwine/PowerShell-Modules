@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Base class to provide syncronized (thread-safe) collections.
@@ -17,7 +16,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// Initializes a new instance of the <see cref="SynchronizedEnumerableBase{T}"/> class that is empty and has the 
         /// default initial capacity.
         /// </summary>
-        protected SynchronizedEnumerableBase() : this(new List<T>()) { }
+        protected SynchronizedEnumerableBase() : this([]) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronizedEnumerableBase{T}"/> class that contains elements copied from the 
@@ -27,10 +26,9 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.ArgumentNullException"><paramref name="list"/> is null.</exception>
         protected SynchronizedEnumerableBase(IList<T> list)
         {
-            if (list == null)
-                throw new ArgumentNullException("list");
+            ArgumentNullException.ThrowIfNull(list);
 
-            this.Initialize(list);
+            Initialize(list);
         }
 
         /// <summary>
@@ -41,17 +39,14 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
         protected SynchronizedEnumerableBase(ICollection<T> collection)
         {
-            this.Initialize(collection);
+            Initialize(collection);
         }
 
         /// <summary>
         /// Called from within the base constructor to initialize the inner synchronized list.
         /// </summary>
         /// <param name="collection">The collection whose elements are copied to the new list.</param>
-        protected virtual void Initialize(ICollection<T> collection)
-        {
-            this._innerList = new List<T>(collection);
-        }
+        protected virtual void Initialize(ICollection<T> collection) => _innerList = new List<T>(collection);
 
         #region IList<T> Support Members
 
@@ -60,7 +55,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="SynchronizedEnumerableBase{T}"/>.</param>
         /// <returns>The zero-based index of <paramref name="item"/> if found in the list; otherwise, -1.</returns>
-        public int IndexOf(T item) { return this.InnerIndexOf(item); }
+        public int IndexOf(T item) => InnerIndexOf(item);
 
         /// <summary>
         /// Gets the element at the specified index.
@@ -69,7 +64,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <returns>The element at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</exception>
-        public T this[int index] { get { return (T)(this.InnerGet(index)); } }
+        public T this[int index] => (T)InnerGet(index);
 
         /// <summary>
         /// Inserts an item to the <see cref="SynchronizedEnumerableBase{T}"/> at the specified index.
@@ -83,8 +78,8 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <para>The <see cref="SynchronizedEnumerableBase{T}"/> has a fixed size.</para></exception>
         /// <exception cref="System.NullReferenceException"><paramref name="item"/> is null reference in 
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</exception>
-        protected void BaseInsert(int index, T item) { this.InnerInsert(index, item); }
-        
+        protected void BaseInsert(int index, T item) => InnerInsert(index, item);
+
         /// <summary>
         /// Removes the S<see cref="SynchronizedEnumerableBase{T}"/> item at the specified index.
         /// </summary>
@@ -92,7 +87,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</exception>
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedEnumerableBase{T}"/> is read-only.</exception>
-        protected virtual void BaseRemoveAt(int index) { this._innerList.RemoveAt(index); }
+        protected virtual void BaseRemoveAt(int index) => _innerList.RemoveAt(index);
 
         /// <summary>
         /// Sets the element at the specified index.
@@ -103,7 +98,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</exception>
         /// <exception cref="System.NotSupportedException">The property is set and the <see cref="SynchronizedEnumerableBase{T}"/>
         /// is read-only.</exception>
-        protected void BaseSet(int index, T item) { this.InnerSet(index, item); }
+        protected void BaseSet(int index, T item) => InnerSet(index, item);
 
         #endregion
 
@@ -114,7 +109,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="SynchronizedEnumerableBase{T}"/>.</param>
         /// <returns>true if <paramref name="item"/> is found in the <see cref="SynchronizedEnumerableBase{T}"/>; otherwise, false.</returns>
-        public bool Contains(T item) { return this.InnerContains(item); }
+        public bool Contains(T item) => InnerContains(item);
 
         /// <summary>
         /// Copies the elements of the <see cref="SynchronizedEnumerableBase{T}"/> to an <see cref="System.Array"/>,
@@ -127,12 +122,12 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
         /// <exception cref="System.ArgumentException">The number of elements in the source <see cref="SynchronizedEnumerableBase{T}"/>
         /// is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
-        public void CopyTo(T[] array, int arrayIndex) { this.InnerCopyTo(array, arrayIndex); }
+        public void CopyTo(T[] array, int arrayIndex) => InnerCopyTo(array, arrayIndex);
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="SynchronizedEnumerableBase{T}"/>.
         /// </summary>
-        public int Count { get { return this._innerList.Count; } }
+        public int Count => _innerList.Count;
 
         /// <summary>
         /// Adds an item to the <see cref="SynchronizedEnumerableBase{T}"/>.
@@ -141,7 +136,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedEnumerableBase{T}"/> is read-only.
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedEnumerableBase{T}"/> has a fixed size.</para></exception>
-        protected void BaseAdd(T item) { this.InnerAdd(item); }
+        protected void BaseAdd(T item) { InnerAdd(item); }
 
         /// <summary>
         /// Removes all items from the <see cref="SynchronizedEnumerableBase{T}"/>.
@@ -149,7 +144,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedEnumerableBase{T}"/> is read-only.
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedEnumerableBase{T}"/> has a fixed size.</para></exception>
-        protected virtual void BaseClear() { this._innerList.Clear(); }
+        protected virtual void BaseClear() => _innerList.Clear();
 
         /// <summary>
         /// Removes the first occurrence of a specific object from the <see cref="SynchronizedEnumerableBase{T}"/>.
@@ -161,30 +156,30 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedEnumerableBase{T}"/> is read-only
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedEnumerableBase{T}"/> has a fixed size.</para></exception>
-        protected virtual bool BaseRemove(T item) { return this.InnerRemove(item); }
+        protected virtual bool BaseRemove(T item) => InnerRemove(item);
 
         #endregion
 
         #region IList Members
 
-        bool IList.IsFixedSize { get { return false; } }
+        bool IList.IsFixedSize => false;
 
-        bool IList.IsReadOnly { get { return false; } }
+        bool IList.IsReadOnly => false;
 
         /// <summary>
         /// Determines whether the <see cref="SynchronizedEnumerableBase{T}"/> contains a specific value.
         /// </summary>
         /// <param name="value">The object to locate in the <see cref="SynchronizedEnumerableBase{T}"/>.</param>
-        /// <returns>true if the <see cref="System.Object"/> is found in the <see cref="SynchronizedEnumerableBase{T}"/>; 
+        /// <returns>true if the <see cref="object"/> is found in the <see cref="SynchronizedEnumerableBase{T}"/>; 
         /// otherwise, false.</returns>
-        protected bool InnerContains(object value) { return (this._innerList as IList).Contains(value); }
+        protected bool InnerContains(object value) => (_innerList as IList).Contains(value);
 
         /// <summary>
         /// Determines the index of a specific item in the <see cref="SynchronizedEnumerableBase{T}"/>.
         /// </summary>
         /// <param name="value">The object to locate in the <see cref="SynchronizedEnumerableBase{T}"/>.</param>
         /// <returns>The index of value if found in the list; otherwise, -1.</returns>
-        protected int InnerIndexOf(object value) { return (this._innerList as IList).IndexOf(value); }
+        protected int InnerIndexOf(object value) => (_innerList as IList).IndexOf(value);
 
         /// <summary>
         /// Gets the element at the specified index.
@@ -193,7 +188,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <returns>The element at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</exception>
-        protected object InnerGet(int index) { return this._innerList[index]; }
+        protected object InnerGet(int index) => _innerList[index];
 
         /// <summary>
         /// Adds an item to the <see cref="SynchronizedEnumerableBase{T}"/>.
@@ -204,7 +199,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedEnumerableBase{T}"/> has a fixed size.</para></exception>
         /// <exception cref="InvalidCastException"><paramref name="value"/> could not be cast to <typeparamref name="T"/>.</exception>
-        protected virtual int InnerAdd(object value) { return (this._innerList as IList).Add((T)value); }
+        protected virtual int InnerAdd(object value) => (_innerList as IList).Add((T)value);
 
         /// <summary>
         /// Inserts an item to the <see cref="SynchronizedEnumerableBase{T}"/> at the specified index.
@@ -219,7 +214,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NullReferenceException"><paramref name="value"/> is null reference in 
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</exception>
         /// <exception cref="InvalidCastException"><paramref name="value"/> could not be cast to <typeparamref name="T"/>.</exception>
-        protected virtual void InnerInsert(int index, object value) { this._innerList.Insert(index, (T)value); }
+        protected virtual void InnerInsert(int index, object value) { _innerList.Insert(index, (T)value); }
 
         /// <summary>
         /// Removes the first occurrence of a specific object from the <see cref="SynchronizedEnumerableBase{T}"/>.
@@ -232,10 +227,10 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <para>The <see cref="SynchronizedEnumerableBase{T}"/> has a fixed size.</para></exception>
         protected virtual bool InnerRemove(object value)
         {
-            if (!(this._innerList as IList).Contains(value))
+            if (!(_innerList as IList).Contains(value))
                 return false;
 
-            (this._innerList as IList).Remove(value);
+            (_innerList as IList).Remove(value);
 
             return true;
         }
@@ -250,29 +245,29 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The property is set and the <see cref="SynchronizedEnumerableBase{T}"/>
         /// is read-only.</exception>
         /// <exception cref="InvalidCastException"><paramref name="value"/> could not be cast to <typeparamref name="T"/>.</exception>
-        protected virtual void InnerSet(int index, object value) { this._innerList[index] = (T)value; }
+        protected virtual void InnerSet(int index, object value) => _innerList[index] = (T)value;
 
         #region Explicit Members
 
-        bool IList.Contains(object value) { return this.InnerContains(value); }
+        bool IList.Contains(object value) => InnerContains(value);
 
-        int IList.IndexOf(object value) { return this.InnerIndexOf(value); }
+        int IList.IndexOf(object value) => InnerIndexOf(value);
 
         object IList.this[int index]
         {
-            get { return this.InnerGet(index); }
-            set { this.InnerSet(index, value); }
+            get => InnerGet(index);
+            set => InnerSet(index, value);
         }
 
-        int IList.Add(object value) { return this.InnerAdd(value); }
+        int IList.Add(object value) { return InnerAdd(value); }
 
-        void IList.Clear() { this.BaseClear(); }
+        void IList.Clear() => BaseClear();
 
-        void IList.Insert(int index, object value) { this.InnerInsert(index, value); }
+        void IList.Insert(int index, object value) => InnerInsert(index, value);
 
-        void IList.Remove(object value) { this.InnerRemove(value); }
+        void IList.Remove(object value) => InnerRemove(value);
 
-        void IList.RemoveAt(int index) { this.BaseRemoveAt(index); }
+        void IList.RemoveAt(int index) => BaseRemoveAt(index);
 
         #endregion
 
@@ -280,12 +275,12 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
 
         #region ICollection Members
 
-        bool ICollection.IsSynchronized { get { return true; } }
+        bool ICollection.IsSynchronized => true;
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the <see cref="SynchronizedEnumerableBase{T}"/>.
         /// </summary>
-        object ICollection.SyncRoot { get { return this._innerList; } }
+        object ICollection.SyncRoot => _innerList;
 
         /// <summary>
         /// Copies the elements of the <see cref="SynchronizedEnumerableBase{T}"/> to an <see cref="System.Array"/>, 
@@ -303,9 +298,9 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <para>-or-</para>
         /// <para>The type of the source <see cref="SynchronizedEnumerableBase{T}"/> cannot be cast automatically to the type of the 
         /// destination array.</para></exception>
-        protected void InnerCopyTo(Array array, int index) { (this._innerList as IList).CopyTo(array, index); }
+        protected void InnerCopyTo(Array array, int index) => (_innerList as IList).CopyTo(array, index);
 
-        void ICollection.CopyTo(Array array, int index) { this.InnerCopyTo(array, index); }
+        void ICollection.CopyTo(Array array, int index) => InnerCopyTo(array, index);
 
         #endregion
 
@@ -316,15 +311,15 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// </summary>
         /// <returns>A <see cref="System.Collections.Generic.IEnumerator&lt;T&gt;"/> that can be used to iterate through 
         /// the <see cref="SynchronizedEnumerableBase{T}"/>.</returns>
-        public IEnumerator<T> GetEnumerator() { return new TypedEnumeratorWrapper<T>(this._innerList); }
+        public IEnumerator<T> GetEnumerator() => new TypedEnumeratorWrapper<T>(_innerList);
 
-        IEnumerator IEnumerable.GetEnumerator() { return this.InnerGetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => InnerGetEnumerator();
 
         /// <summary>
         /// Returns an enumerator that iterates through the inner collection.
         /// </summary>
         /// <returns>An <see cref="System.Collections.IEnumerator"/> object that can be used to iterate through the collection.</returns>
-        protected IEnumerator InnerGetEnumerator() { return this._innerList.GetEnumerator(); }
+        protected IEnumerator InnerGetEnumerator() => _innerList.GetEnumerator();
 
         #endregion
     }

@@ -1,39 +1,32 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
+﻿using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
 using System.Text;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ImageDetail : ImageInfo
     {
-        private PSObject _exifTags = new PSObject();
+        private readonly PSObject _exifTags = new();
 
-        public PSObject ExifTags { get { return _exifTags; } }
+        public PSObject ExifTags => _exifTags;
 
         public ImageDetail() { }
 
         public ImageDetail(FileInfo file, Bitmap bitmap)
             : base(file, bitmap)
         {
-            if (file == null)
-                throw new ArgumentNullException("file");
+            ArgumentNullException.ThrowIfNull(file);
 
-            if (bitmap == null)
-                throw new ArgumentNullException("bitmap");
+            ArgumentNullException.ThrowIfNull(bitmap);
 
             Type t = typeof(ExifPropertyTag);
             foreach (var value in bitmap.PropertyItems.Select(p =>
               {
-                  ExifPropertyTag e;
-                  PSObject o = CreateProperty(p, out e);
+                  PSObject o = CreateProperty(p, out ExifPropertyTag e);
                   return new { T = e, V = o };
               }).Where(a => a.V != null).GroupBy(a => a.T).Select(g => g.First()))
             {
@@ -43,11 +36,11 @@ namespace Erwine.Leonard.T.GDIPlus
 
         private PSObject CreateProperty(PropertyItem propertyItem, out ExifPropertyTag tag)
         {
-            try { tag = (ExifPropertyTag)(propertyItem.Id); } catch { tag = ExifPropertyTag.Unknown; }
+            try { tag = (ExifPropertyTag)propertyItem.Id; } catch { tag = ExifPropertyTag.Unknown; }
             if (tag == ExifPropertyTag.Unknown || propertyItem.Value == null)
                 return null;
             ExifPropertyType type;
-            try { type = (ExifPropertyType)(propertyItem.Type); } catch { type = ExifPropertyType.Undefined; }
+            try { type = (ExifPropertyType)propertyItem.Type; } catch { type = ExifPropertyType.Undefined; }
             return CreateProperty(propertyItem.Value, propertyItem.Len, type, tag);
         }
 
@@ -104,9 +97,9 @@ namespace Erwine.Leonard.T.GDIPlus
             return property;
         }
 
-        private PSObject AsStringZMulti(byte[] bytes, int length)
+        private static PSObject AsStringZMulti(byte[] bytes, int length)
         {
-            Collection<string> values = new Collection<string>();
+            Collection<string> values = [];
             if (bytes.Length == 0 || length == 0)
             {
                 values.Add("");
@@ -130,15 +123,15 @@ namespace Erwine.Leonard.T.GDIPlus
             return PSObject.AsPSObject(values);
         }
         
-        private PSObject AsHexValues(byte[] bytes, int count)
+        private static PSObject AsHexValues(byte[] bytes, int count)
         {
             if (bytes.Length == 0 || count
                 == 0)
                 return PSObject.AsPSObject("");
-            return PSObject.AsPSObject("0x" + String.Join("", bytes.Take(count).Select(b => b.ToString("x2"))));
+            return PSObject.AsPSObject("0x" + string.Join("", bytes.Take(count).Select(b => b.ToString("x2"))));
         }
 
-        private IEnumerable<uint> ReadUInt32Values(byte[] bytes, int count)
+        private static IEnumerable<uint> ReadUInt32Values(byte[] bytes, int count)
         {
             int index = 0;
             int c = 0;
@@ -152,20 +145,20 @@ namespace Erwine.Leonard.T.GDIPlus
                 }
                 else if ((bytes.Length - index) > 2)
                 {
-                    yield return (uint)(BitConverter.ToUInt16(bytes, index));
+                    yield return (uint)BitConverter.ToUInt16(bytes, index);
                     index += 2;
                     count++;
                 }
                 else
                 {
-                    yield return (uint)(bytes[index]);
+                    yield return (uint)bytes[index];
                     index++;
                     count++;
                 }
             }
         }
 
-        private IEnumerable<int> ReadSInt32Values(byte[] bytes, int count)
+        private static IEnumerable<int> ReadSInt32Values(byte[] bytes, int count)
         {
             int index = 0;
             int c = 0;
@@ -179,20 +172,20 @@ namespace Erwine.Leonard.T.GDIPlus
                 }
                 else if ((bytes.Length - index) > 2)
                 {
-                    yield return (int)(BitConverter.ToInt16(bytes, index));
+                    yield return (int)BitConverter.ToInt16(bytes, index);
                     index += 2;
                     count++;
                 }
                 else
                 {
-                    yield return (int)(bytes[index]);
+                    yield return (int)bytes[index];
                     index++;
                     count++;
                 }
             }
         }
 
-        private IEnumerable<ushort> ReadUInt16Values(byte[] bytes, int count)
+        private static IEnumerable<ushort> ReadUInt16Values(byte[] bytes, int count)
         {
             int index = 0;
             int c = 0;
@@ -206,7 +199,7 @@ namespace Erwine.Leonard.T.GDIPlus
                 }
                 else
                 {
-                    yield return (ushort)(bytes[index]);
+                    yield return (ushort)bytes[index];
                     index++;
                     count++;
                 }
@@ -262,20 +255,17 @@ namespace Erwine.Leonard.T.GDIPlus
             if (count == 0)
                 return null;
 
-            using (IEnumerator<decimal> enumerator = ReadSDecimalValues(bytes, count).GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                    return null;
+            using IEnumerator<decimal> enumerator = ReadSDecimalValues(bytes, count).GetEnumerator();
+            if (!enumerator.MoveNext())
+                return null;
 
-                if (count == 1)
-                    return PSObject.AsPSObject(enumerator.Current);
+            if (count == 1)
+                return PSObject.AsPSObject(enumerator.Current);
 
-                Collection<decimal> collection = new Collection<decimal>();
+            Collection<decimal> collection = [enumerator.Current];
+            while (enumerator.MoveNext())
                 collection.Add(enumerator.Current);
-                while (enumerator.MoveNext())
-                    collection.Add(enumerator.Current);
-                return PSObject.AsPSObject(collection);
-            }
+            return PSObject.AsPSObject(collection);
         }
 
         private PSObject AsUDecimalValue(byte[] bytes, int count)
@@ -283,92 +273,80 @@ namespace Erwine.Leonard.T.GDIPlus
             if (count == 0)
                 return null;
 
-            using (IEnumerator<decimal> enumerator = ReadUDecimalValues(bytes, count).GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                    return null;
+            using IEnumerator<decimal> enumerator = ReadUDecimalValues(bytes, count).GetEnumerator();
+            if (!enumerator.MoveNext())
+                return null;
 
-                if (count == 1)
-                    return PSObject.AsPSObject(enumerator.Current);
+            if (count == 1)
+                return PSObject.AsPSObject(enumerator.Current);
 
-                Collection<decimal> collection = new Collection<decimal>();
+            Collection<decimal> collection = [enumerator.Current];
+            while (enumerator.MoveNext())
                 collection.Add(enumerator.Current);
-                while (enumerator.MoveNext())
-                    collection.Add(enumerator.Current);
-                return PSObject.AsPSObject(collection);
-            }
+            return PSObject.AsPSObject(collection);
         }
 
         private PSObject AsUInt32Value(byte[] bytes, int count)
         {
-            using (IEnumerator<uint> enumerator = ReadUInt32Values(bytes, count).GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                    return null;
+            using IEnumerator<uint> enumerator = ReadUInt32Values(bytes, count).GetEnumerator();
+            if (!enumerator.MoveNext())
+                return null;
 
-                if (count == 1)
-                    return PSObject.AsPSObject(enumerator.Current);
+            if (count == 1)
+                return PSObject.AsPSObject(enumerator.Current);
 
-                Collection<uint> collection = new Collection<uint>();
+            Collection<uint> collection = [enumerator.Current];
+            while (enumerator.MoveNext())
                 collection.Add(enumerator.Current);
-                while (enumerator.MoveNext())
-                    collection.Add(enumerator.Current);
-                return PSObject.AsPSObject(collection);
-            }
+            return PSObject.AsPSObject(collection);
         }
 
         private PSObject AsInt32Value(byte[] bytes, int count)
         {
-            using (IEnumerator<int> enumerator = ReadSInt32Values(bytes, count).GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                    return null;
+            using IEnumerator<int> enumerator = ReadSInt32Values(bytes, count).GetEnumerator();
+            if (!enumerator.MoveNext())
+                return null;
 
-                if (count == 1)
-                    return PSObject.AsPSObject(enumerator.Current);
+            if (count == 1)
+                return PSObject.AsPSObject(enumerator.Current);
 
-                Collection<int> collection = new Collection<int>();
+            Collection<int> collection = [enumerator.Current];
+            while (enumerator.MoveNext())
                 collection.Add(enumerator.Current);
-                while (enumerator.MoveNext())
-                    collection.Add(enumerator.Current);
-                return PSObject.AsPSObject(collection);
-            }
+            return PSObject.AsPSObject(collection);
         }
 
         private PSObject AsUInt16Value(byte[] bytes, int count)
         {
-            using (IEnumerator<ushort> enumerator = ReadUInt16Values(bytes, count).GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                    return null;
+            using IEnumerator<ushort> enumerator = ReadUInt16Values(bytes, count).GetEnumerator();
+            if (!enumerator.MoveNext())
+                return null;
 
-                if (count == 1)
-                    return PSObject.AsPSObject((int)(enumerator.Current));
+            if (count == 1)
+                return PSObject.AsPSObject((int)enumerator.Current);
 
-                Collection<int> collection = new Collection<int>();
+            Collection<int> collection = [enumerator.Current];
+            while (enumerator.MoveNext())
                 collection.Add(enumerator.Current);
-                while (enumerator.MoveNext())
-                    collection.Add(enumerator.Current);
-                return PSObject.AsPSObject(collection);
-            }
+            return PSObject.AsPSObject(collection);
         }
 
-        private PSObject AsByteValue(byte[] bytes, int count)
+        private static PSObject AsByteValue(byte[] bytes, int count)
         {
             if (bytes.Length == 0 || count == 0)
                 return null;
 
             if (count == 1)
-                return PSObject.AsPSObject((int)(bytes[0]));
+                return PSObject.AsPSObject((int)bytes[0]);
 
 
-            Collection<int> collection = new Collection<int>();
+            Collection<int> collection = [];
             for (int i = 0; i < count && i < bytes.Length; i++)
-                collection.Add((int)(bytes[i]));
+                collection.Add((int)bytes[i]);
             return PSObject.AsPSObject(collection);
         }
 
-        private PSObject AsStringZ(byte[] bytes, int length)
+        private static PSObject AsStringZ(byte[] bytes, int length)
         {
             if (bytes.Length == 0 || length == 0)
                 return PSObject.AsPSObject("");
@@ -382,7 +360,7 @@ namespace Erwine.Leonard.T.GDIPlus
             return Encoding.ASCII.GetString(bytes);
         }
 
-        private PSObject AsString(byte[] bytes, int length)
+        private static PSObject AsString(byte[] bytes, int length)
         {
             if (bytes.Length == 0 || length == 0)
                 return PSObject.AsPSObject("");
@@ -398,5 +376,4 @@ namespace Erwine.Leonard.T.GDIPlus
         {
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

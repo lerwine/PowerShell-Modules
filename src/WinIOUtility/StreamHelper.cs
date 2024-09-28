@@ -4,13 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace WinIOUtility
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class StreamHelper
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private static int? _minBase64BlockSize = null;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static int MinBase64BlockSize
         {
             get
@@ -87,7 +83,6 @@ namespace WinIOUtility
             byte[] buffer = BitConverter.GetBytes(value);
             outputStream.Write(buffer, 0, buffer.Length);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private static void _WriteLengthEncodedBytes(Stream outputStream, byte[] buffer, int offset, int count)
         {
@@ -98,9 +93,7 @@ namespace WinIOUtility
             if (count > 0)
                 outputStream.Write(buffer, offset, count);
         }
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static void WriteLengthEncodedBytes(Stream outputStream, byte[] buffer, int offset, int count)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer");
@@ -114,9 +107,7 @@ namespace WinIOUtility
                 throw new ArgumentOutOfRangeException("Offset pluc Count cannot extend past the end of the buffer.", "count");
             StreamHelper._WriteLengthEncodedBytes(outputStream, buffer, offset, count);
         }
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static void WriteLengthEncodedBytes(Stream outputStream, byte[] buffer)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer");

@@ -1,15 +1,12 @@
-using System;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class QuantizationHelper
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private const int Alpha = 255 << 24;
         private static readonly Color BackgroundColor;
-        private static readonly Double[] Factors;
+        private static readonly double[] Factors;
 
         static QuantizationHelper()
         {
@@ -20,11 +17,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// <summary>
         /// Precalculates the alpha-fix values for all the possible alpha values (0-255).
         /// </summary>
-        private static Double[] PrecalculateFactors()
+        private static double[] PrecalculateFactors()
         {
-            Double[] result = new Double[256];
+            double[] result = new double[256];
 
-            for (Int32 value = 0; value < 256; value++)
+            for (int value = 0; value < 256; value++)
             {
                 result[value] = value / 255.0;
             }
@@ -37,27 +34,23 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         /// </summary>
         /// <param name="color">The alpha blended color (ARGB).</param>
         /// <returns>The non-alpha blended color (RGB).</returns>
-        internal static Color ConvertAlpha(Color color)
-        {
-            Int32 argb;
-            return ConvertAlpha(color, out argb);
-        }
+        internal static Color ConvertAlpha(Color color) => ConvertAlpha(color, out int argb);
 
         /// <summary>
         /// Converts the alpha blended color to a non-alpha blended color.
         /// </summary>
-        internal static Color ConvertAlpha(Color color, out Int32 argb)
+        internal static Color ConvertAlpha(Color color, out int argb)
         {
             Color result = color;
 
             if (color.A < 255)
             {
                 // performs a alpha blending (second color is BackgroundColor, by default a Control color)
-                Double colorFactor = Factors[color.A];
-                Double backgroundFactor = Factors[255 - color.A];
-                Int32 red = (Int32) (color.R*colorFactor + BackgroundColor.R*backgroundFactor);
-                Int32 green = (Int32) (color.G*colorFactor + BackgroundColor.G*backgroundFactor);
-                Int32 blue = (Int32) (color.B*colorFactor + BackgroundColor.B*backgroundFactor);
+                double colorFactor = Factors[color.A];
+                double backgroundFactor = Factors[255 - color.A];
+                int red = (int) (color.R * colorFactor + BackgroundColor.R * backgroundFactor);
+                int green = (int) (color.G * colorFactor + BackgroundColor.G * backgroundFactor);
+                int blue = (int) (color.B * colorFactor + BackgroundColor.B * backgroundFactor);
                 argb = red << 16 | green << 8 | blue;
                 Color.FromArgb(red, green, blue);
                 result = Color.FromArgb(Alpha | argb);

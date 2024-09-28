@@ -264,7 +264,7 @@ Function Read-XmlDocument {
     
     if ($PSCmdlet.ParameterSetName -eq 'Bytes') {
         $Stream = New-Object -TypeName 'System.IO.MemoryStream' -ArgumentList (,$ByteArray);
-        if ($Stream -eq $null) { return }
+        if ($null -eq $Stream) { return }
     }
     
     switch ($PSCmdlet.ParameterSetName) {
@@ -288,17 +288,17 @@ Function Read-XmlDocument {
         }
     }
 
-    if ($Reader -eq $null -and -not ($PSBoundParameters.ContainsKey('Settings') -or $PSBoundParameters.ContainsKey('BaseUri'))) { return }
+    if ($null -eq $Reader -and -not ($PSBoundParameters.ContainsKey('Settings') -or $PSBoundParameters.ContainsKey('BaseUri'))) { return }
     
     try {
         $XmlDocument = New-Object -TypeName 'System.Xml.XmlDocument';
         $XmlDocument.Load($Reader);
-        if ($XmlDocument.DocumentElement -ne $null) { $XmlDocument | Write-Output }
+        if ($null -ne $XmlDocument.DocumentElement) { $XmlDocument | Write-Output }
     } catch {
         throw;
     } finally {
         if ($Reader -is [System.Xml.XmlReader] -and -not $PSBoundParameters.ContainsKey('XmlReader')) { $XmlReader.Close() }
-        if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
+        if ($null -ne $Stream -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
     }
 }
 
@@ -378,7 +378,7 @@ Function Write-XmlDocument {
     
     if ($AsByteArray -or $AsString) {
         $Stream = New-Object -TypeName 'System.IO.MemoryStream';
-        if ($Stream -eq $null) { return }
+        if ($null -eq $Stream) { return }
     }
     
     switch ($PSCmdlet.ParameterSetName) {
@@ -394,7 +394,7 @@ Function Write-XmlDocument {
         $Writer = $OutputObj;
     }
 
-    if ($Writer -eq $null -and $PSBoundParameters.ContainsKey('Settings')) {
+    if ($null -eq $Writer -and $PSBoundParameters.ContainsKey('Settings')) {
         throw 'Unable to create xml writer.';
         return;
     }
@@ -422,7 +422,7 @@ Function Write-XmlDocument {
         throw;
     } finally {
         if ($Writer -is [System.Xml.XmlWriter] -and -not $PSBoundParameters.ContainsKey('XmlWriter')) { $Writer.Close() }
-        if ($Stream -ne $null -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
+        if ($null -ne $Stream -and -not $PSBoundParameters.ContainsKey('Stream')) { $Stream.Dispose() }
     }
 }
 
@@ -1035,7 +1035,7 @@ Function ConvertFrom-XmlBinary {
     )
 
     Begin {
-        if ($Script:__ConvertFrom_XmlBinary_WhitespaceRegex -eq $null) {
+        if ($null -eq $Script:__ConvertFrom_XmlBinary_WhitespaceRegex) {
             $Script:__ConvertFrom_XmlBinary_WhitespaceRegex = New-Object -TypeName 'System.Text.RegularExpressions.Regex' -ArgumentList '\s+', ([System.Text.RegularExpressions.RegexOptions]::Compiled);
         }
     }
@@ -1298,7 +1298,7 @@ Function Set-XmlAttribute {
         $XmlAttribute = $XmlElement.SelectSingleNode('@' + $Name);
     }
     
-    if ($XmlAttribute -eq $null) {
+    if ($null -eq $XmlAttribute) {
         if (-not $Create) {
             throw 'Attribute not found.';
         } else {
@@ -1314,7 +1314,7 @@ Function Set-XmlAttribute {
         }
     }
     
-    if ($XmlAttribute -ne $null) {
+    if ($null -ne $XmlAttribute) {
         $XmlAttribute.Value = $Value;
         if ($PassThru) { $XmlAttribute | Write-Output }
     }
@@ -1523,7 +1523,7 @@ Function Set-XmlText {
         [switch]$ForceCData
     )
     
-    if ($InnerText -eq $null) {
+    if ($null -eq $InnerText) {
         if (-not $XmlElement.IsEmpty) {
             $XmlElement.RemoveAll();
             $XmlElement.IsEmpty = $true;

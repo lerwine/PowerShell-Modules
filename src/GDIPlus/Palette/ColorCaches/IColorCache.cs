@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IColorCache
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Prepares color cache for next use.
@@ -24,6 +20,6 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="paletteIndex">Index of the palette.</param>
-        void GetColorPaletteIndex(Color color, out Int32 paletteIndex);
+        void GetColorPaletteIndex(Color color, out int paletteIndex);
     }
 }

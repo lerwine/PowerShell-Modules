@@ -8,9 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace WinIOUtility
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class TextHelper
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         internal static string GetRegexPattern(UnicodeCategory? categories, IEnumerable<char> otherChars, bool notMatch, bool noBrackets)
         {
@@ -177,8 +175,6 @@ namespace WinIOUtility
 
             return String.Format("[{0}]", String.Join("", patterns.ToArray()));
         }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static string GetRegexPattern(char ignoreChar, params char[] otherChars)
         {
             return TextHelper.GetRegexPattern(false, ignoreChar, otherChars);
@@ -212,6 +208,5 @@ namespace WinIOUtility
         {
             return TextHelper.GetRegexPattern(categories, otherChars, notMatch, noBrackets);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

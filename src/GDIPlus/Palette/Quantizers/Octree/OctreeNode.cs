@@ -1,22 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     internal class OctreeNode
     {
         #region | Fields |
 
-        private static readonly Byte[] Mask = new Byte[] { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+        private static readonly byte[] Mask = [0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01];
 
-        private Int32 red;
-        private Int32 green;
-        private Int32 blue;
+        private int red;
+        private int green;
+        private int blue;
 
-        private Int32 pixelCount;
-        private Int32 paletteIndex;
+        private int pixelCount;
+        private int paletteIndex;
 
         private readonly OctreeNode[] nodes;
 
@@ -27,7 +24,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <summary>
         /// Initializes a new instance of the <see cref="OctreeNode"/> class.
         /// </summary>
-        public OctreeNode(Int32 level, OctreeQuantizer parent)
+        public OctreeNode(int level, OctreeQuantizer parent)
         {
             nodes = new OctreeNode[8];
 
@@ -45,10 +42,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// Gets a value indicating whether this node is a leaf.
         /// </summary>
         /// <value><c>true</c> if this node is a leaf; otherwise, <c>false</c>.</value>
-        public Boolean IsLeaf
-        {
-            get { return pixelCount > 0; }
-        }
+        public bool IsLeaf => pixelCount > 0;
 
         /// <summary>
         /// Gets the averaged leaf color.
@@ -65,7 +59,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
                 {
                     result = pixelCount == 1 ? 
                         Color.FromArgb(255, red, green, blue) : 
-                        Color.FromArgb(255, red/pixelCount, green/pixelCount, blue/pixelCount);
+                        Color.FromArgb(255, red / pixelCount, green / pixelCount, blue / pixelCount);
                 }
                 else
                 {
@@ -80,14 +74,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// Gets the active nodes pixel count.
         /// </summary>
         /// <value>The active nodes pixel count.</value>
-        public Int32 ActiveNodesPixelCount
+        public int ActiveNodesPixelCount
         {
             get
             {
-                Int32 result = pixelCount;
+                int result = pixelCount;
 
                 // sums up all the pixel presence for all the active nodes
-                for (Int32 index = 0; index < 8; index++)
+                for (int index = 0; index < 8; index++)
                 {
                     OctreeNode node = nodes[index];
 
@@ -109,10 +103,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         {
             get 
             {
-                List<OctreeNode> result = new List<OctreeNode>();
+                List<OctreeNode> result = [];
 
                 // adds all the active sub-nodes to a list
-                for (Int32 index = 0; index < 8; index++)
+                for (int index = 0; index < 8; index++)
                 {
                     OctreeNode node = nodes[index];
 
@@ -143,7 +137,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <param name="color">The color.</param>
         /// <param name="level">The level.</param>
         /// <param name="parent">The parent.</param>
-        public void AddColor(Color color, Int32 level, OctreeQuantizer parent)
+        public void AddColor(Color color, int level, OctreeQuantizer parent)
         {
             // if this node is a leaf, then increase a color amount, and pixel presence
             if (level == 8)
@@ -156,7 +150,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
             else if (level < 8) // otherwise goes one level deeper
             {
                 // calculates an index for the next sub-branch
-                Int32 index = GetColorIndexAtLevel(color, level);
+                int index = GetColorIndexAtLevel(color, level);
 
                 // if that branch doesn't exist, grows it
                 if (nodes[index] == null)
@@ -175,9 +169,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <param name="color">The color.</param>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        public Int32 GetPaletteIndex(Color color, Int32 level)
+        public int GetPaletteIndex(Color color, int level)
         {
-            Int32 result;
+            int result;
 
             // if a node is leaf, then we've found are best match already
             if (IsLeaf)
@@ -186,7 +180,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
             }
             else // otherwise continue in to the lower depths
             {
-                Int32 index = GetColorIndexAtLevel(color, level);
+                int index = GetColorIndexAtLevel(color, level);
 
                 result = nodes[index] != null ? nodes[index].GetPaletteIndex(color, level + 1) : nodes.
                     Where(node => node != null).
@@ -201,12 +195,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// Removes the leaves by summing all it's color components and pixel presence.
         /// </summary>
         /// <returns></returns>
-        public Int32 RemoveLeaves(Int32 level, Int32 activeColorCount, Int32 targetColorCount, OctreeQuantizer parent)
+        public int RemoveLeaves(int level, int activeColorCount, int targetColorCount, OctreeQuantizer parent)
         {
-            Int32 result = 0;
+            int result = 0;
 
             // scans thru all the active nodes
-            for (Int32 index = 0; index < 8; index++)
+            for (int index = 0; index < 8; index++)
             {
                 OctreeNode node = nodes[index];
 
@@ -239,18 +233,15 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <param name="color">The color for which the index will be calculated.</param>
         /// <param name="level">The bit index to be used for index calculation.</param>
         /// <returns>The color index at a certain depth level.</returns>
-        private static Int32 GetColorIndexAtLevel(Color color, Int32 level)
-        {
-            return ((color.R & Mask[level]) == Mask[level] ? 4 : 0) |
+        private static int GetColorIndexAtLevel(Color color, int level) => ((color.R & Mask[level]) == Mask[level] ? 4 : 0) |
                    ((color.G & Mask[level]) == Mask[level] ? 2 : 0) |
                    ((color.B & Mask[level]) == Mask[level] ? 1 : 0);
-        }
 
         /// <summary>
         /// Sets a palette index to this node.
         /// </summary>
         /// <param name="index">The palette index.</param>
-        internal void SetPaletteIndex(Int32 index)
+        internal void SetPaletteIndex(int index)
         {
             paletteIndex = index;
         }

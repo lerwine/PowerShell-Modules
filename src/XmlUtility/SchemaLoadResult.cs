@@ -7,7 +7,6 @@ using System.Xml.Schema;
 
 namespace XmlUtility
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SchemaLoadResult
     {
         private string _path;
@@ -224,5 +223,4 @@ namespace XmlUtility
             }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

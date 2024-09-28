@@ -1,8 +1,7 @@
-﻿using System;
-
+﻿#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum FileType
     {
         Unknown,
@@ -24,5 +23,4 @@ namespace Erwine.Leonard.T.GDIPlus
         [FileExtensionMap(".icos")]
         Icon
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

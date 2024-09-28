@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Represents a syncrhonized (thread-safe), strongly typed list of objects that can be accessed by index.
@@ -47,7 +46,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <para>The <see cref="SynchronizedList{T}"/> has a fixed size.</para></exception>
         /// <exception cref="NullReferenceException"><paramref name="item"/> is null reference in 
         /// the <see cref="SynchronizedList{T}"/>.</exception>
-        public void Insert(int index, T item) { base.BaseInsert(index, item); }
+        public void Insert(int index, T item) => base.BaseInsert(index, item);
 
         /// <summary>
         /// Removes the S<see cref="SynchronizedList{T}"/> item at the specified index.
@@ -56,7 +55,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in
         /// the <see cref="SynchronizedList{T}"/>.</exception>
         /// <exception cref="NotSupportedException">The <see cref="SynchronizedList{T}"/> is read-only.</exception>
-        public void RemoveAt(int index) { base.BaseRemoveAt(index); }
+        public void RemoveAt(int index) => base.BaseRemoveAt(index);
 
         /// <summary>
         /// Gets or sets the element at the specified index.
@@ -69,15 +68,15 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// is read-only.</exception>
         public new T this[int index]
         {
-            get { return base[index]; }
-            set { base.BaseSet(index, value); }
+            get => base[index];
+            set => base.BaseSet(index, value);
         }
 
         #endregion
 
         #region ICollection<T> Members
 
-        bool ICollection<T>.IsReadOnly { get { return false; } }
+        bool ICollection<T>.IsReadOnly => false;
 
         /// <summary>
         /// Adds an item to the <see cref="SynchronizedList{T}"/>.
@@ -86,7 +85,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedList{T}"/> is read-only
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedList{T}"/> has a fixed size.</para></exception>
-        public void Add(T item) { base.BaseAdd(item); }
+        public void Add(T item) => base.BaseAdd(item);
 
         /// <summary>
         /// Removes all items from the <see cref="SynchronizedList{T}"/>.
@@ -94,7 +93,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedList{T}"/> is read-only.
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedList{T}"/> has a fixed size.</para></exception>
-        public void Clear() { base.BaseClear(); }
+        public void Clear() => base.BaseClear();
 
         /// <summary>
         /// Removes the first occurrence of a specific object from the <see cref="SynchronizedList{T}"/>.
@@ -106,13 +105,13 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.NotSupportedException">The <see cref="SynchronizedList{T}"/> is read-only
         /// <para>-or-</para>
         /// <para>The <see cref="SynchronizedList{T}"/> has a fixed size.</para></exception>
-        public bool Remove(T item) { return base.BaseRemove(item); }
+        public bool Remove(T item) => base.BaseRemove(item);
 
         #endregion
 
         #region IEnumerable Members
 
-        IEnumerator IEnumerable.GetEnumerator() { return base.InnerGetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => base.InnerGetEnumerator();
 
         #endregion
     }

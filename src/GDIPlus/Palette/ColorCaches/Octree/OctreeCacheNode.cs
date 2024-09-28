@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class OctreeCacheNode
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
-        private static readonly Byte[] Mask = new Byte[] { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+        private static readonly byte[] Mask = [0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01];
 
         private readonly OctreeCacheNode[] nodes;
-        private readonly Dictionary<Int32, Color> entries;
+        private readonly Dictionary<int, Color> entries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OctreeCacheNode"/> class.
@@ -19,7 +15,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
         public OctreeCacheNode()
         {
             nodes = new OctreeCacheNode[8];
-            entries = new Dictionary<Int32, Color>();
+            entries = [];
         }
         
         /// <summary>
@@ -28,7 +24,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
         /// <param name="color">The color.</param>
         /// <param name="paletteIndex">Index of the palette.</param>
         /// <param name="level">The level.</param>
-        public void AddColor(Color color, Int32 paletteIndex, Int32 level)
+        public void AddColor(Color color, int paletteIndex, int level)
         {
             // if this node is a leaf, then increase a color amount, and pixel presence
             entries.Add(paletteIndex, color);
@@ -36,7 +32,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
             if (level < 8) // otherwise goes one level deeper
             {
                 // calculates an index for the next sub-branch
-                Int32 index = GetColorIndexAtLevel(color, level);
+                int index = GetColorIndexAtLevel(color, level);
 
                 // if that branch doesn't exist, grows it
                 if (nodes[index] == null)
@@ -52,13 +48,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
         /// <summary>
         /// Gets the index of the palette.
         /// </summary>
-        public Dictionary<Int32, Color> GetPaletteIndex(Color color, Int32 level)
+        public Dictionary<int, Color> GetPaletteIndex(Color color, int level)
         {
-            Dictionary<Int32, Color> result = entries;
+            Dictionary<int, Color> result = entries;
             
             if (level < 8)
             {
-                Int32 index = GetColorIndexAtLevel(color, level);
+                int index = GetColorIndexAtLevel(color, level);
 
                 if (nodes[index] != null)
                 {
@@ -69,11 +65,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree
             return result;
         }
 
-        private static Int32 GetColorIndexAtLevel(Color color, Int32 level)
-        {
-            return ((color.R & Mask[level]) == Mask[level] ? 4 : 0) |
-                   ((color.G & Mask[level]) == Mask[level] ? 2 : 0) |
-                   ((color.B & Mask[level]) == Mask[level] ? 1 : 0);
-        }
+        private static int GetColorIndexAtLevel(Color color, int level) => ((color.R & Mask[level]) == Mask[level] ? 4 : 0) |
+            ((color.G & Mask[level]) == Mask[level] ? 2 : 0) |
+            ((color.B & Mask[level]) == Mask[level] ? 1 : 0);
     }
 }

@@ -7,7 +7,6 @@ using System.Threading;
 
 namespace NetworkUtility
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Serializable]
     public class UriInfo : INotifyPropertyChanged, IEquatable<UriInfo>, IEquatable<string>, IComparable<UriInfo>, IComparable<string>, IComparable, IConvertible
     {
@@ -319,5 +318,4 @@ namespace NetworkUtility
             public const string Query_Parse = @"(?<key>[^&=]*)=(?<value>[^&]*)|(?<key>[^&=]+)";
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

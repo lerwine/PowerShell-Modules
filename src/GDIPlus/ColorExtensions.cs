@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Management.Automation;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// 
@@ -28,7 +25,7 @@ namespace Erwine.Leonard.T.GDIPlus
                     result = (IColorModel)baseObj;
                     return true;
                 }
-                string[] names = new string[] { "Hue", "Saturation", "Brightness" };
+                string[] names = ["Hue", "Saturation", "Brightness"];
                 StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
                 object alpha = obj.Properties.Where(p => comparer.Equals(p.Name, "Alpha") && p.IsInstance && p.IsGettable)
                     .Select(p => AsSimplestType(p.Value)).Where(o => o != null && (o is float || o is byte)).ToArray();
@@ -37,17 +34,17 @@ namespace Erwine.Leonard.T.GDIPlus
                     .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
                 if (hsb.Length != 3)
                 {
-                    names = new string[] { "Hue", "Saturation", "Lightness" };
+                    names = ["Hue", "Saturation", "Lightness"];
                     hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
                         .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
                     if (hsb.Length != 3)
                     {
-                        names = new string[] { "H", "S", "L" };
+                        names = ["H", "S", "L"];
                         hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
                             .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
                         if (hsb.Length != 3)
                         {
-                            names = new string[] { "H", "S", "B" };
+                            names = ["H", "S", "B"];
                             hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
                                 .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
                         }
@@ -85,12 +82,12 @@ namespace Erwine.Leonard.T.GDIPlus
                         }
                     }
                 }
-                names = new string[] { "Red", "Green", "Blue" };
+                names = ["Red", "Green", "Blue"];
                 hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
                     .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
                 if (hsb.Length != 3)
                 {
-                    names = new string[] { "R", "G", "B" };
+                    names = ["R", "G", "B"];
                     hsb = names.Select(n => obj.Properties.FirstOrDefault(p => comparer.Equals(p.Name, n))).Where(p => p != null && p.IsInstance && p.IsGettable)
                         .Select(p => AsSimplestType(p.Value)).Where(o => o != null).ToArray();
                 }
@@ -148,7 +145,7 @@ namespace Erwine.Leonard.T.GDIPlus
                 return ((double)obj <= Convert.ToDouble(float.MaxValue) && (double)obj >= Convert.ToSingle(float.MaxValue)) ? Convert.ToSingle((double)obj) : obj;
 
             if (obj is long)
-                return ((long)obj < 256 && (long)obj > -1) ? (byte)((long)obj) : obj;
+                return ((long)obj < 256 && (long)obj > -1) ? (byte)(long)obj : obj;
 
             if (obj is float)
                 return (float)obj;
@@ -163,16 +160,16 @@ namespace Erwine.Leonard.T.GDIPlus
                 return new string(new char[] { (char)obj });
 
             if (obj is uint)
-                return ((uint)obj < 256) ? (byte)((uint)obj) : obj;
+                return ((uint)obj < 256) ? (byte)(uint)obj : obj;
 
             if (obj is short)
-                return ((short)obj > -1 && (short)obj < 256) ? (byte)((short)obj) : obj;
+                return ((short)obj > -1 && (short)obj < 256) ? (byte)(short)obj : obj;
 
             if (obj is ushort)
-                return ((ushort)obj < 256) ? (byte)((ushort)obj) : obj;
+                return ((ushort)obj < 256) ? (byte)(ushort)obj : obj;
 
             if (obj is sbyte)
-                return ((sbyte)obj > -1) ? (byte)((sbyte)obj) : obj;
+                return ((sbyte)obj > -1) ? (byte)(sbyte)obj : obj;
 
             if (obj is IConvertible)
             {
@@ -209,19 +206,19 @@ namespace Erwine.Leonard.T.GDIPlus
                             break;
                         case TypeCode.Int16:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is short)
-                                return ((short)c > -1 && (short)c < 256) ? (byte)((short)c) : obj;
+                                return ((short)c > -1 && (short)c < 256) ? (byte)(short)c : obj;
                             break;
                         case TypeCode.Int32:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is int)
-                                return ((int)c > -1 && (int)c < 256) ? (byte)((int)c) : obj;
+                                return ((int)c > -1 && (int)c < 256) ? (byte)(int)c : obj;
                             break;
                         case TypeCode.Int64:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is long)
-                                return ((long)c > -1 && (long)c < 256) ? (byte)((long)c) : obj;
+                                return ((long)c > -1 && (long)c < 256) ? (byte)(long)c : obj;
                             break;
                         case TypeCode.SByte:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is sbyte)
-                                return ((sbyte)c > -1) ? (byte)((sbyte)c) : obj;
+                                return ((sbyte)c > -1) ? (byte)(sbyte)c : obj;
                             break;
                         case TypeCode.Single:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is float)
@@ -233,15 +230,15 @@ namespace Erwine.Leonard.T.GDIPlus
                             break;
                         case TypeCode.UInt16:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is ushort)
-                                return ((ushort)c < 256) ? (byte)((ushort)c) : obj;
+                                return ((ushort)c < 256) ? (byte)(ushort)c : obj;
                             break;
                         case TypeCode.UInt32:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is uint)
-                                return ((uint)c < 256) ? (byte)((uint)c) : obj;
+                                return ((uint)c < 256) ? (byte)(uint)c : obj;
                             break;
                         case TypeCode.UInt64:
                             if ((c = Convert.ChangeType(obj, TypeCode.Boolean)) != null && c is ulong)
-                                return ((ulong)c < 256) ? (byte)((ulong)c) : obj;
+                                return ((ulong)c < 256) ? (byte)(ulong)c : obj;
                             break;
                     }
                 }
@@ -268,11 +265,11 @@ namespace Erwine.Leonard.T.GDIPlus
         public static void HSBtoRGB(float hue, float saturation, float brightness, out float r, out float g, out float b)
         {
             if (hue < 0f || hue > HUE_MAXVALUE)
-                throw new ArgumentOutOfRangeException("Hue must be a value from 0 to " + HUE_MAXVALUE.ToString());
+                throw new ArgumentOutOfRangeException(nameof(hue), "Hue must be a value from 0 to " + HUE_MAXVALUE.ToString());
             if (saturation < 0f || saturation > 1f)
-                throw new ArgumentOutOfRangeException("Saturation must be a value from 0 to 1");
+                throw new ArgumentOutOfRangeException(nameof(saturation), "Saturation must be a value from 0 to 1");
             if (brightness < 0f || brightness > 1f)
-                throw new ArgumentOutOfRangeException("Brightness must be a value from 0 to 1");
+                throw new ArgumentOutOfRangeException(nameof(brightness), "Brightness must be a value from 0 to 1");
             float min, max;
             if (brightness < 0.5f)
             {
@@ -394,7 +391,7 @@ namespace Erwine.Leonard.T.GDIPlus
         public static byte FromPercentage(this float value)
         {
             if (value < 0f || value > 1f)
-                throw new ArgumentOutOfRangeException("value");
+                throw new ArgumentOutOfRangeException(nameof(value));
             return Convert.ToByte(value * 255f);
         }
 
@@ -403,7 +400,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// </summary>
         /// <param name="value">Byte value to convert.</param>
         /// <returns>8-bit value converted to a value ranging from 0.0 to (but not including) 360.0.</returns>
-        public static float ToDegrees(this byte value) { return (Convert.ToSingle(value) * HUE_MAXVALUE) / 256f; }
+        public static float ToDegrees(this byte value) { return Convert.ToSingle(value) * HUE_MAXVALUE / 256f; }
 
         /// <summary>
         /// Converts a degree value to an 8-bit value.
@@ -414,8 +411,8 @@ namespace Erwine.Leonard.T.GDIPlus
         public static byte FromDegrees(this float value)
         {
             if (value < 0f || value > HUE_MAXVALUE)
-                throw new ArgumentOutOfRangeException("value");
-            return (value == HUE_MAXVALUE) ? (byte)0 : Convert.ToByte((value * 256f) / HUE_MAXVALUE);
+                throw new ArgumentOutOfRangeException(nameof(value));
+            return (value == HUE_MAXVALUE) ? (byte)0 : Convert.ToByte(value * 256f / HUE_MAXVALUE);
         }
 
         /// <summary>

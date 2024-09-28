@@ -5,18 +5,14 @@ using System.Text.RegularExpressions;
 
 namespace WinIOUtility
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class RegularExpressions
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static readonly Regex Whitespace = new Regex(@"\s+", RegexOptions.Compiled);
         public static readonly Regex EncodedName = new Regex(@"_0x(?<hex>[\dA-F]{4})_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static readonly Regex ControlChar = new Regex(@"\p{Cc}", RegexOptions.Compiled);
         public static readonly Regex InvalidFileNameChars;
         public static readonly Regex InvalidPathChars;
         public static readonly Regex InvalidRelativePathChars;
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         static RegularExpressions()
         {

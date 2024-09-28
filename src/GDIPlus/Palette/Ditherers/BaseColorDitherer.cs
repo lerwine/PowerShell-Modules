@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 using Erwine.Leonard.T.GDIPlus.Palette.PathProviders;
 using Erwine.Leonard.T.GDIPlus.Palette.Quantizers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorDitherer : IColorDitherer
     {
         #region | Fields |
@@ -21,7 +19,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// <summary>
         /// Gets the color count.
         /// </summary>
-        protected Int32 ColorCount { get; private set; }
+        protected int ColorCount { get; private set; }
 
         /// <summary>
         /// Gets the source buffer.
@@ -41,12 +39,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// <summary>
         /// Cache: Access to already created coeficient matrix.
         /// </summary>
-        protected Byte[,] CachedMatrix { get; private set; }
+        protected byte[,] CachedMatrix { get; private set; }
 
         /// <summary>
         /// Cache: Access to already created coeficient matrix with division performed.
         /// </summary>
-        protected Single[,] CachedSummedMatrix { get; private set; }
+        protected float[,] CachedSummedMatrix { get; private set; }
 
         #endregion
 
@@ -61,14 +59,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
 
         #region | Helper methods |
 
-        private Int32 GetMatrixFactor()
+        private int GetMatrixFactor()
         {
-            Int32 result = 0;
+            int result = 0;
 
-            for (Int32 y = 0; y < CachedMatrix.GetLength(0); y++)
-            for (Int32 x = 0; x < CachedMatrix.GetLength(1); x++)
+            for (int y = 0; y < CachedMatrix.GetLength(0); y++)
+            for (int x = 0; x < CachedMatrix.GetLength(1); x++)
             {
-                Int32 value = CachedMatrix[y, x];
+                int value = CachedMatrix[y, x];
                 if (value > result) result = value;
             }
 
@@ -83,23 +81,23 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
             // if the provider exists; or default one was created for these purposes.. use it
             if (result == null)
             {
-                String message = string.Format("The path provider is not initialized! Please use SetPathProvider() method on quantizer.");
-                throw new ArgumentNullException(message);
+                string message = string.Format("The path provider is not initialized! Please use SetPathProvider() method on quantizer.");
+                throw new ArgumentNullException(nameof(result), message);
             }
 
             // provider was obtained somehow, use it
             return result;
         }
 
-        protected Int32 GetClampedColorElementWithError(Int32 colorElement, Single factor, Int32 error)
+        protected int GetClampedColorElementWithError(int colorElement, float factor, int error)
         {
-            Int32 result = Convert.ToInt32(colorElement + factor * error);
+            int result = Convert.ToInt32(colorElement + factor * error);
             return GetClampedColorElement(result);
         }
 
-        protected Int32 GetClampedColorElement(Int32 colorElement)
+        protected static int GetClampedColorElement(int colorElement)
         {
-            Int32 result = colorElement;
+            int result = colorElement;
             if (result < 0) result = 0;
             if (result > 255) result = 255;
             return result;
@@ -125,16 +123,16 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         {
             // creates coeficient matrix and determines the matrix factor/divisor/maximum
             CachedMatrix = CreateCoeficientMatrix();
-            Single maximum = GetMatrixFactor();
+            float maximum = GetMatrixFactor();
 
             // prepares the cache arrays
-            Int32 width = CachedMatrix.GetLength(1);
-            Int32 height = CachedMatrix.GetLength(0);
-            CachedSummedMatrix = new Single[height, width];
+            int width = CachedMatrix.GetLength(1);
+            int height = CachedMatrix.GetLength(0);
+            CachedSummedMatrix = new float[height, width];
 
             // caches the matrix (and division by a sum)
-            for (Int32 y = 0; y < height; y++)
-            for (Int32 x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
             {
                 CachedSummedMatrix[y, x] = CachedMatrix[y, x] / maximum;
             }
@@ -144,12 +142,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// Creates the coeficient matrix.
         /// </summary>
         /// <returns></returns>
-        protected abstract Byte[,] CreateCoeficientMatrix();
+        protected abstract byte[,] CreateCoeficientMatrix();
 
         /// <summary>
         /// Allows ditherer to process image per pixel, with ability to access the rest of the image.
         /// </summary>
-        protected abstract Boolean OnProcessPixel(Pixel sourcePixel, Pixel targetPixel);
+        protected abstract bool OnProcessPixel(Pixel sourcePixel, Pixel targetPixel);
 
         /// <summary>
         /// Called when dithering is finished.
@@ -166,7 +164,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// <summary>
         /// See <see cref="IPathProvider.GetPointPath"/> for more details.
         /// </summary>
-        public IList<Point> GetPointPath(Int32 width, Int32 heigth)
+        public IList<Point> GetPointPath(int width, int heigth)
         {
             return GetPathProvider().GetPointPath(width, heigth);
         }
@@ -178,12 +176,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// <summary>
         /// See <see cref="IColorDitherer.IsInplace"/> for more details.
         /// </summary>
-        public abstract Boolean IsInplace { get; }
+        public abstract bool IsInplace { get; }
 
         /// <summary>
         /// See <see cref="IColorDitherer.Prepare"/> for more details.
         /// </summary>
-        public void Prepare(IColorQuantizer quantizer, Int32 colorCount, ImageBuffer sourceBuffer, ImageBuffer targetBuffer)
+        public void Prepare(IColorQuantizer quantizer, int colorCount, ImageBuffer sourceBuffer, ImageBuffer targetBuffer)
         {
             SourceBuffer = sourceBuffer;
             TargetBuffer = targetBuffer;
@@ -197,7 +195,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// Retrieves the path in which to traverse 
         /// </summary>
         /// <returns></returns>
-        public IList<Point> GetPointPath()
+        public static IList<Point> GetPointPath()
         {
             return null;
         }
@@ -205,7 +203,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
         /// <summary>
         /// See <see cref="ProcessPixel"/> for more details.
         /// </summary>
-        public Boolean ProcessPixel(Pixel sourcePixel, Pixel targetPixel)
+        public bool ProcessPixel(Pixel sourcePixel, Pixel targetPixel)
         {
             return OnProcessPixel(sourcePixel, targetPixel);
         }
@@ -220,5 +218,4 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

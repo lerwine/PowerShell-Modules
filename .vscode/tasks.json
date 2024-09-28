@@ -3,79 +3,219 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
-        {
-          "label": "Publish IOUtility",
-          "type": "shell",
-          "command": "${workspaceFolder}/Deploy.ps1",
-          "args": [
-            "-ModuleManifestPath", "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
-            "-DeploymentRoot", "${workspaceFolder}/dist",
-            "-PublishLocalRepo"
-          ],
-          "group": "build",
-          "presentation": {
-            "reveal": "always",
-            "panel": "new"
-          }
-        },
-        {
-            "label": "Build WinIOUtility",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/WinIOUtility/WinIOUtility.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-          "label": "Publish WinIOUtility",
-          "type": "shell",
-          "command": "${workspaceFolder}/Deploy.ps1",
-          "args": [
-            "-ModuleManifestPath", "${workspaceFolder}/src/WinIOUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.WinIOUtility.psd1",
-            "-DeploymentRoot", "${workspaceFolder}/dist",
-            "-PublishLocalRepo"
-          ],
-          "group": "build",
-          "presentation": {
-            "reveal": "always",
-            "panel": "new"
-          }
-        },
-        {
-            "label": "Build LteDev",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/LteDev/LteDev.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": "build"
-        },
-        {
-          "label": "Publish LteDev",
-          "type": "shell",
-          "command": "${workspaceFolder}/Deploy.ps1",
-          "args": [
-            "-ModuleManifestPath", "${workspaceFolder}/src/LteDev/bin/Debug/net8.0-windows/Erwine.Leonard.T.LteDev.psd1",
-            "-DeploymentRoot", "${workspaceFolder}/dist",
-            "-PublishLocalRepo"
-          ],
-          "group": "build",
-          "presentation": {
-            "reveal": "always",
-            "panel": "new"
-          }
+      {
+        "label": "Build All",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/PowerShellModules.sln",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      },
+      {
+        "label": "Publish SwPackage",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
         }
+      },
+      {
+        "label": "Publish IOUtility",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/IOUtility/Erwine.Leonard.T.IOUtility.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Build WinIOUtility",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/WinIOUtility/WinIOUtility.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      },
+      {
+        "label": "Publish WinIOUtility",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/WinIOUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.WinIOUtility.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "dependsOn": [
+          "Build WinIOUtility"
+        ],
+        "problemMatcher": []
+      },
+      {
+        "label": "Build LteDev",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/LteDev/LteDev.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      },
+      {
+        "label": "Build LteDev.UnitTests",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/LteDev.UnitTests/LteDev.UnitTests.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build",
+        "dependsOn": [
+          "Build LteDev"
+        ]
+      },
+      {
+        "label": "Publish LteDev",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/LteDev/bin/Debug/net8.0-windows/Erwine.Leonard.T.LteDev.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "dependsOn": [
+          "Build LteDev"
+        ]
+      },
+      {
+        "label": "Build XmlUtility",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/XmlUtility/XmlUtility.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      },
+      {
+        "label": "Publish XmlUtility",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/XmlUtility/bin/Debug/net8.0/Erwine.Leonard.T.XmlUtility.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": [],
+        "dependsOn": [
+          "Build XmlUtility"
+        ]
+      },
+      {
+        "label": "Build GDIPlus",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/GDIPlus/GDIPlus.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      },
+      {
+        "label": "Publish GDIPlus",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/GDIPlus/bin/Debug/net8.0-windows/Erwine.Leonard.T.GDIPlus.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": [],
+        "dependsOn": [
+          "Build GDIPlus"
+        ]
+      },
+      {
+        "label": "Build CredentialStorage",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/CredentialStorage/CredentialStorage.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      }
     ]
 }

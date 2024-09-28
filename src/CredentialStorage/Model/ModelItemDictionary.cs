@@ -6,7 +6,6 @@ using System.Threading;
 
 namespace CredentialStorage.Model
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ModelItemDictionary<TChild> : IDictionary<Guid, TChild>, IList<TChild>, ICollection<KeyValuePair<Guid, TChild>>, IDictionary, IList
         where TChild : class, IModelItem
     {
@@ -527,5 +526,4 @@ namespace CredentialStorage.Model
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

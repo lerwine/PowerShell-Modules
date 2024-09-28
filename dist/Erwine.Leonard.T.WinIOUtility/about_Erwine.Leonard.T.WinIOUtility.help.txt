@@ -1,0 +1,48 @@
+﻿TOPIC
+    about_Erwine.Leonard.T.WinIOUtility
+
+SHORT DESCRIPTION
+    PowerShell I/O utility functions for windows-based systems.
+
+LONG DESCRIPTION
+    Provides utility functions that are useful for advanced input/output operations on windows-based systems.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    Get-SpecialFolderNames
+        Get special folder names.
+
+    Get-SpecialFolder
+        Get special folder path.
+
+    Get-AppDataPath
+        Get path for application data storage.
+
+    New-WindowOwner
+        Create new window owner object.
+
+    Read-FileDialog
+        Prompt user for filesystem path.
+
+    New-DataTable
+        Creates a new DataTable object.
+
+    Add-DataColumn
+        Adds a new DataColumn object to a DataTable.
+
+    Compare-FileSystemInfo
+        Compares 2 filesystem items.
+
+    Test-PathsAreEqual
+        Determines if 2 paths are equal.
+
+SEE ALSO
+    Get-SpecialFolderNames
+    Get-SpecialFolder
+    Get-AppDataPath
+    New-WindowOwner
+    Test-FileDialogFilter
+    Read-FileDialog
+    Compare-FileSystemInfo
+    Test-PathsAreEqual

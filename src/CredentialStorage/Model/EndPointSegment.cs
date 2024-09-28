@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 
 namespace CredentialStorage.Model
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class EndPointSegment : IBaseItem
     {
         public Credential Credential { get; private set; }
@@ -29,5 +28,4 @@ namespace CredentialStorage.Model
             MetaData = new Hashtable();
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

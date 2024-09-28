@@ -1,15 +1,14 @@
-using System;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     internal class PopularityColorSlot
     {
         #region | Fields |
 
-        private Int32 red;
-        private Int32 green;
-        private Int32 blue;
+        private int red;
+        private int green;
+        private int blue;
 
         #endregion
 
@@ -19,7 +18,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
         /// Gets or sets the pixel count.
         /// </summary>
         /// <value>The pixel count.</value>
-        public Int32 PixelCount { get; private set; }
+        public int PixelCount { get; private set; }
 
         #endregion
 
@@ -58,9 +57,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
         public Color GetAverage()
         {
             // determines the components
-            Int32 finalRed = red/PixelCount;
-            Int32 finalGreen = green/PixelCount;
-            Int32 finalBlue = blue/PixelCount;
+            int finalRed = red / PixelCount;
+            int finalGreen = green / PixelCount;
+            int finalBlue = blue / PixelCount;
 
             // clamps the invalid values
             if (finalRed < 0) finalRed = 0;

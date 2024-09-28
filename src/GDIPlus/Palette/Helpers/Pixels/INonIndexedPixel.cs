@@ -1,24 +1,21 @@
-using System;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface INonIndexedPixel
     {
         // components
-        Int32 Alpha { get; }
-        Int32 Red { get; }
-        Int32 Green { get; }
-        Int32 Blue { get; }
+        int Alpha { get; }
+        int Red { get; }
+        int Green { get; }
+        int Blue { get; }
 
         // higher-level values
-        Int32 Argb { get; }
-        UInt64 Value { get; set; }
+        int Argb { get; }
+        ulong Value { get; set; }
 
         // color methods
         Color GetColor();
         void SetColor(Color color);
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

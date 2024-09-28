@@ -1,17 +1,13 @@
-using System;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers.ErrorDiffusion
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class JarvisJudiceNinkeDitherer : BaseErrorDistributionDitherer
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// See <see cref="BaseColorDitherer.CreateCoeficientMatrix"/> for more details.
         /// </summary>
-        protected override Byte[,] CreateCoeficientMatrix()
-        {
-            return new Byte[,]
+        protected override byte[,] CreateCoeficientMatrix() => new byte[,]
             {
                 { 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0 },
@@ -19,22 +15,15 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers.ErrorDiffusion
                 { 3, 5, 7, 5, 3 },
                 { 1, 3, 5, 3, 1 }
             };
-        }
 
         /// <summary>
         /// See <see cref="BaseErrorDistributionDitherer.MatrixSideWidth"/> for more details.
         /// </summary>
-        protected override Int32 MatrixSideWidth
-        {
-            get { return 2; }
-        }
+        protected override int MatrixSideWidth => 2;
 
         /// <summary>
         /// See <see cref="BaseErrorDistributionDitherer.MatrixSideHeight"/> for more details.
         /// </summary>
-        protected override Int32 MatrixSideHeight
-        {
-            get { return 2; }
-        }
+        protected override int MatrixSideHeight => 2;
     }
 }

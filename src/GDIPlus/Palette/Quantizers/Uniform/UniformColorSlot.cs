@@ -1,17 +1,17 @@
-using System;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     internal struct UniformColorSlot
     {
-        private Int32 value;
-        private Int32 pixelCount;
+        private int value;
+        private int pixelCount;
 
         /// <summary>
         /// Adds the value to the slot.
         /// </summary>
         /// <param name="component">The color component value.</param>
-        public void AddValue(Int32 component)
+        public void AddValue(int component)
         {
             value += component;
             pixelCount++;
@@ -21,13 +21,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
         /// Gets the average, just simple value divided by pixel presence.
         /// </summary>
         /// <returns>The average color component value.</returns>
-        public Int32 GetAverage()
+        public readonly int GetAverage()
         {
-            Int32 result = 0;
+            int result = 0;
 
             if (pixelCount > 0)
             {
-                result = pixelCount == 1 ? value : value/pixelCount;
+                result = pixelCount == 1 ? value : value / pixelCount;
             }
 
             return result;

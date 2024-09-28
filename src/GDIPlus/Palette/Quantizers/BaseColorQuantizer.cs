@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 using Erwine.Leonard.T.GDIPlus.Palette.PathProviders;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorQuantizer : IColorQuantizer
     {
         #region | Constants |
@@ -17,16 +13,16 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// This index will represent invalid palette index.
         /// </summary>
-        protected const Int32 InvalidIndex = -1;
+        protected const int InvalidIndex = -1;
 
         #endregion
 
         #region | Fields |
 
-        private Boolean paletteFound;
-        private Int64 uniqueColorIndex;
+        private bool paletteFound;
+        private long uniqueColorIndex;
         private IPathProvider pathProvider;
-        protected readonly ConcurrentDictionary<Int32, Int16> UniqueColors;
+        protected readonly ConcurrentDictionary<int, short> UniqueColors;
 
         #endregion
 
@@ -39,7 +35,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         {
             pathProvider = null;
             uniqueColorIndex = -1;
-            UniqueColors = new ConcurrentDictionary<Int32, Int16>();
+            UniqueColors = new ConcurrentDictionary<int, short>();
         }
 
         #endregion
@@ -50,10 +46,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// Changes the path provider.
         /// </summary>
         /// <param name="pathProvider">The path provider.</param>
-        public void ChangePathProvider(IPathProvider pathProvider)
-        {
-            this.pathProvider = pathProvider;
-        }
+        public void ChangePathProvider(IPathProvider pathProvider) => this.pathProvider = pathProvider;
 
         #endregion
 
@@ -67,8 +60,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
             // if the provider exists; or default one was created for these purposes.. use it
             if (result == null)
             {
-                String message = string.Format("The path provider is not initialized! Please use SetPathProvider() method on quantizer.");
-                throw new ArgumentNullException(message);
+                string message = string.Format("The path provider is not initialized! Please use SetPathProvider() method on quantizer.");
+                throw new ArgumentNullException(nameof(result), message);
             }
 
             // provider was obtained somehow, use it
@@ -92,10 +85,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// Called when color is to be added.
         /// </summary>
-        protected virtual void OnAddColor(Color color, Int32 key, Int32 x, Int32 y)
+        protected virtual void OnAddColor(Color color, int key, int x, int y)
         {
             UniqueColors.AddOrUpdate(key,
-                colorKey => (Byte) Interlocked.Increment(ref uniqueColorIndex), 
+                colorKey => (byte) Interlocked.Increment(ref uniqueColorIndex), 
                 (colorKey, colorIndex) => colorIndex);
         }
 
@@ -111,7 +104,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// Called when quantized palette is needed.
         /// </summary>
-        protected virtual List<Color> OnGetPalette(Int32 colorCount)
+        protected virtual List<Color> OnGetPalette(int colorCount)
         {
             // early optimalization, in case the color count is lower than total unique color count
             if (UniqueColors.Count > 0 && colorCount >= UniqueColors.Count)
@@ -134,14 +127,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// Called when get palette index for a given color should be returned.
         /// </summary>
-        protected virtual void OnGetPaletteIndex(Color color, Int32 key, Int32 x, Int32 y, out Int32 paletteIndex)
+        protected virtual void OnGetPaletteIndex(Color color, int key, int x, int y, out int paletteIndex)
         {
             // by default unknown index is returned
             paletteIndex = InvalidIndex;
-            Int16 foundIndex;
 
             // if we previously found palette quickly (without quantization), use it
-            if (paletteFound && UniqueColors.TryGetValue(key, out foundIndex))
+            if (paletteFound && UniqueColors.TryGetValue(key, out short foundIndex))
             {
                 paletteIndex = foundIndex;
             }
@@ -150,10 +142,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// Called when get color count.
         /// </summary>
-        protected virtual Int32 OnGetColorCount()
-        {
-            return UniqueColors.Count;
-        }
+        protected virtual int OnGetColorCount() => UniqueColors.Count;
 
         /// <summary>
         /// Called when about to clear left-overs after quantization.
@@ -170,10 +159,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// See <see cref="IPathProvider.GetPointPath"/> for more details.
         /// </summary>
-        public IList<Point> GetPointPath(Int32 width, Int32 heigth)
-        {
-            return GetPathProvider().GetPointPath(width, heigth);
-        }
+        public IList<Point> GetPointPath(int width, int heigth) => GetPathProvider().GetPointPath(width, heigth);
 
         #endregion
 
@@ -182,62 +168,47 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public abstract Boolean AllowParallel { get; }
+        public abstract bool AllowParallel { get; }
 
         /// <summary>
         /// See <see cref="IColorQuantizer.Prepare"/> for more details.
         /// </summary>
-        public void Prepare(ImageBuffer image)
-        {
-            OnPrepare(image);
-        }
+        public void Prepare(ImageBuffer image) => OnPrepare(image);
 
         /// <summary>
         /// See <see cref="IColorQuantizer.AddColor"/> for more details.
         /// </summary>
-        public void AddColor(Color color, Int32 x, Int32 y)
+        public void AddColor(Color color, int x, int y)
         {
-            Int32 key;
-            color = QuantizationHelper.ConvertAlpha(color, out key);
+            color = QuantizationHelper.ConvertAlpha(color, out int key);
             OnAddColor(color, key, x, y);
         }
 
         /// <summary>
         /// See <see cref="IColorQuantizer.GetColorCount"/> for more details.
         /// </summary>
-        public Int32 GetColorCount()
-        {
-            return OnGetColorCount();
-        }
+        public int GetColorCount() => OnGetColorCount();
 
         /// <summary>
         /// See <see cref="IColorQuantizer.GetPalette"/> for more details.
         /// </summary>
-        public List<Color> GetPalette(Int32 colorCount)
-        {
-            return OnGetPalette(colorCount);
-        }
+        public List<Color> GetPalette(int colorCount) => OnGetPalette(colorCount);
 
         /// <summary>
         /// See <see cref="IColorQuantizer.GetPaletteIndex"/> for more details.
         /// </summary>
-        public Int32 GetPaletteIndex(Color color, Int32 x, Int32 y)
+        public int GetPaletteIndex(Color color, int x, int y)
         {
-            Int32 result, key;
-            color = QuantizationHelper.ConvertAlpha(color, out key);
-            OnGetPaletteIndex(color, key, x, y, out result);
+            color = QuantizationHelper.ConvertAlpha(color, out int key);
+            OnGetPaletteIndex(color, key, x, y, out int result);
             return result;
         }
 
         /// <summary>
         /// See <see cref="IColorQuantizer.Finish"/> for more details.
         /// </summary>
-        public void Finish()
-        {
-            OnFinish();
-        }
+        public void Finish() => OnFinish();
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

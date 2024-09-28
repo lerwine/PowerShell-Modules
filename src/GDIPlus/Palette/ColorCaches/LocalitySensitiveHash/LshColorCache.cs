@@ -1,33 +1,29 @@
-using System;
-using System.Linq;
-using System.Drawing;
-using System.Collections.Generic;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class LshColorCache : BaseColorCache
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region | Constants |
 
-        private const Byte DefaultQuality = 16; // 16
-        private const Int64 MaximalDistance = 4096;
+        private const byte DefaultQuality = 16; // 16
+        private const long MaximalDistance = 4096;
 
-        private const Single NormalizedDistanceRGB = 1.0f / 196608.0f; // 256*256*3 (RGB) = 196608 / 768.0f
-        private const Single NormalizedDistanceHSL = 1.0f / 260672.0f; // 360*360 (H) + 256*256*2 (SL) = 260672 / 872.0f
-        private const Single NormalizedDistanceLab = 1.0f / 507.0f; // 13*13*3 = 507 / 300.0f
+        private const float NormalizedDistanceRGB = 1.0f / 196608.0f; // 256 * 256 * 3 (RGB) = 196608 / 768.0f
+        private const float NormalizedDistanceHSL = 1.0f / 260672.0f; // 360 * 360 (H) + 256 * 256 * 2 (SL) = 260672 / 872.0f
+        private const float NormalizedDistanceLab = 1.0f / 507.0f; // 13 * 13 * 3 = 507 / 300.0f
 
         #endregion
 
         #region | Fields |
 
-        private Byte quality;
-        private Int64 bucketSize;
-        private Int64 minBucketIndex;
-        private Int64 maxBucketIndex;
+        private byte quality;
+        private long bucketSize;
+        private long minBucketIndex;
+        private long maxBucketIndex;
         private BucketInfo[] buckets;
 
         #endregion
@@ -38,9 +34,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
         /// Gets or sets the quality.
         /// </summary>
         /// <value>The quality.</value>
-        public Byte Quality
+        public byte Quality
         {
-            get { return quality; }
+            get => quality;
             set
             {
                 quality = value;
@@ -59,10 +55,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
         /// <value>
         /// 	<c>true</c> if this instance is color model supported; otherwise, <c>false</c>.
         /// </value>
-        public override Boolean IsColorModelSupported
-        {
-            get { return true; }
-        }
+        public override bool IsColorModelSupported => true;
 
         #endregion
 
@@ -82,7 +75,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
         /// </summary>
         /// <param name="colorModel">The color model.</param>
         /// <param name="quality">The quality.</param>
-        public LshColorCache(ColorModel colorModel, Byte quality)
+        public LshColorCache(ColorModel colorModel, byte quality)
         {
             ColorModel = colorModel;
             Quality = quality;
@@ -92,10 +85,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
 
         #region | Helper methods |
 
-        private Int64 GetColorBucketIndex(Color color)
+        private long GetColorBucketIndex(Color color)
         {
-            Single normalizedDistance = 0.0f;
-            Single componentA, componentB, componentC;
+            float normalizedDistance = 0.0f;
 
             switch (ColorModel)
             {
@@ -104,17 +96,17 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
                 case ColorModel.LabColorSpace: normalizedDistance = NormalizedDistanceLab; break;
             }
 
-            ColorModelHelper.GetColorComponents(ColorModel, color, out componentA, out componentB, out componentC);
-            Single distance = componentA*componentA + componentB*componentB + componentC*componentC;
-            Single normalized = distance * normalizedDistance * MaximalDistance;
-            Int64 resultHash = (Int64) normalized / bucketSize;
+            ColorModelHelper.GetColorComponents(ColorModel, color, out float componentA, out float componentB, out float componentC);
+            float distance = componentA * componentA + componentB * componentB + componentC * componentC;
+            float normalized = distance * normalizedDistance * MaximalDistance;
+            long resultHash = (long) normalized / bucketSize;
 
             return resultHash;
         }
 
         private BucketInfo GetBucket(Color color)
         {
-            Int64 bucketIndex = GetColorBucketIndex(color);
+            long bucketIndex = GetColorBucketIndex(color);
 
             if (bucketIndex < minBucketIndex)
             {
@@ -126,10 +118,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
             }
             else if (buckets[bucketIndex] == null)
             {
-                Boolean bottomFound = false;
-                Boolean topFound = false;
-                Int64 bottomBucketIndex = bucketIndex;
-                Int64 topBucketIndex = bucketIndex;
+                bool bottomFound = false;
+                bool topFound = false;
+                long bottomBucketIndex = bucketIndex;
+                long topBucketIndex = bucketIndex;
 
                 while (!bottomFound && !topFound)
                 {
@@ -163,13 +155,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
         /// </summary>
         protected override void OnCachePalette(IList<Color> palette)
         {
-            Int32 paletteIndex = 0;
+            int paletteIndex = 0;
             minBucketIndex = quality;
             maxBucketIndex = 0;
 
             foreach (Color color in palette)
             {
-                Int64 bucketIndex = GetColorBucketIndex(color);
+                long bucketIndex = GetColorBucketIndex(color);
                 BucketInfo bucket = buckets[bucketIndex] ?? new BucketInfo();
                 bucket.AddColor(paletteIndex++, color);
                 buckets[bucketIndex] = bucket;
@@ -182,10 +174,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
         /// <summary>
         /// See <see cref="BaseColorCache.OnGetColorPaletteIndex"/> for more details.
         /// </summary>
-        protected override void OnGetColorPaletteIndex(Color color, out Int32 paletteIndex)
+        protected override void OnGetColorPaletteIndex(Color color, out int paletteIndex)
         {
             BucketInfo bucket = GetBucket(color);
-            Int32 colorCount = bucket.Colors.Count();
+            int colorCount = bucket.Colors.Count;
             paletteIndex = 0;
 
             if (colorCount == 1)
@@ -194,10 +186,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.LocalitySensitiveHash
             }
             else
             {
-                Int32 index = 0;
-                Int32 colorIndex = ColorModelHelper.GetEuclideanDistance(color, ColorModel, bucket.Colors.Values.ToList());
+                int index = 0;
+                int colorIndex = ColorModelHelper.GetEuclideanDistance(color, ColorModel, bucket.Colors.Values.ToList());
 
-                foreach (Int32 colorPaletteIndex in bucket.Colors.Keys)
+                foreach (int colorPaletteIndex in bucket.Colors.Keys)
                 {
                     if (index == colorIndex)
                     {

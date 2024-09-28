@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.PathProviders
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IPathProvider
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Retrieves the path throughout the image to determine the order in which pixels will be scanned.
         /// </summary>
-        IList<Point> GetPointPath(Int32 width, Int32 height);
+        IList<Point> GetPointPath(int width, int height);
     }
 }

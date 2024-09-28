@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// An HSB (Hue,Saturation,Brightness) color model using 32 bits.
@@ -18,7 +18,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <summary>
         /// 
         /// </summary>
-        public static readonly Regex ParseRegex = new Regex(@"^((?<h>[a-f\d]{3}([a-f\d]([a-f\d]{2}|[a-f\d]{4})?)?)|hs[lb]a?\(\s*((?<b>(?<h>\d+)\s*,\s*(?<s>\d+)\s*,\s*(?<l>\d+))|(?<p>(?<h>\d+(\.\d+)?)\s*,\s*(?<s>\d+(\.\d+)?)%\s*,\s*(?<l>\d+(\.\d+)?)%))(\s*,\s*(?<a>\d+(\.\d+)?%?))?\s*\))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex ParseRegex = new(@"^((?<h>[a-f\d]{3}([a-f\d]([a-f\d]{2}|[a-f\d]{4})?)?)|hs[lb]a?\(\s*((?<b>(?<h>\d+)\s*,\s*(?<s>\d+)\s*,\s*(?<l>\d+))|(?<p>(?<h>\d+(\.\d+)?)\s*,\s*(?<s>\d+(\.\d+)?)%\s*,\s*(?<l>\d+(\.\d+)?)%))(\s*,\s*(?<a>\d+(\.\d+)?%?))?\s*\))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         [FieldOffset(0)]
         private readonly int _value;
@@ -32,35 +32,35 @@ namespace Erwine.Leonard.T.GDIPlus
         private readonly byte _alpha;
 
         #endregion
-        
+
         #region Properties
 
         /// <summary>
         /// The opaqueness of the color.
         /// </summary>
-        public byte Alpha { get { return _alpha; } }
+        public readonly byte Alpha => _alpha;
 
         /// <summary>
         /// The hue of the color.
         /// </summary>
-        public byte Hue { get { return _hue; } }
+        public readonly byte Hue => _hue;
 
         /// <summary>
         /// The color saturation.
         /// </summary>
-        public byte Saturation { get { return _saturation; } }
+        public readonly byte Saturation => _saturation;
 
         /// <summary>
         /// The brightness of the color.
         /// </summary>
-        public byte Brightness { get { return _brightness; } }
+        public readonly byte Brightness => _brightness;
 
-        bool IColorModel.IsNormalized { get { return false; } }
+        readonly bool IColorModel.IsNormalized => false;
 
-        ColorStringFormat IColorModel.DefaultStringFormat { get { return ColorStringFormat.HSLAHex; } }
+        readonly ColorStringFormat IColorModel.DefaultStringFormat => ColorStringFormat.HSLAHex;
 
         #endregion
-        
+
         #region Constructors
 
         /// <summary>
@@ -111,46 +111,46 @@ namespace Erwine.Leonard.T.GDIPlus
         }
 
         #endregion
-        
+
         #region As* Methods
 
-        IHsbColorModel<byte> IColorModel.AsHsb32() { return this; }
+        readonly IHsbColorModel<byte> IColorModel.AsHsb32() { return this; }
 
         /// <summary>
         /// Returns a <seealso cref="HsbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.
         /// </summary>
         /// <returns>A <seealso cref="HsbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.</returns>
-        public HsbColorF AsHsbF() { return new HsbColorF(this); }
+        public readonly HsbColorF AsHsbF() { return new HsbColorF(this); }
 
-        IHsbColorModel<float> IColorModel.AsHsbF() { return AsHsbF(); }
+        readonly IHsbColorModel<float> IColorModel.AsHsbF() { return AsHsbF(); }
 
         /// <summary>
         /// Returns a <seealso cref="RgbColor32" /> value representing the same color as the current <see cref="HsbColor32" />.
         /// </summary>
         /// <returns>A <seealso cref="RgbColor32" /> value representing the same color as the current <see cref="HsbColor32" />.</returns>
-        public RgbColor32 AsRgb32() { return new RgbColor32(this); }
+        public readonly RgbColor32 AsRgb32() { return new RgbColor32(this); }
 
-        IRgbColorModel<byte> IColorModel.AsRgb32() { return AsRgb32(); }
+        readonly IRgbColorModel<byte> IColorModel.AsRgb32() { return AsRgb32(); }
 
         /// <summary>
         /// Returns a <seealso cref="RgbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.
         /// </summary>
         /// <returns>A <seealso cref="RgbColorF" /> value representing the same color as the current <see cref="HsbColor32" />.</returns>
-        public RgbColorF AsRgbF() { return new RgbColorF(this); }
+        public readonly RgbColorF AsRgbF() { return new RgbColorF(this); }
 
-        IRgbColorModel<float> IColorModel.AsRgbF() { return AsRgbF(); }
+        readonly IRgbColorModel<float> IColorModel.AsRgbF() { return AsRgbF(); }
 
         /// <summary>
         /// Returns a <seealso cref="HsbColor32Normalized" /> value representing the same color as the current <see cref="HsbColor32" /> with the color values normalized for accurate comparisons.
         /// </summary>
         /// <returns>A <seealso cref="RgbColorF" /> value representing the same color as the current <see cref="HsbColor32" /> with the color values normalized for accurate comparisons.</returns>
-        public HsbColor32Normalized AsNormalized() { return new HsbColor32Normalized(this); }
+        public readonly HsbColor32Normalized AsNormalized() { return new HsbColor32Normalized(this); }
 
-        IHsbColorModel<byte> IHsbColorModel<byte>.AsNormalized() { return AsNormalized(); }
+        readonly IHsbColorModel<byte> IHsbColorModel<byte>.AsNormalized() { return AsNormalized(); }
 
-        IColorModel<byte> IColorModel<byte>.AsNormalized() { return AsNormalized(); }
+        readonly IColorModel<byte> IColorModel<byte>.AsNormalized() { return AsNormalized(); }
 
-        IColorModel IColorModel.AsNormalized() { return AsNormalized(); }
+        readonly IColorModel IColorModel.AsNormalized() { return AsNormalized(); }
 
         #endregion
         
@@ -162,7 +162,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="other"></param>
         /// <param name="exact"></param>
         /// <returns></returns>
-        public bool Equals(IRgbColorModel<byte> other, bool exact)
+        public readonly bool Equals(IRgbColorModel<byte> other, bool exact)
         {
             if (other == null || _alpha != other.Alpha)
                 return false;
@@ -182,7 +182,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="other"></param>
         /// <param name="exact"></param>
         /// <returns></returns>
-        public bool Equals(IRgbColorModel<float> other, bool exact)
+        public readonly bool Equals(IRgbColorModel<float> other, bool exact)
         {
             if (other == null)
                 return false;
@@ -203,7 +203,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="other"></param>
         /// <param name="exact"></param>
         /// <returns></returns>
-        public bool Equals(IHsbColorModel<float> other, bool exact)
+        public readonly bool Equals(IHsbColorModel<float> other, bool exact)
         {
             if (other == null)
                 return false;
@@ -220,7 +220,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <param name="other"></param>
         /// <param name="exact"></param>
         /// <returns></returns>
-        public bool Equals(IColorModel other, bool exact)
+        public readonly bool Equals(IColorModel other, bool exact)
         {
             if (other == null)
                 return false;
@@ -240,49 +240,49 @@ namespace Erwine.Leonard.T.GDIPlus
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(HsbColor32 other) { return _value == other._value; }
+        public readonly bool Equals(HsbColor32 other) { return _value == other._value; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IHsbColorModel<float> other) { return Equals(other, false); }
+        public readonly bool Equals(IHsbColorModel<float> other) { return Equals(other, false); }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IRgbColorModel<float> other) { return Equals(other, false); }
+        public readonly bool Equals(IRgbColorModel<float> other) { return Equals(other, false); }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IHsbColorModel<byte> other) { return other.Alpha == _alpha && other.Hue == _hue && other.Saturation == _saturation && other.Brightness == _brightness; }
+        public readonly bool Equals(IHsbColorModel<byte> other) { return other.Alpha == _alpha && other.Hue == _hue && other.Saturation == _saturation && other.Brightness == _brightness; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IRgbColorModel<byte> other) { return Equals(other, false); }
+        public readonly bool Equals(IRgbColorModel<byte> other) { return Equals(other, false); }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IColorModel other) { return Equals(other, false); }
+        public readonly bool Equals(IColorModel other) { return Equals(other, false); }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(System.Drawing.Color other)
+        public readonly bool Equals(System.Drawing.Color other)
         {
             if (other.A != _alpha)
                 return false;
@@ -295,7 +295,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(System.Windows.Media.Color other)
+        public readonly bool Equals(System.Windows.Media.Color other)
         {
             if (other.A != _alpha)
                 return false;
@@ -308,14 +308,14 @@ namespace Erwine.Leonard.T.GDIPlus
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(int other) { return _value == other; }
+        public readonly bool Equals(int other) { return _value == other; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null)
                 return false;
@@ -354,7 +354,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// Returns the hash code for this value.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() { return _value; }
+        public override readonly int GetHashCode() { return _value; }
 
         #region MergeAverage Method
 
@@ -363,7 +363,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public IHsbColorModel<byte> MergeAverage(IEnumerable<IHsbColorModel<byte>> other)
+        public readonly IHsbColorModel<byte> MergeAverage(IEnumerable<IHsbColorModel<byte>> other)
         {
             if (other == null)
                 return this;
@@ -415,10 +415,10 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <returns>A <see cref="IColorModel" /> value with the color hue adjusted.</returns>
         /// <remarks>The values 0.0, -360.0 and 360.0 have no effect since they would result in no hue change.</remarks>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="degrees" /> is less than -360.0 or <paramref name="degrees" /> is greater than 360.0.</exception>
-        public HsbColor32 ShiftHue(float degrees)
+        public readonly HsbColor32 ShiftHue(float degrees)
         {
             if (degrees < -360f || degrees > 360f)
-                throw new ArgumentOutOfRangeException("degrees");
+                throw new ArgumentOutOfRangeException(nameof(degrees));
             if (degrees == 0f || degrees == 360f || degrees == -360f)
                 return this;
             float hue = _hue.ToDegrees() + degrees;
@@ -429,11 +429,11 @@ namespace Erwine.Leonard.T.GDIPlus
             return new HsbColor32(hue.FromDegrees(), _saturation, _brightness, _alpha);
         }
 
-        IHsbColorModel<byte> IHsbColorModel<byte>.ShiftHue(float degrees) { return ShiftHue(degrees); }
+        readonly IHsbColorModel<byte> IHsbColorModel<byte>.ShiftHue(float degrees) { return ShiftHue(degrees); }
 
-        IColorModel<byte> IColorModel<byte>.ShiftHue(float degrees) { return ShiftHue(degrees); }
+        readonly IColorModel<byte> IColorModel<byte>.ShiftHue(float degrees) { return ShiftHue(degrees); }
 
-        IColorModel IColorModel.ShiftHue(float degrees) { return ShiftHue(degrees); }
+        readonly IColorModel IColorModel.ShiftHue(float degrees) { return ShiftHue(degrees); }
 
         #endregion
         
@@ -447,21 +447,21 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <remarks>For positive values, the target saturation value is determined using the following formula: <c>saturation + (MAX_VALUE - saturation) * percentage</c>
         /// <para>For negative values, the target saturation value is determined using the following formula: <c>saturation + saturation * percentage</c></para></remarks>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
-        public HsbColor32 ShiftSaturation(float percentage)
+        public readonly HsbColor32 ShiftSaturation(float percentage)
         {
             if (percentage < -1f || percentage > 1f)
-                throw new ArgumentOutOfRangeException("percentage");
+                throw new ArgumentOutOfRangeException(nameof(percentage));
             if (percentage == 0f || (percentage == 1f) ? _saturation == 255 : percentage == -1f && _saturation == 0)
                 return this;
             float s = _saturation.ToPercentage();
             return new HsbColor32(_hue, (s + ((percentage > 0f) ? (1f - s) : s) * percentage).FromPercentage(), _brightness, _alpha);
         }
 
-        IHsbColorModel<byte> IHsbColorModel<byte>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+        readonly IHsbColorModel<byte> IHsbColorModel<byte>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
 
-        IColorModel<byte> IColorModel<byte>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+        readonly IColorModel<byte> IColorModel<byte>.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
 
-        IColorModel IColorModel.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
+        readonly IColorModel IColorModel.ShiftSaturation(float percentage) { return ShiftSaturation(percentage); }
 
         #endregion
         
@@ -475,21 +475,21 @@ namespace Erwine.Leonard.T.GDIPlus
         /// <remarks>For positive values, the target brightness value is determined using the following formula: <c>brightness + (MAX_VALUE - brightness) * percentage</c>
         /// <para>For negative values, the target brightness value is determined using the following formula: <c>brightness + brightness * percentage</c></para></remarks>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentage" /> is less than -1.0 or <paramref name="percentage" /> is greater than 1.0.</exception>
-        public HsbColor32 ShiftBrightness(float percentage)
+        public readonly HsbColor32 ShiftBrightness(float percentage)
         {
             if (percentage < -1f || percentage > 1f)
-                throw new ArgumentOutOfRangeException("percentage");
+                throw new ArgumentOutOfRangeException(nameof(percentage));
             if (percentage == 0f || (percentage == 1f) ? _brightness == 255 : percentage == -1f && _brightness == 0)
                 return this;
             float b = _brightness.ToPercentage();
             return new HsbColor32(_hue, _saturation, (b + ((percentage > 0f) ? (1f - b) : b) * percentage).FromPercentage(), _alpha);
         }
 
-        IHsbColorModel<byte> IHsbColorModel<byte>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+        readonly IHsbColorModel<byte> IHsbColorModel<byte>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
 
-        IColorModel<byte> IColorModel<byte>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+        readonly IColorModel<byte> IColorModel<byte>.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
 
-        IColorModel IColorModel.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
+        readonly IColorModel IColorModel.ShiftBrightness(float percentage) { return ShiftBrightness(percentage); }
 
         #endregion
 
@@ -497,7 +497,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// Gets the AHSB integer value for the current <see cref="HsbColor32" /> value.
         /// </summary>
         /// <returns>The AHSB integer value for the current <see cref="HsbColor32" /> value.</returns>
-        public int ToAHSB() { return _value; }
+        public readonly int ToAHSB() { return _value; }
 
         #region ToString Methods
 
@@ -506,7 +506,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// </summary>
         /// <param name="format">The color string format to use.</param>
         /// <returns>The formatted string representing the current color value.</returns>
-        public string ToString(ColorStringFormat format)
+        public readonly string ToString(ColorStringFormat format)
         {
             float r, g, b;
             switch (format)
@@ -557,7 +557,7 @@ namespace Erwine.Leonard.T.GDIPlus
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString() { return _value.ToString("X8"); }
+        public override readonly string ToString() { return _value.ToString("X8"); }
 
         /// <summary>
         /// 
@@ -667,32 +667,23 @@ namespace Erwine.Leonard.T.GDIPlus
                     {
                         if (match.Groups["h"].Success)
                         {
-                            switch (text.Length)
+                            result = text.Length switch
                             {
-                                case 3:
-                                    result = new HsbColor32(int.Parse(new string(new char[] { text[0], text[0], text[1], text[1], text[2], text[2]}), NumberStyles.HexNumber) << 8);
-                                    break;
-                                case 4:
-                                    result = new HsbColor32(int.Parse(new string(new char[] { text[0], text[0], text[1], text[1], text[2], text[2]}), NumberStyles.HexNumber) << 8 | int.Parse(new string(new char[] { text[3], text[3] })));
-                                    break;
-                                case 8:
-                                    result = new HsbColor32(int.Parse(text.Substring(0, 6), NumberStyles.HexNumber) << 8 | int.Parse(text.Substring(6), NumberStyles.HexNumber));
-                                    break;
-                                default:
-                                    result = new HsbColor32(int.Parse(text, NumberStyles.HexNumber) << 8);
-                                    break;
-                            }
+                                3 => new HsbColor32(int.Parse(new string(new char[] { text[0], text[0], text[1], text[1], text[2], text[2] }), NumberStyles.HexNumber) << 8),
+                                4 => new HsbColor32(int.Parse(new string(new char[] { text[0], text[0], text[1], text[1], text[2], text[2] }), NumberStyles.HexNumber) << 8 | int.Parse(new string(new char[] { text[3], text[3] }))),
+                                8 => new HsbColor32(int.Parse(text.Substring(0, 6), NumberStyles.HexNumber) << 8 | int.Parse(text.Substring(6), NumberStyles.HexNumber)),
+                                _ => new HsbColor32(int.Parse(text, NumberStyles.HexNumber) << 8),
+                            };
                             return true;
                         }
                         
                         float alpha = 100f;
-                        if (!match.Groups["a"].Success || (((match.Groups["a"].Value.EndsWith("%")) ? (float.TryParse(match.Groups["a"].Value.Substring(0, match.Groups["a"].Length - 1), out alpha) && (alpha = alpha / 100f) <= 1f) : (float.TryParse(match.Groups["a"].Value, out alpha) && alpha <= 1f)) && alpha >= 0f))
+                        if (!match.Groups["a"].Success || ((match.Groups["a"].Value.EndsWith("%") ? (float.TryParse(match.Groups["a"].Value.Substring(0, match.Groups["a"].Length - 1), out alpha) && (alpha = alpha / 100f) <= 1f) : (float.TryParse(match.Groups["a"].Value, out alpha) && alpha <= 1f)) && alpha >= 0f))
                         {
                             if (match.Groups["b"].Success)
                             {
-                                int h, s, l;
-                                if (int.TryParse(match.Groups["h"].Value, out h) && h > -1 && h < 256 && int.TryParse(match.Groups["s"].Value, out s) && s > -1 && s < 256 &&
-                                    int.TryParse(match.Groups["l"].Value, out l) && l > -1 && l < 256)
+                                if (int.TryParse(match.Groups["h"].Value, out int h) && h > -1 && h < 256 && int.TryParse(match.Groups["s"].Value, out int s) && s > -1 && s < 256 &&
+                                    int.TryParse(match.Groups["l"].Value, out int l) && l > -1 && l < 256)
                                 {
                                     result = new HsbColor32((byte)h, (byte)s, (byte)l, alpha.FromPercentage());
                                     return true;
@@ -721,23 +712,39 @@ namespace Erwine.Leonard.T.GDIPlus
 
         #region  IConvertible Members
 
-        TypeCode IConvertible.GetTypeCode() { return TypeCode.Int32; }
-        bool IConvertible.ToBoolean(IFormatProvider provider) { return Convert.ToBoolean(_value, provider); }
-        char IConvertible.ToChar(IFormatProvider provider) { return Convert.ToChar(_value, provider); }
-        sbyte IConvertible.ToSByte(IFormatProvider provider) { return Convert.ToSByte(_value, provider); }
-        byte IConvertible.ToByte(IFormatProvider provider) { return Convert.ToByte(_value, provider); }
-        short IConvertible.ToInt16(IFormatProvider provider) { return Convert.ToInt16(_value, provider); }
-        ushort IConvertible.ToUInt16(IFormatProvider provider) { return Convert.ToUInt16(_value, provider); }
-        int IConvertible.ToInt32(IFormatProvider provider) { return _value; }
-        uint IConvertible.ToUInt32(IFormatProvider provider) { return Convert.ToUInt32(_value, provider); }
-        long IConvertible.ToInt64(IFormatProvider provider) { return _value; }
-        ulong IConvertible.ToUInt64(IFormatProvider provider) { return Convert.ToUInt64(_value, provider); }
-        float IConvertible.ToSingle(IFormatProvider provider) { return _value; }
-        double IConvertible.ToDouble(IFormatProvider provider) { return _value; }
-        decimal IConvertible.ToDecimal(IFormatProvider provider) { return _value; }
-        DateTime IConvertible.ToDateTime(IFormatProvider provider) { return Convert.ToDateTime(_value, provider); }
-        string IConvertible.ToString(IFormatProvider provider) { return Convert.ToString(_value, provider); }
-        object IConvertible.ToType(Type conversionType, IFormatProvider provider) { return Convert.ChangeType(_value, conversionType, provider); }
+        readonly TypeCode IConvertible.GetTypeCode() { return TypeCode.Int32; }
+
+        readonly bool IConvertible.ToBoolean(IFormatProvider provider) { return Convert.ToBoolean(_value, provider); }
+
+        readonly char IConvertible.ToChar(IFormatProvider provider) { return Convert.ToChar(_value, provider); }
+
+        readonly sbyte IConvertible.ToSByte(IFormatProvider provider) { return Convert.ToSByte(_value, provider); }
+
+        readonly byte IConvertible.ToByte(IFormatProvider provider) { return Convert.ToByte(_value, provider); }
+
+        readonly short IConvertible.ToInt16(IFormatProvider provider) { return Convert.ToInt16(_value, provider); }
+
+        readonly ushort IConvertible.ToUInt16(IFormatProvider provider) { return Convert.ToUInt16(_value, provider); }
+
+        readonly int IConvertible.ToInt32(IFormatProvider provider) { return _value; }
+
+        readonly uint IConvertible.ToUInt32(IFormatProvider provider) { return Convert.ToUInt32(_value, provider); }
+
+        readonly long IConvertible.ToInt64(IFormatProvider provider) { return _value; }
+
+        readonly ulong IConvertible.ToUInt64(IFormatProvider provider) { return Convert.ToUInt64(_value, provider); }
+
+        readonly float IConvertible.ToSingle(IFormatProvider provider) { return _value; }
+
+        readonly double IConvertible.ToDouble(IFormatProvider provider) { return _value; }
+
+        readonly decimal IConvertible.ToDecimal(IFormatProvider provider) { return _value; }
+
+        readonly DateTime IConvertible.ToDateTime(IFormatProvider provider) { return Convert.ToDateTime(_value, provider); }
+
+        readonly string IConvertible.ToString(IFormatProvider provider) { return Convert.ToString(_value, provider); }
+
+        readonly object IConvertible.ToType(Type conversionType, IFormatProvider provider) { return Convert.ChangeType(_value, conversionType, provider); }
 
         #endregion
     }

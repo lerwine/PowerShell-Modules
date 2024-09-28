@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Popularity algorithms are another form of uniform quantization. However, instead of 
@@ -33,20 +31,20 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
         #region | Fields |
 
         private List<Color> palette;
-        private ConcurrentDictionary<Int32, PopularityColorSlot> colorMap;
+        private ConcurrentDictionary<int, PopularityColorSlot> colorMap;
 
         #endregion
 
         #region | Methods |
 
-        private static Int32 GetColorIndex(Color color)
+        private static int GetColorIndex(Color color)
         {
             // determines the index by splitting the RGB cube to 4x4x4 (1 >> 2 = 4)
-            Int32 redIndex = color.R >> 2;
-            Int32 greenIndex = color.G >> 2;
-            Int32 blueIndex = color.B >> 2;
+            int redIndex = color.R >> 2;
+            int greenIndex = color.G >> 2;
+            int blueIndex = color.B >> 2;
 
-            // calculates the whole unique index of the slot: Index = R*4096 + G*64 + B
+            // calculates the whole unique index of the slot: Index = R * 4096 + G * 64 + B
             return (redIndex << 12) + (greenIndex << 6) + blueIndex;
         }
 
@@ -61,17 +59,17 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
         {
             base.OnPrepare(image);
 
-            palette = new List<Color>();
-            colorMap = new ConcurrentDictionary<Int32, PopularityColorSlot>();
+            palette = [];
+            colorMap = new ConcurrentDictionary<int, PopularityColorSlot>();
         }
 
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnAddColor"/> for more details.
         /// </summary>
-        protected override void OnAddColor(Color color, Int32 key, Int32 x, Int32 y)
+        protected override void OnAddColor(Color color, int key, int x, int y)
         {
             base.OnAddColor(color, key, x, y);
-            Int32 index = GetColorIndex(color);
+            int index = GetColorIndex(color);
             colorMap.AddOrUpdate(index, colorKey => new PopularityColorSlot(color), (colorKey, slot) => slot.AddValue(color));
         }
 
@@ -87,10 +85,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
         /// <summary>
         /// See <see cref="BaseColorCacheQuantizer.OnGetPaletteToCache"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPaletteToCache(Int32 colorCount)
+        protected override List<Color> OnGetPaletteToCache(int colorCount)
         {
             // use fast random class
-            FastRandom random = new FastRandom(0);
+            FastRandom random = new(0);
 
             // NOTE: I've added a little randomization here, as it was performing terribly otherwise.
             // sorts out the list by a pixel presence, takes top N slots, and calculates 
@@ -113,10 +111,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Popularity
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return true; }
-        }
+        public override bool AllowParallel => true;
 
         #endregion
     }

@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ColorModelHelper
     {
         #region | Constants |
@@ -17,24 +15,24 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
         private const float Epsilon = 1E-05f;
         private const float OneThird = 1.0f / 3.0f;
         private const float TwoThirds = 2.0f * OneThird;
-        public const Double HueFactor = 1.4117647058823529411764705882353;
+        public const double HueFactor = 1.4117647058823529411764705882353;
 
-        private static readonly float[] XYZWhite = new[] { 95.05f, 100.00f, 108.90f };
+        private static readonly float[] XYZWhite = [95.05f, 100.00f, 108.90f];
 
         #endregion
 
         #region | -> RGB |
 
-        private static Int32 GetColorComponent(Single v1, Single v2, Single hue)
+        private static int GetColorComponent(float v1, float v2, float hue)
         {
-            Single preresult;
+            float preresult;
 
             if (hue < 0.0f) hue++;
             if (hue > 1.0f) hue--;
 
             if ((6.0f * hue) < 1.0f)
             {
-                preresult = v1 + (((v2 - v1) * 6.0f) * hue);
+                preresult = v1 + ((v2 - v1) * 6.0f * hue);
             }
             else if ((2.0f * hue) < 1.0f)
             {
@@ -42,7 +40,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             }
             else if ((3.0f * hue) < 2.0f)
             {
-                preresult = v1 + (((v2 - v1) * (TwoThirds - hue)) * 6.0f);
+                preresult = v1 + ((v2 - v1) * (TwoThirds - hue) * 6.0f);
             }
             else
             {
@@ -52,12 +50,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             return Convert.ToInt32(255.0f * preresult);
         }
 
-        public static Color HSBtoRGB(Single hue, Single saturation, Single brightness)
+        public static Color HSBtoRGB(float hue, float saturation, float brightness)
         {
             // initializes the default black
-            Int32 red = 0;
-            Int32 green = 0;
-            Int32 blue = 0;
+            int red = 0;
+            int green = 0;
+            int blue = 0;
 
             // only if there is some brightness; otherwise leave it pitch black
             if (brightness > 0.0f)
@@ -70,9 +68,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                 else // the color is more complex
                 {
                     // converts HSL cylinder to one slice (its factors)
-                    Single factorHue = hue / 360.0f;
-                    Single factorA = brightness < 0.5f ? brightness * (1.0f + saturation) : (brightness + saturation) - (brightness * saturation);
-                    Single factorB = (2.0f * brightness) - factorA;
+                    float factorHue = hue / 360.0f;
+                    float factorA = brightness < 0.5f ? brightness * (1.0f + saturation) : brightness + saturation - (brightness * saturation);
+                    float factorB = (2.0f * brightness) - factorA;
 
                     // maps HSL slice to a RGB cube
                     red = GetColorComponent(factorB, factorA, factorHue + OneThird);
@@ -81,7 +79,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                 }
             }
 
-            Int32 argb = 255 << 24 | red << 16 | green << 8 | blue;
+            int argb = 255 << 24 | red << 16 | green << 8 | blue;
             return Color.FromArgb(argb);
         }
 
@@ -89,24 +87,23 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         #region | RGB -> |
 
-        public static void RGBtoLab(Int32 red, Int32 green, Int32 blue, out Single l, out Single a, out Single b)
+        public static void RGBtoLab(int red, int green, int blue, out float l, out float a, out float b)
         {
-            Single x, y, z;
-            RGBtoXYZ(red, green, blue, out x, out y, out z);
+            RGBtoXYZ(red, green, blue, out float x, out float y, out float z);
             XYZtoLab(x, y, z, out l, out a, out b);
         }
 
-        public static void RGBtoXYZ(Int32 red, Int32 green, Int32 blue, out Single x, out Single y, out Single z)
+        public static void RGBtoXYZ(int red, int green, int blue, out float x, out float y, out float z)
         {
             // normalize red, green, blue values
-            Double redFactor = red / 255.0;
-            Double greenFactor = green / 255.0;
-            Double blueFactor = blue / 255.0;
+            double redFactor = red / 255.0;
+            double greenFactor = green / 255.0;
+            double blueFactor = blue / 255.0;
 
             // convert to a sRGB form
-            Double sRed = (redFactor > 0.04045) ? Math.Pow((redFactor + 0.055) / (1 + 0.055), 2.2) : (redFactor / 12.92);
-            Double sGreen = (greenFactor > 0.04045) ? Math.Pow((greenFactor + 0.055) / (1 + 0.055), 2.2) : (greenFactor / 12.92);
-            Double sBlue = (blueFactor > 0.04045) ? Math.Pow((blueFactor + 0.055) / (1 + 0.055), 2.2) : (blueFactor / 12.92);
+            double sRed = (redFactor > 0.04045) ? Math.Pow((redFactor + 0.055) / (1 + 0.055), 2.2) : (redFactor / 12.92);
+            double sGreen = (greenFactor > 0.04045) ? Math.Pow((greenFactor + 0.055) / (1 + 0.055), 2.2) : (greenFactor / 12.92);
+            double sBlue = (blueFactor > 0.04045) ? Math.Pow((blueFactor + 0.055) / (1 + 0.055), 2.2) : (blueFactor / 12.92);
 
             // converts
             x = Convert.ToSingle(sRed * 0.4124 + sGreen * 0.3576 + sBlue * 0.1805);
@@ -118,12 +115,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         #region | XYZ -> |
 
-        private static Single GetXYZValue(Single value)
+        private static float GetXYZValue(float value)
         {
-            return value > 0.008856f ? (Single)Math.Pow(value, OneThird) : (7.787f * value + 16.0f / 116.0f);
+            return value > 0.008856f ? (float)Math.Pow(value, OneThird) : (7.787f * value + 16.0f / 116.0f);
         }
 
-        public static void XYZtoLab(Single x, Single y, Single z, out Single l, out Single a, out Single b)
+        public static void XYZtoLab(float x, float y, float z, out float l, out float a, out float b)
         {
             l = 116.0f * GetXYZValue(y / XYZWhite[Y]) - 16.0f;
             a = 500.0f * (GetXYZValue(x / XYZWhite[X]) - GetXYZValue(y / XYZWhite[Y]));
@@ -134,23 +131,22 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         #region | Methods |
 
-        public static Int64 GetColorEuclideanDistance(ColorModel colorModel, Color requestedColor, Color realColor)
+        public static long GetColorEuclideanDistance(ColorModel colorModel, Color requestedColor, Color realColor)
         {
-            Single componentA, componentB, componentC;
-            GetColorComponents(colorModel, requestedColor, realColor, out componentA, out componentB, out componentC);
-            return (Int64) (componentA * componentA + componentB * componentB + componentC * componentC);
+            GetColorComponents(colorModel, requestedColor, realColor, out float componentA, out float componentB, out float componentC);
+            return (long) (componentA * componentA + componentB * componentB + componentC * componentC);
         }
 
-        public static Int32 GetEuclideanDistance(Color color, ColorModel colorModel, IList<Color> palette)
+        public static int GetEuclideanDistance(Color color, ColorModel colorModel, IList<Color> palette)
         {
             // initializes the best difference, set it for worst possible, it can only get better
-            Int64 leastDistance = Int64.MaxValue;
-            Int32 result = 0;
+            long leastDistance = long.MaxValue;
+            int result = 0;
 
-            for (Int32 index = 0; index < palette.Count; index++)
+            for (int index = 0; index < palette.Count; index++)
             {
                 Color targetColor = palette[index];
-                Int64 distance = GetColorEuclideanDistance(colorModel, color, targetColor);
+                long distance = GetColorEuclideanDistance(colorModel, color, targetColor);
 
                 // if a difference is zero, we're good because it won't get better
                 if (distance == 0)
@@ -170,9 +166,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             return result;
         }
 
-        public static Int32 GetComponentA(ColorModel colorModel, Color color)
+        public static int GetComponentA(ColorModel colorModel, Color color)
         {
-            Int32 result = 0;
+            int result = 0;
 
             switch (colorModel)
             {
@@ -181,22 +177,22 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                     break;
 
                 case ColorModel.HueSaturationBrightness: 
-                    result = Convert.ToInt32(color.GetHue()/HueFactor);
+                    result = Convert.ToInt32(color.GetHue() / HueFactor);
                     break;
 
                 case ColorModel.LabColorSpace:
-                    Single l, a, b;
+                    float l, a, b;
                     RGBtoLab(color.R, color.G, color.B, out l, out a, out b);
-                    result = Convert.ToInt32(l*255.0f);
+                    result = Convert.ToInt32(l * 255.0f);
                     break;
             }
 
             return result;
         }
 
-        public static Int32 GetComponentB(ColorModel colorModel, Color color)
+        public static int GetComponentB(ColorModel colorModel, Color color)
         {
-            Int32 result = 0;
+            int result = 0;
 
             switch (colorModel)
             {
@@ -205,22 +201,22 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                     break;
 
                 case ColorModel.HueSaturationBrightness:
-                    result = Convert.ToInt32(color.GetSaturation()*255);
+                    result = Convert.ToInt32(color.GetSaturation() * 255);
                     break;
 
                 case ColorModel.LabColorSpace:
-                    Single l, a, b;
+                    float l, a, b;
                     RGBtoLab(color.R, color.G, color.B, out l, out a, out b);
-                    result = Convert.ToInt32(a*255.0f);
+                    result = Convert.ToInt32(a * 255.0f);
                     break;
             }
 
             return result;
         }
 
-        public static Int32 GetComponentC(ColorModel colorModel, Color color)
+        public static int GetComponentC(ColorModel colorModel, Color color)
         {
-            Int32 result = 0;
+            int result = 0;
 
             switch (colorModel)
             {
@@ -229,20 +225,20 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
                     break;
 
                 case ColorModel.HueSaturationBrightness:
-                    result = Convert.ToInt32(color.GetBrightness()*255);
+                    result = Convert.ToInt32(color.GetBrightness() * 255);
                     break;
 
                 case ColorModel.LabColorSpace:
-                    Single l, a, b;
+                    float l, a, b;
                     RGBtoLab(color.R, color.G, color.B, out l, out a, out b);
-                    result = Convert.ToInt32(b*255.0f);
+                    result = Convert.ToInt32(b * 255.0f);
                     break;
             }
 
             return result;
         }
         
-        public static void GetColorComponents(ColorModel colorModel, Color color, out Single componentA, out Single componentB, out Single componentC)
+        public static void GetColorComponents(ColorModel colorModel, Color color, out float componentA, out float componentB, out float componentC)
         {
             componentA = 0.0f;
             componentB = 0.0f;
@@ -272,7 +268,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
             }
         }
 
-        public static void GetColorComponents(ColorModel colorModel, Color color, Color targetColor, out Single componentA, out Single componentB, out Single componentC)
+        public static void GetColorComponents(ColorModel colorModel, Color color, Color targetColor, out float componentA, out float componentB, out float componentC)
         {
             componentA = 0.0f;
             componentB = 0.0f;
@@ -294,8 +290,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
                 case ColorModel.LabColorSpace:
 
-                    Single sourceL, sourceA, sourceB;
-                    Single targetL, targetA, targetB;
+                    float sourceL, sourceA, sourceB;
+                    float targetL, targetA, targetB;
 
                     RGBtoLab(color.R, color.G, color.B, out sourceL, out sourceA, out sourceB);
                     RGBtoLab(targetColor.R, targetColor.G, targetColor.B, out targetL, out targetA, out targetB);
@@ -308,8 +304,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
                 case ColorModel.XYZ:
 
-                    Single sourceX, sourceY, sourceZ;
-                    Single targetX, targetY, targetZ;
+                    float sourceX, sourceY, sourceZ;
+                    float targetX, targetY, targetZ;
 
                     RGBtoXYZ(color.R, color.G, color.B, out sourceX, out sourceY, out sourceZ);
                     RGBtoXYZ(targetColor.R, targetColor.G, targetColor.B, out targetX, out targetY, out targetZ);
@@ -324,5 +320,4 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers
 
         #endregion
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

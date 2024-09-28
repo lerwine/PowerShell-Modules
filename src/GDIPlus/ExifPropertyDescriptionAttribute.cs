@@ -1,18 +1,17 @@
-﻿using System;
-
+﻿
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public sealed class ExifPropertyDescriptionAttribute : Attribute
+    public sealed class ExifPropertyDescriptionAttribute(string displayName) : Attribute
     {
-        private readonly string _displayName;
+        private readonly string _displayName = displayName;
         private string _summary = "";
         private string _remarks = "";
-        public ExifPropertyDescriptionAttribute(string displayName) { _displayName = displayName; }
-        public string DisplayName { get { return _displayName; } }
-        public string Summary { get { return _summary; } set { _summary = (value == null) ? "" : value.Trim(); } }
-        public string Remarks { get { return _remarks; } set { _remarks = (value == null) ? "" : value.Trim(); } }
+
+        public string DisplayName => _displayName;
+        public string Summary { get => _summary; set => _summary = (value == null) ? "" : value.Trim(); }
+        public string Remarks { get => _remarks; set => _remarks = (value == null) ? "" : value.Trim(); }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

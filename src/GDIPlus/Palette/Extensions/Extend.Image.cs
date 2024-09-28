@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 
 namespace Erwine.Leonard.T.GDIPlus.Palette.Extensions
 {
@@ -18,19 +14,19 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Extensions
         /// </summary>
         /// <param name="image">The image.</param>
         /// <returns></returns>
-        public static Int32 GetPaletteColorCount(this Image image)
+        public static int GetPaletteColorCount(this Image image)
         {
             // checks whether a source image is valid
             if (image == null)
             {
-                const String message = "Cannot assign a palette to a null image.";
-                throw new ArgumentNullException(message);
+                const string message = "Cannot assign a palette to a null image.";
+                throw new ArgumentNullException(nameof(image), message);
             }
 
             // checks if the image has an indexed format
             if (!image.PixelFormat.IsIndexed())
             {
-                String message = string.Format("Cannot retrieve a color count from a non-indexed image with pixel format '{0}'.", image.PixelFormat);
+                string message = string.Format("Cannot retrieve a color count from a non-indexed image with pixel format '{0}'.", image.PixelFormat);
                 throw new InvalidOperationException(message);
             }
 
@@ -47,14 +43,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Extensions
             // checks whether a source image is valid
             if (image == null)
             {
-                const String message = "Cannot assign a palette to a null image.";
-                throw new ArgumentNullException(message);
+                const string message = "Cannot assign a palette to a null image.";
+                throw new ArgumentNullException(nameof(image), message);
             }
 
             // checks if the image has an indexed format
             if (!image.PixelFormat.IsIndexed())
             {
-                String message = string.Format("Cannot retrieve a palette from a non-indexed image with pixel format '{0}'.", image.PixelFormat);
+                string message = string.Format("Cannot retrieve a palette from a non-indexed image with pixel format '{0}'.", image.PixelFormat);
                 throw new InvalidOperationException(message);
             }
 
@@ -72,21 +68,21 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Extensions
             // checks whether a palette is valid
             if (palette == null)
             {
-                const String message = "Cannot assign a null palette.";
-                throw new ArgumentNullException(message);
+                const string message = "Cannot assign a null palette.";
+                throw new ArgumentNullException(nameof(palette), message);
             }
 
             // checks whether a target image is valid
             if (image == null)
             {
-                const String message = "Cannot assign a palette to a null image.";
-                throw new ArgumentNullException(message);
+                const string message = "Cannot assign a palette to a null image.";
+                throw new ArgumentNullException(nameof(image), message);
             }
 
             // checks if the image has indexed format
             if (!image.PixelFormat.IsIndexed())
             {
-                String message = string.Format("Cannot store a palette to a non-indexed image with pixel format '{0}'.", image.PixelFormat);
+                string message = string.Format("Cannot store a palette to a non-indexed image with pixel format '{0}'.", image.PixelFormat);
                 throw new InvalidOperationException(message);
             }
 
@@ -96,12 +92,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Extensions
             // checks if the palette can fit into the image palette
             if (palette.Count > imagePalette.Entries.Length)
             {
-                String message = string.Format("Cannot store a palette with '{0}' colors intto an image palette where only '{1}' colors are allowed.", palette.Count, imagePalette.Entries.Length);
-                throw new ArgumentOutOfRangeException(message);
+                string message = string.Format("Cannot store a palette with '{0}' colors intto an image palette where only '{1}' colors are allowed.", palette.Count, imagePalette.Entries.Length);
+                throw new ArgumentOutOfRangeException(nameof(palette), message);
             }
 
             // copies all color entries
-            for (Int32 index = 0; index < palette.Count; index++)
+            for (int index = 0; index < palette.Count; index++)
             {
                 imagePalette.Entries[index] = palette[index];
             }

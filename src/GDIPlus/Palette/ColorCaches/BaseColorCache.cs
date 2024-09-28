@@ -1,18 +1,15 @@
-using System;
 using System.Collections.Concurrent;
-using System.Drawing;
-using System.Collections.Generic;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Common;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseColorCache : IColorCache
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         #region | Fields |
 
-        private readonly ConcurrentDictionary<Int32, Int32> cache;
+        private readonly ConcurrentDictionary<int, int> cache;
 
         #endregion
 
@@ -30,7 +27,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
         /// <value>
         /// 	<c>true</c> if this instance is color model supported; otherwise, <c>false</c>.
         /// </value>
-        public abstract Boolean IsColorModelSupported { get; }
+        public abstract bool IsColorModelSupported { get; }
 
         #endregion
 
@@ -39,10 +36,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseColorCache"/> class.
         /// </summary>
-        protected BaseColorCache()
-        {
-            cache = new ConcurrentDictionary<Int32, Int32>();
-        }
+        protected BaseColorCache() => cache = new ConcurrentDictionary<int, int>();
 
         #endregion
 
@@ -52,10 +46,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
         /// Changes the color model.
         /// </summary>
         /// <param name="colorModel">The color model.</param>
-        public void ChangeColorModel(ColorModel colorModel)
-        {
-            ColorModel = colorModel;
-        }
+        public void ChangeColorModel(ColorModel colorModel) => ColorModel = colorModel;
 
         #endregion
 
@@ -72,7 +63,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="paletteIndex">Index of the palette.</param>
-        protected abstract void OnGetColorPaletteIndex(Color color, out Int32 paletteIndex);
+        protected abstract void OnGetColorPaletteIndex(Color color, out int paletteIndex);
 
         #endregion
 
@@ -81,31 +72,24 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.ColorCaches
         /// <summary>
         /// See <see cref="IColorCache.Prepare"/> for more details.
         /// </summary>
-        public virtual void Prepare()
-        {
-            cache.Clear();
-        }
+        public virtual void Prepare() => cache.Clear();
 
         /// <summary>
         /// See <see cref="IColorCache.CachePalette"/> for more details.
         /// </summary>
-        public void CachePalette(IList<Color> palette)
-        {
-            OnCachePalette(palette);
-        }
+        public void CachePalette(IList<Color> palette) => OnCachePalette(palette);
 
         /// <summary>
         /// See <see cref="IColorCache.GetColorPaletteIndex"/> for more details.
         /// </summary>
-        public void GetColorPaletteIndex(Color color, out Int32 paletteIndex)
+        public void GetColorPaletteIndex(Color color, out int paletteIndex)
         {
-            Int32 key = color.R << 16 | color.G << 8 | color.B;
+            int key = color.R << 16 | color.G << 8 | color.B;
 
             paletteIndex = cache.AddOrUpdate(key,
                 colorKey =>
                 {
-                    Int32 paletteIndexInside;
-                    OnGetColorPaletteIndex(color, out paletteIndexInside);
+                    OnGetColorPaletteIndex(color, out int paletteIndexInside);
                     return paletteIndexInside;
                 }, 
                 (colorKey, inputIndex) => inputIndex);

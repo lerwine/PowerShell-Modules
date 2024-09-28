@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Represents a syncrhonized (thread-safe), read-only list of objects that can be accessed by index, and whose elements are strongly typed.
@@ -40,7 +39,7 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
             {
                 array = collection as T[];
                 for (int index = 0; index < array.Length; index++)
-                    array[index] = this.CreateNewItem(index);
+                    array[index] = CreateNewItem(index);
             }
             else
                 array = collection.ToArray();
@@ -54,52 +53,46 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <param name="index">Index at which the item will be placed.</param>
         /// <returns>A reference to the newly created object.</returns>
         /// <exception cref="System.MissingMethodException">The type that is specified for <typeparamref name="T"/> does not have a parameterless constructor.</exception>
-        protected virtual T CreateNewItem(int index)
-        {
-            return Activator.CreateInstance<T>();
-        }
+        protected virtual T CreateNewItem(int index) => Activator.CreateInstance<T>();
 
         #region Explicit Interface Members
 
-        IEnumerator IEnumerable.GetEnumerator() { return base.InnerGetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => base.InnerGetEnumerator();
 
         T IList<T>.this[int index]
         {
-            get { return base[index]; }
-            set { throw new NotSupportedException(); }
+            get => base[index];
+            set => throw new NotSupportedException();
         }
 
-        void IList<T>.Insert(int index, T item) { throw new NotSupportedException(); }
+        void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
 
-        void IList<T>.RemoveAt(int index) { throw new NotSupportedException(); }
+        void IList<T>.RemoveAt(int index) => throw new NotSupportedException();
 
-        bool ICollection<T>.IsReadOnly { get { return true; } }
+        bool ICollection<T>.IsReadOnly => true;
 
-        void ICollection<T>.Add(T item) { throw new NotSupportedException(); }
+        void ICollection<T>.Add(T item) => throw new NotSupportedException();
 
-        void ICollection<T>.Clear() { throw new NotSupportedException(); }
+        void ICollection<T>.Clear() => throw new NotSupportedException();
 
-        bool ICollection<T>.Remove(T item) { throw new NotSupportedException(); }
+        bool ICollection<T>.Remove(T item) => throw new NotSupportedException();
 
         #endregion
 
         #region Overrides to prevent list from being modified
+        protected override void BaseClear() => throw new NotSupportedException();
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected override void BaseClear() { throw new NotSupportedException(); }
+        protected override bool BaseRemove(T item) => throw new NotSupportedException();
 
-        protected override bool BaseRemove(T item) { throw new NotSupportedException(); }
+        protected override void BaseRemoveAt(int index) => throw new NotSupportedException();
 
-        protected override void BaseRemoveAt(int index) { throw new NotSupportedException(); }
+        protected override int InnerAdd(object value) => throw new NotSupportedException();
 
-        protected override int InnerAdd(object value) { throw new NotSupportedException(); }
+        protected override void InnerInsert(int index, object value) => throw new NotSupportedException();
 
-        protected override void InnerInsert(int index, object value) { throw new NotSupportedException(); }
+        protected override bool InnerRemove(object value) => throw new NotSupportedException();
 
-        protected override bool InnerRemove(object value) { throw new NotSupportedException(); }
-
-        protected override void InnerSet(int index, object value) { throw new NotSupportedException(); }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        protected override void InnerSet(int index, object value) => throw new NotSupportedException();
 
         #endregion
     }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms> 
+    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -32,8 +32,10 @@
     <Content Include="Erwine.Leonard.T.LteDev.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Regex Characteristics Data.txt" />
     <Content Include="VsProjectTypes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\Settings.settings">
@@ -41,7 +43,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="README.md" />
+    <None Include="Regex Characteristics Data.txt" />
     <None Include="Untitled1.ps1" />
     <None Include="WindowsFormsHelper.ps1" />
   </ItemGroup>
@@ -52,8 +54,4 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
     <PackageReference Include="System.Management.Automation" Version="7.4.5" />
   </ItemGroup>
-
-  <!-- <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(ProjectDir)../PostBuild.ps1 -TargetName $(TargetName) -TargetExt $(TargetExt) -ProjectName $(ProjectName) -ProjectDir $(ProjectDir) -OutDir $(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
-  </PropertyGroup> -->
 </Project>

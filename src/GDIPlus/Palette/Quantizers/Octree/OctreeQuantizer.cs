@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 using Erwine.Leonard.T.GDIPlus.Collections.Synchronized;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// The idea here is to build a tree structure containing always a maximum of K different 
@@ -31,14 +29,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         #region | Fields |
 
         private OctreeNode _root = null;
-        private Int32 lastColorCount;
+        private int lastColorCount;
         private SynchronizedReadOnlyList<NonNullSynchronizedList<OctreeNode>> _levels = null;
 
         #endregion
 
         #region | Calculated properties |
 
-        private object _syncRootForLevels = new object();
+        private readonly object _syncRootForLevels = new();
 
         private OctreeNode Root
         {
@@ -46,11 +44,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
             {
                 bool justCreated = false;
 
-                lock (this._syncRootForLevels)
+                lock (_syncRootForLevels)
                 {
-                    justCreated = this._root == null;
+                    justCreated = _root == null;
                     if (justCreated)
-                        this._root = new OctreeNode(0, this);
+                        _root = new OctreeNode(0, this);
                 }
 
                 // If this was a new root node, we'll give other threads a chance to do what they need to do before we return the octree node to the caller.
@@ -59,12 +57,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
                 if (justCreated) 
                     System.Threading.Thread.Sleep(10);
 
-                return this._root;
+                return _root;
             }
             set
             {
-                lock (this._syncRootForLevels)
-                    this._root = value;
+                lock (_syncRootForLevels)
+                    _root = value;
             }
         }
 
@@ -72,18 +70,18 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         {
             get
             {
-                lock (this._syncRootForLevels)
+                lock (_syncRootForLevels)
                 {
-                    if (this._levels == null)
-                        this._levels = new SynchronizedReadOnlyList<NonNullSynchronizedList<OctreeNode>>(7);
+                    if (_levels == null)
+                        _levels = new SynchronizedReadOnlyList<NonNullSynchronizedList<OctreeNode>>(7);
                 }
 
-                return this._levels;
+                return _levels;
             }
             set
             {
-                lock (this._syncRootForLevels)
-                    this._levels = value;
+                lock (_syncRootForLevels)
+                    _levels = value;
             }
         }
 
@@ -91,10 +89,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// Gets the leaf nodes only (recursively).
         /// </summary>
         /// <value>All the tree leaves.</value>
-        internal IEnumerable<OctreeNode> Leaves
-        {
-            get { return this.Root.ActiveNodes.Where(node => node.IsLeaf); }
-        }
+        internal IEnumerable<OctreeNode> Leaves => Root.ActiveNodes.Where(node => node.IsLeaf);
 
         #endregion
 
@@ -105,12 +100,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// </summary>
         /// <param name="level">The depth level.</param>
         /// <param name="octreeNode">The octree node to be added.</param>
-        internal void AddLevelNode(Int32 level, OctreeNode octreeNode)
+        internal void AddLevelNode(int level, OctreeNode octreeNode)
         {
-            if (octreeNode == null)
-                throw new ArgumentNullException("octreeNode");
+            ArgumentNullException.ThrowIfNull(octreeNode);
 
-            this.Levels[level].Add(octreeNode);
+            Levels[level].Add(octreeNode);
         }
 
         #endregion
@@ -131,34 +125,31 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnAddColor"/> for more details.
         /// </summary>
-        protected override void OnAddColor(Color color, Int32 key, Int32 x, Int32 y)
-        {
-            this.Root.AddColor(color, 0, this);
-        }
+        protected override void OnAddColor(Color color, int key, int x, int y) => Root.AddColor(color, 0, this);
 
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPalette"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPalette(Int32 colorCount)
+        protected override List<Color> OnGetPalette(int colorCount)
         {
             // use optimized palette, if any
             List<Color> optimizedPalette = base.OnGetPalette(colorCount);
             if (optimizedPalette != null) return optimizedPalette;
 
             // otherwise let's get to build one
-            List<Color> result = new List<Color>();
-            Int32 leafCount = Leaves.Count();
+            List<Color> result = [];
+            int leafCount = Leaves.Count();
             lastColorCount = leafCount;
-            Int32 paletteIndex = 0;
+            int paletteIndex = 0;
 
             // goes thru all the levels starting at the deepest, and goes upto a root level
-            for (Int32 level = 6; level >= 0; level--)
+            for (int level = 6; level >= 0; level--)
             {
                 // if level contains any node
-                if (this.Levels[level].Count > 0)
+                if (Levels[level].Count > 0)
                 {
                     // orders the level node list by pixel presence (those with least pixels are at the top)
-                    IEnumerable<OctreeNode> sortedNodeList = this.Levels[level].OrderBy(node => node.ActiveNodesPixelCount);
+                    IEnumerable<OctreeNode> sortedNodeList = Levels[level].OrderBy(node => node.ActiveNodesPixelCount);
 
                     // removes the nodes unless the count of the leaves is lower or equal than our requested color count
                     foreach (OctreeNode node in sortedNodeList)
@@ -174,7 +165,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
                     if (leafCount <= colorCount) break;
 
                     // otherwise clear whole level, as it is not needed anymore
-                    this.Levels[level].Clear();
+                    Levels[level].Clear();
                 }
             }
 
@@ -206,20 +197,16 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPaletteIndex"/> for more details.
         /// </summary>
-        protected override void OnGetPaletteIndex(Color color, Int32 key, Int32 x, Int32 y, out Int32 paletteIndex)
-        {
+        protected override void OnGetPaletteIndex(Color color, int key, int x, int y, out int paletteIndex) =>
             // retrieves a palette index
-            paletteIndex = this.Root.GetPaletteIndex(color, 0);
-        }
+            paletteIndex = Root.GetPaletteIndex(color, 0);
 
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetColorCount"/> for more details.
         /// </summary>
-        protected override Int32 OnGetColorCount()
-        {
+        protected override int OnGetColorCount() =>
             // calculates the number of leaves, by parsing the whole tree
-            return lastColorCount;
-        }
+            lastColorCount;
 
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnFinish"/> for more details.
@@ -229,8 +216,8 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
             base.OnFinish();
 
             // Set Levels and Root to null. The next time it they needed, created will be created again and initialized with new octree level lists
-            this.Levels = null;
-            this.Root = null;
+            Levels = null;
+            Root = null;
         }
 
         #endregion
@@ -240,10 +227,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Octree
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return false; }
-        }
+        public override bool AllowParallel => false;
 
         #endregion
     }

@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// In uniform quantization each axis of the color space is treated independently. 
@@ -53,13 +52,13 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
         /// <summary>
         /// See <see cref="BaseColorQuantizer.AddColor"/> for more details.
         /// </summary>
-        protected override void OnAddColor(Color color, Int32 key, Int32 x, Int32 y)
+        protected override void OnAddColor(Color color, int key, int x, int y)
         {
             base.OnAddColor(color, key, x, y);
 
-            Int32 redIndex = color.R >> 5;
-            Int32 greenIndex = color.G >> 5;
-            Int32 blueIndex = color.B >> 6;
+            int redIndex = color.R >> 5;
+            int greenIndex = color.G >> 5;
+            int blueIndex = color.B >> 6;
 
             redSlots[redIndex].AddValue(color.R);
             greenSlots[greenIndex].AddValue(color.G);
@@ -69,14 +68,14 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPalette"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPalette(Int32 colorCount)
+        protected override List<Color> OnGetPalette(int colorCount)
         {
             // use optimized palette, if any
             List<Color> optimizedPalette = base.OnGetPalette(colorCount);
             if (optimizedPalette != null) return optimizedPalette;
 
             // otherwise synthetize one
-            List<Color> result = new List<Color>();
+            List<Color> result = [];
 
             // NOTE: I was considering either Lambda, or For loop (which should be the fastest), 
             // NOTE: but I used the ForEach loop for the sake of readability. Feel free to convert it.
@@ -84,9 +83,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
             foreach (UniformColorSlot greenSlot in greenSlots)
             foreach (UniformColorSlot blueSlot in blueSlots)
             {
-                Int32 red = redSlot.GetAverage();
-                Int32 green = greenSlot.GetAverage();
-                Int32 blue = blueSlot.GetAverage();
+                int red = redSlot.GetAverage();
+                int green = greenSlot.GetAverage();
+                int blue = blueSlot.GetAverage();
 
                 Color color = Color.FromArgb(255, red, green, blue);
                 result.Add(color);
@@ -99,11 +98,11 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnGetPaletteIndex"/> for more details.
         /// </summary>
-        protected override void OnGetPaletteIndex(Color color, Int32 key, Int32 x, Int32 y, out Int32 paletteIndex)
+        protected override void OnGetPaletteIndex(Color color, int key, int x, int y, out int paletteIndex)
         {
-            Int32 redIndex = color.R >> 5;
-            Int32 greenIndex = color.G >> 5;
-            Int32 blueIndex = color.B >> 6;
+            int redIndex = color.R >> 5;
+            int greenIndex = color.G >> 5;
+            int blueIndex = color.B >> 6;
             paletteIndex = (redIndex << 5) + (greenIndex << 2) + blueIndex;
         }
 
@@ -114,10 +113,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.Uniform
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return true; }
-        }
+        public override bool AllowParallel => true;
 
         #endregion
     }

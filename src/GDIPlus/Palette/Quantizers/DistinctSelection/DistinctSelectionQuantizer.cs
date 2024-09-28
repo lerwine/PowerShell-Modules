@@ -1,19 +1,16 @@
 #define UseDictionary
 
-using System;
-using System.Linq;
-using System.Drawing;
-using System.Collections.Generic;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches;
 using Erwine.Leonard.T.GDIPlus.Palette.ColorCaches.Octree;
-using Erwine.Leonard.T.GDIPlus.Palette.Extensions;
 using Erwine.Leonard.T.GDIPlus.Palette.Helpers;
 
-#if (UseDictionary)
-    using System.Collections.Concurrent;
+#if UseDictionary
+using System.Collections.Concurrent;
 #endif
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// This is my baby. Read more in the article on the Code Project:
@@ -24,10 +21,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         #region | Fields |
 
         private List<Color> palette;
-        private Int32 foundColorCount;
+        private int foundColorCount;
 
-#if (UseDictionary)
-        private ConcurrentDictionary<Int32, DistinctColorInfo> colorMap;
+#if UseDictionary
+        private ConcurrentDictionary<int, DistinctColorInfo> colorMap;
 #else
         private DistinctBucket rootBucket;
 #endif
@@ -36,10 +33,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
 
         #region | Methods |
 
-        private static Boolean ProcessList(Int32 colorCount, List<DistinctColorInfo> list, ICollection<IEqualityComparer<DistinctColorInfo>> comparers, out List<DistinctColorInfo> outputList)
+        private static bool ProcessList(int colorCount, List<DistinctColorInfo> list, ICollection<IEqualityComparer<DistinctColorInfo>> comparers, out List<DistinctColorInfo> outputList)
         {
             IEqualityComparer<DistinctColorInfo> bestComparer = null;
-            Int32 maximalCount = 0;
+            int maximalCount = 0;
             outputList = list;
 
             foreach (IEqualityComparer<DistinctColorInfo> comparer in comparers)
@@ -48,7 +45,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
                     Distinct(comparer).
                     ToList();
 
-                Int32 filteredListCount = filteredList.Count;
+                int filteredListCount = filteredList.Count;
 
                 if (filteredListCount > colorCount && filteredListCount > maximalCount)
                 {
@@ -90,9 +87,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnAddColor"/> for more details.
         /// </summary>
-        protected override void OnAddColor(Color color, Int32 key, Int32 x, Int32 y)
+        protected override void OnAddColor(Color color, int key, int x, int y)
         {
-#if (UseDictionary)
+#if UseDictionary
             colorMap.AddOrUpdate(key,
                 colorKey => new DistinctColorInfo(color),
                 (colorKey, colorInfo) => colorInfo.IncreaseCount());
@@ -105,15 +102,15 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// <summary>
         /// See <see cref="BaseColorCacheQuantizer.OnGetPaletteToCache"/> for more details.
         /// </summary>
-        protected override List<Color> OnGetPaletteToCache(Int32 colorCount)
+        protected override List<Color> OnGetPaletteToCache(int colorCount)
         {
             // otherwise calculate one
             palette.Clear();
 
             // lucky seed :)
-            FastRandom random = new FastRandom(13);
+            FastRandom random = new(13);
 
-#if (UseDictionary)
+#if UseDictionary
             List<DistinctColorInfo> colorInfoList = colorMap.Values.ToList();
 #else
             List<DistinctColorInfo> colorInfoList = rootBucket.GetValues().ToList();
@@ -133,21 +130,21 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
                 colorInfoList.Remove(background);
                 colorCount--;
 
-                ColorHueComparer hueComparer = new ColorHueComparer();
-                ColorSaturationComparer saturationComparer = new ColorSaturationComparer();
-                ColorBrightnessComparer brightnessComparer = new ColorBrightnessComparer();
+                ColorHueComparer hueComparer = new();
+                ColorSaturationComparer saturationComparer = new();
+                ColorBrightnessComparer brightnessComparer = new();
 
                 // generates catalogue
-                List<IEqualityComparer<DistinctColorInfo>> comparers = new List<IEqualityComparer<DistinctColorInfo>> { hueComparer, saturationComparer, brightnessComparer };
+                List<IEqualityComparer<DistinctColorInfo>> comparers = [hueComparer, saturationComparer, brightnessComparer];
 
                 // take adequate number from each slot
                 while (ProcessList(colorCount, colorInfoList, comparers, out colorInfoList)) { }
 
-                Int32 listColorCount = colorInfoList.Count();
+                int listColorCount = colorInfoList.Count;
 
                 if (listColorCount > 0)
                 {
-                    Int32 allowedTake = Math.Min(colorCount, listColorCount);
+                    int allowedTake = Math.Min(colorCount, listColorCount);
                     colorInfoList = colorInfoList.Take(allowedTake).ToList();
                 }
 
@@ -165,10 +162,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// <summary>
         /// See <see cref="BaseColorQuantizer.GetColorCount"/> for more details.
         /// </summary>
-        protected override Int32 OnGetColorCount()
-        {
-            return foundColorCount;
-        }
+        protected override int OnGetColorCount() => foundColorCount;
 
         /// <summary>
         /// See <see cref="BaseColorQuantizer.OnFinish"/> for more details.
@@ -177,10 +171,10 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         {
             base.OnFinish();
 
-            palette = new List<Color>();
+            palette = [];
 
-#if (UseDictionary)
-            colorMap = new ConcurrentDictionary<Int32, DistinctColorInfo>();
+#if UseDictionary
+            colorMap = new ConcurrentDictionary<int, DistinctColorInfo>();
 #else
             rootBucket = new DistinctBucket();
 #endif
@@ -193,10 +187,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// <summary>
         /// See <see cref="IColorQuantizer.AllowParallel"/> for more details.
         /// </summary>
-        public override Boolean AllowParallel
-        {
-            get { return true; }
-        }
+        public override bool AllowParallel => true;
 
         #endregion
 
@@ -207,15 +198,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// </summary>
         private class ColorHueComparer : IEqualityComparer<DistinctColorInfo>
         {
-            public Boolean Equals(DistinctColorInfo x, DistinctColorInfo y)
-            {
-                return x.Hue == y.Hue;
-            }
+            public bool Equals(DistinctColorInfo x, DistinctColorInfo y) => x.Hue == y.Hue;
 
-            public Int32 GetHashCode(DistinctColorInfo colorInfo)
-            {
-                return colorInfo.Hue.GetHashCode();
-            }
+            public int GetHashCode(DistinctColorInfo colorInfo) => colorInfo.Hue.GetHashCode();
         }
 
         /// <summary>
@@ -223,15 +208,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// </summary>
         private class ColorSaturationComparer : IEqualityComparer<DistinctColorInfo>
         {
-            public Boolean Equals(DistinctColorInfo x, DistinctColorInfo y)
-            {
-                return x.Saturation == y.Saturation;
-            }
+            public bool Equals(DistinctColorInfo x, DistinctColorInfo y) => x.Saturation == y.Saturation;
 
-            public Int32 GetHashCode(DistinctColorInfo colorInfo)
-            {
-                return colorInfo.Saturation.GetHashCode();
-            }
+            public int GetHashCode(DistinctColorInfo colorInfo) => colorInfo.Saturation.GetHashCode();
         }
 
         /// <summary>
@@ -239,15 +218,9 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
         /// </summary>
         private class ColorBrightnessComparer : IEqualityComparer<DistinctColorInfo>
         {
-            public Boolean Equals(DistinctColorInfo x, DistinctColorInfo y)
-            {
-                return x.Brightness == y.Brightness;
-            }
+            public bool Equals(DistinctColorInfo x, DistinctColorInfo y) => x.Brightness == y.Brightness;
 
-            public Int32 GetHashCode(DistinctColorInfo colorInfo)
-            {
-                return colorInfo.Brightness.GetHashCode();
-            }
+            public int GetHashCode(DistinctColorInfo colorInfo) => colorInfo.Brightness.GetHashCode();
         }
 
         #endregion

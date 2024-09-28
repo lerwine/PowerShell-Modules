@@ -134,7 +134,7 @@ Function Assert-TargetDirectory {
             } else {
                 $Parent = Assert-TargetDirectory -RelativePath $Parent -TargetContainerPath $TargetContainerPath -PassThru -ErrorAction Stop;
             }
-            Write-Information -MessageData "Create: `"$($Parent | Join-Path -ChildPath $Leaf)`"";
+            Write-Information -MessageData "Create: `"$($Parent | Join-Path -ChildPath $Leaf)`"" -InformationAction Continue;
             if ($PassThru.IsPresent) {
                 (New-Item -Path $Parent -Name $Leaf -ItemType Directory -Force -ErrorAction Stop)?.FullName;
             } else {
@@ -154,7 +154,7 @@ Function Install-TargetPsModule {
     Process {
         $TargetContainerPath = $DeploymentRoot | Join-Path -ChildPath $Script:ModuleName;
         if ($TargetContainerPath | Test-Path) {
-            $TargetContainerPath = (Resolve-Path -LiteralPath $DeploymentRoot -ErrorAction Stop).Path;
+            $TargetContainerPath = (Resolve-Path -LiteralPath $TargetContainerPath -ErrorAction Stop).Path;
             Clear-TargetPsModule -DeploymentRoot $DeploymentRoot -ErrorAction Stop;
         } else {
             $TargetContainerPath = (New-Item -Path $DeploymentRoot -Name $Script:ModuleName -ItemType Directory -ErrorAction Stop -Force).FullName;
@@ -202,9 +202,10 @@ Function Install-TargetPsModule {
     
         $AllRelativePaths = @((@('.' | Join-Path -ChildPath $ManifestFileName) + ($AllFiles | ForEach-Object {
             $RP = $null;
+            $FObj = $_;
             try { $RP = $_.Name | Resolve-Path -Relative -RelativeBasePath $Script:SourceModulePath -ErrorAction Stop }
             catch {
-                Write-Warning -Message "$($_.Setting) setting in $ModuleManifestPath contains an file that could not be resolved: $($_.Name)";
+                Write-Warning -Message "$($FObj.Setting) setting in $ModuleManifestPath contains an file that could not be resolved: $($FObj.Name)";
             }
             if ($null -ne $RP) {
                 if ($RP[0] -ne '.' -or $RP.Length -gt 1 -and $RP[1] -eq '.') {
@@ -227,9 +228,7 @@ Function Install-TargetPsModule {
         if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf)) {
             $AllRelativePaths += @($FileName);
         }
-        @($AllRelativePaths | Where-Object { ($_ | Split-Path -Extension) -ieq '.dll' }) | ForEach-Object {
-            ($_ | Split-Path -Parent) | Join-Path -ChildPath "$($_ | Split-Path -LeafBase).pdb";
-        }
+        
         @($AllRelativePaths | Where-Object { ($_ | Split-Path -Extension) -ieq '.dll' }) | ForEach-Object {
             $FileName = ($_ | Split-Path -Parent) | Join-Path -ChildPath "$($_ | Split-Path -LeafBase).pdb";
             if (($AllRelativePaths -inotcontains $FileName) -and (Test-Path -LiteralPath ($Script:SourceModulePath | Join-Path -ChildPath $FileName) -PathType Leaf)) {
@@ -244,9 +243,10 @@ Function Install-TargetPsModule {
             }
             $SourcePath = $Script:SourceModulePath | Join-Path -ChildPath $RelativePath;
             $TargetPath = $TargetContainerPath | Join-Path -ChildPath $RelativePath;
-            Write-Information -MessageData "Copy: `"$SourcePath`" => `"$TargetPath`"";
+            Write-Information -MessageData "Copy: `"$SourcePath`" => `"$TargetPath`"" -InformationAction Continue;
             Copy-Item -Path $SourcePath -Destination $TargetPath -Force -ErrorAction Stop;
         }
+        Write-Information -MessageData "Deployed: `"$Script:SourceModulePath`" => `"$TargetContainerPath`"" -InformationAction Continue;
     }
 }
 

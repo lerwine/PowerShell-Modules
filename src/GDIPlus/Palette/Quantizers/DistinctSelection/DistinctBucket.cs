@@ -1,24 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DistinctBucket
     {
         public DistinctColorInfo ColorInfo { get; private set; }
         public DistinctBucket[] Buckets { get; private set; }
 
-        public DistinctBucket()
-        {
-            Buckets = new DistinctBucket[16];
-        }
+        public DistinctBucket() => Buckets = new DistinctBucket[16];
 
         public void StoreColor(Color color)
         {
-            Int32 redIndex = color.R >> 5;
+            int redIndex = color.R >> 5;
             DistinctBucket redBucket = Buckets[redIndex];
 
             if (redBucket == null)
@@ -27,7 +20,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
                 Buckets[redIndex] = redBucket;
             }
 
-            Int32 greenIndex = color.G >> 5;
+            int greenIndex = color.G >> 5;
             DistinctBucket greenBucket = redBucket.Buckets[greenIndex];
 
             if (greenBucket == null)
@@ -36,7 +29,7 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
                 redBucket.Buckets[greenIndex] = greenBucket;
             }
 
-            Int32 blueIndex = color.B >> 5;
+            int blueIndex = color.B >> 5;
             DistinctBucket blueBucket = greenBucket.Buckets[blueIndex];
 
             if (blueBucket == null)
@@ -57,16 +50,12 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Quantizers.DistinctSelection
                 colorInfo.IncreaseCount();
             }
         }
-        
-        public List<DistinctColorInfo> GetValues()
-        {
-            return Buckets.Where(red => red != null).
+
+        public List<DistinctColorInfo> GetValues() => Buckets.Where(red => red != null).
                 SelectMany(redBucket => redBucket.Buckets.
                 Where(green => green != null), (redBucket, greenBucket) => greenBucket).
                 SelectMany(greenBucket => greenBucket.Buckets.
                 Where(blue => blue != null), (greenBucket, blueBucket) => blueBucket.ColorInfo).
                 ToList();
-        }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

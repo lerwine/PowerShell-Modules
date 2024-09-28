@@ -1,14 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ImageInfo : FileItem
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private bool _exists = false;
         private bool _isReadOnly = true;
@@ -24,40 +21,34 @@ namespace Erwine.Leonard.T.GDIPlus
         private bool _hasAlpha = false;
         private bool _isIndexed = false;
         private ColorSpaceType _colorSpace;
+        public bool Exists { get => _exists; set => _exists = value; }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public bool Exists { get { return _exists; } set { _exists = value; } }
+        public bool IsReadOnly { get => _isReadOnly; set => _isReadOnly = value; }
 
-        public bool IsReadOnly { get { return _isReadOnly; } set { _isReadOnly = value; } }
+        public DateTime CreationTime { get => _creationTime; set => _creationTime = value; }
 
-        public DateTime CreationTime { get { return _creationTime; } set { _creationTime = value; } }
+        public DateTime LastWriteTime { get => _lastWriteTime; set => _lastWriteTime = value; }
 
-        public DateTime LastWriteTime { get { return _lastWriteTime; } set { _lastWriteTime = value; } }
+        public FileAttributes Attributes { get => _attributes; set => _attributes = value; }
 
-        public FileAttributes Attributes { get { return _attributes; } set { _attributes = value; } }
+        public int Width { get => _width; set => _width = (value < 0) ? 0 : value; }
 
-		public int Width { get { return _width; } set { _width = (value < 0) ? 0 : value; } }
+        public int Height { get => _height; set => _height = (value < 0) ? 0 : value; }
 
-		public int Height { get { return _height; } set { _height = (value < 0) ? 0 : value; } }
+        public float HorizontalResolution { get => _horizontalResolution; set => _horizontalResolution = (value < 0.0f) ? 0.0f : value; }
 
-		public float HorizontalResolution { get { return _horizontalResolution; } set { _horizontalResolution = (value < 0.0f) ? 0.0f : value; } }
+        public float VerticalResolution { get => _verticalResolution; set => _verticalResolution = (value < 0.0f) ? 0.0f : value; }
 
-		public float VerticalResolution { get { return _verticalResolution; } set { _verticalResolution = (value < 0.0f) ? 0.0f : value; } }
+        public PixelFormat PixelFormat { get => _pixelFormat; set => _pixelFormat = value; }
 
-		public PixelFormat PixelFormat { get { return _pixelFormat; } set { _pixelFormat = value; } }
+        public int Flags { get => _flags; set => _flags = value; }
 
-		public int Flags { get { return _flags; } set { _flags = value; } }
+        public bool HasAlpha { get => _hasAlpha; set => _hasAlpha = value; }
 
-        public bool HasAlpha { get { return _hasAlpha; } set { _hasAlpha = value; } }
+        public bool IsIndexed { get => _isIndexed; set => _isIndexed = value; }
 
-        public bool IsIndexed { get { return _isIndexed; } set { _isIndexed = value; } }
-
-        public ColorSpaceType ColorSpace { get { return _colorSpace; } set { _colorSpace = value; } }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public ColorSpaceType ColorSpace { get => _colorSpace; set => _colorSpace = value; }
         public static FileType RawFormatToImageType(ImageFormat rawFormat)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
 			if (rawFormat == null)
 				return FileType.Unknown;
@@ -91,18 +82,11 @@ namespace Erwine.Leonard.T.GDIPlus
 			
 			return FileType.Unknown;
 		}
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ImageInfo() { }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ImageInfo(FileInfo file, Bitmap bitmap)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             : base(file)
         {
-            if (file == null)
-                throw new ArgumentNullException("file");
+            ArgumentNullException.ThrowIfNull(file);
 
             _exists = file.Exists;
             if (_exists)
@@ -127,30 +111,26 @@ namespace Erwine.Leonard.T.GDIPlus
             FileType = RawFormatToImageType(bitmap.RawFormat);
             _flags = bitmap.Flags;
 
-            _hasAlpha = (bitmap.Flags & (int)(ImageFlags.HasAlpha)) != 0;
+            _hasAlpha = (bitmap.Flags & (int)ImageFlags.HasAlpha) != 0;
             _isIndexed = bitmap.PixelFormat.HasFlag(PixelFormat.Indexed);
             
-            if ((bitmap.Flags & (int)(ImageFlags.ColorSpaceCmyk)) != 0)
+            if ((bitmap.Flags & (int)ImageFlags.ColorSpaceCmyk) != 0)
                 _colorSpace = ColorSpaceType.Cmyk;
-            else if ((bitmap.Flags & (int)(ImageFlags.ColorSpaceYcbcr)) != 0)
+            else if ((bitmap.Flags & (int)ImageFlags.ColorSpaceYcbcr) != 0)
                 _colorSpace = ColorSpaceType.Ycbcr;
-            else if ((bitmap.Flags & (int)(ImageFlags.ColorSpaceYcck)) != 0)
+            else if ((bitmap.Flags & (int)ImageFlags.ColorSpaceYcck) != 0)
                 _colorSpace = ColorSpaceType.Ycck;
-            else if ((bitmap.Flags & (int)(ImageFlags.ColorSpaceRgb)) != 0)
+            else if ((bitmap.Flags & (int)ImageFlags.ColorSpaceRgb) != 0)
                 _colorSpace = ColorSpaceType.Rgb;
-            else if ((bitmap.Flags & (int)(ImageFlags.ColorSpaceGray)) != 0)
+            else if ((bitmap.Flags & (int)ImageFlags.ColorSpaceGray) != 0)
                 _colorSpace = ColorSpaceType.Gray;
             else
                 _colorSpace = ColorSpaceType.Unknown;
         }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ImageInfo(ImageInfo item)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             : base(item)
         {
-            if (item == null)
-                throw new ArgumentNullException("item");
+            ArgumentNullException.ThrowIfNull(item);
 
             _exists = item._exists;
             _isReadOnly = item._isReadOnly;

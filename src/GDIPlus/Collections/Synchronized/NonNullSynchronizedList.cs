@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Represents a syncrhonized (thread-safe), strongly typed list of class objects whose elements are not permitted to have null values.
@@ -34,45 +32,30 @@ namespace Erwine.Leonard.T.GDIPlus.Collections.Synchronized
         /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="collection"/> contains one or more null values.</exception>
         public NonNullSynchronizedList(ICollection<T> collection) : base(collection) { }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void Initialize(ICollection<T> collection)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.Initialize(collection);
 
             if (this.Any(i => i == null))
-                throw new ArgumentOutOfRangeException("collection", "Source collection cannot have null values.");
+                throw new ArgumentOutOfRangeException(nameof(collection), "Source collection cannot have null values.");
         }
 
         #region Overrides to deny null values
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override int InnerAdd(object value)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
 
             return base.InnerAdd(value);
         }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void InnerInsert(int index, object value)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
 
             base.InnerInsert(index, value);
         }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void InnerSet(int index, object value)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
 
             base.InnerSet(index, value);
         }

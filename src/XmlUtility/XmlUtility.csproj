@@ -281,8 +281,9 @@
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Bypass -File $(SolutionDir)PostBuild.ps1 -TargetName $(TargetName) -TargetExt $(TargetExt) -ProjectName $(ProjectName) -ProjectDir $(ProjectDir) -OutDir $(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
+    <PackageReference Include="System.Management.Automation" Version="7.4.5" />
+  </ItemGroup>
 </Project>

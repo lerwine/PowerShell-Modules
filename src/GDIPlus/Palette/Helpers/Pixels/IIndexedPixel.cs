@@ -1,13 +1,11 @@
-using System;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IIndexedPixel
     {
         // index methods
-        Byte GetIndex(Int32 offset);
-        void SetIndex(Int32 offset, Byte value);
+        byte GetIndex(int offset);
+        void SetIndex(int offset, byte value);
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

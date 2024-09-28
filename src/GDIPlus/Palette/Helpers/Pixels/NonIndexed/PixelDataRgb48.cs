@@ -1,8 +1,8 @@
-using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Name |                     Blue                      |                     Green                     |                      Red                      | 
@@ -13,54 +13,46 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Helpers.Pixels.NonIndexed
     public struct PixelDataRgb48 : INonIndexedPixel
     {
         // raw component values
-        [FieldOffset(0)] private UInt16 blue;   // 00 - 15
-        [FieldOffset(2)] private UInt16 green;  // 16 - 31
-        [FieldOffset(4)] private UInt16 red;    // 32 - 47
+        [FieldOffset(0)] private ushort blue;   // 00 - 15
+        [FieldOffset(2)] private ushort green;  // 16 - 31
+        [FieldOffset(4)] private ushort red;    // 32 - 47
 
         // raw high-level values
-        [FieldOffset(0)] private UInt64 raw;    // 00 - 47
+        [FieldOffset(0)] private ulong raw;    // 00 - 47
 
         // processed component values
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public Int32 Alpha { get { return 0xFF; } }
-        public Int32 Red { get { return red >> 8; } }
-        public Int32 Green { get { return green >> 8; } }
-        public Int32 Blue { get { return blue >> 8; } }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        public readonly int Alpha => 0xFF;
+        public readonly int Red => red >> 8;
+        public readonly int Green => green >> 8;
+        public readonly int Blue => blue >> 8;
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.Argb"/> for more details.
         /// </summary>
-        public Int32 Argb
-        {
-            get { return Alpha << 48 | Red << 32 | Green << 16 | Blue; }
-        }
+        public readonly int Argb => Alpha << 48 | Red << 32 | Green << 16 | Blue;
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.GetColor"/> for more details.
         /// </summary>
-        public Color GetColor()
-        {
-            return Color.FromArgb(Argb);
-        }
+        public readonly Color GetColor() => Color.FromArgb(Argb);
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.SetColor"/> for more details.
         /// </summary>
         public void SetColor(Color color)
         {
-            red = (UInt16) (color.R << 8);
-            green = (UInt16) (color.G << 8);
-            blue = (UInt16) (color.B << 8);
+            red = (ushort) (color.R << 8);
+            green = (ushort) (color.G << 8);
+            blue = (ushort) (color.B << 8);
         }
 
         /// <summary>
         /// See <see cref="INonIndexedPixel.Value"/> for more details.
         /// </summary>
-        public UInt64 Value
+        public ulong Value
         {
-            get { return raw; }
-            set { raw = value & 0xFFFFFFFFFFFF; }
+            readonly get => raw;
+            set => raw = value & 0xFFFFFFFFFFFF;
         }
     }
 }

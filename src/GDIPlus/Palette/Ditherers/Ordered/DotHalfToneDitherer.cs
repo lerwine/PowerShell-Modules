@@ -1,17 +1,13 @@
-using System;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers.Ordered
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DotHalfToneDitherer : BaseOrderedDitherer
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// See <see cref="BaseColorDitherer.CreateCoeficientMatrix"/> for more details.
         /// </summary>
-        protected override Byte[,] CreateCoeficientMatrix()
-        {
-            return new Byte[,] 
+        protected override byte[,] CreateCoeficientMatrix() => new byte[,]
             {
                 { 25,  9, 23, 31, 35, 45, 43, 33 },
                 { 11,  1,  7, 21, 47, 59, 57, 41 },
@@ -22,22 +18,15 @@ namespace Erwine.Leonard.T.GDIPlus.Palette.Ditherers.Ordered
                 { 50, 62, 64, 56, 14,  4,  6, 20 },
                 { 38, 52, 54, 40, 28, 16, 18, 30 }
             };
-        }
 
         /// <summary>
         /// See <see cref="BaseOrderedDitherer.MatrixWidth"/> for more details.
         /// </summary>
-        protected override Byte MatrixWidth
-        {
-            get { return 8; }
-        }
+        protected override byte MatrixWidth => 8;
 
         /// <summary>
         /// See <see cref="BaseOrderedDitherer.MatrixHeight"/> for more details.
         /// </summary>
-        protected override Byte MatrixHeight
-        {
-            get { return 8; }
-        }
+        protected override byte MatrixHeight => 8;
     }
 }

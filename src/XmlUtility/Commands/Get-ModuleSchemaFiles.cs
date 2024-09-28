@@ -9,7 +9,6 @@ using Microsoft.PowerShell.Commands;
 
 namespace XmlUtility.Commands
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Cmdlet(VerbsCommon.Get, "ModuleSchemaFiles")]
     public class Get_ModuleSchemaFiles : PSCmdlet
     {
@@ -47,5 +46,4 @@ namespace XmlUtility.Commands
             }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

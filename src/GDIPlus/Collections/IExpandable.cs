@@ -1,8 +1,7 @@
-using System;
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Erwine.Leonard.T.GDIPlus.Collections
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IExpandable
     {
         event EventHandler IsExpandedChanged;
@@ -18,5 +17,4 @@ namespace Erwine.Leonard.T.GDIPlus.Collections
     {
         T Value { get; set; }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -54,7 +54,7 @@ ProcessorArchitecture = 'MSIL'
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @('Erwine.Leonard.T.GDIPlusLib.dll')
+NestedModules = @('GDIPlus.dll')
 
 # Functions to export from this module
 FunctionsToExport = '*'
