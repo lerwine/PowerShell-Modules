@@ -74,7 +74,7 @@ FunctionsToExport = @('Get-TextEncoding', 'Get-StringComparer', 'Get-IndexOfChar
     'Read-IntegerFromStream', 'Read-UnsignedIntegerFromStream', 'Read-LongIntegerFromStream', 'Read-UnsignedLongIntegerFromStream', 'Write-ShortIntegerToStream', 'Write-UnsignedShortIntegerToStream', 'Write-IntegerToStream',
     'Write-UnsignedIntegerToStream', 'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes', 'Write-TinyLengthEncodedBytes',
     'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'New-MemoryStream', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'ConvertTo-SafeFileName', 'Use-Location', 'Get-AppDataPath', 'Use-TempFolder',
-    'Get-PathStringSegments', 'Optimize-PathString', 'Compare-PathStrings', 'Expand-GZip', 'Compress-GZip')
+    'Resolve-OptionalPath', 'Get-PathStringSegments', 'Optimize-PathString', 'Compare-PathStrings', 'Expand-GZip', 'Compress-GZip')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

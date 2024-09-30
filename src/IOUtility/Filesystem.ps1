@@ -212,6 +212,296 @@ Function Use-TempFolder {
     }
 }
 
+class OptionalPathInfo {
+    [System.Management.Automation.PathInfo]$Resolved;
+    [string]$Unresolved;
+    [string]$Path;
+}
+
+Function Resolve-OptionalPath {
+    [CmdletBinding(DefaultParameterSetName = 'WcPath')]
+    Param(
+        # Specifies a path to one or more locations.
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = "WcPath", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Path,
+
+        # Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName = $true)]
+        [Alias("PSPath", "FullName")]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$LiteralPath,
+
+        [string]$RelativeBasePath,
+
+        [switch]$Relative
+    )
+
+    Begin {
+        $BasePathInfo = $null;
+        if (-not $Relative.IsPresent) {
+            if ($PSBoundParameters.ContainsKey('RelativeBasePath')) {
+                $BasePathInfo = Resolve-Path -LiteralPath $RelativeBasePath;
+                if ($null -eq $RelativeBasePath) { break }
+            } else {
+                $BasePathInfo = Get-Location;
+            }
+        }
+    }
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
+            if ($Relative.IsPresent) {
+                if ($PSBoundParameters.ContainsKey('RelativeBasePath')) {
+                    foreach ($PathString in $LiteralPath) {
+                        $Resolved = $null;
+                        $Resolved = Resolve-Path -LiteralPath $PathString -RelativeBasePath $RelativeBasePath -Relative -ErrorAction Ignore;
+                        if ($null -ne $Resolved) {
+                            $Resolved | Write-Output;
+                        } else {
+                            $Unresolved = $PathString | Split-Path -Leaf;
+                            $Parent = $PathString | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Resolved = Resolve-Path -LiteralPath $Parent -RelativeBasePath $RelativeBasePath -Relative -ErrorAction Ignore;
+                                if ($null -ne $Resolved) { break }
+                                $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            if ($null -ne $Resolved) {
+                                ($Resolved | Join-Path -ChildPath $Unresolved) | Write-Output;
+                            } else {
+                                if ($Unresolved[0] -eq '.') {
+                                    $Unresolved | Write-Output;
+                                } else {
+                                    ('.' | Join-Path -ChildPath $Unresolved) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($PathString in $LiteralPath) {
+                        $Resolved = $null;
+                        $Resolved = Resolve-Path -LiteralPath $PathString -Relative -ErrorAction Ignore;
+                        if ($null -ne $Resolved) {
+                            $Resolved | Write-Output;
+                        } else {
+                            $Unresolved = $PathString | Split-Path -Leaf;
+                            $Parent = $PathString | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Resolved = Resolve-Path -LiteralPath $Parent -Relative -ErrorAction Ignore;
+                                if ($null -ne $Resolved) { break }
+                                $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            if ($null -ne $Resolved) {
+                                ($Resolved | Join-Path -ChildPath $Unresolved) | Write-Output;
+                            } else {
+                                if ($Unresolved[0] -eq '.') {
+                                    $Unresolved | Write-Output;
+                                } else {
+                                    ('.' | Join-Path -ChildPath $Unresolved) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('RelativeBasePath')) {
+                    foreach ($PathString in $LiteralPath) {
+                        $Resolved = $null;
+                        $Resolved = Resolve-Path -LiteralPath $PathString -RelativeBasePath $RelativeBasePath -ErrorAction Ignore;
+                        if ($null -ne $Resolved) {
+                            [OptionalPathInfo]@{
+                                Resolved = $Resolved;
+                                Unresolved = '';
+                                Path = $Resolved.Path;
+                            } | Write-Output;
+                        } else {
+                            $Unresolved = $PathString | Split-Path -Leaf;
+                            $Parent = $PathString | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Resolved = Resolve-Path -LiteralPath $Parent -RelativeBasePath $RelativeBasePath -ErrorAction Ignore;
+                                if ($null -ne $Resolved) { break }
+                                $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            if ($null -eq $Resolved) { $Resolved = $BasePathInfo }
+                            [OptionalPathInfo]@{
+                                Resolved = $Resolved;
+                                Unresolved = $Unresolved;
+                                Path = $Resolved.Path | Join-Path -ChildPath $Unresolved;
+                            } | Write-Output;
+                        }
+                    }
+                } else {
+                    foreach ($PathString in $LiteralPath) {
+                        $Resolved = $null;
+                        $Resolved = Resolve-Path -LiteralPath $PathString -ErrorAction Ignore;
+                        if ($null -ne $Resolved) {
+                            [OptionalPathInfo]@{
+                                Resolved = $Resolved;
+                                Unresolved = '';
+                                Path = $Resolved.Path;
+                            } | Write-Output;
+                        } else {
+                            $Unresolved = $PathString | Split-Path -Leaf;
+                            $Parent = $PathString | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Resolved = Resolve-Path -LiteralPath $Parent -ErrorAction Ignore;
+                                if ($null -ne $Resolved) { break }
+                                $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            if ($null -eq $Resolved) { $Resolved = $BasePathInfo }
+                            [OptionalPathInfo]@{
+                                Resolved = $Resolved;
+                                Unresolved = $Unresolved;
+                                Path = $Resolved.Path | Join-Path -ChildPath $Unresolved;
+                            } | Write-Output;
+                        }
+                    }
+                }
+            }
+        } else {
+            if ($Relative.IsPresent) {
+                if ($PSBoundParameters.ContainsKey('RelativeBasePath')) {
+                    foreach ($P in $Path) {
+                        $Resolved = @(Resolve-Path -LiteralPath $PathString -RelativeBasePath $RelativeBasePath -Relative -ErrorAction Ignore);
+                        if ($Resolved.Count) {
+                            $Resolved | Write-Output;
+                        } else {
+                            $Unresolved = $PathString | Split-Path -Leaf;
+                            $Parent = $PathString | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Resolved = @(Resolve-Path -LiteralPath $Parent -RelativeBasePath $RelativeBasePath -Relative -ErrorAction Ignore);
+                                if ($Resolved.Count -gt 0) { break }
+                                $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            if ($Resolved.Count -gt 0) {
+                                ($Resolved | Join-Path -ChildPath $Unresolved) | Write-Output;
+                            } else {
+                                if ($Unresolved[0] -eq '.') {
+                                    $Unresolved | Write-Output;
+                                } else {
+                                    ('.' | Join-Path -ChildPath $Unresolved) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($P in $Path) {
+                        $Resolved = @(Resolve-Path -LiteralPath $PathString -Relative -ErrorAction Ignore);
+                        if ($Resolved.Count) {
+                            $Resolved | Write-Output;
+                        } else {
+                            $Unresolved = $PathString | Split-Path -Leaf;
+                            $Parent = $PathString | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Resolved = @(Resolve-Path -LiteralPath $Parent -Relative -ErrorAction Ignore);
+                                if ($Resolved.Count -gt 0) { break }
+                                $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            if ($Resolved.Count -gt 0) {
+                                ($Resolved | Join-Path -ChildPath $Unresolved) | Write-Output;
+                            } else {
+                                if ($Unresolved[0] -eq '.') {
+                                    $Unresolved | Write-Output;
+                                } else {
+                                    ('.' | Join-Path -ChildPath $Unresolved) | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('RelativeBasePath')) {
+                    foreach ($P in $Path) {
+                        foreach ($PathString in $LiteralPath) {
+                            $Resolved = @(Resolve-Path -LiteralPath $PathString -RelativeBasePath $RelativeBasePath -ErrorAction Ignore);
+                            if ($Resolved.Count -gt 0) {
+                                $Resolved | ForEach-Object {
+                                    [OptionalPathInfo]@{
+                                        Resolved = $_;
+                                        Unresolved = '';
+                                        Path = $_.Path;
+                                    } | Write-Output;
+                                }
+                            } else {
+                                $Unresolved = $PathString | Split-Path -Leaf;
+                                $Parent = $PathString | Split-Path -Parent;
+                                while (-not [string]::IsNullOrEmpty($Parent)) {
+                                    $Resolved = @(Resolve-Path -LiteralPath $Parent -RelativeBasePath $RelativeBasePath -ErrorAction Ignore);
+                                    if ($Resolved.Count -gt 0) { break }
+                                    $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                    $Parent = $Parent | Split-Path -Parent;
+                                }
+                                if ($Resolved.Count -eq 0) {
+                                    [OptionalPathInfo]@{
+                                        Resolved = $BasePathInfo;
+                                        Unresolved = $Unresolved;
+                                        Path = $BasePathInfo.Path | Join-Path -ChildPath $Unresolved;
+                                    } | Write-Output;
+                                } else {
+                                    $Resolved | ForEach-Object {
+                                        [OptionalPathInfo]@{
+                                            Resolved = $_;
+                                            Unresolved = $Unresolved;
+                                            Path = $_.Path | Join-Path -ChildPath $Unresolved;
+                                        } | Write-Output;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($P in $Path) {
+                        foreach ($PathString in $LiteralPath) {
+                            $Resolved = @(Resolve-Path -LiteralPath $PathString -ErrorAction Ignore);
+                            if ($Resolved.Count -gt 0) {
+                                $Resolved | ForEach-Object {
+                                    [OptionalPathInfo]@{
+                                        Resolved = $_;
+                                        Unresolved = '';
+                                        Path = $_.Path;
+                                    } | Write-Output;
+                                }
+                            } else {
+                                $Unresolved = $PathString | Split-Path -Leaf;
+                                $Parent = $PathString | Split-Path -Parent;
+                                while (-not [string]::IsNullOrEmpty($Parent)) {
+                                    $Resolved = @(Resolve-Path -LiteralPath $Parent -ErrorAction Ignore);
+                                    if ($Resolved.Count -gt 0) { break }
+                                    $Unresolved = ($Parent | Split-Path -Leaf) | Join-Path -ChildPath $Unresolved;
+                                    $Parent = $Parent | Split-Path -Parent;
+                                }
+                                if ($Resolved.Count -eq 0) {
+                                    [OptionalPathInfo]@{
+                                        Resolved = $BasePathInfo;
+                                        Unresolved = $Unresolved;
+                                        Path = $BasePathInfo.Path | Join-Path -ChildPath $Unresolved;
+                                    } | Write-Output;
+                                } else {
+                                    $Resolved | ForEach-Object {
+                                        [OptionalPathInfo]@{
+                                            Resolved = $_;
+                                            Unresolved = $Unresolved;
+                                            Path = $_.Path | Join-Path -ChildPath $Unresolved;
+                                        } | Write-Output;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 Function Get-PathStringSegments {
     <#
     .SYNOPSIS
