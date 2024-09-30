@@ -142,6 +142,15 @@ EXPORTED COMMANDS
     Use-TempFolder
         Creates a temporary folder that is automatically deleted.
 
+    Get-PathStringSegments
+        Gets path segments.
+
+    Optimize-PathString
+        Gets normalized path strings.
+
+    Compare-PathStrings
+        Compares 2 path strings.
+
     Expand-GZip
         Decompresses GZip files.
 
@@ -193,5 +202,8 @@ SEE ALSO
     Use-Location
     Get-AppDataPath
     Use-TempFolder
+    Get-PathStringSegments
+    Optimize-PathString
+    Compare-PathStrings
     Expand-GZip
     Compress-GZip

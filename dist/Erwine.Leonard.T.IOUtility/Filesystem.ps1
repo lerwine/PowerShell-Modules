@@ -139,98 +139,6 @@ Function Use-Location {
     }
 }
 
-Function Get-AppDataPath {
-	<#
-		.SYNOPSIS
-			Get path for application data storage.
-
-		.DESCRIPTION
-			Constructs a path for application-specific data.
-
-		.OUTPUTS
-			System.String. Path to application data storage folder.
-	#>
-	[CmdletBinding(DefaultParameterSetName = 'Roaming')]
-	[OutputType([string])]
-	Param(
-		[Parameter(Mandatory = $true, Position = 0)]
-		# Name of company
-		[string]$Company,
-
-		[Parameter(Mandatory = $true, Position = 1)]
-		# Name of application
-		[string]$ProductName,
-
-		[Parameter(Position = 2)]
-		# Version of application
-		[System.Version]$Version,
-
-		[Parameter(Position = 3)]
-		# Name of component
-		[string]$ComponentName,
-
-		# Create folder structure if it does not exist
-		[switch]$Create,
-
-		[Parameter(ParameterSetName = 'Roaming')]
-		# Create folder structure under roaming profile.
-		[switch]$Roaming,
-
-		[Parameter(ParameterSetName = 'Local')]
-		# Create folder structure under local profile.
-		[switch]$Local,
-
-		[Parameter(ParameterSetName = 'Common')]
-		# Create folder structure under common location.
-		[switch]$Common
-	)
-
-	Process {
-		switch ($PSCmdlet.ParameterSetName) {
-			'Common' { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::CommonApplicationData); break; }
-			'Local' { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::LocalApplicationData); break; }
-			default { $AppDataPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::ApplicationData); break; }
-		}
-
-		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
-			throw ('Unable to find {0} path "{1}".' -f $PSCmdlet.ParameterSetName, $AppDataPath);
-		}
-
-		$AppDataPath = $AppDataPath | Join-Path -ChildPath ($Company | ConvertTo-SafeFileName);
-
-		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
-			New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
-			if (-not ($AppDataPath | Test-Path -PathType Container)) {
-				throw ('Unable to create {0} company path "{1}".' -f $PSCmdlet.ParameterSetName, $AppDataPath);
-			}
-		}
-
-		$N = $ProductName;
-		if ($PSBoundParameters.ContainsKey('Version')) { $N = '{0}_{1}_{2}' -f $N, $Version.Major, $Version.Minor }
-		$AppDataPath = $AppDataPath | Join-Path -ChildPath ($N | ConvertTo-SafeFileName);
-
-		if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
-			New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
-			if (-not ($AppDataPath | Test-Path -PathType Container)) {
-				throw ('Unable to create {0} product path "{1}".' -f $PSCmdlet.ParameterSetName, $AppDataPath);
-			}
-		}
-
-		if ($PSBoundParameters.ContainsKey('ComponentName')) {
-			$AppDataPath = $AppDataPath | Join-Path -ChildPath ($ComponentName | ConvertTo-SafeFileName -AllowExtension);
-
-			if ($Create -and (-not ($AppDataPath | Test-Path -PathType Container))) {
-				New-Item -Path $AppDataPath -ItemType Directory | Out-Null;
-				if (-not ($AppDataPath | Test-Path -PathType Container)) {
-					throw ('Unable to create {0} component path "{1}".' -f $PSCmdlet.ParameterSetName, $AppDataPath);
-				}
-			}
-		}
-
-		$AppDataPath | Write-Output;
-	}
-}
-
 Function Use-TempFolder {
     <#
     .SYNOPSIS
@@ -301,5 +209,222 @@ Function Use-TempFolder {
 
     End {
         Remove-Item -LiteralPath $DirectoryInfo.FullName -Recurse -Force;
+    }
+}
+
+Function Get-PathStringSegments {
+    <#
+    .SYNOPSIS
+        Gets path segments.
+    .DESCRIPTION
+        Gets names of path segments, normalizing '.' and '..' names where possible.
+    .OUTPUTS
+        System.String[]. Names of each path segment.
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    Param(
+        # Specifies a path to one or more locations. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias("PSPath", 'FullName')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Path,
+
+        # Do not attempt to resolve path or parent path.
+        [switch]$NoResolve
+    )
+
+    Process {
+        $Segments = [System.Collections.Generic.LinkedList[string]]::new();
+        if ($NoResolve.IsPresent) {
+            foreach ($PathString in $Path) {
+                $Parent = $PathString | Split-Path -Parent;
+                $Segments.AddFirst(($PathString | Split-Path -Leaf));
+                while (-not [string]::IsNullOrEmpty($Parent)) {
+                    $Segments.AddFirst(($Parent | Split-Path -Leaf));
+                    $Parent = $Parent | Split-Path -Parent;
+                }
+            }
+        } else {
+            foreach ($PathString in $Path) {
+                if ($PathString | Test-Path) {
+                    $Parent = (Resolve-Path -LiteralPath $PathString).Path;
+                    $Segments.AddFirst(($Parent | Split-Path -Leaf));
+                    $Parent = $Parent | Split-Path -Parent;
+                    while (-not [string]::IsNullOrEmpty($Parent)) {
+                        $Segments.AddFirst(($Parent | Split-Path -Leaf));
+                        $Parent = $Parent | Split-Path -Parent;
+                    }
+                    break;
+                } else {
+                    $Parent = $PathString | Split-Path -Parent;
+                    $Segments.AddFirst(($PathString | Split-Path -Leaf));
+                    while (-not [string]::IsNullOrEmpty($Parent)) {
+                        if (Test-Path -LiteralPath $Parent) {
+                            $Parent = (Resolve-Path -LiteralPath $Parent).Path;
+                            $Segments.AddFirst(($Parent | Split-Path -Leaf));
+                            $Parent = $Parent | Split-Path -Parent;
+                            while (-not [string]::IsNullOrEmpty($Parent)) {
+                                $Segments.AddFirst(($Parent | Split-Path -Leaf));
+                                $Parent = $Parent | Split-Path -Parent;
+                            }
+                            break;
+                        }
+                        $Segments.AddFirst(($Parent | Split-Path -Leaf));
+                        $Parent = $Parent | Split-Path -Parent;
+                    }
+                }
+            }
+        }
+        [System.Collections.Generic.LinkedListNode[string]]$Node = $Segments.First;
+        do {
+            if ($Node.Value -eq '.') {
+                $Next = $Node.Next;
+                $Segments.Remove($Node) | Out-Null;
+                $Node = $Next;
+            } else {
+                if ($Node.Value -eq '..') {
+                    $Next = $Node.Next;
+                    if ($null -ne $Node.Previous -and $Node.Previous -ne '..') {
+                        $Segments.Remove($Node.Previous) | Out-Null;
+                        $Segments.Remove($Node) | Out-Null;
+                    }
+                } else {
+                    $Node = $Node.Next;
+                }
+            }
+        } while ($null -ne $Node);
+        $Segments | Write-Output;
+    }
+}
+
+Function Optimize-PathString {
+    <#
+    .SYNOPSIS
+        Gets normalized path strings.
+    .DESCRIPTION
+        Gets path string with normalized path separator characters, normalizing '.' and '..' names where possible.
+    .OUTPUTS
+        System.String. Normalized path string.
+    #>
+    [CmdletBinding()]
+    Param(
+        # Specifies a path to one or more locations. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias("PSPath", 'FullName', 'Path')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Path,
+
+        # Do not attempt to resolve path or parent path.
+        [switch]$NoResolve
+    )
+
+    Process {
+        if ($NoResolve.IsPresent) {
+            foreach ($PathString in $Path) {
+                ([string]$Result, [string[]]$RemainingSegments) = @(Get-PathStringSegments -Path $CompareTo -NoResolve);
+                if ($null -ne $RemainingSegments) {
+                    $RemainingSegments | ForEach-Object { $Result = $Result | Join-Path -ChildPath $_ }
+                }
+                $Result | Write-Output;
+            }
+        } else {
+            foreach ($PathString in $Path) {
+                ([string]$Result, [string[]]$RemainingSegments) = @(Get-PathStringSegments -Path $CompareTo);
+                if ($null -ne $RemainingSegments) {
+                    $RemainingSegments | ForEach-Object { $Result = $Result | Join-Path -ChildPath $_ }
+                }
+                $Result | Write-Output;
+            }
+        }
+    }
+}
+
+Function Compare-PathStrings {
+    <#
+    .SYNOPSIS
+        Compares 2 path strings.
+    .DESCRIPTION
+        Compares each segment of 2 path strings, normalizing '.' and '..' names where possible.
+    .OUTPUTS
+        System.Int32. < 0 if Path is less than CompareTo; > 0 if Path is greater than CompareTo; Otherwise, 0 if both are equal.
+    #>
+    [CmdletBinding()]
+    Param(
+        # Specifies a path to one or more locations. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias("PSPath", 'FullName', 'Path')]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Path,
+
+        # Specifies a path to compare to. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, Position = 1)]
+        [string]$CompareTo,
+
+        [Parameter(Position = 2)]
+        # The comparison type to use for each path segment
+        [System.StringComparison]$Type = [System.StringComparison]::CurrentCulture,
+
+        # Do not attempt to resolve path or parent path.
+        [switch]$NoResolve
+    )
+
+    Begin {
+        [string[]]$CompareSegments = $null;
+        if ($NoResolve.IsPresent) {
+            [string[]]$CompareSegments = @(Get-PathStringSegments -Path $CompareTo -NoResolve);
+        } else {
+            [string[]]$CompareSegments = @(Get-PathStringSegments -Path $CompareTo);
+        }
+        $CL = $CompareSegments.Length;
+    }
+
+    Process {
+        if ($NoResolve.IsPresent) {
+            if ($CaseInsensitive.IsPresent) {}
+            foreach ($PathString in $Path) {
+                [string[]]$Segments = @(Get-PathStringSegments -Path $PathString -NoResolve);
+                $Result = 0;
+                for ($i = 0; $i -lt $CL; $i++) {
+                    if ($i -eq $Segments.Length) {
+                        $Result = -1;
+                        break;
+                    }
+                    $Result = $Segments[$i].CompareTo($CompareSegments[$i], $Type);
+                    if ($Result -ne 0) { break }
+                }
+                if ($Result -ne 0 -or $Segments.Length -eq $CL) {
+                    $Result | Write-Output;
+                } else {
+                    1 | Write-Output;
+                }
+            }
+        } else {
+            foreach ($PathString in $Path) {
+                [string[]]$Segments = @(Get-PathStringSegments -Path $PathString);
+                $Result = 0;
+                for ($i = 0; $i -lt $CL; $i++) {
+                    if ($i -eq $Segments.Length) {
+                        $Result = -1;
+                        break;
+                    }
+                    $Result = $Segments[$i].CompareTo($CompareSegments[$i], $Type);
+                    if ($Result -ne 0) { break }
+                }
+                if ($Result -ne 0 -or $Segments.Length -eq $CL) {
+                    $Result | Write-Output;
+                } else {
+                    1 | Write-Output;
+                }
+            }
+        }
     }
 }
