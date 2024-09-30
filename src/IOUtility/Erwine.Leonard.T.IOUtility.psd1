@@ -69,13 +69,12 @@ Description = 'Provides utility functions that are useful for advanced input/out
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('ConvertTo-SafeFileName', 'Use-Location', 'Get-AppDataPath', 'Read-ShortIntegerFromStream', 'Read-UnsignedShortIntegerFromStream', 'Read-IntegerFromStream',
-    'Read-UnsignedIntegerFromStream', 'Read-LongIntegerFromStream', 'Read-UnsignedLongIntegerFromStream', 'Write-ShortIntegerToStream', 'Write-UnsignedShortIntegerToStream', 'Write-IntegerToStream',
-    'Write-UnsignedIntegerToStream', 'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes',
-    'Write-TinyLengthEncodedBytes', 'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'Get-TextEncoding',
-    'New-MemoryStream', 'Get-StringComparer', 'Optimize-WhiteSpace', 'Remove-ZeroPadding', 'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText', 'Expand-GZip', 'Use-TempFolder',
-    'Assert-IsNotNull', 'Assert-IsType', 'Assert-IsString', 'Assert-IsPsEnumerable', 'Invoke-WhenNotNull', 'Invoke-WhenIsType', 'Invoke-WhenIsString', 'Invoke-WhenIsPsEnumerable',
-    'Get-CharacterClassFlags', 'Test-CharacterClassFlags')
+FunctionsToExport = @('Get-TextEncoding', 'Get-StringComparer', 'Get-IndexOfCharacter', 'Get-CharacterClass', 'Test-CharacterClass', 'Optimize-WhiteSpace', 'Remove-ZeroPadding', 'Out-IndentedText', 'Get-IndentLevel', 'Out-UnindentedText',
+    'Assert-IsNotNull', 'Assert-IsType', 'Assert-IsString', 'Assert-IsPsEnumerable', 'Invoke-WhenNotNull', 'Invoke-WhenIsType', 'Invoke-WhenIsString', 'Invoke-WhenIsPsEnumerable', 'Read-ShortIntegerFromStream', 'Read-UnsignedShortIntegerFromStream',
+    'Read-IntegerFromStream', 'Read-UnsignedIntegerFromStream', 'Read-LongIntegerFromStream', 'Read-UnsignedLongIntegerFromStream', 'Write-ShortIntegerToStream', 'Write-UnsignedShortIntegerToStream', 'Write-IntegerToStream',
+    'Write-UnsignedIntegerToStream', 'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes', 'Write-TinyLengthEncodedBytes',
+    'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'New-MemoryStream', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'ConvertTo-SafeFileName', 'Use-Location', 'Get-AppDataPath', 'Use-TempFolder',
+    'Expand-GZip', 'Compress-GZip')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -93,7 +92,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('README.md', 'about_Erwine.Leonard.T.IOUtility.help.txt', 'IOUtility.tests.ps1', 'Test-CharacterClass.tests.ps1')
+FileList = @('Text-Character-And-String.ps1', 'Type-Assertion.ps1', 'System-IO-Stream.ps1', 'Base64.ps1', 'Filesystem.ps1', 'GZip.ps1', 'README.md', 'about_Erwine.Leonard.T.IOUtility.help.txt', 'IOUtility.tests.ps1', 'Test-CharacterClass.tests.ps1', 'Subby/Example.Txt', 'Subby/Subber/Another.txt')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
