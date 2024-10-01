@@ -602,10 +602,10 @@ Function Get-CharacterClass {
     )
 
     Process {
-        [System.Globalization.UnicodeCategory]$Category = [char]::GetUnicodeCategory($c);
+        [System.Globalization.UnicodeCategory]$Category = [char]::GetUnicodeCategory($InputValue);
         switch ($Category) {
             Surrogate {
-                if ([char]::IsHighSurrogate($c)) {
+                if ([char]::IsHighSurrogate($InputValue)) {
                     [CharacterClass]::HighSurrogate | Write-Output;
                 } else {
                     [CharacterClass]::LowSurrogate | Write-Output;
@@ -613,10 +613,10 @@ Function Get-CharacterClass {
                 break;
             }
             UppercaseLetter {
-                if ([char]::IsAsciiHexDigitUpper($c)) {
+                if ([char]::IsAsciiHexDigitUpper($InputValue)) {
                     [CharacterClass]::HexLetterUpper | Write-Output;
                 } else {
-                    if ([char]::IsAsciiLetterUpper($c)) {
+                    if ([char]::IsAsciiLetterUpper($InputValue)) {
                         [CharacterClass]::NonHexAsciiLetterUpper | Write-Output;
                     } else {
                         [CharacterClass]::NonAsciiLetterUpper | Write-Output;
@@ -625,10 +625,10 @@ Function Get-CharacterClass {
                 break;
             }
             LowercaseLetter {
-                if ([char]::IsAsciiHexDigitLower($c)) {
+                if ([char]::IsAsciiHexDigitLower($InputValue)) {
                     [CharacterClass]::HexLetterLower | Write-Output;
                 } else {
-                    if ([char]::IsAsciiLetterLower($c)) {
+                    if ([char]::IsAsciiLetterLower($InputValue)) {
                         [CharacterClass]::NonHexAsciiLetterLower | Write-Output;
                     } else {
                         [CharacterClass]::NonAsciiLetterLower | Write-Output;
@@ -637,11 +637,11 @@ Function Get-CharacterClass {
                 break;
             }
             DecimalDigitNumber {
-                if ([char]::IsAsciiDigit($c)) {
-                    if ($c -le '1') {
+                if ([char]::IsAsciiDigit($InputValue)) {
+                    if ($InputValue -le '1') {
                         [CharacterClass]::BinaryDigitNumber | Write-Output;
                     } else {
-                        if ($c -gt '7') {
+                        if ($InputValue -gt '7') {
                             [CharacterClass]::NonOctalAsciiDigit | Write-Output;
                         } else {
                             [CharacterClass]::NonBinaryOctalDigit | Write-Output;
@@ -653,7 +653,7 @@ Function Get-CharacterClass {
                 break;
             }
             ConnectorPunctuation {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiConnectorPunctuation | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiConnectorPunctuation | Write-Output;
@@ -661,7 +661,7 @@ Function Get-CharacterClass {
                 break;
             }
             DashPunctuation {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiDashPunctuation | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiDashPunctuation | Write-Output;
@@ -669,7 +669,7 @@ Function Get-CharacterClass {
                 break;
             }
             OpenPunctuation {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiOpenPunctuation | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiOpenPunctuation | Write-Output;
@@ -677,7 +677,7 @@ Function Get-CharacterClass {
                 break;
             }
             ClosePunctuation {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiClosePunctuation | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiClosePunctuation | Write-Output;
@@ -685,7 +685,7 @@ Function Get-CharacterClass {
                 break;
             }
             OtherPunctuation {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::OtherAsciiPunctuation | Write-Output;
                 } else {
                     [CharacterClass]::OtherNonAsciiPunctuation | Write-Output;
@@ -693,7 +693,7 @@ Function Get-CharacterClass {
                 break;
             }
             MathSymbol {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiMathSymbol | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiMathSymbol | Write-Output;
@@ -701,7 +701,7 @@ Function Get-CharacterClass {
                 break;
             }
             CurrencySymbol {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiCurrencySymbol | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiCurrencySymbol | Write-Output;
@@ -709,7 +709,7 @@ Function Get-CharacterClass {
                 break;
             }
             ModifierSymbol {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiModifierSymbol | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiModifierSymbol | Write-Output;
@@ -717,7 +717,7 @@ Function Get-CharacterClass {
                 break;
             }
             SpaceSeparator {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiSpaceSeparator | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiSpaceSeparator | Write-Output;
@@ -725,7 +725,7 @@ Function Get-CharacterClass {
                 break;
             }
             Control {
-                if ([char]::IsAscii($c)) {
+                if ([char]::IsAscii($InputValue)) {
                     [CharacterClass]::AsciiControl | Write-Output;
                 } else {
                     [CharacterClass]::NonAsciiControl | Write-Output;

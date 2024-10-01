@@ -831,406 +831,579 @@ Function Get-CharClassSeparatedValues {
 # :#&?|/\;,=!
 
 if ($null -eq $Script:VersionCoreSeparators) {
-    New-Variable -Name 'VersionCoreSeparators' -Option Constant -Value ':#&?|/\;,.=!';
+    New-Variable -Name 'VersionCoreSeparators' -Option ReadOnly -Value ([System.Collections.ObjectModel.ReadOnlyCollection[char]]::new(([char[]]('+', '-', '#', '?', '\', '/', '&', '=', ':', '|', '`', '^', '>', '<', '~'))));
+    New-Variable -Name 'NonWhiteSpaceRegex' -Option ReadOnly -Value ([regex]::new('[\P{Z}\P{C}]+'));
+    New-Variable -Name 'SymbolNonSymbolsRegex' -Option ReadOnly -Value ([regex]::new('(\p{S})(\P{S}+)'));
+    New-Variable -Name 'SymbolsRegex' -Option ReadOnly -Value ([regex]::new('\p{S}'));
+    # $SeparatorIndex -lt $Script:DotSeparatorIndex: $Script:VersionComponentSeparators[$SeparatorIndex]
+    # $SeparatorIndex -eq $Script:DotSeparatorIndex: '.'
+    # $SeparatorIndex -lt $Script:WsSeparatorIndex: $Script:VersionSubSeparators[$SeparatorIndex - ($Script:DotSeparatorIndex + 1)]
+    # $SeparatorIndex -eq $Script:WsSeparatorIndex: WhiteSpace
+    # $Script:VersionCoreSeparators.Length + 1: [char]::IsPunctuation()
+    # $Script:VersionCoreSeparators.Length + 2: \s+
 }
 
-Function Compare-VersionCore {
-    [CmdletBinding(DefaultParameterSetName = 'CharSeparated')]
+Function Compare-VersionCorePrefixed {
+    [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
         [string]$LVersion,
 
         [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
         [string]$RVersion,
 
         [Parameter(Mandatory = $true)]
         [System.StringComparer]$Comparer,
 
-        [Parameter(ParameterSetName = 'CharSeparated')]
-        [ValidateScript({ $_ -ge -2 -and $_ -le $Script:VersionCoreSeparators.Length + 2 })]
-        [int]$SeparatorIndex = 0,
+        [switch]$Symbol,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'SymbolSeparated')]
-        [switch]$SymbolSeparated,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'PunctuationSeparated')]
-        [switch]$PunctuationSeparated,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'WhiteSpaceOrControlSeparated')]
-        [switch]$WhiteSpaceOrControlSeparated
+        [switch]$Punctuation
     )
 
-    if ($SymbolSeparated.IsPresent) {
-        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -NotMatching '+' -Symbol);
-        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -NotMatching '+' -Symbol);
-        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
-            $Diff = $LSepValues[$i].Separator.CompareTo($RSepValues[$i].Separator);
-            if ($Diff -ne 0) { return $Diff }
-            $Diff = Compare-VersionCore -LVersion $LSepValues[$i].Value -RVersion $LSepValues[$i].Value -Comparer $Comparer -PunctuationSeparated;
-            if ($Diff -ne 0) { return $Diff }
-        }
-        return $LSepValues.Length - $RSepValues.Length;
+    if ($LVersion.Length -eq 0) {
+        if ($RVersion.Length -eq 0) { return 0 }
+        return -1;
+    }
+    if ($RVersion.Length -eq 0) { return 1 }
+
+    $LM = $Script:SymbolNonSymbolsRegex.Match($LVersion);
+    $RM = $Script:SymbolNonSymbolsRegex.Match($RVersion);
+    # TODO: Finish implementation
+}
+
+Function Compare-VersionSpaceSeparated {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$LVersion,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$RVersion,
+
+        [Parameter(Mandatory = $true)]
+        [System.StringComparer]$Comparer
+    )
+
+    $LM = $Script:NonWhiteSpaceRegex.Matches($LVersion);
+    $RM = $Script:NonWhiteSpaceRegex.Matches($RVersion);
+    for ($i = 0; $i -lt $LM.Count -and $i -lt $RM.Count; $i++) {
+        if ($i -eq $RM.Count) { return 1 }
+        $Diff = Compare-VersionCorePrefixed -LVersion $LM[$i].Value, $Rm[$i].Value -Comparer $Comparer;
+        if ($Diff -ne 0) { return $Diff }
     }
 
-    if ($PunctuationSeparated.IsPresent) {
-        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -NotMatching '-' -Punctuation);
-        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -NotMatching '-' -Punctuation);
-        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
-            $Diff = $LSepValues[$i].Separator.CompareTo($RSepValues[$i].Separator);
-            if ($Diff -ne 0) { return $Diff }
-            $Diff = Compare-VersionCore -LVersion $LSepValues[$i].Value -RVersion $LSepValues[$i].Value -Comparer $Comparer -WhiteSpaceOrControlSeparated;
-            if ($Diff -ne 0) { return $Diff }
-        }
-        return $LSepValues.Length - $RSepValues.Length;
-    }
+    return ($LM.Count - $RM.Count);
+}
 
-    if ($WhiteSpaceOrControlSeparated.IsPresent) {
-        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -WhiteSpaceOrControl);
-        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -WhiteSpaceOrControl);
-        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
-            if ($LSepValues[$i].Separator.Length -eq 0) {
-                if ($RSepValues[$i].Separator -gt 0) { return -1 }
+Function Compare-VersionCharSeparated {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$LVersion,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$RVersion,
+
+        [Parameter(Mandatory = $true)]
+        [System.StringComparer]$Comparer,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [ValidateRange(0, 13)]
+        [int]$SeparatorIndex
+    )
+
+    $LV = $LVersion.Trim();
+    $RV = $RVersion.Trim();
+    $c = $Script:VersionCoreSeparators[$SeparatorIndex];
+    $LI = $LV.IndexOf($c);
+    $RI = $RV.IndexOf($c);
+    if ($LI -ge 0) {
+        if ($RI -ge 0) {
+            $LArr = $LVersion.Split($c);
+            $RArr = $RVersion.Split($c);
+            $i = 0;
+            if ($SeparatorIndex -lt 13) {
+                do {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -SeparatorIndex ($SeparatorIndex + 1);
+                    if ($Diff -ne 0) { return $Diff }
+                    $i++;
+                } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
             } else {
-                if ($RSepValues[$i].Separator -eq 0) { return 1 }
+                do {
+                    $Diff = Compare-VersionSpaceSeparated -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer;
+                    if ($Diff -ne 0) { return $Diff }
+                    $i++;
+                } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
             }
-            $Lv = $LSepValues[$i].Value | Remove-ZeroPadding -AllowNegativeSign -AllowPositiveSign;
-            $Rv = $LSepValues[$i].Value | Remove-ZeroPadding -AllowNegativeSign -AllowPositiveSign;
-            $NumIdx = Get-IndexOfCharType -StartIndex
-            $Diff = $Comparer.Compare($LSepValues[$i].Value, $LSepValues[$i].Value);
-            if ($Diff -ne 0) { return $Diff }
+            return $LArr.Length - $RArr.Length;
         }
-        return $LSepValues.Length - $RSepValues.Length;
+        $Diff = 0;
+        if ($SeparatorIndex -lt 13) {
+            $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SeparatorIndex ($SeparatorIndex + 1);
+        } else {
+            $Diff = Compare-VersionSpaceSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer;
+        }
+        if ($Diff -ne 0) { return $Diff }
+        return 1;
+    }
+    if ($RI -ge 0) {
+        $Diff = 0;
+        if ($SeparatorIndex -lt 13) {
+            $Diff = Compare-VersionCharSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SeparatorIndex ($SeparatorIndex + 1);
+        } else {
+            $Diff = Compare-VersionSpaceSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer;
+        }
+        if ($Diff -ne 0) { return $Diff }
+        return -1;
     }
 
-    $LElements = $LVersion.Split($Script:VersionCoreSeparators[$SeparatorIndex]);
-    $RElements = $RVersion.Split($Script:VersionCoreSeparators[$SeparatorIndex]);
-    $NextIndex = $SeparatorIndex + 1;
-    if ($NextIndex -lt $Script:VersionCoreSeparators.Length) {
-        for ($i = 0; $i -lt $LElements.Length -and $i -lt $RElements.Length; $i++) {
-            $Diff = Compare-VersionCore -LVersion $LElements[$i] -RVersion $RElements[$i] -Comparer $Comparer -SeparatorIndex $NextIndex;
-            if ($Diff -ne 0) { return $Diff }
+    if ($SeparatorIndex -lt 13) {
+        Compare-VersionCharSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SeparatorIndex ($SeparatorIndex + 1);
+    } else {
+        Compare-VersionSpaceSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer;
+    }
+}
+
+Function Compare-VersionCoreDotSeparated {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$LVersion,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$RVersion,
+
+        [Parameter(Mandatory = $true)]
+        [System.StringComparer]$Comparer,
+
+        [switch]$BlankNotSameAsZero,
+
+        [switch]$SemverComponent
+    )
+
+    $LV = $LVersion.Trim();
+    $RV = $RVersion.Trim();
+    
+    if ($BlankNotSameAsZero.IsPresent) {
+        if ($Lv.Length -eq 0) {
+            if ($RV.Length -eq 0) { return 0 }
+            return -1;
+        }
+        if ($RV.Length -eq 0) { return 1 }
+        $LI = $LV.IndexOf('.');
+        $RI = $RV.IndexOf('.');
+        $Diff = 0;
+        if ($LI -lt 0) {
+            if ($RI -ge 0) {
+                if ($SemverComponent.IsPresent) {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SeparatorIndex 2;
+                } else {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SeparatorIndex 0;
+                }
+                if ($Diff -eq 0) { $Diff = -1 }
+            } else {
+                if ($SemverComponent.IsPresent) {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SeparatorIndex 2;
+                } else {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SeparatorIndex 0;
+                }
+            }
+        } else {
+            if ($RI -lt 0) {
+                if ($SemverComponent.IsPresent) {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SeparatorIndex 2;
+                } else {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SeparatorIndex 0;
+                }
+                if ($Diff -eq 0) { $Diff = 1 }
+            } else {
+                if ($SemverComponent.IsPresent) {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SeparatorIndex 2;
+                    if ($Diff -eq 0) {
+                        $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring($LI + 1) -RVersion $RV.Substring($RI + 1) -Comparer $Comparer -SeparatorIndex 2;
+                    }
+                } else {
+                    $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SeparatorIndex 0;
+                    if ($Diff -eq 0) {
+                        $Diff = Compare-VersionCharSeparated -LVersion $LV.Substring($LI + 1) -RVersion $RV.Substring($RI + 1) -Comparer $Comparer -SeparatorIndex 0;
+                    }
+                }
+            }
+        }
+        return $Diff;
+    }
+    if ($LV.Contains('.') -or $RV.Contains('.')) {
+        [System.Collections.ObjectModel.Collection[string]]$LColl = $LV.Split('.') | ForEach-Object {
+            $s = $_.Trim();
+            if ($s.Length -eq 0) { return '0' }
+            return $s;
+        };
+        [System.Collections.ObjectModel.Collection[string]]$RColl = $RV.Split('.') | ForEach-Object {
+            $s = $_.Trim();
+            if ($s.Length -eq 0) { return '0' }
+            return $s;
+        };
+        $Count = $LColl.Count;
+        if ($Count -lt $RColl.Count) {
+            $Count = $RColl.Count;
+            do { $LColl.Add('0') } while ($LColl.Count -lt $Count);
+        } else {
+            while ($RColl.Count -lt $Count) { $RColl.Add('0') }
+        }
+        $i = 0;
+        if ($SemverComponent.IsPresent) {
+            do {
+                $Diff = Compare-VersionCharSeparated -LVersion $LColl[0] -RVersion $RColl[0] -Comparer $Comparer -SeparatorIndex 2;
+                if ($Diff -ne 0) { return $Diff }
+            } while (++$i -lt $Count);
+        } else {
+            do {
+                $Diff = Compare-VersionCharSeparated -LVersion $LColl[0] -RVersion $RColl[0] -Comparer $Comparer -SeparatorIndex 0;
+                if ($Diff -ne 0) { return $Diff }
+            } while (++$i -lt $Count);
+        }
+        return 0;
+    }
+    if ($Lv.Length -eq 0) {
+        if ($RV.Length -eq 0) { return 0 }
+        $LV = '0';
+    } else {
+        if ($RV.Length -eq 0) { $RV = '0' }
+    }
+    if ($SemverComponent.IsPresent) {
+        Compare-VersionCharSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SeparatorIndex 2;
+    } else {
+        Compare-VersionCharSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SeparatorIndex 0;
+    }
+}
+
+Function Compare-VersionCore {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$LVersion,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$RVersion,
+
+        [Parameter(Mandatory = $true)]
+        [System.StringComparer]$Comparer,
+
+        [switch]$BlankNotSameAsZero,
+
+        [switch]$Csv,
+
+        [switch]$SemverComponent
+    )
+
+    $LV = $LVersion.Trim();
+    $RV = $RVersion.Trim();
+
+    [char]$Sep = ';';
+    if ($Csv.IsPresent) { $Sep = ',' }
+    $LI = $LV.IndexOf($Sep);
+    $RI = $RV.IndexOf($Sep);
+    if ($LI -ge 0) {
+        if ($RI -ge 0) {
+            $LArr = $LVersion.Split($Sep);
+            $RArr = $RVersion.Split($Sep);
+            $i = 0;
+            if ($SemverComponent.IsPresent) {
+                if ($Csv.IsPresent) {
+                    if ($BlankSameAsZero.IsPresent) {
+                        do {
+                            $Diff = Compare-VersionCoreDotSeparated -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -SemverComponent -BlankSameAsZero;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    } else {
+                        do {
+                            $Diff = Compare-VersionCoreDotSeparated -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -SemverComponent;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    }
+                } else {
+                    if ($BlankSameAsZero.IsPresent) {
+                        do {
+                            $Diff = Compare-VersionCore -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -SemverComponent -Csv -BlankSameAsZero;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    } else {
+                        do {
+                            $Diff = Compare-VersionCore -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -SemverComponent -Csv;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    }
+                }
+            } else {
+                if ($Csv.IsPresent) {
+                    if ($BlankSameAsZero.IsPresent) {
+                        do {
+                            $Diff = Compare-VersionCoreDotSeparated -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -BlankSameAsZero;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    } else {
+                        do {
+                            $Diff = Compare-VersionCoreDotSeparated -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    }
+                } else {
+                    if ($BlankSameAsZero.IsPresent) {
+                        do {
+                            $Diff = Compare-VersionCore -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -Csv -BlankSameAsZero;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    } else {
+                        do {
+                            $Diff = Compare-VersionCore -LVersion $LArr[$i] -RVersion $RArr[$i] -Comparer $Comparer -Csv;
+                            if ($Diff -ne 0) { return $Diff }
+                            $i++;
+                        } while ($i -lt $LArr.Length -and $i -lt $RArr.Length);
+                    }
+                }
+            }
+            return $LArr.Length - $RArr.Length;
+        }
+        $Diff = 0;
+        if ($SemverComponent.IsPresent) {
+            if ($Csv.IsPresent) {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SemverComponent -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SemverComponent;
+                }
+            } else {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCore -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SemverComponent -Csv -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCore -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -SemverComponent -Csv
+                }
+            }
+        } else {
+            if ($Csv.IsPresent) {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer;
+                }
+            } else {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCore -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -Csv -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCore -LVersion $LV.Substring(0, $LI) -RVersion $RV -Comparer $Comparer -Csv
+                }
+            }
+        }
+        if ($Diff -ne 0) { return $Diff }
+        return 1;
+    }
+    if ($RI -ge 0) {
+        $Diff = 0;
+        if ($SemverComponent.IsPresent) {
+            if ($Csv.IsPresent) {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SemverComponent -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SemverComponent;
+                }
+            } else {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCore -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SemverComponent -Csv -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCore -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -SemverComponent -Csv;
+                }
+            }
+        } else {
+            if ($Csv.IsPresent) {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer;
+                }
+            } else {
+                if ($BlankSameAsZero.IsPresent) {
+                    $Diff = Compare-VersionCore -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -Csv -BlankSameAsZero;
+                } else {
+                    $Diff = Compare-VersionCore -LVersion $LV -RVersion $RV.Substring(0, $RI) -Comparer $Comparer -Csv;
+                }
+            }
+        }
+        if ($Diff -ne 0) { return $Diff }
+        return -1;
+    }
+
+    if ($SemverComponent.IsPresent) {
+        if ($Csv.IsPresent) {
+            if ($BlankSameAsZero.IsPresent) {
+                Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SemverComponent -BlankSameAsZero;
+            } else {
+                Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -SemverComponent;
+            }
+        } else {
+            if ($BlankSameAsZero.IsPresent) {
+                Compare-VersionCore -LVersion $LV -RVersion $RV -Comparer $Comparer -SemverComponent -Csv -BlankSameAsZero;
+            } else {
+                Compare-VersionCore -LVersion $LV -RVersion $RV -Comparer $CompComparer -SemverComponentarer -Csv;
+            }
         }
     } else {
-        for ($i = 0; $i -lt $LElements.Length -and $i -lt $RElements.Length; $i++) {
-            $Diff = Compare-VersionCore -LVersion $LElements[$i] -RVersion $RElements[$i] -Comparer $Comparer -SymbolSeparated;
-            if ($Diff -ne 0) { return $Diff }
-        }
-    }
-    return $LElements.Length - $RElements.Length;
-}
-
-Function Compare-VersionCoreExact {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
-    )
-
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
-        } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
-                } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    $SegDiff = $SegEnd - $RSegElements.Length;
-                    if ($SegDiff -gt 0) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $L = $L | Remove-ZeroPadding;
-                            $R = $R | Remove-ZeroPadding;
-                            if ($L[0] -eq '0') {
-                                if ($R[0] -ne '0') { return -1 }
-                                if ($L.Length -eq 1) {
-                                    if ($R.Length -ne 1) { return -1 }
-                                } else {
-                                    if ($R.Length -eq 1) { return 1 }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                }
-                            } else {
-                                if ($R[0] -eq '0') { return 1 }
-                                if ([char]::IsAsciiDigit($L[0])) {
-                                    if (-not [char]::IsAsciiDigit($R[0])) { return -1 }
-                                    $i = 1;
-                                    while ($i -lt $L.Length) {
-                                        if ($i -eq $R.Length) {
-                                            if (-not [char]::IsAsciiDigit($L[$i])) {
-                                                $Diff = $Comparer.Compare($L.Substring(0, $i), $R);
-                                                if ($Diff -ne 0) { return $Diff }
-                                            }
-                                            return 1;
-                                        }
-                                        if ([char]::IsAsciiDigit($L[$i])) {
-                                            if (-not [char]::IsAsciiDigit($R[$i])) { return 1 }
-                                        } else {
-                                            if ([char]::IsAsciiDigit($R[$i])) { return -1 }
-                                            break;
-                                        }
-                                        $i++;
-                                    }
-
-                                    if ($i -eq $l.Length -and $i -lt $R.Length) {
-                                        if ([char]::IsAsciiDigit($R[$i])) { return -1 }
-                                        $Diff = $Comparer.Compare($L, $R.Substring(0, $i));
-                                        if ($Diff -ne 0) { return $Diff }
-                                        return -1;
-                                    }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                } else {
-                                    if ([char]::IsAsciiDigit($R[0])) { return 1 }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                }
-                            }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegDiff -ne 0) { return $SegDiff }
-                }
+        if ($Csv.IsPresent) {
+            if ($BlankSameAsZero.IsPresent) {
+                Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer -BlankSameAsZero;
+            } else {
+                Compare-VersionCoreDotSeparated -LVersion $LV -RVersion $RV -Comparer $Comparer;
             }
-            if ($PDiff -ne 0) { return $PDiff }
+        } else {
+            if ($BlankSameAsZero.IsPresent) {
+                Compare-VersionCore -LVersion $LV -RVersion $RV -Comparer $Comparer -Csv -BlankSameAsZero;
+            } else {
+                Compare-VersionCore -LVersion $LV -RVersion $RV -Comparer $Comparer -Csv;
+            }
         }
     }
-    return $NDiff;
 }
 
-Function Compare-NonOrdinalVersionCore {
+Function Compare-SemverVersionAndPreRelease {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
         [string]$LVersion,
 
         [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
         [string]$RVersion,
 
         [Parameter(Mandatory = $true)]
         [System.StringComparer]$Comparer
     )
 
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
+    $L = $LVersion.Trim();
+    $R = $LVersion.Trim();
+    if ($L.Length -eq 0) {
+        if ($R.Length -eq 0) { return 0 }
+        $L = '0';
+    } else {
+        if ($R.Length -eq 0) { $R = '0' }
+    }
+
+    $LIndex = $L.IndexOf('-');
+    $RIndex = $R.IndexOf('-');
+    if ($LIndex -lt 0) {
+        if ($RIndex -lt 0) {
+            Compare-VersionCore -LVersion $L -RVersion $R -Comparer $Comparer;
         } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
+            $Diff = Compare-VersionCore -LVersion $L -RVersion $RVersRion.Substring(0, $RIndex) -Comparer $Comparer;
+            if ($Diff -ne 0) {
+                $Diff | Write-Output;
+            } else {
+                -1 | Write-Output;
+            }
+        }
+    } else {
+        if ($RIndex -lt 0) {
+            $Diff = Compare-VersionCore -LVersion $L.Substring(0, $LIndex) -RVersion $R -Comparer $Comparer;
+            if ($Diff -ne 0) {
+                $Diff | Write-Output;
+            } else {
+                -1 | Write-Output;
+            }
+        } else {
+            $Diff = Compare-VersionCore -LVersion $L.Substring(0, $LIndex) -RVersion $R.Substring(0, $RIndex) -Comparer $Comparer;
+            if ($Diff -eq 0) {
+                if ($LIndex -eq $L.Length - 1) {
+                    if ($RIndex -lt $R.Length - 1) { $Diff = -1 }
                 } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    if ($SegEnd -gt $RSegElements.Length) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $Diff = $Comparer.Compare($L, $R);
-                            if ($Diff -ne 0) { return $Diff }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegEnd -lt $LSegElements.Length) {
-                        for ($i = $SegEnd; $i -lt $LSegElements.Length; $i++) {
-                            $LWElements = $LSegElements[$i].Trim().Split(' ', 2);
-                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and $LWElements[0] -ne '0')) { return 1 }
-                        }
+                    if ($RIndex -eq $R.Length - 1) {
+                        $Diff = 1;
                     } else {
-                        for ($i = $SegEnd; $i -lt $RSegElements.Length; $i++) {
-                            $RWElements = $RSegElements[$i].Trim().Split(' ', 2);
-                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and $RWElements[0] -ne '0')) { return 1 }
-                        }
+                        $Diff = Compare-VersionCore -LVersion $L.Substring($LIndex + 1) -RVersion $R.Substring($RIndex + 1) -Comparer $Comparer;
                     }
                 }
             }
-            if ($PDiff -ne 0) { return $PDiff }
+            $Diff | Write-Output;
         }
     }
-    return $NDiff;
-}
-
-Function Compare-NonOrdinalVersionCoreExact {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
-    )
-
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
-        } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
-                } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    $SegDiff = $SegEnd - $RSegElements.Length;
-                    if ($SegDiff -gt 0) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $Diff = $Comparer.Compare($L, $R);
-                            if ($Diff -ne 0) { return $Diff }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegDiff -ne 0) { return $SegDiff }
-                }
-            }
-            if ($PDiff -ne 0) { return $PDiff }
-        }
-    }
-    return $NDiff;
 }
 
 Function Compare-SemverVersionStrings {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
         [string]$LVersion,
 
         [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
         [string]$RVersion,
 
         [Parameter(Mandatory = $true)]
         [System.StringComparer]$Comparer
     )
 
-    $LIndex = $LVersion.IndexOfAny($Script:SemverComponentSeparatorChars);
-    $RIndex = $RVersion.IndexOfAny($Script:SemverComponentSeparatorChars);
+    $L = $LVersion.Trim();
+    $R = $LVersion.Trim();
+    if ($L.Length -eq 0) {
+        if ($R.Length -eq 0) { return 0 }
+        $L = '0';
+    } else {
+        if ($R.Length -eq 0) { $R = '0' }
+    }
+
+    $LIndex = $L.IndexOf('+');
+    $RIndex = $R.IndexOf('+');
     if ($LIndex -lt 0) {
         if ($RIndex -lt 0) {
-            return (CompareElements -LVersion $LVersion -RVersion $RVersion -Comparer $Comparer);
+            Compare-SemverVersionAndPreRelease -LVersion $L -RVersion $R -Comparer $Comparer;
+        } else {
+            $Diff = Compare-SemverVersionAndPreRelease -LVersion $L -RVersion $RVersRion.Substring(0, $RIndex) -Comparer $Comparer;
+            if ($Diff -ne 0) {
+                $Diff | Write-Output;
+            } else {
+                -1 | Write-Output;
+            }
         }
-        $Diff = CompareElements -LVersion $LVersion -RVersion $RVersion.Substring(0, $RIndex) -Comparer $Comparer;
-        if ($Diff -eq 0) { return -1 }
-        return $Diff;
-    }
-
-    if ($RIndex -lt 0) {
-        $Diff = CompareElements -LVersion $LVersion.Substring(0, $LIndex) -RVersion $RVersion -Comparer $Comparer;
-        if ($Diff -eq 0) { return 1 }
-        return $Diff;
-    }
-
-    $Diff = CompareElements -LVersion $LVersion.Substring(0, $LIndex) -RVersion $RVersion.Substring(0, $RIndex) -Comparer $Comparer;
-    if ($Diff -ne 0) { return $Diff }
-
-    if ($LVersion[$LIndex] -eq '-') {
-        if ($RVersion[$RIndex] -eq '+') { return 1 }
     } else {
-        if ($RVersion[$RIndex] -eq '-') { return -1 }
+        if ($RIndex -lt 0) {
+            $Diff = Compare-SemverVersionAndPreRelease -LVersion $L.Substring(0, $LIndex) -RVersion $R -Comparer $Comparer;
+            if ($Diff -ne 0) {
+                $Diff | Write-Output;
+            } else {
+                -1 | Write-Output;
+            }
+        } else {
+            $Diff = Compare-SemverVersionAndPreRelease -LVersion $L.Substring(0, $LIndex) -RVersion $R.Substring(0, $RIndex) -Comparer $Comparer;
+            if ($Diff -eq 0) {
+                if ($LIndex -eq $L.Length - 1) {
+                    if ($RIndex -lt $R.Length - 1) { $Diff = -1 }
+                } else {
+                    if ($RIndex -eq $R.Length - 1) {
+                        $Diff = 1;
+                    } else {
+                        $Diff = Compare-VersionCore -LVersion $L.Substring($LIndex + 1) -RVersion $R.Substring($RIndex + 1) -Comparer $Comparer;
+                    }
+                }
+            }
+            $Diff | Write-Output;
+        }
     }
-
-    $LText = $LVersion.Substring($LIndex + 1).Trim();
-    $RText = $RVersion.Substring($RIndex + 1).Trim();
-
-    if ($LText.Length -eq 0) {
-        if ($RText.Length -eq 0) { return 0 }
-        return -1;
-    }
-    if ($RText.Length -eq 0) { return 1 }
-    return (Compare-SemverVersionStrings -LVersion $LText -RVersion $RText -Comparer $Comparer);
 }
 
 Function Compare-GenericVersionStrings {
