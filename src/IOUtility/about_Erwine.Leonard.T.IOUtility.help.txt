@@ -5,19 +5,64 @@ SHORT DESCRIPTION
     PowerShell I/O utility functions.
 
 LONG DESCRIPTION
-    Provides utility functions that are useful for advanced input/output operations.
+    Provides utility functions that are useful for input/output operations.
 
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    ConvertTo-SafeFileName
-        Converts a string to a usable file name / path.
+    Get-TextEncoding
+        Gets an instance of the Encoding class.
 
-    Use-Location
-        Runs ScriptBlock(s) using a specified location.
+    Get-StringComparer
+        Gets a core string comparer object.
 
-    Get-AppDataPath
-        Get path for application data storage.
+    Get-IndexOfCharacter
+        Gets index of matching characters.
+
+    Get-CharacterClass
+        Gets character classes of specified characters.
+
+    Test-CharacterClass
+        Indicates whether a value matches specified CharacterClass(es).
+
+    Optimize-WhiteSpace
+        Normalizes white space in strings.
+
+    Remove-ZeroPadding
+         Remove zero-padding from strings.
+
+    Out-IndentedText
+        Indents text.
+
+    Get-IndentLevel
+        Get number of times text is indented.
+
+    Out-UnindentedText
+        Removes indentation from input text.
+
+    Assert-IsNotNull
+        Asserts that an object is not null.
+
+    Assert-IsType
+        Asserts that an object is of a specified type.
+
+    Assert-IsString
+        Asserts that an object is a string value.
+
+    Assert-IsPsEnumerable
+        Asserts that an object is an enumerable type (other than string and dictionary).
+
+    Invoke-WhenNotNull
+        Invokes a ScriptBlock when an object is not null.
+
+    Invoke-WhenIsType
+        Invokes a ScriptBlock when an object is of a specified type.
+
+    Invoke-WhenIsString
+        Invokes a ScriptBlock when an object is a string value.
+
+    Invoke-WhenIsPsEnumerable
+        Invokes a ScriptBlock when an object is an enumerable type (other than string and dictionary).
 
     Read-ShortIntegerFromStream
         Read 16-bit integer value from a stream.
@@ -73,6 +118,9 @@ EXPORTED COMMANDS
     Write-LengthEncodedBytes
         Writes 32-bit length-encoded data a stream.
 
+    New-MemoryStream
+        Creates a stream whose backing store is memory.
+
     Get-MinBase64BlockSize
         Get minimum base-64 encoding block size.
 
@@ -82,64 +130,55 @@ EXPORTED COMMANDS
     ConvertFrom-Base64String
         Convert base-64 encoded text to a data buffer.
 
-    Get-TextEncoding
-        Gets an instance of the Encoding class.
+    ConvertTo-SafeFileName
+        Converts a string to a usable file name / path.
 
-    New-MemoryStream
-        Creates a stream whose backing store is memory.
+    Use-Location
+        Runs ScriptBlock(s) using a specified location.
 
-    Get-StringComparer
-        Gets a core string comparer object.
-
-    Optimize-WhiteSpace
-        Normalizes white space in strings.
-
-    Remove-ZeroPadding
-         Remove zero-padding from strings.
-
-    Out-IndentedText
-        Indents text.
-
-    Get-IndentLevel
-        Get number of times text is indented.
-
-    Out-UnindentedText
-        Removes indentation from input text.
-
-    Expand-GZip
-        Decompresses GZip files.
+    Get-AppDataPath
+        Get path for application data storage.
 
     Use-TempFolder
         Creates a temporary folder that is automatically deleted.
 
-    Assert-IsNotNull
-        Asserts that an object is not null.
+    Resolve-OptionalPath
+        Resolves path that may or may not exist.
 
-    Assert-IsType
-        Asserts that an object is of a specified type.
+    Get-PathStringSegments
+        Gets path segments.
 
-    Assert-IsString
-        Asserts that an object is a string value.
+    Optimize-PathString
+        Gets normalized path strings.
 
-    Assert-IsPsEnumerable
-        Asserts that an object is an enumerable type (other than string and dictionary).
+    Compare-PathStrings
+        Compares 2 path strings.
 
-    Invoke-WhenNotNull
-        Invokes a ScriptBlock when an object is not null.
+    Expand-GZip
+        Decompresses GZip files.
 
-    Invoke-WhenIsType
-        Invokes a ScriptBlock when an object is of a specified type.
-
-    Invoke-WhenIsString
-        Invokes a ScriptBlock when an object is a string value.
-
-    Invoke-WhenIsPsEnumerable
-        Invokes a ScriptBlock when an object is an enumerable type (other than string and dictionary).
+    Compress-GZip
+        Compresses GZip files.
 
 SEE ALSO
-    ConvertTo-SafeFileName
-    Use-Location
-    Get-AppDataPath
+    Get-TextEncoding
+    Get-StringComparer
+    Get-IndexOfCharacter
+    Get-CharacterClass
+    Test-CharacterClass
+    Optimize-WhiteSpace
+    Remove-ZeroPadding
+    Out-IndentedText
+    Get-IndentLevel
+    Out-UnindentedText
+    Assert-IsNotNull
+    Assert-IsType
+    Assert-IsString
+    Assert-IsPsEnumerable
+    Invoke-WhenNotNull
+    Invoke-WhenIsType
+    Invoke-WhenIsString
+    Invoke-WhenIsPsEnumerable
     Read-ShortIntegerFromStream
     Read-UnsignedShortIntegerFromStream
     Read-IntegerFromStream
@@ -158,24 +197,17 @@ SEE ALSO
     Write-TinyLengthEncodedBytes
     Write-ShortLengthEncodedBytes
     Write-LengthEncodedBytes
+    New-MemoryStream
     Get-MinBase64BlockSize
     ConvertTo-Base64String
     ConvertFrom-Base64String
-    Get-TextEncoding
-    New-MemoryStream
-    Get-StringComparer
-    Optimize-WhiteSpace
-    Remove-ZeroPadding
-    Out-IndentedText
-    Get-IndentLevel
-    Out-UnindentedText
-    Expand-GZip
+    ConvertTo-SafeFileName
+    Use-Location
+    Get-AppDataPath
     Use-TempFolder
-    Assert-IsNotNull
-    Assert-IsType
-    Assert-IsString
-    Assert-IsPsEnumerable
-    Invoke-WhenNotNull
-    Invoke-WhenIsType
-    Invoke-WhenIsString
-    Invoke-WhenIsPsEnumerable
+    Resolve-OptionalPath
+    Get-PathStringSegments
+    Optimize-PathString
+    Compare-PathStrings
+    Expand-GZip
+    Compress-GZip

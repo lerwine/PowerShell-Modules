@@ -31,12 +31,6 @@ EXPORTED COMMANDS
     Add-DataColumn
         Adds a new DataColumn object to a DataTable.
 
-    Compare-FileSystemInfo
-        Compares 2 filesystem items.
-
-    Test-PathsAreEqual
-        Determines if 2 paths are equal.
-
 SEE ALSO
     Get-SpecialFolderNames
     Get-SpecialFolder
@@ -44,5 +38,4 @@ SEE ALSO
     New-WindowOwner
     Test-FileDialogFilter
     Read-FileDialog
-    Compare-FileSystemInfo
-    Test-PathsAreEqual
+    about_Erwine.Leonard.T.IOUtility

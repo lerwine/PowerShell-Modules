@@ -258,6 +258,18 @@ if ($null -eq $Script:SingleQuotedLiteralToEscapeRegex) {
         "`u{20e3}", "`u{2000}", "`u{3000}", "`u{2028}", "`u{2029}", "`u{0605}", "`u{fffb}", "`u{e00b}", "`u{e00e}", "`u{05ce}", "`u{05ec}"))));
 }
 
+. $PSScriptRoot/Text-Character-And-String.ps1
+
+. $PSScriptRoot/Type-Assertion.ps1
+
+# . $PSScriptRoot/System-IO-Stream.ps1
+
+# . $PSScriptRoot/Base64.ps1
+
+# . $PSScriptRoot/Filesystem.ps1
+
+# . $PSScriptRoot/GZip.ps1
+
 Function ConvertTo-PsStringLiteral {
     [CmdletBinding(DefaultParameterSetName = 'PreferSingle')]
     Param(
@@ -2473,15 +2485,75 @@ Function Write-CharacterClassTestCode {
     }
 }
 
-[CharacterClass[]]$AllCharacterClasses = Initialize-CharacterClasses;
+Function Out-CharacterClassXml {
+    [CmdletBinding()]
+    Param(
+        [CharacterClass[]]$CharacterClass        
+    )
 
-# $AllCharacterClasses | Get-CharacterClassPsCode;
-
-$AllCharacterClasses | Export-CharacterClasses -Path ($PSScriptRoot | Join-Path -ChildPath 'test.xml');
-$Writer = [System.IO.StreamWriter]::new(($PSScriptRoot | Join-Path -ChildPath 'Test-CharacterClass.tests.ps1'), $false, [System.Text.UTF8Encoding]::new($false, $false));
-try {
-    $AllCharacterClasses | Write-CharacterClassTestCode -Writer $Writer;
-    $Writer.Flush();
-} finally {
-    $Writer.Close();
+    if ($PSBoundParameters.ContainsKey('CharacterClass')) {
+        $CharacterClass | Export-CharacterClasses -Path ($PSScriptRoot | Join-Path -ChildPath 'test.xml');
+    } else {
+        Out-CharacterClassXml -CharacterClass (Initialize-CharacterClasses);
+    }
 }
+
+Function Out-CharacterClassTests {
+    [CmdletBinding()]
+    Param(
+        [CharacterClass[]]$CharacterClass        
+    )
+
+    if ($PSBoundParameters.ContainsKey('CharacterClass')) {
+        $Writer = [System.IO.StreamWriter]::new(($PSScriptRoot | Join-Path -ChildPath 'Test-CharacterClass.tests.ps1'), $false, [System.Text.UTF8Encoding]::new($false, $false));
+        try {
+            $CharacterClass | Write-CharacterClassTestCode -Writer $Writer;
+            $Writer.Flush();
+        } finally {
+            $Writer.Close();
+        }
+    } else {
+        Out-CharacterClassTests -CharacterClass (Initialize-CharacterClasses);
+    }
+}
+
+$SeparatorChars = @(
+    [PSCustomObject]@{ Value = ([char]';'); Description = 'Version Separator'; Priority = 0; },
+    [PSCustomObject]@{ Value = ([char]','); Description = 'Version Separator'; Priority = 0; },
+    [PSCustomObject]@{ Value = ([char]'#'); Description = 'Fragment Separator'; Priority = 1; },
+    [PSCustomObject]@{ Value = ([char]'?'); Description = 'Query Separator'; Priority = 2; },
+    [PSCustomObject]@{ Value = ([char]'/'); Description = 'Segment Separator'; Priority = 3; },
+    [PSCustomObject]@{ Value = ([char]'\'); Description = 'Segment Separator'; Priority = 3; },
+    [PSCustomObject]@{ Value = ([char]'&'); Description = 'Param Separator'; Priority = 4; },
+    [PSCustomObject]@{ Value = ([char]'='); Description = 'Value Separator'; Priority = 5; },
+    [PSCustomObject]@{ Value = ([char]':'); Description = 'Scheme Separator'; Priority = 6; },
+    [PSCustomObject]@{ Value = ([char]'.'); Description = 'Number Separator'; Priority = 7; }#,
+    # [PSCustomObject]@{ Value = ([char]'-'); Description = 'Other Separator'; Priority = 8; },
+    # [PSCustomObject]@{ Value = ([char]'+'); Description = 'Other Separator'; Priority = 9; }
+);
+[char[]]$PriorityChars = @($SeparatorChars | ForEach-Object { $_.Value });
+
+$SeparatorChars = @(($SeparatorChars + ((([char]'!')..([char]'~')) | Where-Object { [char]::IsSymbol($_) -and $PriorityChars -notcontains $_ } | ForEach-Object {
+    [PSCustomObject]@{ Value = $_; Description = 'Other'; Priority = 10; }
+}) + ((([char]'!')..([char]'~')) | Where-Object { [char]::IsPunctuation($_) -and $PriorityChars -notcontains $_ } | ForEach-Object {
+    [PSCustomObject]@{ Value = $_; Description = 'Other '; Priority = 11; }
+})) | Sort-Object -Property 'Value');
+$Order = 0;
+$SeparatorChars | ForEach-Object {
+    $_ | Add-Member -MemberType NoteProperty -Name 'Order' -Value ($Order++);
+}
+$Precedence = 0;
+($SeparatorChars | Sort-Object -Property 'Priority') | ForEach-Object {
+    $_ | Add-Member -MemberType NoteProperty -Name 'Precedence' -Value ($Precedence++);
+};
+
+"| Value | Precedence | Order | Symbol | Description        |"
+"| ----- | ---------- | ----- | ------ | ------------------ |"
+
+($SeparatorChars | Sort-Object -Property 'Precedence') | ForEach-Object {
+    $IsSymbol = 'No ';
+    if ([char]::IsSymbol($_.Value)) { $IsSymbol = 'Yes' }
+    "| $(($_.Value + '      ').Substring(0, 6);)| $(($_.Precedence.ToString() + '           ').Substring(0, 11);)| $(($_.Order.ToString() + '      ').Substring(0, 6);)| $IsSymbol    | $(($_.Description + '                   ').Substring(0, 19))|"
+}
+
+(($SeparatorChars | Sort-Object -Property 'Precedence') | ForEach-Object { "'$($_.Value)'" }) -join ', '
