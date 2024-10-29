@@ -2379,7 +2379,7 @@ Function Get-VsExtensionFromMarketPlace {
     }
 }
 
-Function Find-VsExtensionFromMarketPlace {
+Function Find-VsExtensionInMarketPlace {
     <#
     .SYNOPSIS
         Searches for VSIX file in the marketplace.

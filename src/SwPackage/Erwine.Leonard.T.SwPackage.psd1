@@ -70,7 +70,7 @@ RequiredModules = @('Erwine.Leonard.T.IOUtility')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @('Compare-VersionStrings', 'New-ExtensionIdentity', 'Read-ExtensionVsixManifest', 'Compare-ExtensionIdentity', 'Optimize-ExtensionVsixManifestOrder', 'Read-VsixExtensionIndex',
-    'Write-VsixExtensionIndex', 'Select-VsixExtension', 'Skip-VsixExtension', 'Merge-VsixExtensions', 'Get-VsExtensionFromMarketPlace', 'Find-VsExtensionFromMarketPlace')
+    'Write-VsixExtensionIndex', 'Select-VsixExtension', 'Skip-VsixExtension', 'Merge-VsixExtensions', 'Get-VsExtensionFromMarketPlace', 'Find-VsExtensionInMarketPlace')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
