@@ -51,6 +51,40 @@
         }
       },
       {
+        "label": "Build HtmlUtility",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/HtmlUtility/HtmlUtility.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      },
+      {
+        "label": "Publish HtmlUtility",
+        "type": "shell",
+        "command": "${workspaceFolder}/Deploy.ps1",
+        "args": [
+          "-ModuleManifestPath",
+          "${workspaceFolder}/src/HtmlUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.HtmlUtility.psd1",
+          "-DeploymentRoot",
+          "${workspaceFolder}/dist",
+          "-PublishLocalRepo"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "dependsOn": [
+          "Build HtmlUtility"
+        ],
+        "problemMatcher": []
+      },
+      {
         "label": "Build WinIOUtility",
         "command": "dotnet",
         "type": "process",
@@ -80,7 +114,8 @@
           "panel": "new"
         },
         "dependsOn": [
-          "Build WinIOUtility"
+          "Build WinIOUtility",
+          "Publish IOUtility"
         ],
         "problemMatcher": []
       },

@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinIOUtility", "WinIOUtilit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LteDev.UnitTests", "LteDev.UnitTests\LteDev.UnitTests.csproj", "{05E808CF-B781-4446-B39B-FBFBA5FBCD06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlUtility", "HtmlUtility\HtmlUtility.csproj", "{E7899656-CE14-4690-8F1E-56A8C54CFCDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -96,6 +98,18 @@ Global
 		{05E808CF-B781-4446-B39B-FBFBA5FBCD06}.Release|x64.Build.0 = Release|Any CPU
 		{05E808CF-B781-4446-B39B-FBFBA5FBCD06}.Release|x86.ActiveCfg = Release|Any CPU
 		{05E808CF-B781-4446-B39B-FBFBA5FBCD06}.Release|x86.Build.0 = Release|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Debug|x64.Build.0 = Debug|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Release|x64.ActiveCfg = Release|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Release|x64.Build.0 = Release|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7899656-CE14-4690-8F1E-56A8C54CFCDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
