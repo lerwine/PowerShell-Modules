@@ -73,64 +73,44 @@ Function Use-Location {
         Runs ScriptBlock(s) using a specified location.
     .DESCRIPTION
         Changes to a specified location, executes the ScriptBlock(s), and restores the previous location when complete.
-        If more than one path is specified, each of the ScriptBlock will be executed for each path.
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    [CmdletBinding()]
     Param(
         # ScriptBlock(s) will be executed for each path.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, HelpMessage = 'ScriptBlock to run.')]
         [ScriptBlock[]]$Process,
 
-        # Specifies a path to one or more locations to temporarily change to. If more than one path is specified, the Process ScriptBlock will be executed for each path.
-        [Parameter(Mandatory = $true, ParameterSetName = 'Path', HelpMessage = 'Path to one or more locations.')]
+        # Specifies the location to temporarily change to.
+        [Parameter(Mandatory = $true, HelpMessage = 'Path to one or more locations.')]
+        [Alias('PSPath', 'LP', 'FullName', 'LiteralPath')]
         [ValidateNotNullOrEmpty()]
-        [SupportsWildcards()]
-        [string[]]$Path,
-
-        # Specifies the locations(s) to temporarily change to. Unlike the Path parameter, the value of the LiteralPath parameter is
-        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
-        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
-        # characters as escape sequences. If more than one path is specified, the Process ScriptBlock will be executed for each path.
-        [Parameter(Mandatory = $true, ParameterSetName = 'LiteralPath', HelpMessage = 'Path to one or more locations.')]
-        [Alias('PSPath', 'LP', 'FullName')]
-        [ValidateNotNullOrEmpty()]
-        [string[]]$LiteralPath
+        [ValidateScript({ Test-Path -LiteralPath $_ -PathType Container})]
+        [string]$Path
     )
 
-    Process {
+    Begin {
         $IsValidLocation = $true;
         $StackName = "Use-Location$([Guid]::NewGuid())";
-        try { Push-Location -StackName $StackName -ErrorAction Stop }
-        catch {
-            Write-Error -ErrorRecord $_;
-            $IsValidLocation = $false;
+    }
+
+    Process {
+        if ($IsValidLocation) {
+            try {
+                Push-Location -StackName $StackName -ErrorAction Stop;
+            } catch {
+                Write-Error -ErrorRecord $_;
+                $IsValidLocation = $false;
+            }
         }
         if ($IsValidLocation) {
             try {
-                if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
-                    foreach ($LP in $LiteralPath) {
-                        $IsValidLocation = $true;
-                        try { Set-Location -LiteralPath $LP -ErrorAction Stop }
-                        catch {
-                            Write-Error -ErrorRecord $_;
-                            $IsValidLocation = $false;
-                        }
-                        if ($IsValidLocation) {
-                            foreach ($ScriptBlock in $Process) { &$Process }
-                        }
-                    }
-                } else {
-                    foreach ($P in $Path) {
-                        $IsValidLocation = $true;
-                        try { Set-Location -Path $P -ErrorAction Stop }
-                        catch {
-                            Write-Error -ErrorRecord $_;
-                            $IsValidLocation = $false;
-                        }
-                        if ($IsValidLocation) {
-                            foreach ($ScriptBlock in $Process) { &$Process }
-                        }
-                    }
+                try { Set-Location -LiteralPath $P -ErrorAction Stop }
+                catch {
+                    Write-Error -ErrorRecord $_;
+                    $IsValidLocation = $false;
+                }
+                if ($IsValidLocation) {
+                    foreach ($ScriptBlock in $Process) { &$Process }
                 }
             } finally {
                 Pop-Location -StackName $StackName;
@@ -165,7 +145,10 @@ Function Use-TempFolder {
 
         [Parameter(Mandatory = $true, ParameterSetName = 'PassAsArg')]
         # Passes the folder path as the first argument.
-        [switch]$PassAsArg
+        [switch]$PassAsArg,
+
+        # Set location to temp folder while processing.
+        [switch]$SetLocation
     )
 
     Begin {
@@ -196,13 +179,31 @@ Function Use-TempFolder {
     }
 
     Process {
-        if ($PassAsArg.IsPresent) {
-            foreach ($sb in $Process) {
-                $sb.Invoke($TempValue);
+        if ($SetLocation.IsPresent) {
+            if ($PassAsArg.IsPresent) {
+                $StackName = [Guid]::NewGuid().ToString('n');
+                foreach ($sb in $Process) {
+                    Push-Location -StackName $StackName;
+                    try { $sb.Invoke($TempValue); }
+                    finally { Pop-Location -StackName $StackName }
+                }
+            } else {
+                foreach ($sb in $Process) {
+                    Push-Location -StackName $StackName;
+                    try { $sb.InvokeWithContext($null, $Variables); }
+                    finally { Pop-Location -StackName $StackName }
+                }
             }
         } else {
-            foreach ($sb in $Process) {
-                $sb.InvokeWithContext($null, $Variables);
+            if ($PassAsArg.IsPresent) {
+                $StackName = [Guid]::NewGuid().ToString('n');
+                foreach ($sb in $Process) {
+                    $sb.Invoke($TempValue);
+                }
+            } else {
+                foreach ($sb in $Process) {
+                    $sb.InvokeWithContext($null, $Variables);
+                }
             }
         }
     }
@@ -217,6 +218,7 @@ class OptionalPathInfo {
     [string]$Unresolved;
     [string]$Path;
 }
+
 
 Function Resolve-OptionalPath {
     [CmdletBinding(DefaultParameterSetName = 'WcPath')]
