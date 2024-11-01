@@ -834,355 +834,6 @@ if ($null -eq $Script:VersionCoreSeparators) {
     New-Variable -Name 'VersionCoreSeparators' -Option Constant -Value ':#&?|/\;,.=!';
 }
 
-Function Compare-VersionCore {
-    [CmdletBinding(DefaultParameterSetName = 'CharSeparated')]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer,
-
-        [Parameter(ParameterSetName = 'CharSeparated')]
-        [ValidateScript({ $_ -ge -2 -and $_ -le $Script:VersionCoreSeparators.Length + 2 })]
-        [int]$SeparatorIndex = 0,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'SymbolSeparated')]
-        [switch]$SymbolSeparated,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'PunctuationSeparated')]
-        [switch]$PunctuationSeparated,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'WhiteSpaceOrControlSeparated')]
-        [switch]$WhiteSpaceOrControlSeparated
-    )
-
-    if ($SymbolSeparated.IsPresent) {
-        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -NotMatching '+' -Symbol);
-        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -NotMatching '+' -Symbol);
-        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
-            $Diff = $LSepValues[$i].Separator.CompareTo($RSepValues[$i].Separator);
-            if ($Diff -ne 0) { return $Diff }
-            $Diff = Compare-VersionCore -LVersion $LSepValues[$i].Value -RVersion $LSepValues[$i].Value -Comparer $Comparer -PunctuationSeparated;
-            if ($Diff -ne 0) { return $Diff }
-        }
-        return $LSepValues.Length - $RSepValues.Length;
-    }
-
-    if ($PunctuationSeparated.IsPresent) {
-        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -NotMatching '-' -Punctuation);
-        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -NotMatching '-' -Punctuation);
-        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
-            $Diff = $LSepValues[$i].Separator.CompareTo($RSepValues[$i].Separator);
-            if ($Diff -ne 0) { return $Diff }
-            $Diff = Compare-VersionCore -LVersion $LSepValues[$i].Value -RVersion $LSepValues[$i].Value -Comparer $Comparer -WhiteSpaceOrControlSeparated;
-            if ($Diff -ne 0) { return $Diff }
-        }
-        return $LSepValues.Length - $RSepValues.Length;
-    }
-
-    if ($WhiteSpaceOrControlSeparated.IsPresent) {
-        [CharClassSeparatedValue[]]$LSepValues = @($LVersion | Get-CharClassSeparatedValues -WhiteSpaceOrControl);
-        [CharClassSeparatedValue[]]$RSepValues = @($RVersion | Get-CharClassSeparatedValues -WhiteSpaceOrControl);
-        for ($i = 0; $i -lt $LSepValues.Length -and $i -lt $RSepValues.Length; $i++) {
-            if ($LSepValues[$i].Separator.Length -eq 0) {
-                if ($RSepValues[$i].Separator -gt 0) { return -1 }
-            } else {
-                if ($RSepValues[$i].Separator -eq 0) { return 1 }
-            }
-            $Lv = $LSepValues[$i].Value | Remove-ZeroPadding -AllowNegativeSign -AllowPositiveSign;
-            $Rv = $LSepValues[$i].Value | Remove-ZeroPadding -AllowNegativeSign -AllowPositiveSign;
-            $NumIdx = Get-IndexOfCharType -StartIndex
-            $Diff = $Comparer.Compare($LSepValues[$i].Value, $LSepValues[$i].Value);
-            if ($Diff -ne 0) { return $Diff }
-        }
-        return $LSepValues.Length - $RSepValues.Length;
-    }
-
-    $LElements = $LVersion.Split($Script:VersionCoreSeparators[$SeparatorIndex]);
-    $RElements = $RVersion.Split($Script:VersionCoreSeparators[$SeparatorIndex]);
-    $NextIndex = $SeparatorIndex + 1;
-    if ($NextIndex -lt $Script:VersionCoreSeparators.Length) {
-        for ($i = 0; $i -lt $LElements.Length -and $i -lt $RElements.Length; $i++) {
-            $Diff = Compare-VersionCore -LVersion $LElements[$i] -RVersion $RElements[$i] -Comparer $Comparer -SeparatorIndex $NextIndex;
-            if ($Diff -ne 0) { return $Diff }
-        }
-    } else {
-        for ($i = 0; $i -lt $LElements.Length -and $i -lt $RElements.Length; $i++) {
-            $Diff = Compare-VersionCore -LVersion $LElements[$i] -RVersion $RElements[$i] -Comparer $Comparer -SymbolSeparated;
-            if ($Diff -ne 0) { return $Diff }
-        }
-    }
-    return $LElements.Length - $RElements.Length;
-}
-
-Function Compare-VersionCoreExact {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
-    )
-
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
-        } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
-                } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    $SegDiff = $SegEnd - $RSegElements.Length;
-                    if ($SegDiff -gt 0) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $L = $L | Remove-ZeroPadding;
-                            $R = $R | Remove-ZeroPadding;
-                            if ($L[0] -eq '0') {
-                                if ($R[0] -ne '0') { return -1 }
-                                if ($L.Length -eq 1) {
-                                    if ($R.Length -ne 1) { return -1 }
-                                } else {
-                                    if ($R.Length -eq 1) { return 1 }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                }
-                            } else {
-                                if ($R[0] -eq '0') { return 1 }
-                                if ([char]::IsAsciiDigit($L[0])) {
-                                    if (-not [char]::IsAsciiDigit($R[0])) { return -1 }
-                                    $i = 1;
-                                    while ($i -lt $L.Length) {
-                                        if ($i -eq $R.Length) {
-                                            if (-not [char]::IsAsciiDigit($L[$i])) {
-                                                $Diff = $Comparer.Compare($L.Substring(0, $i), $R);
-                                                if ($Diff -ne 0) { return $Diff }
-                                            }
-                                            return 1;
-                                        }
-                                        if ([char]::IsAsciiDigit($L[$i])) {
-                                            if (-not [char]::IsAsciiDigit($R[$i])) { return 1 }
-                                        } else {
-                                            if ([char]::IsAsciiDigit($R[$i])) { return -1 }
-                                            break;
-                                        }
-                                        $i++;
-                                    }
-
-                                    if ($i -eq $l.Length -and $i -lt $R.Length) {
-                                        if ([char]::IsAsciiDigit($R[$i])) { return -1 }
-                                        $Diff = $Comparer.Compare($L, $R.Substring(0, $i));
-                                        if ($Diff -ne 0) { return $Diff }
-                                        return -1;
-                                    }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                } else {
-                                    if ([char]::IsAsciiDigit($R[0])) { return 1 }
-                                    $Diff = $Comparer.Compare($L, $R);
-                                    if ($Diff -ne 0) { return $Diff }
-                                }
-                            }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegDiff -ne 0) { return $SegDiff }
-                }
-            }
-            if ($PDiff -ne 0) { return $PDiff }
-        }
-    }
-    return $NDiff;
-}
-
-Function Compare-NonOrdinalVersionCore {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
-    )
-
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
-        } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
-                } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    if ($SegEnd -gt $RSegElements.Length) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $Diff = $Comparer.Compare($L, $R);
-                            if ($Diff -ne 0) { return $Diff }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegEnd -lt $LSegElements.Length) {
-                        for ($i = $SegEnd; $i -lt $LSegElements.Length; $i++) {
-                            $LWElements = $LSegElements[$i].Trim().Split(' ', 2);
-                            if ($LWElements.Length -gt 1 -or ($LWElements[0].Length -ne 0 -and $LWElements[0] -ne '0')) { return 1 }
-                        }
-                    } else {
-                        for ($i = $SegEnd; $i -lt $RSegElements.Length; $i++) {
-                            $RWElements = $RSegElements[$i].Trim().Split(' ', 2);
-                            if ($RWElements.Length -gt 1 -or ($RWElements[0].Length -ne 0 -and $RWElements[0] -ne '0')) { return 1 }
-                        }
-                    }
-                }
-            }
-            if ($PDiff -ne 0) { return $PDiff }
-        }
-    }
-    return $NDiff;
-}
-
-Function Compare-NonOrdinalVersionCoreExact {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
-    )
-
-    $LNsElements = $LVersion.Split(':');
-    $RNsElements = $RVersion.Split(':');
-    $NsEnd = $LNsElements.Length;
-    $NDiff = $NsEnd - $RNsElements.Length;
-    if ($NDiff -gt $0) { $NsEnd = $RNsElements.Length }
-    for ($NsIndex = 0; $NsIndex -lt $NsEnd; $NsIndex++) {
-        $LNs = $LNsElements[$NsIndex].Trim();
-        $RNs = $RNsElements[$NsIndex].Trim();
-        if ($LNs.Length -eq 0) {
-            if ($RNs.Length -gt 0) { return -1 }
-        } else {
-            if ($RNs.Length -eq 0) { return 1 }
-            $LPElements = $LNs.Split($Script:VersionPathSeparatorChars);
-            $RPElements = $RNs.Split($Script:VersionPathSeparatorChars);
-            $PEnd = $LPElements.Length;
-            $PDiff = $PEnd - $RPElements.Length;
-            if ($PEnd -gt $0) { $NsEnd = $RPElements.Length }
-            for ($PIndex = 0; $PIndex -lt $PEnd; $PIndex++) {
-                $LPs = $LPElements[$PIndex].Trim();
-                $RPs = $RPElements[$PIndex].Trim();
-                if ($LPs.Length -eq 0) {
-                    if ($RPs.Length -gt 0) { return -1 }
-                } else {
-                    if ($RPs.Length -eq 0) { return 1 }
-                    $LSegElements = $LPs.Split('.');
-                    $RSegElements = $RPs.Split('.');
-                    $SegEnd = $LSegElements.Length;
-                    $SegDiff = $SegEnd - $RSegElements.Length;
-                    if ($SegDiff -gt 0) { $NsEnd = $RSegElements.Length }
-                    for ($SegIndex = 0; $SegIndex -lt $SegEnd; $SegIndex++) {
-                        $LWElements = $LSegElements[$SegIndex].Trim().Split(' ');
-                        $RWElements = $RSegElements[$SegIndex].Trim().Split(' ');
-                        $WEnd = $LWElements.Length;
-                        $DfltDiff = $WEnd - $RWElements.Length;
-                        if ($DfltDiff -gt 0) { $WEnd = $RWElements.Length }
-                        for ($i = 0; $i -lt $WEnd; $i++) {
-                            $L = $LWElements[$i];
-                            $R = $RWElements[$i];
-                            if ($L.Length -eq 0) {
-                                if ($R.Length -gt 0) { return -1 }
-                            } else {
-                                if ($R.Length -eq 0) { return 1 }
-                            }
-                            $Diff = $Comparer.Compare($L, $R);
-                            if ($Diff -ne 0) { return $Diff }
-                        }
-                        if ($DfltDiff -ne 0) { return $DfltDiff }
-                    }
-                    if ($SegDiff -ne 0) { return $SegDiff }
-                }
-            }
-            if ($PDiff -ne 0) { return $PDiff }
-        }
-    }
-    return $NDiff;
-}
-
 Function Compare-SemverVersionStrings {
     [CmdletBinding()]
     Param(
@@ -1233,147 +884,307 @@ Function Compare-SemverVersionStrings {
     return (Compare-SemverVersionStrings -LVersion $LText -RVersion $RText -Comparer $Comparer);
 }
 
-Function Compare-GenericVersionStrings {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [string]$LVersion,
-
-        [Parameter(Mandatory = $true)]
-        [string]$RVersion,
-
-        [Parameter(Mandatory = $true)]
-        [System.StringComparer]$Comparer
-    )
-
-    $LIndex = $LVersion.IndexOf('@');
-    $RIndex = $RVersion.IndexOf('@');
-    if ($LIndex -lt 0) {
-        if ($RIndex -lt 0) {
-            return (Compare-SemverVersionStrings -LVersion $LVersion -RVersion $RVersion -Comparer $Comparer);
-        }
-        $Diff = Compare-SemverVersionStrings -LVersion $LVersion -RVersion $RVersion.Substring(0, $RIndex) -Comparer $Comparer;
-        if ($Diff -eq 0) { return -1 }
-        return $Diff;
-    }
-
-    if ($RIndex -lt 0) {
-        $Diff = Compare-SemverVersionStrings -LVersion $LVersion.Substring(0, $LIndex) -RVersion $RVersion -Comparer $Comparer;
-        if ($Diff -eq 0) { return 1 }
-        return $Diff;
-    }
-
-    $Diff = Compare-SemverVersionStrings -LVersion $LVersion.Substring(0, $LIndex) -RVersion $RVersion.Substring(0, $RIndex) -Comparer $Comparer;
-    if ($Diff -ne 0) { return $Diff }
-
-    $LText = $LVersion.Substring($LIndex + 1).Trim();
-    $RText = $RVersion.Substring($RIndex + 1).Trim();
-
-    if ($LText.Length -eq 0) {
-        if ($RText.Length -eq 0) { return 0 }
-        return -1;
-    }
-    if ($RText.Length -eq 0) { return 1 }
-    return (Compare-GenericVersionStrings -LVersion $LText -RVersion $RText -Comparer $Comparer);
-}
-
-Function Compare-VersionStrings {
+Function Select-SemanticVersion {
     <#
     .SYNOPSIS
-        Compare version strings.
+        Filter by Semver versions.
     .DESCRIPTION
-        Compares two version strings, returning a number indicating whether one version is less than, greater than, or equal to the other.
+        Filters by SemanticVersion values.
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Generic')]
-    [OutputType([int])]
+    [CmdletBinding(DefaultParameterSetName = 'EqualTo')]
+    [OutputType([System.Management.Automation.SemanticVersion])]
     Param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [AllowEmptyString()]
-        [AllowNull()]
-        # The version string to be compared.
-        [string]$LVersion,
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [System.Management.Automation.SemanticVersion[]]$Version,
 
-        [Parameter(Mandatory = $true, Position = 1)]
-        [AllowEmptyString()]
-        [AllowNull()]
-        # The version string to compare to.
-        [string]$RVersion,
+        [Parameter(Mandatory = $true, ParameterSetName = 'EqualTo')]
+        [System.Management.Automation.SemanticVersion]$EqualTo,
 
-        # Use Semantic Versioning scheme.
-        [Parameter(Mandatory = $true, ParameterSetName = 'SemVer')]
-        [switch]$SemVer,
+        [Parameter(Mandatory = $true, ParameterSetName = 'NotEqualTo')]
+        [System.Management.Automation.SemanticVersion]$NotEqualTo,
 
-        # Use dot-separated versioning scheme.
-        [Parameter(Mandatory = $true, ParameterSetName = 'DotSeparated')]
-        [switch]$DotSeparated,
+        [Parameter(Mandatory = $true, ParameterSetName = 'GreaterThan')]
+        [System.Management.Automation.SemanticVersion]$GreaterThan,
 
-        # Don't assume that corresponding version number elements are zero when one version string has more version number elements than the other.
-        [switch]$DontAssumeZeroElements,
+        [Parameter(Mandatory = $true, ParameterSetName = 'NotGreaterThan')]
+        [System.Management.Automation.SemanticVersion]$NotGreaterThan,
 
-        # Do not treat null version strings as though they are empty strings.
-        [switch]$NullNotSameAsEmpty,
+        [Parameter(Mandatory = $true, ParameterSetName = 'LessThan')]
+        [System.Management.Automation.SemanticVersion]$LessThan,
 
-        [System.StringComparison]$ComparisonType = [System.StringComparison]::OrdinalIgnoreCase
+        [Parameter(Mandatory = $true, ParameterSetName = 'NotLessThan')]
+        [System.Management.Automation.SemanticVersion]$NotLessThan
     )
 
+}
+
+Function Select-BySemanticVersion {
+    <#
+    .SYNOPSIS
+        Filter by Semver versions.
+    .DESCRIPTION
+        Filters by SemanticVersion values.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'EqualTo')]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [object[]]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [string]$PropertyName,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'EqualTo')]
+        [System.Management.Automation.SemanticVersion]$EqualTo,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'NotEqualTo')]
+        [System.Management.Automation.SemanticVersion]$NotEqualTo,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'GreaterThan')]
+        [System.Management.Automation.SemanticVersion]$GreaterThan,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'NotGreaterThan')]
+        [System.Management.Automation.SemanticVersion]$NotGreaterThan,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'LessThan')]
+        [System.Management.Automation.SemanticVersion]$LessThan,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'NotLessThan')]
+        [System.Management.Automation.SemanticVersion]$NotLessThan,
+
+        [switch]$NullSameAsZero,
+
+        [switch]$IgnoreNonVersionValues
+    )
+    
     Begin {
-        $Comparer = $ComparisonType | Get-StringComparer;
-        if ($DotSeparated.IsPresent) {
-            if ($ComparisonType | Test-IsStringComparisonOrdinal) {
-                if ($DontAssumeZeroElements.IsPresent) {
-                    Set-Alias -Name 'CompareVersionStrings' -Value 'Compare-VersionCoreExact';
-                } else {
-                    Set-Alias -Name 'CompareVersionStrings' -Value 'Compare-VersionCore';
+        if ($NullSameAsZero.IsPresent) { $Local:Zero = [System.Management.Automation.SemanticVersion]::new(0) }
+        [System.Management.Automation.SemanticVersion]$Local:VersionValue = $null;
+    }
+    Process {
+        if ($NullSameAsZero.IsPresent) {
+            switch ($PSCmdlet.ParameterSetName) {
+                'NotEqualTo' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ($null -eq $Value) {
+                            if (-not $Local:Zero.Equals($NotEqualTo)) { $Obj | Write-Output }
+                        } else {
+                            if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                                if (-not $Local:VersionValue.Equals($NotEqualTo)) { $Obj | Write-Output }
+                            } else {
+                                if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotEqualTo) -ne 0) {
+                                    $Obj | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
                 }
-            } else {
-                if ($DontAssumeZeroElements.IsPresent) {
-                    Set-Alias -Name 'CompareVersionStrings' -Value 'Compare-NonOrdinalVersionCoreExact';
-                } else {
-                    Set-Alias -Name 'CompareVersionStrings' -Value 'Compare-NonOrdinalVersionCore';
+                'GreaterThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ($null -eq $Value) {
+                            if ($Local:Zero.CompareTo($GreaterThan) -gt 0) { $Obj | Write-Output }
+                        } else {
+                            if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                                if ($Local:VersionValue.CompareTo($GreaterThan) -gt 0) { $Obj | Write-Output }
+                            } else {
+                                if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $GreaterThan) -gt 0) {
+                                    $Obj | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                'NotGreaterThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ($null -eq $Value) {
+                            if ($Local:Zero.CompareTo($NotGreaterThan) -le 0) { $Obj | Write-Output }
+                        } else {
+                            if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                                if ($Local:VersionValue.CompareTo($NotGreaterThan) -le 0) { $Obj | Write-Output }
+                            } else {
+                                if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotGreaterThan) -le 0) {
+                                    $Obj | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                'LessThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ($null -eq $Value) {
+                            if ($Local:Zero.CompareTo($LessThan) -lt 0) { $Obj | Write-Output }
+                        } else {
+                            if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                                if ($Local:VersionValue.CompareTo($LessThan) -lt 0) { $Obj | Write-Output }
+                            } else {
+                                if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $LessThan) -lt 0) {
+                                    $Obj | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                'NotLessThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ($null -eq $Value) {
+                            if ($Local:Zero.CompareTo($NotLessThan) -ge 0) { $Obj | Write-Output }
+                        } else {
+                            if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                                if ($Local:VersionValue.CompareTo($NotLessThan) -ge 0) { $Obj | Write-Output }
+                            } else {
+                                if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotLessThan) -ge 0) {
+                                    $Obj | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                default {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ($null -eq $Value) {
+                            if ($Local:Zero.Equals($EqualTo)) { $Obj | Write-Output }
+                        } else {
+                            if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                                if ($Local:VersionValue.Equals($EqualTo)) { $Obj | Write-Output }
+                            } else {
+                                if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $EqualTo) -eq 0) {
+                                    $Obj | Write-Output;
+                                }
+                            }
+                        }
+                    }
+                    break;
                 }
             }
         } else {
-            if ($ComparisonType | Test-IsStringComparisonOrdinal) {
-                if ($DontAssumeZeroElements.IsPresent) {
-                    Set-Alias -Name 'CompareElements' -Value 'Compare-VersionCoreExact';
-                } else {
-                    Set-Alias -Name 'CompareElements' -Value 'Compare-VersionCore';
+            switch ($PSCmdlet.ParameterSetName) {
+                'NotEqualTo' {
+                    foreach ($Obj in $InputObject) {
+                        if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Obj.($PropertyName), [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                            if ($null -eq $Local:VersionValue -or -not $Local:VersionValue.Equals($NotEqualTo)) { $Obj | Write-Output }
+                        } else {
+                            if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotEqualTo) -ne 0) {
+                                $Obj | Write-Output;
+                            }
+                        }
+                    }
+                    break;
                 }
-            } else {
-                if ($DontAssumeZeroElements.IsPresent) {
-                    Set-Alias -Name 'CompareElements' -Value 'Compare-NonOrdinalVersionCoreExact';
-                } else {
-                    Set-Alias -Name 'CompareElements' -Value 'Compare-NonOrdinalVersionCore';
+                'GreaterThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                            if ($null -ne $Local:VersionValue -and $Local:VersionValue.CompareTo($GreaterThan) -gt 0) { $Obj | Write-Output }
+                        } else {
+                            if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $GreaterThan) -gt 0) {
+                                $Obj | Write-Output;
+                            }
+                        }
+                    }
+                    break;
                 }
-            }
-            if ($SemVer.IsPresent) {
-                Set-Alias -Name 'CompareVersionStrings' -Value 'Compare-SemverVersionStrings';
-            } else {
-                Set-Alias -Name 'CompareVersionStrings' -Value 'Compare-GenericVersionStrings';
+                'NotGreaterThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                            if ($null -eq $Local:VersionValue -or $Local:VersionValue.CompareTo($NotGreaterThan) -le 0) { $Obj | Write-Output }
+                        } else {
+                            if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotGreaterThan) -le 0) {
+                                $Obj | Write-Output;
+                            }
+                        }
+                    }
+                    break;
+                }
+                'LessThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                            if ($null -eq $Local:VersionValue -or $Local:VersionValue.CompareTo($NotGreaterThan) -lt 0) { $Obj | Write-Output }
+                        } else {
+                            if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotGreaterThan) -lt 0) {
+                                $Obj | Write-Output;
+                            }
+                        }
+                    }
+                    break;
+                }
+                'NotLessThan' {
+                    foreach ($Obj in $InputObject) {
+                        $Value = $Obj.($PropertyName);
+                        if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Value, [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                            if ($null -ne $Local:VersionValue -and $Local:VersionValue.CompareTo($GreaterThan) -ge 0) { $Obj | Write-Output }
+                        } else {
+                            if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $GreaterThan) -ge 0) {
+                                $Obj | Write-Output;
+                            }
+                        }
+                    }
+                    break;
+                }
+                default {
+                    foreach ($Obj in $InputObject) {
+                        if ([System.Management.Automation.LanguagePrimitives]::TryConvertTo($Obj.($PropertyName), [System.Management.Automation.SemanticVersion], [ref]$Local:VersionValue)) {
+                            if ($null -ne $Local:VersionValue -and $Local:VersionValue.Equals($NotEqualTo)) { $Obj | Write-Output }
+                        } else {
+                            if ((-not $IgnoreNonVersionValues.IsPresent) -and [System.Management.Automation.LanguagePrimitives]::Compare($Value, $NotEqualTo) -eq 0) {
+                                $Obj | Write-Output;
+                            }
+                        }
+                    }
+                    break;
+                }
             }
         }
     }
+}
+
+Function Compare-SemanticVersion {
+    <#
+    .SYNOPSIS
+        Compare Semver versions.
+    .DESCRIPTION
+        Compares two SemanticVersion values, returning a number indicating whether one version is less than, greater than, or equal to the other.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'ReturnsInt')]
+    [OutputType([int], ParameterSetName = 'ReturnsInt')]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias('Version')]
+        [System.Management.Automation.SemanticVersion[]]$ReferenceVersion,
+
+        [Parameter(Mandatory = $true)]
+        [Alias('To')]
+        [System.Management.Automation.SemanticVersion]$DifferenceVersion,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'PassThru')]
+        [switch]$PassThru
+    )
 
     Process {
-        if ($null -eq $LVersion) {
-            if ($NullNotSameAsEmpty.IsPresent) {
-                if ($null -eq $RVersion) { return 0 }
-            } else {
-                if ([string]::IsNullOrEmpty($RVersion)) { return 0 }
+        if ($PassThru.IsPresent) {
+            foreach ($Version in $ReferenceVersion) {
+                ($Version | Add-Member -MemberType NoteProperty -Name 'ComparisonIndicator' -Value $Version.CompareTo($ReferenceVersion) -PassThru) | Write-Output;
             }
-            return -1;
+        } else {
+            foreach ($Version in $ReferenceVersion) {
+                $Version.CompareTo($ReferenceVersion) | Write-Output;
+            }
         }
-        if ($null -eq $RVersion) {
-            if ($NullNotSameAsEmpty.IsPresent -or $LVersion.Length -gt 0) { return 1 }
-            return 0;
-        }
-        if ($LVersion.Length -eq 0) {
-            if ($RVersion.Length -eq 0) { return 0 }
-            return -1;
-        }
-        if ($RVersion.Length -eq 0) { return 1 }
-        return CompareVersionStrings -LVersion $LVersion -RVersion $RVersion -Comparer $Comparer;
     }
+}
+Function Compare-VersionStrings {
+    
 }
 
 Function New-ExtensionIdentity {
@@ -2379,7 +2190,7 @@ Function Get-VsExtensionFromMarketPlace {
     }
 }
 
-Function Find-VsExtensionFromMarketPlace {
+Function Find-VsExtensionInMarketPlace {
     <#
     .SYNOPSIS
         Searches for VSIX file in the marketplace.

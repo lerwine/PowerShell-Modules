@@ -43,7 +43,7 @@ EXPORTED COMMANDS
     Get-VsExtensionFromMarketPlace
         Downloads a VSIX file from the marketplace.
 
-    Find-VsExtensionFromMarketPlace
+    Find-VsExtensionInMarketPlace
         Searches for VSIX file in the marketplace.
 
 SEE ALSO
@@ -58,5 +58,5 @@ SEE ALSO
     Skip-VsixExtension
     Merge-VsixExtensions
     Get-VsExtensionFromMarketPlace
-    Find-VsExtensionFromMarketPlace
+    Find-VsExtensionInMarketPlace
     about_Erwine.Leonard.T.IOUtility
