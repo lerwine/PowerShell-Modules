@@ -1,0 +1,25 @@
+﻿TOPIC
+    about_Erwine.Leonard.T.HtmlUtility
+
+SHORT DESCRIPTION
+    PowerShell HTML utility functions.
+
+LONG DESCRIPTION
+    Provides utility functions that are useful for parsing and modifying HTML.
+
+EXPORTED COMMANDS
+    Following is a list of commands exported by this module:
+
+    ConvertFrom-HtmlString
+        Converts an HTML string to an HtmlDocument.
+
+    ConvertFrom-HtmlDocument
+        Converts an HtmlDocument to a string or XML document.
+
+    Select-HtmlNode
+        Selects nodes from an HtmlDocument.
+
+SEE ALSO
+    ConvertFrom-HtmlString
+    ConvertFrom-HtmlDocument
+    Select_HtmlNode
