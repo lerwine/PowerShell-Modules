@@ -4,6 +4,7 @@ if ($null -eq $Script:VersionCoreSeparators) {
     New-Variable -Name 'NonWhiteSpacesRegex' -Option ReadOnly -Value ([regex]::new('[\P{Z}\P{C}]+'));
     New-Variable -Name 'SymbolRegex' -Option ReadOnly -Value ([regex]::new('\p{S}'));
     New-Variable -Name 'VersionStartRegex' -Option ReadOnly -Value ([regex]::new('\d+(\.\d+)*(-[^+]*)?(\+|$)'));
+    New-Variable -Name 'Pep440Regex' -Option ReadOnly -Value ([regex]::new('^(?:(?<epoch>\d+)!)?(?<release>\d+(?:\.\d+)*)(?:[_.-]?(?:(?<a>a(?:lpha)?)|(?<b>b(?:eta)?)|(?<c>r?c)|(?<pre>pre(?:view)?))[_.-]?(?<pre_n>\d*))?(?:-(?<post_n1>\d+)|[_.-]?(?:(?<post>post)|(?<rev>rev)|(?<r>r))[_.-]?(?<post_n2>\d*))?(?:[_.-]?dev[_.-]?(?<dev>\d*))?(?:\+(?<local>[a-z\d]+(?:[_.-][a-z\d]+)*))?$', $IgnoreCaseRegexOptions));
     # $SeparatorIndex -lt $Script:DotSeparatorIndex: $Script:VersionComponentSeparators[$SeparatorIndex]
     # $SeparatorIndex -eq $Script:DotSeparatorIndex: '.'
     # $SeparatorIndex -lt $Script:WsSeparatorIndex: $Script:VersionSubSeparators[$SeparatorIndex - ($Script:DotSeparatorIndex + 1)]
