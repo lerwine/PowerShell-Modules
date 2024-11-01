@@ -21,24 +21,24 @@ namespace XmlUtility.Commands
             
             PSModuleInfo module = SessionState.Module;
             if (module == null)
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "SessionState.Module is null");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "SessionState.Module is null");
             module = MyInvocation.MyCommand.Module;
             string path = SessionState.Path.Combine(module.ModuleBase, "Schemas");
             System.Diagnostics.Trace.WriteLine("Path is " + path);
             if (module.ModuleBase == null)
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "ModuleBase is null");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "ModuleBase is null");
             else
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "ModuleBase is '" + module.ModuleBase + "'");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "ModuleBase is '" + module.ModuleBase + "'");
             if (module.Name == null)
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Name is null");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Name is null");
             else
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Name is '" + module.Name + "'");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Name is '" + module.Name + "'");
             if (module.Path == null)
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Path is null");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Path is null");
             else
-                this.Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Path is '" + module.Path + "'");
+                Host.UI.WriteLine(ConsoleColor.Cyan, ConsoleColor.Black, "Path is '" + module.Path + "'");
                 
-            foreach (PSObject obj in this.InvokeProvider.ChildItem.Get(path, true))
+            foreach (PSObject obj in InvokeProvider.ChildItem.Get(path, true))
             {
                 if (Stopping)
                     return;
