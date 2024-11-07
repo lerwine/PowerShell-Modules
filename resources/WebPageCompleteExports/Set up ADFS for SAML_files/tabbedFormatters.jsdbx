@@ -1,0 +1,47 @@
+(function() {
+	angular.module('nowsreTabbedFormFilters', [])
+		.filter('titledFormSectionFilter', function() {
+		return function(input) {
+			var output = [];
+			if (!input) return output;
+			for (var i = 0; i < input.length; i++) {
+				if (input[i].captionDisplay.length > 0) {
+					output.push(input[i]);
+				}
+			}
+			return output;
+		};
+	}).filter('currentFormSectionFilter', function() {
+		return function(input, startingCaptionDisplay) {
+			var output = [];
+			var include = false;
+			for (var i = 0; i < input.length; i++) {
+				if (input[i].captionDisplay == startingCaptionDisplay) {
+					include = true;
+					output.push(input[i]);
+				} else if ((include) && (input[i].captionDisplay == '')) {
+					output.push(input[i]);
+				} else {
+					include = false;
+				}
+			}
+			return output;
+		};
+	}).filter('mandatoryColumnFilter', function() {
+		return function(input, mandatory) {
+			var output = [];
+			var include = false;
+			for (var i = 0; i < input.length; i++) {
+				if (mandatory.some(function(man) {
+					return man.name === input[i].name;
+				})) {
+					include = true;
+					output.push(input[i]);
+				} else {
+					include = false;
+				}
+			}
+			return output;
+		};
+	});
+})();
