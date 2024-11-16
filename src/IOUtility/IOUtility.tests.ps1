@@ -4,79 +4,79 @@ Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath './Erwine.Leonard.T.IO
 Import-Module Pester
 #>
 
-# Describe 'Testing ConvertTo-SafeFileName Function', {
+# Descrbe 'Testing ConvertTo-SafeFileName Function' {
 # }
 
-# Describe 'Testing Get-AppDataPath Function', {
+# Descrbe 'Testing Get-AppDataPath Function' {
 # }
 
-# Describe 'Testing Read-ShortIntegerFromStream Function', {
+# Descrbe 'Testing Read-ShortIntegerFromStream Function' {
 # }
 
-# Describe 'Testing Read-UnsignedShortIntegerFromStream Function', {
+# Descrbe 'Testing Read-UnsignedShortIntegerFromStream Function' {
 # }
 
-# Describe 'Testing Read-IntegerFromStream Function', {
+# Descrbe 'Testing Read-IntegerFromStream Function' {
 # }
 
-# Describe 'Testing Read-UnsignedIntegerFromStream Function', {
+# Descrbe 'Testing Read-UnsignedIntegerFromStream Function' {
 # }
 
-# Describe 'Testing Read-LongIntegerFromStream Function', {
+# Descrbe 'Testing Read-LongIntegerFromStream Function' {
 # }
 
-# Describe 'Testing Read-UnsignedLongIntegerFromStream Function', {
+# Descrbe 'Testing Read-UnsignedLongIntegerFromStream Function' {
 # }
 
-# Describe 'Testing Write-ShortIntegerToStream Function', {
+# Descrbe 'Testing Write-ShortIntegerToStream Function' {
 # }
 
-# Describe 'Testing Write-UnsignedShortIntegerToStream Function', {
+# Descrbe 'Testing Write-UnsignedShortIntegerToStream Function' {
 # }
 
-# Describe 'Testing Write-IntegerToStream Function', {
+# Descrbe 'Testing Write-IntegerToStream Function' {
 # }
 
-# Describe 'Testing Write-UnsignedIntegerToStream Function', {
+# Descrbe 'Testing Write-UnsignedIntegerToStream Function' {
 # }
 
-# Describe 'Testing Write-LongIntegerToStream Function', {
+# Descrbe 'Testing Write-LongIntegerToStream Function' {
 # }
 
-# Describe 'Testing Write-UnsignedLongIntegerToStream Function', {
+# Descrbe 'Testing Write-UnsignedLongIntegerToStream Function' {
 # }
 
-# Describe 'Testing Read-TinyLengthEncodedBytes Function', {
+# Descrbe 'Testing Read-TinyLengthEncodedBytes Function' {
 # }
 
-# Describe 'Testing Read-ShortLengthEncodedBytes Function', {
+# Descrbe 'Testing Read-ShortLengthEncodedBytes Function' {
 # }
 
-# Describe 'Testing Read-LengthEncodedBytes Function', {
+# Descrbe 'Testing Read-LengthEncodedBytes Function' {
 # }
 
-# Describe 'Testing Write-TinyLengthEncodedBytes Function', {
+# Descrbe 'Testing Write-TinyLengthEncodedBytes Function' {
 # }
 
-# Describe 'Testing Write-ShortLengthEncodedBytes Function', {
+# Descrbe 'Testing Write-ShortLengthEncodedBytes Function' {
 # }
 
-# Describe 'Testing Write-LengthEncodedBytes Function', {
+# Descrbe 'Testing Write-LengthEncodedBytes Function' {
 # }
 
-# Describe 'Testing Get-MinBase64BlockSize Function', {
+# Descrbe 'Testing Get-MinBase64BlockSize Function' {
 # }
 
-# Describe 'Testing ConvertTo-Base64String Function', {
+# Descrbe 'Testing ConvertTo-Base64String Function' {
 # }
 
-# Describe 'Testing ConvertFrom-Base64String Function', {
+# Descrbe 'Testing ConvertFrom-Base64String Function' {
 # }
 
-# Describe 'Testing Get-TextEncoding Function', {
+# Descrbe 'Testing Get-TextEncoding Function' {
 # }
 
-# Describe 'Testing New-MemoryStream Function', {
+# Descrbe 'Testing New-MemoryStream Function' {
 # }
 
 Describe 'Optimize-WhiteSpace Function' {
@@ -1516,19 +1516,19 @@ Describe 'Remove-ZeroPadding Function' {
     }
 }
 
-# Describe 'Testing Out-IndentedText Function', {
+# Descrbe 'Testing Out-IndentedText Function' {
 # }
 
-# Describe 'Testing Get-IndentLevel Function', {
+# Descrbe 'Testing Get-IndentLevel Function' {
 # }
 
-# Describe 'Testing Out-UnindentedText Function', {
+# Descrbe 'Testing Out-UnindentedText Function' {
 # }
 
-# Describe 'Testing Expand-GZip Function', {
+# Descrbe 'Testing Expand-GZip Function' {
 # }
 
-Describe 'Testing Use-TempFolder Function', {
+Descrbe 'Testing Use-TempFolder Function' {
     Context 'Use-TempFolder <ScriptBlock[]>' {
         $CurrentLocation = (Get-Location).Path;
         $TempPath = Use-TempFolder {
@@ -1828,11 +1828,11 @@ Describe 'Testing Use-TempFolder Function', {
     }
 }
 
-# Describe 'Testing Get-PathStringSegments Function', {
+# Descrbe 'Testing Get-PathStringSegments Function' {
 # }
 
-# Describe 'Testing Optimize-PathString Function', {
+# Descrbe 'Testing Optimize-PathString Function' {
 # }
 
-# Describe 'Testing Compare-PathStrings Function', {
+# Descrbe 'Testing Compare-PathStrings Function' {
 # }
