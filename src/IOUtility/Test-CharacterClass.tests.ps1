@@ -60,7 +60,7 @@ Describe 'Test-CharacterClass -Flags Symbol' {
                 $Actual | Should -BeTrue -Because "`"$Value"`";
             }
         }
-        
+
         It 'Non-Symbol characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags Symbol -ErrorAction Stop;

@@ -217,7 +217,7 @@ Function Compress-GZip {
             $OutputPathInfo = Get-Location;
         }
         if ($null -eq $OutputPathInfo) { break }
-        
+
         function CompressItemTo([string]$InputPath, [string]$OutputPath) {
             $InputStream = [System.IO.FileStream]::new($InputPath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::Read);
             try {
@@ -242,7 +242,7 @@ Function Compress-GZip {
                 $InputStream.Close();
             }
         }
-        
+
         if ($NoTgzExt.IsPresent) {
             Function GetOutputFileName([string]$FileName) {
                 if ($FileName.EndsWith('.')) { return "$($FileName).gz" }
