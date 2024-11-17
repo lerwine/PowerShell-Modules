@@ -69,8 +69,9 @@ RequiredModules = @('Erwine.Leonard.T.IOUtility')
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Compare-VersionStrings', 'New-ExtensionIdentity', 'Read-ExtensionVsixManifest', 'Compare-ExtensionIdentity', 'Optimize-ExtensionVsixManifestOrder', 'Read-VsixExtensionIndex',
-    'Write-VsixExtensionIndex', 'Select-VsixExtension', 'Skip-VsixExtension', 'Merge-VsixExtensions', 'Get-VsExtensionFromMarketPlace', 'Find-VsExtensionInMarketPlace')
+FunctionsToExport = @('Select-SemanticVersion', 'Select-BySemanticVersion', 'Compare-SemanticVersion', 'Compare-SemverString', 'ConvertTo-TargetVsixPlatform',
+    'ConvertFrom-TargetVsixPlatform', 'Split-VsCodeExtensionBaseFileName', 'Get-TargetVsixPlatform', 'Get-VsExtensionsGalleryServiceUri',
+    'Find-VsCodeExtensionInMarketPlace', 'Get-VsCodeExtensionFromMarketPlace')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -88,10 +89,11 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('README.md', 'about_Erwine.Leonard.T.SwPackage.help.txt', 'Compare-VersionStrings.tests.ps1')
+FileList = @('README.md', 'about_Erwine.Leonard.T.SwPackage.help.txt', 'VersionStrings.ps1', 'VsCodeExtensions.ps1', 'VsCodeExtensions.tests.ps1')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
+    VsExtensionsGalleryServiceUri = 'https://marketplace.visualstudio.com/_apis/public/gallery'
 
     PSData = @{
 

@@ -10,53 +10,49 @@ LONG DESCRIPTION
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    Compare-VersionStrings
-        Compare version strings.
+    Select-SemanticVersion
+        Get specific Semver versions.
 
-    New-ExtensionIdentity
-        Create new ExtensionIdentity object.
+    Select-BySemanticVersion
+        Filter by Semver version property values.
 
-    Read-ExtensionVsixManifest
-        Gets package information from VSIX files.
+    Compare-SemanticVersion
+        Compare Semver versions.
 
-    Compare-ExtensionIdentity
-        Compares 2 ExtensionIdentity objects.
+    Compare-SemverString
+        Compare Semver version strings.
 
-    Optimize-ExtensionVsixManifestOrder
-        Sorts ExtensionVsixManifest objects.
+    ConvertTo-TargetVsixPlatform
+        Converts string value to target platform value.
 
-    Read-VsixExtensionIndex
-        Reads from the index file of an extension repository.
+    ConvertFrom-TargetVsixPlatform
+        Converts VSIX target platform value to string value.
 
-    Write-VsixExtensionIndex
-        Writes to the index file of an extension repository.
+    Split-VsCodeExtensionBaseFileName
+        Parses components of the base file name of VS Code VSIX extension packages.
 
-    Select-VsixExtension
-        Gets matching VSIX extensions according to identity.
+    Get-TargetVsixPlatform
+        Gets a TargetPlatform value from a platform and architecture type.
 
-    Skip-VsixExtension
-        Gets VSIX extensions that do not match specifid identies.
+    Get-VsExtensionsGalleryServiceUri
+        Gets the VS gallery extension service URI.
 
-    Merge-VsixExtensions
-        Merges a VSIX extension objects.
+    Find-VsCodeExtensionInMarketPlace
+        Queries the VS Extension Marketplace for a package.
 
-    Get-VsExtensionFromMarketPlace
-        Downloads a VSIX file from the marketplace.
-
-    Find-VsExtensionInMarketPlace
-        Searches for VSIX file in the marketplace.
+    Get-VsCodeExtensionFromMarketPlace
+        Downloads VS extension from the Visual Studio marketplace.
 
 SEE ALSO
-    Compare-VersionStrings
-    New-ExtensionIdentity
-    Read-ExtensionVsixManifest
-    Compare-ExtensionIdentity
-    Optimize-ExtensionVsixManifestOrder
-    Read-VsixExtensionIndex
-    Write-VsixExtensionIndex
-    Select-VsixExtension
-    Skip-VsixExtension
-    Merge-VsixExtensions
-    Get-VsExtensionFromMarketPlace
-    Find-VsExtensionInMarketPlace
+    Select-SemanticVersion
+    Select-BySemanticVersion
+    Compare-SemanticVersion
+    Compare-SemverString
+    ConvertTo-TargetVsixPlatform
+    ConvertFrom-TargetVsixPlatform
+    Split-VsCodeExtensionBaseFileName
+    Get-TargetVsixPlatform
+    Get-VsExtensionsGalleryServiceUri
+    Find-VsCodeExtensionInMarketPlace
+    Get-VsCodeExtensionFromMarketPlace
     about_Erwine.Leonard.T.IOUtility
