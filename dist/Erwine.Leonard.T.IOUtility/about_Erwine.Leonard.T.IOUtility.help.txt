@@ -142,6 +142,9 @@ EXPORTED COMMANDS
     Use-TempFolder
         Creates a temporary folder that is automatically deleted.
 
+    Resolve-OptionalPath
+        Resolves path that may or may not exist.
+
     Get-PathStringSegments
         Gets path segments.
 
@@ -156,6 +159,9 @@ EXPORTED COMMANDS
 
     Compress-GZip
         Compresses GZip files.
+
+    Optimize-DateTime
+        Optimizes Date/Time values.
 
 SEE ALSO
     Get-TextEncoding
@@ -202,8 +208,10 @@ SEE ALSO
     Use-Location
     Get-AppDataPath
     Use-TempFolder
+    Resolve-OptionalPath
     Get-PathStringSegments
     Optimize-PathString
     Compare-PathStrings
     Expand-GZip
     Compress-GZip
+    Optimize-DateTime

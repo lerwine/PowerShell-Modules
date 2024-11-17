@@ -12,7 +12,7 @@
 RootModule = 'Erwine.Leonard.T.IOUtility.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.0.0'
+ModuleVersion = '2.0.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -74,7 +74,7 @@ FunctionsToExport = @('Get-TextEncoding', 'Get-StringComparer', 'Get-IndexOfChar
     'Read-IntegerFromStream', 'Read-UnsignedIntegerFromStream', 'Read-LongIntegerFromStream', 'Read-UnsignedLongIntegerFromStream', 'Write-ShortIntegerToStream', 'Write-UnsignedShortIntegerToStream', 'Write-IntegerToStream',
     'Write-UnsignedIntegerToStream', 'Write-LongIntegerToStream', 'Write-UnsignedLongIntegerToStream', 'Read-TinyLengthEncodedBytes', 'Read-ShortLengthEncodedBytes', 'Read-LengthEncodedBytes', 'Write-TinyLengthEncodedBytes',
     'Write-ShortLengthEncodedBytes', 'Write-LengthEncodedBytes', 'New-MemoryStream', 'Get-MinBase64BlockSize', 'ConvertTo-Base64String', 'ConvertFrom-Base64String', 'ConvertTo-SafeFileName', 'Use-Location', 'Get-AppDataPath', 'Use-TempFolder',
-    'Get-PathStringSegments', 'Optimize-PathString', 'Compare-PathStrings', 'Expand-GZip', 'Compress-GZip')
+    'Resolve-OptionalPath', 'Get-PathStringSegments', 'Optimize-PathString', 'Compare-PathStrings', 'Expand-GZip', 'Compress-GZip', 'Optimize-DateTime')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -93,7 +93,7 @@ AliasesToExport = @()
 
 # List of all files packaged with this module
 FileList = @('Text-Character-And-String.ps1', 'Type-Assertion.ps1', 'System-IO-Stream.ps1', 'Base64.ps1', 'Filesystem.ps1', 'GZip.ps1', 'README.md', 'about_Erwine.Leonard.T.IOUtility.help.txt', 'IOUtility.tests.ps1',
-    'Test-CharacterClass.tests.ps1')
+    'Test-CharacterClass.tests.ps1', 'Optimize-DateTime-tests.ps1')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{

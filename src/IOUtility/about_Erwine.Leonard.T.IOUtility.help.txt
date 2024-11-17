@@ -160,6 +160,9 @@ EXPORTED COMMANDS
     Compress-GZip
         Compresses GZip files.
 
+    Optimize-DateTime
+        Optimizes Date/Time values.
+
 SEE ALSO
     Get-TextEncoding
     Get-StringComparer
@@ -211,3 +214,4 @@ SEE ALSO
     Compare-PathStrings
     Expand-GZip
     Compress-GZip
+    Optimize-DateTime
