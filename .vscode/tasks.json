@@ -17,12 +17,25 @@
         "group": "build"
       },
       {
+        "label": "Build SwPackage",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/SwPackage/SwPackage.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build"
+      },
+      {
         "label": "Publish SwPackage",
         "type": "shell",
         "command": "${workspaceFolder}/Deploy.ps1",
         "args": [
           "-ModuleManifestPath",
-          "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+          "${workspaceFolder}/src/HtmlUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.SwPackage.psd1",
           "-DeploymentRoot",
           "${workspaceFolder}/dist",
           "-PublishLocalRepo"
@@ -31,7 +44,39 @@
         "presentation": {
           "reveal": "always",
           "panel": "new"
-        }
+        },
+        "dependsOn": [
+          "Build SwPackage"
+        ]
+      },
+      {
+        "label": "Build SwPackage.UnitTests",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/SwPackage.UnitTests/SwPackage.UnitTests.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build",
+        "dependsOn": [
+          "Build SwPackage"
+        ]
+      },
+      {
+          "label": "Test SwPackage",
+          "command": "dotnet",
+          "type": "process",
+          "args": [
+              "test",
+              "${workspaceFolder}/src/SwPackage.UnitTests/SwPackage.UnitTests.csproj",
+              "--no-build",
+              "--logger",
+              "trx;LogFileName=${workspaceFolder}/src/TestResults/TestResults.trx"
+          ],
+          "problemMatcher": "$msCompile"
       },
       {
         "label": "Publish IOUtility",

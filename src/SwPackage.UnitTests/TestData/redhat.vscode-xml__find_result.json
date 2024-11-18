@@ -1,0 +1,158 @@
+{
+    "results": [
+        {
+            "extensions": [
+                {
+                    "publisher": {
+                        "publisherId": "eed56242-9699-4317-8bc7-e9f4b9bdd3ff",
+                        "publisherName": "redhat",
+                        "displayName": "Red Hat",
+                        "flags": "verified",
+                        "domain": "https://redhat.com",
+                        "isDomainVerified": true
+                    },
+                    "extensionId": "6703768d-d42f-474e-9f6e-5f288d53f6e8",
+                    "extensionName": "vscode-xml",
+                    "displayName": "XML",
+                    "flags": "validated, public, preview",
+                    "lastUpdated": "2024-11-12T08:18:45.127Z",
+                    "publishedDate": "2018-09-25T19:39:30.027Z",
+                    "releaseDate": "2018-09-25T19:39:30.027Z",
+                    "shortDescription": "XML Language Support by Red Hat",
+                    "versions": [
+                        {
+                            "version": "0.27.2024111208",
+                            "targetPlatform": "linux-x64",
+                            "flags": "validated",
+                            "lastUpdated": "2024-11-12T08:18:45.123Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399103281",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
+                        },
+                        {
+                            "version": "0.27.2024111208",
+                            "targetPlatform": "alpine-x64",
+                            "flags": "validated",
+                            "lastUpdated": "2024-11-12T08:17:08.193Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399087257",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
+                        },
+                        {
+                            "version": "0.27.2024111208",
+                            "flags": "validated",
+                            "lastUpdated": "2024-11-12T08:17:00.947Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399113127",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
+                        },
+                        {
+                            "version": "0.27.2024111208",
+                            "targetPlatform": "win32-x64",
+                            "flags": "validated",
+                            "lastUpdated": "2024-11-12T08:16:57.883Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399108299",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
+                        },
+                        {
+                            "version": "0.27.2024111208",
+                            "targetPlatform": "darwin-x64",
+                            "flags": "validated",
+                            "lastUpdated": "2024-11-12T08:16:47.247Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399097970",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
+                        },
+                        {
+                            "version": "0.27.2024111208",
+                            "targetPlatform": "darwin-arm64",
+                            "flags": "validated",
+                            "lastUpdated": "2024-11-12T08:16:06.39Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399092678",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
+                        },
+                        {
+                            "version": "0.24.2023012703",
+                            "targetPlatform": "alpine-arm64",
+                            "flags": "validated",
+                            "lastUpdated": "2023-01-27T08:45:18.083Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.24.2023012703/1674808231409",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.24.2023012703/assetbyname"
+                        },
+                        {
+                            "version": "0.24.2023012703",
+                            "targetPlatform": "linux-arm64",
+                            "flags": "validated",
+                            "lastUpdated": "2023-01-27T08:37:51.34Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.24.2023012703/1674808197857",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.24.2023012703/assetbyname"
+                        },
+                        {
+                            "version": "0.24.2023012703",
+                            "targetPlatform": "win32-arm64",
+                            "flags": "validated",
+                            "lastUpdated": "2023-01-27T08:35:48.157Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.24.2023012703/1674808183948",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.24.2023012703/assetbyname"
+                        },
+                        {
+                            "version": "0.24.2023012703",
+                            "targetPlatform": "linux-armhf",
+                            "flags": "validated",
+                            "lastUpdated": "2023-01-27T08:35:35.037Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.24.2023012703/1674808207917",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.24.2023012703/assetbyname"
+                        },
+                        {
+                            "version": "0.24.2023012703",
+                            "targetPlatform": "win32-ia32",
+                            "flags": "validated",
+                            "lastUpdated": "2023-01-27T08:34:56.69Z",
+                            "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.24.2023012703/1674808170014",
+                            "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.24.2023012703/assetbyname"
+                        }
+                    ],
+                    "categories": [
+                        "Programming Languages",
+                        "Snippets",
+                        "Linters",
+                        "Formatters"
+                    ],
+                    "tags": [
+                        "__ext_dtd",
+                        "__ext_ent",
+                        "__ext_mod",
+                        "__ext_rnc",
+                        "dtd",
+                        "json",
+                        "MEI",
+                        "RelaxNG",
+                        "RelaxNG Compact",
+                        "rnc",
+                        "rng",
+                        "svg",
+                        "TEI",
+                        "xml",
+                        "xsd",
+                        "xsl"
+                    ],
+                    "installationTargets": [
+                        {
+                            "target": "Microsoft.VisualStudio.Code",
+                            "targetVersion": ""
+                        }
+                    ],
+                    "deploymentType": 0
+                }
+            ],
+            "pagingToken": null,
+            "resultMetadata": [
+                {
+                    "metadataType": "ResultCount",
+                    "metadataItems": [
+                        {
+                            "name": "TotalCount",
+                            "count": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
