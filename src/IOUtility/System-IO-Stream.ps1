@@ -1,10 +1,10 @@
 if ($null -eq $Script:Int16ByteLength) {
-    New-Variable -Name 'Int16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int16]0).Length;
-    New-Variable -Name 'UInt16ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt16]0).Length;
-    New-Variable -Name 'Int32ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([int]0).Length;
-    New-Variable -Name 'UInt32ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt32]0).Length;
-    New-Variable -Name 'Int64ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([Int64]0).Length;
-    New-Variable -Name 'UInt64ByteLength' -Scope 'Script' -Option Constant -Value [System.BitConverter]::GetBytes([UInt64]0).Length;
+    New-Variable -Name 'Int16ByteLength' -Scope 'Script' -Option Constant -Value ([System.BitConverter]::GetBytes([Int16]0).Length);
+    New-Variable -Name 'UInt16ByteLength' -Scope 'Script' -Option Constant -Value ([System.BitConverter]::GetBytes([UInt16]0).Length);
+    New-Variable -Name 'Int32ByteLength' -Scope 'Script' -Option Constant -Value ([System.BitConverter]::GetBytes([int]0).Length);
+    New-Variable -Name 'UInt32ByteLength' -Scope 'Script' -Option Constant -Value ([System.BitConverter]::GetBytes([UInt32]0).Length);
+    New-Variable -Name 'Int64ByteLength' -Scope 'Script' -Option Constant -Value ([System.BitConverter]::GetBytes([Int64]0).Length);
+    New-Variable -Name 'UInt64ByteLength' -Scope 'Script' -Option Constant -Value ([System.BitConverter]::GetBytes([UInt64]0).Length);
 }
 
 Function Read-ShortIntegerFromStream {
