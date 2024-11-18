@@ -1,0 +1,235 @@
+(function() {
+    try {
+        //Execute redirection script only on window refresh
+        //PRB1294625: or if jQuery is undefined due to the sysparm_media=print on non reportable pages.
+
+        if (window.HI_SKIP_REDIRECTION || typeof jQuery == "undefined")
+            return;
+
+        function processCustomUrl() {
+            // If logged in as maint, skip redirection logic
+            if (NOW && NOW.user) {
+                var splitRoles = NOW.user.allRoles.split(",");
+                if (splitRoles && splitRoles.length > 0 && splitRoles.indexOf("maint") > -1) {
+                    return;
+                }
+            }
+            // redirect url for HI
+            var origUrl = window.parent.location,
+                //customUrlDetails = window.localStorage[origUrl.hostname] ? JSON.parse(window.localStorage[origUrl.hostname]) : {},
+                pathName = origUrl.pathname;
+
+            jQuery.ajax({
+                method: "GET",
+                dataType: "json",
+                url: "/api/snc/customurl/property?prop=url&pn=" + pathName,
+                async: false,
+            }).done(function(response) {
+                customUrlDetails = response.result;
+                if (customUrlDetails) {
+                    if (customUrlDetails.sr) {
+                        return;
+                    }
+
+                    if (customUrlDetails.cue === "true" &&
+                        !customUrlDetails.ism &&
+                        !customUrlDetails.aou &&
+                        customUrlDetails.value && customUrlDetails.utbr === origUrl.origin + "/") {
+                        if (customUrlDetails.air) {
+                            window.parent.location.replace(customUrlDetails.value);
+                        } else {
+                            window.parent.location.replace(customUrlDetails.value + origUrl.pathname.substring(1) + origUrl.search);
+                        }
+                    }
+                }
+
+            });
+        }
+
+        processCustomUrl();
+
+        // Hide the navbar till this script executes.
+        var nav = jQuery(".navpage-header");
+        nav.css("background", "white");
+        var currentURL = window.location.href,
+            pathName = window.location.pathname,
+            userDomainDetails = {},
+            isPureCommunityUser = true,
+            isAdminImpersonating = false,
+            isCommunityDomain = _isCommunityDomain();
+
+        //Pure Community Users should be redirected to Community Landing Page
+        // It is a community Domain URL
+        if (isCommunityDomain) {
+            if (window.parent.NOW.userDomainDetails && !window.parent.NOW.userDomainDetails.isPureCommunityUser) {
+                return;
+            } else if (pathName === '/login.do' || pathName === '/login_redirect.do' || pathName == '/navpage.do' || pathName === '/now_support_home.do' || pathName === '/login_locate_sso.do') {
+                userDomainDetails = getDomainDetails();
+                isAdminImpersonating = userDomainDetails.isAdminImpersonating;
+                isPureCommunityUser = userDomainDetails.isPureCommunityUser;
+
+                window.NOW.userDomainDetails = userDomainDetails;
+
+                if (isAdminImpersonating || !isPureCommunityUser) {
+                    return;
+                } else {
+                    window.parent.location.replace('/community');
+                }
+            } else if (!isValidCommunityURL() && !isLoginPage()) {
+                if (window.parent.NOW.userDomainDetails && window.parent.NOW.userDomainDetails.isAdminImpersonating)
+                    return;
+
+                if ((isPureCommunityUser || (window.NOW && window.NOW.user_id == 'guest')) &&
+                    pathName != "/auth_redirect.do") {
+                    window.parent.location.replace('/community');
+                }
+            }
+        } else if (!isValidHIURL()) {
+            //DEBUG CODE: Allow clone.user to go to community on HI domain for WPT runs - This needs to be removed 
+            if (window.NOW.user_name && window.NOW.user_name === 'clone.user') {
+                return;
+            }
+
+            if (window.NOW.user.userID == 'guest') {
+                routeToHISP();
+            } else {
+                loadEvent(routeUser);
+            }
+        } else if (window.parent.NOW.page_id == "ns_get_help" || window.parent.NOW.page_id == "ns_guided_support") {
+            handleGetSupportRedirect();
+        } else {
+            var isIndex = endsWith(currentURL, '.service-now.com/') || endsWith(currentURL, '.service-now.com') || endsWith(currentURL, 'home.do') || endsWith(currentURL, 'nav_to.do?uri=%2Fnow');
+            if (isIndex) {
+                loadEvent(routeUser);
+            }
+        }
+        window.HI_SKIP_REDIRECTION = true;
+    } catch (error) {
+        // fall back. Resolve the domain using the URL.
+        var domain = window.location.href.indexOf("community.servicenow.com") > -1 ? "community" : "now";
+        if (domain === "community") {
+            window.parent.location.replace('/community');
+        } else {
+            if (window.location.href.indexOf('/57ef2cef87bb011073257445dabb3598') == -1) {
+                window.parent.location.replace('/now');
+            }
+
+        }
+        //console.log('## Routing error: ' + error);
+    }
+
+    function handleGetSupportRedirect() {
+        var isValidSupportLevelForGuidedSupport = isValidSupportLevelForGS();
+        var allowedRoles = ["Customer Admin", "Partner Admin", "Customer", "Partner"];
+        var isGuidedSupportUser = allowedRoles.indexOf(window.parent.NOW.user_role) > -1;
+
+        if (isValidSupportLevelForGuidedSupport) {
+            if (isGuidedSupportUser && window.parent.NOW.page_id == "ns_get_help") {
+                window.parent.location.replace('/now?id=ns_guided_support');
+            } else if (!isGuidedSupportUser && window.parent.NOW.page_id == "ns_guided_support") {
+                window.parent.location.replace('/now?id=ns_get_help');
+            }
+        } else {
+            if (window.parent.NOW.page_id == "ns_guided_support") {
+                window.parent.location.replace('/now?id=ns_get_help');
+            }
+        }
+    }
+
+    function isValidSupportLevelForGS() {
+        //The allowedSupportLevels should be based on sys property - ns.guided.support.allowed.support.level
+        var allowedSupportLevels = ["100", "110", "120", "130", "90", "-1"]; //Base: 100, Advanced: 120, Guided: 110, Total: 130, Legacy: 90, Empty/None: -1
+        var companySupportLevel = window.parent.NOW.support_level_value;
+
+        if (!companySupportLevel)
+            companySupportLevel = '-1'; //Empty/None: -1
+
+        return allowedSupportLevels.indexOf(companySupportLevel) > -1;
+    }
+
+    function isValidHIURL() {
+        return !isCommunityDomain && pathName.replace(/\//g, '') != 'community';
+    }
+
+    function isValidCommunityURL() {
+        return isCommunityDomain && (pathName.replace(/\//g, '') == 'community' || pathName.replace(/\//g, '') == 'communityair');
+    }
+
+    //HI System Admin should be able to access /login.do under community domain
+    function isLoginPage() {
+        return isCommunityDomain && pathName == '/login.do';
+    }
+
+    function _isCommunityDomain() {
+        var regexResult = window.location.hostname.match(/community(.*?)\.servicenow\.com/g);
+        if (regexResult && regexResult.length) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function getDomainDetails() {
+        var domainDetails = {};
+
+        jQuery.ajax({
+            method: "GET",
+            dataType: "json",
+            url: "/api/snc/community_user_redirection/getCommunityWebDomainInfo",
+            async: false,
+        }).done(function(response) {
+            domainDetails = response.result;
+        });
+
+        return domainDetails;
+    }
+
+    function routeUser() {
+        if (window.NOW.user.userID == 'guest')
+            return;
+        var isLegacy = true;
+        jQuery.ajax({
+            method: "GET",
+            dataType: "json",
+            url: "/api/snc/community_user_redirection/getLegacyPreference",
+            async: false,
+        }).done(function(response) {
+            isLegacy = response.result.isLegacy;
+        });
+        if (isLegacy == 'false') {
+            var sessionPreference = localStorage.getItem('hiLegacy');
+            if (sessionPreference && sessionPreference == 'false') {
+                routeToHISP();
+            }
+        }
+    }
+
+    function routeToHISP() {
+        window.parent.location.replace('/now');
+    }
+
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
+    // In case the addLoadEvent function provided by the fx is not available, use this version.
+    function loadEvent(func) {
+        if (typeof addLoadEvent !== 'undefined') {
+            addLoadEvent(func);
+        } else {
+            var oldonload = window.onload;
+            if (typeof window.onload != 'function') {
+                window.onload = func;
+            } else {
+                window.onload = function() {
+                    if (oldonload) {
+                        oldonload();
+                    }
+                    func();
+                };
+            }
+
+        }
+    }
+
+})();

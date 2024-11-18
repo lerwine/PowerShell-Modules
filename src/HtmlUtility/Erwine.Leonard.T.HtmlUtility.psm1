@@ -1,3 +1,181 @@
+# . $PSScriptRoot/Offline-Html.ps1
+
+class ResourceRef {
+    [string]$RelativePath;
+    [Uri[]]$OriginalUri;
+
+    static [ResourceRef] FromJson([object]$Obj) {
+        if ($null -eq $Obj) { return $null }
+        if ($Obj.RelativePath -isnot [string] -or $Obj.RelativePath.Trim().Length -eq 0) {
+            throw 'Invalid RelativePath';
+        }
+        [Uri]$Uri = $null;
+        return [ResourceRef]@{
+            RelativePath = $Obj.RelativePath;
+            OriginalUri = ([Uri[]]@(@($Obj.OriginalUri) | ForEach-Object {
+                if ($_ -is [string] -and [Uri]::TryCreate($_, [System.UriKind]::Absolute, [ref]$Uri)) {
+                    $Uri | Write-Output;
+                } else {
+                    throw "$_ is not an absolute URI";
+                }
+            }))
+        };
+    }
+}
+class HtmlImportRepository {
+    [string]$RootPath;
+    [System.Collections.ObjectModel.Collection[ResourceRef]]$Lib = [System.Collections.ObjectModel.Collection[ResourceRef]]::new();
+    [System.Collections.ObjectModel.Collection[ResourceRef]]$Images = [System.Collections.ObjectModel.Collection[ResourceRef]]::new();
+}
+
+Function Open-HtmlImportRepository {
+    [CmdletBinding()]
+    [OutputType([HtmlImportRepository])]
+    Param(
+        # Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
+        # used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
+        # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
+        # characters as escape sequences.
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipelineByPropertyName = $true)]
+        [Alias('LiteralPath', 'LP', 'FullName', 'PSPath')]
+        [string]$Path,
+
+        [switch]$Force
+    )
+
+    Process {
+        if (Test-Path -LiteralPath $Path -PathType Container) {
+            try {
+                if ($Force.IsPresent) {
+                    $Local:Item = Get-Item -LiteralPath $Path -ErrorAction Stop -Force;
+                } else {
+                    $Local:Item = Get-Item -LiteralPath $Path -ErrorAction Stop;
+                }
+            } catch {
+                if ([string]::IsNullOrWhiteSpace($_.Exception.Message)) {
+                    Write-Error -Exception $_.Exception -Message "Error accessing $($Path | ConvertTo-Json)" -Category $_.CategoryInfo.Category -ErrorId 'RepoDirAccessError' -TargetObject $Path;
+                } else {
+                    Write-Error -Exception $_.Exception -Message "Error accessing $($Path | ConvertTo-Json): $($_.Exception.Message)" -Category $_.CategoryInfo.Category -ErrorId 'RepoDirAccessError' -TargetObject $Path;
+                }
+                $Local:Item = $null;
+            }
+            if ($null -ne $Local:Item) {
+                $Local:P = $Local:Item | Join-Path -ChildPath 'index.json';
+                if (Test-Path -LiteralPath $P -PathType Leaf) {
+                    try {
+                        if ($Force.IsPresent) {
+                            $Local:Content = Get-Content -LiteralPath $P -ErrorAction Stop -Force;
+                        } else {
+                            $Local:Content = Get-Content -LiteralPath $P -ErrorAction Stop;
+                        }
+                    } catch {
+                        if ([string]::IsNullOrWhiteSpace($_.Exception.Message)) {
+                            Write-Error -Exception $_.Exception -Message "Error accessing $($P | ConvertTo-Json)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexAccessError' -TargetObject $P;
+                        } else {
+                            Write-Error -Exception $_.Exception -Message "Error accessing $($P | ConvertTo-Json): $($_.Exception.Message)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexAccessError' -TargetObject $P;
+                        }
+                        $Local:Content = $null;
+                    }
+                    if ($null -ne $Local:Content) {
+                        try { $Local:JsonData = $Local:Content | ConvertFrom-Json }
+                        catch {
+                            if ([string]::IsNullOrWhiteSpace($_.Exception.Message)) {
+                                Write-Error -Exception $_.Exception -Message "Error parsing JSON from $($P | ConvertTo-Json)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexParseError' -TargetObject $P;
+                            } else {
+                                Write-Error -Exception $_.Exception -Message "Error parsing JSON from $($P | ConvertTo-Json): $($_.Exception.Message)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexParseError' -TargetObject $P;
+                            }
+                            $Local:JsonData = $null;
+                        }
+                        if ($null -ne $Local:JsonData) {
+                            if ($Local:JsonData.Lib -isnot [Array]) {
+                                Write-Error -Message "Lib property is not an array in $($P | ConvertTo-Json)" -Category InvalidData -ErrorId 'InvalidIndexLibProperty' -TargetObject $P;
+                                $Local:JsonData = $null;
+                            } else {
+                                if ($Local:JsonData.Images -isnot [Array]) {
+                                    Write-Error -Message "Images property is not an array in $($P | ConvertTo-Json)" -Category InvalidData -ErrorId 'InvalidIndexImagesProperty' -TargetObject $P;
+                                    $Local:JsonData = $null;
+                                } else {
+                                    if ($Local:JsonData.HTML -isnot [Array]) {
+                                        Write-Error -Message "HTML property is not an array in $($P | ConvertTo-Json)" -Category InvalidData -ErrorId 'InvalidIndexHTMLProperty' -TargetObject $P;
+                                        $Local:JsonData = $null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (Test-Path -LiteralPath $P) {
+                        Write-Error -Message "Path of index file is a subdirectory: $($P | ConvertTo-Json)" -Category InvalidOperation -ErrorId 'RepoIndexNotLeaf' -TargetObject $P;
+                        $Local:Content = $null;
+                    } else {
+                        $Local:JsonData = [PSCustomObject]@{
+                            Lib = ([object[]]@());
+                            Images = ([object[]]@());
+                            HTML = ([object[]]@());
+                        };
+                    }
+                }
+                if ($null -ne $Local:JsonData) {
+                    if ($Local:Item.FullName -is [string] -and $Local:Item.FullName.Length -gt 0) {
+                        $Local:HtmlImportRepository = [HtmlImportRepository]@{ RootPath = $Local:Item.FullName }
+                    } else {
+                        $Local:HtmlImportRepository = [HtmlImportRepository]@{ RootPath = $Local:Item.PSPath }
+                    }
+                    foreach ($obj in $Local:JsonData.Lib) {
+                        if ($null -eq $obj) {
+                            Write-Error -Message "Lib property contains a null value in $($P | ConvertTo-Json)" -Category InvalidData -ErrorId 'RepoIndexLibNull' -TargetObject $P;
+                            $Local:HtmlImportRepository = $null;
+                            break;
+                        }
+                        try {  $Local:HtmlImportRepository.Lib.Add([ResourceRef]::FromJson($obj)) }
+                        catch {
+                            if ([string]::IsNullOrWhiteSpace($_.Exception.Message)) {
+                                Write-Error -Exception $_.Exception -Message "Error parsing Lib element $($obj | ConvertTo-Json) from $($P | ConvertTo-Json)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexParseError' -TargetObject $P;
+                            } else {
+                                Write-Error -Exception $_.Exception -Message "Error parsing Lib element $($obj | ConvertTo-Json) from $($P | ConvertTo-Json): $($_.Exception.Message)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexParseError' -TargetObject $P;
+                            }
+                            $Local:HtmlImportRepository = $null;
+                        }
+                        if ($null -eq $Local:HtmlImportRepository) { break }
+                    }
+                    if ($null -ne $Local:HtmlImportRepository) {
+                        foreach ($obj in $Local:JsonData.Images) {
+                            if ($null -eq $obj) {
+                                Write-Error -Message "Images property contains a null value in $($P | ConvertTo-Json)" -Category InvalidData -ErrorId 'RepoIndexImageNull' -TargetObject $P;
+                                $Local:HtmlImportRepository = $null;
+                                break;
+                            }
+                            try {  $Local:HtmlImportRepository.Lib.Add([ResourceRef]::FromJson($obj)) }
+                            catch {
+                                if ([string]::IsNullOrWhiteSpace($_.Exception.Message)) {
+                                    Write-Error -Exception $_.Exception -Message "Error parsing Images element $($obj | ConvertTo-Json) from $($P | ConvertTo-Json)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexParseError' -TargetObject $P;
+                                } else {
+                                    Write-Error -Exception $_.Exception -Message "Error parsing Images element $($obj | ConvertTo-Json) from $($P | ConvertTo-Json): $($_.Exception.Message)" -Category $_.CategoryInfo.Category -ErrorId 'RepoIndexParseError' -TargetObject $P;
+                                }
+                                $Local:HtmlImportRepository = $null;
+                            }
+                            if ($null -eq $Local:HtmlImportRepository) { break }
+                        }
+                    }
+                    if ($null -ne $Local:HtmlImportRepository) {
+                        # TODO: Parse in HTML property
+                    }
+                }
+            }
+        } else {
+            if (Test-Path -LiteralPath $Path) {
+                Write-Error -Message "Path does not refer to a subdirectory: $($Path | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'RepoPathNotContainer' -TargetObject $Path;
+            } else {
+                if (Test-Path -LiteralPath $Path -IsValid) {
+                    Write-Error -Message "Path not found: $($Path | ConvertTo-Json)" -Category ObjectNotFound -ErrorId 'RepoPathNotFound' -TargetObject $Path;
+                } else {
+                    Write-Error -Message "Path is not valid: $($Path | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'RepoPathInvalid' -TargetObject $Path;
+                }
+            }
+        }
+    }
+}
+
 Function Publish-OfflineHtml {
     [CmdletBinding(DefaultParameterSetName = "Wcpath")]
     Param(
