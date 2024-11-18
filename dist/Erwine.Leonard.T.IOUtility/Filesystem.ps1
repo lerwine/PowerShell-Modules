@@ -128,7 +128,7 @@ Function Use-TempFolder {
     #>
     [CmdletBinding(DefaultParameterSetName = 'TempPathVar')]
     Param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         # The script block(s) to run.
         [ScriptBlock[]]$Process,
 
