@@ -12,14 +12,16 @@ static class TestData
         JsonNode.Parse(File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/redhat.vscode-xml__find_result.json")))!.AsObject();
 
     internal static JsonObject GetFindRedhatXmlResultExtensionJson() =>
-        GetFindRedhatXmlResultRawJson()["results"]!.AsObject()["extensions"]!.AsArray()[0]!.AsObject();
+        GetFindRedhatXmlResultRawJson()["results"]!.AsArray()[0]!["extensions"]!.AsArray()[0]!.AsObject();
 
     private static RawGalleryExtensionVersion ToRawGalleryExtensionVersion(JsonObject obj)
     {
         var item = new RawGalleryExtensionVersion(SemanticVersion.Parse(obj["version"]!.AsValue().GetString()!),
             DateTime.Parse(obj["lastUpdated"]!.AsValue().GetString()!),
-            new Uri(obj["assetUri"]!.AsValue().GetString()!, UriKind.Absolute), obj["assetUri"]!.AsValue().GetString()!.ToTargetPlatform());
-        if (obj.TryGetPropertyValue("fallbackAssetUri", out JsonNode? jsonNode))
+            new Uri(obj["assetUri"]!.AsValue().GetString()!, UriKind.Absolute),
+            (obj.TryGetPropertyValue("targetPlatform", out JsonNode? jsonNode) && jsonNode is not null) ?
+                jsonNode.AsValue().GetString()!.ToTargetPlatform() : TargetPlatform.UNIVERSAL);
+        if (obj.TryGetPropertyValue("fallbackAssetUri", out jsonNode))
             item.FallbackAssetUri = new(jsonNode!.AsValue().GetString()!, UriKind.Absolute);
         return item;
     }
