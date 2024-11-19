@@ -141,13 +141,43 @@ public partial class RawGalleryExtension
                 result.ShortDescription = shortDescription;
             if (RawGalleryExtensionVersion.TryAddVersions(jsonArray, result.Versions))
             {
-                if (extensionJson.TryGetJsonArrayProperty("categories", out jsonArray))
+                if (extensionJson.TryGetJsonArrayProperty("categories", out jsonArray) && jsonArray.Count > 0)
                 {
-                    // TODO: Get categories
+                    result.Categories = [];
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        JsonNode? node = jsonArray[i];
+                        if (node is null) continue;
+                        if (node is not JsonValue jv)
+                        {
+                            result = null;
+                            return false;
+                        }
+                        string? s = jv.GetString();
+                        if (!string.IsNullOrWhiteSpace(s))
+                            result.Categories.Add(s);
+                    }
+                    if (result.Categories.Count == 0)
+                        result.Categories = null;
                 }
-                if (extensionJson.TryGetJsonArrayProperty("tags", out jsonArray))
+                if (extensionJson.TryGetJsonArrayProperty("tags", out jsonArray) && jsonArray.Count > 0)
                 {
-                    // TODO: Get tags
+                    result.Tags = [];
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        JsonNode? node = jsonArray[i];
+                        if (node is null) continue;
+                        if (node is not JsonValue jv)
+                        {
+                            result = null;
+                            return false;
+                        }
+                        string? s = jv.GetString();
+                        if (!string.IsNullOrWhiteSpace(s))
+                            result.Tags.Add(s);
+                    }
+                    if (result.Tags.Count == 0)
+                        result.Tags = null;
                 }
                 return true;
             }
