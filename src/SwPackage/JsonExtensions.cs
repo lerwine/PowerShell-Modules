@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.Management.Automation;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using Json.More;
 
 namespace SwPackage;
@@ -60,6 +57,32 @@ public static class JsonExtensions
         if (obj is not null && obj.TryGetJsonStringProperty(propertyName, out string? value) && DateTime.TryParse(value, out result))
             return true;
         result = default;
+        return false;
+    }
+
+    public static bool TryGetJsonSemverProperty(this JsonObject obj, string propertyName, [NotNullWhen(true)] out SemanticVersion? result)
+    {
+        if (obj is not null && obj.TryGetJsonStringProperty(propertyName, out string? value) && SemanticVersion.TryParse(value, out result))
+            return true;
+        result = null;
+        return false;
+    }
+
+    public static bool TryGetJsonUriProperty(this JsonObject obj, string propertyName, [NotNullWhen(true)] out Uri? result)
+    {
+        if (obj is not null && obj.TryGetJsonStringProperty(propertyName, out string? value) &&
+                (Uri.TryCreate(value, UriKind.Absolute, out result) || Uri.TryCreate(value, UriKind.Relative, out result)))
+            return true;
+        result = null;
+        return false;
+    }
+
+    public static bool TryGetJsonTargetPlatformProperty(this JsonObject obj, string propertyName, out VsCodeVsix.TargetPlatform result)
+    {
+        if (obj is not null && obj.TryGetJsonStringProperty(propertyName, out string? value) &&
+                VsCodeVsix.VsixExtensions.TryConvertToTargetPlatform(value, out result))
+            return true;
+        result = VsCodeVsix.TargetPlatform.UNIVERSAL;
         return false;
     }
 
