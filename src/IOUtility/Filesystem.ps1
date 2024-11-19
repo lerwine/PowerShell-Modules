@@ -89,31 +89,31 @@ Function Use-Location {
     )
 
     Begin {
-        $IsValidLocation = $true;
-        $StackName = "Use-Location$([Guid]::NewGuid())";
+        $Private:IsValidLocation = $true;
+        $Private:StackName = "Use-Location$([Guid]::NewGuid())";
     }
 
     Process {
-        if ($IsValidLocation) {
+        if ($Private:IsValidLocation) {
             try {
-                Push-Location -StackName $StackName -ErrorAction Stop;
+                Push-Location -StackName $Private:StackName -ErrorAction Stop;
             } catch {
                 Write-Error -ErrorRecord $_;
-                $IsValidLocation = $false;
+                $Private:IsValidLocation = $false;
             }
         }
-        if ($IsValidLocation) {
+        if ($Private:IsValidLocation) {
             try {
                 try { Set-Location -LiteralPath $P -ErrorAction Stop }
                 catch {
                     Write-Error -ErrorRecord $_;
-                    $IsValidLocation = $false;
+                    $Private:IsValidLocation = $false;
                 }
-                if ($IsValidLocation) {
-                    foreach ($ScriptBlock in $Process) { &$Process }
+                if ($Private:IsValidLocation) {
+                    foreach ($Private:ScriptBlock in $Process) { &$Private:ScriptBlock }
                 }
             } finally {
-                Pop-Location -StackName $StackName;
+                Pop-Location -StackName $Private:StackName;
             }
         }
     }
@@ -132,15 +132,7 @@ Function Use-TempFolder {
         # The script block(s) to run.
         [ScriptBlock[]]$Process,
 
-        # The name of the variable containing the temp folder path (without the leading '$'). The default is _.
-        [Parameter(ParameterSetName = 'TempPathVar')]
-        [ValidatePattern('^[_a-z]\w*$')]
-        [string]$TempPathVar = '_',
-
-        [Parameter(ParameterSetName = 'TempPathVar')]
-        [PSVariable[]]$ContextVariables,
-
-        # The temp folder path variable will contain the DirectoryInfo object. If this is not specified, it will contain the full path string.
+        # The temp PSItem variable / argument will contain the DirectoryInfo object. If this is not specified, it will contain the full path string.
         [switch]$TempPathItem,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'PassAsArg')]
@@ -152,64 +144,59 @@ Function Use-TempFolder {
     )
 
     Begin {
-        $TempPath = [System.IO.Path]::GetTempPath();
-        $FolderName = [Guid]::NewGuid().ToString('n');
-        $FullPath = $TempPath | Join-Path -ChildPath $FolderName;
-        while ($FullPath | Test-Path) {
-            $FolderName = [Guid]::NewGuid().ToString('n');
-            $FullPath = $TempPath | Join-Path -ChildPath $FolderName;
+        $Private:TempPath = [System.IO.Path]::GetTempPath();
+        $Private:FolderName = [Guid]::NewGuid().ToString('n');
+        $Private:FullPath = $Private:TempPath | Join-Path -ChildPath $Private:FolderName;
+        while ($Private:FullPath | Test-Path) {
+            $Private:FolderName = [Guid]::NewGuid().ToString('n');
+            $Private:FullPath = $Private:TempPath | Join-Path -ChildPath $Private:FolderName;
         }
-        $DirectoryInfo = New-Item -Path $TempPath -Name $FolderName -ItemType Directory -Force;
-        $TempValue = $null;
+        $Private:DirectoryInfo = New-Item -Path $Private:TempPath -Name $Private:FolderName -ItemType Directory -Force;
+        $Private:TempValue = $null;
         if ($TempPathItem.IsPresent) {
-            $TempValue = $DirectoryInfo;
+            $Private:TempValue = $DirectoryInfo;
         } else {
-            $TempValue = $DirectoryInfo.FullName;
-        }
-        [System.Collections.Generic.List[PSVariable]]$Variables = $null;
-        if (-not $PassAsArg.IsPresent) {
-            $Variables = [System.Collections.Generic.List[PSVariable]]::new();
-            $Variables.Add([PSVariable]::new($TempPathVar, $TempValue, [System.Management.Automation.ScopedItemOptions]::ReadOnly));
-            if ($PSBoundParameters.ContainsKey('ContextVariables')) {
-                foreach ($v in $ContextVariables) {
-                    if ($v.Name -ine $TempPathVar) { $Variables.Add($v) }
-                }
-            }
+            $Private:TempValue = $DirectoryInfo.FullName;
         }
     }
 
     Process {
         if ($SetLocation.IsPresent) {
-            if ($PassAsArg.IsPresent) {
-                $StackName = [Guid]::NewGuid().ToString('n');
-                foreach ($sb in $Process) {
-                    Push-Location -StackName $StackName;
-                    try { $sb.Invoke($TempValue); }
-                    finally { Pop-Location -StackName $StackName }
+            $Private:StackName = [Guid]::NewGuid().ToString('n');
+            Push-Location -StackName $Private:StackName;
+            Set-Location -LiteralPath $Private:DirectoryInfo.FullName;
+            try {
+                if ($PassAsArg.IsPresent) {
+                    foreach ($Private:sb in $Process) {
+                        if ((Get-Location).Path -ne $Private:DirectoryInfo.FullName) {
+                            Set-Location -LiteralPath $Private:DirectoryInfo.FullName;
+                        }
+                        &$Private:sb $Private:TempValue;
+                    }
+                } else {
+                    foreach ($Private:sb in $Process) {
+                        if ((Get-Location).Path -ne $Private:DirectoryInfo.FullName) {
+                            Set-Location -LiteralPath $Private:DirectoryInfo.FullName;
+                        }
+                        ForEach-Object -Process $Private:sb -InputObject $Private:TempValue;
+                    }
                 }
-            } else {
-                foreach ($sb in $Process) {
-                    Push-Location -StackName $StackName;
-                    try { $sb.InvokeWithContext($null, $Variables); }
-                    finally { Pop-Location -StackName $StackName }
-                }
-            }
+            } finally { Pop-Location -StackName $Private:StackName }
         } else {
             if ($PassAsArg.IsPresent) {
-                $StackName = [Guid]::NewGuid().ToString('n');
-                foreach ($sb in $Process) {
-                    $sb.Invoke($TempValue);
+                foreach ($Private:sb in $Process) {
+                    &$Private:sb $Private:TempValue;
                 }
             } else {
-                foreach ($sb in $Process) {
-                    $sb.InvokeWithContext($null, $Variables);
+                foreach ($Private:sb in $Process) {
+                    ForEach-Object -Process $Private:sb -InputObject $Private:TempValue;
                 }
             }
         }
     }
 
     End {
-        Remove-Item -LiteralPath $DirectoryInfo.FullName -Recurse -Force;
+        $Private:DirectoryInfo.Delete($true);
     }
 }
 

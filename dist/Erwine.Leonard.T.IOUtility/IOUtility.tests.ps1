@@ -1530,23 +1530,28 @@ Describe 'Remove-ZeroPadding Function' {
 
 Describe 'Testing Use-TempFolder Function' {
     Context 'Use-TempFolder <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = (Get-Location).Path;
         $TempPath = Use-TempFolder {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $_ | Should -BeOfType string -Because 'Type';
-            $_ | Should -Not Be $CurrentLocation;
+            $_ | Should -Not -Be $StartingLocation -Because 'PSItem';
             $_ | Write-Output;
             ($_ | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
+            (Get-Location).Path | Should -Be $StartingLocation -Because 'CurrentLocation';
         } -ErrorAction Stop;
         $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
         ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
     }
 
     Context 'Use-TempFolder -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = $PSScriptRoot;
+        Set-Location -LiteralPath $PSScriptRoot;
         $TempPath = Use-TempFolder -SetLocation {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $_ | Should -BeOfType string -Because 'Type';
-            $_ | Should -Not Be $CurrentLocation;
+            $_ | Should -Not -Be $StartingLocation -Because 'PSItem';
             $_ | Write-Output;
             ($_ | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
             (Get-Location).Path | Should -Be $_ -Because 'CurrentLocation';
@@ -1556,13 +1561,15 @@ Describe 'Testing Use-TempFolder Function' {
     }
 
     Context 'Use-TempFolder -TempPathItem <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = (Get-Location).Path;
         $TempDir = Use-TempFolder -TempPathItem {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $_ | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $_.FullName | Should -Not Be $CurrentLocation;
+            $_.FullName | Should -Not -Be $StartingLocation -Because 'PSItem';
             $_ | Write-Output;
             $_.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
+            (Get-Location).Path | Should -Be $StartingLocation -Because 'CurrentLocation';
         } -ErrorAction Stop;
         $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
         $TempDir.Refresh();
@@ -1570,10 +1577,13 @@ Describe 'Testing Use-TempFolder Function' {
     }
 
     Context 'Use-TempFolder -TempPathItem -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = $PSScriptRoot;
+        Set-Location -LiteralPath $PSScriptRoot;
         $TempDir = Use-TempFolder -TempPathItem -SetLocation {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $_ | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $_.FullName | Should -Not Be $CurrentLocation;
+            $_.FullName | Should -Not -Be $StartingLocation -Because 'PSItem';
             $_ | Write-Output;
             $_.Exists | Should -BeTrue -Because 'Exists';
             (Get-Location).Path | Should -Be $_.FullName -Because 'CurrentLocation';
@@ -1584,25 +1594,30 @@ Describe 'Testing Use-TempFolder Function' {
     }
 
     Context 'Use-TempFolder -PassAsArg <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = (Get-Location).Path;
         $TempPath = Use-TempFolder -PassAsArg {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $args.Count | Should -Not -Be 0 -Because 'ArgCount';
             $args[0] | Should -BeOfType string -Because 'Type';
-            $args[0] | Should -Not Be $CurrentLocation;
+            $args[0] | Should -Not -Be $StartingLocation -Because 'Arg0';
             $args[0] | Write-Output;
             ($args[0] | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
+            (Get-Location).Path | Should -Be $StartingLocation -Because 'CurrentLocation';
         } -ErrorAction Stop;
         $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
         ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
     }
 
     Context 'Use-TempFolder -PassAsArg -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = $PSScriptRoot;
+        Set-Location -LiteralPath $PSScriptRoot;
         $TempPath = Use-TempFolder -PassAsArg -SetLocation {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $args.Count | Should -Not -Be 0 -Because 'ArgCount';
             $args[0] | Should -BeOfType string -Because 'Type';
-            $args[0] | Should -Not Be $CurrentLocation;
+            $args[0] | Should -Not -Be $StartingLocation -Because 'Arg0';
             $args[0] | Write-Output;
             ($args[0] | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
             (Get-Location).Path | Should -Be $args[0] -Because 'CurrentLocation';
@@ -1612,14 +1627,16 @@ Describe 'Testing Use-TempFolder Function' {
     }
 
     Context 'Use-TempFolder -PassAsArg -TempPathItem <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = (Get-Location).Path;
         $TempDir = Use-TempFolder -PassAsArg -TempPathItem {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $args.Count | Should -Not -Be 0 -Because 'ArgCount';
             $args[0] | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $args[0].FullName | Should -Not Be $CurrentLocation;
+            $args[0].FullName | Should -Not -Be $StartingLocation -Because 'Arg0';
             $args[0] | Write-Output;
             $args[0].Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
+            (Get-Location).Path | Should -Be $StartingLocation -Because 'CurrentLocation';
         } -ErrorAction Stop;
         $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
         $TempDir.Refresh();
@@ -1627,11 +1644,14 @@ Describe 'Testing Use-TempFolder Function' {
     }
 
     Context 'Use-TempFolder -PassAsArg -TempPathItem -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
+        $Local:DefinedOutsideProcessBlock = $true;
+        $Local:StartingLocation = $PSScriptRoot;
+        Set-Location -LiteralPath $PSScriptRoot;
         $TempDir = Use-TempFolder -PassAsArg -TempPathItem -SetLocation {
+            $DefinedOutsideProcessBlock | Should -BeTrue -Because 'DefinedOutsideProcessBlock';
             $args.Count | Should -Not -Be 0 -Because 'ArgCount';
             $args[0] | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $args[0].FullName | Should -Not Be $CurrentLocation;
+            $args[0].FullName | Should -Not -Be $StartingLocation -Because 'Arg0';
             $args[0] | Write-Output;
             $args[0].Exists | Should -BeTrue -Because 'Exists';
             (Get-Location).Path | Should -Be $args[0].FullName -Because 'CurrentLocation';
@@ -1639,192 +1659,6 @@ Describe 'Testing Use-TempFolder Function' {
         $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
         $TempDir.Refresh();
         $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempPath = Use-TempFolder -TempPathVar 'xyz' {
-            $xyz | Should -BeOfType string -Because 'Type';
-            $xyz | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            ($xyz | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
-        } -ErrorAction Stop;
-        $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
-        ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempPath = Use-TempFolder -TempPathVar 'xyz' -SetLocation {
-            $xyz | Should -BeOfType string -Because 'Type';
-            $xyz | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            ($xyz | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $xyz -Because 'CurrentLocation';
-        } -ErrorAction Stop;
-        $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
-        ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -TempPathItem <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempDir = Use-TempFolder -TempPathVar 'xyz' -TempPathItem {
-            $xyz | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $xyz.FullName | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            $xyz.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
-        } -ErrorAction Stop;
-        $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
-        $TempDir.Refresh();
-        $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -TempPathItem -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempDir = Use-TempFolder -TempPathVar 'xyz'  -TempPathItem -SetLocation {
-            $xyz | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $xyz.FullName | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            $xyz.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $xyz.FullName -Because 'CurrentLocation';
-        } -ErrorAction Stop;
-        $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
-        $TempDir.Refresh();
-        $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-    }
-
-    Context 'Use-TempFolder -ContextVariables <[PSVariable[]> <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempPath = Use-TempFolder -ContextVariables ([PSVariable]::new('abc', 7)) {
-            $_ | Should -BeOfType string -Because 'Type';
-            $_ | Should -Not Be $CurrentLocation;
-            $_ | Write-Output;
-            ($_ | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
-        ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -ContextVariables <[PSVariable[]> -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempPath = Use-TempFolder -ContextVariables ([PSVariable]::new('abc', 7)) -SetLocation {
-            $_ | Should -BeOfType string -Because 'Type';
-            $_ | Should -Not Be $CurrentLocation;
-            $_ | Write-Output;
-            ($_ | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $_ -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
-        ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -ContextVariables <[PSVariable[]> -TempPathItem <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempDir = Use-TempFolder -ContextVariables ([PSVariable]::new('abc', 7)) -TempPathItem {
-            $_ | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $_.FullName | Should -Not Be $CurrentLocation;
-            $_ | Write-Output;
-            $_.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
-        $TempDir.Refresh();
-        $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -ContextVariables <[PSVariable[]> -TempPathItem -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempDir = Use-TempFolder -ContextVariables ([PSVariable]::new('abc', 7)) -TempPathItem -SetLocation {
-            $_ | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $_.FullName | Should -Not Be $CurrentLocation;
-            $_ | Write-Output;
-            $_.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $_.FullName -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
-        $TempDir.Refresh();
-        $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -ContextVariables <[PSVariable[]> <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempPath = Use-TempFolder -TempPathVar 'xyz' -ContextVariables ([PSVariable]::new('abc', 7)) {
-            $xyz | Should -BeOfType string -Because 'Type';
-            $xyz | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            ($xyz | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
-        ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -ContextVariables <[PSVariable[]> -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempPath = Use-TempFolder -TempPathVar 'xyz' -ContextVariables ([PSVariable]::new('abc', 7)) -SetLocation {
-            $xyz | Should -BeOfType string -Because 'Type';
-            $xyz | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            ($xyz | Test-Path -PathType Container) | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $xyz -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempPath | Should -Not -BeNullOrEmpty -Because 'AfterInvoke';
-        ($TempPath | Test-Path) | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -ContextVariables <[PSVariable[]> -TempPathItem <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempDir = Use-TempFolder -TempPathVar 'xyz' -ContextVariables ([PSVariable]::new('abc', 7)) -TempPathItem {
-            $xyz | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $xyz.FullName | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            $xyz.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $CurrentLocation -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
-        $TempDir.Refresh();
-        $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
-    }
-
-    Context 'Use-TempFolder -TempPathVar <string> -ContextVariables <[PSVariable[]> -TempPathItem -SetLocation <ScriptBlock[]>' {
-        $CurrentLocation = (Get-Location).Path;
-        $TempDir = Use-TempFolder -TempPathVar 'xyz' -ContextVariables ([PSVariable]::new('abc', 7)) -TempPathItem -SetLocation {
-            $xyz | Should -BeOfType System.IO.DirectoryInfo -Because 'Type';
-            $xyz.FullName | Should -Not Be $CurrentLocation;
-            $xyz | Write-Output;
-            $xyz.Exists | Should -BeTrue -Because 'Exists';
-            (Get-Location).Path | Should -Be $xyz.FullName -Because 'CurrentLocation';
-            $abc | Should -BeOfType int -Because 'ContextVarType';
-            $abc | Should -be 7 -Because 'ContextVarValue';
-        } -ErrorAction Stop;
-        $TempDir | Should -BeOfType System.IO.DirectoryInfo -Because 'AfterInvoke';
-        $TempDir.Refresh();
-        $TempDir.Exists | Should -BeFalse -Because 'NotExists';
-        ($null -eq (Get-Variable -Name 'abc' -ErrorAction Ignore)) | Should -BeTrue -Because 'VarOutOfScope';
     }
 }
 
