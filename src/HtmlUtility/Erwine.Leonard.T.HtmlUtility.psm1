@@ -244,11 +244,12 @@ Function Publish-OfflineHtml {
             if ($LibFolderPath | Test-Path) { Remove-Item -LiteralPath $LibFolderPath -Force }
             (New-Item -ItemType Directory -Path $RootFolder.FullName -Name 'lib') | Out-Null;
         }
+        $ResourcesPath = $PSScriptRoot | Join-Path -ChildPath 'Resources';
         ('from-md.css', 'highlight.css', 'katex-copytex.min.css', 'katex-copytex.min.js', 'katex.min.css', 'markdown.css', 'vscode-github.css') | ForEach-Object {
-            $CssPath = $LibFolderPath | Join-Path -ChildPath $_;
+            $CssPath = ($LibFolderPath | Join-Path -ChildPath $_);
             if (-not ($CssPath | Test-Path -PathType Leaf)) {
                 if ($CssPath | Test-Path) { Remove-Item -LiteralPath $CssPath -Recurse -Force }
-                Copy-Item -LiteralPath ($PSScriptRoot | Join-Path -ChildPath $_) -Destination $CssPath -Force;
+                Copy-Item -LiteralPath ($ResourcesPath | Join-Path -ChildPath $_) -Destination $CssPath -Force;
             }
         }
     }

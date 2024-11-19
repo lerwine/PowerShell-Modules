@@ -9,7 +9,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'Erwine.Leonard.T.HtmlUtility'
+RootModule = 'Erwine.Leonard.T.HtmlUtility.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.0.1'
@@ -87,8 +87,8 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('from-md.css', 'highlight.css', 'katex-copytex.min.css', 'katex-copytex.min.js', 'katex.min.css', 'markdown.css', 'vscode-github.css',
-    'about_Erwine.Leonard.T.HtmlUtility.help.txt', 'README.md')
+FileList = @('Resources/from-md.css', 'Resources/highlight.css', 'Resources/katex-copytex.min.css', 'Resources/katex-copytex.min.js', 'Resources/katex.min.css',
+    'Resources/markdown.css', 'Resources/vscode-github.css', 'about_Erwine.Leonard.T.HtmlUtility.help.txt', 'README.md')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
