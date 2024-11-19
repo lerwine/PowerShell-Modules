@@ -74,7 +74,7 @@
               "${workspaceFolder}/src/SwPackage.UnitTests/SwPackage.UnitTests.csproj",
               "--no-build",
               "--logger",
-              "trx;LogFileName=${workspaceFolder}/src/TestResults/TestResults.trx"
+              "trx;LogFileName=${workspaceFolder}/src/TestResults/SwPackage-TestResults.trx"
           ],
           "dependsOn": [
             "Build SwPackage.UnitTests"
@@ -215,6 +215,22 @@
         "dependsOn": [
           "Build LteDev"
         ]
+      },
+      {
+          "label": "Test LteDev",
+          "command": "dotnet",
+          "type": "process",
+          "args": [
+              "test",
+              "${workspaceFolder}/src/LteDev.UnitTests/LteDev.UnitTests.csproj",
+              "--no-build",
+              "--logger",
+              "trx;LogFileName=${workspaceFolder}/src/TestResults/LteDev-TestResults.trx"
+          ],
+          "dependsOn": [
+            "Build LteDev.UnitTests"
+          ],
+          "problemMatcher": "$msCompile"
       },
       {
         "label": "Build XmlUtility",

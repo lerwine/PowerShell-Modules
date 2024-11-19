@@ -1,6 +1,10 @@
-Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.IOUtility') -ErrorAction Stop;
-Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.WinIOUtility') -ErrorAction Stop;
-Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../../dist/Erwine.Leonard.T.LteDev') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../IOUtility/Erwine.Leonard.T.IOUtility.psd1') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath '../WinIOUtility/Erwine.Leonard.T.WinIOUtility.psd1') -ErrorAction Stop;
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath './Erwine.Leonard.T.LteDev.psd1') -ErrorAction Stop;
+
+<#
+Import-Module Pester
+#>
 
 $ValidNames = @({'NormalName'}, {'lcFirst'}, {'has_underscore'}, {'_startsWithUndersore'}, {'hasNumber3'}, {'x'}, {'__'}, {'_'}, {'_123'},
     {'__Has_itAll4_the_last1__'});
