@@ -35,7 +35,7 @@
         "command": "${workspaceFolder}/Deploy.ps1",
         "args": [
           "-ModuleManifestPath",
-          "${workspaceFolder}/src/HtmlUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.SwPackage.psd1",
+          "${workspaceFolder}/src/SwPackage/bin/Debug/net8.0/Erwine.Leonard.T.SwPackage.psd1",
           "-DeploymentRoot",
           "${workspaceFolder}/dist",
           "-PublishLocalRepo"
