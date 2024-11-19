@@ -53,12 +53,16 @@ public class RawGalleryExtensionPublisher
 
     public static bool TryCreate(JsonObject publisherJson, [NotNullWhen(true)] out RawGalleryExtensionPublisher? publisher)
     {
-        // "publisherId": "eed56242-9699-4317-8bc7-e9f4b9bdd3ff",
-        // "publisherName": "redhat",
-        // "displayName": "Red Hat",
-        // "flags": "verified",
-        // "domain": "https://redhat.com",
-        // "isDomainVerified": true
-        throw new NotImplementedException();
+        if (publisherJson is not null && publisherJson.TryGetJsonStringProperty("publisherId", out string? publisherId) &&
+            publisherJson.TryGetJsonStringProperty("publisherName", out string? publisherName) &&
+            publisherJson.TryGetJsonStringProperty("displayName", out string? displayName))
+        {
+            publisher = new RawGalleryExtensionPublisher(publisherId, publisherName, displayName);
+            if (publisherJson.TryGetJsonBooleanProperty("isDomainVerified", out bool? isDomainVerified))
+                publisher.IsDomainVerified = isDomainVerified;
+            return true;
+        }
+        publisher = null;
+        return false;
     }
 }
