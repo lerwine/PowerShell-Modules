@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Text.Json.Nodes;
 
@@ -38,7 +39,7 @@ public class RawGalleryExtensionVersion : IPlatformAndVersion, IEquatable<RawGal
     public RawGalleryExtensionVersion(SemanticVersion version, DateTime lastUpdated, Uri assetUri, TargetPlatform platform)
     {
         ArgumentNullException.ThrowIfNull(version);
-        if (version.PreReleaseLabel is null || version.BuildLabel is not null) throw new ArgumentOutOfRangeException(nameof(version));
+        if (version.PreReleaseLabel is not null || version.BuildLabel is not null) throw new ArgumentOutOfRangeException(nameof(version));
         if (platform == TargetPlatform.UNKNOWN) throw new ArgumentOutOfRangeException(nameof(platform));
         _assetUri = assetUri ?? throw new ArgumentNullException(nameof(assetUri));
         _version = version;
@@ -124,12 +125,27 @@ public class RawGalleryExtensionVersion : IPlatformAndVersion, IEquatable<RawGal
 
     public static bool TryAddVersions(JsonArray jsonArray, RawGalleryExtension.VersionCollection versions)
     {
-        // "version": "0.27.2024111208",
-        // "targetPlatform": "linux-x64",
-        // "flags": "validated",
-        // "lastUpdated": "2024-11-12T08:18:45.123Z",
-        // "assetUri": "https://redhat.gallerycdn.vsassets.io/extensions/redhat/vscode-xml/0.27.2024111208/1731399103281",
-        // "fallbackAssetUri": "https://redhat.gallery.vsassets.io/_apis/public/gallery/publisher/redhat/extension/vscode-xml/0.27.2024111208/assetbyname"
-        throw new NotImplementedException();
+        if (jsonArray is null) return false;
+        Collection<RawGalleryExtensionVersion> toAdd = [];
+        for (int i = 0; i < jsonArray.Count; i++)
+        {
+            JsonNode? jsonNode = jsonArray[i];
+            if (jsonNode is null) continue;
+            if (jsonNode is JsonObject versionJson && versionJson.TryGetJsonSemverProperty("version", out SemanticVersion? version) &&
+                versionJson.TryGetJsonDateTimeProperty("lastUpdated", out DateTime lastUpdated) &&
+                versionJson.TryGetJsonUriProperty("assetUri", out Uri? uri))
+            {
+                versionJson.TryGetJsonTargetPlatformProperty("targetPlatform", out TargetPlatform targetPlatform);
+                RawGalleryExtensionVersion rgev = new(version, lastUpdated, uri, targetPlatform);
+                if (versionJson.TryGetJsonUriProperty("fallbackAssetUri", out uri))
+                    rgev.FallbackAssetUri = uri;
+                toAdd.Add(rgev);
+            }
+            else
+                return false;
+        }
+        foreach (RawGalleryExtensionVersion item in toAdd)
+            versions.Add(item);
+        return true;
     }
 }
