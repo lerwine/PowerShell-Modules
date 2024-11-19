@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/lerwine/PowerShell-Modules.git"
   },
-  "author": "Leonard T. ERwine",
+  "author": "Leonard T. Erwine",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/lerwine/PowerShell-Modules/issues"
