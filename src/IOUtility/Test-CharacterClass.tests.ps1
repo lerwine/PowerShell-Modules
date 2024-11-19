@@ -16,14 +16,14 @@ Describe 'Test-CharacterClass -Flags BinaryDigitNumber' {
         It 'Digits other than 1 or 0 should return false' {
             foreach ($Value in ('2', '3', '4', '5', '6', '7', '8', '9')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags BinaryDigitNumber -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Digits should return false' {
             foreach ($Value in ("`t", "`n", ' ', '_', '-', '¡', '„', '«', '»', '(', ')', '₎', '‿', '־', '^', '˅', '+', '±', '|', '¦', '$', '£', '¼', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags BinaryDigitNumber -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -39,14 +39,14 @@ Describe 'Test-CharacterClass -Flags BinaryDigitNumber' {
         It 'Digits other than 1 or 0 should return true' {
             foreach ($Value in ('2', '3', '4', '5', '6', '7', '8', '9')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags BinaryDigitNumber -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Digits should return true' {
             foreach ($Value in ("`t", "`n", ' ', '_', '-', '¡', '„', '«', '»', '(', ')', '₎', '‿', '־', '^', '˅', '+', '±', '|', '¦', '$', '£', '¼', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags BinaryDigitNumber -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -57,14 +57,14 @@ Describe 'Test-CharacterClass -Flags Symbol' {
         It 'Symbol characters should return true' {
             foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±', '˅')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags Symbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags Symbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -73,14 +73,14 @@ Describe 'Test-CharacterClass -Flags Symbol' {
         It 'Symbol characters should return false' {
             foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±', '˅')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags Symbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags Symbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -91,21 +91,21 @@ Describe 'Test-CharacterClass -Flags ModifierSymbol' {
         It '"^" and "^" should return true' {
             foreach ($Value in ('^', '˅')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Other Symbol characters should return false' {
             foreach ($Value in ('$', '+', '|', '£', '¦', '±')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -114,21 +114,21 @@ Describe 'Test-CharacterClass -Flags ModifierSymbol' {
         It '"^" and "^" should return true' {
             foreach ($Value in ('^', '˅')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Other Symbol characters should return true' {
             foreach ($Value in ('$', '+', '|', '£', '¦', '±')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -136,7 +136,6 @@ Describe 'Test-CharacterClass -Flags ModifierSymbol' {
 
 Describe 'Test-CharacterClass -Flags AsciiModifierSymbol' {
     Context 'IsNot.Present = $false' {
-
         It '"^" should return true' {
             $Actual = Test-CharacterClass -Value '^' -Flags AsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"^"';
@@ -145,36 +144,35 @@ Describe 'Test-CharacterClass -Flags AsciiModifierSymbol' {
         It 'Other Symbol characters should return false' {
             foreach ($Value in ('$', '+', '|', '£', '¦', '±', '˅')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
 
     Context 'IsNot.Present = $true' {
-
         It '"^" should return false' {
-            $Actual = Test-CharacterClass -Value '^' -Flags AsciiModifierSymbol -ErrorAction Stop;
+            $Actual = Test-CharacterClass -Value '^' -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"^"';
         }
 
         It 'Other Symbol characters should return true' {
             foreach ($Value in ('$', '+', '|', '£', '¦', '±', '˅')) {
-                $Actual = Test-CharacterClass -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
-                $Actual = Test-CharacterClass -Value $Value -Flags AsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -191,14 +189,14 @@ Describe 'Test-CharacterClass -Flags NonAsciiModifierSymbol' {
         It 'Other Symbol characters should return false' {
             foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -206,21 +204,21 @@ Describe 'Test-CharacterClass -Flags NonAsciiModifierSymbol' {
     Context 'IsNot.Present = $true' {
 
         It '"˅" should return false' {
-            $Actual = Test-CharacterClass -Value '˅' -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+            $Actual = Test-CharacterClass -Value '˅' -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"˅"';
         }
 
         It 'Other Symbol characters should return true' {
             foreach ($Value in ('$', '+', '^', '|', '£', '¦', '±')) {
-                $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Symbol characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '-', '0', '2', '7', '9', 'A', '_', 'z', '¡', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', 'ˮ', '־', '„', '‿', '₎', 'Ⅵ')) {
-                $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiModifierSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiModifierSymbol -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -241,7 +239,7 @@ Describe 'Test-CharacterClass -Flags CurrencySymbol' {
         It 'Non-CurrencySymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags CurrencySymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -260,7 +258,7 @@ Describe 'Test-CharacterClass -Flags CurrencySymbol' {
         It 'Non-CurrencySymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags CurrencySymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -281,7 +279,7 @@ Describe 'Test-CharacterClass -Flags NonAsciiCurrencySymbol' {
         It 'Non-CurrencySymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiCurrencySymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -300,7 +298,7 @@ Describe 'Test-CharacterClass -Flags NonAsciiCurrencySymbol' {
         It 'Non-CurrencySymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiCurrencySymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -321,7 +319,7 @@ Describe 'Test-CharacterClass -Flags AsciiCurrencySymbol' {
         It 'Non-CurrencySymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiCurrencySymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -340,7 +338,7 @@ Describe 'Test-CharacterClass -Flags AsciiCurrencySymbol' {
         It 'Non-CurrencySymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '¦', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiCurrencySymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -363,7 +361,7 @@ Describe 'Test-CharacterClass -Flags MathSymbol' {
         It 'Non-MathSymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags MathSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -384,7 +382,7 @@ Describe 'Test-CharacterClass -Flags MathSymbol' {
         It 'Non-MathSymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags MathSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -407,7 +405,7 @@ Describe 'Test-CharacterClass -Flags NonAsciiMathSymbol' {
         It 'Non-MathSymbols should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiMathSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -428,7 +426,7 @@ Describe 'Test-CharacterClass -Flags NonAsciiMathSymbol' {
         It 'Non-MathSymbols should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiMathSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -451,7 +449,7 @@ Describe 'Test-CharacterClass -Flags AsciiMathSymbol' {
         It 'Non-MathSymbols should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiMathSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -472,7 +470,7 @@ Describe 'Test-CharacterClass -Flags AsciiMathSymbol' {
         It 'Non-MathSymbols should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '¡', '£', '¦', '«', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiMathSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -488,7 +486,7 @@ Describe 'Test-CharacterClass -Flags OtherSymbol' {
         It 'Non-OtherSymbol should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags OtherSymbol -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -502,7 +500,7 @@ Describe 'Test-CharacterClass -Flags OtherSymbol' {
         It 'Non-OtherSymbol should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '(', ')', '+', '-', '0', '2', '7', '9', 'A', '^', '_', 'z', '|', '¡', '£', '«', '±', 'µ', '»', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', '־', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags OtherSymbol -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -513,14 +511,14 @@ Describe 'Test-CharacterClass -Flags Punctuation' {
         It 'Punctuation characters should return true' {
             foreach ($Value in ('(', ')', '-', '_', '¡', '„', '«', '»', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags Punctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags Punctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -529,14 +527,14 @@ Describe 'Test-CharacterClass -Flags Punctuation' {
         It 'Punctuation characters should return false' {
             foreach ($Value in ('(', ')', '-', '_', '¡', '„', '«', '»', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags Punctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags Punctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -552,35 +550,35 @@ Describe 'Test-CharacterClass -Flags InitialQuotePunctuation' {
         It 'Other Punctuation should return false' {
             foreach ($Value in '(', ')', '-', '_', '¡', '„', '»', '₎', '־') {
                 $Actual = Test-CharacterClass -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-InitialQuotePunctuation should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
 
     Context 'IsNot.Present = $true' {
-        It '"«" should return true' {
+        It '"«" should return false' {
             $Actual = Test-CharacterClass -Value "«" -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"«"';
+            $Actual | Should -BeFalse -Because '"«"';
         }
 
-        It 'Other Punctuation should return false' {
+        It 'Other Punctuation should return true' {
             foreach ($Value in '(', ')', '-', '_', '¡', '„', '»', '₎', '־') {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
-        It 'Non-InitialQuotePunctuation should return false' {
+        It 'Non-InitialQuotePunctuation should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -589,42 +587,42 @@ Describe 'Test-CharacterClass -Flags InitialQuotePunctuation' {
 Describe 'Test-CharacterClass -Flags FinalQuotePunctuation' {
     Context 'IsNot.Present = $false' {
         It '"»" should return true' {
-            $Actual = Test-CharacterClass -Value "»" -Flags InitialQuotePunctuation -ErrorAction Stop;
+            $Actual = Test-CharacterClass -Value "»" -Flags FinalQuotePunctuation -ErrorAction Stop;
             $Actual | Should -BeTrue -Because '"»"';
         }
 
         It 'Other Punctuation should return false' {
             foreach ($Value in '(', ')', '-', '_', '¡', '„', '«', '₎', '־') {
-                $Actual = Test-CharacterClass -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual = Test-CharacterClass -Value $Value -Flags FinalQuotePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
-        It 'Non-InitialQuotePunctuation should return false' {
+        It 'Non-FinalQuotePunctuation should return false' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
-                $Actual = Test-CharacterClass -Value $Value -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value`"";
+                $Actual = Test-CharacterClass -Value $Value -Flags FinalQuotePunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
 
     Context 'IsNot.Present = $false' {
         It '"»" should return true' {
-            $Actual = Test-CharacterClass -Value "»" -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
+            $Actual = Test-CharacterClass -Value "»" -IsNot -Flags FinalQuotePunctuation -ErrorAction Stop;
             $Actual | Should -BeFalse -Because '"»"';
         }
 
         It 'Other Punctuation should return true' {
             foreach ($Value in '(', ')', '-', '_', '¡', '„', '«', '₎', '־') {
-                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags FinalQuotePunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
-        It 'Non-InitialQuotePunctuation should return true' {
+        It 'Non-FinalQuotePunctuation should return true' {
             foreach ($Value in ("`t", "`n", ' ', '$', '+', '0', '2', '7', '9', 'A', '^', 'z', '|', '£', '¦', '±', 'µ', '¼', 'À', 'æ', 'ǂ', '˅', 'ˮ', 'Ⅵ')) {
-                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags InitialQuotePunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value`"";
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags FinalQuotePunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -632,43 +630,46 @@ Describe 'Test-CharacterClass -Flags FinalQuotePunctuation' {
 
 Describe 'Test-CharacterClass -Flags OpenPunctuation' {
     Context 'IsNot.Present = $false' {
-        It '"(" should return true' {
-            $Actual = Test-CharacterClass -Value '(' -Flags OpenPunctuation -ErrorAction Stop;
+        It 'Open Punctuation should return true' {
+            foreach ($Value in ('(', '„')) {
+                $Actual = Test-CharacterClass -Value $Value -Flags OpenPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
+            }
             $Actual | Should -BeTrue -Because '"("';
         }
 
         It 'Other Punctuation characters should return false' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', ')', '₎', '־')) {
+            foreach ($Value in ('_', '-', '¡', '«', '»', ')', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags OpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags OpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
 
     Context 'IsNot.Present = $true' {
-        It '"(" should return false' {
-            $Actual = Test-CharacterClass -Value '(' -IsNot -Flags OpenPunctuation -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"("';
+        foreach ($Value in ('(', '„')) {
+            $Actual = Test-CharacterClass -Value $Value -IsNot -Flags OpenPunctuation -ErrorAction Stop;
+            $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
         }
 
         It 'Other Punctuation characters should return true' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', ')', '₎', '־')) {
+            foreach ($Value in ('_', '-', '¡', '«', '»', ')', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags OpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags OpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -682,16 +683,16 @@ Describe 'Test-CharacterClass -Flags NonAsciiOpenPunctuation' {
         }
 
         It 'Other Punctuation characters should return false' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+            foreach ($Value in ('_', '-', '¡', '«', '»', '(', ')', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -703,16 +704,16 @@ Describe 'Test-CharacterClass -Flags NonAsciiOpenPunctuation' {
         }
 
         It 'Other Punctuation characters should return true' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+            foreach ($Value in ('_', '-', '¡', '«', '»', '(', ')', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -728,14 +729,14 @@ Describe 'Test-CharacterClass -Flags AsciiOpenPunctuation' {
         It 'Other Punctuation characters should return false' {
             foreach ($Value in ('_', '-', '¡', '„', '„', '«', '»', ')', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -749,14 +750,14 @@ Describe 'Test-CharacterClass -Flags AsciiOpenPunctuation' {
         It 'Other Punctuation characters should return true' {
             foreach ($Value in ('_', '-', '¡', '„', '«', '»', ')', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiOpenPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -770,16 +771,16 @@ Describe 'Test-CharacterClass -Flags NonAsciiClosePunctuation' {
         }
 
         It 'Other Punctuation characters should return false' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -791,16 +792,16 @@ Describe 'Test-CharacterClass -Flags NonAsciiClosePunctuation' {
         }
 
         It 'Other Punctuation characters should return true' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '₎', '־')) {
+            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -816,14 +817,14 @@ Describe 'Test-CharacterClass -Flags AsciiClosePunctuation' {
         It 'Other Punctuation characters should return false' {
             foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags AsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -837,14 +838,14 @@ Describe 'Test-CharacterClass -Flags AsciiClosePunctuation' {
         It 'Other Punctuation characters should return true' {
             foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags AsciiClosePunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -860,14 +861,14 @@ Describe 'Test-CharacterClass -Flags ConnectorPunctuation' {
         It 'Other Punctuation characters should return false' {
             foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -881,14 +882,14 @@ Describe 'Test-CharacterClass -Flags ConnectorPunctuation' {
         It 'Other Punctuation characters should return true' {
             foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -896,47 +897,47 @@ Describe 'Test-CharacterClass -Flags ConnectorPunctuation' {
 
 Describe 'Test-CharacterClass -Flags NonAsciiConnectorPunctuation' {
     Context 'IsNot.Present = $false' {
-        # It 'ConnectorPunctuation characters should return false' {
-        #     foreach ($Value in ()) {
-        #         $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-        #         $Actual | Should -BeFalse -Because "`"$Value"`";
-        #     }
-        # }
+        It 'Non-ASCII ConnectorPunctuation characters should return true' {
+            foreach ($Value in ('_')) {
+                $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
+            }
+        }
 
         It 'Other Punctuation characters should return false' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+            foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
 
     Context 'IsNot.Present = $true' {
-        # It 'ConnectorPunctuation characters should return true' {
-        #     foreach ($Value in ()) {
-        #         $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-        #         $Actual | Should -BeTrue -Because "`"$Value"`";
-        #     }
-        # }
+        It 'ConnectorPunctuation characters should return false' {
+            foreach ($Value in ('_')) {
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
+            }
+        }
 
         It 'Other Punctuation characters should return true' {
-            foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
+            foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -952,14 +953,14 @@ Describe 'Test-CharacterClass -Flags ConnectorPunctuation' {
         It 'Other Punctuation characters should return false' {
             foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -973,14 +974,14 @@ Describe 'Test-CharacterClass -Flags ConnectorPunctuation' {
         It 'Other Punctuation characters should return true' {
             foreach ($Value in ('-', '¡', '„', '«', '»', '(', '₎', ')', '־')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags ConnectorPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -988,53 +989,47 @@ Describe 'Test-CharacterClass -Flags ConnectorPunctuation' {
 
 Describe 'Test-CharacterClass -Flags DashPunctuation' {
     Context 'IsNot.Present = $false' {
-        It '"-" should return false' {
-            $Actual = Test-CharacterClass -Value '-' -Flags DashPunctuation -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"-"';
-        }
-
-        It '"־" should return false' {
-            $Actual = Test-CharacterClass -Value '־' -Flags DashPunctuation -ErrorAction Stop;
-            $Actual | Should -BeFalse -Because '"־"';
+        It 'Dash Punctuation should return true' {
+            foreach ($Value in ('-', '־')) {
+                $Actual = Test-CharacterClass -Value $Value -Flags DashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
+            }
         }
 
         It 'Other Punctuation characters should return false' {
             foreach ($Value in ('_', '¡', '„', '«', '»', '(', '₎', ')')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags DashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags DashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
 
     Context 'IsNot.Present = $true' {
-        It '"-" should return true' {
-            $Actual = Test-CharacterClass -Value '-' -IsNot -Flags DashPunctuation -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"-"';
-        }
-
-        It '"־" should return true' {
-            $Actual = Test-CharacterClass -Value '־' -IsNot -Flags DashPunctuation -ErrorAction Stop;
-            $Actual | Should -BeTrue -Because '"־"';
+        It 'Dash Punctuation should return false' {
+            foreach ($Value in ('־', '-')) {
+                $Actual = Test-CharacterClass -Value $Value -IsNot -Flags DashPunctuation -ErrorAction Stop;
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
+            }
         }
 
         It 'Other Punctuation characters should return true' {
             foreach ($Value in ('_', '¡', '„', '«', '»', '(', '₎', ')')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags DashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags DashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -1050,14 +1045,14 @@ Describe 'Test-CharacterClass -Flags NonAsciiDashPunctuation' {
         It 'Other Punctuation characters should return false' {
             foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiDashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return false' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -Flags NonAsciiDashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeFalse -Because ($Value | ConvertTo-Json);
             }
         }
     }
@@ -1071,14 +1066,14 @@ Describe 'Test-CharacterClass -Flags NonAsciiDashPunctuation' {
         It 'Other Punctuation characters should return true' {
             foreach ($Value in ('_', '-', '¡', '„', '«', '»', '(', '₎', ')')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiDashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeTrue -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
 
         It 'Non-Punctuation characters should return true' {
             foreach ($Value in ("`t", "`n", ' ', '^', '˅', '+', '±', '|', '¦', '$', '£', '0', '¼', '2', '7', '9', 'A', 'À', 'æ', 'Ⅵ', 'z', 'ˮ', 'ǂ', 'µ')) {
                 $Actual = Test-CharacterClass -Value $Value -IsNot -Flags NonAsciiDashPunctuation -ErrorAction Stop;
-                $Actual | Should -BeFalse -Because "`"$Value"`";
+                $Actual | Should -BeTrue -Because ($Value | ConvertTo-Json);
             }
         }
     }

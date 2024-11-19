@@ -733,7 +733,7 @@ Function Get-CharacterClass {
                 break;
             }
             default {
-                [enum]::Parse([CharacterClass]$Category.ToString('F')) | Write-Output;
+                [enum]::Parse([CharacterClass], $Category.ToString('F')) | Write-Output;
                 break;
             }
         }
