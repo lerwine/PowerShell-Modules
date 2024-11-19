@@ -87,7 +87,8 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('from-md.css', 'highlight.css', 'katex-copytex.min.css', 'katex-copytex.min.js', 'katex.min.css', 'markdown.css', 'vscode-github.css', 'about_Erwine.Leonard.T.HtmlUtility.help.txt')
+FileList = @('from-md.css', 'highlight.css', 'katex-copytex.min.css', 'katex-copytex.min.js', 'katex.min.css', 'markdown.css', 'vscode-github.css',
+    'about_Erwine.Leonard.T.HtmlUtility.help.txt', 'README.md')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
