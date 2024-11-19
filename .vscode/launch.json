@@ -36,29 +36,23 @@
             "preLaunchTask": "Publish IOUtility"
         },
         {
+            "name": "Run SwPackage Pester Tests",
             "type": "PowerShell",
             "request": "launch",
-            "name": "Test SwPackage",
-            "script": "${workspaceRoot}/Deploy.ps1",
-            "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
-                "-DeploymentRoot", "${workspaceFolder}/dist",
-                "-PublishLocalRepo -Test"
-            ],
-            "cwd": "${workspaceRoot}",
+            "script": "Invoke-Pester",
+            "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.SwPackage",
+            "createTemporaryIntegratedConsole": true,
+            "attachDotnetDebugger": false,
             "preLaunchTask": "Publish SwPackage"
         },
         {
+            "name": "Run SwPackage Pester Tests (no deploy)",
             "type": "PowerShell",
             "request": "launch",
-            "name": "Test SwPackage (no publish)",
-            "script": "${workspaceRoot}/Deploy.ps1",
-            "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
-                "-DeploymentRoot", "${workspaceFolder}/dist",
-                "--Test"
-            ],
-            "cwd": "${workspaceRoot}"
+            "script": "Invoke-Pester",
+            "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.SwPackage",
+            "createTemporaryIntegratedConsole": true,
+            "attachDotnetDebugger": true
         },
         {
             "type": "PowerShell",
@@ -66,7 +60,7 @@
             "name": "Deploy SwPackage Local",
             "script": "${workspaceRoot}/Deploy.ps1",
             "args": [
-                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/Erwine.Leonard.T.SwPackage.psd1",
+                "-ModuleManifestPath", "${workspaceFolder}/src/SwPackage/bin/Debug/net8.0/Erwine.Leonard.T.SwPackage.psd1",
                 "-DeployPSModulePath"
             ],
             "cwd": "${workspaceRoot}",
@@ -92,6 +86,18 @@
             "attachDotnetDebugger": true
         },
         {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Deploy XmlUtility Local",
+            "script": "${workspaceRoot}/Deploy.ps1",
+            "args": [
+                "-ModuleManifestPath", "${workspaceFolder}/src/XmlUtility/bin/Debug/net8.0/Erwine.Leonard.T.XmlUtility.psd1",
+                "-DeployPSModulePath"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish XmlUtility"
+        },
+        {
             "name": "Run LteDev Pester Tests",
             "type": "PowerShell",
             "request": "launch",
@@ -109,6 +115,54 @@
             "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.LteDev",
             "createTemporaryIntegratedConsole": true,
             "attachDotnetDebugger": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Deploy GDIPlus Local",
+            "script": "${workspaceRoot}/Deploy.ps1",
+            "args": [
+                "-ModuleManifestPath", "${workspaceFolder}/src/GDIPlus/bin/Debug/net8.0-windows/Erwine.Leonard.T.GDIPlus.psd1",
+                "-DeployPSModulePath"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish GDIPlus"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Deploy HtmlUtility Local",
+            "script": "${workspaceRoot}/Deploy.ps1",
+            "args": [
+                "-ModuleManifestPath", "${workspaceFolder}/src/HtmlUtility/bin/Debug/net8.0/Erwine.Leonard.T.HtmlUtility.psd1",
+                "-DeployPSModulePath"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish HtmlUtility"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Deploy WinIOUtility Local",
+            "script": "${workspaceRoot}/Deploy.ps1",
+            "args": [
+                "-ModuleManifestPath", "${workspaceFolder}/src/WinIOUtility/bin/Debug/net8.0-windows/Erwine.Leonard.T.WinIOUtility.psd1",
+                "-DeployPSModulePath"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish WinIOUtility"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Deploy LteDev Local",
+            "script": "${workspaceRoot}/Deploy.ps1",
+            "args": [
+                "-ModuleManifestPath", "${workspaceFolder}/src/LteDev/bin/Debug/net8.0-windows/Erwine.Leonard.T.LteDev.psd1",
+                "-DeployPSModulePath"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish LteDev"
         },
         {
             "type": "PowerShell",
