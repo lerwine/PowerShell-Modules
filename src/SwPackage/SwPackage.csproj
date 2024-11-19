@@ -19,7 +19,7 @@
     <Content Include="VersionStrings.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="sVersionStrings.tests.ps1">
+    <Content Include="VersionStrings.tests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="VsCodeExtensions.ps1">
