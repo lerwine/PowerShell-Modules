@@ -75,7 +75,7 @@ AliasesToExport = '*'
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('Palette/LICENSE.htm', 'about_Erwine.Leonard.T.GDIPlus.help.txt')
+FileList = @('README.md', 'Palette/README.md', 'Palette/LICENSE.htm', 'about_Erwine.Leonard.T.GDIPlus.help.txt')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{

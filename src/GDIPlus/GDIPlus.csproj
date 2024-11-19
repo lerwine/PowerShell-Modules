@@ -20,14 +20,16 @@
     <Content Include="about_Erwine.Leonard.T.GDIPlus.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="GDIPlus.snk" />
-    <None Include="Palette\README.md" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Palette\README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Palette\LICENSE.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="GDIPlus.snk" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
