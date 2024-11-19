@@ -76,6 +76,9 @@
               "--logger",
               "trx;LogFileName=${workspaceFolder}/src/TestResults/TestResults.trx"
           ],
+          "dependsOn": [
+            "Build SwPackage.UnitTests"
+          ],
           "problemMatcher": "$msCompile"
       },
       {
