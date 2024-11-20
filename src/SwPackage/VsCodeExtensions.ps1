@@ -10,205 +10,6 @@ https://github.com/microsoft/vscode/blob/1.95.0/src/vs/platform/extensionManagem
 
 #>
 
-# https://github.com/microsoft/vscode/blob/1.95.0/src/vs/platform/extensions/common/extensions.ts#L288
-enum TargetVsixPlatform {
-	UNIVERSAL;
-	WIN32_X64;
-	WIN32_ARM64;
-    WIN32_IA32;
-	LINUX_X64;
-	LINUX_ARM64;
-	LINUX_ARMHF;
-	ALPINE_X64;
-	ALPINE_ARM64;
-	DARWIN_X64;
-	DARWIN_ARM64;
-	WEB;
-	UNKNOWN;
-}
-
-# https://github.com/microsoft/vscode/blob/1.95.0/src/vs/base/common/platform.ts#L116
-enum VsixPlatform {
-	Windows;
-	Linux;
-    Alpine;
-	Mac;
-	Web;
-}
-
-class RawVsCodeGalleryExtensionPublisher {
-    # interface IRawGalleryExtensionPublisher: https://github.com/microsoft/vscode/blob/1.95.0/src/vs/platform/extensionManagement/common/extensionGalleryService.ts#L59
-
-    [ValidateNotNullOrWhiteSpace()]
-	[string]$PublisherId;
-
-    [ValidateNotNullOrWhiteSpace()]
-    [string]$PublisherName;
-
-    [ValidateNotNullOrWhiteSpace()]
-	[string]$DisplayName;
-
-    [AllowNull()]
-    [AllowEmptyString()]
-    [string]$Domain = $null;
-
-    [AllowNull()]
-    [Nullable[bool]]$IsDomainVerified = $null;
-
-    [string] ToString() {
-        return $this.PublisherName;
-    }
-
-    static [RawVsCodeGalleryExtensionPublisher] FromVsExtensionObject([object]$JsonObj) {
-        if ($null -eq $JsonObj) { return $null }
-        $Result = [RawVsCodeGalleryExtensionPublisher]::new();
-        try {
-            $Result.PublisherId = $JsonObj.publisherId;
-            $Result.PublisherName = $JsonObj.publisherName;
-            $Result.DisplayName = $JsonObj.displayName;
-            $Result.Domain = $JsonObj.domain;
-            $Result.IsDomainVerified = $JsonObj.isDomainVerified;
-        } catch {
-            Write-Error -Exception $_.Exception -Message "Cannot create object of type `"RawVsCodeGalleryExtensionPublisher`". $($_.Exception.Message) $($_.FullyQualifiedErrorId)" -Category InvalidArgument -ErrorId 'ExceptionWhenSetting' -CategoryTargetName 'JsonObj' -TargetObject $JsonObj -ErrorAction Stop;
-            return $null;
-        }
-        return $Result;
-    }
-}
-
-class RawVsCodeGalleryExtensionVersion {
-    # interface IRawGalleryExtensionVersion: https://github.com/microsoft/vscode/blob/1.95.0/src/vs/platform/extensionManagement/common/extensionGalleryService.ts#L44
-
-    [ValidateNotNull()]
-	[semver]$Version;
-
-	[DateTime]$LastUpdated;
-
-    [ValidateNotNull()]
-	[Uri]$AssetUri;
-
-    [ValidateNotNull()]
-	[Uri]$FallbackAssetUri;
-
-    [AllowNull()]
-    [Nullable[TargetVsixPlatform]]$TargetPlatForm = $null;
-
-    [string] ToString() {
-        if ($null -ne $this.TargetPlatForm) {
-            $tp = $this.TargetPlatForm | ConvertFrom-TargetVsixPlatform -UniversalReturnsBlank;
-            if ($tp.Length -gt 0) {
-                return "$($this.Version)@$tp";
-            }
-        }
-        return $this.Version.ToString();
-    }
-
-    static [RawVsCodeGalleryExtensionVersion] FromVsExtensionObject([object]$JsonObj) {
-        if ($null -eq $JsonObj) { return $null }
-        $Result = [RawVsCodeGalleryExtensionVersion]::new();
-        try {
-            $Result.Version = $JsonObj.version;
-            if (-not [string]::IsNullOrWhiteSpace($JsonObj.targetPlatForm)) {
-                $Result.TargetPlatForm = $JsonObj.targetPlatForm | ConvertTo-TargetVsixPlatform;
-            }
-            $Result.LastUpdated = $JsonObj.lastUpdated;
-            $Result.AssetUri = $JsonObj.assetUri;
-            $Result.FallbackAssetUri = $JsonObj.fallbackAssetUri;
-        } catch {
-            Write-Error -Exception $_.Exception -Message "Cannot create object of type `"RawVsCodeGalleryExtensionVersion`". $($_.Exception.Message) $($_.FullyQualifiedErrorId)" -Category InvalidArgument -ErrorId 'ExceptionWhenSetting' -CategoryTargetName 'JsonObj' -TargetObject $JsonObj -ErrorAction Stop;
-            return $null;
-        }
-        $Result.LastUpdated = $Result.LastUpdated | Optimize-DateTime -Utc;
-        return $Result;
-    }
-}
-
-class RawVsCodeGalleryExtension {
-    # interface IRawGalleryExtension: https://github.com/microsoft/vscode/blob/1.95.0/src/vs/platform/extensionManagement/common/extensionGalleryService.ts
-
-    [ValidateNotNullOrWhiteSpace()]
-    [string]$ExtensionId;
-
-    [ValidateNotNullOrWhiteSpace()]
-    [ValidatePattern('^[a-z\d]+(?:-[a-z\d]+)*$')]
-    [string]$ExtensionName;
-
-    [ValidateNotNullOrWhiteSpace()]
-    [string]$DisplayName;
-
-    [AllowNull()]
-    [AllowEmptyString()]
-    [string]$ShortDescription = $null;
-
-    [ValidateNotNull()]
-    [RawVsCodeGalleryExtensionPublisher]$Publisher;
-
-    [ValidateNotNull()]
-    [RawVsCodeGalleryExtensionVersion[]]$Versions;
-
-    [AllowNull()]
-    [string[]] $Tags;
-
-    [DateTime]$ReleaseDate;
-
-    [DateTime]$PublishedDate;
-
-    [DateTime]$LastUpdated;
-
-    [AllowNull()]
-    [AllowEmptyString()]
-    [AllowEmptyCollection()]
-    [string[]]$Categories = $null;
-
-    [string] ToString() {
-        return "$($this.Publisher.PublisherName).$($this.ExtensionName)";
-    }
-
-    static [RawVsCodeGalleryExtension] FromVsExtensionObject([object]$JsonObj) {
-        if ($null -eq $JsonObj) { return $null }
-        $Result = [RawVsCodeGalleryExtension]::new();
-        try {
-            $Result.ExtensionId = $JsonObj.extensionId;
-            $Result.ExtensionName = $JsonObj.extensionName;
-            $Result.DisplayName = $JsonObj.displayName;
-            $Result.LastUpdated = $JsonObj.lastUpdated;
-            $Result.PublishedDate = $JsonObj.publishedDate;
-            $Result.ReleaseDate = $JsonObj.releaseDate;
-            $Result.ShortDescription = $JsonObj.shortDescription;
-            $Result.Categories = $JsonObj.categories;
-            $Result.Tags = $JsonObj.tags;
-        } catch {
-            Write-Error -Exception $_.Exception -Message "Cannot create object of type `"RawVsCodeGalleryExtension`". $($_.Exception.Message) $($_.FullyQualifiedErrorId)" -Category InvalidArgument -ErrorId 'ExceptionWhenSetting' -CategoryTargetName 'JsonObj' -TargetObject $JsonObj -ErrorAction Stop;
-            return $null;
-        }
-        <#
-            "installationTargets": [
-                {
-                    "target": "Microsoft.VisualStudio.Code",
-                    "targetVersion": ""
-                }
-            ],
-            "deploymentType": 0
-        #>
-        try {
-            $Result.Publisher = [RawVsCodeGalleryExtensionPublisher]::FromVsExtensionObject($_.publisher);
-        } catch {
-            Write-Error -Exception $_.Exception -Message "Cannot initialize `"Publisher`" property on type `"RawVsCodeGalleryExtension`". $($_.Exception.Message) $($_.FullyQualifiedErrorId)" -Category InvalidArgument -ErrorId 'ExceptionWhenSetting' -CategoryTargetName 'JsonObj' -TargetObject $JsonObj -ErrorAction Stop;
-            return $null;
-        }
-        try {
-            $Result.Versions = @($JsonObj.versions) | ForEach-Object { [RawVsCodeGalleryExtensionVersion]::FromVsExtensionObject($_) }
-        } catch {
-            Write-Error -Exception $_.Exception -Message "Cannot initialize `"Versions`" property on type `"RawVsCodeGalleryExtension`". $($_.Exception.Message) $($_.FullyQualifiedErrorId)" -Category InvalidArgument -ErrorId 'ExceptionWhenSetting' -CategoryTargetName 'JsonObj' -TargetObject $JsonObj -ErrorAction Stop;
-            return $null;
-        }
-        $Result.ReleaseDate = $Result.ReleaseDate | Optimize-DateTime -Utc;
-        $Result.PublishedDate = $Result.PublishedDate | Optimize-DateTime -Utc;
-        $Result.LastUpdated = $Result.LastUpdated | Optimize-DateTime -Utc;
-        return $Result;
-    }
-}
-
 class ParsedVsExtensionVersion {
     [ValidateRange(0, [int]::MaxValue)]
     [int]$MajorBase = 0;
@@ -280,100 +81,17 @@ class ParsedVsExtensionVersion {
     }
 }
 
-class VsCodeExtensionBaseFileName {
-    [ValidatePattern('^[a-z\d]+(?:-[a-z\d]+)*$')]
-    [string]$Publisher;
-
-    [ValidatePattern('^[a-z\d]+(?:-[a-z\d]+)*$')]
-    [string]$Name;
-
-    [System.Management.Automation.SemanticVersion]$Version;
-
-    [TargetVsixPlatform]$TargetPlatform = [TargetVsixPlatform]::UNIVERSAL;
-}
-
-class VsCodeExtensionFile : VsCodeExtensionBaseFileName {
-    [string]$PSPath;
-}
-
-class ScannedVsCodeExtensionFile : VsCodeExtensionFile {
-    [string]$DisplayName;
-    [AllowNull()]
-    [string]$Description = $null;
-    [AllowNull()]
-    [string]$IconUri = $null;
-    [AllowNull()]
-    [object[]]$IconData = $null;
-}
-
-<#
-Flag values for the VS extension gallery search service.
-This is used by function Find-VsCodeExtensionInMarketPlace.
-Example implementation in TypeScript: https://github.com/microsoft/vscode/blob/1.95.0/src/vs/platform/extensionManagement/common/extensionGalleryService.ts#L102
-#>
-enum VsExtensionSearchFlags {
-	# None is used to retrieve only the basic extension details.
-	None = 0x0;
-
-	# IncludeVersions will return version information for extensions returned
-	IncludeVersions = 0x1;
-
-	# IncludeFiles will return information about which files were found
-	# within the extension that were stored independent of the manifest.
-	# When asking for files, versions will be included as well since files
-	# are returned as a property of the versions.
-	# These files can be retrieved using the path to the file without
-	# requiring the entire manifest be downloaded.
-	IncludeFiles = 0x2;
-
-	# Include the Categories and Tags that were added to the extension definition.
-	IncludeCategoryAndTags = 0x4;
-
-    # Include the details about which accounts the extension has been shared
-    # with if the extension is a private extension.
-	IncludeSharedAccounts = 0x8;
-
-	# Include properties associated with versions of the extension
-	IncludeVersionProperties = 0x10;
-
-	# Excluding non-validated extensions will remove any extension versions that
-	# either are in the process of being validated or have failed validation.
-	ExcludeNonValidated = 0x20;
-
-	# Include the set of installation targets the extension has requested.
-	IncludeInstallationTargets = 0x40;
-
-	# Include the base uri for assets of this extension
-	IncludeAssetUri = 0x80;
-
-	# Include the statistics associated with this extension
-	IncludeStatistics = 0x100;
-
-	# When retrieving versions from a query, only include the latest
-	# version of the extensions that matched. This is useful when the
-	# caller doesn't need all the published versions. It will save a
-	# significant size in the returned payload.
-	IncludeLatestVersionOnly = 0x200;
-
-	# The Unpublished extension flag indicates that the extension can't be installed/downloaded.
-	# Users who have installed such an extension can continue to use the extension.
-	Unpublished = 0x1000;
-
-	# Include the details if an extension is in conflict list or not
-	IncludeNameConflictInfo = 0x8000;
-}
-
 Function ConvertTo-TargetVsixPlatform {
     <#
     .SYNOPSIS
         Converts string value to target platform value.
     .DESCRIPTION
-        Converts string value to TargetVsixPlatform enum value.
+        Converts string value to SwPackage.VsCodeVsix.TargetPlatform enum value.
     .LINK
-        ConvertFrom-TargetVsixPlatform
+        ConvertFrom-SwPackage.VsCodeVsix.TargetPlatform
     #>
     [CmdletBinding()]
-    [OutputType([TargetVsixPlatform])]
+    [OutputType([SwPackage.VsCodeVsix.TargetPlatform])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [AllowNull()]
@@ -385,35 +103,12 @@ Function ConvertTo-TargetVsixPlatform {
     )
 
     Process {
+        $TargetPlatform = [SwPackage.VsCodeVsix.TargetPlatform]::UNIVERSAL;
         foreach ($s in $InputString) {
-            if ([string]::IsNullOrEmpty($s)) {
-                [TargetVsixPlatform]::UNIVERSAL | Write-Output;
+            if ([SwPackage.VsCodeVsix.VsixExtensions]::TryConvertToTargetPlatform($s, [ref]$TargetPlatform -or $Force.IsPresent)) {
+                $TargetPlatform | Write-Output;
             } else {
-                switch ($s.Trim()) {
-                    'win32-x64' { [TargetVsixPlatform]::WIN32_X64 | Write-Output; break; }
-                    'win32-arm64' { [TargetVsixPlatform]::WIN32_ARM64 | Write-Output; break; }
-                    'win32-ia32' { [TargetVsixPlatform]::WIN32_IA32 | Write-Output; break; }
-                    'win32-x32' { [TargetVsixPlatform]::WIN32_IA32 | Write-Output; break; }
-                    'linux-x64' { [TargetVsixPlatform]::LINUX_X64 | Write-Output; break; }
-                    'linux-arm64' { [TargetVsixPlatform]::LINUX_ARM64 | Write-Output; break; }
-                    'linux-armhf' { [TargetVsixPlatform]::LINUX_ARMHF | Write-Output; break; }
-                    'linux-armf' { [TargetVsixPlatform]::LINUX_ARMHF | Write-Output; break; }
-                    'linux-arm' { [TargetVsixPlatform]::LINUX_ARMHF | Write-Output; break; }
-                    'alpine-x64' { [TargetVsixPlatform]::ALPINE_X64 | Write-Output; break; }
-                    'alpine-arm64' { [TargetVsixPlatform]::ALPINE_ARM64 | Write-Output; break; }
-                    'darwin-x64' { [TargetVsixPlatform]::DARWIN_X64 | Write-Output; break; }
-                    'darwin-arm64' { [TargetVsixPlatform]::DARWIN_ARM64 | Write-Output; break; }
-                    'web' { [TargetVsixPlatform]::WEB | Write-Output; break; }
-                    'universal' { [TargetVsixPlatform]::UNIVERSAL | Write-Output; break; }
-                    default {
-                        if ($Force.IsPresent) {
-                            [TargetVsixPlatform]::UNKNOWN | Write-Output;
-                        } else {
-                            Write-Error -Message "Unknown platform type: $($_ | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'InvalidTargetPlatform' -TargetObject $s -CategoryTargetName 'InputString';
-                        }
-                        break;
-                    }
-                }
+                Write-Error -Message "Unknown platform type: $($_ | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'InvalidTargetPlatform' -TargetObject $s -CategoryTargetName 'InputString';
             }
         }
     }
@@ -425,7 +120,7 @@ Function ConvertFrom-TargetVsixPlatform {
     .SYNOPSIS
         Converts VSIX target platform value to string value.
     .DESCRIPTION
-        Converts enum TargetVsixPlatform value to string value.
+        Converts enum SwPackage.VsCodeVsix.TargetPlatform value to string value.
     .LINK
         ConvertTo-TargetVsixPlatform
     .LINK
@@ -435,7 +130,7 @@ Function ConvertFrom-TargetVsixPlatform {
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [Alias('TargetPlatform', 'Platform')]
-        [TargetVsixPlatform[]]$InputValue,
+        [SwPackage.VsCodeVsix.TargetPlatform[]]$InputValue,
 
         [switch]$AsDisplayName,
 
@@ -561,17 +256,17 @@ Function Split-VsCodeExtensionBaseFileName {
         Gets specified tokens from the formatted base file name of VS Code VSIX extension packages.
     #>
     [CmdletBinding(DefaultParameterSetName = '')]
-    [OutputType([VsCodeExtensionBaseFileName], ParameterSetName = 'Components')]
+    [OutputType([SwPackage.VsCodeVsix.ExtensionBaseFileName], ParameterSetName = 'Components')]
     [OutputType([string], ParameterSetName = 'Publisher', 'ExtensionName')]
     [OutputType([semver], ParameterSetName = 'Version')]
-    [OutputType([TargetVsixPlatform], ParameterSetName = 'TargetPlatForm')]
+    [OutputType([SwPackage.VsCodeVsix.TargetPlatform], ParameterSetName = 'TargetPlatForm')]
     Param(
         # The base file name to parse.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [Alias('BaseName')]
         [string[]]$InputString,
 
-        # Return all component values as a VsCodeExtensionBaseFileName object.
+        # Return all component values as a SwPackage.VsCodeVsix.ExtensionBaseFileName object.
         [Parameter(ParameterSetName = 'Components')]
         [switch]$Components,
 
@@ -587,7 +282,7 @@ Function Split-VsCodeExtensionBaseFileName {
         [Parameter(Mandatory = $true, ParameterSetName = 'Version')]
         [switch]$Version,
 
-        # Gets the target platform as a TargetVsixPlatform value.
+        # Gets the target platform as a SwPackage.VsCodeVsix.TargetPlatform value.
         [Parameter(Mandatory = $true, ParameterSetName = 'TargetPlatForm')]
         [switch]$TargetPlatForm
     )
@@ -639,7 +334,7 @@ Function Split-VsCodeExtensionBaseFileName {
                                 Write-Error -Exception $_.Exception -Message "Input string is not a valid VS Code VSIX file basename: $($BaseName | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'InvalidBaseName' -TargetObject $BaseName -CategoryTargetName 'InputString';
                             }
                         } else {
-                            [TargetVsixPlatform]::UNIVERSAL | Write-Output;
+                            [SwPackage.VsCodeVsix.TargetPlatform]::UNIVERSAL | Write-Output;
                         }
                     } else {
                         Write-Error -Message "Input string is not a valid VS Code VSIX file basename: $($BaseName | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'InvalidBaseName' -TargetObject $BaseName -CategoryTargetName 'InputString';
@@ -655,7 +350,7 @@ Function Split-VsCodeExtensionBaseFileName {
                         $G = $M.Groups[4];
                         if ($G.Success) {
                             try {
-                                [VsCodeExtensionBaseFileName]@{
+                                [SwPackage.VsCodeVsix.ExtensionBaseFileName]@{
                                     Publisher = $M.Groups[1].Value.ToLower();
                                     Name = $M.Groups[2].Value.ToLower();
                                     Version = $SemVer;
@@ -665,7 +360,7 @@ Function Split-VsCodeExtensionBaseFileName {
                                 Write-Error -Exception $_.Exception -Message "Input string is not a valid VS Code VSIX file basename: $($BaseName | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'InvalidBaseName' -TargetObject $BaseName -CategoryTargetName 'InputString';
                             }
                         } else {
-                            [VsCodeExtensionBaseFileName]@{
+                            [SwPackage.VsCodeVsix.ExtensionBaseFileName]@{
                                 Publisher = $M.Groups[1].Value.ToLower();
                                 Name = $M.Groups[2].Value.ToLower();
                                 Version = $SemVer;
@@ -693,7 +388,7 @@ Function Get-TargetVsixPlatform {
     Param(
         # The base platform type.
         [Parameter(Mandatory = $true, Position = 0)]
-        [VsixPlatform]$Platform,
+        [SwPackage.VsCodeVsix.PlatformType]$Platform,
 
         # The architecture type.
         [Parameter(Position = 1)]
@@ -796,7 +491,7 @@ Function Find-VsCodeExtensionInMarketPlace {
     #>
 
     [CmdletBinding()]
-    [OutputType([RawVsCodeGalleryExtension])]
+    [OutputType([SwPackage.VsCodeVsix.RawGalleryExtension])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipelineByPropertyName = $true)]
         [ValidatePattern('^[a-z][a-z\d]*(?:-[a-z][a-z\d]*)*$')]
@@ -812,7 +507,7 @@ Function Find-VsCodeExtensionInMarketPlace {
 
         [Parameter(Position = 2, ValueFromPipelineByPropertyName = $true)]
         # The explicit target platform to look for.
-        [TargetVsixPlatform]$TargetPlatform,
+        [SwPackage.VsCodeVsix.TargetPlatform]$TargetPlatform,
 
         [ValidateRange(1, [int]::MaxValue)]
         [int]$MaxPage = 10000,
@@ -836,14 +531,14 @@ Function Find-VsCodeExtensionInMarketPlace {
         [Uri]$ServiceUri
     )
 
-    [int]$Flags = [VsExtensionSearchFlags]::IncludeAssetUri -bor [VsExtensionSearchFlags]::IncludeCategoryAndTags -bor [VsExtensionSearchFlags]::IncludeInstallationTargets;
+    [int]$Flags = [SwPackage.VsCodeVsix.VsExtensionSearchFlags]::IncludeAssetUri -bor [SwPackage.VsCodeVsix.VsExtensionSearchFlags]::IncludeCategoryAndTags -bor [SwPackage.VsCodeVsix.VsExtensionSearchFlags]::IncludeInstallationTargets;
     if ($IncludeLatestVersionOnly.IsPresent) {
-        $Flags = $Flags -bor [VsExtensionSearchFlags]::IncludeLatestVersionOnly;
+        $Flags = $Flags -bor [SwPackage.VsCodeVsix.VsExtensionSearchFlags]::IncludeLatestVersionOnly;
     } else {
-        $Flags = $Flags -bor [VsExtensionSearchFlags]::IncludeVersions;
+        $Flags = $Flags -bor [SwPackage.VsCodeVsix.VsExtensionSearchFlags]::IncludeVersions;
     }
     if (-not $IncludeNonValidated.IsPresent) {
-        $Flags = $Flags -bor [VsExtensionSearchFlags]::ExcludeNonValidated;
+        $Flags = $Flags -bor [SwPackage.VsCodeVsix.VsExtensionSearchFlags]::ExcludeNonValidated;
     }
 
     $criteria = @([PSCustomObject]@{
@@ -885,7 +580,7 @@ Function Find-VsCodeExtensionInMarketPlace {
         $Response.Content | Out-File -LiteralPath ($PSScriptRoot | Join-Path -ChildPath 'Example.json');
         $ResponseJson = $Response.Content | ConvertFrom-Json;
         $ResponseJson.results | ForEach-Object {
-            $_.extensions | ForEach-Object { [RawVsCodeGalleryExtension]::FromVsExtensionObject($_) } | Where-Object { $null -ne $_ }
+            $_.extensions | ForEach-Object { [SwPackage.VsCodeVsix.RawGalleryExtension]::FromVsExtensionObject($_) } | Where-Object { $null -ne $_ }
         };
     }
 }
@@ -902,7 +597,7 @@ Function Get-VsCodeExtensionFromMarketPlace {
         https://github.com/microsoft/vscode/blob/1.95.0/src/vs/workbench/contrib/extensions/browser/extensionsActions.ts#L208
     #>
     [CmdletBinding()]
-    [OutputType([VsCodeExtensionFile])]
+    [OutputType([SwPackage.VsCodeVsix.ExtensionFile])]
     Param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipelineByPropertyName = $true)]
         [ValidatePattern('^[a-z\d]+(?:-[a-z\d]+)*$')]
@@ -919,7 +614,7 @@ Function Get-VsCodeExtensionFromMarketPlace {
         [semver]$Version,
 
         [Parameter(ValueFromPipelineByPropertyName = $true)]
-        [TargetVsixPlatform]$TargetPlatform,
+        [SwPackage.VsCodeVsix.TargetPlatform]$TargetPlatform,
 
         [Parameter(Mandatory = $true)]
         [string]$RepositoryFolder,
@@ -954,7 +649,7 @@ Function Get-VsCodeExtensionFromMarketPlace {
 
 Function Get-VsCodeExtensionsInRepository {
     [CmdletBinding(DefaultParameterSetName = 'WcPath')]
-    [OutputType([VsCodeExtensionFile])]
+    [OutputType([SwPackage.VsCodeVsix.ExtensionFile])]
     Param(
         # Specifies a path to one or more locations. Wildcards are permitted.
         [Parameter(Mandatory = $true, Position = 0, ParameterSetName = "WcPath", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true,
@@ -983,10 +678,10 @@ Function Get-VsCodeExtensionsInRepository {
                         $G = $M.Groups[4];
                         if ($G.Success) {
                             $Platform = $G.Value | ConvertTo-TargetVsixPlatform -Force;
-                            if ($Platform -eq [TargetVsixPlatform]::UNKNOWN) {
+                            if ($Platform -eq [SwPackage.VsCodeVsix.TargetPlatform]::UNKNOWN) {
                                 Write-Warning -Message "$($_.PSChildName | ConvertTo-Json) references an unknown platform (Container = $($_.PSParentPath | ConvertTo-Json))";
                             } else {
-                                [VsCodeExtensionFile]@{
+                                [SwPackage.VsCodeVsix.ExtensionFile]@{
                                     Publisher = $M.Groups[1].Value.ToLower();
                                     Name = $M.Groups[2].Value.ToLower();
                                     Version = $Version;
@@ -995,7 +690,7 @@ Function Get-VsCodeExtensionsInRepository {
                                 } | Write-Output;
                             }
                         } else {
-                            [VsCodeExtensionFile]@{
+                            [SwPackage.VsCodeVsix.ExtensionFile]@{
                                 Publisher = $M.Groups[1].Value.ToLower();
                                 Name = $M.Groups[2].Value.ToLower();
                                 Version = $Version;
