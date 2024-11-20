@@ -105,7 +105,7 @@ Function ConvertTo-TargetVsixPlatform {
     Process {
         $TargetPlatform = [SwPackage.VsCodeVsix.TargetPlatform]::UNIVERSAL;
         foreach ($s in $InputString) {
-            if ([SwPackage.VsCodeVsix.VsixExtensions]::TryConvertToTargetPlatform($s, [ref]$TargetPlatform -or $Force.IsPresent)) {
+            if ([SwPackage.VsCodeVsix.VsixExtensions]::TryConvertToTargetPlatform($s, [ref]$TargetPlatform) -or $Force.IsPresent) {
                 $TargetPlatform | Write-Output;
             } else {
                 Write-Error -Message "Unknown platform type: $($_ | ConvertTo-Json)" -Category InvalidArgument -ErrorId 'InvalidTargetPlatform' -TargetObject $s -CategoryTargetName 'InputString';
@@ -132,114 +132,51 @@ Function ConvertFrom-TargetVsixPlatform {
         [Alias('TargetPlatform', 'Platform')]
         [SwPackage.VsCodeVsix.TargetPlatform[]]$InputValue,
 
+        [Parameter(Mandatory = $true, ParameterSetName = 'DisplayName')]
         [switch]$AsDisplayName,
 
         [switch]$Force,
 
+        [Parameter(ParameterSetName = 'Identifier')]
         [switch]$UniversalReturnsBlank
     )
 
     Process {
-        if ($UniversalReturnsBlank.IsPresent) {
-            if ($AsDisplayName.IsPresent) {
-                foreach ($T in $InputValue) {
-                    switch ($T) {
-                        WIN32_X64 { 'Windows 64 bit' | Write-Output; break; }
-                        WIN32_ARM64 { 'Windows ARM' | Write-Output; break; }
-                        WIN32_IA32 { 'Windows 32 bit' | Write-Output; break; }
-                        LINUX_X64 { 'Linux 64 bit' | Write-Output; break; }
-                        LINUX_ARM64 { 'Linux ARM 64' | Write-Output; break; }
-                        LINUX_ARMHF { 'Linux ARM' | Write-Output; break; }
-                        ALPINE_X64 { 'Alpine Linux 64 bit' | Write-Output; break; }
-                        ALPINE_ARM64 { 'Alpine ARM 64' | Write-Output; break; }
-                        DARWIN_X64 { 'Mac' | Write-Output; break; }
-                        DARWIN_ARM64 { 'Mac Silicon' | Write-Output; break; }
-                        WEB { 'Web' | Write-Output; break; }
-                        UNIVERSAL { '' | Write-Output; break; }
-                        default {
-                            if ($Force.IsPresent) {
-                                'Unknown' | Write-Output;
-                            } else {
-                                Write-Error -Message 'Value does not represent a valid Target VSIX Platform' -Category InvalidArgument -ErrorId 'InvalidVsixPlatform' -TargetObject $T -CategoryTargetName 'InputValue';
-                            }
-                            break;
-                        }
-                    }
-                }
-            } else {
-                foreach ($T in $InputValue) {
-                    switch ($T) {
-                        WIN32_X64 { 'win32-x64' | Write-Output; break; }
-                        WIN32_ARM64 { 'win32-arm64' | Write-Output; break; }
-                        WIN32_IA32 { 'win32-ia32' | Write-Output; break; }
-                        LINUX_X64 { 'linux-x64' | Write-Output; break; }
-                        LINUX_ARM64 { 'linux-arm64' | Write-Output; break; }
-                        LINUX_ARMHF { 'linux-armhf' | Write-Output; break; }
-                        ALPINE_X64 { 'alpine-x64' | Write-Output; break; }
-                        ALPINE_ARM64 { 'alpine-arm64' | Write-Output; break; }
-                        DARWIN_X64 { 'darwin-x64' | Write-Output; break; }
-                        DARWIN_ARM64 { 'darwin-arm64' | Write-Output; break; }
-                        WEB { 'web' | Write-Output; break; }
-                        UNIVERSAL { '' | Write-Output; break; }
-                        default {
-                            if ($Force.IsPresent) {
-                                'unknown' | Write-Output;
-                            } else {
-                                Write-Error -Message 'Value does not represent a valid Target VSIX Platform' -Category InvalidArgument -ErrorId 'InvalidVsixPlatform' -TargetObject $T -CategoryTargetName 'InputValue';
-                            }
-                            break;
-                        }
-                    }
+        $s = '';
+        if ($AsDisplayName.IsPresent) {
+            foreach ($T in $InputValue) {
+                if ($T -eq [SwPackage.VsCodeVsix.TargetPlatform]::UNIVERSAL) {
+                    '' | Write-Output;
+                } else {
+                    [SwPackage.VsCodeVsix.VsixExtensions]::GetDisplayName($T) | Write-Output;
                 }
             }
         } else {
-            if ($AsDisplayName.IsPresent) {
+            if ($UniversalReturnsBlank.IsPresent) {
                 foreach ($T in $InputValue) {
-                    switch ($T) {
-                        WIN32_X64 { 'Windows 64 bit' | Write-Output; break; }
-                        WIN32_ARM64 { 'Windows ARM' | Write-Output; break; }
-                        WIN32_IA32 { 'Windows 32 bit' | Write-Output; break; }
-                        LINUX_X64 { 'Linux 64 bit' | Write-Output; break; }
-                        LINUX_ARM64 { 'Linux ARM 64' | Write-Output; break; }
-                        LINUX_ARMHF { 'Linux ARM' | Write-Output; break; }
-                        ALPINE_X64 { 'Alpine Linux 64 bit' | Write-Output; break; }
-                        ALPINE_ARM64 { 'Alpine ARM 64' | Write-Output; break; }
-                        DARWIN_X64 { 'Mac' | Write-Output; break; }
-                        DARWIN_ARM64 { 'Mac Silicon' | Write-Output; break; }
-                        WEB { 'Web' | Write-Output; break; }
-                        UNIVERSAL { 'Universal' | Write-Output; break; }
-                        default {
-                            if ($Force.IsPresent) {
-                                'Unknown' | Write-Output;
-                            } else {
-                                Write-Error -Message 'Value does not represent a valid Target VSIX Platform' -Category InvalidArgument -ErrorId 'InvalidVsixPlatform' -TargetObject $T -CategoryTargetName 'InputValue';
-                            }
-                            break;
+                    if ($T -eq [SwPackage.VsCodeVsix.TargetPlatform]::UNIVERSAL) {
+                        '' | Write-Output;
+                    } else {
+                        if ([SwPackage.VsCodeVsix.VsixExtensions]::TryGetIdentifierString($T, [ref]$s) -or $Force) {
+                            $s | Write-Output;
+                        } else {
+                            Write-Error -Message 'Value does not represent a valid Target VSIX Platform' -Category InvalidArgument -ErrorId 'InvalidVsixPlatform' -TargetObject $T -CategoryTargetName 'InputValue';
                         }
                     }
                 }
             } else {
                 foreach ($T in $InputValue) {
-                    switch ($T) {
-                        WIN32_X64 { 'win32-x64' | Write-Output; break; }
-                        WIN32_ARM64 { 'win32-arm64' | Write-Output; break; }
-                        WIN32_IA32 { 'win32-ia32' | Write-Output; break; }
-                        LINUX_X64 { 'linux-x64' | Write-Output; break; }
-                        LINUX_ARM64 { 'linux-arm64' | Write-Output; break; }
-                        LINUX_ARMHF { 'linux-armhf' | Write-Output; break; }
-                        ALPINE_X64 { 'alpine-x64' | Write-Output; break; }
-                        ALPINE_ARM64 { 'alpine-arm64' | Write-Output; break; }
-                        DARWIN_X64 { 'darwin-x64' | Write-Output; break; }
-                        DARWIN_ARM64 { 'darwin-arm64' | Write-Output; break; }
-                        WEB { 'web' | Write-Output; break; }
-                        UNIVERSAL { 'universal' | Write-Output; break; }
-                        default {
+                    if ($T -eq [SwPackage.VsCodeVsix.TargetPlatform]::UNIVERSAL) {
+                        'universal' | Write-Output;
+                    } else {
+                        if ([SwPackage.VsCodeVsix.VsixExtensions]::TryGetIdentifierString($T, [ref]$s)) {
+                            $s | Write-Output;
+                        } else {
                             if ($Force.IsPresent) {
-                                'unknown' | Write-Output;
+                                'universal' | Write-Output;
                             } else {
                                 Write-Error -Message 'Value does not represent a valid Target VSIX Platform' -Category InvalidArgument -ErrorId 'InvalidVsixPlatform' -TargetObject $T -CategoryTargetName 'InputValue';
                             }
-                            break;
                         }
                     }
                 }
