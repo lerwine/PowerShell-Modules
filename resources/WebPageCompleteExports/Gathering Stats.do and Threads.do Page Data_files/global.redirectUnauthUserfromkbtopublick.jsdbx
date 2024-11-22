@@ -1,0 +1,48 @@
+(function() {
+    try {
+        var pathName = window.location.pathname;
+        var search = window.location.search;
+        if (pathName.startsWith('/kb') && window.NOW && window.NOW.user_id == 'guest') {
+            var urlParams = new URLSearchParams(search);
+            var id = urlParams.get('id');
+            if (!(id === 'public_kb' || id === 'kb_article_view' || id === 'known_error_portal' || id === 'kb_home' || id === 'kb_browse' || id === 'kb_aisearch')) {
+                window.location.replace('/kb?id=kb_home');
+            }
+        }
+
+        if (window.parent.NOW.page_id == "ns_get_help" || window.parent.NOW.page_id == "ns_guided_support") {
+            handleGetSupportRedirect();
+        }
+    } catch (error) {
+        // fall back to default or current.
+    }
+
+    function handleGetSupportRedirect() {
+        var isValidSupportLevelForGuidedSupport = isValidSupportLevelForGS();
+        var allowedRoles = ["Customer Admin", "Partner Admin", "Customer", "Partner"];
+        var isGuidedSupportUser = allowedRoles.indexOf(window.parent.NOW.user_role) > -1;
+
+        if (isValidSupportLevelForGuidedSupport) {
+            if (isGuidedSupportUser && window.parent.NOW.page_id == "ns_get_help") {
+                window.parent.location.replace('/now?id=ns_guided_support');
+            } else if (!isGuidedSupportUser && window.parent.NOW.page_id == "ns_guided_support") {
+                window.parent.location.replace('/now?id=ns_get_help');
+            }
+        } else {
+            if (window.parent.NOW.page_id == "ns_guided_support") {
+                window.parent.location.replace('/now?id=ns_get_help');
+            }
+        }
+    }
+
+    function isValidSupportLevelForGS() {
+        //The allowedSupportLevels should be based on sys property - ns.guided.support.allowed.support.level
+        var allowedSupportLevels = ["100", "110", "120", "130", "90", "-1"]; //Base: 100, Advanced: 120, Guided: 110, Total: 130, Legacy: 90, Empty/None: -1
+        var companySupportLevel = window.parent.NOW.support_level_value;
+
+        if (!companySupportLevel)
+            companySupportLevel = '-1'; //Empty/None: -1
+
+        return allowedSupportLevels.indexOf(companySupportLevel) > -1;
+    }
+})();

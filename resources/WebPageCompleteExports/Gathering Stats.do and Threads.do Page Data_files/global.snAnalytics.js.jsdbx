@@ -1,0 +1,345 @@
+angular.module('sn.common.analytics').factory("snAnalytics", function ($rootScope) {
+    "use strict";
+    var instanceLevelEnabled = NOW.analytics_enabled && NOW.sp_analytics_plugin_active;
+    var authKeyPresent = !!NOW.instrumentation_authkey_hisp;
+    // allow performance monitoring only when 'glide.service_portal.performance.monitoring.enabled' is true
+    var isPerfMonitoringEnabled = NOW.performance_monitoring_enabled;
+    var unauthenticatedUserTrackingEnabled = NOW.unauthenticated_user_tracking_enabled || false;
+	var enableNewWebSdk = NOW.enable_new_web_sdk;
+
+    var actionQueue = [];
+
+    function processAction(actionName, args) {
+        // if SNAnalytics is not available,
+		if( typeof(SNAnalytics) === 'undefined' ) {
+            // add action to queue and return. (will be invoked later)
+			logDetails('Action Queued : ' + actionName);
+            actionQueue.push({
+                name: actionName,
+                args: args
+            });
+
+            return;
+		} else if(actionQueue.length > 0) {
+            // If SNAnalytics is available and when queue is not empty
+            // 	invoke queued actions first
+			logDetails('Invoking Queued actions');
+            invokeQueuedActions();
+        }
+
+        // invoke current action
+        invokeAction({
+            name: actionName,
+            args: args
+        });
+    }
+
+    function invokeQueuedActions() {
+		if( typeof(SNAnalytics) !== 'undefined' ) {
+            actionQueue.forEach(function(action) {
+                invokeAction(action);
+            });
+
+            // empty the queue
+            actionQueue = [];
+        }
+    }
+
+    function invokeAction(action) {
+        try {
+			logDetails('Event handed over to Appsee SDK : ' + action.name);
+            SNAnalytics[action.name].apply(SNAnalytics, action.args);
+		} catch(e) {
+			console.warn('SNAnalytics '+action.name+' failed:'+ e.message);
+        }
+    }
+
+    var SNAnalyticsWrapper = {
+        start: function() {
+			var options = {
+				__isLegacy__: true,
+				enableNewWebSdk: enableNewWebSdk,
+				arguments: arguments
+			};
+			processAction('setApplication', ['application', 0, options]);
+        },
+        setTrackingConsent: function() {
+			var options = {
+				__operation__: "setTrackingConsent",
+				arguments: arguments
+			};
+			processAction('setUser', ['setTrackingConsent',options]);
+        },
+        setUserId: function() {
+			var options = {
+				__operation__: "setUserId",
+				arguments: arguments
+			};
+			processAction('setUser', ['setUserId',options]);
+        },
+        addEvent: function() {
+			var options = {
+				name: arguments[0],
+				attributes: {
+					__type__: "addEvent",
+					arguments: arguments
+				}
+			};
+			processAction('track', [options.name, options]);
+        },
+        startPage: function() {
+			var options = {
+				__operation__: "startPage",
+				arguments: arguments
+			};
+			processAction('setPage', [arguments[0], options]);
+        },
+        setUserProperty: function() {
+			var options = {
+				__operation__: "setUserProperty",
+				arguments: arguments
+			};
+			processAction('setUser', [options.__operation__ ,options]);
+        },
+        setUserProperties: function() {
+			var options = {
+				__operation__: "setUserProperties",
+				arguments: arguments
+			};
+			processAction('setUser', [options.__operation__ ,options]);
+        },
+        removeUserProperty: function() {
+			var options = {
+				__operation__: "removeUserProperty",
+				arguments: arguments
+			};
+			processAction('setUser', [options.__operation__ ,options]);
+        },
+        appendToUserProperty: function() {
+			var options = {
+				__operation__: "appendToUserProperty",
+				arguments: arguments
+			};
+			processAction('setUser', [options.__operation__ ,options]);
+        },
+        incUserProperty: function() {
+
+			var options = {
+				__operation__: "incUserProperty",
+				arguments: arguments
+			};
+			processAction('setUser', [options.__operation__ ,options]);
+        },
+        addPerformanceTrace: function() {
+			var options = {
+				name: arguments[0],
+				attributes: {
+					__type__: "addPerformanceTrace",
+					arguments: arguments
+				}
+			};
+			processAction('track', [options.name, options]);
+        }
+	};
+
+    initializeAnalyticsSDK(); // on page refresh we need to invoke sdk
+
+    $rootScope.$on('sn.ucm.finished', function() { // once ucm is finished we need to invoke sdk
+		logDetails("SP UCM flow finished");
+        initializeAnalyticsSDK();
+    });
+
+    // invoke queued actions when the defered scripts are loaded
+	$rootScope.$on('sp.defer_scripts.loaded', function(){ // once ucm is finished we need to invoke sdk
+        invokeQueuedActions();
+    });
+
+    // This event can be called from customers to bypass the UCM implementation and still have UX analytics
+    // according to their own logic
+    // TODO: Put link to KB of how one should use it
+    $rootScope.$on('sn.sp.ux.analytics.start', function(event, data) {
+        var allowedValues = ['NoConsentRequired', 'BasicTracking'];
+		if (allowedValues.indexOf(data.userConsent) < 0 ) {
+			console.error('On event "' + event + '" the data object key "userConsent" must be one of these values: ' + allowedValues.toString());
+            return;
+        }
+
+        NOW.usage_tracking.usage_tracking_allowed_for_session = true;
+        NOW.usage_tracking.user_consent = data.userConsent;
+
+        initializeAnalyticsSDK();
+    });
+
+    function initializeAnalyticsSDK() {
+        if (!allowAnalytics())
+            return;
+
+		logDetails("Initializing the Appsee SDK");
+
+        var options = {
+            "serverEndpoint": NOW.instrumentation_api_host,
+            "trackingConsent": "Full" //Fix for PRB1531325
+        };
+
+        //For unauthenticated user, not sending the userId and tracking consent
+        //For new unauthenticated user session - userID null will assign Anonymous and consent is true by default
+        //For later unauthenticated user session - userID and consent are retained from last logged in user
+        if (!unauthenticatedUserTrackingEnabled || NOW.user_name !== 'guest') {
+            options["userId"] = NOW.user_id_hashed;
+        }
+
+        SNAnalyticsWrapper.start(getApiKey(), NOW.instrumentation_authkey_hisp, options);
+
+        if (NOW.instance_name)
+            setUserProperty("Instance Name", NOW.instance_name);
+
+        if (NOW.domain_id)
+            setUserProperty("Domain", NOW.domain_id);
+
+    }
+
+    function getApiKey() {
+        var _portal = NOW.portal_id;
+        _portal = _portal === "45d6680fdb52220099f93691f0b8f5ad" ? "b157644bdbd6e010dd03a40fd39619d9" : _portal;
+        return NOW.instance_id + ":" + _portal;
+    }
+
+    function setUserProperty(name, value) {
+        if (!allowAnalytics())
+            return;
+
+        SNAnalyticsWrapper.setUserProperty(name, value);
+    }
+
+    function setUserProperties(properties) {
+        if (!allowAnalytics())
+            return;
+
+        SNAnalyticsWrapper.setUserProperties(properties);
+    }
+
+    function removeUserProperty(name) {
+        if (!allowAnalytics())
+            return;
+
+        SNAnalyticsWrapper.removeUserProperty(name);
+    }
+
+    function appendToUserProperty(name, value) {
+        if (!allowAnalytics())
+            return;
+
+        SNAnalyticsWrapper.appendToUserProperty(name, value);
+    }
+
+    function incUserProperty(name, value) {
+        if (!allowAnalytics())
+            return;
+
+        SNAnalyticsWrapper.incUserProperty(name, value);
+    }
+
+    function startPage(id, title) {
+        if (!allowAnalytics())
+            return;
+
+        SNAnalyticsWrapper.startPage(id, title);
+    }
+
+    function multipleEventsInPayload(payload) {
+        var eventName = payload.parentEvent.EventName || "";
+        var eventPayload = payload.parentEvent.EventPayload;
+        if (eventName && eventPayload)
+            SNAnalyticsWrapper.addEvent(eventName, eventPayload);
+
+        var childEvents = payload.childEvents;
+        if (childEvents) {
+            var childEventName;
+            var childEventPayload;
+            for (var i = 0; i < childEvents.length; i++) {
+                childEventName = childEvents[i]['EventName'];
+                childEventPayload = childEvents[i]['EventPayload'];
+                if (childEventName && childEventPayload)
+                    SNAnalyticsWrapper.addEvent(childEventName, childEventPayload);
+            }
+        }
+    }
+
+    function addEvent(payload) {
+        if (!allowAnalytics())
+            return;
+
+        if (payload.parentEvent) {
+            multipleEventsInPayload(payload);
+            return;
+        }
+
+        if (payload.name && payload.data)
+            SNAnalyticsWrapper.addEvent(payload.name, payload.data);
+    }
+
+    function tracePerformance(pageId, perfMetrics) {
+        if (!isPerformanceMonitoringAllowed()) {
+            return;
+        }
+
+        for (var type in perfMetrics) {
+            SNAnalyticsWrapper.addPerformanceTrace(pageId, perfMetrics[type]['name'], perfMetrics[type]['duration'], perfMetrics[type]['properties']);
+        }
+    }
+
+    function allowAnalytics() {
+        if (!instanceLevelEnabled)
+            return false;
+
+        if (NOW.usage_tracking.usage_tracking_allowed_for_session && authKeyPresent && NOW.user_name !== 'guest')
+            return true;
+
+        else if (unauthenticatedUserTrackingEnabled && authKeyPresent && NOW.user_name === 'guest')
+            return true;
+
+        return false;
+    }
+
+    $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl) {
+        //while logging out turn off tracking and remove user ID
+        if (newUrl.indexOf('logout.do') !== -1) {
+            //not clearing userID and retaining consent when unauthenticated user tracking is enabled
+            if (unauthenticatedUserTrackingEnabled && authKeyPresent) {
+                // Send a Logout event for the session
+                // (if session is finished because of timeout, sending an event will cause SNAnalytics to start a new session)
+                var payload = {};
+                payload.name = "Successful Logout";
+                payload.data = {};
+                payload.data["Login"] = false;
+                addEvent(payload);
+            } else if (allowAnalytics()) {
+                SNAnalyticsWrapper.setTrackingConsent('Disabled');
+            }
+        }
+    });
+
+    function isPerformanceMonitoringAllowed() {
+        return allowAnalytics() && isPerfMonitoringEnabled;
+    }
+
+    function logDetails(message) {
+		if(NOW.sp_debug) {
+			console.log('[SP Analytics] ' + message);
+		}
+	}
+    
+    var util = {
+        addEvent: addEvent,
+        startPage: startPage,
+        setUserProperty: setUserProperty,
+        setUserProperties: setUserProperties,
+        removeUserProperty: removeUserProperty,
+        appendToUserProperty: appendToUserProperty,
+        incUserProperty: incUserProperty,
+        _isPerformanceMonitoringAllowed: isPerformanceMonitoringAllowed,
+        _tracePerformance: tracePerformance
+    };
+
+    return util;
+});
