@@ -6,101 +6,116 @@ using System.Management.Automation;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Markdig.Syntax;
+using Markdig.Renderers.Html;
 using Microsoft.PowerShell.Commands;
 
 namespace HtmlUtility;
 
-[Cmdlet(VerbsCommon.Select, "MarkdownObject", DefaultParameterSetName = ParameterSetName_ByType)]
-public class Select_MarkdownObject : PSCmdlet
+[Cmdlet(VerbsCommon.Select, "MarkdownObject", DefaultParameterSetName = ParameterSetName_DepthRange)]
+public partial class Select_MarkdownObject : PSCmdlet
 {
-    private const string ParameterSetName_ByType = "ByType";
     private const string ParameterSetName_ExplicitDepth = "ExplicitDepth";
     private const string ParameterSetName_DepthRange = "DepthRange";
 
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select from.")]
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select from.")]
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select from.")]
     [ValidateNotNull()]
     [Alias("MarkdownObject", "Markdown")]
     public Markdig.Syntax.MarkdownObject[] InputObject { get; set; } = null!;
 
-    [Parameter(Mandatory = true, Position = 1, HelpMessage = "The type of the Markdown object(s) to select.", ParameterSetName = ParameterSetName_ByType)]
     [Parameter(Position = 1, HelpMessage = "The type of the Markdown object(s) to select.")]
     public MarkdownTokenType[] Type { get; set; } = null!;
 
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_ExplicitDepth)]
-    [ValidateRange(0, int.MaxValue)]
+    [ValidateRange(1, int.MaxValue)]
     public int Depth { get; set; }
 
     [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
-    [ValidateRange(0, int.MaxValue)]
+    [ValidateRange(1, int.MaxValue)]
     public int MinDepth { get; set; }
 
     [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
-    [ValidateRange(0, int.MaxValue)]
+    [ValidateRange(1, int.MaxValue)]
     public int MaxDepth { get; set; }
 
-    private IMarkdownObjectFilter _filter = null!;
+    [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
+    public SwitchParameter Recurse { get; set; }
 
-    interface IMarkdownObjectFilter
-    {
-        IEnumerable<Markdig.Syntax.MarkdownObject> GetMatches(Markdig.Syntax.MarkdownObject source);
-    }
-
-    class SingleTypeFilter : IMarkdownObjectFilter
-    {
-        public IEnumerable<MarkdownObject> GetMatches(MarkdownObject source)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    class MultiTypeFilter : IMarkdownObjectFilter
-    {
-        public IEnumerable<MarkdownObject> GetMatches(MarkdownObject source)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
+    public SwitchParameter DoNotRecurseMatches { get; set; }
 
     protected override void BeginProcessing()
     {
-        if (ParameterSetName == ParameterSetName_ByType)
+
+        List<Type>? typesToMatch = Type.ToReflectionTypes();
+        if (ParameterSetName == ParameterSetName_ExplicitDepth)
         {
-            // List<Type> byType = Type.ToUniqueReflectionTypes()!;
-            // if (byType.Count == 1)
-            //     _filter = new SingleTypeFilter(byType[0]);
-            // else
-            //     _filter = new MultiTypeFilter(byType);
-            
+            // Get descendant MarkdownObject exactly at Depth levels deep
         }
-        else
+        else if (MyInvocation.BoundParameters.ContainsKey(nameof(MaxDepth)))
         {
-            List<Type>? byType = Type.ToUniqueReflectionTypes();
-            if (ParameterSetName == ParameterSetName_ExplicitDepth)
+            if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
             {
-                // TODO: Depth
-            }
-            else if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
-            {
-                if (MyInvocation.BoundParameters.ContainsKey(nameof(MaxDepth)))
+                if (MinDepth > MaxDepth)
                 {
-                    // TODO: MinDepth, MaxDepth
+                    WriteError(new(new ArgumentOutOfRangeException(nameof(MaxDepth), $"{nameof(MaxDepth)} cannot be less than {nameof(MinDepth)}"), "", ErrorCategory.InvalidArgument, MaxDepth));
+                    throw new PipelineStoppedException();
+                }
+                if (MinDepth == MaxDepth)
+                {
+                    // Get descendant MarkdownObject exactly at MinDepth levels deep
+                }
+                else if (DoNotRecurseMatches.IsPresent)
+                {
+                    // MinDepth = 1; MaxDepth = 2; Recurse = any;   DoNotRecurseMatches = true;
                 }
                 else
                 {
-                    // TODO: MinDepth
+                    // MinDepth = 1; MaxDepth = 2; Recurse = any;   DoNotRecurseMatches = false
                 }
+            }
+            else if (DoNotRecurseMatches.IsPresent)
+            {
+                // MinDepth = ?; MaxDepth = 1; Recurse = any;   DoNotRecurseMatches = true;  Depth = ?;
             }
             else
             {
-                    // TODO: MaxDepth
+                // MinDepth = ?; MaxDepth = 1; Recurse = any;   DoNotRecurseMatches = false; Depth = ?;
             }
+        }
+        else if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
+        {
+            if (DoNotRecurseMatches.IsPresent)
+            {
+                // MinDepth = 1; MaxDepth = ?; Recurse = any;   DoNotRecurseMatches = true;  Depth = ?;
+            }
+            else
+            {
+                // MinDepth = 1; MaxDepth = ?; Recurse = any;   DoNotRecurseMatches = false; Depth = ?;
+            }
+        }
+        else if (Recurse.IsPresent)
+        {
+            if (DoNotRecurseMatches.IsPresent)
+            {
+                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = true;  Depth = ?;
+                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = true;  Depth = ?;
+            }
+            else
+            {
+                // MinDepth = ?; MaxDepth = ?; Recurse = false; DoNotRecurseMatches = any;   Depth = ?;
+                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = false; Depth = ?;
+                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = false; Depth = ?;
+            }
+        }
+        else
+        {
+                // MinDepth = ?; MaxDepth = ?; Recurse = ?;     DoNotRecurseMatches = false; Depth = ?;
+
         }
     }
 
     protected override void ProcessRecord()
     {
+        throw new NotImplementedException();
     }
 }
