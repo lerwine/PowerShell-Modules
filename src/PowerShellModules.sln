@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwPackage", "SwPackage\SwPa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwPackage.UnitTests", "SwPackage.UnitTests\SwPackage.UnitTests.csproj", "{2FD80CE6-8D58-4A22-AD1F-45E7248F7B52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlUtility.UnitTests", "HtmlUtility.UnitTests\HtmlUtility.UnitTests.csproj", "{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -138,6 +140,18 @@ Global
 		{2FD80CE6-8D58-4A22-AD1F-45E7248F7B52}.Release|x64.Build.0 = Release|Any CPU
 		{2FD80CE6-8D58-4A22-AD1F-45E7248F7B52}.Release|x86.ActiveCfg = Release|Any CPU
 		{2FD80CE6-8D58-4A22-AD1F-45E7248F7B52}.Release|x86.Build.0 = Release|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Debug|x64.Build.0 = Debug|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Debug|x86.Build.0 = Debug|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Release|x64.ActiveCfg = Release|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Release|x64.Build.0 = Release|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Release|x86.ActiveCfg = Release|Any CPU
+		{BDFDD2D6-1AB3-4858-A517-205D9887C1D3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

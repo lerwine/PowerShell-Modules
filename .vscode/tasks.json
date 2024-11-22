@@ -133,6 +133,38 @@
         "problemMatcher": []
       },
       {
+        "label": "Build HtmlUtility.UnitTests",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/HtmlUtility.UnitTests/HtmlUtility.UnitTests.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": "build",
+        "dependsOn": [
+          "Build HtmlUtility"
+        ]
+      },
+      {
+          "label": "Test HtmlUtility",
+          "command": "dotnet",
+          "type": "process",
+          "args": [
+              "test",
+              "${workspaceFolder}/src/HtmlUtility.UnitTests/HtmlUtility.UnitTests.csproj",
+              "--no-build",
+              "--logger",
+              "trx;LogFileName=${workspaceFolder}/src/TestResults/HtmlUtility-TestResults.trx"
+          ],
+          "dependsOn": [
+            "Build HtmlUtility.UnitTests"
+          ],
+          "problemMatcher": "$msCompile"
+      },
+      {
         "label": "Build WinIOUtility",
         "command": "dotnet",
         "type": "process",

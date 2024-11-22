@@ -32,7 +32,7 @@ public class ConvertFrom_HtmlDocument : PSCmdlet
     /// Output as XML document object.
     /// </summary>
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_XmlDocument)]
-    public SwitchParameter AsXmlDcoument { get; set; }
+    public SwitchParameter AsXmlDocument { get; set; }
 
     /// <summary>
     /// Preserve XML namespaces in element names.
@@ -72,7 +72,7 @@ public class ConvertFrom_HtmlDocument : PSCmdlet
     {
         foreach (var html in InputDocument)
         {
-            if (AsXmlString.IsPresent || AsXmlDcoument.IsPresent)
+            if (AsXmlString.IsPresent || AsXmlDocument.IsPresent)
             {
                 html.OptionOutputAsXml = true;
                 html.OptionPreserveXmlNamespaces = PreserveXmlNamespaces.IsPresent;
@@ -105,7 +105,7 @@ public class ConvertFrom_HtmlDocument : PSCmdlet
             html.Save(writer);
             string text = writer.ToString();
             
-            if (AsXmlDcoument.IsPresent)
+            if (AsXmlDocument.IsPresent)
             {
                 XmlDocument? xml = new();
                 try { xml.LoadXml(text); }
