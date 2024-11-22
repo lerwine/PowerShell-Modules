@@ -5,31 +5,34 @@ using System.Management.Automation;
 namespace HtmlUtility;
 
 [Cmdlet(VerbsCommon.Select, "HtmlNode", DefaultParameterSetName = ParameterSetName_Nodes)]
-[OutputType(typeof(HtmlNode), ParameterSetName = [ParameterSetName_Nodes])]
+[OutputType(typeof(HtmlNode), ParameterSetName = [ParameterSetName_Single, ParameterSetName_Collection])]
 [OutputType(typeof(HtmlNodeCollection), ParameterSetName = [ParameterSetName_Collection])]
 public class Select_HtmlNode : PSCmdlet
 {
-    public const string ParameterSetName_Nodes = "Nodes";
+    public const string ParameterSetName_Single = "Single";
     
     public const string ParameterSetName_Collection = "Collection";
     
-    /// <summary>
-    /// The document to convert.
-    /// </summary>
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    public const string ParameterSetName_Nodes = "Nodes";
+    
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "HTML node to select from.")]
     [ValidateNotNull()]
     [Alias(nameof(HtmlDocument.DocumentNode))]
     public HtmlNode[] InputNode { get; set; } = null!;
 
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(Mandatory = true, Position = 1, HelpMessage = "The XPath of the HTML node(s) to select.")]
     [ValidateNotNullOrWhiteSpace()]
     public string XPath { get; set; } = null!;
 
-    [Parameter(ParameterSetName = ParameterSetName_Nodes)]
+    [Parameter(ParameterSetName = ParameterSetName_Nodes, HelpMessage = "Returns all matching nodes as individual HtmlNode objects. This is the default behavior.")]
+    [Alias("SelectNodes")]
+    public SwitchParameter All { get; set; }
+
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Single, HelpMessage = "Returns the first matching HtmlNode object.")]
+    [Alias("Single", "SelectSingleNode")]
     public SwitchParameter First { get; set; }
 
-
-    [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Collection)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Collection, HelpMessage = "Return all matching nodes as a single HtmlNodeCollection object.")]
     public SwitchParameter AsNodeCollection { get; set; }
 
     protected override void ProcessRecord()
