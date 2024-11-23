@@ -1,4 +1,6 @@
-# Erwine.Leonard.T.IOUtility Powershell Module
+# Erwine.Leonard.T.PSDB
+
+In-memory database provider for PowerShell.
 
 ## Contributing
 

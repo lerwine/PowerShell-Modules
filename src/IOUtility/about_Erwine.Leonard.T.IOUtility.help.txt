@@ -2,7 +2,7 @@
     about_Erwine.Leonard.T.IOUtility
 
 SHORT DESCRIPTION
-    PowerShell I/O utility functions.
+    General PowerShell I/O utility functions.
 
 LONG DESCRIPTION
     Provides utility functions that are useful for input/output operations.

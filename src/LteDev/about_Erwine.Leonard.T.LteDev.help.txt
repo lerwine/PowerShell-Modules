@@ -2,7 +2,7 @@
     about_Erwine.Leonard.T.LteDev
 
 SHORT DESCRIPTION
-    PowerShell PowerShell development utility functions.
+    PowerShell development utility functions.
 
 LONG DESCRIPTION
     Provides utility functions that are useful when developing PowerShell scripts and modules.

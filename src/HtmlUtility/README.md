@@ -1,8 +1,10 @@
 # Erwine.Leonard.T.Htmltility Powershell Module
 
+Provides utility functions that are useful for parsing and modifying HTML.
+
 ## Contributing{#contributed}
 
-This PowerShell module is maintained by Leonard T. Erwine. If you wish to contribute to this project, fork [this repository](https://github.com/lerwine/PowerShell-Modules.git) and generate a pull request.
+This PowerShell module is maintained by Leonard T. Erwine. If you wish to contribute to this project, fork [this repository](https://github.com/lerwine/PowerShell-Modules) and generate a pull request.
 
 - [HTML Agility Pack Documentation](https://html-agility-pack.net/documentation)
   - [NuGet Package](https://www.nuget.org/packages/HtmlAgilityPack)

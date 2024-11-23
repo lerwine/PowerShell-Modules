@@ -1,7 +1,7 @@
-Erwine.Leonard.T.GDIPlus Powershell Module
-==========================================
+# Erwine.Leonard.T.GDIPlus Powershell Module
 
-Contributing
-------------
+Module providing GDI Plus Graphics capabilities.
 
-This PowerShell module is maintained by Leonard T. Erwine. If you wish to contribute to this project, fork [this repository](https://github.com/lerwine/PowerShell-Modules.git) and generate a pull request.
+## Contributing
+
+This PowerShell module is maintained by Leonard T. Erwine. If you wish to contribute to this project, fork [this repository](https://github.com/lerwine/PowerShell-Modules) and generate a pull request.

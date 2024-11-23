@@ -1,4 +1,6 @@
-# Erwine.Leonard.T.IOUtility Powershell Module
+# MsExcelUtil
+
+Provides commands for working with Microsoft Excel files.
 
 ## Contributing
 

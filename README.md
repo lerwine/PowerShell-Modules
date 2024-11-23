@@ -5,37 +5,39 @@ Please reference the appropriate version-named branch for versions which are dee
 
 The PowerShell modules contained in this project were targeted for PowerShell Core 7.0 or later.
 
-## Contents
+## Modules
 
-### CertificateCryptography
+- [GDIPlus](dist/Erwine.Leonard.T.GDIPlus/README.md): Module providing GDI Plus Graphics capabilities.
+- [Htmltility](dist/Erwine.Leonard.T.HtmlUtility/README.md): PowerShell HTML utility functions.
+- [IOUtility](dist/Erwine.Leonard.T.IOUtility/README.md): General PowerShell I/O utility functions.
+- [LteDev](dist/Erwine.Leonard.T.LteDev/README.md): PowerShell development utility functions.
+- [SwPackage](dist/Erwine.Leonard.T.SwPackage/README.md): Functions for working with software packages.
+- [WinIOUtility](dist/Erwine.Leonard.T.WinIOUtility/README.md): PowerShell I/O utility functions for windows-based systems.
+- [XmlUtility](dist/Erwine.Leonard.T.XmlUtility/README.md): Provides XML functions for advanced manipulation and formatting of XML.
 
-Encrypt and decrypt using PKI technology.
+### Unpublished Modules
 
-### CredentialStorage
+These are incomplete modules which are not yet ready to be published.
 
-Provides secure credential storage and retrieval.
+- [CredentialStorage](src/CredentialStorage/README.md): Provides password storage and retrieval functionality.
+- [MsExcelUtil](src/MsExcelUtil/README.md): Provides commands for working with Microsoft Excel files.
+- [NetworkUtility](src/NetworkUtility/README.md): PowerShell Network utility functions.
+- [PSDB](src/PSDB/README.md): In-memory database provider for PowerShell.
 
-### GDIPlus
+## Building and Publishing
 
-Binary Module to support graphic file manipulation.
+The term "publishing" refers to the PowerShell module being published to the `dist` folder of this repository.
 
-### IOUtility
+Tasks for building and publishing modules are defined in [.vscode/tasks.json](./.vscode/tasks.json).
+These tasks use the [Deploy.ps1](./Deploy.ps1) to copy the necessary files to the corresponding subdirectory under the `dist` folder.
+The solution file for all binary modules is at [src/PowerShellModules.sln](./src/PowerShellModules.sln).
 
-Utility functions to manage filesystem, console, and stream IO.
+## Testing
 
-### LteDev
-
-PowerShell development utility functions.
-
-### NetworkUtility
-
-### PSDB
-
-Database command utilities
-
-### XmlUtility
-
-Provides advanced XML functionality.
+This solution uses [Pester](https://pester.dev/)-based unit testing. Pester tests are distributed along with the PowerShell modules.
+Binary modules may also have [NUnit](https://nunit.org/) tests for binary module components.
+The [.vscode/launch.json](./.vscode/launch.json) contains configurations for executing `Pester` unit tests
+and the [.vscode/tasks.json](./.vscode/tasks.json) contains tasks for executing the `NUnit` tests.
 
 ## Requirements
 
@@ -64,4 +66,4 @@ To compile without Visual Studio, you will also need .
 
 ## Contributing
 
-This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, simply edit a file and propose a change, or propose a new file at [My Public GitHub Website](<https://github.com/lerwine/PowerShell-Modules.git>).
+This Git script library is maintained by Leonard T. Erwine. If you wish to contribute to this project, simply edit a file and propose a change, or propose a new file at [My Public GitHub Website](<https://github.com/lerwine/PowerShell-Modules>).

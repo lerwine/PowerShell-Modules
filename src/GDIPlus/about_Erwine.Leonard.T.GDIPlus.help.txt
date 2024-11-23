@@ -2,40 +2,48 @@
     about_Erwine.Leonard.T.LteDev
 
 SHORT DESCRIPTION
-    PowerShell PowerShell development utility functions.
+    Module providing GDI Plus Graphics capabilities.
 
 LONG DESCRIPTION
-    Provides utility functions that are useful when developing PowerShell scripts and modules.
+    Provides utility functions that are useful for working with graphics files.
 
 EXPORTED COMMANDS
     Following is a list of commands exported by this module:
 
-    Get-ClrSimpleName
-        Get simple CLR full name
+    Convert-HsbToRgb
+        (no description, yet)
 
-    Get-FieldUsage
-        Get-FieldUsage [-FieldInfo] <FieldInfo> [-IncludeSpecialNamed] [-Verbose] [-Debug] [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>] [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable <String>] [-OutBuffer <Int32>]
+    Convert-HsbToRgb
+        (no description, yet)
 
-    Get-PropertyUsage
-        Get-PropertyUsage [-PropertyInfo] <PropertyInfo> [-IncludeSpecialNamed] [-Verbose] [-Debug] [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>] [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable <String>] [-OutBuffer <Int32>]
+    Convert-RgbToHsb
+        (no description, yet)
 
-    Get-ParameterUsage
-        Get-ParameterUsage [-Method] <MethodBase> [-IsInitVars] [-NonOptional] [-Verbose] [-Debug] [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>] [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable <String>] [-OutBuffer <Int32>]
+    ConvertTo-CroppedImage
+        (no description, yet)
 
-    Get-ConstructorUsage
-        Get-ConstructorUsage [-ConstructorInfo] <ConstructorInfo> [-Verbose] [-Debug] [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>] [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable <String>] [-OutBuffer <Int32>]
+    ConvertTo-ResizedImage
+        (no description, yet)
 
-    Get-MethodUsage
-        Get-MethodUsage [-MethodInfo] <MethodInfo> [-IncludeSpecialNamed] [-Verbose] [-Debug] [-ErrorAction <ActionPreference>] [-WarningAction <ActionPreference>] [-ErrorVariable <String>] [-WarningVariable <String>] [-OutVariable <String>] [-OutBuffer <Int32>]
+    Enter-DrawingSurface
+        Creates a System.Drawing.Graphics object from a System.Drawing.Image object for graphics manipulation.
 
-    Get-TypeUsage
-        Get object type sample usage
+    Exit-DrawingSurface
+        Applies changes made in a System.Drawing.Graphics object to the corresponding System.Drawing.Image object and disposes the System.Drawing.Graphics object.
+
+    New-Image
+        Creates a new System.Drawing.Image object.
+
+    Sync-DrawingSurface
+        Applies changes made in a System.Drawing.Graphics object to the corresponding System.Drawing.Image object.
 
 SEE ALSO
-	Get-ClrSimpleName
-    Get-FieldUsage
-    Get-PropertyUsage
-    Get-ParameterUsage
-    Get-ConstructorUsage
-    Get-MethodUsage
-    Get-TypeUsage
+    Convert-HsbToRgb
+    Convert-HsbToRgb
+    Convert-RgbToHsb
+    ConvertTo-CroppedImage
+    ConvertTo-ResizedImage
+    Enter-DrawingSurface
+    Exit-DrawingSurface
+    New-Image
+    Sync-DrawingSurface
