@@ -72,7 +72,7 @@ NestedModules = @('HtmlUtility.dll')
 FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = @('ConvertFrom-HtmlString', 'ConvertFrom-HtmlDocument')
+CmdletsToExport = @('ConvertFrom-HtmlString', 'ConvertFrom-HtmlDocument', 'Select-HtmlNode', 'Select-MarkdownObject')
 
 # Variables to export from this module
 VariablesToExport = '*'
@@ -88,7 +88,8 @@ AliasesToExport = @()
 
 # List of all files packaged with this module
 FileList = @('Resources/from-md.css', 'Resources/highlight.css', 'Resources/katex-copytex.min.css', 'Resources/katex-copytex.min.js', 'Resources/katex.min.css',
-    'Resources/markdown.css', 'Resources/vscode-github.css', 'about_Erwine.Leonard.T.HtmlUtility.help.txt', 'README.md')
+    'Resources/markdown.css', 'Resources/vscode-github.css', 'about_Erwine.Leonard.T.HtmlUtility.help.txt', 'README.md', 'ConvertFrom-HtmlDocument.tests.ps1',
+    'ConvertFrom-HtmlString.tests.ps1', 'Select-HtmlNode.tests.ps1', 'Select-MarkdownObject.tests.ps1')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{

@@ -67,6 +67,37 @@
             "preLaunchTask": "Publish SwPackage"
         },
         {
+            "name": "Run HtmlUtility Pester Tests",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "Invoke-Pester",
+            "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.HtmlUtility",
+            "createTemporaryIntegratedConsole": true,
+            "attachDotnetDebugger": false,
+            "preLaunchTask": "Publish HtmlUtility"
+        },
+        {
+            "name": "Run HtmlUtility Pester Tests (no deploy)",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "Invoke-Pester",
+            "cwd": "${workspaceFolder}/dist/Erwine.Leonard.T.HtmlUtility",
+            "createTemporaryIntegratedConsole": true,
+            "attachDotnetDebugger": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Deploy HtmlUtility Local",
+            "script": "${workspaceRoot}/Deploy.ps1",
+            "args": [
+                "-ModuleManifestPath", "${workspaceFolder}/src/HtmlUtility/bin/Debug/net8.0/Erwine.Leonard.T.HtmlUtility.psd1",
+                "-DeployPSModulePath"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Publish HtmlUtility"
+        },
+        {
             "name": "Run XmlUtility Pester Tests",
             "type": "PowerShell",
             "request": "launch",

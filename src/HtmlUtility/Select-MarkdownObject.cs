@@ -1,28 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Management.Automation;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.XPath;
-using Markdig.Renderers.Html;
-using Microsoft.PowerShell.Commands;
 
 namespace HtmlUtility;
 
 [Cmdlet(VerbsCommon.Select, "MarkdownObject", DefaultParameterSetName = ParameterSetName_DepthRange)]
 public partial class Select_MarkdownObject : PSCmdlet
 {
-    private const string ParameterSetName_ExplicitDepth = "ExplicitDepth";
-    private const string ParameterSetName_DepthRange = "DepthRange";
+    public const string ParameterSetName_DepthRange = "DepthRange";
+    public const string ParameterSetName_ExplicitDepth = "ExplicitDepth";
+    public const string ParameterSetName_Recurse = "Recurse";
+    public const string ParameterSetName_RecurseUnmatched = "RecurseUnmatched";
+    private const string HtmlMessage_Type = "The type of the Markdown object(s) to select.";
 
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select from.")]
     [ValidateNotNull()]
     [Alias("MarkdownObject", "Markdown")]
     public Markdig.Syntax.MarkdownObject[] InputObject { get; set; } = null!;
 
-    [Parameter(Position = 1, HelpMessage = "The type of the Markdown object(s) to select.")]
+    [Parameter(Position = 1, HelpMessage = HtmlMessage_Type, ParameterSetName = ParameterSetName_DepthRange)]
+    [Parameter(Position = 1, HelpMessage = HtmlMessage_Type, ParameterSetName = ParameterSetName_ExplicitDepth)]
+    [Parameter(Position = 1, HelpMessage = HtmlMessage_Type, ParameterSetName = ParameterSetName_Recurse)]
+    [Parameter(Mandatory = true, Position = 1, HelpMessage = HtmlMessage_Type, ParameterSetName = ParameterSetName_RecurseUnmatched)]
     public MarkdownTokenType[] Type { get; set; } = null!;
 
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_ExplicitDepth)]
@@ -30,92 +27,438 @@ public partial class Select_MarkdownObject : PSCmdlet
     public int Depth { get; set; }
 
     [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
+    [Parameter(ParameterSetName = ParameterSetName_RecurseUnmatched)]
     [ValidateRange(1, int.MaxValue)]
     public int MinDepth { get; set; }
 
     [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
+    [Parameter(ParameterSetName = ParameterSetName_RecurseUnmatched)]
     [ValidateRange(1, int.MaxValue)]
     public int MaxDepth { get; set; }
 
-    [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_Recurse)]
     public SwitchParameter Recurse { get; set; }
 
-    [Parameter(ParameterSetName = ParameterSetName_DepthRange)]
-    public SwitchParameter DoNotRecurseMatches { get; set; }
+    [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_RecurseUnmatched)]
+    public SwitchParameter RecurseUnmatchedOnly { get; set; }
+
+    private List<Type> _multiType = null!;
+    private Type _singleType = null!;
+    private int _depth;
+    private Action<Markdig.Syntax.MarkdownObject> _processInputObject = null!;
 
     protected override void BeginProcessing()
     {
-
         List<Type>? typesToMatch = Type.ToReflectionTypes();
-        if (ParameterSetName == ParameterSetName_ExplicitDepth)
+        if (typesToMatch is not null)
         {
-            // Get descendant MarkdownObject exactly at Depth levels deep
+            if (typesToMatch.Count == 1)
+                _singleType = typesToMatch[0];
+            else
+                _multiType = typesToMatch;
         }
-        else if (MyInvocation.BoundParameters.ContainsKey(nameof(MaxDepth)))
+        switch (ParameterSetName)
         {
-            if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
-            {
-                if (MinDepth > MaxDepth)
+            case ParameterSetName_ExplicitDepth:
+                _depth = Depth;
+                if (typesToMatch is null)
+                    _processInputObject = GetDescendantsAtDepth;
+                else if (typesToMatch.Count == 1)
+                    _processInputObject = GetDescendantsMatchingSingleTypeAtDepth;
+                else
+                    _processInputObject = GetDescendantsMatchingTypeAtDepth;
+                break;
+            case ParameterSetName_Recurse:
+                if (typesToMatch is null)
+                    _processInputObject = GetCurrentAndDescendants;
+                else if (typesToMatch.Count == 1)
+                    _processInputObject = GetCurrentAndDescendantsMatchingSingleTypeRecurseAll;
+                else
+                    _processInputObject = GetCurrentAndDescendantsMatchingTypeRecurseAll;
+                break;
+            default:
+                if (MyInvocation.BoundParameters.ContainsKey(nameof(MaxDepth)))
                 {
-                    WriteError(new(new ArgumentOutOfRangeException(nameof(MaxDepth), $"{nameof(MaxDepth)} cannot be less than {nameof(MinDepth)}"), "", ErrorCategory.InvalidArgument, MaxDepth));
-                    throw new PipelineStoppedException();
+                    if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
+                    {
+                        _depth = MaxDepth = MinDepth;
+                        if (_depth < 0)
+                        {
+                            WriteError(new(new ArgumentOutOfRangeException(nameof(MaxDepth), $"{nameof(MaxDepth)} cannot be less than {nameof(MinDepth)}"), "", ErrorCategory.InvalidArgument, MaxDepth));
+                            throw new PipelineStoppedException();
+                        }
+                        if (_depth == 0)
+                        {
+                            _depth = MinDepth;
+                            if (typesToMatch is null)
+                                _processInputObject = GetDescendantsAtDepth;
+                            else if (typesToMatch.Count == 1)
+                                _processInputObject = GetDescendantsMatchingSingleTypeAtDepth;
+                            else
+                                _processInputObject = GetDescendantsMatchingTypeAtDepth;
+                        }
+                        else if (RecurseUnmatchedOnly.IsPresent)
+                        {
+                            if (typesToMatch!.Count == 1)
+                                _processInputObject = GetDescendantsMatchingSingleTypeInDepthRange;
+                            else
+                                _processInputObject = GetDescendantsMatchingTypeInDepthRange;
+                        }
+                        else if (typesToMatch is null)
+                            _processInputObject = GetDescendantsInDepthRange;
+                        else if (typesToMatch.Count == 1)
+                            _processInputObject = GetDescendantsMatchingSingleTypeInDepthRangeRecurseAll;
+                        else
+                            _processInputObject = GetDescendantsMatchingTypeInDepthRangeRecurseAll;
+                    }
+                    else if (RecurseUnmatchedOnly.IsPresent)
+                    {
+                        if (typesToMatch!.Count == 1)
+                            _processInputObject = GetCurrentAndDescendantsMatchingSingleTypeUpToDepth;
+                        else
+                            _processInputObject = GetCurrentAndDescendantsMatchingTypeUpToDepth;
+                    }
+                    else
+                    {
+                        if (typesToMatch is null)
+                            _processInputObject = GetCurrentAndDescendantsUpToDepth;
+                        else if (typesToMatch.Count == 1)
+                            _processInputObject = GetCurrentAndDescendantsMatchingSingleTypeUpToDepthRecurseAll;
+                        else
+                            _processInputObject = GetCurrentAndDescendantsMatchingTypeUpToDepthRecurseAll;
+                    }
                 }
-                if (MinDepth == MaxDepth)
+                else if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
                 {
-                    // Get descendant MarkdownObject exactly at MinDepth levels deep
+                    if (RecurseUnmatchedOnly.IsPresent)
+                    {
+                        if (typesToMatch!.Count == 1)
+                            _processInputObject = GetDescendantsMatchingSingleTypeFromDepth;
+                        else
+                            _processInputObject = GetDescendantsMatchingTypeFromDepth;
+                    }
+                    else
+                    {
+                        if (typesToMatch is null)
+                            _processInputObject = GetDescendantsFromDepth;
+                        else if (typesToMatch.Count == 1)
+                            _processInputObject = GetDescendantsMatchingSingleTypeFromDepthRecurseAll;
+                        else
+                            _processInputObject = GetDescendantsMatchingTypeFromDepthRecurseAll;
+                    }
                 }
-                else if (DoNotRecurseMatches.IsPresent)
+                else if (RecurseUnmatchedOnly.IsPresent)
                 {
-                    // MinDepth = 1; MaxDepth = 2; Recurse = any;   DoNotRecurseMatches = true;
+                    if (typesToMatch!.Count == 1)
+                        _processInputObject = GetCurrentAndDescendantsMatchingSingleType;
+                    else
+                        _processInputObject = GetCurrentAndDescendantsMatchingType;
                 }
                 else
                 {
-                    // MinDepth = 1; MaxDepth = 2; Recurse = any;   DoNotRecurseMatches = false
+                    if (typesToMatch is null)
+                        _processInputObject = obj => WriteObject(obj, false);
+                    else if (typesToMatch.Count == 1)
+                        _processInputObject = GetCurrentMatchingSingleType;
+                    else
+                        _processInputObject = GetCurrentMatchingType;
                 }
-            }
-            else if (DoNotRecurseMatches.IsPresent)
-            {
-                // MinDepth = ?; MaxDepth = 1; Recurse = any;   DoNotRecurseMatches = true;  Depth = ?;
-            }
-            else
-            {
-                // MinDepth = ?; MaxDepth = 1; Recurse = any;   DoNotRecurseMatches = false; Depth = ?;
-            }
+                break;
         }
-        else if (MyInvocation.BoundParameters.ContainsKey(nameof(MinDepth)))
-        {
-            if (DoNotRecurseMatches.IsPresent)
-            {
-                // MinDepth = 1; MaxDepth = ?; Recurse = any;   DoNotRecurseMatches = true;  Depth = ?;
-            }
-            else
-            {
-                // MinDepth = 1; MaxDepth = ?; Recurse = any;   DoNotRecurseMatches = false; Depth = ?;
-            }
-        }
-        else if (Recurse.IsPresent)
-        {
-            if (DoNotRecurseMatches.IsPresent)
-            {
-                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = true;  Depth = ?;
-                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = true;  Depth = ?;
-            }
-            else
-            {
-                // MinDepth = ?; MaxDepth = ?; Recurse = false; DoNotRecurseMatches = any;   Depth = ?;
-                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = false; Depth = ?;
-                // MinDepth = ?; MaxDepth = ?; Recurse = true;  DoNotRecurseMatches = false; Depth = ?;
-            }
-        }
-        else
-        {
-                // MinDepth = ?; MaxDepth = ?; Recurse = ?;     DoNotRecurseMatches = false; Depth = ?;
+    }
 
+    private void GetCurrentAndDescendants(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetAllDescendants())
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetCurrentAndDescendantsMatchingSingleTypeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_singleType.IsInstanceOfType(currentObject))
+            WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetAllDescendants().Where(_singleType.IsInstanceOfType))
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetCurrentAndDescendantsMatchingSingleType(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_singleType.IsInstanceOfType(currentObject))
+            WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType))
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetCurrentMatchingSingleType(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_singleType.IsInstanceOfType(currentObject))
+            WriteObject(currentObject, false);
+    }
+
+    private void GetCurrentAndDescendantsMatchingTypeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
+            WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetAllDescendants().Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetCurrentAndDescendantsMatchingType(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
+            WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType))
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetCurrentMatchingType(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
+            WriteObject(currentObject, false);
+    }
+
+    private void GetDescendantsAtDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(_depth))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetDescendantsMatchingSingleTypeAtDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(_depth).Where(_singleType.IsInstanceOfType))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetDescendantsMatchingTypeAtDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(_depth).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetDescendantsFromDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsFromDepth(MinDepth))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetDescendantsMatchingSingleTypeFromDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            if (_singleType.IsInstanceOfType(item))
+                WriteObject(item, false);
+            else
+                foreach (var c in item.GetDescendantBranchesMatchingType(_singleType))
+                {
+                    if (Stopping) return;
+                    WriteObject(c, false);
+                }
+        }
+    }
+
+    private void GetDescendantsMatchingSingleTypeFromDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsFromDepth(MinDepth).Where(_singleType.IsInstanceOfType))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetDescendantsMatchingTypeFromDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            if (_multiType.Any(t => t.IsInstanceOfType(item)))
+                WriteObject(item, false);
+            else
+                foreach (var c in item.GetDescendantBranchesMatchingType(_multiType))
+                {
+                    if (Stopping) return;
+                    WriteObject(c, false);
+                }
+        }
+    }
+
+    private void GetDescendantsMatchingTypeFromDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsFromDepth(_depth).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetCurrentAndDescendantsUpToDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        WriteObject(currentObject, false);
+        foreach (var item in currentObject.GetDescendantsUpToDepth(MaxDepth))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+        }
+    }
+
+    private void GetCurrentAndDescendantsMatchingSingleTypeUpToDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_singleType.IsInstanceOfType(currentObject))
+            WriteObject(currentObject, false);
+        else
+            foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType))
+            {
+                if (Stopping) return;
+                WriteObject(c, false);
+            }
+    }
+
+    private void GetCurrentAndDescendantsMatchingSingleTypeUpToDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_singleType.IsInstanceOfType(currentObject))
+            WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType, MaxDepth))
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetCurrentAndDescendantsMatchingTypeUpToDepth(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
+            WriteObject(currentObject, false);
+        else
+            foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType))
+            {
+                if (Stopping) return;
+                WriteObject(c, false);
+            }
+    }
+
+    private void GetCurrentAndDescendantsMatchingTypeUpToDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
+            WriteObject(currentObject, false);
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType, MaxDepth))
+        {
+            if (Stopping) return;
+            WriteObject(c, false);
+        }
+    }
+
+    private void GetDescendantsInDepthRange(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            WriteObject(item, false);
+            foreach (var c in item.GetDescendantsUpToDepth(_depth))
+            {
+                if (Stopping) return;
+                WriteObject(c, false);
+            }
+        }
+    }
+
+    private void GetDescendantsMatchingSingleTypeInDepthRange(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            if (_singleType.IsInstanceOfType(item))
+                WriteObject(item, false);
+            else
+                foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, _depth))
+                {
+                    if (Stopping) return;
+                    WriteObject(c, false);
+                }
+        }
+    }
+
+    private void GetDescendantsMatchingSingleTypeInDepthRangeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            if (_singleType.IsInstanceOfType(item))
+                WriteObject(item, false);
+            foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, _depth))
+            {
+                if (Stopping) return;
+                WriteObject(c, false);
+            }
+        }
+    }
+
+    private void GetDescendantsMatchingTypeInDepthRange(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            if (_multiType.Any(t => t.IsInstanceOfType(item)))
+                WriteObject(item, false);
+            else
+                foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, _depth))
+                {
+                    if (Stopping) return;
+                    WriteObject(c, false);
+                }
+        }
+    }
+
+    private void GetDescendantsMatchingTypeInDepthRangeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    {
+        foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth))
+        {
+            if (Stopping) return;
+            if (Stopping)
+                break;
+            if (_multiType.Any(t => t.IsInstanceOfType(item)))
+                WriteObject(item, false);
+            foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, _depth))
+            {
+                if (Stopping) return;
+                WriteObject(c, false);
+            }
         }
     }
 
     protected override void ProcessRecord()
     {
-        throw new NotImplementedException();
+        foreach (var item in InputObject)
+        {
+            if (Stopping) break;
+            _processInputObject(item);
+        }
     }
 }
