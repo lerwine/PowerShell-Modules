@@ -15,10 +15,10 @@ public static class MarkdownExtensions
     }
     public static Type ToReflectionType(this MarkdownTokenType type) => _markdownTokenTypeMap[type];
     
-    public static List<Type>? ToReflectionTypes(this MarkdownTokenType[]? Type)
+    public static List<Type>? ToReflectionTypes(this IList<MarkdownTokenType>? source)
     {
-        if (Type is null || Type.Length == 0) return null;
-        var types = Type.Distinct().Select(ToReflectionType).ToList();
+        if (source is null || source.Count == 0) return null;
+        var types = source.Distinct().Select(ToReflectionType).ToList();
         for (int end = 1; end < types.Count; end++)
         {
             var x = types[end];
