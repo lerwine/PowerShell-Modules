@@ -2,35 +2,33 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HtmlUtility.UnitTests;
 
-public class MarkdownExtensionsTests
+public partial class MarkdownExtensionsTests
 {
     [SetUp]
     public void Setup()
     {
     }
 
-    [Test]
-    public void ToReflectionTypeTest()
+    [TestCaseSource(typeof(TestData), nameof(TestData.GetToReflectionTypeTestData))]
+    public Type ToReflectionTypeTest(MarkdownTokenType type)
     {
-        // MarkdownTokenType type;
-        // Type actual = MarkdownExtensions.ToReflectionType(type);
-        Assert.Inconclusive();
+        return MarkdownExtensions.ToReflectionType(type);
     }
 
-    [Test]
-    public void ToReflectionTypesTest()
+    [TestCaseSource(typeof(TestData), nameof(TestData.GetToReflectionTypesTestData))]
+    public Type[]? ToReflectionTypesTest(IList<MarkdownTokenType>? types)
     {
-        // MarkdownTokenType[] types;
-        // List<Type>? actual = MarkdownExtensions.ToReflectionTypes(types);
-        Assert.Inconclusive();
+        return MarkdownExtensions.ToReflectionTypes(types)?.ToArray();
     }
 
-    [Test]
-    public void GetChildObjectsTest()
+    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetChildObjectsTestData))]
+    public Markdig.Syntax.SourceSpan[] GetChildObjectsTest(Markdig.Syntax.MarkdownObject source, Type[] expectedTypes)
     {
-        // Markdig.Syntax.MarkdownObject source;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetChildObjects(source);
-        Assert.Inconclusive();
+        Markdig.Syntax.MarkdownObject[] result = MarkdownExtensions.GetChildObjects(source).ToArray();
+        Assert.That(result, Has.Length.EqualTo(expectedTypes.Length));
+        for (int i = 0; i < expectedTypes.Length; i++)
+            Assert.That(result[i], Is.InstanceOf(expectedTypes[i]), "Type Index ", i);
+        return MarkdownExtensions.GetChildObjects(source).Select(obj => obj.Span).ToArray();
     }
 
     [Test]
