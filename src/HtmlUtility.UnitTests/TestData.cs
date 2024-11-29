@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Markdig;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
@@ -262,42 +263,192 @@ public static class TestData
         (@($Inline) | % { $t = $_.GetType(); if ($t.Namespace -ceq 'Markdig.Syntax') { "typeof($($t.Name))" } else { "typeof($($t.FullName))" } }) -join ', '
         (@($Inline) | % { "new($($_.Span.Start), $($_.Span.End))" }) -join ', '
     */
-    public static MarkdownDocument GetExampleMarkdownDocument() => Markdig.Markdown.Parse(GetExampleMarkdownText(), true);
+    public static MarkdownDocument GetExampleMarkdownDocument() => Markdown.Parse(GetExampleMarkdownText(), new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
 
     public static System.Collections.IEnumerable GetGetChildObjectsTestData()
     {
         MarkdownDocument document = GetExampleMarkdownDocument();
-        yield return new TestCaseData(document, new Type[]
-        {
-            typeof(HeadingBlock), typeof(ParagraphBlock), typeof(ParagraphBlock), typeof(ListBlock), typeof(HeadingBlock), typeof(ParagraphBlock), typeof(HeadingBlock), typeof(ParagraphBlock), typeof(HeadingBlock), typeof(ParagraphBlock),
-            typeof(ParagraphBlock), typeof(LinkReferenceDefinition), typeof(HeadingBlock), typeof(ParagraphBlock), typeof(ParagraphBlock), typeof(ParagraphBlock), typeof(HeadingBlock), typeof(ParagraphBlock), typeof(ParagraphBlock),
-            typeof(HeadingBlock), typeof(ParagraphBlock), typeof(FencedCodeBlock), typeof(FencedCodeBlock), typeof(HeadingBlock), typeof(ParagraphBlock), typeof(HeadingBlock), typeof(ParagraphBlock), typeof(ParagraphBlock), typeof(HeadingBlock),
-            typeof(ParagraphBlock), typeof(ParagraphBlock)
-        })
-            .Returns(new SourceSpan[]
-            {
-                new(0, 26), new(31, 84), new(89, 110), new(115, 168), new(171, 199), new(204, 274), new(279, 285), new(290, 321), new(326, 352), new(357, 416), new(421, 432), new(437, 479), new(484, 490), new(495, 570), new(575, 660), new(665, 813),
-                new(818, 835), new(840, 923), new(928, 990), new(995, 1001), new(1006, 1027), new(1032, 1071), new(1076, 1194), new(1199, 1216), new(1221, 1285), new(1290, 1301), new(1306, 1366), new(1371, 1446), new(1451, 1462), new(1467, 1484),
-                new(1489, 1499)
-            });
-        HeadingBlock headingBlock = document.OfType<HeadingBlock>().First();
 
-        yield return new TestCaseData(headingBlock, new Type[]
+        static TestCaseData containerBlockToTestCaseData(ContainerBlock cb)
         {
-            typeof(Markdig.Syntax.Inlines.ContainerInline)
-        })
-            .Returns(new SourceSpan[]
-            {
-                new(0, 0)
-            });
-        yield return new TestCaseData(headingBlock.Inline, new Type[]
+            var attr = cb.TryGetAttributes();
+            if (attr is null)
+                return new TestCaseData(cb, cb.Select(obj => obj.GetType()).ToArray()).Returns(cb.Select(obj => obj.Span).ToArray()).SetDescription($"{cb.GetType().Name}: Line {cb.Line}");
+            return new TestCaseData(cb, new Type[] { attr.GetType() }.Concat(cb.Select(obj => obj.GetType())).ToArray())
+                .Returns(new SourceSpan[] { attr.Span }.Concat(cb.Select(obj => obj.Span)).ToArray()).SetDescription($"{cb.GetType().Name}: Line {cb.Line}");
+        }
+        static TestCaseData containerInlineToTestCaseData(Markdig.Syntax.Inlines.ContainerInline ci)
         {
-            typeof(Markdig.Syntax.Inlines.LiteralInline)
-        })
-            .Returns(new SourceSpan[]
+            var attr = ci.TryGetAttributes();
+            if (attr is null)
+                return new TestCaseData(ci, ci.Select(obj => obj.GetType()).ToArray()).Returns(ci.Select(obj => obj.Span).ToArray()).SetDescription($"{ci.GetType().Name}: Line {ci.Line}, Column {ci.Column}");
+            return new TestCaseData(ci, new Type[] { attr.GetType() }.Concat(ci.Select(obj => obj.GetType())).ToArray())
+                .Returns(new SourceSpan[] { attr.Span }.Concat(ci.Select(obj => obj.Span)).ToArray()).SetDescription($"{ci.GetType().Name}: Line {ci.Line}, Column {ci.Column}");
+        }
+
+        static TestCaseData leafBlockToTestCaseData(LeafBlock lb)
+        {
+            var attr = lb.TryGetAttributes();
+            var leaf = lb.Inline;
+            if (attr is null)
             {
-                new(0, 0)
-            });
+                if (leaf is null)
+                    return new TestCaseData(lb, Array.Empty<Type>()).Returns(Array.Empty<SourceSpan>()).SetDescription($"{lb.GetType().Name}: Line {lb.Line}");
+                return new TestCaseData(lb, new Type[] { leaf.GetType() }).Returns(new SourceSpan[] { leaf.Span }).SetDescription($"{lb.GetType().Name}: Line {lb.Line}");
+            }
+            if (leaf is null)
+                return new TestCaseData(lb, new Type[] { attr.GetType() }).Returns(new SourceSpan[] { attr.Span }).SetDescription($"{lb.GetType().Name}: Line {lb.Line}");
+                
+            return new TestCaseData(lb, new Type[] { attr.GetType(), leaf.GetType() }).Returns(new SourceSpan[] { attr.Span, leaf.Span }).SetDescription($"{lb.GetType().Name}: Line {lb.Line}");
+        }
+        
+        static TestCaseData nonContainerTestCaseData(MarkdownObject lb)
+        {
+            var attr = lb.TryGetAttributes();
+            if (attr is null)
+            {
+                if (lb is Markdig.Syntax.Inlines.Inline)
+                    return new TestCaseData(lb, Array.Empty<Type>()).Returns(Array.Empty<SourceSpan>()).SetDescription($"{lb.GetType().Name}: Line {lb.Line}, Column: {lb.Column}");
+                return new TestCaseData(lb, Array.Empty<Type>()).Returns(Array.Empty<SourceSpan>()).SetDescription($"{lb.GetType().Name}: Line {lb.Line}");
+            }
+            if (lb is Markdig.Syntax.Inlines.Inline)
+                return new TestCaseData(lb, new Type[] { attr.GetType() }).Returns(new SourceSpan[] { attr.Span }).SetDescription($"{lb.GetType().Name}: Line {lb.Line}, Column: {lb.Column}");
+                
+            return new TestCaseData(lb, new Type[] { attr.GetType() }).Returns(new SourceSpan[] { attr.Span }).SetDescription($"{lb.GetType().Name}: Line {lb.Line}");
+        }
+        
+
+        yield return containerBlockToTestCaseData(document);
+
+        // # Example Markdown Document
+        HeadingBlock headingBlock = (HeadingBlock)document[0];
+        yield return leafBlockToTestCaseData(headingBlock);
+        yield return containerInlineToTestCaseData(headingBlock.Inline!);
+        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!);
+
+        // [CommonMark Spec](https://spec.commonmark.org/0.31.2/)
+        ParagraphBlock paragraphBlock = (ParagraphBlock)document[1];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        yield return containerInlineToTestCaseData(paragraphBlock.Inline!);
+        Markdig.Syntax.Inlines.ContainerInline containerInline = (Markdig.Syntax.Inlines.ContainerInline)paragraphBlock.Inline!.FirstChild!;
+        yield return containerInlineToTestCaseData(containerInline);
+        yield return nonContainerTestCaseData(containerInline.FirstChild!);
+        // Hard line break\
+        // here
+        paragraphBlock = (ParagraphBlock)document[2];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        containerInline = paragraphBlock.Inline!;
+        yield return containerInlineToTestCaseData(containerInline);
+        Markdig.Syntax.Inlines.Inline inline = containerInline.FirstChild!;
+        yield return nonContainerTestCaseData(inline);
+        yield return nonContainerTestCaseData(inline.NextSibling!);
+        yield return nonContainerTestCaseData(containerInline.LastChild!);
+
+        ContainerBlock containerBlock = (ContainerBlock)document[3];
+        yield return containerBlockToTestCaseData(containerBlock);
+
+        // - [X] Task
+        ContainerBlock innerContainerBlock = (ContainerBlock)containerBlock[0];
+        yield return containerBlockToTestCaseData(innerContainerBlock);
+        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        containerInline = paragraphBlock.Inline!;
+        yield return containerInlineToTestCaseData(containerInline);
+        yield return nonContainerTestCaseData(containerInline.FirstChild!);
+        yield return nonContainerTestCaseData(containerInline.LastChild!);
+
+        // - [ ] List Item
+        innerContainerBlock = (ListItemBlock)containerBlock[1];
+        yield return containerBlockToTestCaseData(innerContainerBlock);
+        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        containerInline = paragraphBlock.Inline!;
+        yield return containerInlineToTestCaseData(containerInline);
+        yield return nonContainerTestCaseData(containerInline.FirstChild!);
+        yield return nonContainerTestCaseData(containerInline.LastChild!);
+
+        // - Normal List
+        innerContainerBlock = (ListItemBlock)containerBlock[2];
+        yield return containerBlockToTestCaseData(innerContainerBlock);
+
+        // - Item
+        innerContainerBlock = (ListItemBlock)containerBlock[3];
+        yield return containerBlockToTestCaseData(innerContainerBlock);
+
+        headingBlock = (HeadingBlock)document[4];
+        yield return leafBlockToTestCaseData(headingBlock);
+
+        headingBlock = (HeadingBlock)document[5];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[6];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        headingBlock = (HeadingBlock)document[7];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[8];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[9];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        containerBlock = (ContainerBlock)document[10];
+        yield return containerBlockToTestCaseData(containerBlock);
+
+        headingBlock = (HeadingBlock)document[11];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[12];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[13];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[14];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        headingBlock = (HeadingBlock)document[11];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        containerBlock = (ContainerBlock)document[12];
+        yield return containerBlockToTestCaseData(containerBlock);
+
+        headingBlock = (HeadingBlock)document[13];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[14];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        LeafBlock leafBlock = (LeafBlock)document[15];
+        yield return leafBlockToTestCaseData(leafBlock);
+        
+        leafBlock = (LeafBlock)document[16];
+        yield return leafBlockToTestCaseData(leafBlock);
+        
+        headingBlock = (HeadingBlock)document[17];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[18];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        headingBlock = (HeadingBlock)document[19];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[20];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        headingBlock = (HeadingBlock)document[21];
+        yield return leafBlockToTestCaseData(headingBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[22];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        paragraphBlock = (ParagraphBlock)document[23];
+        yield return leafBlockToTestCaseData(paragraphBlock);
+        
+        containerBlock = (ContainerBlock)document[24];
+        yield return containerBlockToTestCaseData(containerBlock);
     }
 
     // public static System.Collections.IEnumerable GetData()

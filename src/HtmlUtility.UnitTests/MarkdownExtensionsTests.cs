@@ -12,23 +12,23 @@ public partial class MarkdownExtensionsTests
     [TestCaseSource(typeof(TestData), nameof(TestData.GetToReflectionTypeTestData))]
     public Type ToReflectionTypeTest(MarkdownTokenType type)
     {
-        return MarkdownExtensions.ToReflectionType(type);
+        return MarkdownExtensionMethods.ToReflectionType(type);
     }
 
     [TestCaseSource(typeof(TestData), nameof(TestData.GetToReflectionTypesTestData))]
     public Type[]? ToReflectionTypesTest(IList<MarkdownTokenType>? types)
     {
-        return MarkdownExtensions.ToReflectionTypes(types)?.ToArray();
+        return MarkdownExtensionMethods.ToReflectionTypes(types)?.ToArray();
     }
 
     [TestCaseSource(typeof(TestData), nameof(TestData.GetGetChildObjectsTestData))]
     public Markdig.Syntax.SourceSpan[] GetChildObjectsTest(Markdig.Syntax.MarkdownObject source, Type[] expectedTypes)
     {
-        Markdig.Syntax.MarkdownObject[] result = MarkdownExtensions.GetChildObjects(source).ToArray();
+        Markdig.Syntax.MarkdownObject[] result = MarkdownExtensionMethods.GetChildObjects(source).ToArray();
         Assert.That(result, Has.Length.EqualTo(expectedTypes.Length));
         for (int i = 0; i < expectedTypes.Length; i++)
             Assert.That(result[i], Is.InstanceOf(expectedTypes[i]), "Type Index ", i);
-        return MarkdownExtensions.GetChildObjects(source).Select(obj => obj.Span).ToArray();
+        return result.Select(obj => obj.Span).ToArray();
     }
 
     [Test]

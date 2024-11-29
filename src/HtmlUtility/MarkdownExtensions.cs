@@ -4,15 +4,16 @@ using Markdig.Renderers.Html;
 
 namespace HtmlUtility;
 
-public static class MarkdownExtensions
+public static class MarkdownExtensionMethods
 {
     private static readonly ReadOnlyDictionary<MarkdownTokenType, Type> _markdownTokenTypeMap;
 
-    static MarkdownExtensions()
+    static MarkdownExtensionMethods()
     {
         Type t = typeof(MarkdownTokenType);
         _markdownTokenTypeMap = new(Enum.GetValues<MarkdownTokenType>().ToDictionary(k => k, v => t.GetField(v.ToString("F"))!.GetCustomAttribute<ReflectionTypeAttribute>()!.Type));
     }
+    
     public static Type ToReflectionType(this MarkdownTokenType type) => _markdownTokenTypeMap[type];
     
     public static List<Type>? ToReflectionTypes(this IList<MarkdownTokenType>? source)
