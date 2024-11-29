@@ -13,6 +13,11 @@
     <PackageReference Include="Microsoft.PowerShell.Commands.Utility" Version="7.4.6" />
     <PackageReference Include="System.Management.Automation" Version="7.4.6" />
   </ItemGroup>
+  
+  <!-- <ItemGroup>
+    <InternalsVisibleTo Include="HtmlUtility.UnitTests" />
+  </ItemGroup> -->
+
   <ItemGroup>
     <Content Include="Erwine.Leonard.T.HtmlUtility.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
