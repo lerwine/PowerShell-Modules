@@ -1,0 +1,86 @@
+{
+	"New Schema": {
+		"prefix": "json-schema",
+		"scope": "json,jsonc",
+		"body": [
+			"{",
+			"    \"\\$schema\": \"https://json-schema.org/draft/2020-12/schema\",",
+			"    \"\\$id\": \"https://raw.githubusercontent.com/lerwine/LteCodeGen/main/${RELATIVE_FILEPATH/\\\\/\\//g}\",",
+			"    \"title\": \"${1:title}\",",
+			"    \"description\": \"${2:description}\",",
+			"    \"type\": \"object\",",
+			"    \"properties\": {$0},",
+			"}"
+		],
+		"description": "Create new JSON Schema File",
+		"isFileTemplate": true
+	},
+	"Simple JSON Property Schema": {
+		"prefix": "json-property",
+		"scope": "json,jsonc",
+		"body": [
+			"\"${1:name}\": {",
+			"  \"description\": \"${2:description}\",",
+			"  \"type\": \"${3|string,number,integer,boolean,null|}\"$0",
+			"}"
+		]
+	},
+	"JSON Object Property Schema": {
+		"prefix": "json-object-property",
+		"scope": "json,jsonc",
+		"body": [
+			"\"${1:name}\": {",
+			"  \"description\": \"${2:description}\",",
+			"  \"type\": \"object\",",
+			"  \"properties\": {$0},",
+			"  \"required\": []",
+			"}"
+		]
+	},
+	"JSON Ref Property Schema": {
+		"prefix": "json-ref-property",
+		"scope": "json,jsonc",
+		"body": [
+			"\"${1:name}\": {",
+			"  \"description\": \"${2:description}\",",
+			"  \"\\$ref\": \"${3:#/\\$defs/name}\"$0",
+			"}"
+		]
+	},
+	"JSON Enum Property Schema": {
+		"prefix": "json-enum-property",
+		"scope": "json,jsonc",
+		"body": [
+			"\"${1:name}\": {",
+			"  \"description\": \"${2:description}\",",
+			"  \"enum\": [ ${3:\"\"}, ${4:\"\"}$0 ]",
+			"}"
+		]
+	},
+	"Simple Array Property Schema": {
+		"prefix": "json-array-property",
+		"scope": "json,jsonc",
+		"body": [
+			"\"${1:name}\": {",
+			"  \"description\": \"${2:description}\",",
+			"  \"type\": \"array\",",
+			"  \"items\": {",
+			"    `\"type\": \"${3|string,number,integer,boolean|}\"",
+			"  }$0",
+			"}"
+		]
+	},
+	"Ref Array Property Schema": {
+		"prefix": "json-enum-array-property",
+		"scope": "json,jsonc",
+		"body": [
+			"\"${1:name}\": {",
+			"  \"type\": \"array\",",
+			"  \"description\": \"${2:description}\",",
+			"  \"items\": {",
+			"    \"\\$ref\": \"${3:#/\\$defs/name}\"",
+			"  }$0",
+			"}"
+		]
+	}
+}
