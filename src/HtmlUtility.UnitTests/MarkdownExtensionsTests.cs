@@ -7,38 +7,38 @@ public partial class MarkdownExtensionsTests
     {
     }
 
-    [TestCaseSource(typeof(TestData), nameof(TestData.GetToReflectionTypeTestData))]
+    [TestCaseSource(typeof(Helpers.TestHelper), nameof(Helpers.TestHelper.GetToReflectionTypeTestData))]
     public Type ToReflectionTypeTest(MarkdownTokenType type)
     {
         return MarkdownExtensionMethods.ToReflectionType(type);
     }
 
-    [TestCaseSource(typeof(TestData), nameof(TestData.GetToReflectionTypesTestData))]
+    [TestCaseSource(typeof(Helpers.TestHelper), nameof(Helpers.TestHelper.GetToReflectionTypesTestData))]
     public Type[]? ToReflectionTypesTest(IList<MarkdownTokenType>? types)
     {
         return MarkdownExtensionMethods.ToReflectionTypes(types)?.ToArray();
     }
 
-    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetChildObjectsTestData))]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetChildObjectsTestData))]
     public Tuple<Type, Markdig.Syntax.SourceSpan>[] GetChildObjectsTest(Markdig.Syntax.MarkdownObject source)
     {
         return MarkdownExtensionMethods.GetChildObjects(source).Select(obj => new Tuple<Type, Markdig.Syntax.SourceSpan>(obj.GetType(), obj.Span)).ToArray();
     }
 
-    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetAllDescendantsTestData))]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetAllDescendantsTestData))]
     public Tuple<Type, Markdig.Syntax.SourceSpan>[] GetAllDescendantsTest(Markdig.Syntax.MarkdownObject source)
     {
         return MarkdownExtensionMethods.GetAllDescendants(source).Select(obj => new Tuple<Type, Markdig.Syntax.SourceSpan>(obj.GetType(), obj.Span)).ToArray();
     }
 
-    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetDescendantBranchesMatchingType1TestData))]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType1TestData))]
     public Tuple<Type, Markdig.Syntax.SourceSpan, int, int>[] GetDescendantBranchesMatchingType1Test(Markdig.Syntax.MarkdownObject source, Type type)
     {
         return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type)
             .Select(r => new Tuple<Type, Markdig.Syntax.SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
 
-    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetDescendantBranchesMatchingType2TestData))]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType2TestData))]
     public Tuple<Type, Markdig.Syntax.SourceSpan, int, int>[] GetDescendantBranchesMatchingType2Test(Markdig.Syntax.MarkdownObject source, ICollection<Type> types)
     {
         return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types)
