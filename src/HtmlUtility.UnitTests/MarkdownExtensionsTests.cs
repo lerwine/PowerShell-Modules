@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace HtmlUtility.UnitTests;
 
 public partial class MarkdownExtensionsTests
@@ -22,39 +20,29 @@ public partial class MarkdownExtensionsTests
     }
 
     [TestCaseSource(typeof(TestData), nameof(TestData.GetGetChildObjectsTestData))]
-    public Markdig.Syntax.SourceSpan[] GetChildObjectsTest(Markdig.Syntax.MarkdownObject source, Type[] expectedTypes)
+    public Tuple<Type, Markdig.Syntax.SourceSpan>[] GetChildObjectsTest(Markdig.Syntax.MarkdownObject source)
     {
-        Markdig.Syntax.MarkdownObject[] result = MarkdownExtensionMethods.GetChildObjects(source).ToArray();
-        Assert.That(result, Has.Length.EqualTo(expectedTypes.Length));
-        for (int i = 0; i < expectedTypes.Length; i++)
-            Assert.That(result[i], Is.InstanceOf(expectedTypes[i]), "Type Index ", i);
-        return result.Select(obj => obj.Span).ToArray();
+        return MarkdownExtensionMethods.GetChildObjects(source).Select(obj => new Tuple<Type, Markdig.Syntax.SourceSpan>(obj.GetType(), obj.Span)).ToArray();
     }
 
-    [Test]
-    public void GetAllDescendantsTest()
+    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetAllDescendantsTestData))]
+    public Tuple<Type, Markdig.Syntax.SourceSpan>[] GetAllDescendantsTest(Markdig.Syntax.MarkdownObject source)
     {
-        // Markdig.Syntax.MarkdownObject source;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetAllDescendants(source);
-        Assert.Inconclusive();
+        return MarkdownExtensionMethods.GetAllDescendants(source).Select(obj => new Tuple<Type, Markdig.Syntax.SourceSpan>(obj.GetType(), obj.Span)).ToArray();
     }
 
-    [Test]
-    public void GetDescendantBranchesMatchingType1Test()
+    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetDescendantBranchesMatchingType1TestData))]
+    public Tuple<Type, Markdig.Syntax.SourceSpan, int, int>[] GetDescendantBranchesMatchingType1Test(Markdig.Syntax.MarkdownObject source, Type type)
     {
-        // Markdig.Syntax.MarkdownObject source;
-        // Type type;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantBranchesMatchingType(source, type);
-        Assert.Inconclusive();
+        return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type)
+            .Select(r => new Tuple<Type, Markdig.Syntax.SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
 
-    [Test]
-    public void GetDescendantBranchesMatchingType2Test()
+    [TestCaseSource(typeof(TestData), nameof(TestData.GetGetDescendantBranchesMatchingType2TestData))]
+    public Tuple<Type, Markdig.Syntax.SourceSpan, int, int>[] GetDescendantBranchesMatchingType2Test(Markdig.Syntax.MarkdownObject source, ICollection<Type> types)
     {
-        // Markdig.Syntax.MarkdownObject source;
-        // ICollection<Type> types;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantBranchesMatchingType(source, types);
-        Assert.Inconclusive();
+        return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types)
+            .Select(r => new Tuple<Type, Markdig.Syntax.SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
 
     [Test]
@@ -63,7 +51,7 @@ public partial class MarkdownExtensionsTests
         // Markdig.Syntax.MarkdownObject source;
         // Type type;
         // int maximumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantBranchesMatchingType(source, type, maximumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, maximumDepth);
         Assert.Inconclusive();
     }
 
@@ -73,7 +61,7 @@ public partial class MarkdownExtensionsTests
         // Markdig.Syntax.MarkdownObject source;
         // ICollection<Type> types;
         // int maximumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantBranchesMatchingType(source, types, maximumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, maximumDepth);
         Assert.Inconclusive();
     }
 
@@ -82,7 +70,7 @@ public partial class MarkdownExtensionsTests
     {
         // Markdig.Syntax.MarkdownObject source;
         // int depth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantsAtDepth(source, depth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantsAtDepth(source, depth);
         Assert.Inconclusive();
     }
 
@@ -91,7 +79,7 @@ public partial class MarkdownExtensionsTests
     {
         // Markdig.Syntax.MarkdownObject source;
         // int minimumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantsFromDepth(source, minimumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantsFromDepth(source, minimumDepth);
         Assert.Inconclusive();
     }
 
@@ -100,7 +88,7 @@ public partial class MarkdownExtensionsTests
     {
         // Markdig.Syntax.MarkdownObject source;
         // int maximumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantsUpToDepth(source, maximumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantsUpToDepth(source, maximumDepth);
         Assert.Inconclusive();
     }
 
@@ -110,7 +98,7 @@ public partial class MarkdownExtensionsTests
         // Markdig.Syntax.MarkdownObject source;
         // int minimumDepth;
         // int maximumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantsInDepthRange(source, minimumDepth, maximumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantsInDepthRange(source, minimumDepth, maximumDepth);
         Assert.Inconclusive();
     }
 
@@ -121,7 +109,7 @@ public partial class MarkdownExtensionsTests
         // Type type;
         // int minimumDepth;
         // int maximumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantBranchesMatchingType(source, type, minimumDepth, maximumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, minimumDepth, maximumDepth);
         Assert.Inconclusive();
     }
 
@@ -132,7 +120,7 @@ public partial class MarkdownExtensionsTests
         // ICollection<Type> types;
         // int minimumDepth;
         // int maximumDepth;
-        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensions.GetDescendantBranchesMatchingType(source, types, minimumDepth, maximumDepth);
+        // IEnumerable<Markdig.Syntax.MarkdownObject> result = MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, minimumDepth, maximumDepth);
         Assert.Inconclusive();
     }
 }

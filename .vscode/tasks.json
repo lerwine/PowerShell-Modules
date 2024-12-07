@@ -66,20 +66,20 @@
         ]
       },
       {
-          "label": "Test SwPackage",
-          "command": "dotnet",
-          "type": "process",
-          "args": [
-              "test",
-              "${workspaceFolder}/src/SwPackage.UnitTests/SwPackage.UnitTests.csproj",
-              "--no-build",
-              "--logger",
-              "trx;LogFileName=${workspaceFolder}/src/TestResults/SwPackage-TestResults.trx"
-          ],
-          "dependsOn": [
-            "Build SwPackage.UnitTests"
-          ],
-          "problemMatcher": "$msCompile"
+        "label": "Test SwPackage",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "test",
+          "${workspaceFolder}/src/SwPackage.UnitTests/SwPackage.UnitTests.csproj",
+          "--no-build",
+          "--logger",
+          "trx;LogFileName=${workspaceFolder}/src/TestResults/SwPackage-TestResults.trx"
+        ],
+        "dependsOn": [
+          "Build SwPackage.UnitTests"
+        ],
+        "problemMatcher": "$msCompile"
       },
       {
         "label": "Publish IOUtility",
@@ -143,26 +143,29 @@
           "/consoleloggerparameters:NoSummary"
         ],
         "problemMatcher": "$msCompile",
-        "group": "build",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
         "dependsOn": [
           "Build HtmlUtility"
         ]
       },
       {
-          "label": "Test HtmlUtility",
-          "command": "dotnet",
-          "type": "process",
-          "args": [
-              "test",
-              "${workspaceFolder}/src/HtmlUtility.UnitTests/HtmlUtility.UnitTests.csproj",
-              "--no-build",
-              "--logger",
-              "trx;LogFileName=${workspaceFolder}/src/TestResults/HtmlUtility-TestResults.trx"
-          ],
-          "dependsOn": [
-            "Build HtmlUtility.UnitTests"
-          ],
-          "problemMatcher": "$msCompile"
+        "label": "Test HtmlUtility",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "test",
+          "${workspaceFolder}/src/HtmlUtility.UnitTests/HtmlUtility.UnitTests.csproj",
+          "--no-build",
+          "--logger",
+          "trx;LogFileName=${workspaceFolder}/src/TestResults/HtmlUtility-TestResults.trx"
+        ],
+        "dependsOn": [
+          "Build HtmlUtility.UnitTests"
+        ],
+        "problemMatcher": "$msCompile"
       },
       {
         "label": "Build WinIOUtility",
@@ -249,20 +252,20 @@
         ]
       },
       {
-          "label": "Test LteDev",
-          "command": "dotnet",
-          "type": "process",
-          "args": [
-              "test",
-              "${workspaceFolder}/src/LteDev.UnitTests/LteDev.UnitTests.csproj",
-              "--no-build",
-              "--logger",
-              "trx;LogFileName=${workspaceFolder}/src/TestResults/LteDev-TestResults.trx"
-          ],
-          "dependsOn": [
-            "Build LteDev.UnitTests"
-          ],
-          "problemMatcher": "$msCompile"
+        "label": "Test LteDev",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "test",
+          "${workspaceFolder}/src/LteDev.UnitTests/LteDev.UnitTests.csproj",
+          "--no-build",
+          "--logger",
+          "trx;LogFileName=${workspaceFolder}/src/TestResults/LteDev-TestResults.trx"
+        ],
+        "dependsOn": [
+          "Build LteDev.UnitTests"
+        ],
+        "problemMatcher": "$msCompile"
       },
       {
         "label": "Build XmlUtility",
@@ -309,10 +312,7 @@
           "/consoleloggerparameters:NoSummary"
         ],
         "problemMatcher": "$msCompile",
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        }
+        "group": "build"
       },
       {
         "label": "Publish GDIPlus",
