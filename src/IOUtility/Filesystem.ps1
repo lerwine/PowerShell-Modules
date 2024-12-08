@@ -82,7 +82,7 @@ Function Use-Location {
 
         # Specifies the location to temporarily change to.
         [Parameter(Mandatory = $true, HelpMessage = 'Path to one or more locations.')]
-        [Alias('PSPath', 'LP', 'FullName', 'LiteralPath')]
+        [Alias("PSPath", 'FullName', 'LiteralPath', 'LP')]
         [ValidateNotNullOrEmpty()]
         [ValidateScript({ Test-Path -LiteralPath $_ -PathType Container})]
         [string]$Path
@@ -220,7 +220,7 @@ Function Resolve-OptionalPath {
         # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
         # characters as escape sequences.
         [Parameter(Mandatory = $true, ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName = $true)]
-        [Alias("PSPath", "FullName")]
+        [Alias("PSPath", "FullName", "LP")]
         [ValidateNotNullOrEmpty()]
         [string[]]$LiteralPath,
 
@@ -507,7 +507,7 @@ Function Get-PathStringSegments {
         # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
         # characters as escape sequences.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [Alias("PSPath", 'FullName')]
+        [Alias("PSPath", 'FullName', 'LiteralPath', 'LP')]
         [ValidateNotNullOrEmpty()]
         [string[]]$Path,
 
@@ -594,7 +594,7 @@ Function Optimize-PathString {
         # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
         # characters as escape sequences.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [Alias("PSPath", 'FullName', 'Path')]
+        [Alias("PSPath", 'FullName', 'LiteralPath', 'LP')]
         [ValidateNotNullOrEmpty()]
         [string[]]$Path,
 
@@ -638,7 +638,7 @@ Function Compare-PathStrings {
         # enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
         # characters as escape sequences.
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [Alias("PSPath", 'FullName', 'Path')]
+        [Alias("PSPath", 'FullName', 'LiteralPath', 'LP')]
         [ValidateNotNullOrEmpty()]
         [string[]]$Path,
 
