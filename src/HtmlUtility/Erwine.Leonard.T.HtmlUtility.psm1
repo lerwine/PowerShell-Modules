@@ -1,5 +1,7 @@
 # . $PSScriptRoot/Offline-Html.ps1
 
+. $PSScriptRoot/MarkdownFunctions.ps1
+
 Function Publish-OfflineHtml {
     [CmdletBinding(DefaultParameterSetName = "Wcpath")]
     Param(

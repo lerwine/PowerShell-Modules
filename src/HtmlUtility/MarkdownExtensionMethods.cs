@@ -1,21 +1,14 @@
-using System.Collections.ObjectModel;
 using System.Reflection;
 using Markdig.Renderers.Html;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace HtmlUtility;
 
-public static class MarkdownExtensionMethods
+public static partial class MarkdownExtensionMethods
 {
-    private static readonly ReadOnlyDictionary<MarkdownTokenType, Type> _markdownTokenTypeMap;
-
-    static MarkdownExtensionMethods()
-    {
-        Type t = typeof(MarkdownTokenType);
-        _markdownTokenTypeMap = new(Enum.GetValues<MarkdownTokenType>().ToDictionary(k => k, v => t.GetField(v.ToString("F"))!.GetCustomAttribute<ReflectionTypeAttribute>()!.Type));
-    }
-    
     public static Type ToReflectionType(this MarkdownTokenType type) => _markdownTokenTypeMap[type];
-    
+
     public static List<Type>? ToReflectionTypes(this IList<MarkdownTokenType>? source)
     {
         if (source is null || source.Count == 0) return null;
@@ -47,39 +40,49 @@ public static class MarkdownExtensionMethods
     /// Gets all direct child markdown objects.
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that are direct child objects of the <paramref name="source"/> object.</returns>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetChildObjects(this Markdig.Syntax.MarkdownObject? source)
+    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that are direct child objects of the <paramref name="source"/> object.</returns>
+    public static IEnumerable<MarkdownObject> GetChildObjects(this MarkdownObject? source, bool includeAttributes = false)
     {
-        if (source is not null)
+        if (source is null) return [];
+        if (includeAttributes)
         {
             var attributes = source.TryGetAttributes();
             if (attributes is not null)
-                yield return attributes;
-            if (source is Markdig.Syntax.ContainerBlock block)
-                foreach (var item in block) yield return item;
-            else if (source is Markdig.Syntax.Inlines.ContainerInline inline)
-                foreach (var item in inline) yield return item;
-            else if (source is Markdig.Syntax.LeafBlock leaf && leaf.Inline is not null)
-                yield return leaf.Inline;
+            {
+                if (source.IsMarkdownObjectEnumerable(out IEnumerable<MarkdownObject>? enumerable))
+                    return ((MarkdownObject[])[attributes]).Concat(enumerable);
+                return [attributes];
+            }
         }
+        return source.GetDirectDescendants();
     }
 
     /// <summary>
     /// Gets all descendant markdown objects.
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that descend from the <paramref name="source"/> object.</returns>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetAllDescendants(this Markdig.Syntax.MarkdownObject? source)
+    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object.</returns>
+    public static IEnumerable<MarkdownObject> GetAllDescendants(this MarkdownObject? source, bool includeAttributes = false)
     {
-        if (source is not null)
+        if (source is null) return [];
+        if (includeAttributes)
         {
-            foreach (var item in GetChildObjects(source))
-            {
-                yield return item;
-                foreach (var c in GetAllDescendants(item))
-                    yield return c;
-            }
+            if (source is ContainerBlock cb)
+                return GetNestedDescendantsAndAttributes(cb);
+            if (source is ContainerInline ci)
+                return GetNestedDescendantsAndAttributes(ci);
+            if (source is LeafBlock lb)
+                return GetNestedDescendantsAndAttributes(lb);
+            var attributes = source.TryGetAttributes();
+            return (attributes is null) ? [] : [attributes];
         }
+        if (source is ContainerBlock containerBlock)
+            return GetNestedDescendants(containerBlock);
+        if (source is ContainerInline containerInline)
+            return GetNestedDescendants(containerInline);
+        return (source is LeafBlock leafBlock) ? GetNestedDescendants(leafBlock) : [];
     }
 
     /// <summary>
@@ -87,21 +90,44 @@ public static class MarkdownExtensionMethods
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="type">The object type to search for.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
+    /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
     /// except for any that have an ancestor that has already been yielded.</returns>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantBranchesMatchingType(this Markdig.Syntax.MarkdownObject? source, Type type)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, bool emitAttributesofUnmatched = false)
     {
-        if (source is not null && type is not null)
+        ArgumentNullException.ThrowIfNull(type);
+        if (source is null) return [];
+        if (type == MarkdownObjectType)
+            return GetChildObjects(source, emitAttributesofUnmatched);
+        if (type.IsNonAttributeMarkdownObjectType())
         {
-            foreach (var item in GetChildObjects(source))
+            if (source is ContainerBlock containerBlock)
             {
-                if (type.IsInstanceOfType(item))
-                    yield return item;
-                else
-                    foreach (var c in GetDescendantBranchesMatchingType(item, type))
-                        yield return c;
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(containerBlock, type.IsInstanceOfType);
+                return GetNestedDescendants(containerBlock, type.IsInstanceOfType);
+            }
+            if (source is ContainerInline containerInline)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(containerInline, type.IsInstanceOfType);
+                return GetNestedDescendants(containerInline, type.IsInstanceOfType);
+            }
+            if (source is LeafBlock leafBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(leafBlock, type.IsInstanceOfType);
+                return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, type.IsInstanceOfType);
             }
         }
+        
+        if (emitAttributesofUnmatched)
+        {
+            var attributes = source.TryGetAttributes();
+            if (attributes is not null)
+                return [attributes];
+        }
+        return [];
     }
 
     /// <summary>
@@ -109,21 +135,67 @@ public static class MarkdownExtensionMethods
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="types">The object types to search for.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
+    /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
     /// except for any that have an ancestor that has already been yielded.</returns>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantBranchesMatchingType(this Markdig.Syntax.MarkdownObject? source, ICollection<Type> types)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, bool emitAttributesofUnmatched = false)
     {
-        if (source is not null && types is not null && types.Count > 0)
+        ArgumentNullException.ThrowIfNull(types);
+        if (source is null) return [];
+        types = types.Where(IsNonAttributeMarkdownObjectType).CollapseTypes(out int typeCount);
+        if (typeCount == 1)
         {
-            foreach (var item in GetChildObjects(source))
+            Type singleType = types.First();
+            if (singleType == MarkdownObjectType)
+                return GetChildObjects(source, emitAttributesofUnmatched);
+            if (source is ContainerBlock containerBlock)
             {
-                if (types.Any(t => t.IsInstanceOfType(item)))
-                    yield return item;
-                else
-                    foreach (var c in GetDescendantBranchesMatchingType(item, types))
-                        yield return c;
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(containerBlock, singleType.IsInstanceOfType);
+                return GetNestedDescendants(containerBlock, singleType.IsInstanceOfType);
+            }
+            if (source is ContainerInline containerInline)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(containerInline, singleType.IsInstanceOfType);
+                return GetNestedDescendants(containerInline, singleType.IsInstanceOfType);
+            }
+            if (source is LeafBlock leafBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(leafBlock, singleType.IsInstanceOfType);
+                return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, singleType.IsInstanceOfType);
             }
         }
+        else if (typeCount > 0)
+        {
+            if (source is ContainerBlock containerBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(containerBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetNestedDescendants(containerBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
+            }
+            if (source is ContainerInline containerInline)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(containerInline, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetNestedDescendants(containerInline, obj => types.Any(t => t.IsInstanceOfType(obj)));
+            }
+            if (source is LeafBlock leafBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributes(leafBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, obj => types.Any(t => t.IsInstanceOfType(obj)));
+            }
+        }
+
+        if (emitAttributesofUnmatched)
+        {
+            var attributes = source.TryGetAttributes();
+            if (attributes is not null)
+                return [attributes];
+        }
+        return [];
     }
 
     /// <summary>
@@ -132,32 +204,45 @@ public static class MarkdownExtensionMethods
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="type">The object type to search for.</param>
     /// <param name="maximumDepth">The maximum number of times to recurse into nested child objects.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
+    /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
     /// except for any that have an ancestor that has already been yielded or are beyond the specified <paramref name="maximumDepth"/>.</returns>
     /// <remarks>If <paramref name="maximumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantBranchesMatchingType(this Markdig.Syntax.MarkdownObject? source, Type type, int maximumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int maximumDepth, bool emitAttributesofUnmatched = false)
     {
-        if (source is not null && maximumDepth > 0 && type is not null)
+        ArgumentNullException.ThrowIfNull(type);
+        if (source is null || maximumDepth < 1) return [];
+        if (type == MarkdownObjectType)
+            return GetChildObjects(source, emitAttributesofUnmatched);
+        if (type.IsNonAttributeMarkdownObjectType())
         {
-            if (maximumDepth == 1)
+            if (source is ContainerBlock containerBlock)
             {
-                foreach (var item in GetChildObjects(source).Where(type.IsInstanceOfType))
-                    yield return item;
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
+                return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
             }
-            else
+            if (source is ContainerInline containerInline)
             {
-                maximumDepth--;
-                foreach (var item in GetChildObjects(source))
-                {
-                    if (type.IsInstanceOfType(item))
-                        yield return item;
-                    else
-                        foreach (var c in GetDescendantBranchesMatchingType(item, type, maximumDepth))
-                            yield return c;
-
-                }
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
+                return GetNestedDescendantsToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
+            }
+            if (source is LeafBlock leafBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
+                return GetNestedDescendantsToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
             }
         }
+
+        if (emitAttributesofUnmatched)
+        {
+            var attributes = source.TryGetAttributes();
+            if (attributes is not null)
+                return [attributes];
+        }
+        return [];
     }
 
     /// <summary>
@@ -166,33 +251,69 @@ public static class MarkdownExtensionMethods
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="types">The object types to search for.</param>
     /// <param name="maximumDepth">The maximum number of times to recurse into nested child objects.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
+    /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
     /// except for any that have an ancestor that has already been yielded or are beyond the specifed <paramref name="maximumDepth"/>.</returns>
     /// <remarks>If <paramref name="maximumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantBranchesMatchingType(this Markdig.Syntax.MarkdownObject? source, ICollection<Type> types, int maximumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int maximumDepth, bool emitAttributesofUnmatched = false)
     {
         ArgumentNullException.ThrowIfNull(types);
-        if (source is not null && types is not null && maximumDepth > 0 && types.Count > 0)
+        if (source is null || maximumDepth < 1) return [];
+        types = types.Where(IsNonAttributeMarkdownObjectType).CollapseTypes(out int typeCount);
+        if (typeCount == 0) return [];
+        if (typeCount == 1)
         {
-            if (maximumDepth == 1)
+            Type type = types.First();
+            if (type == MarkdownObjectType)
+                return GetChildObjects(source, emitAttributesofUnmatched);
+            if (source is ContainerBlock containerBlock)
             {
-                foreach (var item in GetChildObjects(source).Where(obj => types.Any(t => t.IsInstanceOfType(obj))))
-                    yield return item;
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
+                return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
             }
-            else
+            if (source is ContainerInline containerInline)
             {
-                maximumDepth--;
-                foreach (var item in GetChildObjects(source))
-                {
-                    if (types.Any(t => t.IsInstanceOfType(item)))
-                        yield return item;
-                    else
-                        foreach (var c in GetDescendantBranchesMatchingType(item, types, maximumDepth))
-                            yield return c;
-
-                }
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
+                return GetNestedDescendantsToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
+            }
+            if (source is LeafBlock leafBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
+                return GetNestedDescendantsToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
             }
         }
+        else
+        {
+            if (source is ContainerBlock containerBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(containerBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetNestedDescendantsToDepth(containerBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+            }
+            if (source is ContainerInline containerInline)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(containerInline, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetNestedDescendantsToDepth(containerInline, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+            }
+            if (source is LeafBlock leafBlock)
+            {
+                if (emitAttributesofUnmatched)
+                    return GetNestedDescendantsAndAttributesToDepth(leafBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetNestedDescendantsToDepth(leafBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+            }
+        }
+
+        if (emitAttributesofUnmatched)
+        {
+            var attributes = source.TryGetAttributes();
+            if (attributes is not null)
+                return [attributes];
+        }
+        return [];
     }
 
     /// <summary>
@@ -200,27 +321,13 @@ public static class MarkdownExtensionMethods
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="depth">The number of times to recurse into child markdown objects.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that exist at the specified recursion <paramref name="depth"/>.</returns>
+    /// <returns>The <see cref="MarkdownObject"/>s that exist at the specified recursion <paramref name="depth"/>.</returns>
+    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
     /// <remarks>If <paramref name="depth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantsAtDepth(this Markdig.Syntax.MarkdownObject? source, int depth)
+    public static IEnumerable<MarkdownObject> GetDescendantsAtDepth(this MarkdownObject? source, int depth, bool includeAttributes = false)
     {
-        if (source is not null && depth > 0)
-        {
-            if (depth == 1)
-            {
-                foreach (var item in source.GetChildObjects())
-                    yield return item;
-            }
-            else
-            {
-                depth--;
-                foreach (var parent in source.GetChildObjects())
-                {
-                    foreach (var item in GetDescendantsAtDepth(parent, depth))
-                    yield return item;
-                }
-            }
-        }
+        if (source is null || depth < 1) return [];
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -228,16 +335,13 @@ public static class MarkdownExtensionMethods
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="minimumDepth">The number of to recurse into child objects before yielding descendant markdown objects.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that exist at or beyond the specified recursion <paramref name="minimumDepth"/>.</returns>
+    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
+    /// <returns>The <see cref="MarkdownObject"/>s that exist at or beyond the specified recursion <paramref name="minimumDepth"/>.</returns>
     /// <remarks>If <paramref name="minimumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantsFromDepth(this Markdig.Syntax.MarkdownObject? source, int minimumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantsFromDepth(this MarkdownObject? source, int minimumDepth, bool includeAttributes = false)
     {
-        foreach (var parent in GetDescendantsAtDepth(source, minimumDepth))
-        {
-            yield return parent;
-            foreach (var item in GetAllDescendants(parent))
-                yield return item;
-        }
+        if (source is null) return [];
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -245,82 +349,34 @@ public static class MarkdownExtensionMethods
     /// </summary>
     /// <param name="source">The prospective parent markdown object.</param>
     /// <param name="maximumDepth">The maximum number of times to recurse into nested child objects.</param>
-    /// <returns>The <see cref="Markdig.Syntax.MarkdownObject"/>s that exist at or below the specified recursion <paramref name="maximumDepth"/>.</returns>
+    /// <returns>The <see cref="MarkdownObject"/>s that exist at or below the specified recursion <paramref name="maximumDepth"/>.</returns>
+    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
     /// <remarks>If <paramref name="minimumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantsUpToDepth(this Markdig.Syntax.MarkdownObject? source, int maximumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantsUpToDepth(this MarkdownObject? source, int maximumDepth, bool includeAttributes = false)
     {
-        if (source is not null && maximumDepth > 0)
-        {
-            if (maximumDepth == 1)
-            {
-                foreach (var item in source.GetChildObjects())
-                    yield return item;
-            }
-            else
-            {
-                maximumDepth--;
-                foreach (var parent in source.GetChildObjects())
-                {
-                    yield return parent;
-                    foreach (var item in GetDescendantsUpToDepth(source, maximumDepth))
-                        yield return item;
-                }
-            }
-        }
+        if (source is null || maximumDepth < 1) return [];
+        throw new NotImplementedException();
     }
 
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantsInDepthRange(this Markdig.Syntax.MarkdownObject? source, int minimumDepth, int maximumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantsInDepthRange(this MarkdownObject? source, int minimumDepth, int maximumDepth, bool includeAttributes = false)
     {
-        if (source is not null && minimumDepth > 0 && (maximumDepth -= minimumDepth) >= 0)
-        {
-            if (maximumDepth == 0)
-                foreach (var item in GetDescendantsAtDepth(source, minimumDepth))
-                    yield return item;
-            else
-                foreach (var item in GetDescendantsAtDepth(source, minimumDepth))
-                {
-                    yield return item;
-                    foreach (var c in item.GetDescendantsUpToDepth(maximumDepth))
-                        yield return c;
-                }
-        }
+        if (source is null || maximumDepth < 1 || maximumDepth < minimumDepth) return [];
+        throw new NotImplementedException();
     }
 
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantBranchesMatchingType(this Markdig.Syntax.MarkdownObject? source, Type type, int minimumDepth, int maximumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int minimumDepth, int maximumDepth, bool emitAttributesofUnmatched = false)
     {
-        if (source is not null && minimumDepth > 0 && (maximumDepth -= minimumDepth) >= 0)
-        {
-            if (maximumDepth == 0)
-                foreach (var item in GetDescendantsAtDepth(source, minimumDepth).Where(type.IsInstanceOfType))
-                    yield return item;
-            else
-                foreach (var item in GetDescendantsAtDepth(source, minimumDepth))
-                {
-                    if (type.IsInstanceOfType(item))
-                        yield return item;
-                    else
-                        foreach (var c in item.GetDescendantBranchesMatchingType(type, maximumDepth))
-                            yield return c;
-                }
-        }
+        ArgumentNullException.ThrowIfNull(type);
+        if (source is null || maximumDepth < 1 || maximumDepth < minimumDepth) return [];
+        throw new NotImplementedException();
     }
 
-    public static IEnumerable<Markdig.Syntax.MarkdownObject> GetDescendantBranchesMatchingType(this Markdig.Syntax.MarkdownObject? source, ICollection<Type> types, int minimumDepth, int maximumDepth)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth, bool emitAttributesofUnmatched = false)
     {
-        if (source is not null && minimumDepth > 0 && (maximumDepth -= minimumDepth) >= 0)
-        {
-            if (maximumDepth == 0)
-                foreach (var item in GetDescendantsAtDepth(source, minimumDepth).Where(obj => types.Any(t => t.IsInstanceOfType(obj))))
-                    yield return item;
-            else
-                foreach (var item in GetDescendantsAtDepth(source, minimumDepth))
-                {
-                    if (types.Any(t => t.IsInstanceOfType(item)))
-                        yield return item;
-                    else
-                        foreach (var c in item.GetDescendantBranchesMatchingType(types, maximumDepth))
-                            yield return c;
-                }
-        }
+        ArgumentNullException.ThrowIfNull(types);
+        if (source is null || minimumDepth < 1 || maximumDepth < minimumDepth) return [];
+        types = types.Where(IsNonAttributeMarkdownObjectType).CollapseTypes(out int typeCount);
+        if (typeCount == 0) return [];
+        throw new NotImplementedException();
     }
 }

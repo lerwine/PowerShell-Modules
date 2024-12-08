@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
+using Json.Schema;
 using Markdig;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -12,15 +14,21 @@ public static class TestHelper
 
     internal static void AddMarkdownJsonTestAttachment(MarkdownDocument document, string sourceFileName, string jsonFileName)
     {
-        static JsonObject createJsonObject(MarkdownObject obj)
+        static JsonObject createJsonObject(MarkdownObject obj, int level, int index)
         {
             JsonObject result = new()
             {
                 { "Name", JsonValue.Create(obj.GetType().Name) }
             };
-            JsonArray arr = new();
+            level++;
+            index = 0;
             if (obj is HtmlAttributes a)
             {
+                JsonObject pos = new()
+                {
+                    { "Level", JsonValue.Create(level) }
+                };
+                result.Add("Position", pos);
                 if (!string.IsNullOrEmpty(a.Id))
                     result.Add("Id", JsonValue.Create(a.Id));
                 if (a.Classes is not null && a.Classes.Count > 0)
@@ -48,30 +56,68 @@ public static class TestHelper
                     }
                     result.Add("Properties", ca);
                 }
+                return result;
             }
-            else
+
+            JsonArray arr = new();
+            if ((a = obj.TryGetAttributes()!) is not null)
+                arr.Add(createJsonObject(a, level, 0));
+            if (obj is ContainerBlock cb)
             {
-                if ((a = obj.TryGetAttributes()!) is not null)
-                    arr.Add(createJsonObject(a));
-                if (obj is Markdig.Extensions.Footnotes.FootnoteLink fnl)
+                JsonObject pos = new()
                 {
-                    if (fnl.Footnote is not null)
-                    {
-                        JsonObject fno = new()
-                        {
-                            { "Start", fnl.Footnote.Span.Start },
-                            { "End", fnl.Footnote.Span.Start }
-                        };
-                        result.Add("Footnote", fno);
-                    }
-                    result.Add("Index", JsonValue.Create(fnl.Index));
-                    if (fnl.IsBackLink)
-                        result.Add("IsBackLink", JsonValue.Create(true));
+                    { "Level", JsonValue.Create(level) },
+                    { "Index", JsonValue.Create(index) },
+                    { "Line", JsonValue.Create(obj.Line) },
+                    { "Column", JsonValue.Create(obj.Column) },
+                    { "Start", JsonValue.Create(obj.Span.Start) },
+                    { "End", JsonValue.Create(obj.Span.End) }
+                };
+                result.Add("Position", pos);
+                foreach (var o in cb)
+                    arr.Add(createJsonObject(o, level, ++index));
+            }
+            else if (obj is Markdig.Syntax.Inlines.ContainerInline ci)
+            {
+                JsonObject pos = new()
+                {
+                    { "Level", JsonValue.Create(level) },
+                    { "Index", JsonValue.Create(index) }
+                };
+                foreach (var o in ci)
+                    arr.Add(createJsonObject(o, level, ++index));
+                if (obj is Markdig.Syntax.Inlines.LinkInline li)
+                {
+                    if (!string.IsNullOrEmpty(li.Title))
+                        result.Add("Title", JsonValue.Create(li.Title));
+                    if (!string.IsNullOrEmpty(li.Label))
+                        result.Add("Label", JsonValue.Create(li.Label));
+                    if (!string.IsNullOrEmpty(li.Url))
+                        result.Add("Url", JsonValue.Create(li.Url));
+                    if (!string.IsNullOrEmpty(li.LinkRefDefLabel))
+                        result.Add("LinkRefDefLabel", JsonValue.Create(li.LinkRefDefLabel));
+                    if (li.IsImage)
+                        result.Add("IsImage", JsonValue.Create(true));
+                    if (li.IsShortcut)
+                        result.Add("IsShortcut", JsonValue.Create(true));
+                    if (li.IsAutoLink)
+                        result.Add("IsAutoLink", JsonValue.Create(true));
                 }
-                else if (obj is LinkReferenceDefinition lrd)
+            }
+            else if (obj is LeafBlock leafBlock)
+            {
+                JsonObject pos = new()
                 {
-                    if (lrd.Inline is not null)
-                        arr.Add(createJsonObject(lrd.Inline));
+                    { "Level", JsonValue.Create(level) },
+                    { "Index", JsonValue.Create(index) },
+                    { "Line", JsonValue.Create(obj.Line) },
+                    { "Column", JsonValue.Create(obj.Column) },
+                    { "Start", JsonValue.Create(obj.Span.Start) },
+                    { "End", JsonValue.Create(obj.Span.End) }
+                };
+                result.Add("Position", pos);
+                if (obj is LinkReferenceDefinition lrd)
+                {
                     if (obj is Markdig.Extensions.AutoIdentifiers.HeadingLinkReferenceDefinition hlr && hlr.Heading is not null)
                     {
                         JsonObject fno = new()
@@ -88,75 +134,59 @@ public static class TestHelper
                     if (!string.IsNullOrEmpty(lrd.Url))
                         result.Add("Url", JsonValue.Create(lrd.Url));
                 }
+                if (leafBlock.Inline is not null)
+                    foreach (var o in leafBlock.Inline)
+                        arr.Add(createJsonObject(o, level, ++index));
+            }
+            else
+            {
+                if (obj is Markdig.Extensions.Footnotes.FootnoteLink fnl)
+                {
+                    JsonObject pos = new()
+                    {
+                        { "Level", JsonValue.Create(level) },
+                        { "Index", JsonValue.Create(index) },
+                        { "Line", JsonValue.Create(obj.Line) },
+                        { "Column", JsonValue.Create(obj.Column) }
+                    };
+                    result.Add("Position", pos);
+                    if (fnl.Footnote is not null)
+                    {
+                        JsonObject fno = new()
+                        {
+                            { "Start", fnl.Footnote.Span.Start },
+                            { "End", fnl.Footnote.Span.Start }
+                        };
+                        result.Add("Footnote", fno);
+                    }
+                    result.Add("Index", JsonValue.Create(fnl.Index));
+                    if (fnl.IsBackLink)
+                        result.Add("IsBackLink", JsonValue.Create(true));
+                }
                 else
                 {
-                    if (obj is ContainerBlock cb)
+                    JsonObject pos = new()
                     {
-                        JsonObject pos = new()
-                        {
-                            { "Line", JsonValue.Create(obj.Line) },
-                            { "Column", JsonValue.Create(obj.Column) }
-                        };
-                        result.Add("Position", pos);
-                        pos = new()
-                        {
-                            { "Start", JsonValue.Create(obj.Span.Start) },
-                            { "End", JsonValue.Create(obj.Span.End) }
-                        };
-                        result.Add("Span", pos);
-                        foreach (var o in cb)
-                            arr.Add(createJsonObject(o));
-                    }
-                    else if (obj is Markdig.Syntax.Inlines.ContainerInline ci)
-                    {
-                        foreach (var o in ci)
-                            arr.Add(createJsonObject(o));
-                        if (obj is Markdig.Syntax.Inlines.LinkInline li)
-                        {
-                            if (!string.IsNullOrEmpty(li.Title))
-                                result.Add("Title", JsonValue.Create(li.Title));
-                            if (!string.IsNullOrEmpty(li.Label))
-                                result.Add("Label", JsonValue.Create(li.Label));
-                            if (!string.IsNullOrEmpty(li.Url))
-                                result.Add("Url", JsonValue.Create(li.Url));
-                            if (!string.IsNullOrEmpty(li.LinkRefDefLabel))
-                                result.Add("LinkRefDefLabel", JsonValue.Create(li.LinkRefDefLabel));
-                            if (li.IsImage)
-                                result.Add("IsImage", JsonValue.Create(true));
-                            if (li.IsShortcut)
-                                result.Add("IsShortcut", JsonValue.Create(true));
-                            if (li.IsAutoLink)
-                                result.Add("IsAutoLink", JsonValue.Create(true));
-                        }
-                    }
-                    else
-                    {
-                        JsonObject pos = new()
-                        {
-                            { "Line", JsonValue.Create(obj.Line) },
-                            { "Column", JsonValue.Create(obj.Column) }
-                        };
-                        result.Add("Position", pos);
-                        pos = new()
-                        {
-                            { "Start", JsonValue.Create(obj.Span.Start) },
-                            { "End", JsonValue.Create(obj.Span.End) }
-                        };
-                        result.Add("Span", pos);
-                        if (obj is LeafBlock blk && blk.Inline is not null)
-                            arr.Add(createJsonObject(blk.Inline));
-                        else if (obj is Markdig.Syntax.Inlines.Inline)
-                            result.Add("Text", obj.ToString());
-                    }
+                        { "Level", JsonValue.Create(level) },
+                        { "Index", JsonValue.Create(index) },
+                        { "Line", JsonValue.Create(obj.Line) },
+                        { "Column", JsonValue.Create(obj.Column) },
+                        { "Start", JsonValue.Create(obj.Span.Start) },
+                        { "End", JsonValue.Create(obj.Span.End) }
+                    };
+                    result.Add("Span", pos);
+                    if (obj is Markdig.Syntax.Inlines.LiteralInline)
+                        result.Add("Text", obj.ToString());
                 }
-                if (arr.Count > 0)
-                    result.Add("Tokens", arr);
             }
+
+            if (arr.Count > 0)
+                result.Add("Tokens", arr);
             return result;
         }
-        JsonObject rootObject = createJsonObject(document);
+        JsonObject rootObject = createJsonObject(document, 0, 0);
         string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", jsonFileName);
-        using FileStream stream = File.OpenWrite(path);
+        using FileStream stream = new(path, FileMode.Create, FileAccess.Write);
         using (Utf8JsonWriter writer = new(stream))
         {
             rootObject.WriteTo(writer);
@@ -164,6 +194,22 @@ public static class TestHelper
             stream.Flush();
         }
         stream.Close();
+
+        // "Position":\s+\{[\r\n\s]+"Level":\s+(\d+),[\r\n\s]+"Index":\s+(\d+),[\r\n\s]+"Line":\s+(\d+),[\r\n\s]+"Column":\s+(\d+),[\r\n\s]+"Start":\s+(\d+),[\r\n\s]+"End":\s+(\d+)[\r\n\s]+\}
+        // "Position": { "Level": $1, "Index": $2, "Line": $3, "Column": $4, "Start": $5, "End": $6 }
+
+        // "Heading":\s+\{[\r\n\s]+"Start":\s+(\d+),[\r\n\s]+"End":\s+(\d+)[\r\n\s]+\}
+        // "Heading": { "Start": $1, "End": $2 }
+
+        // "Position":\s+\{[\r\n\s]+"Level":\s+(\d+),[\r\n\s]+"Index":\s+(\d+),[\r\n\s]+"Line":\s+(\d+),[\r\n\s]+"Column":\s+(\d+),[\r\n\s]+\}
+        // "Position": { "Level": $1, "Index": $2, "Line": $3, "Column": $4 }
+
+        // "Position":\s+\{[\r\n\s]+"Level":\s+(\d+),[\r\n\s]+"Index":\s+0,[\r\n\s]+"Line":\s+0,[\r\n\s]+"Column":\s+0,[\r\n\s]+"Start":\s+0,[\r\n\s]+"End":\s+-1[\r\n\s]+\}
+        // "Position": { "Level": $1 }
+
+        // "Position":\s+\{[\r\n\s]+"Level":\s+(\d+)[\r\n\s]+\}
+        // "Position": { "Level": $1 }
+
         TestContext.AddTestAttachment(path, $"JSON node information for contents of {sourceFileName}");
 
     }
