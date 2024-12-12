@@ -518,10 +518,12 @@ public enum MarkdownTokenType
     [ReflectionType(typeof(Markdig.Extensions.CustomContainers.CustomContainerInline))]
     CustomContainerInline,
 
+    // TODO: Fix logic - HtmlAttributes is not a type that can be selected
     /// <summary>
     /// Objects of type Markdig.Renderers.Html.HtmlAttributes
     /// </summary>
     [ReflectionType(typeof(Markdig.Renderers.Html.HtmlAttributes))]
+    [Obsolete("This is not a selectable type")]
     HtmlAttributes,
 
     /// <summary>

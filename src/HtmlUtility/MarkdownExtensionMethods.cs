@@ -36,6 +36,16 @@ public static partial class MarkdownExtensionMethods
         return types;
     }
 
+    public static IEnumerable<(MarkdownObject Parent, HtmlAttributes Attribute)> GetAllAttributes(this MarkdownObject? source)
+    {
+        foreach (MarkdownObject parent in GetAllDescendants(source))
+        {
+            var attr = parent.TryGetAttributes();
+            if (attr is not null)
+                yield return (parent, attr);
+        }
+    }
+
     /// <summary>
     /// Gets all direct child markdown objects.
     /// </summary>
@@ -93,40 +103,22 @@ public static partial class MarkdownExtensionMethods
     /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
     /// except for any that have an ancestor that has already been yielded.</returns>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, bool emitAttributesofUnmatched = false)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (source is null) return [];
         if (type == MarkdownObjectType)
-            return GetChildObjects(source, emitAttributesofUnmatched);
+            return GetChildObjects(source);
         if (type.IsNonAttributeMarkdownObjectType())
         {
             if (source is ContainerBlock containerBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(containerBlock, type.IsInstanceOfType);
                 return GetNestedDescendants(containerBlock, type.IsInstanceOfType);
-            }
             if (source is ContainerInline containerInline)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(containerInline, type.IsInstanceOfType);
                 return GetNestedDescendants(containerInline, type.IsInstanceOfType);
-            }
             if (source is LeafBlock leafBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(leafBlock, type.IsInstanceOfType);
                 return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, type.IsInstanceOfType);
-            }
         }
         
-        if (emitAttributesofUnmatched)
-        {
-            var attributes = source.TryGetAttributes();
-            if (attributes is not null)
-                return [attributes];
-        }
         return [];
     }
 
@@ -138,7 +130,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
     /// except for any that have an ancestor that has already been yielded.</returns>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, bool emitAttributesofUnmatched = false)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (source is null) return [];
@@ -147,54 +139,24 @@ public static partial class MarkdownExtensionMethods
         {
             Type singleType = types.First();
             if (singleType == MarkdownObjectType)
-                return GetChildObjects(source, emitAttributesofUnmatched);
+                return GetChildObjects(source);
             if (source is ContainerBlock containerBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(containerBlock, singleType.IsInstanceOfType);
                 return GetNestedDescendants(containerBlock, singleType.IsInstanceOfType);
-            }
             if (source is ContainerInline containerInline)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(containerInline, singleType.IsInstanceOfType);
                 return GetNestedDescendants(containerInline, singleType.IsInstanceOfType);
-            }
             if (source is LeafBlock leafBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(leafBlock, singleType.IsInstanceOfType);
                 return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, singleType.IsInstanceOfType);
-            }
         }
         else if (typeCount > 0)
         {
             if (source is ContainerBlock containerBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(containerBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
                 return GetNestedDescendants(containerBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
-            }
             if (source is ContainerInline containerInline)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(containerInline, obj => types.Any(t => t.IsInstanceOfType(obj)));
                 return GetNestedDescendants(containerInline, obj => types.Any(t => t.IsInstanceOfType(obj)));
-            }
             if (source is LeafBlock leafBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributes(leafBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
                 return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, obj => types.Any(t => t.IsInstanceOfType(obj)));
-            }
         }
 
-        if (emitAttributesofUnmatched)
-        {
-            var attributes = source.TryGetAttributes();
-            if (attributes is not null)
-                return [attributes];
-        }
         return [];
     }
 
@@ -208,40 +170,22 @@ public static partial class MarkdownExtensionMethods
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
     /// except for any that have an ancestor that has already been yielded or are beyond the specified <paramref name="maximumDepth"/>.</returns>
     /// <remarks>If <paramref name="maximumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int maximumDepth, bool emitAttributesofUnmatched = false)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (source is null || maximumDepth < 1) return [];
         if (type == MarkdownObjectType)
-            return GetChildObjects(source, emitAttributesofUnmatched);
+            return GetChildObjects(source);
         if (type.IsNonAttributeMarkdownObjectType())
         {
             if (source is ContainerBlock containerBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
                 return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
-            }
             if (source is ContainerInline containerInline)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
                 return GetNestedDescendantsToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
-            }
             if (source is LeafBlock leafBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
                 return GetNestedDescendantsToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
-            }
         }
 
-        if (emitAttributesofUnmatched)
-        {
-            var attributes = source.TryGetAttributes();
-            if (attributes is not null)
-                return [attributes];
-        }
         return [];
     }
 
@@ -255,7 +199,7 @@ public static partial class MarkdownExtensionMethods
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
     /// except for any that have an ancestor that has already been yielded or are beyond the specifed <paramref name="maximumDepth"/>.</returns>
     /// <remarks>If <paramref name="maximumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int maximumDepth, bool emitAttributesofUnmatched = false)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (source is null || maximumDepth < 1) return [];
@@ -265,54 +209,24 @@ public static partial class MarkdownExtensionMethods
         {
             Type type = types.First();
             if (type == MarkdownObjectType)
-                return GetChildObjects(source, emitAttributesofUnmatched);
+                return GetChildObjects(source);
             if (source is ContainerBlock containerBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
                 return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
-            }
             if (source is ContainerInline containerInline)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
                 return GetNestedDescendantsToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
-            }
             if (source is LeafBlock leafBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
                 return GetNestedDescendantsToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
-            }
         }
         else
         {
             if (source is ContainerBlock containerBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(containerBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
                 return GetNestedDescendantsToDepth(containerBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
-            }
             if (source is ContainerInline containerInline)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(containerInline, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
                 return GetNestedDescendantsToDepth(containerInline, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
-            }
             if (source is LeafBlock leafBlock)
-            {
-                if (emitAttributesofUnmatched)
-                    return GetNestedDescendantsAndAttributesToDepth(leafBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
                 return GetNestedDescendantsToDepth(leafBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
-            }
         }
 
-        if (emitAttributesofUnmatched)
-        {
-            var attributes = source.TryGetAttributes();
-            if (attributes is not null)
-                return [attributes];
-        }
         return [];
     }
 
@@ -364,14 +278,14 @@ public static partial class MarkdownExtensionMethods
         throw new NotImplementedException();
     }
 
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int minimumDepth, int maximumDepth, bool emitAttributesofUnmatched = false)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int minimumDepth, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (source is null || maximumDepth < 1 || maximumDepth < minimumDepth) return [];
         throw new NotImplementedException();
     }
 
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth, bool emitAttributesofUnmatched = false)
+    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (source is null || minimumDepth < 1 || maximumDepth < minimumDepth) return [];

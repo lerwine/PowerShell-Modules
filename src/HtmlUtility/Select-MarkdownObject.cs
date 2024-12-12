@@ -42,6 +42,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     [Parameter(Mandatory = true, ParameterSetName = ParameterSetName_RecurseUnmatched)]
     public SwitchParameter RecurseUnmatchedOnly { get; set; }
 
+    // TODO: Fix logic - IncludeAttributes is only applicable when type is not specified
     public SwitchParameter IncludeAttributes { get; set; }
 
     private List<Type> _multiType = null!;
@@ -194,7 +195,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType, IncludeAttributes.IsPresent))
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType))
         {
             if (Stopping) return;
             WriteObject(c, false);
@@ -222,7 +223,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType, IncludeAttributes.IsPresent))
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType))
         {
             if (Stopping) return;
             WriteObject(c, false);
@@ -279,7 +280,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             if (_singleType.IsInstanceOfType(item))
                 WriteObject(item, false);
             else
-                foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, IncludeAttributes.IsPresent))
+                foreach (var c in item.GetDescendantBranchesMatchingType(_singleType))
                 {
                     if (Stopping) return;
                     WriteObject(c, false);
@@ -304,7 +305,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             if (_multiType.Any(t => t.IsInstanceOfType(item)))
                 WriteObject(item, false);
             else
-                foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, IncludeAttributes.IsPresent))
+                foreach (var c in item.GetDescendantBranchesMatchingType(_multiType))
                 {
                     if (Stopping) return;
                     WriteObject(c, false);
@@ -336,7 +337,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
         else
-            foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType, IncludeAttributes.IsPresent))
+            foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType))
             {
                 if (Stopping) return;
                 WriteObject(c, false);
@@ -347,7 +348,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType, MaxDepth, IncludeAttributes.IsPresent))
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_singleType, MaxDepth))
         {
             if (Stopping) return;
             WriteObject(c, false);
@@ -359,7 +360,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
         else
-            foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType, IncludeAttributes.IsPresent))
+            foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType))
             {
                 if (Stopping) return;
                 WriteObject(c, false);
@@ -370,7 +371,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType, MaxDepth, IncludeAttributes.IsPresent))
+        foreach (var c in currentObject.GetDescendantBranchesMatchingType(_multiType, MaxDepth))
         {
             if (Stopping) return;
             WriteObject(c, false);
@@ -399,7 +400,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             if (_singleType.IsInstanceOfType(item))
                 WriteObject(item, false);
             else
-                foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, _depth, IncludeAttributes.IsPresent))
+                foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, _depth))
                 {
                     if (Stopping) return;
                     WriteObject(c, false);
@@ -414,7 +415,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             if (Stopping) return;
             if (_singleType.IsInstanceOfType(item))
                 WriteObject(item, false);
-            foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, _depth, IncludeAttributes.IsPresent))
+            foreach (var c in item.GetDescendantBranchesMatchingType(_singleType, _depth))
             {
                 if (Stopping) return;
                 WriteObject(c, false);
@@ -430,7 +431,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             if (_multiType.Any(t => t.IsInstanceOfType(item)))
                 WriteObject(item, false);
             else
-                foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, _depth, IncludeAttributes.IsPresent))
+                foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, _depth))
                 {
                     if (Stopping) return;
                     WriteObject(c, false);
@@ -447,7 +448,7 @@ public partial class Select_MarkdownObject : PSCmdlet
                 break;
             if (_multiType.Any(t => t.IsInstanceOfType(item)))
                 WriteObject(item, false);
-            foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, _depth, IncludeAttributes.IsPresent))
+            foreach (var c in item.GetDescendantBranchesMatchingType(_multiType, _depth))
             {
                 if (Stopping) return;
                 WriteObject(c, false);

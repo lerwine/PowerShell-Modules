@@ -92,11 +92,8 @@ public partial class MarkdownExtensionsTests
     /// <param name="type"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType1TestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType1Test(MarkdownObject source, Type type, bool? emitAttributesofUnmatched)
+    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType1Test(MarkdownObject source, Type type)
     {
-        if (emitAttributesofUnmatched.HasValue)
-            return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, emitAttributesofUnmatched.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
         return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type)
             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
@@ -108,11 +105,8 @@ public partial class MarkdownExtensionsTests
     /// <param name="types"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType2TestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType2Test(MarkdownObject source, IEnumerable<Type> types, bool? emitAttributesofUnmatched)
+    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType2Test(MarkdownObject source, IEnumerable<Type> types)
     {
-        if (emitAttributesofUnmatched.HasValue)
-            return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, emitAttributesofUnmatched.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
         return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types)
             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
@@ -126,11 +120,8 @@ public partial class MarkdownExtensionsTests
     /// <param name="emitAttributesofUnmatched"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType3TestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType3Test(MarkdownObject? source, Type type, int maximumDepth, bool? emitAttributesofUnmatched)
+    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType3Test(MarkdownObject? source, Type type, int maximumDepth)
     {
-        if (emitAttributesofUnmatched.HasValue)
-            return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, maximumDepth, emitAttributesofUnmatched.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
         return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, maximumDepth)
             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
@@ -144,11 +135,8 @@ public partial class MarkdownExtensionsTests
     /// <param name="emitAttributesofUnmatched"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType4TestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType4Test(MarkdownObject? source, IEnumerable<Type> types, int maximumDepth, bool? emitAttributesofUnmatched)
+    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType4Test(MarkdownObject? source, IEnumerable<Type> types, int maximumDepth)
     {
-        if (emitAttributesofUnmatched.HasValue)
-            return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, maximumDepth, emitAttributesofUnmatched.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
         return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, maximumDepth)
             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
@@ -160,7 +148,7 @@ public partial class MarkdownExtensionsTests
     /// <param name="depth"></param>
     /// <param name="includeAttributes"></param>
     /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantsAtDepthTestData), new object[] { false })]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantsAtDepthTestData))]
     public Tuple<Type, SourceSpan, int, int>[] GetDescendantsAtDepthTest(MarkdownObject? source, int depth, bool? includeAttributes)
     {
         if (includeAttributes.HasValue)
@@ -187,76 +175,70 @@ public partial class MarkdownExtensionsTests
             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
     }
 
-    /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantsUpToDepth(MarkdownObject?, int, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="maximumDepth"></param>
-    /// <param name="includeAttributes"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantsUpToDepthTestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantsUpToDepthTest(MarkdownObject? source, int maximumDepth, bool? includeAttributes)
-    {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.GetDescendantsUpToDepth(source, maximumDepth, includeAttributes.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-        return MarkdownExtensionMethods.GetDescendantsUpToDepth(source, maximumDepth)
-            .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-    }
+    // /// <summary>
+    // /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantsUpToDepth(MarkdownObject?, int, bool)"/>.
+    // /// </summary>
+    // /// <param name="source"></param>
+    // /// <param name="maximumDepth"></param>
+    // /// <param name="includeAttributes"></param>
+    // /// <returns></returns>
+    // [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantsUpToDepthTestData))]
+    // public Tuple<Type, SourceSpan, int, int>[] GetDescendantsUpToDepthTest(MarkdownObject? source, int maximumDepth, bool? includeAttributes)
+    // {
+    //     if (includeAttributes.HasValue)
+    //         return MarkdownExtensionMethods.GetDescendantsUpToDepth(source, maximumDepth, includeAttributes.Value)
+    //             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
+    //     return MarkdownExtensionMethods.GetDescendantsUpToDepth(source, maximumDepth)
+    //         .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
+    // }
 
-    /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantsInDepthRange(MarkdownObject?, int, int, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="minimumDepth"></param>
-    /// <param name="maximumDepth"></param>
-    /// <param name="includeAttributes"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantsInDepthRangeTestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantsInDepthRangeTest(MarkdownObject? source, int minimumDepth, int maximumDepth, bool? includeAttributes)
-    {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.GetDescendantsInDepthRange(source, minimumDepth, maximumDepth, includeAttributes.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-        return MarkdownExtensionMethods.GetDescendantsInDepthRange(source, minimumDepth, maximumDepth)
-            .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-    }
+    // /// <summary>
+    // /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantsInDepthRange(MarkdownObject?, int, int, bool)"/>.
+    // /// </summary>
+    // /// <param name="source"></param>
+    // /// <param name="minimumDepth"></param>
+    // /// <param name="maximumDepth"></param>
+    // /// <param name="includeAttributes"></param>
+    // /// <returns></returns>
+    // [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantsInDepthRangeTestData))]
+    // public Tuple<Type, SourceSpan, int, int>[] GetDescendantsInDepthRangeTest(MarkdownObject? source, int minimumDepth, int maximumDepth, bool? includeAttributes)
+    // {
+    //     if (includeAttributes.HasValue)
+    //         return MarkdownExtensionMethods.GetDescendantsInDepthRange(source, minimumDepth, maximumDepth, includeAttributes.Value)
+    //             .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
+    //     return MarkdownExtensionMethods.GetDescendantsInDepthRange(source, minimumDepth, maximumDepth)
+    //         .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
+    // }
 
-    /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int, int, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="type"></param>
-    /// <param name="minimumDepth"></param>
-    /// <param name="maximumDepth"></param>
-    /// <param name="emitAttributesofUnmatched"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType5TestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType5Test(MarkdownObject? source, Type type, int minimumDepth, int maximumDepth, bool? emitAttributesofUnmatched)
-    {
-        if (emitAttributesofUnmatched.HasValue)
-            return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, minimumDepth, maximumDepth, emitAttributesofUnmatched.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-        return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, minimumDepth, maximumDepth)
-            .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-    }
+    // /// <summary>
+    // /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int, int, bool)"/>.
+    // /// </summary>
+    // /// <param name="source"></param>
+    // /// <param name="type"></param>
+    // /// <param name="minimumDepth"></param>
+    // /// <param name="maximumDepth"></param>
+    // /// <param name="emitAttributesofUnmatched"></param>
+    // /// <returns></returns>
+    // [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType5TestData))]
+    // public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType5Test(MarkdownObject? source, Type type, int minimumDepth, int maximumDepth)
+    // {
+    //     return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, type, minimumDepth, maximumDepth)
+    //         .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
+    // }
 
-    /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, int, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="types"></param>
-    /// <param name="minimumDepth"></param>
-    /// <param name="maximumDepth"></param>
-    /// <param name="emitAttributesofUnmatched"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType6TestData))]
-    public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType6Test(MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth, bool? emitAttributesofUnmatched)
-    {
-        if (emitAttributesofUnmatched.HasValue)
-            return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, minimumDepth, maximumDepth, emitAttributesofUnmatched.Value)
-                .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-        return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, minimumDepth, maximumDepth)
-            .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
-    }
+    // /// <summary>
+    // /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, int, bool)"/>.
+    // /// </summary>
+    // /// <param name="source"></param>
+    // /// <param name="types"></param>
+    // /// <param name="minimumDepth"></param>
+    // /// <param name="maximumDepth"></param>
+    // /// <param name="emitAttributesofUnmatched"></param>
+    // /// <returns></returns>
+    // [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetDescendantBranchesMatchingType6TestData))]
+    // public Tuple<Type, SourceSpan, int, int>[] GetDescendantBranchesMatchingType6Test(MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth)
+    // {
+    //     return MarkdownExtensionMethods.GetDescendantBranchesMatchingType(source, types, minimumDepth, maximumDepth)
+    //         .Select(r => new Tuple<Type, SourceSpan, int, int>(r.GetType(), r.Span, r.Line, r.Column)).ToArray();
+    // }
 }

@@ -23,7 +23,7 @@ public static class ExampleMarkdown1
     public static System.Collections.IEnumerable GetGetChildObjectsTestData(bool includeAttributes)
     {
         MarkdownDocument document = GetMarkdownDocument();
-        TestHelper.AddMarkdownJsonTestAttachment(document, SourceFileName, JsonTestOutputFileName);
+        // TestHelper.AddMarkdownJsonTestAttachment(document, SourceFileName, JsonTestOutputFileName);
 
         static Tuple<Type, SourceSpan> toReturnsTuple(MarkdownObject obj)
         {
@@ -1273,86 +1273,153 @@ public static class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type)"/>.
     /// </summary>
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType1TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject source, Type type, bool? emitAttributesofUnmatched, params MarkdownObject[] expected)
+        TestCaseData createTestCaseData(MarkdownObject source, Type type, params MarkdownObject[] expected)
         {
             return new TestCaseData(source, type)
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames($"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!, emitAttributesofUnmatched?.ToString() ?? "null");
+                .SetArgDisplayNames($"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!);
         }
 
+        /*
+CodeBlock
+FencedCodeBlock
+
+"((Fenced)?Code|Heading|Html|Leaf|Empty|Paragraph|ThematicBreak|YamlFrontMatter|Math)Block|(Footnote|Heading)?LinkReferenceDefinition|FigureCaption|DefinitionTerm|Abbreviation"
+
+Markdig.Extensions.Yaml.YamlFrontMatterBlock
+Markdig.Extensions.Mathematics.MathBlock
+Markdig.Extensions.Footnotes.FootnoteLinkReferenceDefinition
+Markdig.Extensions.Figures.FigureCaption
+Markdig.Extensions.DefinitionLists.DefinitionTerm
+Markdig.Extensions.AutoIdentifiers.HeadingLinkReferenceDefinition
+Markdig.Extensions.Abbreviations.Abbreviation
+        */
         MarkdownDocument document = GetMarkdownDocument();
-        yield return createTestCaseData(document, typeof(MarkdownDocument), null, document);
-        yield return createTestCaseData(document, typeof(HeadingBlock), null, document.OfType<HeadingBlock>().ToArray());
+        yield return createTestCaseData(document, typeof(MarkdownDocument), document);
+        yield return createTestCaseData(document, typeof(HeadingBlock), document.OfType<HeadingBlock>().ToArray());
         IEnumerable<MarkdownObject> expected = document.Take(3);
         expected = expected.Concat(((ListBlock)document[3]).Cast<ListItemBlock>().Select(lib => lib[0]));
-        expected = expected.Concat(document.Skip(3).Take(6));
+        expected = expected.Concat(document.Skip(4).Take(6));
         expected = expected.Concat((ContainerBlock)document[10]);
-        expected = expected.Concat(document.Skip(10).Take(5));
+        expected = expected.Concat(document.Skip(11).Take(5));
         expected = expected.Concat(((Markdig.Extensions.DefinitionLists.DefinitionList)document[16]).SelectMany(b => ((Markdig.Extensions.DefinitionLists.DefinitionItem)b).AsEnumerable()));
-        expected = expected.Concat(document.Skip(16).Take(11));
+        expected = expected.Concat(document.Skip(17).Take(11));
         expected = expected.Concat(((Markdig.Extensions.Footnotes.FootnoteGroup)document[28]).Cast<Markdig.Extensions.Footnotes.Footnote>().Select(f => f[0]));
-        yield return createTestCaseData(document, typeof(LeafBlock), null, expected.ToArray());
+        yield return createTestCaseData(document, typeof(LeafBlock), expected.ToArray());
 
+        LeafBlock leafBlock = (LeafBlock)document[24];
+        var inline0 = leafBlock.Inline!.FirstChild!;
+        yield return createTestCaseData(leafBlock, typeof(LiteralInline), [inline0, inline0.NextSibling!.NextSibling!, leafBlock.Inline!.LastChild!]);
+
+        yield return createTestCaseData(leafBlock, typeof(ParagraphBlock), []);
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type})"/>.
     /// </summary>
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType2TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, bool? emitAttributesofUnmatched, params MarkdownObject[] expected)
+        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, params MarkdownObject[] expected)
         {
             return new TestCaseData(source, types)
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]", emitAttributesofUnmatched?.ToString() ?? "null");
+                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]");
         }
 
         MarkdownDocument document = GetMarkdownDocument();
-        var expected = ((IEnumerable<MarkdownObject>)[document]).Concat(((LinkReferenceDefinitionGroup)document[10]).Cast<MarkdownObject>());
-        yield return createTestCaseData(document, [typeof(LinkReferenceDefinition), typeof(MarkdownDocument)], null, expected.ToArray());
+        yield return createTestCaseData(document, [typeof(ParagraphBlock), typeof(LeafBlock)], document.Take(3).Concat(((ListBlock)document[3]).Cast<ListItemBlock>().Select(lib => lib[0]))
+            .Concat(document.Skip(4).Take(6)).Concat((ContainerBlock)document[10]).Concat(document.Skip(11).Take(5)).Concat(((ContainerBlock)document[16]).SelectMany(b => ((ContainerBlock)b).AsEnumerable()))
+            .Concat(document.Skip(17).Take(11)).Concat(((Markdig.Extensions.Footnotes.FootnoteGroup)document[28]).Cast<Markdig.Extensions.Footnotes.Footnote>().Select(f => f[0])).ToArray());
+
+        yield return createTestCaseData(document, [typeof(CodeInline), typeof(FencedCodeBlock), typeof(LineBreakInline)], [((LeafBlock)document[2]).Inline!.FirstChild!.NextSibling!,
+            ((LeafBlock)document[12]).Inline!.FirstChild!.NextSibling!, ((LeafBlock)document[14]).Inline!.FirstChild!.NextSibling!,
+            ((LeafBlock)((ContainerBlock)((ContainerBlock)document[16])[0])[1]).Inline!.FirstChild!.NextSibling!, ((LeafBlock)document[18]).Inline!.FirstChild!.NextSibling!, document[19], document[20],
+            ((LeafBlock)document[22]).Inline!.FirstChild!.NextSibling!]);
+
+        yield return createTestCaseData(document, [typeof(ListBlock), typeof(ParagraphBlock)], document.Skip(1).Take(3).Concat([document[6], document[8], document[9]]).Concat(document.Skip(12).Take(3))
+            .Concat(((ContainerBlock)document[16]).Select(b => ((ContainerBlock)b)[1])).Concat([document[18], document[22], document[24]]).Concat(document.Skip(26).Take(3)).ToArray());
+
+        yield return createTestCaseData(((ContainerBlock)((ContainerBlock)document[16])[0])[1], [typeof(ParagraphBlock), typeof(ContainerBlock)], []);
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int)"/>.
     /// </summary>
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType3TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject? source, Type type, int maximumDepth, bool? emitAttributesofUnmatched, params MarkdownObject[] expected)
+        TestCaseData createTestCaseData(MarkdownObject? source, Type type, int maximumDepth, params MarkdownObject[] expected)
         {
-            return new TestCaseData(source, type, maximumDepth, emitAttributesofUnmatched)
+            return new TestCaseData(source, type, maximumDepth)
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!, maximumDepth.ToString(), emitAttributesofUnmatched?.ToString() ?? "null");
+                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!, maximumDepth.ToString());
         }
-        throw new NotImplementedException();
+        MarkdownDocument document = GetMarkdownDocument();
+        IEnumerable<MarkdownObject> expected = [((LeafBlock)document[0]).Inline!.FirstChild!, ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!];
+        var containerInline = ((LeafBlock)document[2]).Inline!;
+        expected = expected.Concat([containerInline.FirstChild!, containerInline.LastChild!, ((LeafBlock)document[4]).Inline!.FirstChild!, ((LeafBlock)document[5]).Inline!.FirstChild!,
+            ((ContainerInline)((LeafBlock)document[6]).Inline!.FirstChild!).FirstChild!, ((LeafBlock)document[7]).Inline!.FirstChild!,
+            ((ContainerInline)((LeafBlock)document[8]).Inline!.FirstChild!).FirstChild!]);
+        containerInline = (ContainerInline)((LeafBlock)document[9]).Inline!.FirstChild!;
+        expected = expected.Concat([containerInline.FirstChild!, ((ContainerInline)containerInline.LastChild!).FirstChild!, ((LeafBlock)document[11]).Inline!.FirstChild!]);
+        var inline = ((LeafBlock)document[12]).Inline!.FirstChild!;
+        expected = expected.Concat([inline, inline.NextSibling!.NextSibling!]);
+        inline = ((LeafBlock)document[13]).Inline!.FirstChild!;
+        expected = expected.Concat([inline, inline.NextSibling!.NextSibling!, ((ContainerInline)((LeafBlock)document[14]).Inline!.FirstChild!).FirstChild!,
+            ((LeafBlock)document[15]).Inline!.FirstChild!, ((LeafBlock)document[17]).Inline!.FirstChild!]);
+        containerInline = ((LeafBlock)document[18]).Inline!;
+        expected = expected.Concat([containerInline.FirstChild!, containerInline.LastChild!]);
+        expected = expected.Concat(document.Skip(21).Take(3).Cast<LeafBlock>().Select(lb => lb.Inline!.FirstChild!));
+        containerInline = ((LeafBlock)document[24]).Inline!;
+        inline = containerInline.FirstChild!;
+        expected = expected.Concat([inline, inline.NextSibling!.NextSibling!, containerInline.LastChild!]);
+        expected = expected.Concat(document.Skip(25).Take(3).Cast<LeafBlock>().Select(lb => lb.Inline!.FirstChild!));
+        yield return createTestCaseData(document, typeof(LiteralInline), 3, expected.ToArray());
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int)"/>.
     /// </summary>
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType4TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, int maximumDepth, bool? emitAttributesofUnmatched, params MarkdownObject[] expected)
+        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, int maximumDepth, params MarkdownObject[] expected)
         {
-            return new TestCaseData(source, types, maximumDepth, emitAttributesofUnmatched)
+            return new TestCaseData(source, types, maximumDepth)
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]", maximumDepth.ToString(), emitAttributesofUnmatched?.ToString() ?? "null");
+                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]", maximumDepth.ToString());
         }
-        throw new NotImplementedException();
+        MarkdownDocument document = GetMarkdownDocument();
+        IEnumerable<MarkdownObject> expected = [((LeafBlock)document[0]).Inline!.FirstChild!, ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!];
+        var containerInline = ((LeafBlock)document[2]).Inline!;
+        expected = expected.Concat([containerInline.FirstChild!, containerInline.LastChild!, ((LeafBlock)document[4]).Inline!.FirstChild!, ((LeafBlock)document[5]).Inline!.FirstChild!,
+            ((LeafBlock)document[7]).Inline!.FirstChild!, ((LeafBlock)document[11]).Inline!.FirstChild!]);
+        var inline = ((LeafBlock)document[12]).Inline!.FirstChild!;
+        expected = expected.Concat([inline, inline.NextSibling!.NextSibling!]);
+        inline = ((LeafBlock)document[13]).Inline!.FirstChild!;
+        expected = expected.Concat([inline, inline.NextSibling!.NextSibling!, ((LeafBlock)document[14]).Inline!.FirstChild!, ((LeafBlock)document[15]).Inline!.FirstChild!,
+            ((LeafBlock)document[17]).Inline!.FirstChild!]);
+        containerInline = ((LeafBlock)document[18]).Inline!;
+        expected = expected.Concat([containerInline.FirstChild!, containerInline.LastChild!]);
+        expected = expected.Concat(document.Skip(21).Take(3).Cast<LeafBlock>().Select(lb => lb.Inline!.FirstChild!));
+        containerInline = ((LeafBlock)document[24]).Inline!;
+        inline = containerInline.FirstChild!;
+        expected = expected.Concat([inline, inline.NextSibling!.NextSibling!, containerInline.LastChild!]);
+        expected = expected.Concat(document.Skip(25).Take(3).Cast<LeafBlock>().Select(lb => lb.Inline!.FirstChild!));
+        yield return createTestCaseData(document, [typeof(LiteralInline), typeof(EmphasisInline)], 2, expected.ToArray());
     }
 
     /// <summary>
     /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantsAtDepth(MarkdownObject?, int, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantsAtDepthTestData(bool includeAttributes)
+    public static System.Collections.IEnumerable GetGetDescendantsAtDepthTestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, int minimumDepth, bool? inclAttr, params MarkdownObject[] expected)
         {
@@ -1368,105 +1435,96 @@ public static class ExampleMarkdown1
         ContainerBlock listItemBlock2 = (ContainerBlock)listBlock[2];
         ContainerBlock listItemBlock3 = (ContainerBlock)listBlock[3];
         Inline inline0 = ((LinkInline)((ParagraphBlock)document[9]).Inline!.FirstChild!).FirstChild!;
+        Inline mathInine = ((ParagraphBlock)document[13]).Inline!.FirstChild!.NextSibling!;
         ContainerInline emphasisInline = (ContainerInline)((LeafBlock)document[14]).Inline!.FirstChild!;
         ContainerBlock definitionList = (ContainerBlock)document[16];
         ContainerBlock definitionItem0 = (ContainerBlock)definitionList[0];
         ContainerBlock definitionItem1 = (ContainerBlock)definitionList[1];
         ContainerBlock footNoteGroup = (ContainerBlock)document[28];
 
-        MarkdownObject[] expected;
-        if (includeAttributes)
-        {
-            Inline mathInine = ((ParagraphBlock)document[13]).Inline!.FirstChild!.NextSibling!;
-            yield return createTestCaseData(document, 3, true, [
-                // LiteralInline: CommonMark Spec
-                ((ContainerInline)((LeafBlock)document[13]).Inline!.FirstChild!.NextSibling!).FirstChild!,
-                // HtmlAttributes: class="task-list-item"
-                listItemBlock0.GetAttributes(),
-                // ParagraphBlock: Task
-                listItemBlock0[0],
-                // HtmlAttributes: class="task-list-item"
-                listItemBlock1.GetAttributes(),
-                // ParagraphBlock: List Item
-                listItemBlock1[0],
-                // HtmlAttributes: class="task-list-item"
-                listItemBlock2.GetAttributes(),
-                // ParagraphBlock: Normal List
-                listItemBlock2[0],
-                // HtmlAttributes: class="task-list-item"
-                listItemBlock3.GetAttributes(),
-                // ParagraphBlock: Item
-                listItemBlock3[0],
-                // LiteralInline: Abbreviations Link
-                ((ContainerInline)((LeafBlock)document[6]).Inline!.FirstChild!).FirstChild!,
-                // LiteralInline: alt attribute goes here
-                ((ContainerInline)((LeafBlock)document[8]).Inline!.FirstChild!).FirstChild!,
-                // LiteralInline: foo
-                inline0,
-                // EmphasisInline: bar
-                inline0.NextSibling!,
-                // class="math"
-                ((ParagraphBlock)document[9]).Inline!.LastChild!.GetAttributes(),
-                // class="math"
-                mathInine.GetAttributes(),
-                mathInine.NextSibling!.NextSibling!.GetAttributes(),
-                // LiteralInline: The Cauchy-Schwarz Inequality
-                emphasisInline.FirstChild!,
-                // class="math"
-                emphasisInline.NextSibling!.NextSibling!.GetAttributes(),
-                // DefinitionTerm
-                definitionItem0[0],
-                // ParagraphBlock
-                definitionItem0[1],
-                // DefinitionTerm
-                definitionItem1[0],
-                // ParagraphBlock
-                definitionItem1[1],
-                // style="color: #333; color: #ff0000;"
-                ((ParagraphBlock)document[22]).Inline!.LastChild!.GetAttributes(),
-                ((ContainerBlock)footNoteGroup[0])[0],
-                ((ContainerBlock)footNoteGroup[1])[0]
-            ]);
-        }
-        else
-        {
-            expected = [
-                // LiteralInline: CommonMark Spec
-                ((ContainerInline)((LeafBlock)document[13]).Inline!.FirstChild!.NextSibling!).FirstChild!,
-                // ParagraphBlock: Task
-                listItemBlock0[0],
-                // ParagraphBlock: List Item
-                listItemBlock1[0],
-                // ParagraphBlock: Normal List
-                listItemBlock2[0],
-                // ParagraphBlock: Item
-                listItemBlock3[0],
-                // LiteralInline: Abbreviations Link
-                ((ContainerInline)((LeafBlock)document[6]).Inline!.FirstChild!).FirstChild!,
-                // LiteralInline: alt attribute goes here
-                ((ContainerInline)((LeafBlock)document[8]).Inline!.FirstChild!).FirstChild!,
-                // LiteralInline: foo
-                inline0,
-                // EmphasisInline: bar
-                inline0.NextSibling!,
-                // LiteralInline: The Cauchy-Schwarz Inequality
-                emphasisInline.FirstChild!,
-                // DefinitionTerm
-                definitionItem0[0],
-                // ParagraphBlock
-                definitionItem0[1],
-                // DefinitionTerm
-                definitionItem1[0],
-                // ParagraphBlock
-                definitionItem1[1],
-                ((ContainerBlock)footNoteGroup[0])[0],
-                ((ContainerBlock)footNoteGroup[1])[0]
-            ];
-            yield return createTestCaseData(document, 3, null, expected);
-            yield return createTestCaseData(document, 3, false, expected);
-        }
-
-        throw new NotImplementedException();
+        MarkdownObject[] expected = [
+            // LiteralInline: CommonMark Spec
+            ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!,
+            // ParagraphBlock: Task
+            listItemBlock0[0],
+            // ParagraphBlock: List Item
+            listItemBlock1[0],
+            // ParagraphBlock: Normal List
+            listItemBlock2[0],
+            // ParagraphBlock: Item
+            listItemBlock3[0],
+            // LiteralInline: Abbreviations Link
+            ((ContainerInline)((LeafBlock)document[6]).Inline!.FirstChild!).FirstChild!,
+            // LiteralInline: alt attribute goes here
+            ((ContainerInline)((LeafBlock)document[8]).Inline!.FirstChild!).FirstChild!,
+            // LiteralInline: foo
+            inline0,
+            // EmphasisInline: bar
+            inline0.NextSibling!,
+            // LiteralInline: The Cauchy-Schwarz Inequality
+            emphasisInline.FirstChild!,
+            // DefinitionTerm
+            definitionItem0[0],
+            // ParagraphBlock
+            definitionItem0[1],
+            // DefinitionTerm
+            definitionItem1[0],
+            // ParagraphBlock
+            definitionItem1[1],
+            ((ContainerBlock)footNoteGroup[0])[0],
+            ((ContainerBlock)footNoteGroup[1])[0]
+        ];
+        yield return createTestCaseData(document, 3, null, expected);
+        yield return createTestCaseData(document, 3, false, expected);
+        yield return createTestCaseData(document, 3, true, [
+            // LiteralInline: CommonMark Spec
+            ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!,
+            // HtmlAttributes: class="task-list-item"
+            listItemBlock0.GetAttributes(),
+            // ParagraphBlock: Task
+            listItemBlock0[0],
+            // HtmlAttributes: class="task-list-item"
+            listItemBlock1.GetAttributes(),
+            // ParagraphBlock: List Item
+            listItemBlock1[0],
+            // HtmlAttributes: class="task-list-item"
+            listItemBlock2.GetAttributes(),
+            // ParagraphBlock: Normal List
+            listItemBlock2[0],
+            // HtmlAttributes: class="task-list-item"
+            listItemBlock3.GetAttributes(),
+            // ParagraphBlock: Item
+            listItemBlock3[0],
+            // LiteralInline: Abbreviations Link
+            ((ContainerInline)((LeafBlock)document[6]).Inline!.FirstChild!).FirstChild!,
+            // LiteralInline: alt attribute goes here
+            ((ContainerInline)((LeafBlock)document[8]).Inline!.FirstChild!).FirstChild!,
+            // LiteralInline: foo
+            inline0,
+            // EmphasisInline: bar
+            inline0.NextSibling!,
+            // class="math"
+            ((ParagraphBlock)document[9]).Inline!.LastChild!.GetAttributes(),
+            // class="math"
+            mathInine.GetAttributes(),
+            mathInine.NextSibling!.NextSibling!.GetAttributes(),
+            // LiteralInline: The Cauchy-Schwarz Inequality
+            emphasisInline.FirstChild!,
+            // class="math"
+            emphasisInline.NextSibling!.NextSibling!.GetAttributes(),
+            // DefinitionTerm
+            definitionItem0[0],
+            // ParagraphBlock
+            definitionItem0[1],
+            // DefinitionTerm
+            definitionItem1[0],
+            // ParagraphBlock
+            definitionItem1[1],
+            // style="color: #333; color: #ff0000;"
+            ((ParagraphBlock)document[22]).Inline!.LastChild!.GetAttributes(),
+            ((ContainerBlock)footNoteGroup[0])[0],
+            ((ContainerBlock)footNoteGroup[1])[0]
+        ]);
     }
 
     /// <summary>
@@ -1481,7 +1539,38 @@ public static class ExampleMarkdown1
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
                 .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", minimumDepth.ToString(), includeAttributes?.ToString() ?? "null");
         }
-        throw new NotImplementedException();
+        MarkdownDocument document = GetMarkdownDocument();
+        var inline0 = ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!;
+        var listBlock0 = (ContainerBlock)document[3];
+        var containerBlock0 = (ContainerBlock)listBlock0[0];
+        var leafBlock0 = (LeafBlock)containerBlock0[0];
+        var containerBlock1 = (ContainerBlock)listBlock0[1];
+        var leafBlock1 = (LeafBlock)containerBlock1[0];
+        var containerBlock2 = (ContainerBlock)listBlock0[2];
+        var leafBlock2 = (LeafBlock)containerBlock2[0];
+        var containerBlock3 = (ContainerBlock)listBlock0[3];
+        var leafBlock3 = (LeafBlock)containerBlock2[0];
+        var inline1 = ((ContainerInline)((LeafBlock)document[6]).Inline!.FirstChild!).FirstChild!;
+        var inline2 = ((ContainerInline)((LeafBlock)document[8]).Inline!.FirstChild!).FirstChild!;
+        var inline3 = ((ContainerInline)((LeafBlock)document[9]).Inline!.FirstChild!).FirstChild!;
+        var inline4 = inline3!.NextSibling!;
+        var inline5 = ((ContainerInline)inline4).FirstChild!;
+        var paragraph0 = ((LeafBlock)document[13]).Inline!;
+        var paragraph1 = ((LeafBlock)document[14]).Inline!;
+        var inline6 = ((ContainerInline)paragraph1.FirstChild!).FirstChild!;
+        var leafBlocks0 = ((ContainerBlock)document[16]).Cast<ContainerBlock>().SelectMany(cb => cb.Cast<LeafBlock>());
+        var leafBlocks1 = ((ContainerBlock)document[28]).Cast<ContainerBlock>().SelectMany(cb => cb.Cast<LeafBlock>());
+        var expected = ((IEnumerable<MarkdownObject>)[inline0, leafBlock0, leafBlock0.Inline!.FirstChild!, leafBlock0.Inline!.LastChild!, leafBlock1, leafBlock1.Inline!.FirstChild!,
+            leafBlock1.Inline!.LastChild!, leafBlock2, leafBlock2.Inline!.FirstChild!, leafBlock3, leafBlock3.Inline!.FirstChild!, inline1, inline2, inline3, inline4, inline5, inline6])
+            .Concat(leafBlocks0.SelectMany(lb => ((IEnumerable<MarkdownObject>)[lb]).Concat(lb.Inline!))).Concat(leafBlocks1.SelectMany(lb => ((IEnumerable<MarkdownObject>)[lb]).Concat(lb.Inline!))).ToArray();
+        yield return createTestCaseData(document, 3, null, expected);
+        yield return createTestCaseData(document, 3, false, expected);
+        yield return createTestCaseData(document, 3, true, ((IEnumerable<MarkdownObject>)[inline0, containerBlock0.GetAttributes(), leafBlock0, leafBlock0.Inline!.FirstChild!, leafBlock0.Inline!.LastChild!,
+            containerBlock1.GetAttributes(), leafBlock1, leafBlock1.Inline!.FirstChild!, leafBlock1.Inline!.LastChild!, leafBlock2, leafBlock2.Inline!.FirstChild!, leafBlock3, leafBlock3.Inline!.FirstChild!,
+            inline1, inline2, inline3, inline4, inline5, ((LeafBlock)document[12]).Inline!.LastChild!.GetAttributes(), paragraph0.FirstChild!.NextSibling!.GetAttributes(),
+            paragraph0.LastChild!.GetAttributes(), inline6, paragraph1.LastChild!.GetAttributes()])
+            .Concat(leafBlocks0.SelectMany(lb => ((IEnumerable<MarkdownObject>)[lb]).Concat(lb.Inline!)).Concat([((LeafBlock)document[22]).Inline!.LastChild!.GetAttributes()]))
+            .Concat(leafBlocks1.SelectMany(lb => ((IEnumerable<MarkdownObject>)[lb]).Concat(lb.Inline!))).ToArray());
     }
 
     /// <summary>
@@ -1515,31 +1604,31 @@ public static class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int, int)"/>.
     /// </summary>
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType5TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject? source, Type type, int minimumDepth, int maximumDepth, bool? emitAttributesofUnmatched, params MarkdownObject[] expected)
+        TestCaseData createTestCaseData(MarkdownObject? source, Type type, int minimumDepth, int maximumDepth, params MarkdownObject[] expected)
         {
-            return new TestCaseData(source, type, maximumDepth, emitAttributesofUnmatched)
+            return new TestCaseData(source, type, maximumDepth)
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!, maximumDepth.ToString(), emitAttributesofUnmatched?.ToString() ?? "null");
+                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!, maximumDepth.ToString());
         }
         throw new NotImplementedException();
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, int)"/>.
     /// </summary>
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType6TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth, bool? emitAttributesofUnmatched, params MarkdownObject[] expected)
+        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth, params MarkdownObject[] expected)
         {
-            return new TestCaseData(source, types, maximumDepth, emitAttributesofUnmatched)
+            return new TestCaseData(source, types, maximumDepth)
                 .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]", maximumDepth.ToString(), emitAttributesofUnmatched?.ToString() ?? "null");
+                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]", maximumDepth.ToString());
         }
         throw new NotImplementedException();
     }
