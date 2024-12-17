@@ -38,7 +38,7 @@ public partial class MarkdownExtensionsTests
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetChildObjectsTestData), new object[] { false })]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetChildObjectsTestData))]
     public Tuple<Type, SourceSpan>[] GetChildObjectsTest(MarkdownObject source, bool? includeAttributes)
     {
         if (includeAttributes.HasValue)
@@ -46,39 +46,13 @@ public partial class MarkdownExtensionsTests
         return MarkdownExtensionMethods.GetChildObjects(source).Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray();
     }
     
-    /// /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetChildObjects(MarkdownObject?, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetChildObjectsTestData), new object[] { true })]
-    public Tuple<Type, SourceSpan>[] GetChildObjectsTestWithAttribute(MarkdownObject source, bool? includeAttributes)
-    {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.GetChildObjects(source, includeAttributes.Value).Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray();
-        return MarkdownExtensionMethods.GetChildObjects(source).Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray();
-    }
-    
     /// <summary>
     /// Unit test for <see cref="MarkdownExtensionMethods.GetAllDescendants(MarkdownObject?, bool)"/>.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetAllDescendantsTestData), new object[] { false })]
+    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetAllDescendantsTestData))]
     public Tuple<Type, SourceSpan>[] GetAllDescendantsTest(MarkdownObject source, bool? includeAttributes)
-    {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.GetAllDescendants(source, includeAttributes.Value).Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray();
-        return MarkdownExtensionMethods.GetAllDescendants(source).Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray();
-    }
-
-    /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetAllDescendants(MarkdownObject?, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetAllDescendantsTestData), new object[] { false })]
-    public Tuple<Type, SourceSpan>[] GetAllDescendantsTestWithAttributes(MarkdownObject source, bool? includeAttributes)
     {
         if (includeAttributes.HasValue)
             return MarkdownExtensionMethods.GetAllDescendants(source, includeAttributes.Value).Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray();

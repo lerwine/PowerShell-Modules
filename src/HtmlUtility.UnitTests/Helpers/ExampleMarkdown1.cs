@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Markdig;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
@@ -5,7 +6,7 @@ using Markdig.Syntax.Inlines;
 
 namespace HtmlUtility.UnitTests.Helpers;
 
-public static class ExampleMarkdown1
+public static partial class ExampleMarkdown1
 {
     internal const string SourceFileName = "Example1.md";
     internal const string JsonTestOutputFileName = "Example1.json";
@@ -16,1260 +17,332 @@ public static class ExampleMarkdown1
 
     internal static MarkdownDocument GetMarkdownDocument() => Markdown.Parse(GetMarkdownSourceText(), new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
 
+    static readonly Tuple<Type, SourceSpan>[] ReturnsEmpty = [];
+
+    static Tuple<Type, SourceSpan> ToReturnsTuple(MarkdownObject obj)
+    {
+        return new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span);
+    }
+
     /// <summary>
     /// Test cases for <see cref="MarkdownExtensionMethods.GetChildObjects(MarkdownObject?, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetChildObjectsTestData(bool includeAttributes)
+    public static System.Collections.IEnumerable GetGetChildObjectsTestData()
     {
         MarkdownDocument document = GetMarkdownDocument();
         // TestHelper.AddMarkdownJsonTestAttachment(document, SourceFileName, JsonTestOutputFileName);
 
-        static Tuple<Type, SourceSpan> toReturnsTuple(MarkdownObject obj)
-        {
-            return new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span);
-        }
+        var elements = new MarkdownElements(document);
+        var expected = ((IEnumerable<MarkdownObject>)[elements.Element0, elements.Element1, elements.Element2, elements.Element3, elements.Element4, elements.Element5,
+            elements.Element6, elements.Element7, elements.Element8, elements.Element9, elements.Element10, elements.Element11, elements.Element12, elements.Element13,
+            elements.Element14, elements.Element15, elements.Element16, elements.Element17, elements.Element18, elements.Element19, elements.Element20,
+            elements.Element21, elements.Element22, elements.Element23, elements.Element24, elements.Element25, elements.Element26, elements.Element27,
+            elements.Element28]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(document, null).Returns(expected).SetArgDisplayNames("Document", "null");
+        yield return new TestCaseData(document, false).Returns(expected).SetArgDisplayNames("Document", "false");
+        yield return new TestCaseData(document, true).Returns(((IEnumerable<MarkdownObject>)[elements.Element0, elements.Element0_Attributes, elements.Element1,
+            elements.Element2, elements.Element3, elements.Element3_Attributes, elements.Element4, elements.Element4_Attributes, elements.Element5,
+            elements.Element5_Attributes, elements.Element6, elements.Element7, elements.Element7_Attributes, elements.Element8, elements.Element9, elements.Element10,
+            elements.Element11, elements.Element11_Attributes, elements.Element12, elements.Element13, elements.Element14, elements.Element15,
+            elements.Element15_Attributes, elements.Element16, elements.Element17, elements.Element17_Attributes, elements.Element18, elements.Element19,
+            elements.Element19_Attributes, elements.Element20, elements.Element20_Attributes, elements.Element21, elements.Element21_Attributes, elements.Element22,
+            elements.Element23, elements.Element23_Attributes, elements.Element24, elements.Element25, elements.Element25_Attributes, elements.Element26,
+            elements.Element27, elements.Element28]).Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "true");
 
-        static TestCaseData containerBlockToTestCaseData(ContainerBlock cb, bool? inclAttr)
-        {
-            if (inclAttr.HasValue && inclAttr.Value)
-            {
-                var attr = cb.TryGetAttributes();
-                if (attr is not null)
-                    return new TestCaseData(cb, inclAttr).Returns(new MarkdownObject[] { attr }.Concat(cb).Select(toReturnsTuple).ToArray())
-                        .SetArgDisplayNames($"{cb.GetType().Name}: Line {cb.Line}");
-            }
-            return new TestCaseData(cb, inclAttr).Returns(cb.Select(toReturnsTuple).ToArray())
-                .SetArgDisplayNames($"{cb.GetType().Name}: Line {cb.Line}");
-        }
+        expected = [ToReturnsTuple(elements.Element0_0)];
+        yield return new TestCaseData(elements.Element0, null).Returns(expected).SetArgDisplayNames("(HeadingBlock)Document[0]", "null");
+        yield return new TestCaseData(elements.Element0, false).Returns(expected).SetArgDisplayNames("(HeadingBlock)Document[0]", "false");
+        yield return new TestCaseData(elements.Element0, true)
+            .Returns(((IEnumerable<MarkdownObject>)[elements.Element0_Attributes, elements.Element0_0]).Select(ToReturnsTuple).ToArray())
+            .SetArgDisplayNames("(HeadingBlock)Document[0]", "true");
 
-        // static TestCaseData containerInlineToTestCaseData(ContainerInline ci)
-        // {
-        //     var attr = ci.TryGetAttributes();
-        //     if (attr is null)
-        //         return new TestCaseData(ci).Returns(ci.Select(toReturnsTuple).ToArray())
-        //             .SetArgDisplayNames($"{ci.GetType().Name}: Line {ci.Line}, Column {ci.Column}");
-        //     return new TestCaseData(ci).Returns(new MarkdownObject[] { attr }.Concat(ci).Select(toReturnsTuple).ToArray())
-        //         .SetArgDisplayNames($"{ci.GetType().Name}: Line {ci.Line}, Column {ci.Column}");
-        // }
+        yield return new TestCaseData(elements.Element0_0, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "null");
+        yield return new TestCaseData(elements.Element0_0, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "false");
+        yield return new TestCaseData(elements.Element0_0, true).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "true");
 
-        static TestCaseData leafBlockToTestCaseData(LeafBlock lb, bool? inclAttr)
-        {
-            var leaf = lb.Inline;
-            if (inclAttr.HasValue && inclAttr.Value)
-            {
-                var attr = lb.TryGetAttributes();
-                if (attr is not null)
-                {
-                    if (leaf is null)
-                        return new TestCaseData(lb, inclAttr).Returns(new Tuple<Type, SourceSpan>[] { toReturnsTuple(attr) })
-                            .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}");
+        expected = [ToReturnsTuple(elements.Element1_0)];
+        yield return new TestCaseData(elements.Element1, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[1]", "null");
+        yield return new TestCaseData(elements.Element1, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[1]", "false");
+        yield return new TestCaseData(elements.Element1, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[1]", "true");
 
-                    return new TestCaseData(lb, inclAttr).Returns(new MarkdownObject[] { attr }.Concat(leaf).Select(toReturnsTuple).ToArray())
-                        .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}");
-                }
-            }
-            if (leaf is null)
-                return new TestCaseData(lb, inclAttr).Returns(Array.Empty<Tuple<Type, SourceSpan>>())
-                    .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}");
-            return new TestCaseData(lb, inclAttr).Returns(leaf.Select(toReturnsTuple).ToArray())
-                .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}");
-        }
+        expected = [ToReturnsTuple(elements.Element1_0_0)];
+        yield return new TestCaseData(elements.Element1_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[1]", "null");
+        yield return new TestCaseData(elements.Element1_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[1][0]", "false");
+        yield return new TestCaseData(elements.Element1_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[1][0]", "true");
 
-        static TestCaseData nonContainerTestCaseData(MarkdownObject lb, bool? inclAttr)
-        {
-            if (inclAttr.HasValue && inclAttr.Value)
-            {
-                var attr = lb.TryGetAttributes();
-                if (attr is not null)
-                {
-                    if (lb is Inline)
-                        return new TestCaseData(lb, inclAttr).Returns(new Tuple<Type, SourceSpan>[] { toReturnsTuple(attr) })
-                            .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}, Column: {lb.Column}");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element2_0, elements.Element2_1, elements.Element2_2]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element2, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[2]", "null");
+        yield return new TestCaseData(elements.Element2, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[2]", "false");
+        yield return new TestCaseData(elements.Element2, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[2]", "true");
 
-                    return new TestCaseData(lb, inclAttr).Returns(new Tuple<Type, SourceSpan>[] { toReturnsTuple(attr) })
-                        .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}");
-                }
-            }
-            if (lb is Inline)
-                return new TestCaseData(lb, inclAttr).Returns(Array.Empty<Tuple<Type, SourceSpan>>())
-                    .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}, Column: {lb.Column}");
-            return new TestCaseData(lb, inclAttr).Returns(Array.Empty<Tuple<Type, SourceSpan>>())
-                .SetArgDisplayNames($"{lb.GetType().Name}: Line {lb.Line}");
-        }
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element3_0, elements.Element3_1, elements.Element3_2, elements.Element3_3]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element3, null).Returns(expected).SetArgDisplayNames("(ListBlock)Document[3]", "null");
+        yield return new TestCaseData(elements.Element3, false).Returns(expected).SetArgDisplayNames("(ListBlock)Document[3]", "false");
+        yield return new TestCaseData(elements.Element3, true)
+            .Returns(((IEnumerable<MarkdownObject>)[elements.Element3_Attributes, elements.Element3_0, elements.Element3_1, elements.Element3_2, elements.Element3_3]).Select(ToReturnsTuple).ToArray())
+            .SetArgDisplayNames("(ListBlock)Document[3]", "true");
 
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element3_0_0]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element3_0, null).Returns(expected).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "null");
+        yield return new TestCaseData(elements.Element3_0, false).Returns(expected).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "false");
+        yield return new TestCaseData(elements.Element3_0, true)
+            .Returns(((IEnumerable<MarkdownObject>)[elements.Element3_0_Attributes, elements.Element3_0_0]).Select(ToReturnsTuple).ToArray())
+            .SetArgDisplayNames("(ListItemBlock)Document[3][0]", "true");
 
-        if (includeAttributes)
-            yield return containerBlockToTestCaseData(document, true);
-        else
-        {
-            yield return containerBlockToTestCaseData(document, null);
-            yield return containerBlockToTestCaseData(document, false);
-        }
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element3_0_0_0, elements.Element3_0_0_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element3_0_0, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[3][0][0]", "null");
+        yield return new TestCaseData(elements.Element3_0_0, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[3][0][0]", "false");
+        yield return new TestCaseData(elements.Element3_0_0, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[3][0][0]", "true");
 
-        // # Example Markdown Document
-        HeadingBlock headingBlock = (HeadingBlock)document[0];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element8_0_0]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element8_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[8][0]", "null");
+        yield return new TestCaseData(elements.Element8_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[8][0]", "false");
+        yield return new TestCaseData(elements.Element8_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[8][0]", "true");
 
-        // [CommonMark Spec](https://spec.commonmark.org/0.31.2/)
-        ParagraphBlock paragraphBlock = (ParagraphBlock)document[1];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        ContainerInline containerInline = (ContainerInline)paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
-        // Hard line break\
-        // here
-        paragraphBlock = (ParagraphBlock)document[2];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = paragraphBlock.Inline!;
-        Inline inline = containerInline.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes);
-        yield return nonContainerTestCaseData(containerInline.LastChild!, includeAttributes);
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element9_0_0, elements.Element9_0_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element9_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[9][0]", "null");
+        yield return new TestCaseData(elements.Element9_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[9][0]", "false");
+        yield return new TestCaseData(elements.Element9_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[9][0]", "true");
 
-        ContainerBlock containerBlock = (ContainerBlock)document[3];
-        yield return containerBlockToTestCaseData(containerBlock, includeAttributes); // Has attribute
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element9_0_1_0]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element9_0_1, null).Returns(expected).SetArgDisplayNames("(EmphasisInline)Document[9][0][1]", "null");
+        yield return new TestCaseData(elements.Element9_0_1, false).Returns(expected).SetArgDisplayNames("(EmphasisInline)Document[9][0][1]", "false");
+        yield return new TestCaseData(elements.Element9_0_1, true).Returns(expected).SetArgDisplayNames("(EmphasisInline)Document[9][0][1]", "true");
 
-        // - [X] Task
-        ContainerBlock innerContainerBlock = (ContainerBlock)containerBlock[0];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes); // Has attribute
-        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = paragraphBlock.Inline!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
-        yield return nonContainerTestCaseData(containerInline.LastChild!, includeAttributes);
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element10_1, elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7,
+            elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11, elements.Element10_12]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element10, null).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinition)Document[10]", "null");
+        yield return new TestCaseData(elements.Element10, false).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinition)Document[10]", "false");
+        yield return new TestCaseData(elements.Element10, true).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinition)Document[10]", "true");
 
-        // - [ ] List Item
-        innerContainerBlock = (ContainerBlock)containerBlock[1];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes); // Has attribute
-        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = paragraphBlock.Inline!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
-        yield return nonContainerTestCaseData(containerInline.LastChild!, includeAttributes);
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element16_0, elements.Element16_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element16, null).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[16]", "null");
+        yield return new TestCaseData(elements.Element16, false).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[16]", "false");
+        yield return new TestCaseData(elements.Element16, true).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[16]", "true");
 
-        // - Normal List
-        innerContainerBlock = (ContainerBlock)containerBlock[2];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes);
-        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = paragraphBlock.Inline!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element16_0_0, elements.Element16_0_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element16_0, null).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "null");
+        yield return new TestCaseData(elements.Element16_0, false).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "false");
+        yield return new TestCaseData(elements.Element16_0, true).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "true");
 
-        // - Item
-        innerContainerBlock = (ContainerBlock)containerBlock[3];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes);
-        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = paragraphBlock.Inline!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element28_0, elements.Element28_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element28, null).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[16][0]", "null");
+        yield return new TestCaseData(elements.Element28, false).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[16][0]", "false");
+        yield return new TestCaseData(elements.Element28, true).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[16][0]", "true");
 
-        // ## Abbreviations {#custom-id}
+        yield return new TestCaseData(elements.Element2_0, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[2][0]", "null");
+        yield return new TestCaseData(elements.Element2_0, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[2][0]", "false");
+        yield return new TestCaseData(elements.Element2_0, true).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[2][0]", "true");
 
-        // *[HTML]: Hyper Text Markup Language
-        // *[W3C]:  World Wide Web Consortium
+        yield return new TestCaseData(elements.Element10_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLinkReferenceDefinition)Document[10][1]", "null");
+        yield return new TestCaseData(elements.Element10_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLinkReferenceDefinition)Document[10][1]", "false");
+        yield return new TestCaseData(elements.Element10_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLinkReferenceDefinition)Document[10][1]", "true");
 
-        headingBlock = (HeadingBlock)document[4];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
+        yield return new TestCaseData(elements.Element10_3, null).Returns(ReturnsEmpty).SetArgDisplayNames("(HeadingLinkReferenceDefinition)Document[10][1]", "null");
+        yield return new TestCaseData(elements.Element10_3, false).Returns(ReturnsEmpty).SetArgDisplayNames("(HeadingLinkReferenceDefinition)Document[10][1]", "false");
+        yield return new TestCaseData(elements.Element10_3, true).Returns(ReturnsEmpty).SetArgDisplayNames("(HeadingLinkReferenceDefinition)Document[10][1]", "true");
 
-        // ## Link
-        headingBlock = (HeadingBlock)document[5];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
+        yield return new TestCaseData(elements.Element12_3, null).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "null");
+        yield return new TestCaseData(elements.Element12_3, false).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "false");
+        yield return new TestCaseData(elements.Element12_3, true)
+            .Returns(((IEnumerable<MarkdownObject>)[elements.Element12_3_Attributes]).Select(ToReturnsTuple).ToArray())
+            .SetArgDisplayNames("(MathInline)Document[12][3]", "true");
 
-        // [Abbreviations Link](#custom-id)
-        paragraphBlock = (ParagraphBlock)document[6];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = (ContainerInline)paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
+        yield return new TestCaseData(elements.Element18_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "null");
+        yield return new TestCaseData(elements.Element18_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "false");
+        yield return new TestCaseData(elements.Element18_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "true");
 
-        // ## Image with Alt and Title
-        headingBlock = (HeadingBlock)document[7];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
+        yield return new TestCaseData(elements.Element18_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "null");
+        yield return new TestCaseData(elements.Element18_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "false");
+        yield return new TestCaseData(elements.Element18_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "true");
 
-        // ![alt attribute goes here](./sn-logo.jpg "This is a Title" )
-        paragraphBlock = (ParagraphBlock)document[8];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = (ContainerInline)paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
-
-        // ![foo *bar*]
-        // [foo *bar*]: ./sn-logo.jpg "train & tracks"
-        paragraphBlock = (ParagraphBlock)document[9];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = (ContainerInline)paragraphBlock.Inline!.FirstChild!;
-        inline = containerInline.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        containerInline = (ContainerInline)inline.NextSibling!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
-
-        containerBlock = (ContainerBlock)document[10];
-        yield return containerBlockToTestCaseData(containerBlock, includeAttributes);
-        for (var i = 0; i < containerBlock.Count; i++)
-            yield return leafBlockToTestCaseData((LeafBlock)containerBlock[0], includeAttributes);
-
-        // ## Math
-        headingBlock = (HeadingBlock)document[11];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
-
-        // This sentence uses `$` delimiters to show math inline: $\sqrt{3x-1}+(1+x)^2$
-        paragraphBlock = (ParagraphBlock)document[12];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes); // Has attribute
-
-        // This sentence uses $\` and \`$ delimiters to show math inline: $`\sqrt{3x-1}+(1+x)^2`$
-        paragraphBlock = (ParagraphBlock)document[13];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes); // Has attribute
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes); // Has attribute
-
-        // **The Cauchy-Schwarz Inequality**
-        // $$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
-        paragraphBlock = (ParagraphBlock)document[14];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        containerInline = paragraphBlock.Inline!;
-        containerInline = (ContainerInline)containerInline.FirstChild!;
-        yield return nonContainerTestCaseData(containerInline.FirstChild!, includeAttributes);
-        inline = containerInline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes); // Has attribute
-
-        // ## Definition List
-        headingBlock = (HeadingBlock)document[15];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
-
-        containerBlock = (ContainerBlock)document[16];
-        yield return containerBlockToTestCaseData(containerBlock, includeAttributes);
-        innerContainerBlock = (ContainerBlock)containerBlock[0];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes);
-        // Apple
-        LeafBlock leafBlock = (LeafBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(leafBlock, includeAttributes);
-        yield return nonContainerTestCaseData(leafBlock.Inline!.FirstChild!, includeAttributes);
-        // :   Pomaceous fruit of plants of the genus Malus in
-        //     the family Rosaceae.
-        leafBlock = (LeafBlock)innerContainerBlock[1];
-        yield return leafBlockToTestCaseData(leafBlock, includeAttributes);
-        inline = leafBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes);
-
-        innerContainerBlock = (ContainerBlock)containerBlock[1];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes);
-        // Orange
-        leafBlock = (LeafBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(leafBlock, includeAttributes);
-        yield return nonContainerTestCaseData(leafBlock.Inline!.FirstChild!, includeAttributes);
-        // :   The fruit of an evergreen tree of the genus Citrus.
-        leafBlock = (LeafBlock)innerContainerBlock[1];
-        yield return leafBlockToTestCaseData(leafBlock, includeAttributes);
-        yield return nonContainerTestCaseData(leafBlock.Inline!.FirstChild!, includeAttributes);
-
-        // ## Code
-        headingBlock = (HeadingBlock)document[17];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
-
-        // This is `inline code`.
-        paragraphBlock = (ParagraphBlock)document[18];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes);
-
-        // ```log
-        // This is a fenced code block
-        // ```
-        yield return leafBlockToTestCaseData((LeafBlock)document[19], includeAttributes); // Has attribute
-
-        // ``` { .html #codeId style="color: #333; background: #f8f8f8;" }
-        // This is a fenced code block
-        // with an ID and style
-        // ```
-        yield return leafBlockToTestCaseData((LeafBlock)document[20], includeAttributes); // Has attribute
-        // ((LeafBlock)document[20]).Inline
-
-        // ## Attribute lists
-        headingBlock = (HeadingBlock)document[21];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
-
-        // This is red paragraph.
-        // {: style="color: #333; color: #ff0000;" }
-        paragraphBlock = (ParagraphBlock)document[22];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes); // Has attribute
-
-        // ## Footnotes
-        headingBlock = (HeadingBlock)document[23];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
-
-        paragraphBlock = (ParagraphBlock)document[24];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        inline = inline.NextSibling!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes);
-
-        // ### Smarties
-        headingBlock = (HeadingBlock)document[25];
-        yield return leafBlockToTestCaseData(headingBlock, includeAttributes); // Has attribute
-        yield return nonContainerTestCaseData(headingBlock.Inline!.FirstChild!, includeAttributes);
-
-        // << angle quotes >>
-        paragraphBlock = (ParagraphBlock)document[26];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        yield return nonContainerTestCaseData(paragraphBlock.Inline!.FirstChild!, includeAttributes);
-
-        // Ellipsis...
-        paragraphBlock = (ParagraphBlock)document[27];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        yield return nonContainerTestCaseData(paragraphBlock.Inline!.FirstChild!, includeAttributes);
-
-        containerBlock = (ContainerBlock)document[28];
-        yield return containerBlockToTestCaseData(containerBlock, includeAttributes);
-        innerContainerBlock = (ContainerBlock)containerBlock[0];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes);
-        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes);
-        innerContainerBlock = (ContainerBlock)containerBlock[1];
-        yield return containerBlockToTestCaseData(innerContainerBlock, includeAttributes);
-        paragraphBlock = (ParagraphBlock)innerContainerBlock[0];
-        yield return leafBlockToTestCaseData(paragraphBlock, includeAttributes);
-        inline = paragraphBlock.Inline!.FirstChild!;
-        yield return nonContainerTestCaseData(inline, includeAttributes);
-        yield return nonContainerTestCaseData(inline.NextSibling!, includeAttributes);
+        yield return new TestCaseData(elements.Element28_0_0_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[28][0][0][1]", "null");
+        yield return new TestCaseData(elements.Element28_0_0_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[28][0][0][1]", "false");
+        yield return new TestCaseData(elements.Element28_0_0_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[28][0][0][1]", "true");
     }
 
     /// <summary>
     /// Test cases for <see cref="MarkdownExtensionMethods.GetAllDescendants(MarkdownObject?, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetAllDescendantsTestData(bool withAttributes)
+    public static System.Collections.IEnumerable GetGetAllDescendantsTestData()
     {
-        TestCaseData getTestCaseData(MarkdownObject src, bool? includeAttributes, params MarkdownObject[] expected)
-        {
-            return new TestCaseData(src).Returns(expected.Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray())
-                .SetArgDisplayNames($"{src.GetType().Name}: Line {src.Line} Column: {src.Column}", includeAttributes?.ToString() ?? "null");
-        }
-        TestCaseData getTestCaseData2(MarkdownObject src, bool? includeAttributes, IEnumerable<MarkdownObject> expected)
-        {
-            return new TestCaseData(src).Returns(expected.Select(obj => new Tuple<Type, SourceSpan>(obj.GetType(), obj.Span)).ToArray())
-                .SetArgDisplayNames($"{src.GetType().Name}: Line {src.Line} Column: {src.Column}", includeAttributes?.ToString() ?? "null");
-        }
         MarkdownDocument document = GetMarkdownDocument();
+        var elements = new MarkdownElements(document);
+        IEnumerable<MarkdownObject> expected = [elements.Element0_0];
+        IEnumerable<MarkdownObject> withAttrReturns = [elements.Element0_Attributes, elements.Element0_0];
+        yield return new TestCaseData(elements.Element0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "null");
+        yield return new TestCaseData(elements.Element0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "false");
+        yield return new TestCaseData(elements.Element0, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "true");
 
-        // HeadingBlock
-        LeafBlock leafBlock0 = (LeafBlock)document[0];
-        List<MarkdownObject> documentTokens;
-        // LiteralInline: Example Markdown Document
-        Inline inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="example-markdown-document"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens = [leafBlock0, attributes, inline0];
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens = [leafBlock0, inline0];
-        }
+        expected = [elements.Element2_0, elements.Element2_1, elements.Element2_2];
+        yield return new TestCaseData(elements.Element2, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[2]", "null");
+        yield return new TestCaseData(elements.Element2, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[2]", "false");
+        yield return new TestCaseData(elements.Element2, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[2]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[1];
-        // LinkInline
-        ContainerInline containerInline0 = (ContainerInline)leafBlock0.Inline!.FirstChild!;
-        // LiteralInline: CommonMark Spec
-        inline0 = containerInline0.FirstChild!;
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(containerInline0, true, inline0);
-            yield return getTestCaseData(leafBlock0, true, containerInline0, inline0);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(containerInline0, null, inline0);
-            yield return getTestCaseData(containerInline0, false, inline0);
-            yield return getTestCaseData(leafBlock0, null, containerInline0, inline0);
-            yield return getTestCaseData(leafBlock0, false, containerInline0, inline0);
-        }
-        documentTokens.AddRange([leafBlock0, containerInline0, inline0]);
+        expected = [elements.Element3_0, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1,
+            elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0];
+        withAttrReturns = [elements.Element3_Attributes, elements.Element3_0, elements.Element3_0_Attributes, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1,
+            elements.Element3_1_Attributes, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1, elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3,
+            elements.Element3_3_0, elements.Element3_3_0_0];
+        yield return new TestCaseData(elements.Element3, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListBlock)Document[3]", "null");
+        yield return new TestCaseData(elements.Element3, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListBlock)Document[3]", "false");
+        yield return new TestCaseData(elements.Element3, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListBlock)Document[3]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[2];
-        // LiteralInline: Hard line break
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // LineBreakInline
-        Inline inline1 = inline0.NextSibling!;
-        // LiteralInline: here
-        Inline inline2 = inline1.NextSibling!;
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            yield return getTestCaseData(containerInline0, true, inline0, inline1, inline2);
-            yield return getTestCaseData(leafBlock0, true, containerInline0, inline0, inline1, inline2);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(inline2, null);
-            yield return getTestCaseData(inline2, false);
-            yield return getTestCaseData(leafBlock0, null, inline0, inline1, inline2);
-            yield return getTestCaseData(leafBlock0, false, inline0, inline1, inline2);
-        }
-        documentTokens.AddRange([leafBlock0, inline0, inline1, inline2]);
-        ContainerBlock containerBlock0 = (ContainerBlock)document[3];
-        List<MarkdownObject> containerTokens;
-        // ListItemBlock
-        ContainerBlock containerBlock1 = (ContainerBlock)containerBlock0[0];
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // TaskList
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // LiteralInline: Task
-        inline1 = inline0.NextSibling!;
-        if (withAttributes)
-        {
-            // class="contains-task-list"
-            HtmlAttributes attributes0 = containerBlock0.GetAttributes();
-            yield return getTestCaseData(attributes0, true);
-            HtmlAttributes attributes1 = containerBlock1.GetAttributes();
-            yield return getTestCaseData(attributes1, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(containerBlock1, true, attributes1, inline0, inline1);
-            containerTokens = [attributes0, containerBlock1, attributes1, inline0, inline1];
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(containerBlock1, true, inline0, inline1);
-            containerTokens = [containerBlock1, inline0, inline1];
-        }
+        expected = [elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1];
+        withAttrReturns = [elements.Element3_0_Attributes, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1];
+        yield return new TestCaseData(elements.Element3_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "null");
+        yield return new TestCaseData(elements.Element3_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "false");
+        yield return new TestCaseData(elements.Element3_0, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "true");
 
-        containerBlock1 = (ContainerBlock)containerBlock0[1];
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // TaskList
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // LiteralInline: List Item
-        inline1 = inline0.NextSibling!;
-        if (withAttributes)
-        {
-            // class="task-list-item"
-            HtmlAttributes attributes0 = containerBlock0.GetAttributes();
-            yield return getTestCaseData(attributes0, true);
-            HtmlAttributes attributes1 = containerBlock1.GetAttributes();
-            yield return getTestCaseData(attributes1, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(containerBlock1, true, attributes1, inline0, inline1);
-            containerTokens.AddRange([attributes0, containerBlock1, attributes1, inline0, inline1]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(containerBlock1, null, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, false, inline0, inline1);
-            containerTokens.AddRange([containerBlock1, inline0, inline1]);
-        }
-        // ListItemBlock
-        containerBlock1 = (ContainerBlock)containerBlock0[2];
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // LiteralInline: Normal List
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        containerTokens.AddRange([containerBlock1, inline0, inline1]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(containerBlock1, true, inline0, inline1);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(containerBlock1, null, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, false, inline0, inline1);
-        }
-        // ListItemBlock
-        containerBlock1 = (ContainerBlock)containerBlock0[3];
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // LiteralInline: Item
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        containerTokens.AddRange([containerBlock1, inline0, inline1]);
-        documentTokens.Add(containerBlock0);
-        documentTokens.AddRange(containerTokens);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(containerBlock1, true, inline0, inline1);
-            yield return getTestCaseData2(containerBlock0, true, containerTokens);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(containerBlock1, null, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, false, inline0, inline1);
-            yield return getTestCaseData2(containerBlock0, null, containerTokens);
-            yield return getTestCaseData2(containerBlock0, false, containerTokens);
-        }
+        expected = [elements.Element6_0, elements.Element6_0_0];
+        yield return new TestCaseData(elements.Element6, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[6]", "null");
+        yield return new TestCaseData(elements.Element6, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[6]", "false");
+        yield return new TestCaseData(elements.Element6, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[6]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[4];
-        // LiteralInline: Abbreviations
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="custom-id"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        expected = [elements.Element6_0_0];
+        yield return new TestCaseData(elements.Element6_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[6][0]", "null");
+        yield return new TestCaseData(elements.Element6_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[6][0]", "false");
+        yield return new TestCaseData(elements.Element6_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[6][0]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[4];
-        // LiteralInline: Link
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="link"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        expected = [elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0];
+        yield return new TestCaseData(elements.Element9, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[9]", "null");
+        yield return new TestCaseData(elements.Element9, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[9]", "false");
+        yield return new TestCaseData(elements.Element9, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[9]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[6];
-        // LinkInline
-        containerInline0 = (ContainerInline)leafBlock0.Inline!.FirstChild!;
-        // LiteralInline: Abbreviations Link
-        inline0 = containerInline0.FirstChild!;
-        documentTokens.AddRange([leafBlock0, containerInline0, inline0]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(containerInline0, true, inline0);
-            yield return getTestCaseData(leafBlock0, true, containerInline0, inline0);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(containerInline0, null, inline0);
-            yield return getTestCaseData(containerInline0, false, inline0);
-            yield return getTestCaseData(leafBlock0, null, containerInline0, inline0);
-            yield return getTestCaseData(leafBlock0, false, containerInline0, inline0);
-        }
+        expected = [elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0];
+        yield return new TestCaseData(elements.Element9_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "null");
+        yield return new TestCaseData(elements.Element9_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "false");
+        yield return new TestCaseData(elements.Element9_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[7];
-        // LiteralInline: Image with Alt and Title
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="image-with-alt-and-title"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        expected = [elements.Element10_0, elements.Element10_1, elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7,
+            elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11, elements.Element10_12];
+        yield return new TestCaseData(elements.Element10, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[10]", "null");
+        yield return new TestCaseData(elements.Element10, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[10]", "false");
+        yield return new TestCaseData(elements.Element10, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[10]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[6];
-        // LinkInline
-        containerInline0 = (ContainerInline)leafBlock0.Inline!.FirstChild!;
-        // LiteralInline - Url: ./sn-logo.jpg
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        documentTokens.AddRange([leafBlock0, containerInline0, inline0]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(containerInline0, true, inline0);
-            yield return getTestCaseData(leafBlock0, true, containerInline0, inline0);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(containerInline0, null, inline0);
-            yield return getTestCaseData(containerInline0, false, inline0);
-            yield return getTestCaseData(leafBlock0, null, containerInline0, inline0);
-            yield return getTestCaseData(leafBlock0, false, containerInline0, inline0);
-        }
+        expected = [elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3];
+        withAttrReturns = [elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element12_3_Attributes];
+        yield return new TestCaseData(elements.Element12, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[12]", "null");
+        yield return new TestCaseData(elements.Element12, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[12]", "false");
+        yield return new TestCaseData(elements.Element12, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[12]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[9];
-        // LinkInline
-        containerInline0 = (ContainerInline)leafBlock0.Inline!.FirstChild!;
-        // LiteralInline - Url: ./sn-logo.jpg
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // EmphasisInline
-        ContainerInline containerInline1 = (ContainerInline)inline0.NextSibling!;
-        // LiteralInline: bar
-        inline1 = containerInline1.FirstChild!;
-        documentTokens.AddRange([leafBlock0, containerInline0, inline0, containerInline1, inline1]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(containerInline1, true, inline1);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(containerInline0, true, inline0, containerInline1, inline1);
-            yield return getTestCaseData(leafBlock0, true, containerInline0, inline0, containerInline1, inline1);
-        }
-        else
-        {
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(containerInline1, null, inline1);
-            yield return getTestCaseData(containerInline1, false, inline1);
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(containerInline0, null, inline0, containerInline1, inline1);
-            yield return getTestCaseData(containerInline0, false, inline0, containerInline1, inline1);
-            yield return getTestCaseData(leafBlock0, null, containerInline0, inline0, containerInline1, inline1);
-            yield return getTestCaseData(leafBlock0, false, containerInline0, inline0, containerInline1, inline1);
-        }
+        expected = [elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1,
+            elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0];
+        yield return new TestCaseData(elements.Element16, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionList)Document[16]", "null");
+        yield return new TestCaseData(elements.Element16, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionList)Document[16]", "false");
+        yield return new TestCaseData(elements.Element16, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionList)Document[16]", "true");
 
-        // LinkReferenceDefinitionGroup
-        containerBlock0 = (ContainerBlock)document[10];
-        containerTokens = containerBlock0.Cast<MarkdownObject>().ToList();
-        documentTokens.Add(containerBlock0);
-        documentTokens.AddRange(containerTokens);
-        if (withAttributes)
-        {
-            foreach (var token in containerTokens)
-                yield return getTestCaseData(token, true);
-            yield return getTestCaseData2(containerBlock0, true, containerTokens);
-        }
-        else
-        {
-            foreach (var token in containerTokens)
-            {
-                yield return getTestCaseData(token, null);
-                yield return getTestCaseData(token, false);
-            }
-            yield return getTestCaseData2(containerBlock0, null, containerTokens);
-            yield return getTestCaseData2(containerBlock0, false, containerTokens);
-        }
+        expected = [elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2];
+        yield return new TestCaseData(elements.Element16_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "null");
+        yield return new TestCaseData(elements.Element16_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "false");
+        yield return new TestCaseData(elements.Element16_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[11];
-        // LiteralInline: Math
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="math"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        expected = [elements.Element16_0_0_0];
+        yield return new TestCaseData(elements.Element16_0_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionTerm)Document[16][0][0]", "null");
+        yield return new TestCaseData(elements.Element16_0_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionTerm)Document[16][0][0]", "false");
+        yield return new TestCaseData(elements.Element16_0_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionTerm)Document[16][0][0]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[12];
-        // LiteralInline: This sentence uses
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // CodeInline
-        inline1 = inline0.NextSibling!;
-        // LiteralInline: delimiters to show math inline:
-        inline2 = inline1.NextSibling!;
-        // MathInline
-        Inline inline3 = inline2.NextSibling!;
-        if (withAttributes)
-        {
-            // class="math"
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            // class="math"
-            HtmlAttributes attributes = inline3.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline3, true, attributes);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2, inline3, attributes);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, inline2, inline3, attributes]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2, inline3);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, inline2, inline3]);
-        }
+        expected = [elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2];
+        yield return new TestCaseData(elements.Element16_0_1, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[16][0][1]", "null");
+        yield return new TestCaseData(elements.Element16_0_1, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[16][0][1]", "false");
+        yield return new TestCaseData(elements.Element16_0_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[16][0][1]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[13];
-        // LiteralInline: This sentence uses
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // MathInline
-        inline1 = inline0.NextSibling!;
-        // LiteralInline: delimiters to show math inline:
-        inline2 = inline1.NextSibling!;
-        // MathInline
-        inline3 = inline2.NextSibling!;
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            // class="math"
-            HtmlAttributes attributes0 = inline3.GetAttributes();
-            yield return getTestCaseData(attributes0, true);
-            yield return getTestCaseData(inline1, true, attributes0);
-            yield return getTestCaseData(inline2, true);
-            // class="math"
-            HtmlAttributes attributes1 = inline3.GetAttributes();
-            yield return getTestCaseData(attributes1, true);
-            yield return getTestCaseData(inline3, true, attributes1);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, attributes0, inline2, inline3, attributes1);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, attributes0, inline2, inline3, attributes1]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2, inline3);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, inline2, inline3]);
-        }
+        expected = [elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0];
+        yield return new TestCaseData(elements.Element16_1, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][1]", "null");
+        yield return new TestCaseData(elements.Element16_1, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][1]", "false");
+        yield return new TestCaseData(elements.Element16_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][1]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[14];
-        // EmphasisInline
-        containerInline0 = (ContainerInline)leafBlock0.Inline!.FirstChild!;
-        // LiteralInline: The Cauchy-Schwarz Inequality
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // LineBreakInline
-        inline1 = inline0.NextSibling!;
-        // MathInline
-        inline2 = inline1.NextSibling!;
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            // class="math"
-            yield return getTestCaseData(inline1, true);
-            HtmlAttributes attributes = inline3.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline2, true, attributes);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2, attributes);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, inline2, attributes]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, inline2]);
-        }
+        expected = [elements.Element18_0, elements.Element18_1, elements.Element18_2];
+        yield return new TestCaseData(elements.Element18, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[18]", "null");
+        yield return new TestCaseData(elements.Element18, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[18]", "false");
+        yield return new TestCaseData(elements.Element18, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[18]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[15];
-        // LiteralInline: Definition List
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="definition-list"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        expected = [elements.Element22_0, elements.Element22_1];
+        withAttrReturns = [elements.Element22_0, elements.Element22_1, elements.Element22_1_Attributes];
+        yield return new TestCaseData(elements.Element22, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[22]", "null");
+        yield return new TestCaseData(elements.Element22, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[22]", "false");
+        yield return new TestCaseData(elements.Element22, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[22]", "true");
 
-        // DefinitionList
-        containerBlock0 = (ContainerBlock)document[16];
+        expected = [elements.Element24_0, elements.Element24_1, elements.Element24_2, elements.Element24_3, elements.Element24_4];
+        yield return new TestCaseData(elements.Element24, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[24]", "null");
+        yield return new TestCaseData(elements.Element24, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[24]", "false");
+        yield return new TestCaseData(elements.Element24, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[24]", "true");
 
-        // DefinitionItem
-        containerBlock1 = (ContainerBlock)containerBlock0[0];
-        // DefinitionTerm
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // LiteralInline: Apple
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // ParagraphBlock
-        LeafBlock leafBlock1 = (LeafBlock)containerBlock1[1];
-        // LiteralInline: Pomaceous fruit of plants of the genus Malus in
-        inline1 = leafBlock1.Inline!.FirstChild!;
-        // LineBreakInline
-        inline2 = inline1.NextSibling!;
-        // LiteralInline: the family Rosaceae.
-        inline3 = inline2.NextSibling!;
-        containerTokens = [containerBlock1, leafBlock0, inline0, leafBlock1, inline1, inline2, inline3];
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, inline0);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            yield return getTestCaseData(inline3, true);
-            yield return getTestCaseData(leafBlock1, true, inline1, inline2, inline3);
-            yield return getTestCaseData(containerBlock1, true, leafBlock0, inline0, leafBlock1, inline1, inline2, inline3);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(inline2, null);
-            yield return getTestCaseData(inline2, false);
-            yield return getTestCaseData(inline3, null);
-            yield return getTestCaseData(inline3, false);
-            yield return getTestCaseData(leafBlock1, null, inline1, inline2, inline3);
-            yield return getTestCaseData(leafBlock1, false, inline1, inline2, inline3);
-            yield return getTestCaseData(containerBlock1, null, leafBlock0, inline0, leafBlock1, inline1, inline2, inline3);
-            yield return getTestCaseData(containerBlock1, false, leafBlock0, inline0, leafBlock1, inline1, inline2, inline3);
-        }
+        expected = [elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1,
+                elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
+        yield return new TestCaseData(elements.Element28, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteGroup)Document[28]", "null");
+        yield return new TestCaseData(elements.Element28, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteGroup)Document[28]", "false");
+        yield return new TestCaseData(elements.Element28, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteGroup)Document[28]", "true");
 
-        // DefinitionItem
-        containerBlock1 = (ContainerBlock)containerBlock0[1];
-        // DefinitionTerm
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // LiteralInline: Orange
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // ParagraphBlock
-        leafBlock1 = (LeafBlock)containerBlock1[1];
-        // LiteralInline: The fruit of an evergreen tree of the genus Citrus.
-        inline1 = leafBlock1.Inline!.FirstChild!;
-        containerTokens.AddRange([containerBlock1, leafBlock0, inline0, leafBlock1, inline1]);
-        documentTokens.Add(containerBlock0);
-        documentTokens.AddRange(containerTokens);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, inline0);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(leafBlock1, true, inline1);
-            yield return getTestCaseData(containerBlock1, true, leafBlock0, inline0, leafBlock1, inline1);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(leafBlock1, null, inline1);
-            yield return getTestCaseData(leafBlock1, false, inline1);
-            yield return getTestCaseData(containerBlock1, null, leafBlock0, inline0, leafBlock1, inline1);
-            yield return getTestCaseData(containerBlock1, false, leafBlock0, inline0, leafBlock1, inline1);
-        }
+        expected = [elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
+        yield return new TestCaseData(elements.Element28_1, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Footnote)Document[28][1]", "null");
+        yield return new TestCaseData(elements.Element28_1, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Footnote)Document[28][1]", "false");
+        yield return new TestCaseData(elements.Element28_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Footnote)Document[28][1]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[17];
-        // LiteralInline: Code
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="code"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        expected = [elements.Element0, elements.Element0_0, elements.Element1, elements.Element1_0_0, elements.Element2, elements.Element2_0, elements.Element2_1, elements.Element2_2, elements.Element3,
+            elements.Element3_0, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1,
+            elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0, elements.Element4, elements.Element4_0, elements.Element5,
+            elements.Element5_0, elements.Element6, elements.Element6_0, elements.Element6_0_0, elements.Element7, elements.Element7_0, elements.Element8, elements.Element8_0, elements.Element8_0_0,
+            elements.Element9, elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0, elements.Element10, elements.Element10_0, elements.Element10_1, elements.Element10_2,
+            elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7, elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11,
+            elements.Element10_12, elements.Element11, elements.Element11_0, elements.Element12, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element13,
+            elements.Element13_0, elements.Element13_1, elements.Element13_2, elements.Element13_3, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_1, elements.Element14_2,
+            elements.Element15, elements.Element15_0, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0,
+            elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1, elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0, elements.Element17,
+            elements.Element17_0, elements.Element18, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element19, elements.Element20, elements.Element21, elements.Element21_0,
+            elements.Element22, elements.Element22_0, elements.Element22_1, elements.Element23, elements.Element23_0, elements.Element24, elements.Element24_0, elements.Element24_1, elements.Element24_2,
+            elements.Element24_3, elements.Element24_4, elements.Element25, elements.Element25_0, elements.Element26, elements.Element26_0, elements.Element27, elements.Element27_0, elements.Element28,
+            elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1, elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
+        withAttrReturns = [elements.Element0, elements.Element0_Attributes, elements.Element0_0, elements.Element1, elements.Element1_0_0, elements.Element2, elements.Element2_0, elements.Element2_1,
+            elements.Element2_2, elements.Element3, elements.Element3_Attributes, elements.Element3_0, elements.Element3_0_Attributes, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1,
+            elements.Element3_1, elements.Element3_1_Attributes, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1, elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0,
+            elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0, elements.Element4, elements.Element4_Attributes, elements.Element4_0, elements.Element5, elements.Element5_Attributes,
+            elements.Element5_0, elements.Element6, elements.Element6_0, elements.Element6_0_0, elements.Element7, elements.Element7_Attributes, elements.Element7_0, elements.Element8, elements.Element8_0,
+            elements.Element8_0_0, elements.Element9, elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0, elements.Element10, elements.Element10_0, elements.Element10_1,
+            elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7, elements.Element10_8, elements.Element10_9, elements.Element10_10,
+            elements.Element10_11, elements.Element10_12, elements.Element11, elements.Element11_Attributes, elements.Element11_0, elements.Element12, elements.Element12_0, elements.Element12_1,
+            elements.Element12_2, elements.Element12_3, elements.Element12_3_Attributes, elements.Element13, elements.Element13_0, elements.Element13_1, elements.Element13_1_Attributes, elements.Element13_2,
+            elements.Element13_3, elements.Element13_3_Attributes, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_1, elements.Element14_2, elements.Element14_2_Attributes,
+            elements.Element15, elements.Element15_Attributes, elements.Element15_0, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1,
+            elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1, elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0,
+            elements.Element17, elements.Element17_Attributes, elements.Element17_0, elements.Element18, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element19,
+            elements.Element19_Attributes, elements.Element20, elements.Element21, elements.Element21_Attributes, elements.Element21_0, elements.Element22, elements.Element22_0, elements.Element22_1,
+            elements.Element22_1_Attributes, elements.Element23, elements.Element23_Attributes, elements.Element23_0, elements.Element24, elements.Element24_0, elements.Element24_1, elements.Element24_2,
+            elements.Element24_3, elements.Element24_4, elements.Element25, elements.Element25_Attributes, elements.Element25_0, elements.Element26, elements.Element26_0, elements.Element27, elements.Element27_0,
+            elements.Element28, elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1, elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0,
+            elements.Element28_1_0_1];
+        yield return new TestCaseData(document, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "null");
+        yield return new TestCaseData(document, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "false");
+        yield return new TestCaseData(document, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[18];
-        // LiteralInline: This is
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // CodeInline
-        inline1 = inline0.NextSibling!;
-        // LiteralInline: .
-        inline2 = inline1.NextSibling!;
-        documentTokens.AddRange([leafBlock0, inline0, inline1, inline2]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline2, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(inline2, null);
-            yield return getTestCaseData(inline2, false);
-            yield return getTestCaseData(leafBlock1, null, inline0, inline1, inline2);
-            yield return getTestCaseData(leafBlock1, false, inline0, inline1, inline2);
-        }
+        yield return new TestCaseData(elements.Element0_0, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "null");
+        yield return new TestCaseData(elements.Element0_0, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "false");
+        yield return new TestCaseData(elements.Element0_0, true).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "true");
 
-        // FencedCodeBlock
-        leafBlock0 = (LeafBlock)document[19];
-        if (withAttributes)
-        {
-            // class="language-log"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(leafBlock0, true, attributes);
-            documentTokens.AddRange([leafBlock0, attributes]);
-        }
-        else
-        {
-            yield return getTestCaseData(leafBlock0, null);
-            yield return getTestCaseData(leafBlock0, false);
-            documentTokens.Add(leafBlock0);
-        }
+        withAttrReturns = [elements.Element12_3_Attributes];
+        yield return new TestCaseData(elements.Element12_3, null).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "null");
+        yield return new TestCaseData(elements.Element12_3, false).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "false");
+        yield return new TestCaseData(elements.Element12_3, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(MathInline)Document[12][3]", "true");
 
-        // FencedCodeBlock
-        leafBlock0 = (LeafBlock)document[20];
-        if (withAttributes)
-        {
-            // class="html" id="codeId" style="color: #333; background: #f8f8f8;"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(leafBlock0, true, attributes);
-            documentTokens.AddRange([leafBlock0, attributes]);
-        }
-        else
-        {
-            yield return getTestCaseData(leafBlock0, null);
-            yield return getTestCaseData(leafBlock0, false);
-            documentTokens.Add(leafBlock0);
-        }
+        yield return new TestCaseData(elements.Element18_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "null");
+        yield return new TestCaseData(elements.Element18_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "false");
+        yield return new TestCaseData(elements.Element18_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[21];
-        // LiteralInline: Attribute lists
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="attribute-lists"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
+        withAttrReturns = [elements.Element20_Attributes];
+        yield return new TestCaseData(elements.Element20, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FencedCodeBlock)Document[20]", "null");
+        yield return new TestCaseData(elements.Element20, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FencedCodeBlock)Document[20]", "false");
+        yield return new TestCaseData(elements.Element20, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FencedCodeBlock)Document[20]", "true");
 
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[22];
-        // LiteralInline: This is red paragraph.
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // LineBreakInline
-        inline1 = inline0.NextSibling!;
-        if (withAttributes)
-        {
-            // style="color: #333; color: #ff0000;"
-            yield return getTestCaseData(inline0, true);
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline1, true, attributes);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, attributes);
-            documentTokens.AddRange([leafBlock0, inline0, inline1, attributes]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(leafBlock0, null, inline0, inline1);
-            yield return getTestCaseData(leafBlock0, false, inline0, inline1);
-            documentTokens.AddRange([leafBlock0, inline0, inline1]);
-        }
+        withAttrReturns = [elements.Element22_1_Attributes];
+        yield return new TestCaseData(elements.Element22_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LineBreakInline)Document[22][1]", "null");
+        yield return new TestCaseData(elements.Element22_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LineBreakInline)Document[22][1]", "false");
+        yield return new TestCaseData(elements.Element22_1, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LineBreakInline)Document[22][1]", "true");
 
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[23];
-        // LiteralInline: Footnotes
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="footnotes"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
-
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[24];
-        // LiteralInline: Footnotes.
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // FootnoteLink
-        inline1 = inline0.NextSibling!;
-        // LiteralInline: have a label
-        inline2 = inline1.NextSibling!;
-        // FootnoteLink
-        inline3 = inline2.NextSibling!;
-        // LiteralInline:  and the footnote's content.
-        Inline inline4 = inline3.NextSibling!;
-        documentTokens.AddRange([leafBlock0, inline0, inline1, inline2, inline3, inline4]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(inline3, true);
-            yield return getTestCaseData(inline4, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1, inline2, inline3, inline4);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(inline3, null);
-            yield return getTestCaseData(inline3, false);
-            yield return getTestCaseData(inline4, null);
-            yield return getTestCaseData(inline4, false);
-            yield return getTestCaseData(leafBlock0, null, inline0, inline1, inline2, inline3, inline4);
-            yield return getTestCaseData(leafBlock0, false, inline0, inline1, inline2, inline3, inline4);
-        }
-
-        // HeadingBlock
-        leafBlock0 = (LeafBlock)document[25];
-        // LiteralInline: Smarties
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        if (withAttributes)
-        {
-            // id="smarties"
-            HtmlAttributes attributes = leafBlock0.GetAttributes();
-            yield return getTestCaseData(attributes, true);
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, attributes, inline0);
-            documentTokens.AddRange([leafBlock0, attributes, inline0]);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock0, null, inline0);
-            yield return getTestCaseData(leafBlock0, false, inline0);
-            documentTokens.AddRange([leafBlock0, inline0]);
-        }
-
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[26];
-        // LiteralInline: Footnotes
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        documentTokens.AddRange([leafBlock0, inline0]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, inline0);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(leafBlock1, null, inline0);
-            yield return getTestCaseData(leafBlock1, false, inline0);
-        }
-
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)document[27];
-        // LiteralInline: Ellipsis...
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        documentTokens.AddRange([leafBlock0, inline0]);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(leafBlock0, true, inline0);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(leafBlock1, null, inline0);
-            yield return getTestCaseData(leafBlock1, false, inline0);
-        }
-
-        // FootnoteGroup
-        containerBlock0 = (ContainerBlock)document[28];
-
-        // Footnote
-        containerBlock1 = (ContainerBlock)containerBlock0[1];
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // LiteralInline: This is a footnote content.
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // FootnoteLink
-        inline1 = inline0.NextSibling!;
-        containerTokens = [containerBlock1, leafBlock0, inline0, inline1];
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, true, leafBlock0, inline0, inline1);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(leafBlock0, null, inline0, inline1);
-            yield return getTestCaseData(leafBlock0, false, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, null, leafBlock0, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, false, leafBlock0, inline0, inline1);
-        }
-
-        // Footnote
-        containerBlock1 = (ContainerBlock)containerBlock0[1];
-        // ParagraphBlock
-        leafBlock0 = (LeafBlock)containerBlock1[0];
-        // LiteralInline: A footnote on the label: \u0022@#$%\u0022.
-        inline0 = leafBlock0.Inline!.FirstChild!;
-        // FootnoteLink
-        inline1 = inline0.NextSibling!;
-        containerTokens.AddRange([containerBlock1, leafBlock0, inline0, inline1]);
-        documentTokens.Add(containerBlock0);
-        documentTokens.AddRange(containerTokens);
-        if (withAttributes)
-        {
-            yield return getTestCaseData(inline0, true);
-            yield return getTestCaseData(inline1, true);
-            yield return getTestCaseData(leafBlock0, true, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, true, leafBlock0, inline0, inline1);
-            yield return getTestCaseData2(containerBlock0, true, containerTokens);
-        }
-        else
-        {
-            yield return getTestCaseData(inline0, null);
-            yield return getTestCaseData(inline0, false);
-            yield return getTestCaseData(inline1, null);
-            yield return getTestCaseData(inline1, false);
-            yield return getTestCaseData(leafBlock0, null, inline0, inline1);
-            yield return getTestCaseData(leafBlock0, false, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, null, leafBlock0, inline0, inline1);
-            yield return getTestCaseData(containerBlock1, false, leafBlock0, inline0, inline1);
-            yield return getTestCaseData2(containerBlock0, null, containerTokens);
-            yield return getTestCaseData2(containerBlock0, false, containerTokens);
-        }
+        yield return new TestCaseData(elements.Element24_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "null");
+        yield return new TestCaseData(elements.Element24_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "false");
+        yield return new TestCaseData(elements.Element24_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "true");
     }
 
     /// <summary>
@@ -1278,45 +351,69 @@ public static class ExampleMarkdown1
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType1TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject source, Type type, params MarkdownObject[] expected)
-        {
-            return new TestCaseData(source, type)
-                .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames($"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!);
-        }
-
-        /*
-CodeBlock
-FencedCodeBlock
-
-"((Fenced)?Code|Heading|Html|Leaf|Empty|Paragraph|ThematicBreak|YamlFrontMatter|Math)Block|(Footnote|Heading)?LinkReferenceDefinition|FigureCaption|DefinitionTerm|Abbreviation"
-
-Markdig.Extensions.Yaml.YamlFrontMatterBlock
-Markdig.Extensions.Mathematics.MathBlock
-Markdig.Extensions.Footnotes.FootnoteLinkReferenceDefinition
-Markdig.Extensions.Figures.FigureCaption
-Markdig.Extensions.DefinitionLists.DefinitionTerm
-Markdig.Extensions.AutoIdentifiers.HeadingLinkReferenceDefinition
-Markdig.Extensions.Abbreviations.Abbreviation
-        */
         MarkdownDocument document = GetMarkdownDocument();
-        yield return createTestCaseData(document, typeof(MarkdownDocument), document);
-        yield return createTestCaseData(document, typeof(HeadingBlock), document.OfType<HeadingBlock>().ToArray());
-        IEnumerable<MarkdownObject> expected = document.Take(3);
-        expected = expected.Concat(((ListBlock)document[3]).Cast<ListItemBlock>().Select(lib => lib[0]));
-        expected = expected.Concat(document.Skip(4).Take(6));
-        expected = expected.Concat((ContainerBlock)document[10]);
-        expected = expected.Concat(document.Skip(11).Take(5));
-        expected = expected.Concat(((Markdig.Extensions.DefinitionLists.DefinitionList)document[16]).SelectMany(b => ((Markdig.Extensions.DefinitionLists.DefinitionItem)b).AsEnumerable()));
-        expected = expected.Concat(document.Skip(17).Take(11));
-        expected = expected.Concat(((Markdig.Extensions.Footnotes.FootnoteGroup)document[28]).Cast<Markdig.Extensions.Footnotes.Footnote>().Select(f => f[0]));
-        yield return createTestCaseData(document, typeof(LeafBlock), expected.ToArray());
+        var elements = new MarkdownElements(document);
+        IEnumerable<MarkdownObject> expected = [elements.Element0, elements.Element0_0, elements.Element1, elements.Element1_0_0, elements.Element2, elements.Element2_0, elements.Element2_1, elements.Element2_2, elements.Element3,
+            elements.Element3_0, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1,
+            elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0, elements.Element4, elements.Element4_0, elements.Element5,
+            elements.Element5_0, elements.Element6, elements.Element6_0, elements.Element6_0_0, elements.Element7, elements.Element7_0, elements.Element8, elements.Element8_0, elements.Element8_0_0,
+            elements.Element9, elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0, elements.Element10, elements.Element10_0, elements.Element10_1, elements.Element10_2,
+            elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7, elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11,
+            elements.Element10_12, elements.Element11, elements.Element11_0, elements.Element12, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element13,
+            elements.Element13_0, elements.Element13_1, elements.Element13_2, elements.Element13_3, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_1, elements.Element14_2,
+            elements.Element15, elements.Element15_0, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0,
+            elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1, elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0, elements.Element17,
+            elements.Element17_0, elements.Element18, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element19, elements.Element20, elements.Element21, elements.Element21_0,
+            elements.Element22, elements.Element22_0, elements.Element22_1, elements.Element23, elements.Element23_0, elements.Element24, elements.Element24_0, elements.Element24_1, elements.Element24_2,
+            elements.Element24_3, elements.Element24_4, elements.Element25, elements.Element25_0, elements.Element26, elements.Element26_0, elements.Element27, elements.Element27_0, elements.Element28,
+            elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1, elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
+        yield return new TestCaseData(document, typeof(MarkdownObject)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "MarkdownObject");
 
-        LeafBlock leafBlock = (LeafBlock)document[24];
-        var inline0 = leafBlock.Inline!.FirstChild!;
-        yield return createTestCaseData(leafBlock, typeof(LiteralInline), [inline0, inline0.NextSibling!.NextSibling!, leafBlock.Inline!.LastChild!]);
+        expected = [elements.Element0, elements.Element1, elements.Element2, elements.Element3_0_0, elements.Element3_1_0, elements.Element3_2_0, elements.Element3_3_0, elements.Element4, elements.Element5,
+            elements.Element6, elements.Element7, elements.Element8, elements.Element9, elements.Element10, elements.Element11, elements.Element12, elements.Element13, elements.Element14, elements.Element15,
+            elements.Element16_0_0, elements.Element16_0_1, elements.Element16_1_0, elements.Element16_1_1, elements.Element17, elements.Element18, elements.Element19, elements.Element20, elements.Element21,
+            elements.Element22, elements.Element23, elements.Element24, elements.Element25, elements.Element26, elements.Element27, elements.Element28_0_0, elements.Element28_1_0];
+        yield return new TestCaseData(document, typeof(LeafBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "LeafBlock");
 
-        yield return createTestCaseData(leafBlock, typeof(ParagraphBlock), []);
+        expected = [elements.Element1, elements.Element2, elements.Element3_0_0, elements.Element3_1_0, elements.Element3_2_0, elements.Element3_3_0, elements.Element6, elements.Element8, elements.Element9,
+            elements.Element12, elements.Element13, elements.Element14, elements.Element16_0_1, elements.Element16_1_1, elements.Element18,  elements.Element22, elements.Element24,elements.Element26,
+            elements.Element27, elements.Element28_0_0, elements.Element28_1_0];
+        yield return new TestCaseData(document, typeof(ParagraphBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ParagraphBlock");
+
+        expected = [elements.Element3, elements.Element10, elements.Element16, elements.Element24_1, elements.Element24_3, elements.Element28];
+        yield return new TestCaseData(document, typeof(ContainerBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ContainerBlock");
+
+        expected = [elements.Element19, elements.Element20, elements.Element16, elements.Element24_1, elements.Element24_3, elements.Element28];
+        yield return new TestCaseData(document, typeof(CodeBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ContainerBlock");
+
+        expected = [elements.Element1_0, elements.Element6_0, elements.Element8_0, elements.Element9_0, elements.Element14_0];
+        yield return new TestCaseData(document, typeof(ContainerInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ContainerBlock");
+
+        expected = [elements.Element9_0_1];
+        yield return new TestCaseData(elements.Element9_0, typeof(ContainerInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "ContainerBlock");
+
+        expected = [elements.Element0_0, elements.Element1_0_0, elements.Element2_0, elements.Element2_1, elements.Element2_2, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1_0_0,
+            elements.Element3_1_0_1, elements.Element3_2_0_0, elements.Element3_3_0_0, elements.Element4_0, elements.Element5_0, elements.Element6_0_0, elements.Element7_0,  elements.Element8_0_0,
+            elements.Element9_0_0, elements.Element9_0_1_0, elements.Element11_0, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element13_0, elements.Element13_2,
+            elements.Element13_3, elements.Element14_0_0, elements.Element14_1, elements.Element14_2, elements.Element15_0, elements.Element16_0_0_0, elements.Element16_0_1_0, elements.Element16_0_1_1,
+            elements.Element16_0_1_2, elements.Element16_1_0_0, elements.Element16_1_1_0, elements.Element17_0, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element21_0,
+            elements.Element22_0, elements.Element22_1, elements.Element23_0, elements.Element24_0, elements.Element24_2, elements.Element24_4, elements.Element25_0, elements.Element26_0, elements.Element27_0,
+            elements.Element28_0_0_0, elements.Element28_1_0_0];
+        yield return new TestCaseData(document, typeof(LeafInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "LeafInline");
+
+        expected = [elements.Element0_0, elements.Element1_0_0, elements.Element2_0, elements.Element2_2, elements.Element3_0_0_1, elements.Element3_1_0_1, elements.Element3_2_0_0, elements.Element3_3_0_0,
+            elements.Element4_0, elements.Element5_0, elements.Element6_0_0, elements.Element7_0,  elements.Element8_0_0, elements.Element9_0_0, elements.Element9_0_1_0, elements.Element11_0, elements.Element12_0,
+            elements.Element12_2, elements.Element13_0, elements.Element13_2, elements.Element14_0_0, elements.Element15_0, elements.Element16_0_0_0, elements.Element16_0_1_0, elements.Element16_0_1_2,
+            elements.Element16_1_0_0, elements.Element16_1_1_0, elements.Element17_0, elements.Element18_0, elements.Element18_2, elements.Element21_0, elements.Element22_0, elements.Element23_0, elements.Element24_0,
+            elements.Element24_2, elements.Element24_4, elements.Element25_0, elements.Element26_0, elements.Element27_0, elements.Element28_0_0_0, elements.Element28_1_0_0];
+        yield return new TestCaseData(document, typeof(LiteralInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "LiteralInline");
+
+        expected = [elements.Element1_0_0];
+        yield return new TestCaseData(elements.Element1_0, typeof(LeafInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[1][0]", "LeafInline");
+
+        yield return new TestCaseData(elements.Element12_2, typeof(LiteralInline)).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[12][2]", "LiteralInline");
+
+        yield return new TestCaseData(elements.Element2_1, typeof(LeafInline)).Returns(ReturnsEmpty).SetArgDisplayNames("(LineBreakInline)Document[2][1]", "LeafInline");
     }
 
     /// <summary>
@@ -1325,29 +422,23 @@ Markdig.Extensions.Abbreviations.Abbreviation
     /// <returns></returns>
     public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType2TestData()
     {
-        TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, params MarkdownObject[] expected)
-        {
-            return new TestCaseData(source, types)
-                .Returns(expected.Select(o => new Tuple<Type, SourceSpan, int, int>(o.GetType(), o.Span, o.Line, o.Column)).ToArray())
-                .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]");
-        }
-
         MarkdownDocument document = GetMarkdownDocument();
-        yield return createTestCaseData(document, [typeof(ParagraphBlock), typeof(LeafBlock)], document.Take(3).Concat(((ListBlock)document[3]).Cast<ListItemBlock>().Select(lib => lib[0]))
-            .Concat(document.Skip(4).Take(6)).Concat((ContainerBlock)document[10]).Concat(document.Skip(11).Take(5)).Concat(((ContainerBlock)document[16]).SelectMany(b => ((ContainerBlock)b).AsEnumerable()))
-            .Concat(document.Skip(17).Take(11)).Concat(((Markdig.Extensions.Footnotes.FootnoteGroup)document[28]).Cast<Markdig.Extensions.Footnotes.Footnote>().Select(f => f[0])).ToArray());
+        var elements = new MarkdownElements(document);
+        IEnumerable<Type> types = [typeof(ContainerInline), typeof(Container)];
+        IEnumerable<MarkdownObject> expected = [elements.Element1_0, elements.Element3, elements.Element6_0, elements.Element8_0, elements.Element9_0, elements.Element10, elements.Element14_0, elements.Element16,
+            elements.Element24_1, elements.Element24_3, elements.Element28];
+        yield return new TestCaseData(document, types).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", $"[{string.Join(", ", types.Select(t => t.Name))}]");
 
-        yield return createTestCaseData(document, [typeof(CodeInline), typeof(FencedCodeBlock), typeof(LineBreakInline)], [((LeafBlock)document[2]).Inline!.FirstChild!.NextSibling!,
-            ((LeafBlock)document[12]).Inline!.FirstChild!.NextSibling!, ((LeafBlock)document[14]).Inline!.FirstChild!.NextSibling!,
-            ((LeafBlock)((ContainerBlock)((ContainerBlock)document[16])[0])[1]).Inline!.FirstChild!.NextSibling!, ((LeafBlock)document[18]).Inline!.FirstChild!.NextSibling!, document[19], document[20],
-            ((LeafBlock)document[22]).Inline!.FirstChild!.NextSibling!]);
+        types = [typeof(CodeInline), typeof(FencedCodeBlock), typeof(LineBreakInline)];
+        expected = [elements.Element2_1, elements.Element12_1, elements.Element14_1, elements.Element16_0_1_1, elements.Element18_1, elements.Element19, elements.Element20, elements.Element22_1];
+        yield return new TestCaseData(document, types).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", $"[{string.Join(", ", types.Select(t => t.Name))}]");
 
-        yield return createTestCaseData(document, [typeof(ListBlock), typeof(ParagraphBlock)], document.Skip(1).Take(3).Concat([document[6], document[8], document[9]]).Concat(document.Skip(12).Take(3))
-            .Concat(((ContainerBlock)document[16]).Select(b => ((ContainerBlock)b)[1])).Concat([document[18], document[22], document[24]]).Concat(document.Skip(26).Take(3)).ToArray());
-
-        yield return createTestCaseData(((ContainerBlock)((ContainerBlock)document[16])[0])[1], [typeof(ParagraphBlock), typeof(ContainerBlock)], []);
+        types = [typeof(ListBlock), typeof(ParagraphBlock)];
+        expected = [elements.Element1, elements.Element2, elements.Element3, elements.Element6, elements.Element8, elements.Element9, elements.Element12, elements.Element13, elements.Element14,
+            elements.Element16_0_1, elements.Element16_1_1, elements.Element18, elements.Element22, elements.Element24, elements.Element26, elements.Element27, elements.Element28_0_0, elements.Element28_1_0];
+        yield return new TestCaseData(document, types).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", $"[{string.Join(", ", types.Select(t => t.Name))}]");
     }
-
+/// 
     /// <summary>
     /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int)"/>.
     /// </summary>
@@ -1463,11 +554,11 @@ Markdig.Extensions.Abbreviations.Abbreviation
             inline0.NextSibling!,
             // LiteralInline: The Cauchy-Schwarz Inequality
             emphasisInline.FirstChild!,
-            // DefinitionTerm
+            // Markdig.Extensions.DefinitionLists.DefinitionTerm
             definitionItem0[0],
             // ParagraphBlock
             definitionItem0[1],
-            // DefinitionTerm
+            // Markdig.Extensions.DefinitionLists.DefinitionTerm
             definitionItem1[0],
             // ParagraphBlock
             definitionItem1[1],
@@ -1512,11 +603,11 @@ Markdig.Extensions.Abbreviations.Abbreviation
             emphasisInline.FirstChild!,
             // class="math"
             emphasisInline.NextSibling!.NextSibling!.GetAttributes(),
-            // DefinitionTerm
+            // Markdig.Extensions.DefinitionLists.DefinitionTerm
             definitionItem0[0],
             // ParagraphBlock
             definitionItem0[1],
-            // DefinitionTerm
+            // Markdig.Extensions.DefinitionLists.DefinitionTerm
             definitionItem1[0],
             // ParagraphBlock
             definitionItem1[1],
