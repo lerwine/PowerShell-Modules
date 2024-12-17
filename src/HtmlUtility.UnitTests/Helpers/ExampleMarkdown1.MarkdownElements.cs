@@ -145,11 +145,11 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element12_0;
         internal LiteralInline Element12_0 => _element12_0 ??= (LiteralInline)Element12.Inline!.FirstChild!;
         private CodeInline? _element12_1;
-        internal CodeInline Element12_1 => _element12_1 ??= (CodeInline)Element12.Inline!.FirstChild!;
+        internal CodeInline Element12_1 => _element12_1 ??= (CodeInline)Element12_0.NextSibling!;
         private LiteralInline? _element12_2;
-        internal LiteralInline Element12_2 => _element12_2 ??= (LiteralInline)Element12.Inline!.FirstChild!;
+        internal LiteralInline Element12_2 => _element12_2 ??= (LiteralInline)Element12_1.NextSibling!;
         private Markdig.Extensions.Mathematics.MathInline? _element12_3;
-        internal Markdig.Extensions.Mathematics.MathInline Element12_3 => _element12_3 ??= (Markdig.Extensions.Mathematics.MathInline)Element12.Inline!.FirstChild!;
+        internal Markdig.Extensions.Mathematics.MathInline Element12_3 => _element12_3 ??= (Markdig.Extensions.Mathematics.MathInline)Element12.Inline!.LastChild!;
         private HtmlAttributes? _element12_3_Attributes;
         internal HtmlAttributes Element12_3_Attributes => _element12_3_Attributes ?? Element12_3.GetAttributes();
         private ParagraphBlock? _element13;
@@ -157,11 +157,11 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element13_0;
         internal LiteralInline Element13_0 => _element13_0 ??= (LiteralInline)Element13.Inline!.FirstChild!;
         private Markdig.Extensions.Mathematics.MathInline? _element13_1;
-        internal Markdig.Extensions.Mathematics.MathInline Element13_1 => _element13_1 ??= (Markdig.Extensions.Mathematics.MathInline)Element13.Inline!.FirstChild!;
+        internal Markdig.Extensions.Mathematics.MathInline Element13_1 => _element13_1 ??= (Markdig.Extensions.Mathematics.MathInline)Element13_0.NextSibling!;
         private HtmlAttributes? _element13_1_Attributes;
         internal HtmlAttributes Element13_1_Attributes => _element13_1_Attributes ?? Element13_1.GetAttributes();
         private LiteralInline? _element13_2;
-        internal LiteralInline Element13_2 => _element13_2 ??= (LiteralInline)Element13.Inline!.FirstChild!;
+        internal LiteralInline Element13_2 => _element13_2 ??= (LiteralInline)Element13.Inline!.LastChild!;
         private Markdig.Extensions.Mathematics.MathInline? _element13_3;
         internal Markdig.Extensions.Mathematics.MathInline Element13_3 => _element13_3 ??= (Markdig.Extensions.Mathematics.MathInline)Element13.Inline!.FirstChild!;
         private HtmlAttributes? _element13_3_Attributes;
@@ -173,9 +173,9 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element14_0_0;
         internal LiteralInline Element14_0_0 => _element14_0_0 ??= (LiteralInline)Element14_0.FirstChild!;
         private LineBreakInline? _element14_1;
-        internal LineBreakInline Element14_1 => _element14_1 ??= (LineBreakInline)Element14.Inline!.FirstChild!;
+        internal LineBreakInline Element14_1 => _element14_1 ??= (LineBreakInline)Element14_0.NextSibling!;
         private Markdig.Extensions.Mathematics.MathInline? _element14_2;
-        internal Markdig.Extensions.Mathematics.MathInline Element14_2 => _element14_2 ??= (Markdig.Extensions.Mathematics.MathInline)Element14.Inline!.FirstChild!;
+        internal Markdig.Extensions.Mathematics.MathInline Element14_2 => _element14_2 ??= (Markdig.Extensions.Mathematics.MathInline)Element14.Inline!.LastChild!;
         private HtmlAttributes? _element14_2_Attributes;
         internal HtmlAttributes Element14_2_Attributes => _element14_2_Attributes ?? Element14_2.GetAttributes();
         private HeadingBlock? _element15;
@@ -197,9 +197,9 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element16_0_1_0;
         internal LiteralInline Element16_0_1_0 => _element16_0_1_0 ??= (LiteralInline)Element16_0_1.Inline!.FirstChild!;
         private LineBreakInline? _element16_0_1_1;
-        internal LineBreakInline Element16_0_1_1 => _element16_0_1_1 ??= (LineBreakInline)Element16_0_1.Inline!.FirstChild!;
+        internal LineBreakInline Element16_0_1_1 => _element16_0_1_1 ??= (LineBreakInline)Element16_0_1_0.NextSibling!;
         private LiteralInline? _element16_0_1_2;
-        internal LiteralInline Element16_0_1_2 => _element16_0_1_2 ??= (LiteralInline)Element16_0_1.Inline!.FirstChild!;
+        internal LiteralInline Element16_0_1_2 => _element16_0_1_2 ??= (LiteralInline)Element16_0_1.Inline!.LastChild!;
         private Markdig.Extensions.DefinitionLists.DefinitionItem? _element16_1;
         internal Markdig.Extensions.DefinitionLists.DefinitionItem Element16_1 => _element16_1 ??= (Markdig.Extensions.DefinitionLists.DefinitionItem)Element16[1];
         private Markdig.Extensions.DefinitionLists.DefinitionTerm? _element16_1_0;
@@ -221,9 +221,9 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element18_0;
         internal LiteralInline Element18_0 => _element18_0 ??= (LiteralInline)Element18.Inline!.FirstChild!;
         private CodeInline? _element18_1;
-        internal CodeInline Element18_1 => _element18_1 ??= (CodeInline)Element18.Inline!.FirstChild!;
+        internal CodeInline Element18_1 => _element18_1 ??= (CodeInline)Element18_0.NextSibling!;
         private LiteralInline? _element18_2;
-        internal LiteralInline Element18_2 => _element18_2 ??= (LiteralInline)Element18.Inline!.FirstChild!;
+        internal LiteralInline Element18_2 => _element18_2 ??= (LiteralInline)Element18.Inline!.LastChild!;
         private FencedCodeBlock? _element19;
         internal FencedCodeBlock Element19 => _element19 ??= (FencedCodeBlock)Document[19];
         private HtmlAttributes? _element19_Attributes;
@@ -243,7 +243,7 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element22_0;
         internal LiteralInline Element22_0 => _element22_0 ??= (LiteralInline)Element22.Inline!.FirstChild!;
         private LineBreakInline? _element22_1;
-        internal LineBreakInline Element22_1 => _element22_1 ??= (LineBreakInline)Element22.Inline!.FirstChild!;
+        internal LineBreakInline Element22_1 => _element22_1 ??= (LineBreakInline)Element22.Inline!.LastChild!;
         private HtmlAttributes? _element22_1_Attributes;
         internal HtmlAttributes Element22_1_Attributes => _element22_1_Attributes ?? Element22_1.GetAttributes();
         private HeadingBlock? _element23;
@@ -257,13 +257,13 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element24_0;
         internal LiteralInline Element24_0 => _element24_0 ??= (LiteralInline)Element24.Inline!.FirstChild!;
         private Markdig.Extensions.Footnotes.FootnoteLink? _element24_1;
-        internal Markdig.Extensions.Footnotes.FootnoteLink Element24_1 => _element24_1 ??= (Markdig.Extensions.Footnotes.FootnoteLink)Element24.Inline!.FirstChild!;
+        internal Markdig.Extensions.Footnotes.FootnoteLink Element24_1 => _element24_1 ??= (Markdig.Extensions.Footnotes.FootnoteLink)Element24_0.NextSibling!;
         private LiteralInline? _element24_2;
-        internal LiteralInline Element24_2 => _element24_2 ??= (LiteralInline)Element24.Inline!.FirstChild!;
+        internal LiteralInline Element24_2 => _element24_2 ??= (LiteralInline)Element24_1.NextSibling!;
         private Markdig.Extensions.Footnotes.FootnoteLink? _element24_3;
-        internal Markdig.Extensions.Footnotes.FootnoteLink Element24_3 => _element24_3 ??= (Markdig.Extensions.Footnotes.FootnoteLink)Element24.Inline!.FirstChild!;
+        internal Markdig.Extensions.Footnotes.FootnoteLink Element24_3 => _element24_3 ??= (Markdig.Extensions.Footnotes.FootnoteLink)Element24_4.PreviousSibling!;
         private LiteralInline? _element24_4;
-        internal LiteralInline Element24_4 => _element24_4 ??= (LiteralInline)Element24.Inline!.FirstChild!;
+        internal LiteralInline Element24_4 => _element24_4 ??= (LiteralInline)Element24.Inline!.LastChild!;
         private HeadingBlock? _element25;
         internal HeadingBlock Element25 => _element25 ??= (HeadingBlock)Document[25];
         private HtmlAttributes? _element25_Attributes;
@@ -295,7 +295,7 @@ public static partial class ExampleMarkdown1
         private LiteralInline? _element28_1_0_0;
         internal LiteralInline Element28_1_0_0 => _element28_1_0_0 ??= (LiteralInline)Element28_1_0.Inline!.FirstChild!;
         private Markdig.Extensions.Footnotes.FootnoteLink? _element28_1_0_1;
-        internal Markdig.Extensions.Footnotes.FootnoteLink Element28_1_0_1 => _element28_1_0_1 ??= (Markdig.Extensions.Footnotes.FootnoteLink)Element28_1_0.Inline!.FirstChild!;
+        internal Markdig.Extensions.Footnotes.FootnoteLink Element28_1_0_1 => _element28_1_0_1 ??= (Markdig.Extensions.Footnotes.FootnoteLink)Element28_1_0.Inline!.LastChild!;
         
         internal MarkdownElements(MarkdownDocument markdownDocument)
         {
