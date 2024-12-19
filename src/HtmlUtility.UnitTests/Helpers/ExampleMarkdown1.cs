@@ -6,6 +6,17 @@ using Markdig.Syntax.Inlines;
 
 namespace HtmlUtility.UnitTests.Helpers;
 
+public static partial class ExampleMarkdown2
+{
+    internal const string SourceFileName = "Example2.md";
+    internal const string JsonTestOutputFileName = "Example2.json";
+
+    internal static string GetSourcePath() => Path.Combine(TestHelper.GetResourcesDirectoryPath(), SourceFileName);
+
+    internal static string GetMarkdownSourceText() => File.ReadAllText(GetSourcePath());
+
+    internal static MarkdownDocument GetMarkdownDocument() => Markdown.Parse(GetMarkdownSourceText(), new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
+}
 public static partial class ExampleMarkdown1
 {
     internal const string SourceFileName = "Example1.md";
@@ -31,24 +42,16 @@ public static partial class ExampleMarkdown1
     public static System.Collections.IEnumerable GetGetChildObjectsTestData()
     {
         MarkdownDocument document = GetMarkdownDocument();
-        // TestHelper.AddMarkdownJsonTestAttachment(document, SourceFileName, JsonTestOutputFileName);
 
         var elements = new MarkdownElements(document);
         var expected = ((IEnumerable<MarkdownObject>)[elements.Element0, elements.Element1, elements.Element2, elements.Element3, elements.Element4, elements.Element5,
             elements.Element6, elements.Element7, elements.Element8, elements.Element9, elements.Element10, elements.Element11, elements.Element12, elements.Element13,
             elements.Element14, elements.Element15, elements.Element16, elements.Element17, elements.Element18, elements.Element19, elements.Element20,
             elements.Element21, elements.Element22, elements.Element23, elements.Element24, elements.Element25, elements.Element26, elements.Element27,
-            elements.Element28]).Select(ToReturnsTuple).ToArray();
+            elements.Element28, elements.Element29, elements.Element30]).Select(ToReturnsTuple).ToArray();
         yield return new TestCaseData(document, null).Returns(expected).SetArgDisplayNames("Document", "null");
         yield return new TestCaseData(document, false).Returns(expected).SetArgDisplayNames("Document", "false");
-        yield return new TestCaseData(document, true).Returns(((IEnumerable<MarkdownObject>)[elements.Element0, elements.Element0_Attributes, elements.Element1,
-            elements.Element2, elements.Element3, elements.Element3_Attributes, elements.Element4, elements.Element4_Attributes, elements.Element5,
-            elements.Element5_Attributes, elements.Element6, elements.Element7, elements.Element7_Attributes, elements.Element8, elements.Element9, elements.Element10,
-            elements.Element11, elements.Element11_Attributes, elements.Element12, elements.Element13, elements.Element14, elements.Element15,
-            elements.Element15_Attributes, elements.Element16, elements.Element17, elements.Element17_Attributes, elements.Element18, elements.Element19,
-            elements.Element19_Attributes, elements.Element20, elements.Element20_Attributes, elements.Element21, elements.Element21_Attributes, elements.Element22,
-            elements.Element23, elements.Element23_Attributes, elements.Element24, elements.Element25, elements.Element25_Attributes, elements.Element26,
-            elements.Element27, elements.Element28]).Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "true");
+        yield return new TestCaseData(document, true).Returns(expected).SetArgDisplayNames("Document", "true");
 
         expected = [ToReturnsTuple(elements.Element0_0)];
         yield return new TestCaseData(elements.Element0, null).Returns(expected).SetArgDisplayNames("(HeadingBlock)Document[0]", "null");
@@ -61,105 +64,96 @@ public static partial class ExampleMarkdown1
         yield return new TestCaseData(elements.Element0_0, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "false");
         yield return new TestCaseData(elements.Element0_0, true).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "true");
 
-        expected = [ToReturnsTuple(elements.Element1_0)];
-        yield return new TestCaseData(elements.Element1, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[1]", "null");
-        yield return new TestCaseData(elements.Element1, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[1]", "false");
-        yield return new TestCaseData(elements.Element1, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[1]", "true");
+        expected = [];
+        yield return new TestCaseData(elements.Element1, null).Returns(expected).SetArgDisplayNames("(HtmlBlock)Document[1]", "null");
+        yield return new TestCaseData(elements.Element1, false).Returns(expected).SetArgDisplayNames("(HtmlBlock)Document[1]", "false");
+        yield return new TestCaseData(elements.Element1, true).Returns(expected).SetArgDisplayNames("(HtmlBlock)Document[1]", "true");
 
-        expected = [ToReturnsTuple(elements.Element1_0_0)];
-        yield return new TestCaseData(elements.Element1_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[1]", "null");
-        yield return new TestCaseData(elements.Element1_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[1][0]", "false");
-        yield return new TestCaseData(elements.Element1_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[1][0]", "true");
-
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element2_0, elements.Element2_1, elements.Element2_2]).Select(ToReturnsTuple).ToArray();
+        expected = [ToReturnsTuple(elements.Element2_0)];
         yield return new TestCaseData(elements.Element2, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[2]", "null");
         yield return new TestCaseData(elements.Element2, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[2]", "false");
         yield return new TestCaseData(elements.Element2, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[2]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element3_0, elements.Element3_1, elements.Element3_2, elements.Element3_3]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element3, null).Returns(expected).SetArgDisplayNames("(ListBlock)Document[3]", "null");
-        yield return new TestCaseData(elements.Element3, false).Returns(expected).SetArgDisplayNames("(ListBlock)Document[3]", "false");
-        yield return new TestCaseData(elements.Element3, true)
-            .Returns(((IEnumerable<MarkdownObject>)[elements.Element3_Attributes, elements.Element3_0, elements.Element3_1, elements.Element3_2, elements.Element3_3]).Select(ToReturnsTuple).ToArray())
-            .SetArgDisplayNames("(ListBlock)Document[3]", "true");
+        expected = [ToReturnsTuple(elements.Element3_0_0)];
+        yield return new TestCaseData(elements.Element3_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[3][0]", "null");
+        yield return new TestCaseData(elements.Element3_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[3][0]", "false");
+        yield return new TestCaseData(elements.Element3_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[3][0]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element3_0_0]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element3_0, null).Returns(expected).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "null");
-        yield return new TestCaseData(elements.Element3_0, false).Returns(expected).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "false");
-        yield return new TestCaseData(elements.Element3_0, true)
-            .Returns(((IEnumerable<MarkdownObject>)[elements.Element3_0_Attributes, elements.Element3_0_0]).Select(ToReturnsTuple).ToArray())
-            .SetArgDisplayNames("(ListItemBlock)Document[3][0]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element4_0, elements.Element4_1, elements.Element4_2]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element4, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[4]", "null");
+        yield return new TestCaseData(elements.Element4, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[4]", "false");
+        yield return new TestCaseData(elements.Element4, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[4]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element3_0_0_0, elements.Element3_0_0_1]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element3_0_0, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[3][0][0]", "null");
-        yield return new TestCaseData(elements.Element3_0_0, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[3][0][0]", "false");
-        yield return new TestCaseData(elements.Element3_0_0, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[3][0][0]", "true");
+        expected = [];
+        yield return new TestCaseData(elements.Element4_2, null).Returns(expected).SetArgDisplayNames("(LineBreakInline)Document[4][2]", "null");
+        yield return new TestCaseData(elements.Element4_2, false).Returns(expected).SetArgDisplayNames("(LineBreakInline)Document[4][2]", "false");
+        yield return new TestCaseData(elements.Element4_2, true)
+            .Returns((Tuple<Type, SourceSpan>[])[ToReturnsTuple(elements.Element4_2_Attributes)])
+            .SetArgDisplayNames("(LineBreakInline)Document[4][2]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element8_0_0]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element8_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[8][0]", "null");
-        yield return new TestCaseData(elements.Element8_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[8][0]", "false");
-        yield return new TestCaseData(elements.Element8_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[8][0]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element5_0, elements.Element5_1, elements.Element5_2, elements.Element5_3, elements.Element5_4, elements.Element5_5, elements.Element5_6])
+            .Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element5, null).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[5]", "null");
+        yield return new TestCaseData(elements.Element5, false).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[5]", "false");
+        yield return new TestCaseData(elements.Element5, true).Returns(expected).SetArgDisplayNames("(ParagraphBlock)Document[5]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element9_0_0, elements.Element9_0_1]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element9_0, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[9][0]", "null");
-        yield return new TestCaseData(elements.Element9_0, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[9][0]", "false");
-        yield return new TestCaseData(elements.Element9_0, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[9][0]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element5_5_0]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element5_5, null).Returns(expected).SetArgDisplayNames("(LinkInline)Document[5][5]", "null");
+        yield return new TestCaseData(elements.Element5_5, false).Returns(expected).SetArgDisplayNames("(LinkInline)Document[5][5]", "false");
+        yield return new TestCaseData(elements.Element5_5, true).Returns(expected).SetArgDisplayNames("(LinkInline)Document[5][5]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element9_0_1_0]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element9_0_1, null).Returns(expected).SetArgDisplayNames("(EmphasisInline)Document[9][0][1]", "null");
-        yield return new TestCaseData(elements.Element9_0_1, false).Returns(expected).SetArgDisplayNames("(EmphasisInline)Document[9][0][1]", "false");
-        yield return new TestCaseData(elements.Element9_0_1, true).Returns(expected).SetArgDisplayNames("(EmphasisInline)Document[9][0][1]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element13_0, elements.Element13_1, elements.Element13_2, elements.Element13_3]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element13, null).Returns(expected).SetArgDisplayNames("(ListBlock)Document[13]", "null");
+        yield return new TestCaseData(elements.Element13, false).Returns(expected).SetArgDisplayNames("(ListBlock)Document[13]", "false");
+        yield return new TestCaseData(elements.Element13, true)
+            .Returns(((IEnumerable<MarkdownObject>)[elements.Element13_Attributes, elements.Element13_0, elements.Element13_1, elements.Element13_2, elements.Element13_3]).Select(ToReturnsTuple).ToArray())
+            .SetArgDisplayNames("(ListBlock)Document[13]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element10_1, elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7,
-            elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11, elements.Element10_12]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element10, null).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinition)Document[10]", "null");
-        yield return new TestCaseData(elements.Element10, false).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinition)Document[10]", "false");
-        yield return new TestCaseData(elements.Element10, true).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinition)Document[10]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element13_1_0]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element13_1, null).Returns(expected).SetArgDisplayNames("(ListItemBlock)Document[13][1]", "null");
+        yield return new TestCaseData(elements.Element13_1, false).Returns(expected).SetArgDisplayNames("(ListItemBlock)Document[13][1]", "false");
+        yield return new TestCaseData(elements.Element13_1, true)
+            .Returns(((IEnumerable<MarkdownObject>)[elements.Element13_1_Attributes, elements.Element13_1_0]).Select(ToReturnsTuple).ToArray())
+            .SetArgDisplayNames("(ListItemBlock)Document[13][1]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element16_0, elements.Element16_1]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element16, null).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[16]", "null");
-        yield return new TestCaseData(elements.Element16, false).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[16]", "false");
-        yield return new TestCaseData(elements.Element16, true).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[16]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element18_2_0, elements.Element18_2_1, elements.Element18_2_2]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element18_2, null).Returns(expected).SetArgDisplayNames("(TableRow)Document[18][2]", "null");
+        yield return new TestCaseData(elements.Element18_2, false).Returns(expected).SetArgDisplayNames("(TableRow)Document[18][2]", "false");
+        yield return new TestCaseData(elements.Element18_2, true).Returns(expected).SetArgDisplayNames("(TableRow)Document[18][2]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element16_0_0, elements.Element16_0_1]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element16_0, null).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "null");
-        yield return new TestCaseData(elements.Element16_0, false).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "false");
-        yield return new TestCaseData(elements.Element16_0, true).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element19_0]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element19, null).Returns(expected).SetArgDisplayNames("(Table)Document[19]", "null");
+        yield return new TestCaseData(elements.Element19, false).Returns(expected).SetArgDisplayNames("(Table)Document[19]", "false");
+        yield return new TestCaseData(elements.Element19, true).Returns(((IEnumerable<MarkdownObject>)[elements.Element19_Attributes, elements.Element19_0])
+            .Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Table)Document[19]", "true");
 
-        expected = ((IEnumerable<MarkdownObject>)[elements.Element28_0, elements.Element28_1]).Select(ToReturnsTuple).ToArray();
-        yield return new TestCaseData(elements.Element28, null).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[16][0]", "null");
-        yield return new TestCaseData(elements.Element28, false).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[16][0]", "false");
-        yield return new TestCaseData(elements.Element28, true).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[16][0]", "true");
+        expected = [];
+        yield return new TestCaseData(elements.Element23_2, null).Returns(expected).SetArgDisplayNames("(MathInline)Document[23][2]", "null");
+        yield return new TestCaseData(elements.Element23_2, false).Returns(expected).SetArgDisplayNames("(MathInline)Document[23][2]", "false");
+        yield return new TestCaseData(elements.Element23_2, true)
+            .Returns((Tuple<Type, SourceSpan>[])[ToReturnsTuple(elements.Element23_2_Attributes)]).SetArgDisplayNames("(MathInline)Document[23][2]", "true");
 
-        yield return new TestCaseData(elements.Element2_0, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[2][0]", "null");
-        yield return new TestCaseData(elements.Element2_0, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[2][0]", "false");
-        yield return new TestCaseData(elements.Element2_0, true).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[2][0]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element29_0, elements.Element29_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element29, null).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[29]", "null");
+        yield return new TestCaseData(elements.Element29, false).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[29]", "false");
+        yield return new TestCaseData(elements.Element29, true).Returns(expected).SetArgDisplayNames("(DefinitionList)Document[29]", "true");
 
-        yield return new TestCaseData(elements.Element10_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLinkReferenceDefinition)Document[10][1]", "null");
-        yield return new TestCaseData(elements.Element10_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLinkReferenceDefinition)Document[10][1]", "false");
-        yield return new TestCaseData(elements.Element10_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLinkReferenceDefinition)Document[10][1]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element29_1_0, elements.Element29_1_1]).Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element29_1, null).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[29][1]", "null");
+        yield return new TestCaseData(elements.Element29_1, false).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[29][1]", "false");
+        yield return new TestCaseData(elements.Element29_1, true).Returns(expected).SetArgDisplayNames("(DefinitionItem)Document[29][1]", "true");
 
-        yield return new TestCaseData(elements.Element10_3, null).Returns(ReturnsEmpty).SetArgDisplayNames("(HeadingLinkReferenceDefinition)Document[10][1]", "null");
-        yield return new TestCaseData(elements.Element10_3, false).Returns(ReturnsEmpty).SetArgDisplayNames("(HeadingLinkReferenceDefinition)Document[10][1]", "false");
-        yield return new TestCaseData(elements.Element10_3, true).Returns(ReturnsEmpty).SetArgDisplayNames("(HeadingLinkReferenceDefinition)Document[10][1]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element30_0, elements.Element30_1, elements.Element30_2, elements.Element30_3, elements.Element30_4, elements.Element30_5])
+            .Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element30, null).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[30]", "null");
+        yield return new TestCaseData(elements.Element30, false).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[30]", "false");
+        yield return new TestCaseData(elements.Element30, true).Returns(expected).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[30]", "true");
 
-        yield return new TestCaseData(elements.Element12_3, null).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "null");
-        yield return new TestCaseData(elements.Element12_3, false).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "false");
-        yield return new TestCaseData(elements.Element12_3, true)
-            .Returns(((IEnumerable<MarkdownObject>)[elements.Element12_3_Attributes]).Select(ToReturnsTuple).ToArray())
-            .SetArgDisplayNames("(MathInline)Document[12][3]", "true");
-
-        yield return new TestCaseData(elements.Element18_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "null");
-        yield return new TestCaseData(elements.Element18_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "false");
-        yield return new TestCaseData(elements.Element18_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "true");
-
-        yield return new TestCaseData(elements.Element18_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "null");
-        yield return new TestCaseData(elements.Element18_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "false");
-        yield return new TestCaseData(elements.Element18_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "true");
-
-        yield return new TestCaseData(elements.Element28_0_0_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[28][0][0][1]", "null");
-        yield return new TestCaseData(elements.Element28_0_0_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[28][0][0][1]", "false");
-        yield return new TestCaseData(elements.Element28_0_0_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[28][0][0][1]", "true");
+        expected = ((IEnumerable<MarkdownObject>)[elements.Element31_0, elements.Element31_1])
+            .Select(ToReturnsTuple).ToArray();
+        yield return new TestCaseData(elements.Element31, null).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[31]", "null");
+        yield return new TestCaseData(elements.Element31, false).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[31]", "false");
+        yield return new TestCaseData(elements.Element31, true).Returns(expected).SetArgDisplayNames("(FootnoteGroup)Document[31]", "true");
     }
 
     /// <summary>
@@ -169,180 +163,36 @@ public static partial class ExampleMarkdown1
     public static System.Collections.IEnumerable GetGetAllDescendantsTestData()
     {
         MarkdownDocument document = GetMarkdownDocument();
+        TestHelper.AddMarkdownJsonTestAttachment(document, SourceFileName, JsonTestOutputFileName);
+        TestHelper.AddMarkdownJsonTestAttachment(ExampleMarkdown2.GetMarkdownDocument(), ExampleMarkdown2.SourceFileName, ExampleMarkdown2.JsonTestOutputFileName);
         var elements = new MarkdownElements(document);
-        IEnumerable<MarkdownObject> expected = [elements.Element0_0];
+        IEnumerable<MarkdownObject> expected = [elements.Element0, elements.Element0_0, elements.Element1, elements.Element2, elements.Element2_0, elements.Element3, elements.Element3_0, elements.Element3_0_0,
+            elements.Element4, elements.Element4_0, elements.Element4_1, elements.Element4_2, elements.Element5, elements.Element5_0, elements.Element5_1, elements.Element5_2, elements.Element5_3,
+            elements.Element5_4, elements.Element5_5, elements.Element5_5_0, elements.Element5_6, elements.Element6, elements.Element6_0, elements.Element7, elements.Element7_0, elements.Element8,
+            elements.Element8_0, elements.Element8_0_0, elements.Element9, elements.Element9_0, elements.Element9_1, elements.Element9_1_0, elements.Element9_2, elements.Element10, elements.Element10_0,
+            elements.Element10_1, elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_4_0, elements.Element11, elements.Element11_0, elements.Element11_1, elements.Element11_2,
+            elements.Element12, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element13, elements.Element13_0, elements.Element13_0_0,
+            elements.Element13_0_0_0, elements.Element13_0_0_1, elements.Element13_1, elements.Element13_1_0, elements.Element13_1_0_0, elements.Element13_1_0_1, elements.Element13_2, elements.Element13_2_0, elements.Element13_2_0_1, elements.Element13_3,
+            elements.Element13_3_0, elements.Element13_3_0_0, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_0_0_0, elements.Element14_1, elements.Element14_1_0, elements.Element14_1_0_0, elements.Element15,
+            elements.Element15_0, elements.Element15_1, elements.Element15_2, elements.Element15_3, elements.Element15_4, elements.Element15_5, elements.Element15_6, elements.Element15_7, elements.Element15_8, elements.Element15_9,
+            elements.Element15_10, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_1, elements.Element16_0_2, elements.Element16_0_2_0, elements.Element16_1, elements.Element16_1_0, elements.Element17,
+            elements.Element17_0, elements.Element17_0_0, elements.Element17_0_0_0, elements.Element17_0_0_0_0, elements.Element17_0_1, elements.Element17_0_1_0, elements.Element17_0_1_0_0, elements.Element17_1, elements.Element17_1_0,
+            elements.Element17_1_0_0, elements.Element17_1_0_0_0, elements.Element17_1_1, elements.Element17_1_1_0, elements.Element17_1_1_0_0, elements.Element17_2, elements.Element17_2_0, elements.Element17_2_0_0, elements.Element17_2_0_0_0,
+            elements.Element17_2_1, elements.Element17_2_1_0, elements.Element17_2_1_0_0, elements.Element18, elements.Element18_0, elements.Element18_0_0, elements.Element18_0_0_0, elements.Element18_0_0_0_0, elements.Element18_0_1, elements.Element18_0_1_0,
+            elements.Element18_0_1_0_0, elements.Element18_0_2, elements.Element18_0_2_0, elements.Element18_0_2_0_0, elements.Element18_1, elements.Element18_1_0, elements.Element18_1_0_0, elements.Element18_1_0_0_0, elements.Element18_1_1,
+            elements.Element18_1_1_0, elements.Element18_1_1_0_0, elements.Element18_1_2, elements.Element18_1_2_0, elements.Element18_1_2_0_0, elements.Element18_2, elements.Element18_2_0, elements.Element18_2_0_0, elements.Element18_2_0_0_0,
+            elements.Element18_2_1, elements.Element18_2_1_0, elements.Element18_2_1_0_0, elements.Element18_2_2, elements.Element18_2_2_0, elements.Element19, elements.Element19_0, elements.Element20, elements.Element20_0, elements.Element20_0_0,
+            elements.Element21, elements.Element21_0, elements.Element21_1, elements.Element21_1_0, elements.Element21_2, elements.Element21_3, elements.Element21_3_0, elements.Element21_4, elements.Element22, elements.Element22_0,
+            elements.Element22_1, elements.Element22_2, elements.Element22_3, elements.Element22_4, elements.Element23, elements.Element23_0, elements.Element23_1, elements.Element23_2, elements.Element24, elements.Element24_0, elements.Element24_1,
+            elements.Element24_2, elements.Element25, elements.Element26, elements.Element26_0, elements.Element26_0_0, elements.Element26_1, elements.Element26_2, elements.Element26_2_0, elements.Element26_3, elements.Element27, elements.Element28,
+            elements.Element29, elements.Element29_0, elements.Element29_0_0, elements.Element29_0_0_0, elements.Element29_0_1, elements.Element29_0_1_0, elements.Element29_0_1_1, elements.Element29_0_1_2, elements.Element29_1, elements.Element29_1_0,
+            elements.Element29_1_0_0, elements.Element29_1_1, elements.Element29_1_1_0, elements.Element30, elements.Element30_0, elements.Element30_1, elements.Element30_2, elements.Element30_3, elements.Element30_4, elements.Element30_5,
+            elements.Element31, elements.Element31_0, elements.Element31_0_0, elements.Element31_0_0_0, elements.Element31_0_0_1, elements.Element31_1, elements.Element31_1_0, elements.Element31_1_0_0, elements.Element31_1_0_1];
         IEnumerable<MarkdownObject> withAttrReturns = [elements.Element0_Attributes, elements.Element0_0];
-        yield return new TestCaseData(elements.Element0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "null");
-        yield return new TestCaseData(elements.Element0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "false");
-        yield return new TestCaseData(elements.Element0, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "true");
+        yield return new TestCaseData(document, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "null");
+        yield return new TestCaseData(document, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "false");
+        yield return new TestCaseData(document, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(HeadingBlock)Document[0]", "true");
 
-        expected = [elements.Element2_0, elements.Element2_1, elements.Element2_2];
-        yield return new TestCaseData(elements.Element2, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[2]", "null");
-        yield return new TestCaseData(elements.Element2, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[2]", "false");
-        yield return new TestCaseData(elements.Element2, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[2]", "true");
-
-        expected = [elements.Element3_0, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1,
-            elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0];
-        withAttrReturns = [elements.Element3_Attributes, elements.Element3_0, elements.Element3_0_Attributes, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1,
-            elements.Element3_1_Attributes, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1, elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3,
-            elements.Element3_3_0, elements.Element3_3_0_0];
-        yield return new TestCaseData(elements.Element3, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListBlock)Document[3]", "null");
-        yield return new TestCaseData(elements.Element3, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListBlock)Document[3]", "false");
-        yield return new TestCaseData(elements.Element3, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListBlock)Document[3]", "true");
-
-        expected = [elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1];
-        withAttrReturns = [elements.Element3_0_Attributes, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1];
-        yield return new TestCaseData(elements.Element3_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "null");
-        yield return new TestCaseData(elements.Element3_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "false");
-        yield return new TestCaseData(elements.Element3_0, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ListItemBlock)Document[3][0]", "true");
-
-        expected = [elements.Element6_0, elements.Element6_0_0];
-        yield return new TestCaseData(elements.Element6, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[6]", "null");
-        yield return new TestCaseData(elements.Element6, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[6]", "false");
-        yield return new TestCaseData(elements.Element6, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[6]", "true");
-
-        expected = [elements.Element6_0_0];
-        yield return new TestCaseData(elements.Element6_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[6][0]", "null");
-        yield return new TestCaseData(elements.Element6_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[6][0]", "false");
-        yield return new TestCaseData(elements.Element6_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[6][0]", "true");
-
-        expected = [elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0];
-        yield return new TestCaseData(elements.Element9, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[9]", "null");
-        yield return new TestCaseData(elements.Element9, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[9]", "false");
-        yield return new TestCaseData(elements.Element9, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[9]", "true");
-
-        expected = [elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0];
-        yield return new TestCaseData(elements.Element9_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "null");
-        yield return new TestCaseData(elements.Element9_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "false");
-        yield return new TestCaseData(elements.Element9_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "true");
-
-        expected = [elements.Element10_0, elements.Element10_1, elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7,
-            elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11, elements.Element10_12];
-        yield return new TestCaseData(elements.Element10, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[10]", "null");
-        yield return new TestCaseData(elements.Element10, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[10]", "false");
-        yield return new TestCaseData(elements.Element10, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkReferenceDefinitionGroup)Document[10]", "true");
-
-        expected = [elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3];
-        withAttrReturns = [elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element12_3_Attributes];
-        yield return new TestCaseData(elements.Element12, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[12]", "null");
-        yield return new TestCaseData(elements.Element12, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[12]", "false");
-        yield return new TestCaseData(elements.Element12, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[12]", "true");
-
-        expected = [elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1,
-            elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0];
-        yield return new TestCaseData(elements.Element16, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionList)Document[16]", "null");
-        yield return new TestCaseData(elements.Element16, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionList)Document[16]", "false");
-        yield return new TestCaseData(elements.Element16, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionList)Document[16]", "true");
-
-        expected = [elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2];
-        yield return new TestCaseData(elements.Element16_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "null");
-        yield return new TestCaseData(elements.Element16_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "false");
-        yield return new TestCaseData(elements.Element16_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][0]", "true");
-
-        expected = [elements.Element16_0_0_0];
-        yield return new TestCaseData(elements.Element16_0_0, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionTerm)Document[16][0][0]", "null");
-        yield return new TestCaseData(elements.Element16_0_0, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionTerm)Document[16][0][0]", "false");
-        yield return new TestCaseData(elements.Element16_0_0, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionTerm)Document[16][0][0]", "true");
-
-        expected = [elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2];
-        yield return new TestCaseData(elements.Element16_0_1, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[16][0][1]", "null");
-        yield return new TestCaseData(elements.Element16_0_1, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[16][0][1]", "false");
-        yield return new TestCaseData(elements.Element16_0_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[16][0][1]", "true");
-
-        expected = [elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0];
-        yield return new TestCaseData(elements.Element16_1, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][1]", "null");
-        yield return new TestCaseData(elements.Element16_1, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][1]", "false");
-        yield return new TestCaseData(elements.Element16_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(DefinitionItem)Document[16][1]", "true");
-
-        expected = [elements.Element18_0, elements.Element18_1, elements.Element18_2];
-        yield return new TestCaseData(elements.Element18, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[18]", "null");
-        yield return new TestCaseData(elements.Element18, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[18]", "false");
-        yield return new TestCaseData(elements.Element18, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[18]", "true");
-
-        expected = [elements.Element22_0, elements.Element22_1];
-        withAttrReturns = [elements.Element22_0, elements.Element22_1, elements.Element22_1_Attributes];
-        yield return new TestCaseData(elements.Element22, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[22]", "null");
-        yield return new TestCaseData(elements.Element22, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[22]", "false");
-        yield return new TestCaseData(elements.Element22, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[22]", "true");
-
-        expected = [elements.Element24_0, elements.Element24_1, elements.Element24_2, elements.Element24_3, elements.Element24_4];
-        yield return new TestCaseData(elements.Element24, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[24]", "null");
-        yield return new TestCaseData(elements.Element24, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[24]", "false");
-        yield return new TestCaseData(elements.Element24, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(ParagraphBlock)Document[24]", "true");
-
-        expected = [elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1,
-                elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
-        yield return new TestCaseData(elements.Element28, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteGroup)Document[28]", "null");
-        yield return new TestCaseData(elements.Element28, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteGroup)Document[28]", "false");
-        yield return new TestCaseData(elements.Element28, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteGroup)Document[28]", "true");
-
-        expected = [elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
-        yield return new TestCaseData(elements.Element28_1, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Footnote)Document[28][1]", "null");
-        yield return new TestCaseData(elements.Element28_1, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Footnote)Document[28][1]", "false");
-        yield return new TestCaseData(elements.Element28_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(Footnote)Document[28][1]", "true");
-
-        expected = [elements.Element0, elements.Element0_0, elements.Element1, elements.Element1_0_0, elements.Element2, elements.Element2_0, elements.Element2_1, elements.Element2_2, elements.Element3,
-            elements.Element3_0, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1,
-            elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0, elements.Element4, elements.Element4_0, elements.Element5,
-            elements.Element5_0, elements.Element6, elements.Element6_0, elements.Element6_0_0, elements.Element7, elements.Element7_0, elements.Element8, elements.Element8_0, elements.Element8_0_0,
-            elements.Element9, elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0, elements.Element10, elements.Element10_0, elements.Element10_1, elements.Element10_2,
-            elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7, elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11,
-            elements.Element10_12, elements.Element11, elements.Element11_0, elements.Element12, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element13,
-            elements.Element13_0, elements.Element13_1, elements.Element13_2, elements.Element13_3, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_1, elements.Element14_2,
-            elements.Element15, elements.Element15_0, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0,
-            elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1, elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0, elements.Element17,
-            elements.Element17_0, elements.Element18, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element19, elements.Element20, elements.Element21, elements.Element21_0,
-            elements.Element22, elements.Element22_0, elements.Element22_1, elements.Element23, elements.Element23_0, elements.Element24, elements.Element24_0, elements.Element24_1, elements.Element24_2,
-            elements.Element24_3, elements.Element24_4, elements.Element25, elements.Element25_0, elements.Element26, elements.Element26_0, elements.Element27, elements.Element27_0, elements.Element28,
-            elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1, elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
-        withAttrReturns = [elements.Element0, elements.Element0_Attributes, elements.Element0_0, elements.Element1, elements.Element1_0_0, elements.Element2, elements.Element2_0, elements.Element2_1,
-            elements.Element2_2, elements.Element3, elements.Element3_Attributes, elements.Element3_0, elements.Element3_0_Attributes, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1,
-            elements.Element3_1, elements.Element3_1_Attributes, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1, elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0,
-            elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0, elements.Element4, elements.Element4_Attributes, elements.Element4_0, elements.Element5, elements.Element5_Attributes,
-            elements.Element5_0, elements.Element6, elements.Element6_0, elements.Element6_0_0, elements.Element7, elements.Element7_Attributes, elements.Element7_0, elements.Element8, elements.Element8_0,
-            elements.Element8_0_0, elements.Element9, elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0, elements.Element10, elements.Element10_0, elements.Element10_1,
-            elements.Element10_2, elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7, elements.Element10_8, elements.Element10_9, elements.Element10_10,
-            elements.Element10_11, elements.Element10_12, elements.Element11, elements.Element11_Attributes, elements.Element11_0, elements.Element12, elements.Element12_0, elements.Element12_1,
-            elements.Element12_2, elements.Element12_3, elements.Element12_3_Attributes, elements.Element13, elements.Element13_0, elements.Element13_1, elements.Element13_1_Attributes, elements.Element13_2,
-            elements.Element13_3, elements.Element13_3_Attributes, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_1, elements.Element14_2, elements.Element14_2_Attributes,
-            elements.Element15, elements.Element15_Attributes, elements.Element15_0, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1,
-            elements.Element16_0_1_0, elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1, elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0,
-            elements.Element17, elements.Element17_Attributes, elements.Element17_0, elements.Element18, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element19,
-            elements.Element19_Attributes, elements.Element20, elements.Element21, elements.Element21_Attributes, elements.Element21_0, elements.Element22, elements.Element22_0, elements.Element22_1,
-            elements.Element22_1_Attributes, elements.Element23, elements.Element23_Attributes, elements.Element23_0, elements.Element24, elements.Element24_0, elements.Element24_1, elements.Element24_2,
-            elements.Element24_3, elements.Element24_4, elements.Element25, elements.Element25_Attributes, elements.Element25_0, elements.Element26, elements.Element26_0, elements.Element27, elements.Element27_0,
-            elements.Element28, elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1, elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0,
-            elements.Element28_1_0_1];
-        yield return new TestCaseData(document, null).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "null");
-        yield return new TestCaseData(document, false).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "false");
-        yield return new TestCaseData(document, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "true");
-
-        yield return new TestCaseData(elements.Element0_0, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "null");
-        yield return new TestCaseData(elements.Element0_0, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "false");
-        yield return new TestCaseData(elements.Element0_0, true).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[0][0]", "true");
-
-        withAttrReturns = [elements.Element12_3_Attributes];
-        yield return new TestCaseData(elements.Element12_3, null).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "null");
-        yield return new TestCaseData(elements.Element12_3, false).Returns(ReturnsEmpty).SetArgDisplayNames("(MathInline)Document[12][3]", "false");
-        yield return new TestCaseData(elements.Element12_3, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(MathInline)Document[12][3]", "true");
-
-        yield return new TestCaseData(elements.Element18_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "null");
-        yield return new TestCaseData(elements.Element18_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "false");
-        yield return new TestCaseData(elements.Element18_1, true).Returns(ReturnsEmpty).SetArgDisplayNames("(CodeInline)Document[18][1]", "true");
-
-        withAttrReturns = [elements.Element20_Attributes];
-        yield return new TestCaseData(elements.Element20, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FencedCodeBlock)Document[20]", "null");
-        yield return new TestCaseData(elements.Element20, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FencedCodeBlock)Document[20]", "false");
-        yield return new TestCaseData(elements.Element20, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FencedCodeBlock)Document[20]", "true");
-
-        withAttrReturns = [elements.Element22_1_Attributes];
-        yield return new TestCaseData(elements.Element22_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(LineBreakInline)Document[22][1]", "null");
-        yield return new TestCaseData(elements.Element22_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(LineBreakInline)Document[22][1]", "false");
-        yield return new TestCaseData(elements.Element22_1, true).Returns(withAttrReturns.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LineBreakInline)Document[22][1]", "true");
-
-        yield return new TestCaseData(elements.Element24_1, null).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "null");
-        yield return new TestCaseData(elements.Element24_1, false).Returns(ReturnsEmpty).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "false");
-        yield return new TestCaseData(elements.Element24_1, true).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(FootnoteLink)Document[24][1]", "true");
     }
 
     /// <summary>
@@ -353,67 +203,11 @@ public static partial class ExampleMarkdown1
     {
         MarkdownDocument document = GetMarkdownDocument();
         var elements = new MarkdownElements(document);
-        IEnumerable<MarkdownObject> expected = [elements.Element0, elements.Element0_0, elements.Element1, elements.Element1_0_0, elements.Element2, elements.Element2_0, elements.Element2_1, elements.Element2_2, elements.Element3,
-            elements.Element3_0, elements.Element3_0_0, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1, elements.Element3_1_0, elements.Element3_1_0_0, elements.Element3_1_0_1,
-            elements.Element3_2, elements.Element3_2_0, elements.Element3_2_0_0, elements.Element3_3, elements.Element3_3_0, elements.Element3_3_0_0, elements.Element4, elements.Element4_0, elements.Element5,
-            elements.Element5_0, elements.Element6, elements.Element6_0, elements.Element6_0_0, elements.Element7, elements.Element7_0, elements.Element8, elements.Element8_0, elements.Element8_0_0,
-            elements.Element9, elements.Element9_0, elements.Element9_0_0, elements.Element9_0_1, elements.Element9_0_1_0, elements.Element10, elements.Element10_0, elements.Element10_1, elements.Element10_2,
-            elements.Element10_3, elements.Element10_4, elements.Element10_5, elements.Element10_6, elements.Element10_7, elements.Element10_8, elements.Element10_9, elements.Element10_10, elements.Element10_11,
-            elements.Element10_12, elements.Element11, elements.Element11_0, elements.Element12, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element13,
-            elements.Element13_0, elements.Element13_1, elements.Element13_2, elements.Element13_3, elements.Element14, elements.Element14_0, elements.Element14_0_0, elements.Element14_1, elements.Element14_2,
-            elements.Element15, elements.Element15_0, elements.Element16, elements.Element16_0, elements.Element16_0_0, elements.Element16_0_0_0, elements.Element16_0_1, elements.Element16_0_1_0,
-            elements.Element16_0_1_1, elements.Element16_0_1_2, elements.Element16_1, elements.Element16_1_0, elements.Element16_1_0_0, elements.Element16_1_1, elements.Element16_1_1_0, elements.Element17,
-            elements.Element17_0, elements.Element18, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element19, elements.Element20, elements.Element21, elements.Element21_0,
-            elements.Element22, elements.Element22_0, elements.Element22_1, elements.Element23, elements.Element23_0, elements.Element24, elements.Element24_0, elements.Element24_1, elements.Element24_2,
-            elements.Element24_3, elements.Element24_4, elements.Element25, elements.Element25_0, elements.Element26, elements.Element26_0, elements.Element27, elements.Element27_0, elements.Element28,
-            elements.Element28_0, elements.Element28_0_0, elements.Element28_0_0_0, elements.Element28_0_0_1, elements.Element28_1, elements.Element28_1_0, elements.Element28_1_0_0, elements.Element28_1_0_1];
+        IEnumerable<MarkdownObject> expected = [elements.Element0, elements.Element1, elements.Element2, elements.Element3, elements.Element4, elements.Element5, elements.Element6, elements.Element7,
+            elements.Element8, elements.Element9, elements.Element10, elements.Element11, elements.Element12, elements.Element13, elements.Element14, elements.Element15, elements.Element16, elements.Element17,
+            elements.Element18, elements.Element19, elements.Element20, elements.Element21, elements.Element22, elements.Element23, elements.Element24, elements.Element25, elements.Element26, elements.Element27,
+            elements.Element28, elements.Element29, elements.Element30, elements.Element31];
         yield return new TestCaseData(document, typeof(MarkdownObject)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "MarkdownObject");
-
-        expected = [elements.Element0, elements.Element1, elements.Element2, elements.Element3_0_0, elements.Element3_1_0, elements.Element3_2_0, elements.Element3_3_0, elements.Element4, elements.Element5,
-            elements.Element6, elements.Element7, elements.Element8, elements.Element9, elements.Element10, elements.Element11, elements.Element12, elements.Element13, elements.Element14, elements.Element15,
-            elements.Element16_0_0, elements.Element16_0_1, elements.Element16_1_0, elements.Element16_1_1, elements.Element17, elements.Element18, elements.Element19, elements.Element20, elements.Element21,
-            elements.Element22, elements.Element23, elements.Element24, elements.Element25, elements.Element26, elements.Element27, elements.Element28_0_0, elements.Element28_1_0];
-        yield return new TestCaseData(document, typeof(LeafBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "LeafBlock");
-
-        expected = [elements.Element1, elements.Element2, elements.Element3_0_0, elements.Element3_1_0, elements.Element3_2_0, elements.Element3_3_0, elements.Element6, elements.Element8, elements.Element9,
-            elements.Element12, elements.Element13, elements.Element14, elements.Element16_0_1, elements.Element16_1_1, elements.Element18,  elements.Element22, elements.Element24,elements.Element26,
-            elements.Element27, elements.Element28_0_0, elements.Element28_1_0];
-        yield return new TestCaseData(document, typeof(ParagraphBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ParagraphBlock");
-
-        expected = [elements.Element3, elements.Element10, elements.Element16, elements.Element24_1, elements.Element24_3, elements.Element28];
-        yield return new TestCaseData(document, typeof(ContainerBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ContainerBlock");
-
-        expected = [elements.Element19, elements.Element20, elements.Element16, elements.Element24_1, elements.Element24_3, elements.Element28];
-        yield return new TestCaseData(document, typeof(CodeBlock)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ContainerBlock");
-
-        expected = [elements.Element1_0, elements.Element6_0, elements.Element8_0, elements.Element9_0, elements.Element14_0];
-        yield return new TestCaseData(document, typeof(ContainerInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "ContainerBlock");
-
-        expected = [elements.Element9_0_1];
-        yield return new TestCaseData(elements.Element9_0, typeof(ContainerInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[9][0]", "ContainerBlock");
-
-        expected = [elements.Element0_0, elements.Element1_0_0, elements.Element2_0, elements.Element2_1, elements.Element2_2, elements.Element3_0_0_0, elements.Element3_0_0_1, elements.Element3_1_0_0,
-            elements.Element3_1_0_1, elements.Element3_2_0_0, elements.Element3_3_0_0, elements.Element4_0, elements.Element5_0, elements.Element6_0_0, elements.Element7_0,  elements.Element8_0_0,
-            elements.Element9_0_0, elements.Element9_0_1_0, elements.Element11_0, elements.Element12_0, elements.Element12_1, elements.Element12_2, elements.Element12_3, elements.Element13_0, elements.Element13_2,
-            elements.Element13_3, elements.Element14_0_0, elements.Element14_1, elements.Element14_2, elements.Element15_0, elements.Element16_0_0_0, elements.Element16_0_1_0, elements.Element16_0_1_1,
-            elements.Element16_0_1_2, elements.Element16_1_0_0, elements.Element16_1_1_0, elements.Element17_0, elements.Element18_0, elements.Element18_1, elements.Element18_2, elements.Element21_0,
-            elements.Element22_0, elements.Element22_1, elements.Element23_0, elements.Element24_0, elements.Element24_2, elements.Element24_4, elements.Element25_0, elements.Element26_0, elements.Element27_0,
-            elements.Element28_0_0_0, elements.Element28_1_0_0];
-        yield return new TestCaseData(document, typeof(LeafInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "LeafInline");
-
-        expected = [elements.Element0_0, elements.Element1_0_0, elements.Element2_0, elements.Element2_2, elements.Element3_0_0_1, elements.Element3_1_0_1, elements.Element3_2_0_0, elements.Element3_3_0_0,
-            elements.Element4_0, elements.Element5_0, elements.Element6_0_0, elements.Element7_0,  elements.Element8_0_0, elements.Element9_0_0, elements.Element9_0_1_0, elements.Element11_0, elements.Element12_0,
-            elements.Element12_2, elements.Element13_0, elements.Element13_2, elements.Element14_0_0, elements.Element15_0, elements.Element16_0_0_0, elements.Element16_0_1_0, elements.Element16_0_1_2,
-            elements.Element16_1_0_0, elements.Element16_1_1_0, elements.Element17_0, elements.Element18_0, elements.Element18_2, elements.Element21_0, elements.Element22_0, elements.Element23_0, elements.Element24_0,
-            elements.Element24_2, elements.Element24_4, elements.Element25_0, elements.Element26_0, elements.Element27_0, elements.Element28_0_0_0, elements.Element28_1_0_0];
-        yield return new TestCaseData(document, typeof(LiteralInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", "LiteralInline");
-
-        expected = [elements.Element1_0_0];
-        yield return new TestCaseData(elements.Element1_0, typeof(LeafInline)).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("(LinkInline)Document[1][0]", "LeafInline");
-
-        yield return new TestCaseData(elements.Element12_2, typeof(LiteralInline)).Returns(ReturnsEmpty).SetArgDisplayNames("(LiteralInline)Document[12][2]", "LiteralInline");
-
-        yield return new TestCaseData(elements.Element2_1, typeof(LeafInline)).Returns(ReturnsEmpty).SetArgDisplayNames("(LineBreakInline)Document[2][1]", "LeafInline");
     }
 
     /// <summary>
@@ -425,17 +219,9 @@ public static partial class ExampleMarkdown1
         MarkdownDocument document = GetMarkdownDocument();
         var elements = new MarkdownElements(document);
         IEnumerable<Type> types = [typeof(ContainerInline), typeof(Container)];
-        IEnumerable<MarkdownObject> expected = [elements.Element1_0, elements.Element3, elements.Element6_0, elements.Element8_0, elements.Element9_0, elements.Element10, elements.Element14_0, elements.Element16,
-            elements.Element24_1, elements.Element24_3, elements.Element28];
-        yield return new TestCaseData(document, types).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", $"[{string.Join(", ", types.Select(t => t.Name))}]");
-
-        types = [typeof(CodeInline), typeof(FencedCodeBlock), typeof(LineBreakInline)];
-        expected = [elements.Element2_1, elements.Element12_1, elements.Element14_1, elements.Element16_0_1_1, elements.Element18_1, elements.Element19, elements.Element20, elements.Element22_1];
-        yield return new TestCaseData(document, types).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", $"[{string.Join(", ", types.Select(t => t.Name))}]");
-
-        types = [typeof(ListBlock), typeof(ParagraphBlock)];
-        expected = [elements.Element1, elements.Element2, elements.Element3, elements.Element6, elements.Element8, elements.Element9, elements.Element12, elements.Element13, elements.Element14,
-            elements.Element16_0_1, elements.Element16_1_1, elements.Element18, elements.Element22, elements.Element24, elements.Element26, elements.Element27, elements.Element28_0_0, elements.Element28_1_0];
+        // TODO: This is not valid
+        IEnumerable<MarkdownObject> expected = [elements.Element1, elements.Element3, elements.Element6_0, elements.Element8_0, elements.Element9_0, elements.Element10, elements.Element14_0, elements.Element16,
+            elements.Element24_1, elements.Element24, elements.Element28];
         yield return new TestCaseData(document, types).Returns(expected.Select(ToReturnsTuple).ToArray()).SetArgDisplayNames("Document", $"[{string.Join(", ", types.Select(t => t.Name))}]");
     }
 /// 
@@ -452,6 +238,7 @@ public static partial class ExampleMarkdown1
                 .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", type.FullName!, maximumDepth.ToString());
         }
         MarkdownDocument document = GetMarkdownDocument();
+        // TODO: This is not valid
         IEnumerable<MarkdownObject> expected = [((LeafBlock)document[0]).Inline!.FirstChild!, ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!];
         var containerInline = ((LeafBlock)document[2]).Inline!;
         expected = expected.Concat([containerInline.FirstChild!, containerInline.LastChild!, ((LeafBlock)document[4]).Inline!.FirstChild!, ((LeafBlock)document[5]).Inline!.FirstChild!,
@@ -487,6 +274,7 @@ public static partial class ExampleMarkdown1
                 .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", $"[{string.Join(", ", types.Select(t => t.FullName))}]", maximumDepth.ToString());
         }
         MarkdownDocument document = GetMarkdownDocument();
+        // TODO: This is not valid
         IEnumerable<MarkdownObject> expected = [((LeafBlock)document[0]).Inline!.FirstChild!, ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!];
         var containerInline = ((LeafBlock)document[2]).Inline!;
         expected = expected.Concat([containerInline.FirstChild!, containerInline.LastChild!, ((LeafBlock)document[4]).Inline!.FirstChild!, ((LeafBlock)document[5]).Inline!.FirstChild!,
@@ -520,6 +308,7 @@ public static partial class ExampleMarkdown1
         }
 
         MarkdownDocument document = GetMarkdownDocument();
+        // TODO: This is not valid
         ContainerBlock listBlock = (ContainerBlock)document[3];
         ContainerBlock listItemBlock0 = (ContainerBlock)listBlock[0];
         ContainerBlock listItemBlock1 = (ContainerBlock)listBlock[1];
@@ -631,6 +420,7 @@ public static partial class ExampleMarkdown1
                 .SetArgDisplayNames((source is null) ? "null" : $"{source.GetType().Name} {{ {source.ToPositionText()}}}", minimumDepth.ToString(), includeAttributes?.ToString() ?? "null");
         }
         MarkdownDocument document = GetMarkdownDocument();
+        // TODO: This is not valid
         var inline0 = ((ContainerInline)((LeafBlock)document[1]).Inline!.FirstChild!).FirstChild!;
         var listBlock0 = (ContainerBlock)document[3];
         var containerBlock0 = (ContainerBlock)listBlock0[0];

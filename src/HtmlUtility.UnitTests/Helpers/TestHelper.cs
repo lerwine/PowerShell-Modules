@@ -19,7 +19,7 @@ public static class TestHelper
             JsonObject position = new()
             {
                 { "Level", JsonValue.Create(level) },
-                { "Index", JsonValue.Create(index) },
+                { "Index", JsonValue.Create(index) }
             };
             JsonObject result = new()
             {
@@ -33,10 +33,21 @@ public static class TestHelper
             var a = obj.TryGetAttributes();
             if (a is not null)
             {
+                var aPos = new JsonObject()
+                {
+                    { "Level", JsonValue.Create(level) }
+                };
+                if (!a.Span.IsEmpty)
+                {
+                    aPos.Add("Line", JsonValue.Create(a.Line));
+                    aPos.Add("Column", JsonValue.Create(a.Column));
+                    aPos.Add("Start", JsonValue.Create(a.Span.Start));
+                    aPos.Add("End", JsonValue.Create(a.Span.End));
+                }
                 JsonObject attr = new()
                 {
                     { "Name", JsonValue.Create(a.GetType().Name) },
-                    { "Position", new JsonObject() { { "Level", JsonValue.Create(level) } } }
+                    { "Position", aPos }
                 };
                 if (!string.IsNullOrEmpty(a.Id))
                     attr.Add("Id", JsonValue.Create(a.Id));
@@ -110,6 +121,13 @@ public static class TestHelper
             }
             else if (obj is LeafBlock leafBlock)
             {
+                if (!obj.Span.IsEmpty)
+                {
+                    position.Add("Line", JsonValue.Create(obj.Line));
+                    position.Add("Column", JsonValue.Create(obj.Column));
+                    position.Add("Start", JsonValue.Create(obj.Span.Start));
+                    position.Add("End", JsonValue.Create(obj.Span.End));
+                }
                 if (obj is CodeBlock codeBlock)
                 {
                     if (obj is FencedCodeBlock fencedCodeBlock)
@@ -174,6 +192,11 @@ public static class TestHelper
                 {
                     position.Add("Line", JsonValue.Create(obj.Line));
                     position.Add("Column", JsonValue.Create(obj.Column));
+                    if (!obj.Span.IsEmpty)
+                    {
+                        position.Add("Start", JsonValue.Create(obj.Span.Start));
+                        position.Add("End", JsonValue.Create(obj.Span.End));
+                    }
                     if (fnl.Footnote is not null)
                     {
                         JsonObject fno = new()
@@ -213,7 +236,10 @@ public static class TestHelper
 
                         }
                         else if (containerInline is Markdig.Syntax.Inlines.EmphasisInline emphasisInline)
+                        {
+                            result.Add("DelimiterChar", JsonValue.Create(emphasisInline.DelimiterChar));
                             result.Add("DelimiterCount", JsonValue.Create(emphasisInline.DelimiterCount));
+                        }
                         else if (containerInline is Markdig.Syntax.Inlines.LinkInline linkInline)
                         {
                             if (!string.IsNullOrEmpty(linkInline.Title))
@@ -310,12 +336,6 @@ public static class TestHelper
 
         // \\u0027
         // '
-
-        // \\u003C
-        // <
-
-        // \\u003E
-        // >
 
         // \\u0022
         // \\"
