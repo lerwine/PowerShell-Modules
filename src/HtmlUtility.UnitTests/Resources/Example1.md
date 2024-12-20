@@ -15,7 +15,7 @@ Footnotes[^2] have a label[^@#$%] and the footnote's content, whereas [reference
 
 ### Example Heading 3
 
-[CommonMark Spec](https://spec.commonmark.org/0.31.2/)
+[CommonMark Spec](https://spec.commonmark.org/0.31.2/){ target="_blank" } :arrow_upper_right:
 
 My favorite search engine is [Duck Duck Go](https://duckduckgo.com "The best search engine for privacy").
 
@@ -41,13 +41,16 @@ here
 *[API]: Application Programming Interface
 *[JSON]: JavaScript Object Notation
 
-When working with APIs, it's common to send and receive data in JSON format.
-This API uses JSON for all its responses.
-
 > Block quoted
 > *text*
 >
 > With a blank line
+
+Cited: ""When working with APIs, it's common to send and receive data in JSON format.""
+This API uses JSON for all its responses.
+
+> [!IMPORTANT]
+> This is an important note.
 
 | Syntax      | Description |
 | ----------- | ----------- |
@@ -61,7 +64,11 @@ This API uses JSON for all its responses.
 
 ## Example Heading 2{#example-heading}
 
-![alt attribute goes here](./sn-logo.jpg "This is a Title" )
+^^^
+![alt attribute goes here](./sn-logo.jpg "This is a Title")
+^^^ My Figure
+
+![alt attribute goes here](./sn-logo.jpg "This is a Title")
 
 H~2~O, E = Mc^2^, $\sqrt{3x-1}+(1+x)^2$
 
@@ -80,9 +87,30 @@ This is `inline code`.
 [ "This is a fenced code block" ]
 ```
 
-``` { .html #codeId style="color: #333; background: #f8f8f8;" }
+```{ .html #codeId style="color: #333; background: #f8f8f8;" }
 This is a fenced code block
 with an ID and style
+```
+
+```nomnoml
+[example|
+  propertyA: Int
+  propertyB: string
+|
+  methodA()
+  methodB()
+|
+  [subA]--[subB]
+  [subA]-:>[sub C]
+]
+```
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
 ```
 
 Apple
@@ -91,6 +119,9 @@ Apple
 
 Orange
 :   The fruit of an evergreen tree of the genus Citrus.
+
+^^ This is a footer
+^^ multi-line
 
 [1]: <https://github.com/xoofx/markdig/blob/master/readme.md> "Markdig Documentation"
 [^2]: This is a footnote content.
