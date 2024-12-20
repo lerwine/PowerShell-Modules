@@ -1,993 +1,964 @@
 {
-    "Name": "MarkdownDocument",
-    "LineCount": 78,
-    "End": 1499,
-    "Tokens": [
+  "Name": "MarkdownDocument",
+  "LineCount": 78,
+  "End": 1499,
+  "Tokens": [
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 0, "Line": 0, "Start": 0, "End": 26 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 1,
+      "IsSetext": false,
+      "Tokens": [
         {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 0 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 1,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 0, "Column": 2, "Start": 2, "End": 26 },
-                    "Content": "Example Markdown Document",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
         },
         {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 1 },
-            "Tokens": [
-                {
-                    "Name": "LinkInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 2, "Column": 0, "Start": 31, "End": 84 },
-                    "Url": "https://spec.commonmark.org/0.31.2/",
-                    "UrlHasPointyBrackets": false,
-                    "Title": "",
-                    "IsShortcut": false,
-                    "IsAutoLink": false,
-                    "Tokens": [
-                        {
-                            "Name": "LiteralInline",
-                            "Position": { "Level": 3, "Index": 0, "Line": 2, "Column": 1, "Start": 32, "End": 46 },
-                            "Content": "CommonMark Spec",
-                            "IsFirstCharacterEscaped": false
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 2 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 4, "Column": 0, "Start": 89, "End": 103 },
-                    "Content": "Hard line break",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "LineBreakInline",
-                    "Position": { "Level": 2, "Index": 1, "Line": 4, "Column": 15, "Start": 104, "End": 105 },
-                    "IsHard": true,
-                    "IsBackslash": true
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 2, "Line": 5, "Column": 0, "Start": 107, "End": 110 },
-                    "Content": "here",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ListBlock",
-            "Position": { "Level": 1, "Index": 3, "Line": 7, "Column": 0, "Start": 115, "End": 168 },
-            "IsOrdered": false,
-            "BulletType": "-",
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Classes": [
-                        "contains-task-list"
-                    ]
-                },
-                {
-                    "Name": "ListItemBlock",
-                    "Position": { "Level": 2, "Index": 0, "Line": 7, "Column": 0, "Start": 115, "End": 124 },
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3 },
-                            "Classes": [
-                                "task-list-item"
-                            ]
-                        },
-                        { "Key": "Name", "Value": "ParagraphBlock" },
-                        {
-                            "Key": "Position",
-                            "Value": { "Level": 3, "Index": 0 }
-                        },
-                        {
-                            "Key": "Tokens",
-                            "Value": [
-                                {
-                                    "Name": "TaskList",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 7, "Column": 2, "Start": 117, "End": 119 },
-                                    "Checked": true
-                                },
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 1, "Line": 7, "Column": 5, "Start": 120, "End": 124 },
-                                    "Content": " Task",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Name": "ListItemBlock",
-                    "Position": { "Level": 2, "Index": 1, "Line": 8, "Column": 0, "Start": 127, "End": 143 },
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3 },
-                            "Classes": [
-                                "task-list-item"
-                            ]
-                        },
-                        { "Key": "Name", "Value": "ParagraphBlock" },
-                        {
-                            "Key": "Position",
-                            "Value": { "Level": 3, "Index": 0 }
-                        },
-                        {
-                            "Key": "Tokens",
-                            "Value": [
-                                {
-                                    "Name": "TaskList",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 8, "Column": 2, "Start": 129, "End": 131 },
-                                    "Checked": false
-                                },
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 1, "Line": 8, "Column": 5, "Start": 132, "End": 141 },
-                                    "Content": " List Item",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Name": "ListItemBlock",
-                    "Position": { "Level": 2, "Index": 2, "Line": 10, "Column": 0, "Start": 146, "End": 158 },
-                    "Tokens": [
-                        { "Key": "Name", "Value": "ParagraphBlock" },
-                        {
-                            "Key": "Position",
-                            "Value": { "Level": 3, "Index": 0 }
-                        },
-                        {
-                            "Key": "Tokens",
-                            "Value": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 10, "Column": 2, "Start": 148, "End": 158 },
-                                    "Content": "Normal List",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Name": "ListItemBlock",
-                    "Position": { "Level": 2, "Index": 3, "Line": 11, "Column": 0, "Start": 161, "End": 168 },
-                    "Tokens": [
-                        { "Key": "Name", "Value": "ParagraphBlock" },
-                        {
-                            "Key": "Position",
-                            "Value": { "Level": 3, "Index": 0 }
-                        },
-                        {
-                            "Key": "Tokens",
-                            "Value": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 11, "Column": 2, "Start": 163, "End": 166 },
-                                    "Content": "Item",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 4 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2, "Line": 13, "Column": 17, "Start": 188, "End": 199 },
-                    "Id": 17
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 13, "Column": 3, "Start": 174, "End": 186 },
-                    "Content": "Abbreviations",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 5 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 18, "Column": 3, "Start": 282, "End": 285 },
-                    "Content": "Link",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 6 },
-            "Tokens": [
-                {
-                    "Name": "LinkInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 20, "Column": 0, "Start": 290, "End": 321 },
-                    "Url": "#custom-id",
-                    "UrlHasPointyBrackets": false,
-                    "Title": "",
-                    "IsShortcut": false,
-                    "IsAutoLink": false,
-                    "Tokens": [
-                        {
-                            "Name": "LiteralInline",
-                            "Position": { "Level": 3, "Index": 0, "Line": 20, "Column": 1, "Start": 291, "End": 308 },
-                            "Content": "Abbreviations Link",
-                            "IsFirstCharacterEscaped": false
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 7 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 22, "Column": 3, "Start": 329, "End": 352 },
-                    "Content": "Image with Alt and Title",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 8 },
-            "Tokens": [
-                {
-                    "Name": "LinkInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 24, "Column": 0, "Start": 357, "End": 416 },
-                    "Url": "./sn-logo.jpg",
-                    "UrlHasPointyBrackets": false,
-                    "Title": "This is a Title",
-                    "IsShortcut": false,
-                    "IsAutoLink": false,
-                    "Tokens": [
-                        {
-                            "Name": "LiteralInline",
-                            "Position": { "Level": 3, "Index": 0, "Line": 24, "Column": 2, "Start": 359, "End": 381 },
-                            "Content": "alt attribute goes here",
-                            "IsFirstCharacterEscaped": false
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 9 },
-            "Tokens": [
-                {
-                    "Name": "LinkInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 26, "Column": 0, "Start": 421, "End": 432 },
-                    "Label": "foo *bar*",
-                    "Url": "./sn-logo.jpg",
-                    "UrlHasPointyBrackets": false,
-                    "Title": "train & tracks",
-                    "IsShortcut": true,
-                    "IsAutoLink": false,
-                    "Tokens": [
-                        {
-                            "Name": "LiteralInline",
-                            "Position": { "Level": 3, "Index": 0, "Line": 26, "Column": 2, "Start": 423, "End": 426 },
-                            "Content": "foo ",
-                            "IsFirstCharacterEscaped": false
-                        },
-                        {
-                            "Name": "EmphasisInline",
-                            "Position": { "Level": 3, "Index": 1, "Line": 26, "Column": 6, "Start": 427, "End": 431 },
-                            "DelimiterChar": "*",
-                            "DelimiterCount": 1,
-                            "Tokens": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 26, "Column": 7, "Start": 428, "End": 430 },
-                                    "Content": "bar",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "LinkReferenceDefinitionGroup",
-            "Position": { "Level": 1, "Index": 10, "Line": 0, "Column": 0, "Start": 0, "End": 1412 },
-            "Tokens": [
-                {
-                    "Name": "LinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 0 },
-                    "Label": "foo *bar*",
-                    "Url": "./sn-logo.jpg",
-                    "UrlHasPointyBrackets": false,
-                    "Title": "train & tracks"
-                },
-                {
-                    "Name": "FootnoteLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 1 },
-                    "Label": "^1",
-                    "Footnote": { "Line": 70, "Column": 0, "Label": "^1", "Order": 1 }
-                },
-                {
-                    "Name": "FootnoteLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 2 },
-                    "Label": "^@#$%",
-                    "Footnote": { "Line": 71, "Column": 0, "Label": "^@#$%", "Order": 2 }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 3 },
-                    "Heading": { "Line": 0, "Column": 0, "Id": "example-markdown-document" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 4 },
-                    "Heading": { "Line": 13, "Column": 0, "Id": "custom-id" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 5 },
-                    "Heading": { "Line": 18, "Column": 0, "Id": "link" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 6 },
-                    "Heading": { "Line": 22, "Column": 0, "Id": "image-with-alt-and-title" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 7 },
-                    "Heading": { "Line": 30, "Column": 0, "Id": "math" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 8 },
-                    "Heading": { "Line": 39, "Column": 0, "Id": "definition-list" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 9 },
-                    "Heading": { "Line": 48, "Column": 0, "Id": "code" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 10 },
-                    "Heading": { "Line": 61, "Column": 0, "Id": "attribute-lists" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 11 },
-                    "Heading": { "Line": 66, "Column": 0, "Id": "footnotes" }
-                },
-                {
-                    "Name": "HeadingLinkReferenceDefinition",
-                    "Position": { "Level": 2, "Index": 12 },
-                    "Heading": { "Line": 73, "Column": 0, "Id": "smarties" }
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 11 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 30, "Column": 3, "Start": 487, "End": 490 },
-                    "Content": "Math",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 12 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 32, "Column": 0, "Start": 495, "End": 513 },
-                    "Content": "This sentence uses ",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "CodeInline",
-                    "Position": { "Level": 2, "Index": 1, "Line": 32, "Column": 19, "Start": 514, "End": 516 },
-                    "Delimiter": "`",
-                    "DelimiterCount": 1,
-                    "Content": "$"
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 2, "Line": 32, "Column": 22, "Start": 517, "End": 549 },
-                    "Content": " delimiters to show math inline: ",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "MathInline",
-                    "Position": { "Level": 2, "Index": 3, "Line": 32, "Column": 55, "Start": 550, "End": 570 },
-                    "Delimiter": "$",
-                    "DelimiterCount": 1,
-                    "Content": "\\sqrt{3x-1}+(1+x)^2",
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3 },
-                            "Classes": [
-                                "math"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 13 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 34, "Column": 0, "Start": 575, "End": 593 },
-                    "Content": "This sentence uses ",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "MathInline",
-                    "Position": { "Level": 2, "Index": 1, "Line": 34, "Column": 19, "Start": 594, "End": 660 },
-                    "Delimiter": "$",
-                    "DelimiterCount": 1,
-                    "Content": "\\` and \\`",
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3 },
-                            "Classes": [
-                                "math"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 2, "Line": 34, "Column": 30, "Start": 605, "End": 637 },
-                    "Content": " delimiters to show math inline: ",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "MathInline",
-                    "Position": { "Level": 2, "Index": 3, "Line": 34, "Column": 63, "Start": 638, "End": 660 },
-                    "Delimiter": "$",
-                    "DelimiterCount": 1,
-                    "Content": "`\\sqrt{3x-1}+(1+x)^2`",
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3 },
-                            "Classes": [
-                                "math"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 14 },
-            "Tokens": [
-                {
-                    "Name": "EmphasisInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 36, "Column": 0, "Start": 665, "End": 697 },
-                    "DelimiterChar": "*",
-                    "DelimiterCount": 2,
-                    "Tokens": [
-                        {
-                            "Name": "LiteralInline",
-                            "Position": { "Level": 3, "Index": 0, "Line": 36, "Column": 2, "Start": 667, "End": 695 },
-                            "Content": "The Cauchy-Schwarz Inequality",
-                            "IsFirstCharacterEscaped": false
-                        }
-                    ]
-                },
-                {
-                    "Name": "LineBreakInline",
-                    "Position": { "Level": 2, "Index": 1, "Line": 36, "Column": 33, "Start": 698, "End": 698 },
-                    "IsHard": false,
-                    "IsBackslash": false
-                },
-                {
-                    "Name": "MathInline",
-                    "Position": { "Level": 2, "Index": 2, "Line": 37, "Column": 0, "Start": 700, "End": 813 },
-                    "Delimiter": "$",
-                    "DelimiterCount": 2,
-                    "Content": "\\left( \\sum_{k=1}^n a_k b_k \\right)^2 \\leq \\left( \\sum_{k=1}^n a_k^2 \\right) \\left( \\sum_{k=1}^n b_k^2 \\right)",
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3 },
-                            "Classes": [
-                                "math"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 15 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 39, "Column": 3, "Start": 821, "End": 835 },
-                    "Content": "Definition List",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "DefinitionList",
-            "Position": { "Level": 1, "Index": 16, "Line": 41, "Column": 0, "Start": 840, "End": 990 },
-            "Tokens": [
-                {
-                    "Name": "DefinitionItem",
-                    "Position": { "Level": 2, "Index": 0, "Line": 42, "Column": 0, "Start": 847, "End": 923 },
-                    "Tokens": [
-                        {
-                            "Name": "DefinitionTerm",
-                            "Position": { "Level": 3, "Index": 0 },
-                            "Tokens": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 41, "Column": 0, "Start": 840, "End": 844 },
-                                    "Content": "Apple",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        },
-                        {
-                            "Name": "ParagraphBlock",
-                            "Position": { "Level": 3, "Index": 1 },
-                            "Tokens": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 42, "Column": 4, "Start": 851, "End": 897 },
-                                    "Content": "Pomaceous fruit of plants of the genus Malus in",
-                                    "IsFirstCharacterEscaped": false
-                                },
-                                {
-                                    "Name": "LineBreakInline",
-                                    "Position": { "Level": 4, "Index": 1, "Line": 42, "Column": 51, "Start": 898, "End": 898 },
-                                    "IsHard": false,
-                                    "IsBackslash": false
-                                },
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 2, "Line": 43, "Column": 4, "Start": 904, "End": 923 },
-                                    "Content": "the family Rosaceae.",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Name": "DefinitionItem",
-                    "Position": { "Level": 2, "Index": 1, "Line": 46, "Column": 0, "Start": 936, "End": 990 },
-                    "Tokens": [
-                        {
-                            "Name": "DefinitionTerm",
-                            "Position": { "Level": 3, "Index": 0 },
-                            "Tokens": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 45, "Column": 0, "Start": 928, "End": 933 },
-                                    "Content": "Orange",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        },
-                        {
-                            "Name": "ParagraphBlock",
-                            "Position": { "Level": 3, "Index": 1 },
-                            "Tokens": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 46, "Column": 4, "Start": 940, "End": 990 },
-                                    "Content": "The fruit of an evergreen tree of the genus Citrus.",
-                                    "IsFirstCharacterEscaped": false
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 17 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 48, "Column": 3, "Start": 998, "End": 1001 },
-                    "Content": "Code",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 18 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 50, "Column": 0, "Start": 1006, "End": 1013 },
-                    "Content": "This is ",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "CodeInline",
-                    "Position": { "Level": 2, "Index": 1, "Line": 50, "Column": 8, "Start": 1014, "End": 1026 },
-                    "Delimiter": "`",
-                    "DelimiterCount": 1,
-                    "Content": "inline code"
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 2, "Line": 50, "Column": 21, "Start": 1027, "End": 1027 },
-                    "Content": ".",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "FencedCodeBlock",
-            "Position": { "Level": 1, "Index": 19 },
-            "FencedChar": "`",
-            "IndentCount": 0,
-            "OpeningFencedCharCount": 3,
-            "Info": "log",
-            "Arguments": "",
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Classes": [
-                        "language-log"
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "FencedCodeBlock",
-            "Position": { "Level": 1, "Index": 20 },
-            "FencedChar": "`",
-            "IndentCount": 0,
-            "OpeningFencedCharCount": 3,
-            "Info": "",
-            "Arguments": "",
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2, "Line": 56, "Column": 4, "Start": 1080, "End": 1138 },
-                    "Id": 4,
-                    "Classes": [
-                        "html"
-                    ],
-                    "Properties": [
-                        { "Name": "style", "Value": "color: #333; background: #f8f8f8;" }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 21 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 61, "Column": 3, "Start": 1202, "End": 1216 },
-                    "Content": "Attribute lists",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 22 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 63, "Column": 0, "Start": 1221, "End": 1242 },
-                    "Content": "This is red paragraph.",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "LineBreakInline",
-                    "Position": { "Level": 2, "Index": 1, "Line": 63, "Column": 22, "Start": 1243, "End": 1243 },
-                    "IsHard": false,
-                    "IsBackslash": false,
-                    "Tokens": [
-                        {
-                            "Name": "HtmlAttributes",
-                            "Position": { "Level": 3, "Line": 64, "Column": 0, "Start": 1245, "End": 1285 },
-                            "Properties": [
-                                { "Name": ":", "Value": null },
-                                { "Name": "style", "Value": "color: #333; color: #ff0000;" }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 23 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 2,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 66, "Column": 3, "Start": 1293, "End": 1301 },
-                    "Content": "Footnotes",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 24 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 68, "Column": 0, "Start": 1306, "End": 1314 },
-                    "Content": "Footnotes",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "FootnoteLink",
-                    "Position": { "Level": 2, "Index": 1, "Line": 0, "Column": 0 },
-                    "IsBackLink": false,
-                    "Index": 1,
-                    "Footnote": { "Line": 70, "Column": 0, "Label": "^1" }
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 2, "Line": 68, "Column": 13, "Start": 1319, "End": 1331 },
-                    "Content": " have a label",
-                    "IsFirstCharacterEscaped": false
-                },
-                {
-                    "Name": "FootnoteLink",
-                    "Position": { "Level": 2, "Index": 3, "Line": 0, "Column": 0 },
-                    "IsBackLink": false,
-                    "Index": 2,
-                    "Footnote": { "Line": 71, "Column": 0, "Label": "^@#$%" }
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 4, "Line": 68, "Column": 33, "Start": 1339, "End": 1366 },
-                    "Content": " and the footnote's content.",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "HeadingBlock",
-            "Position": { "Level": 1, "Index": 25 },
-            "HeaderChar": "#",
-            "HeaderCharCount": 0,
-            "Level": 3,
-            "IsSetext": false,
-            "Tokens": [
-                {
-                    "Name": "HtmlAttributes",
-                    "Position": { "Level": 2 },
-                    "Id": 0
-                },
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 73, "Column": 4, "Start": 1455, "End": 1462 },
-                    "Content": "Smarties",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 26 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 75, "Column": 0, "Start": 1467, "End": 1484 },
-                    "Content": "<< angle quotes >>",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "ParagraphBlock",
-            "Position": { "Level": 1, "Index": 27 },
-            "Tokens": [
-                {
-                    "Name": "LiteralInline",
-                    "Position": { "Level": 2, "Index": 0, "Line": 77, "Column": 0, "Start": 1489, "End": 1499 },
-                    "Content": "Ellipsis...",
-                    "IsFirstCharacterEscaped": false
-                }
-            ]
-        },
-        {
-            "Name": "FootnoteGroup",
-            "Position": { "Level": 1, "Index": 28, "Line": 0, "Column": 0, "Start": 0, "End": 1446 },
-            "Tokens": [
-                {
-                    "Name": "Footnote",
-                    "Position": { "Level": 2, "Index": 0, "Line": 70, "Column": 0, "Start": 0, "End": 1403 },
-                    "Order": 1,
-                    "Label": "^1",
-                    "IsLastLineEmpty": null,
-                    "Links": [
-                        { "Line": 0, "Column": 0 }
-                    ],
-                    "Tokens": [
-                        { "Key": "Name", "Value": "ParagraphBlock" },
-                        {
-                            "Key": "Position",
-                            "Value": { "Level": 3, "Index": 0 }
-                        },
-                        {
-                            "Key": "Tokens",
-                            "Value": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 70, "Column": 6, "Start": 1377, "End": 1403 },
-                                    "Content": "This is a footnote content.",
-                                    "IsFirstCharacterEscaped": false
-                                },
-                                {
-                                    "Name": "FootnoteLink",
-                                    "Position": { "Level": 4, "Index": 1, "Line": 0, "Column": 0 },
-                                    "IsBackLink": true,
-                                    "Index": 1,
-                                    "Footnote": { "Line": 70, "Column": 0, "Label": "^1" }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Name": "Footnote",
-                    "Position": { "Level": 2, "Index": 1, "Line": 71, "Column": 0, "Start": 0, "End": 1446 },
-                    "Order": 2,
-                    "Label": "^@#$%",
-                    "IsLastLineEmpty": null,
-                    "Links": [
-                        { "Line": 0, "Column": 0 }
-                    ],
-                    "Tokens": [
-                        { "Key": "Name", "Value": "ParagraphBlock" },
-                        {
-                            "Key": "Position",
-                            "Value": { "Level": 3, "Index": 0 }
-                        },
-                        {
-                            "Key": "Tokens",
-                            "Value": [
-                                {
-                                    "Name": "LiteralInline",
-                                    "Position": { "Level": 4, "Index": 0, "Line": 71, "Column": 9, "Start": 1415, "End": 1446 },
-                                    "Content": "A footnote on the label: \u0022@#$%\u0022.",
-                                    "IsFirstCharacterEscaped": false
-                                },
-                                {
-                                    "Name": "FootnoteLink",
-                                    "Position": { "Level": 4, "Index": 1, "Line": 0, "Column": 0 },
-                                    "IsBackLink": true,
-                                    "Index": 2,
-                                    "Footnote": { "Line": 71, "Column": 0, "Label": "^@#$%" }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 0, "Column": 2, "Start": 2, "End": 26 },
+          "Content": "Example Markdown Document",
+          "IsFirstCharacterEscaped": false
         }
-    ]
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 1, "Line": 2, "Start": 31, "End": 84 },
+      "Tokens": [
+        {
+          "Name": "LinkInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 2, "Column": 0, "Start": 31, "End": 84 },
+          "Url": "https://spec.commonmark.org/0.31.2/",
+          "UrlHasPointyBrackets": false,
+          "IsShortcut": false,
+          "IsAutoLink": false,
+          "Tokens": [
+            {
+              "Name": "LiteralInline",
+              "Position": { "Level": 3, "Index": 0, "Line": 2, "Column": 1, "Start": 32, "End": 46 },
+              "Content": "CommonMark Spec",
+              "IsFirstCharacterEscaped": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 2, "Line": 4, "Start": 89, "End": 110 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 4, "Column": 0, "Start": 89, "End": 103 },
+          "Content": "Hard line break",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "LineBreakInline",
+          "Position": { "Level": 2, "Index": 1, "Line": 4, "Column": 15, "Start": 104, "End": 105 },
+          "IsHard": true,
+          "IsBackslash": true
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 2, "Line": 5, "Column": 0, "Start": 107, "End": 110 },
+          "Content": "here",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ListBlock",
+      "Position": { "Level": 1, "Index": 3, "Line": 7, "Start": 115, "End": 168 },
+      "IsOrdered": false,
+      "BulletType": "-",
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Classes": [
+            "contains-task-list"
+          ]
+        },
+        {
+          "Name": "ListItemBlock",
+          "Position": { "Level": 2, "Index": 0, "Line": 7, "Start": 115, "End": 124 },
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3 },
+              "Classes": [
+                "task-list-item"
+              ]
+            },
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 0, "Line": 7, "Start": 117, "End": 124 },
+              "Tokens": [
+                {
+                  "Name": "TaskList",
+                  "Position": { "Level": 4, "Index": 0, "Line": 7, "Column": 2, "Start": 117, "End": 119 },
+                  "Checked": true
+                },
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 1, "Line": 7, "Column": 5, "Start": 120, "End": 124 },
+                  "Content": " Task",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "ListItemBlock",
+          "Position": { "Level": 2, "Index": 1, "Line": 8, "Start": 127, "End": 143 },
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3 },
+              "Classes": [
+                "task-list-item"
+              ]
+            },
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 0, "Line": 8, "Start": 129, "End": 141 },
+              "Tokens": [
+                {
+                  "Name": "TaskList",
+                  "Position": { "Level": 4, "Index": 0, "Line": 8, "Column": 2, "Start": 129, "End": 131 },
+                  "Checked": false
+                },
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 1, "Line": 8, "Column": 5, "Start": 132, "End": 141 },
+                  "Content": " List Item",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "ListItemBlock",
+          "Position": { "Level": 2, "Index": 2, "Line": 10, "Start": 146, "End": 158 },
+          "Tokens": [
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 0, "Line": 10, "Start": 148, "End": 158 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 10, "Column": 2, "Start": 148, "End": 158 },
+                  "Content": "Normal List",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "ListItemBlock",
+          "Position": { "Level": 2, "Index": 3, "Line": 11, "Start": 161, "End": 168 },
+          "Tokens": [
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 0, "Line": 11, "Start": 163, "End": 166 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 11, "Column": 2, "Start": 163, "End": 166 },
+                  "Content": "Item",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 4, "Line": 13, "Start": 171, "End": 187 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2, "Line": 13, "Column": 17, "Start": 188, "End": 199 },
+          "Id": 17
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 13, "Column": 3, "Start": 174, "End": 186 },
+          "Content": "Abbreviations",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 5, "Line": 18, "Start": 279, "End": 285 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 18, "Column": 3, "Start": 282, "End": 285 },
+          "Content": "Link",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 6, "Line": 20, "Start": 290, "End": 321 },
+      "Tokens": [
+        {
+          "Name": "LinkInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 20, "Column": 0, "Start": 290, "End": 321 },
+          "Url": "#custom-id",
+          "UrlHasPointyBrackets": false,
+          "IsShortcut": false,
+          "IsAutoLink": false,
+          "Tokens": [
+            {
+              "Name": "LiteralInline",
+              "Position": { "Level": 3, "Index": 0, "Line": 20, "Column": 1, "Start": 291, "End": 308 },
+              "Content": "Abbreviations Link",
+              "IsFirstCharacterEscaped": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 7, "Line": 22, "Start": 326, "End": 352 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 22, "Column": 3, "Start": 329, "End": 352 },
+          "Content": "Image with Alt and Title",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 8, "Line": 24, "Start": 357, "End": 416 },
+      "Tokens": [
+        {
+          "Name": "LinkInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 24, "Column": 0, "Start": 357, "End": 416 },
+          "Url": "./sn-logo.jpg",
+          "UrlHasPointyBrackets": false,
+          "Title": "This is a Title",
+          "IsShortcut": false,
+          "IsAutoLink": false,
+          "Tokens": [
+            {
+              "Name": "LiteralInline",
+              "Position": { "Level": 3, "Index": 0, "Line": 24, "Column": 2, "Start": 359, "End": 381 },
+              "Content": "alt attribute goes here",
+              "IsFirstCharacterEscaped": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 9, "Line": 26, "Start": 421, "End": 432 },
+      "Tokens": [
+        {
+          "Name": "LinkInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 26, "Column": 0, "Start": 421, "End": 432 },
+          "Label": "foo *bar*",
+          "Url": "./sn-logo.jpg",
+          "UrlHasPointyBrackets": false,
+          "Title": "train & tracks",
+          "IsShortcut": true,
+          "IsAutoLink": false,
+          "Tokens": [
+            {
+              "Name": "LiteralInline",
+              "Position": { "Level": 3, "Index": 0, "Line": 26, "Column": 2, "Start": 423, "End": 426 },
+              "Content": "foo ",
+              "IsFirstCharacterEscaped": false
+            },
+            {
+              "Name": "EmphasisInline",
+              "Position": { "Level": 3, "Index": 1, "Line": 26, "Column": 6, "Start": 427, "End": 431 },
+              "DelimiterChar": "*",
+              "DelimiterCount": 1,
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 26, "Column": 7, "Start": 428, "End": 430 },
+                  "Content": "bar",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "LinkReferenceDefinitionGroup",
+      "Position": { "Level": 1, "Index": 10, "Line": 0, "Start": 0, "End": 1412 },
+      "Tokens": [
+        {
+          "Name": "LinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 0, "Line": 28, "Start": 437, "End": 479 },
+          "Label": "foo *bar*",
+          "Url": "./sn-logo.jpg",
+          "UrlHasPointyBrackets": false,
+          "Title": "train & tracks"
+        },
+        {
+          "Name": "FootnoteLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 1, "Line": 70, "Start": 1371, "End": 1374 },
+          "Label": "^1",
+          "Footnote": { "Line": 70, "Column": 0, "Label": "^1", "Order": 1 }
+        },
+        {
+          "Name": "FootnoteLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 2, "Line": 71, "Start": 1406, "End": 1412 },
+          "Label": "^@#$%",
+          "Footnote": { "Line": 71, "Column": 0, "Label": "^@#$%", "Order": 2 }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 3, "Line": 0 },
+          "Heading": { "Line": 0, "Column": 0, "Id": "example-markdown-document" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 4, "Line": 0 },
+          "Heading": { "Line": 13, "Column": 0, "Id": "custom-id" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 5, "Line": 0 },
+          "Heading": { "Line": 18, "Column": 0, "Id": "link" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 6, "Line": 0 },
+          "Heading": { "Line": 22, "Column": 0, "Id": "image-with-alt-and-title" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 7, "Line": 0 },
+          "Heading": { "Line": 30, "Column": 0, "Id": "math" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 8, "Line": 0 },
+          "Heading": { "Line": 39, "Column": 0, "Id": "definition-list" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 9, "Line": 0 },
+          "Heading": { "Line": 48, "Column": 0, "Id": "code" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 10, "Line": 0 },
+          "Heading": { "Line": 61, "Column": 0, "Id": "attribute-lists" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 11, "Line": 0 },
+          "Heading": { "Line": 66, "Column": 0, "Id": "footnotes" }
+        },
+        {
+          "Name": "HeadingLinkReferenceDefinition",
+          "Position": { "Level": 2, "Index": 12, "Line": 0 },
+          "Heading": { "Line": 73, "Column": 0, "Id": "smarties" }
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 11, "Line": 30, "Start": 484, "End": 490 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 30, "Column": 3, "Start": 487, "End": 490 },
+          "Content": "Math",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 12, "Line": 32, "Start": 495, "End": 570 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 32, "Column": 0, "Start": 495, "End": 513 },
+          "Content": "This sentence uses ",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "CodeInline",
+          "Position": { "Level": 2, "Index": 1, "Line": 32, "Column": 19, "Start": 514, "End": 516 },
+          "Delimiter": "`",
+          "DelimiterCount": 1,
+          "Content": "$"
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 2, "Line": 32, "Column": 22, "Start": 517, "End": 549 },
+          "Content": " delimiters to show math inline: ",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "MathInline",
+          "Position": { "Level": 2, "Index": 3, "Line": 32, "Column": 55, "Start": 550, "End": 570 },
+          "Delimiter": "$",
+          "DelimiterCount": 1,
+          "Content": "\\sqrt{3x-1}+(1+x)^2",
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3 },
+              "Classes": [
+                "math"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 13, "Line": 34, "Start": 575, "End": 660 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 34, "Column": 0, "Start": 575, "End": 593 },
+          "Content": "This sentence uses ",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "MathInline",
+          "Position": { "Level": 2, "Index": 1, "Line": 34, "Column": 19, "Start": 594, "End": 660 },
+          "Delimiter": "$",
+          "DelimiterCount": 1,
+          "Content": "\\` and \\`",
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3 },
+              "Classes": [
+                "math"
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 2, "Line": 34, "Column": 30, "Start": 605, "End": 637 },
+          "Content": " delimiters to show math inline: ",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "MathInline",
+          "Position": { "Level": 2, "Index": 3, "Line": 34, "Column": 63, "Start": 638, "End": 660 },
+          "Delimiter": "$",
+          "DelimiterCount": 1,
+          "Content": "`\\sqrt{3x-1}+(1+x)^2`",
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3 },
+              "Classes": [
+                "math"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 14, "Line": 36, "Start": 665, "End": 813 },
+      "Tokens": [
+        {
+          "Name": "EmphasisInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 36, "Column": 0, "Start": 665, "End": 697 },
+          "DelimiterChar": "*",
+          "DelimiterCount": 2,
+          "Tokens": [
+            {
+              "Name": "LiteralInline",
+              "Position": { "Level": 3, "Index": 0, "Line": 36, "Column": 2, "Start": 667, "End": 695 },
+              "Content": "The Cauchy-Schwarz Inequality",
+              "IsFirstCharacterEscaped": false
+            }
+          ]
+        },
+        {
+          "Name": "LineBreakInline",
+          "Position": { "Level": 2, "Index": 1, "Line": 36, "Column": 33, "Start": 698, "End": 698 },
+          "IsHard": false,
+          "IsBackslash": false
+        },
+        {
+          "Name": "MathInline",
+          "Position": { "Level": 2, "Index": 2, "Line": 37, "Column": 0, "Start": 700, "End": 813 },
+          "Delimiter": "$",
+          "DelimiterCount": 2,
+          "Content": "\\left( \\sum_{k=1}^n a_k b_k \\right)^2 \\leq \\left( \\sum_{k=1}^n a_k^2 \\right) \\left( \\sum_{k=1}^n b_k^2 \\right)",
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3 },
+              "Classes": [
+                "math"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 15, "Line": 39, "Start": 818, "End": 835 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 39, "Column": 3, "Start": 821, "End": 835 },
+          "Content": "Definition List",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "DefinitionList",
+      "Position": { "Level": 1, "Index": 16, "Line": 41, "Start": 840, "End": 990 },
+      "Tokens": [
+        {
+          "Name": "DefinitionItem",
+          "Position": { "Level": 2, "Index": 0, "Line": 42, "Start": 847, "End": 923 },
+          "Tokens": [
+            {
+              "Name": "DefinitionTerm",
+              "Position": { "Level": 3, "Index": 0, "Line": 41, "Start": 840, "End": 844 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 41, "Column": 0, "Start": 840, "End": 844 },
+                  "Content": "Apple",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            },
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 1, "Line": 42, "Start": 851, "End": 923 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 42, "Column": 4, "Start": 851, "End": 897 },
+                  "Content": "Pomaceous fruit of plants of the genus Malus in",
+                  "IsFirstCharacterEscaped": false
+                },
+                {
+                  "Name": "LineBreakInline",
+                  "Position": { "Level": 4, "Index": 1, "Line": 42, "Column": 51, "Start": 898, "End": 898 },
+                  "IsHard": false,
+                  "IsBackslash": false
+                },
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 2, "Line": 43, "Column": 4, "Start": 904, "End": 923 },
+                  "Content": "the family Rosaceae.",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "DefinitionItem",
+          "Position": { "Level": 2, "Index": 1, "Line": 46, "Start": 936, "End": 990 },
+          "Tokens": [
+            {
+              "Name": "DefinitionTerm",
+              "Position": { "Level": 3, "Index": 0, "Line": 45, "Start": 928, "End": 933 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 45, "Column": 0, "Start": 928, "End": 933 },
+                  "Content": "Orange",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            },
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 1, "Line": 46, "Start": 940, "End": 990 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 46, "Column": 4, "Start": 940, "End": 990 },
+                  "Content": "The fruit of an evergreen tree of the genus Citrus.",
+                  "IsFirstCharacterEscaped": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 17, "Line": 48, "Start": 995, "End": 1001 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 48, "Column": 3, "Start": 998, "End": 1001 },
+          "Content": "Code",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 18, "Line": 50, "Start": 1006, "End": 1027 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 50, "Column": 0, "Start": 1006, "End": 1013 },
+          "Content": "This is ",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "CodeInline",
+          "Position": { "Level": 2, "Index": 1, "Line": 50, "Column": 8, "Start": 1014, "End": 1026 },
+          "Delimiter": "`",
+          "DelimiterCount": 1,
+          "Content": "inline code"
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 2, "Line": 50, "Column": 21, "Start": 1027, "End": 1027 },
+          "Content": ".",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "FencedCodeBlock",
+      "Position": { "Level": 1, "Index": 19, "Line": 52, "Start": 1032, "End": 1071 },
+      "FencedChar": "`",
+      "IndentCount": 0,
+      "OpeningFencedCharCount": 3,
+      "Info": "log",
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Classes": [
+            "language-log"
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "FencedCodeBlock",
+      "Position": { "Level": 1, "Index": 20, "Line": 56, "Start": 1076, "End": 1194 },
+      "FencedChar": "`",
+      "IndentCount": 0,
+      "OpeningFencedCharCount": 3,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2, "Line": 56, "Column": 4, "Start": 1080, "End": 1138 },
+          "Id": 4,
+          "Classes": [
+            "html"
+          ],
+          "Properties": [
+            { "Name": "style", "Value": "color: #333; background: #f8f8f8;" }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 21, "Line": 61, "Start": 1199, "End": 1216 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 61, "Column": 3, "Start": 1202, "End": 1216 },
+          "Content": "Attribute lists",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 22, "Line": 63, "Start": 1221, "End": 1285 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 63, "Column": 0, "Start": 1221, "End": 1242 },
+          "Content": "This is red paragraph.",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "LineBreakInline",
+          "Position": { "Level": 2, "Index": 1, "Line": 63, "Column": 22, "Start": 1243, "End": 1243 },
+          "IsHard": false,
+          "IsBackslash": false,
+          "Tokens": [
+            {
+              "Name": "HtmlAttributes",
+              "Position": { "Level": 3, "Line": 64, "Column": 0, "Start": 1245, "End": 1285 },
+              "Properties": [
+                { "Name": ":", "Value": null },
+                { "Name": "style", "Value": "color: #333; color: #ff0000;" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 23, "Line": 66, "Start": 1290, "End": 1301 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 2,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 66, "Column": 3, "Start": 1293, "End": 1301 },
+          "Content": "Footnotes",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 24, "Line": 68, "Start": 1306, "End": 1366 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 68, "Column": 0, "Start": 1306, "End": 1314 },
+          "Content": "Footnotes",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "FootnoteLink",
+          "Position": { "Level": 2, "Index": 1 },
+          "IsBackLink": false,
+          "Index": 1,
+          "Footnote": { "Line": 70, "Column": 0, "Label": "^1" }
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 2, "Line": 68, "Column": 13, "Start": 1319, "End": 1331 },
+          "Content": " have a label",
+          "IsFirstCharacterEscaped": false
+        },
+        {
+          "Name": "FootnoteLink",
+          "Position": { "Level": 2, "Index": 3 },
+          "IsBackLink": false,
+          "Index": 2,
+          "Footnote": { "Line": 71, "Column": 0, "Label": "^@#$%" }
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 4, "Line": 68, "Column": 33, "Start": 1339, "End": 1366 },
+          "Content": " and the footnote's content.",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "HeadingBlock",
+      "Position": { "Level": 1, "Index": 25, "Line": 73, "Start": 1451, "End": 1462 },
+      "HeaderChar": "#",
+      "HeaderCharCount": 0,
+      "Level": 3,
+      "IsSetext": false,
+      "Tokens": [
+        {
+          "Name": "HtmlAttributes",
+          "Position": { "Level": 2 },
+          "Id": 0
+        },
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 73, "Column": 4, "Start": 1455, "End": 1462 },
+          "Content": "Smarties",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 26, "Line": 75, "Start": 1467, "End": 1484 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 75, "Column": 0, "Start": 1467, "End": 1484 },
+          "Content": "<< angle quotes >>",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "ParagraphBlock",
+      "Position": { "Level": 1, "Index": 27, "Line": 77, "Start": 1489, "End": 1499 },
+      "Tokens": [
+        {
+          "Name": "LiteralInline",
+          "Position": { "Level": 2, "Index": 0, "Line": 77, "Column": 0, "Start": 1489, "End": 1499 },
+          "Content": "Ellipsis...",
+          "IsFirstCharacterEscaped": false
+        }
+      ]
+    },
+    {
+      "Name": "FootnoteGroup",
+      "Position": { "Level": 1, "Index": 28, "Line": 0, "Start": 0, "End": 1446 },
+      "Tokens": [
+        {
+          "Name": "Footnote",
+          "Position": { "Level": 2, "Index": 0, "Line": 70, "Start": 0, "End": 1403 },
+          "Order": 1,
+          "Label": "^1",
+          "IsLastLineEmpty": null,
+          "Links": [
+            { "Line": 0, "Column": 0 }
+          ],
+          "Tokens": [
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 0, "Line": 70, "Start": 1377, "End": 1403 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 70, "Column": 6, "Start": 1377, "End": 1403 },
+                  "Content": "This is a footnote content.",
+                  "IsFirstCharacterEscaped": false
+                },
+                {
+                  "Name": "FootnoteLink",
+                  "Position": { "Level": 4, "Index": 1 },
+                  "IsBackLink": true,
+                  "Index": 1,
+                  "Footnote": { "Line": 70, "Column": 0, "Label": "^1" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "Footnote",
+          "Position": { "Level": 2, "Index": 1, "Line": 71, "Start": 0, "End": 1446 },
+          "Order": 2,
+          "Label": "^@#$%",
+          "IsLastLineEmpty": null,
+          "Links": [
+            { "Line": 0, "Column": 0 }
+          ],
+          "Tokens": [
+            {
+              "Name": "ParagraphBlock",
+              "Position": { "Level": 3, "Index": 0, "Line": 71, "Start": 1415, "End": 1446 },
+              "Tokens": [
+                {
+                  "Name": "LiteralInline",
+                  "Position": { "Level": 4, "Index": 0, "Line": 71, "Column": 9, "Start": 1415, "End": 1446 },
+                  "Content": "A footnote on the label: \"@#$%\".",
+                  "IsFirstCharacterEscaped": false
+                },
+                {
+                  "Name": "FootnoteLink",
+                  "Position": { "Level": 4, "Index": 1 },
+                  "IsBackLink": true,
+                  "Index": 2,
+                  "Footnote": { "Line": 71, "Column": 0, "Label": "^@#$%" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
