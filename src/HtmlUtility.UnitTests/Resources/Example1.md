@@ -7,7 +7,7 @@ Plain Text
 [Heading Link](#example-heading)
 
 This is red paragraph&darr;
-{: style="color: #333; color: #ff0000;" }
+{ style="color: #333; color: #ff0000;" }
 
 Footnotes[^2] have a label[^@#$%] and the footnote's content, whereas [reference style links][1] have the URL followed by the text.
 
@@ -38,6 +38,9 @@ here
 1. Ordered
 2. List
 
+> [!NOTE]
+> Highlights information that users should take into account, even when skimming.
+
 *[API]: Application Programming Interface
 *[JSON]: JavaScript Object Notation
 
@@ -49,20 +52,28 @@ here
 Cited: ""When working with APIs, it's common to send and receive data in JSON format.""
 This API uses JSON for all its responses.
 
-> [!IMPORTANT]
-> This is an important note.
+> [!NOTE]
+> Highlights information that users should take into account, even when skimming.
+>
+> Testing rendering for multiple lines
+>
+> ```csharp
+> var test = "I can also add code to panels";
+> ```
+>
+> `Inline code testing`
 
 | Syntax      | Description |
 | ----------- | ----------- |
 | Header      | Title       |
 | Paragraph   | Text        |
 
+## Example Heading 2{#example-heading}
+
 | Syntax      | Description | Test Text     |
 | :---        |    :----:   |          ---: |
 | Header      | Title       | Here's this   |
 | Paragraph   | Text        | And more      |
-
-## Example Heading 2{#example-heading}
 
 ^^^
 ![alt attribute goes here](./sn-logo.jpg "This is a Title")
