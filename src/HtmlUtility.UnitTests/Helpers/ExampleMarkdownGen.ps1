@@ -778,64 +778,25 @@ Function Write-ExampleMarkdownInfo {
                 $FileStream.Flush();
             } finally { $FileStream.Close() }
             
-            # "Position":\s+\{[\r\n\s]+"Level":\s+(\d+),[\r\n\s]+"Index":\s+(\d+),[\r\n\s]+"Line":\s+(\d+),[\r\n\s]+"Column":\s+(\d+),[\r\n\s]+"Start":\s+(\d+),[\r\n\s]+"End":\s+(\d+)[\r\n\s]+\}
-            # "Position": { "Level": $1, "Index": $2, "Line": $3, "Column": $4, "Start": $5, "End": $6 }
-
-            # "(\w+)":\s+\{[\r\n\s]+"(\w+)":\s+(\d+),[\r\n\s]+"(\w+)":\s+(\d+)[\r\n\s]+\}
-            # "$1": { "$2": $3, "$4": $5 }
-
-            # "(\w+)":\s+\{[\r\n\s]+"(\w+)":\s+(\d+|"[^"]*")[\r\n\s]+\}
-            # "$1": { "$2": $3 }
-
-            # "(\w+)":\s+\[[\r\n\s]+("[^"]*")[\r\n\s]+\]
-            # "$1": [ $2 ]
-
-            # \\u0026
-            # &
-
-            # \\u002B
-            # +
-
-            # \\u0060
-            # `
-
-            # \\u0027
-            # '
-
-            # \\u0022
-            # \\"
+            $Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+            $JsonText = [System.IO.File]::ReadAllText($JsonPath, $Encoding) -replace '\\u0026', '&';
+            $JsonText = $JsonText -replace '\\u0027', "'";
+            $JsonText = $JsonText -replace '\\u002B', "+";
+            $JsonText = $JsonText -replace '\\u0060', '`';
+            $JsonText = $JsonText -replace '\\u003C', '<';
+            $JsonText = $JsonText -replace '\\u003E', '>';
+            # $JsonText = $JsonText -replace '\\u0022', '\\"';
+            $JsonText = $JsonText -replace '\{[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null)[\r\n\s]+\}', '{ "$1": $2, "$3": $4, "$5": $6, "$7": $8, "$9": $10, "$11": $12 }';
+            $JsonText = $JsonText -replace '\{[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null)[\r\n\s]+\}', '{ "$1": $2, "$3": $4, "$5": $6, "$7": $8, "$9": $10 }';
+            $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2, "$3": $4, "$5": $6, "$7": $8 }';
+            $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2, "$3": $4, "$5": $6 }';
+            $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2, "$3": $4 }';
+            $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2 }';
+            [System.IO.File]::WriteAllText($JsonPath, $JsonText, $Encoding);
         }
     }
 }
 
-Function Optimize-ExampleMarkdownInfo {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]$BaseName
-    )
-
-    Process {
-        $JsonPath = $PSScriptRoot | Join-Path -ChildPath "$BaseName.json";
-        $Encoding = [System.Text.UTF8Encoding]::new($false, $false);
-        $JsonText = [System.IO.File]::ReadAllText($JsonPath, $Encoding) -replace '\\u0026', '&';
-        $JsonText = $JsonText -replace '\\u0027', "'";
-        $JsonText = $JsonText -replace '\\u002B', "+";
-        $JsonText = $JsonText -replace '\\u0060', '`';
-        $JsonText = $JsonText -replace '\\u003C', '<';
-        $JsonText = $JsonText -replace '\\u003E', '>';
-        # $JsonText = $JsonText -replace '\\u0022', '\\"';
-        $JsonText = $JsonText -replace '\{[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null)[\r\n\s]+\}', '{ "$1": $2, "$3": $4, "$5": $6, "$7": $8, "$9": $10, "$11": $12 }';
-        $JsonText = $JsonText -replace '\{[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null),[\r\n\s]+"(\w+)":\s*(\d+(?:\.\d+)?|true|false|null)[\r\n\s]+\}', '{ "$1": $2, "$3": $4, "$5": $6, "$7": $8, "$9": $10 }';
-        $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2, "$3": $4, "$5": $6, "$7": $8 }';
-        $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2, "$3": $4, "$5": $6 }';
-        $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null),[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2, "$3": $4 }';
-        $JsonText = $JsonText -replace '\{[\r\n\s]*"(\w+)":\s*("[^\\"]*"|\d+(?:\.\d+)?|true|false|null)[\r\n\s]*\}', '{ "$1": $2 }';
-        [System.IO.File]::WriteAllText($JsonPath, $JsonText, $Encoding);
-    }
-}
-
 ('Example1', 'Example2') | Write-ExampleMarkdownInfo -ErrorAction Stop;
-('Example1', 'Example2') | Optimize-ExampleMarkdownInfo -ErrorAction Stop;
 
 ([Markdig.Syntax.Inlines.LiteralInline].Assembly.GetTypes() | ? { [Markdig.Syntax.Inlines.ContainerInline].IsAssignableFrom($_) -or [Markdig.Syntax.ContainerBlock].IsAssignableFrom($_) } | % { $_.Name }) -join '|'
