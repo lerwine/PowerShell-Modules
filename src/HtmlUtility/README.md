@@ -10,3 +10,4 @@ This PowerShell module is maintained by Leonard T. Erwine. If you wish to contri
   - [NuGet Package](https://www.nuget.org/packages/HtmlAgilityPack)
   - [GitHub Repository](https://github.com/zzzprojects/html-agility-pack)
 - [Markdig Documentation](https://github.com/xoofx/markdig/blob/master/readme.md)
+- [Pester Assertion Reference](https://pester.dev/docs/assertions)

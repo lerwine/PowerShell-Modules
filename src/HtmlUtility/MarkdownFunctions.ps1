@@ -34,12 +34,12 @@ Function New-MarkdownPipeline {
 
         [Parameter(Mandatory = $true, ParameterSetName = 'UseAdvancedExtensions')]
         # Includes all extensions except the BootStrap, Emoji, SmartyPants and soft line as hard line breaks extensions.
-        # This is equivalent to using switches: -UseAlertBlocks -UseAbbreviations -UseAutoIdentifiers -UseCitations -UseCustomContainers -UseDefinitionLists -UseEmphasisExtras -UseFigures -UseFooters -UseFootnotes -UseGridTables -UseMathematics -UseMediaLinks -UsePipeTables -UseListExtras -UseTaskLists -UseDiagrams -UseAutoLinks -UseGenericAttributes
+        # This is equivalent to using switches: -UseAbbreviations -UseAutoIdentifiers -UseCitations -UseCustomContainers -UseDefinitionLists -UseEmphasisExtras -UseFigures -UseFooters -UseFootnotes -UseGridTables -UseMathematics -UseMediaLinks -UsePipeTables -UseListExtras -UseTaskLists -UseDiagrams -UseAutoLinks -UseGenericAttributes
         [switch]$UseAdvancedExtensions,
 
-        [Parameter(ParameterSetName = 'ExplicitExtensions')]
-        # Includes the AlertExtension to enable parsing of alert blocks.
-        [switch]$UseAlertBlocks,
+        # [Parameter(ParameterSetName = 'ExplicitExtensions')]
+        # # Includes the AlertExtension to enable parsing of alert blocks.
+        # [switch]$UseAlertBlocks,
 
         [Parameter(ParameterSetName = 'ExplicitExtensions')]
         # Includes the AutoLinkExtension to parse autolinks from text.
@@ -171,69 +171,29 @@ Function New-MarkdownPipeline {
 
     $MarkdownPipelineBuilder = [Markdig.MarkdownPipelineBuilder]::new();
     
+    if ($PipeTablesDoNotRequireHeaderSeparator.IsPresent) {
+        [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
+            RequireHeaderSeparator = $true;
+            UseHeaderForColumnCount  = $UseHeaderForPipeTableColumnCount.IsPresent;
+        })) | Out-Null;
+    } else {
+        if ($UseHeaderForPipeTableColumnCount.IsPresent) {
+            [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
+                RequireHeaderSeparator = $true;
+                UseHeaderForColumnCount  = $true;
+            })) | Out-Null;
+        }
+    }
     if ($UseAdvancedExtensions.IsPresent) {
         if ($PSBoundParameters.ContainsKey('EmphasisExtraOptions')) {
             $Eo = $EmphasisExtraOptions[0];
             ($EmphasisExtraOptions | Select-Object -Skip 1) | ForEach-Object {
                 [Markdig.Extensions.EmphasisExtras.EmphasisExtraOptions]$Eo =  $Eo -bor $_;
             }
-            [Markdig.MarkdownExtensions]::UseAlertBlocks([Markdig.MarkdownExtensions]::UseAbbreviations([Markdig.MarkdownExtensions]::UseAutoIdentifiers($MarkdownPipelineBuilder))) | Out-Null;
-            [Markdig.MarkdownExtensions]::UseCitations([Markdig.MarkdownExtensions]::UseCustomContainers([Markdig.MarkdownExtensions]::UseDefinitionLists($MarkdownPipelineBuilder))) | Out-Null;
-            [Markdig.MarkdownExtensions]::UseEmphasisExtras([Markdig.MarkdownExtensions]::UseFigures([Markdig.MarkdownExtensions]::UseFooters($MarkdownPipelineBuilder)), $Eo) | Out-Null;
-            [Markdig.MarkdownExtensions]::UseFootnotes([Markdig.MarkdownExtensions]::UseGridTables([Markdig.MarkdownExtensions]::UseMathematics($MarkdownPipelineBuilder))) | Out-Null;
-            if ($PipeTablesDoNotRequireHeaderSeparator.IsPresent) {
-                [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
-                    RequireHeaderSeparator = $false;
-                    UseHeaderForColumnCount  = $UseHeaderForPipeTableColumnCount.IsPresent;
-                })) | Out-Null;
-            } else {
-                if ($UseHeaderForPipeTableColumnCount.IsPresent) {
-                    [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
-                        RequireHeaderSeparator = $false;
-                        UseHeaderForColumnCount  = $true;
-                    })) | Out-Null;
-                } else {
-                    [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder) | Out-Null;
-                }
-            }
-            [Markdig.MarkdownExtensions]::UseMediaLinks([Markdig.MarkdownExtensions]::UseListExtras([Markdig.MarkdownExtensions]::UseTaskLists($MarkdownPipelineBuilder))) | Out-Null;
-            [Markdig.MarkdownExtensions]::UseDiagrams([Markdig.MarkdownExtensions]::UseAutoLinks([Markdig.MarkdownExtensions]::UseGenericAttributes($MarkdownPipelineBuilder))) | Out-Null;
-        } else {
-            if ($PipeTablesDoNotRequireHeaderSeparator.IsPresent) {
-                [Markdig.MarkdownExtensions]::UseAlertBlocks([Markdig.MarkdownExtensions]::UseAbbreviations([Markdig.MarkdownExtensions]::UseAutoIdentifiers($MarkdownPipelineBuilder))) | Out-Null;
-                [Markdig.MarkdownExtensions]::UseCitations([Markdig.MarkdownExtensions]::UseCustomContainers([Markdig.MarkdownExtensions]::UseDefinitionLists($MarkdownPipelineBuilder))) | Out-Null;
-                [Markdig.MarkdownExtensions]::UseEmphasisExtras([Markdig.MarkdownExtensions]::UseFigures([Markdig.MarkdownExtensions]::UseFooters($MarkdownPipelineBuilder))) | Out-Null;
-                [Markdig.MarkdownExtensions]::UseFootnotes([Markdig.MarkdownExtensions]::UseGridTables([Markdig.MarkdownExtensions]::UseMathematics($MarkdownPipelineBuilder))) | Out-Null;
-                [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
-                    RequireHeaderSeparator = $true;
-                    UseHeaderForColumnCount  = $UseHeaderForPipeTableColumnCount.IsPresent;
-                })) | Out-Null;
-                [Markdig.MarkdownExtensions]::UseMediaLinks([Markdig.MarkdownExtensions]::UseListExtras([Markdig.MarkdownExtensions]::UseTaskLists($MarkdownPipelineBuilder))) | Out-Null;
-                [Markdig.MarkdownExtensions]::UseDiagrams([Markdig.MarkdownExtensions]::UseAutoLinks([Markdig.MarkdownExtensions]::UseGenericAttributes($MarkdownPipelineBuilder))) | Out-Null;
-            } else {
-                if ($UseHeaderForPipeTableColumnCount.IsPresent) {
-                    [Markdig.MarkdownExtensions]::UseAlertBlocks([Markdig.MarkdownExtensions]::UseAbbreviations([Markdig.MarkdownExtensions]::UseAutoIdentifiers($MarkdownPipelineBuilder))) | Out-Null;
-                    [Markdig.MarkdownExtensions]::UseCitations([Markdig.MarkdownExtensions]::UseCustomContainers([Markdig.MarkdownExtensions]::UseDefinitionLists($MarkdownPipelineBuilder))) | Out-Null;
-                    [Markdig.MarkdownExtensions]::UseEmphasisExtras([Markdig.MarkdownExtensions]::UseFigures([Markdig.MarkdownExtensions]::UseFooters($MarkdownPipelineBuilder))) | Out-Null;
-                    [Markdig.MarkdownExtensions]::UseFootnotes([Markdig.MarkdownExtensions]::UseGridTables([Markdig.MarkdownExtensions]::UseMathematics($MarkdownPipelineBuilder))) | Out-Null;
-                    [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
-                        RequireHeaderSeparator = $true;
-                        UseHeaderForColumnCount  = $true;
-                    })) | Out-Null;
-                    [Markdig.MarkdownExtensions]::UseMediaLinks([Markdig.MarkdownExtensions]::UseListExtras([Markdig.MarkdownExtensions]::UseTaskLists($MarkdownPipelineBuilder))) | Out-Null;
-                    [Markdig.MarkdownExtensions]::UseDiagrams([Markdig.MarkdownExtensions]::UseAutoLinks([Markdig.MarkdownExtensions]::UseGenericAttributes($MarkdownPipelineBuilder))) | Out-Null;
-                } else {
-                    [Markdig.MarkdownExtensions]::UseAdvancedExtensions($MarkdownPipelineBuilder) | Out-Null;
-                }
-            }
+            [Markdig.MarkdownExtensions]::UseEmphasisExtras($MarkdownPipelineBuilder, $Eo) | Out-Null;
         }
+        [Markdig.MarkdownExtensions]::UseAdvancedExtensions($MarkdownPipelineBuilder) | Out-Null;
     } else {
-        if ($UseAlertBlocks.IsPresent) { [Markdig.MarkdownExtensions]::UseAlertBlocks($MarkdownPipelineBuilder) | Out-Null }
-        if ($UseAbbreviations.IsPresent) { [Markdig.MarkdownExtensions]::UseAbbreviations($MarkdownPipelineBuilder) | Out-Null }
-        if ($UseAutoIdentifiers.IsPresent) { [Markdig.MarkdownExtensions]::UseAutoIdentifiers($MarkdownPipelineBuilder) | Out-Null }
-        if ($UseCitations.IsPresent) { [Markdig.MarkdownExtensions]::UseCitations($MarkdownPipelineBuilder) | Out-Null }
-        if ($UseCustomContainers.IsPresent) { [Markdig.MarkdownExtensions]::UseCustomContainers($MarkdownPipelineBuilder) | Out-Null }
-        if ($UseDefinitionLists.IsPresent) { [Markdig.MarkdownExtensions]::UseDefinitionLists($MarkdownPipelineBuilder) | Out-Null }
         if ($PSBoundParameters.ContainsKey('EmphasisExtraOptions')) {
             $Eo = $EmphasisExtraOptions[0];
             ($EmphasisExtraOptions | Select-Object -Skip 1) | ForEach-Object {
@@ -243,27 +203,18 @@ Function New-MarkdownPipeline {
         } else {
             if ($UseEmphasisExtras.IsPresent) { [Markdig.MarkdownExtensions]::UseEmphasisExtras($MarkdownPipelineBuilder) | Out-Null }
         }
+        if ($UseAlertBlocks.IsPresent) { [Markdig.MarkdownExtensions]::UseAlertBlocks($MarkdownPipelineBuilder) | Out-Null }
+        if ($UseAbbreviations.IsPresent) { [Markdig.MarkdownExtensions]::UseAbbreviations($MarkdownPipelineBuilder) | Out-Null }
+        if ($UseAutoIdentifiers.IsPresent) { [Markdig.MarkdownExtensions]::UseAutoIdentifiers($MarkdownPipelineBuilder) | Out-Null }
+        if ($UseCitations.IsPresent) { [Markdig.MarkdownExtensions]::UseCitations($MarkdownPipelineBuilder) | Out-Null }
+        if ($UseCustomContainers.IsPresent) { [Markdig.MarkdownExtensions]::UseCustomContainers($MarkdownPipelineBuilder) | Out-Null }
+        if ($UseDefinitionLists.IsPresent) { [Markdig.MarkdownExtensions]::UseDefinitionLists($MarkdownPipelineBuilder) | Out-Null }
         if ($UseFigures.IsPresent) { [Markdig.MarkdownExtensions]::UseFigures($MarkdownPipelineBuilder) | Out-Null }
         if ($UseFooters.IsPresent) { [Markdig.MarkdownExtensions]::UseFooters($MarkdownPipelineBuilder) | Out-Null }
         if ($UseFootnotes.IsPresent) { [Markdig.MarkdownExtensions]::UseFootnotes($MarkdownPipelineBuilder) | Out-Null }
         if ($UseGridTables.IsPresent) { [Markdig.MarkdownExtensions]::UseGridTables($MarkdownPipelineBuilder) | Out-Null }
         if ($UseMathematics.IsPresent) { [Markdig.MarkdownExtensions]::UseMathematics($MarkdownPipelineBuilder) | Out-Null }
         if ($UseMediaLinks.IsPresent) { [Markdig.MarkdownExtensions]::UseMediaLinks($MarkdownPipelineBuilder) | Out-Null }
-        if ($PipeTablesDoNotRequireHeaderSeparator.IsPresent) {
-            [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
-                RequireHeaderSeparator = $UseHeaderForPipeTableColumnCount.IsPresent;
-                UseHeaderForColumnCount  = $false;
-            })) | Out-Null;
-        } else {
-            if ($UseHeaderForPipeTableColumnCount.IsPresent) {
-                [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder, ([Markdig.Extensions.Tables.PipeTableOptions]@{
-                    RequireHeaderSeparator = $true;
-                    UseHeaderForColumnCount  = $true;
-                })) | Out-Null;
-            } else {
-                if ($UsePipeTables.IsPresent) { [Markdig.MarkdownExtensions]::UsePipeTables($MarkdownPipelineBuilder) | Out-Null }
-            }
-        }
         if ($UseListExtras.IsPresent) { [Markdig.MarkdownExtensions]::UseListExtras($MarkdownPipelineBuilder) | Out-Null }
         if ($UseTaskLists.IsPresent) { [Markdig.MarkdownExtensions]::UseTaskLists($MarkdownPipelineBuilder) | Out-Null }
         if ($UseDiagrams.IsPresent) { [Markdig.MarkdownExtensions]::UseDiagrams($MarkdownPipelineBuilder) | Out-Null }
@@ -549,10 +500,3 @@ Function Get-MarkdownDescendants {
         }
     }
 }
-
-$Path = $PSScriptRoot | Join-Path -ChildPath '../HtmlUtility.UnitTests/Resources/Example1.md';
-[Markdig.Syntax.MarkdownDocument]$Document = (ConvertFrom-Markdown -LiteralPath $Path).Tokens;
-
-$Descendants = @(Get-MarkdownDescendants -MarkdownObject $Document -Type ([Markdig.Renderers.Html.HtmlAttributes]));
-$Descendants | % { $_.GetType().Name }
-$Descendants.Count;
