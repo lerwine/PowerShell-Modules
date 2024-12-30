@@ -542,5 +542,7 @@ Function Write-ExampleMarkdownInfo {
 ('Example1', 'Example2') | Write-ExampleMarkdownInfo -ErrorAction Stop;
 
 <#
-([Markdig.Syntax.Inlines.LiteralInline].Assembly.GetTypes() | ? { [Markdig.Syntax.Inlines.ContainerInline].IsAssignableFrom($_) -or [Markdig.Syntax.ContainerBlock].IsAssignableFrom($_) } | % { $_.Name }) -join '|'
+([Markdig.Syntax.Inlines.LiteralInline].Assembly.GetTypes() | ? { [Markdig.Syntax.ParagraphBlock].IsAssignableFrom($_) } | % { $_.Name }) -join '|'
+([Markdig.Syntax.Inlines.LiteralInline].Assembly.GetTypes() | ? { [Markdig.Syntax.ParagraphBlock].IsAssignableFrom($_) -or [Markdig.Syntax.Inlines.LeafInline].IsAssignableFrom($_) } | % { $_.Name }) -join '|'
+([Markdig.Syntax.Inlines.LiteralInline].Assembly.GetTypes() | ? { [Markdig.Syntax.ContainerBlock].IsAssignableFrom($_) -or [Markdig.Syntax.Inlines.LinkInline].IsAssignableFrom($_) -or [Markdig.Syntax.Inlines.LiteralInline].IsAssignableFrom($_) } | % { $_.Name }) -join '|'
 #>
