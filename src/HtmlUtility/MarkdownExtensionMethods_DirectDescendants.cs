@@ -12,6 +12,7 @@ public static partial class MarkdownExtensionMethods
     /// </summary>
     /// <param name="parent">The parent <see cref="MarkdownObject"/>.</param>
     /// <returns>Direct descendants of <paramref name="parent"/>, not including <see cref="HtmlAttributes"/>.</returns>
+    // TODO: Rename to DirectDescendants
     internal static IEnumerable<MarkdownObject> GetDirectDescendants(this MarkdownObject parent)
     {
         if (parent is ContainerBlock || parent is ContainerInline)
@@ -24,6 +25,7 @@ public static partial class MarkdownExtensionMethods
     /// </summary>
     /// <param name="parent">The parent <see cref="MarkdownObject"/>.</param>
     /// <returns>Direct descendants of <paramref name="parent"/>, including <see cref="HtmlAttributes"/> of <paramref name="parent"/>, if present.</returns>
+    // TODO: Rename to DirectDescendantsAndAttributes
     internal static IEnumerable<MarkdownObject> GetDirectDescendantsAndAttributes(this MarkdownObject parent)
     {
         Debug.Assert(parent is not null);
@@ -41,6 +43,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="MarkdownObject"/>.</param>
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Direct descendants of <paramref name="parent"/> where <paramref name="predicate"/> returns true.</returns>
+    // TODO: Rename to DirectDescendants
     internal static IEnumerable<MarkdownObject> GetDirectDescendants(this MarkdownObject parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
@@ -58,12 +61,13 @@ public static partial class MarkdownExtensionMethods
     /// <returns>Nested recursive descendants where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.
     /// <para>The <see cref="HtmlAttributes"/> of <paramref name="parent"/> will always be returned, if present.</para></remarks>
+    // TODO: Rename to DirectDescendantsAndAttributes
     internal static IEnumerable<MarkdownObject> GetDirectDescendantsAndAttributes(this MarkdownObject parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
+        if (attributes is not null && predicate(attributes))
             yield return attributes;
         if (parent.IsMarkdownObjectEnumerable(out IEnumerable<MarkdownObject>? descendants))
             foreach (var item in descendants.Where(predicate))
