@@ -38,61 +38,15 @@ public static partial class MarkdownExtensionMethods
 
     public static IEnumerable<(MarkdownObject Parent, HtmlAttributes Attribute)> GetAllAttributes(this MarkdownObject? source)
     {
-        foreach (MarkdownObject parent in GetAllDescendants(source))
+        if (source is not null)
         {
-            var attr = parent.TryGetAttributes();
-            if (attr is not null)
-                yield return (parent, attr);
-        }
-    }
-
-    /// <summary>
-    /// Gets all direct child markdown objects.
-    /// </summary>
-    /// <param name="source">The prospective parent markdown object.</param>
-    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
-    /// <returns>The <see cref="MarkdownObject"/>s that are direct child objects of the <paramref name="source"/> object.</returns>
-    public static IEnumerable<MarkdownObject> GetChildObjects(this MarkdownObject? source, bool includeAttributes = false)
-    {
-        if (source is null) return [];
-        if (includeAttributes)
-        {
-            var attributes = source.TryGetAttributes();
-            if (attributes is not null)
+            foreach (MarkdownObject parent in source.Descendants())
             {
-                if (source.IsMarkdownObjectEnumerable(out IEnumerable<MarkdownObject>? enumerable))
-                    return ((MarkdownObject[])[attributes]).Concat(enumerable);
-                return [attributes];
+                var attr = parent.TryGetAttributes();
+                if (attr is not null)
+                    yield return (parent, attr);
             }
         }
-        return source.GetDirectDescendants();
-    }
-
-    /// <summary>
-    /// Gets all descendant markdown objects.
-    /// </summary>
-    /// <param name="source">The prospective parent markdown object.</param>
-    /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
-    /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object.</returns>
-    public static IEnumerable<MarkdownObject> GetAllDescendants(this MarkdownObject? source, bool includeAttributes = false)
-    {
-        if (source is null) return [];
-        if (includeAttributes)
-        {
-            if (source is ContainerBlock cb)
-                return GetNestedDescendantsAndAttributes(cb);
-            if (source is ContainerInline ci)
-                return GetNestedDescendantsAndAttributes(ci);
-            if (source is LeafBlock lb)
-                return GetNestedDescendantsAndAttributes(lb);
-            var attributes = source.TryGetAttributes();
-            return (attributes is null) ? [] : [attributes];
-        }
-        if (source is ContainerBlock containerBlock)
-            return GetNestedDescendants(containerBlock);
-        if (source is ContainerInline containerInline)
-            return GetNestedDescendants(containerInline);
-        return (source is LeafBlock leafBlock) ? GetNestedDescendants(leafBlock) : [];
     }
 
     /// <summary>
@@ -108,7 +62,7 @@ public static partial class MarkdownExtensionMethods
         ArgumentNullException.ThrowIfNull(type);
         if (source is null) return [];
         if (type == MarkdownObjectType)
-            return GetChildObjects(source);
+            return source.Descendants();
         if (type.IsNonAttributeMarkdownObjectType())
         {
             if (source is ContainerBlock containerBlock)
@@ -139,7 +93,7 @@ public static partial class MarkdownExtensionMethods
         {
             Type singleType = types.First();
             if (singleType == MarkdownObjectType)
-                return GetChildObjects(source);
+                return source.Descendants();
             if (source is ContainerBlock containerBlock)
                 return GetNestedDescendants(containerBlock, singleType.IsInstanceOfType);
             if (source is ContainerInline containerInline)
@@ -175,7 +129,7 @@ public static partial class MarkdownExtensionMethods
         ArgumentNullException.ThrowIfNull(type);
         if (source is null || maximumDepth < 1) return [];
         if (type == MarkdownObjectType)
-            return GetChildObjects(source);
+            return source.Descendants();
         if (type.IsNonAttributeMarkdownObjectType())
         {
             if (source is ContainerBlock containerBlock)
@@ -209,7 +163,7 @@ public static partial class MarkdownExtensionMethods
         {
             Type type = types.First();
             if (type == MarkdownObjectType)
-                return GetChildObjects(source);
+                return source.Descendants();
             if (source is ContainerBlock containerBlock)
                 return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
             if (source is ContainerInline containerInline)

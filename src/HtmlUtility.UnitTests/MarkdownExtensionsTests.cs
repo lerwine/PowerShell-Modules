@@ -34,32 +34,6 @@ public partial class MarkdownExtensionsTests
     }
 
     /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetChildObjects(MarkdownObject?, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetChildObjectsTestData))]
-    public IEnumerable<MarkdownObject> GetChildObjectsTest(MarkdownObject source, bool? includeAttributes)
-    {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.GetChildObjects(source, includeAttributes.Value);
-        return MarkdownExtensionMethods.GetChildObjects(source);
-    }
-    
-    /// <summary>
-    /// Unit test for <see cref="MarkdownExtensionMethods.GetAllDescendants(MarkdownObject?, bool)"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetGetAllDescendantsTestData))]
-    public IEnumerable<MarkdownObject> GetAllDescendantsTest(MarkdownObject source, bool? includeAttributes)
-    {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.GetAllDescendants(source, includeAttributes.Value);
-        return MarkdownExtensionMethods.GetAllDescendants(source);
-    }
-
-    /// <summary>
     /// Unit test for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, bool)"/>.
     /// </summary>
     /// <param name="source"></param>

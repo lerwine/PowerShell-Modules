@@ -25,10 +25,10 @@ public static partial class MarkdownExtensionMethods
                 {
                     yield return item;
                     if (item is ContainerBlock containerBlock)
-                        foreach (var obj in containerBlock.GetNestedDescendants())
+                        foreach (var obj in containerBlock.Descendants())
                             yield return obj;
                     else if (item is LeafBlock leafBlock)
-                        foreach (var obj in leafBlock.GetNestedDescendants())
+                        foreach (var obj in leafBlock.Descendants())
                             yield return obj;
                 }
             else
@@ -65,7 +65,7 @@ public static partial class MarkdownExtensionMethods
                 {
                     yield return item;
                     if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendants())
+                        foreach (var obj in containerInline.Descendants())
                             yield return obj;
                 }
             else

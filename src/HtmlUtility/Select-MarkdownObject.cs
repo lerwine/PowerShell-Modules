@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using Markdig.Syntax;
 
 namespace HtmlUtility;
 
@@ -14,7 +15,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select from.")]
     [ValidateNotNull()]
     [Alias("MarkdownObject", "Markdown")]
-    public Markdig.Syntax.MarkdownObject[] InputObject { get; set; } = null!;
+    public MarkdownObject[] InputObject { get; set; } = null!;
 
     [Parameter(Position = 1, HelpMessage = HtmlMessage_Type, ParameterSetName = ParameterSetName_DepthRange)]
     [Parameter(Position = 1, HelpMessage = HtmlMessage_Type, ParameterSetName = ParameterSetName_ExplicitDepth)]
@@ -48,7 +49,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     private List<Type> _multiType = null!;
     private Type _singleType = null!;
     private int _depth;
-    private Action<Markdig.Syntax.MarkdownObject> _processInputObject = null!;
+    private Action<MarkdownObject> _processInputObject = null!;
 
     protected override void BeginProcessing()
     {
@@ -170,28 +171,29 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetCurrentAndDescendants(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendants(MarkdownObject currentObject)
     {
         WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetAllDescendants(IncludeAttributes.IsPresent))
+        foreach (var c in IncludeAttributes.IsPresent ? currentObject.GetNestedDescendantsAndAttributes() : currentObject.Descendants())
         {
             if (Stopping) return;
             WriteObject(c, false);
         }
     }
 
-    private void GetCurrentAndDescendantsMatchingSingleTypeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingSingleTypeRecurseAll(MarkdownObject currentObject)
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetAllDescendants(IncludeAttributes.IsPresent).Where(_singleType.IsInstanceOfType))
+        // TODO: Logic could probably be better when _singleType is HtmlAttributes
+        foreach (var c in (IncludeAttributes.IsPresent ? currentObject.GetNestedDescendantsAndAttributes() : currentObject.Descendants()).Where(_singleType.IsInstanceOfType))
         {
             if (Stopping) return;
             WriteObject(c, false);
         }
     }
 
-    private void GetCurrentAndDescendantsMatchingSingleType(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingSingleType(MarkdownObject currentObject)
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
@@ -202,24 +204,25 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetCurrentMatchingSingleType(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentMatchingSingleType(MarkdownObject currentObject)
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
     }
 
-    private void GetCurrentAndDescendantsMatchingTypeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingTypeRecurseAll(MarkdownObject currentObject)
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
-        foreach (var c in currentObject.GetAllDescendants(IncludeAttributes.IsPresent).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
+        // TODO: Logic could probably be better when _singleType is HtmlAttributes
+        foreach (var c in (IncludeAttributes.IsPresent ? currentObject.GetNestedDescendantsAndAttributes() : currentObject.Descendants()).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
         {
             if (Stopping) return;
             WriteObject(c, false);
         }
     }
 
-    private void GetCurrentAndDescendantsMatchingType(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingType(MarkdownObject currentObject)
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
@@ -230,13 +233,13 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetCurrentMatchingType(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentMatchingType(MarkdownObject currentObject)
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
     }
 
-    private void GetDescendantsAtDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsAtDepth(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(_depth, IncludeAttributes.IsPresent))
         {
@@ -245,7 +248,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingSingleTypeAtDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingSingleTypeAtDepth(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(_depth, IncludeAttributes.IsPresent).Where(_singleType.IsInstanceOfType))
         {
@@ -254,7 +257,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingTypeAtDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingTypeAtDepth(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(_depth, IncludeAttributes.IsPresent).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
         {
@@ -263,7 +266,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsFromDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsFromDepth(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsFromDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -272,7 +275,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingSingleTypeFromDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingSingleTypeFromDepth(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -288,7 +291,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingSingleTypeFromDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingSingleTypeFromDepthRecurseAll(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsFromDepth(MinDepth, IncludeAttributes.IsPresent).Where(_singleType.IsInstanceOfType))
         {
@@ -297,7 +300,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingTypeFromDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingTypeFromDepth(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -313,7 +316,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingTypeFromDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingTypeFromDepthRecurseAll(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsFromDepth(_depth, IncludeAttributes.IsPresent).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
         {
@@ -322,7 +325,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetCurrentAndDescendantsUpToDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsUpToDepth(MarkdownObject currentObject)
     {
         WriteObject(currentObject, false);
         foreach (var item in currentObject.GetDescendantsUpToDepth(MaxDepth, IncludeAttributes.IsPresent))
@@ -332,7 +335,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetCurrentAndDescendantsMatchingSingleTypeUpToDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingSingleTypeUpToDepth(MarkdownObject currentObject)
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
@@ -344,7 +347,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             }
     }
 
-    private void GetCurrentAndDescendantsMatchingSingleTypeUpToDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingSingleTypeUpToDepthRecurseAll(MarkdownObject currentObject)
     {
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
@@ -355,7 +358,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetCurrentAndDescendantsMatchingTypeUpToDepth(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingTypeUpToDepth(MarkdownObject currentObject)
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
@@ -367,7 +370,7 @@ public partial class Select_MarkdownObject : PSCmdlet
             }
     }
 
-    private void GetCurrentAndDescendantsMatchingTypeUpToDepthRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetCurrentAndDescendantsMatchingTypeUpToDepthRecurseAll(MarkdownObject currentObject)
     {
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
@@ -378,7 +381,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsInDepthRange(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsInDepthRange(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -392,7 +395,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingSingleTypeInDepthRange(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingSingleTypeInDepthRange(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -408,7 +411,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingSingleTypeInDepthRangeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingSingleTypeInDepthRangeRecurseAll(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -423,7 +426,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingTypeInDepthRange(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingTypeInDepthRange(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {
@@ -439,7 +442,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
     }
 
-    private void GetDescendantsMatchingTypeInDepthRangeRecurseAll(Markdig.Syntax.MarkdownObject currentObject)
+    private void GetDescendantsMatchingTypeInDepthRangeRecurseAll(MarkdownObject currentObject)
     {
         foreach (var item in currentObject.GetDescendantsAtDepth(MinDepth, IncludeAttributes.IsPresent))
         {

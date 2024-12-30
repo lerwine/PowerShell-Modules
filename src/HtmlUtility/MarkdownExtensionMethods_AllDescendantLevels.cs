@@ -9,73 +9,18 @@ namespace HtmlUtility;
 public static partial class MarkdownExtensionMethods
 {
     /// <summary>
-    /// Gets the nested descendants of a <see cref="ContainerBlock"/>.
+    /// Gets the descendants and attributes of a <see cref="MarkdownObject"/>.
     /// </summary>
-    /// <param name="parent">The parent <see cref="ContainerBlock"/>.</param>
-    /// <returns>Recursive nested descendants of <paramref name="parent"/>, not including <see cref="HtmlAttributes"/>.</returns>
-    [Obsolete("Use Markdig.Syntax.MarkdownObjectExtensions.Descendants")]
-    internal static IEnumerable<MarkdownObject> GetNestedDescendants(this ContainerBlock parent)
-    {
-        Debug.Assert(parent is not null);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
-            foreach (var item in descendants)
-            {
-                yield return item;
-                if (item is ContainerBlock containerBlock)
-                    foreach (var obj in containerBlock.GetNestedDescendants())
-                        yield return obj;
-                else if (item is LeafBlock leafBlock)
-                    foreach (var obj in leafBlock.GetNestedDescendants())
-                        yield return obj;
-            }
-    }
-
-    /// <summary>
-    /// Gets the nested descendants of a <see cref="ContainerInline"/>.
-    /// </summary>
-    /// <param name="parent">The parent <see cref="ContainerInline"/>.</param>
-    /// <returns>Recursive nested descendants of <paramref name="parent"/>, not including <see cref="HtmlAttributes"/>.</returns>
-    [Obsolete("Use Markdig.Syntax.MarkdownObjectExtensions.Descendants")]
-    internal static IEnumerable<MarkdownObject> GetNestedDescendants(this ContainerInline parent)
-    {
-        Debug.Assert(parent is not null);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
-        {
-            foreach (var item in descendants)
-            {
-                yield return item;
-                if (item is ContainerInline containerInline)
-                    foreach (var obj in containerInline.GetNestedDescendants())
-                        yield return obj;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets the nested descendants of a <see cref="LeafBlock"/>.
-    /// </summary>
-    /// <param name="parent">The parent <see cref="LeafBlock"/>.</param>
-    /// <returns>Recursive nested descendants of <paramref name="parent"/>, not including <see cref="HtmlAttributes"/>.</returns>
-    [Obsolete("Use Markdig.Syntax.MarkdownObjectExtensions.Descendants")]
-    internal static IEnumerable<MarkdownObject> GetNestedDescendants(this LeafBlock parent)
-    {
-        Debug.Assert(parent is not null);
-        return (parent.Inline is null) ? [] : parent.Inline.GetNestedDescendants();
-    }
-
-    /// <summary>
-    /// Gets the nested descendants and attributes of a <see cref="ContainerBlock"/>.
-    /// </summary>
-    /// <param name="parent">The parent <see cref="ContainerBlock"/>.</param>
-    /// <returns>Recursive nested descendants of <paramref name="parent"/>, including <see cref="HtmlAttributes"/>.</returns>
+    /// <param name="parent">The parent <see cref="MarkdownObject"/>.</param>
+    /// <returns>Recursive descendants of <paramref name="parent"/>, including <see cref="HtmlAttributes"/>.</returns>
     // TODO: Rename to DescendantsAndAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this ContainerBlock parent)
+    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this MarkdownObject parent)
     {
         Debug.Assert(parent is not null);
         var attribute = parent.TryGetAttributes();
         if (attribute is not null)
             yield return attribute;
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendantIncludingAttributes(out IEnumerable<MarkdownObject>? descendants))
             foreach (var item in descendants)
             {
                 yield return item;
@@ -88,47 +33,6 @@ public static partial class MarkdownExtensionMethods
                 else if ((attribute = item.TryGetAttributes()) is not null)
                     yield return attribute;
             }
-    }
-
-    /// <summary>
-    /// Gets the nested descendants and attributes of a <see cref="ContainerInline"/>.
-    /// </summary>
-    /// <param name="parent">The parent <see cref="ContainerInline"/>.</param>
-    /// <returns>Recursive nested descendants of <paramref name="parent"/>, including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsAndAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this ContainerInline parent)
-    {
-        Debug.Assert(parent is not null);
-        var attribute = parent.TryGetAttributes();
-        if (attribute is not null)
-            yield return attribute;
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
-            foreach (var item in descendants)
-            {
-                yield return item;
-                if (item is ContainerInline containerInline)
-                    foreach (var obj in containerInline.GetNestedDescendantsAndAttributes())
-                        yield return obj;
-                else if ((attribute = item.TryGetAttributes()) is not null)
-                    yield return attribute;
-            }
-    }
-
-    /// <summary>
-    /// Gets the nested descendants and attributes of a <see cref="LeafBlock"/>.
-    /// </summary>
-    /// <param name="parent">The parent <see cref="LeafBlock"/>.</param>
-    /// <returns>Recursive nested descendants of <paramref name="parent"/>, including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsAndAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this LeafBlock parent)
-    {
-        Debug.Assert(parent is not null);
-        var attribute = parent.TryGetAttributes();
-        if (attribute is not null)
-            yield return attribute;
-        if (parent.Inline is not null)
-            foreach (var item in parent.Inline.GetNestedDescendantsAndAttributes())
-                yield return item;
     }
 
     /// <summary>
