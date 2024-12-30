@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Markdig.Renderers.Html;
@@ -92,9 +93,9 @@ public static partial class MarkdownExtensionMethods
                 result = (IEnumerable<MarkdownObject>)parent;
                 return true;
             }
-            if (parent is LeafBlock leafBlock && leafBlock.Inline is not null)
+            if (parent is LeafBlock leafBlock)
             {
-                result = leafBlock.Inline.AsEnumerable();
+                result = (leafBlock.Inline is null) ? Enumerable.Empty<MarkdownObject>() : leafBlock.Inline.AsEnumerable();
                 return true;
             }
         }
@@ -102,23 +103,31 @@ public static partial class MarkdownExtensionMethods
         return false;
     }
 
-    internal static bool HasDirectDescendants(this ContainerBlock parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
+    internal static bool HasDirectDescendants(this MarkdownObject? parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
     {
-        if (parent.Count > 0)
+        if (parent is not null)
         {
-            result = parent.AsEnumerable();
-            return true;
-        }
-        result = null;
-        return false;
-    }
-
-    internal static bool HasDirectDescendants(this ContainerInline parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
-    {
-        if (parent.FirstChild is not null)
-        {
-            result = parent.AsEnumerable();
-            return true;
+            if (parent is ContainerInline containerInline)
+            {
+                if (containerInline.FirstChild is not null)
+                {
+                    result = containerInline.AsEnumerable();
+                    return true;
+                }
+            }
+            else if (parent is ContainerBlock containerBlock)
+            {
+                if (containerBlock.Count > 0)
+                {
+                    result = containerBlock.AsEnumerable();
+                    return true;
+                }
+            }
+            else if (parent is LeafBlock leafBlock && leafBlock.Inline is not null && leafBlock.Inline.FirstChild is not null)
+            {
+                result = leafBlock.Inline.AsEnumerable();
+                return true;
+            }
         }
         result = null;
         return false;
