@@ -22,10 +22,10 @@ public static partial class ExampleMarkdown1
     // }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantBranchesMatchingType(MarkdownObject?, Type)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType1TestData()
+    public static System.Collections.IEnumerable GetDescendantBranchesMatchingType1TestData()
     {
         MarkdownDocument document = GetMarkdownDocument();
         var elements = new MarkdownElements(document);
@@ -37,10 +37,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type})"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type})"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType2TestData()
+    public static System.Collections.IEnumerable GetDescendantBranchesMatchingType2TestData()
     {
         MarkdownDocument document = GetMarkdownDocument();
         var elements = new MarkdownElements(document);
@@ -52,10 +52,10 @@ public static partial class ExampleMarkdown1
     }
 /// 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantBranchesMatchingType(MarkdownObject?, Type, int)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType3TestData()
+    public static System.Collections.IEnumerable GetDescendantBranchesMatchingType3TestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, Type type, int maximumDepth, params MarkdownObject[] expected)
         {
@@ -88,10 +88,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType4TestData()
+    public static System.Collections.IEnumerable GetDescendantBranchesMatchingType4TestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, int maximumDepth, params MarkdownObject[] expected)
         {
@@ -121,10 +121,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantsAtDepth(MarkdownObject?, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantsAtDepth(MarkdownObject?, int, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantsAtDepthTestData()
+    public static System.Collections.IEnumerable GetDescendantsAtDepthTestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, int minimumDepth, bool? inclAttr, params MarkdownObject[] expected)
         {
@@ -234,10 +234,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantsUpToDepth(MarkdownObject?, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantsFromDepth(MarkdownObject?, int, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantsFromDepthTestData()
+    public static System.Collections.IEnumerable GetDescendantsFromDepthTestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, int minimumDepth, bool? includeAttributes, params MarkdownObject[] expected)
         {
@@ -281,10 +281,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantsUpToDepth(MarkdownObject?, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantsUpToDepth(MarkdownObject?, int, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantsUpToDepthTestData()
+    public static System.Collections.IEnumerable GetDescendantsUpToDepthTestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, int maximumDepth, bool? includeAttributes, params MarkdownObject[] expected)
         {
@@ -296,10 +296,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantsInDepthRange(MarkdownObject?, int, int, bool)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantsInDepthRange(MarkdownObject?, int, int, bool)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantsInDepthRangeTestData()
+    public static System.Collections.IEnumerable GetDescendantsInDepthRangeTestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, int minimumDepth, int maximumDepth, bool? includeAttributes, params MarkdownObject[] expected)
         {
@@ -311,10 +311,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, Type, int, int)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantBranchesMatchingType(MarkdownObject?, Type, int, int)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType5TestData()
+    public static System.Collections.IEnumerable GetDescendantBranchesMatchingType5TestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, Type type, int minimumDepth, int maximumDepth, params MarkdownObject[] expected)
         {
@@ -326,10 +326,10 @@ public static partial class ExampleMarkdown1
     }
 
     /// <summary>
-    /// Test cases for <see cref="MarkdownExtensionMethods.GetDescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, int)"/>.
+    /// Test cases for <see cref="MarkdownExtensionMethods.DescendantBranchesMatchingType(MarkdownObject?, IEnumerable{Type}, int, int)"/>.
     /// </summary>
     /// <returns></returns>
-    public static System.Collections.IEnumerable GetGetDescendantBranchesMatchingType6TestData()
+    public static System.Collections.IEnumerable GetDescendantBranchesMatchingType6TestData()
     {
         TestCaseData createTestCaseData(MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth, params MarkdownObject[] expected)
         {

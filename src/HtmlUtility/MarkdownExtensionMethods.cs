@@ -36,7 +36,7 @@ public static partial class MarkdownExtensionMethods
         return types;
     }
 
-    public static IEnumerable<(MarkdownObject Parent, HtmlAttributes Attribute)> GetAllAttributes(this MarkdownObject? source)
+    public static IEnumerable<(MarkdownObject Parent, HtmlAttributes Attribute)> AllAttributes(this MarkdownObject? source)
     {
         if (source is not null)
         {
@@ -57,7 +57,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
     /// except for any that have an ancestor that has already been yielded.</returns>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type)
+    public static IEnumerable<MarkdownObject> DescendantBranchesMatchingType(this MarkdownObject? source, Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (source is null) return [];
@@ -84,7 +84,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="emitAttributesofUnmatched">Whether to emit <see cref="HtmlAttributes"/> of unmatched tokens.</param>
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
     /// except for any that have an ancestor that has already been yielded.</returns>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types)
+    public static IEnumerable<MarkdownObject> DescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (source is null) return [];
@@ -124,7 +124,7 @@ public static partial class MarkdownExtensionMethods
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of the specified <paramref name="type"/>,
     /// except for any that have an ancestor that has already been yielded or are beyond the specified <paramref name="maximumDepth"/>.</returns>
     /// <remarks>If <paramref name="maximumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int maximumDepth)
+    public static IEnumerable<MarkdownObject> DescendantBranchesMatchingType(this MarkdownObject? source, Type type, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (source is null || maximumDepth < 1) return [];
@@ -153,7 +153,7 @@ public static partial class MarkdownExtensionMethods
     /// <returns>The <see cref="MarkdownObject"/>s that descend from the <paramref name="source"/> object that is an instance of any of the specified <paramref name="types"/>,
     /// except for any that have an ancestor that has already been yielded or are beyond the specifed <paramref name="maximumDepth"/>.</returns>
     /// <remarks>If <paramref name="maximumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int maximumDepth)
+    public static IEnumerable<MarkdownObject> DescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (source is null || maximumDepth < 1) return [];
@@ -192,7 +192,7 @@ public static partial class MarkdownExtensionMethods
     /// <returns>The <see cref="MarkdownObject"/>s that exist at the specified recursion <paramref name="depth"/>.</returns>
     /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
     /// <remarks>If <paramref name="depth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantsAtDepth(this MarkdownObject? source, int depth, bool includeAttributes = false)
+    public static IEnumerable<MarkdownObject> DescendantsAtDepth(this MarkdownObject? source, int depth, bool includeAttributes = false)
     {
         if (source is null || depth < 1) return [];
         throw new NotImplementedException();
@@ -206,7 +206,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
     /// <returns>The <see cref="MarkdownObject"/>s that exist at or beyond the specified recursion <paramref name="minimumDepth"/>.</returns>
     /// <remarks>If <paramref name="minimumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantsFromDepth(this MarkdownObject? source, int minimumDepth, bool includeAttributes = false)
+    public static IEnumerable<MarkdownObject> DescendantsFromDepth(this MarkdownObject? source, int minimumDepth, bool includeAttributes = false)
     {
         if (source is null) return [];
         throw new NotImplementedException();
@@ -220,26 +220,26 @@ public static partial class MarkdownExtensionMethods
     /// <returns>The <see cref="MarkdownObject"/>s that exist at or below the specified recursion <paramref name="maximumDepth"/>.</returns>
     /// <param name="includeAttributes">Whether to include <see cref="HtmlAttributes"/>.</param>
     /// <remarks>If <paramref name="minimumDepth"/> is less than <c>1</c>, nothing will be yielded.</remarks>
-    public static IEnumerable<MarkdownObject> GetDescendantsUpToDepth(this MarkdownObject? source, int maximumDepth, bool includeAttributes = false)
+    public static IEnumerable<MarkdownObject> DescendantsUpToDepth(this MarkdownObject? source, int maximumDepth, bool includeAttributes = false)
     {
         if (source is null || maximumDepth < 1) return [];
         throw new NotImplementedException();
     }
 
-    public static IEnumerable<MarkdownObject> GetDescendantsInDepthRange(this MarkdownObject? source, int minimumDepth, int maximumDepth, bool includeAttributes = false)
+    public static IEnumerable<MarkdownObject> DescendantsInDepthRange(this MarkdownObject? source, int minimumDepth, int maximumDepth, bool includeAttributes = false)
     {
         if (source is null || maximumDepth < 1 || maximumDepth < minimumDepth) return [];
         throw new NotImplementedException();
     }
 
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, Type type, int minimumDepth, int maximumDepth)
+    public static IEnumerable<MarkdownObject> DescendantBranchesMatchingType(this MarkdownObject? source, Type type, int minimumDepth, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (source is null || maximumDepth < 1 || maximumDepth < minimumDepth) return [];
         throw new NotImplementedException();
     }
 
-    public static IEnumerable<MarkdownObject> GetDescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth)
+    public static IEnumerable<MarkdownObject> DescendantBranchesMatchingType(this MarkdownObject? source, IEnumerable<Type> types, int minimumDepth, int maximumDepth)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (source is null || minimumDepth < 1 || maximumDepth < minimumDepth) return [];
