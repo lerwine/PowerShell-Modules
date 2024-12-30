@@ -13,8 +13,7 @@ public static partial class MarkdownExtensionMethods
     /// </summary>
     /// <param name="parent">The parent <see cref="MarkdownObject"/>.</param>
     /// <returns>Recursive descendants of <paramref name="parent"/>, including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsAndAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this MarkdownObject parent)
+    internal static IEnumerable<MarkdownObject> GetDescendantsAndAttributes(this MarkdownObject parent)
     {
         Debug.Assert(parent is not null);
         var attribute = parent.TryGetAttributes();
@@ -25,10 +24,10 @@ public static partial class MarkdownExtensionMethods
             {
                 yield return item;
                 if (item is ContainerBlock containerBlock)
-                    foreach (var obj in containerBlock.GetNestedDescendantsAndAttributes())
+                    foreach (var obj in containerBlock.GetDescendantsAndAttributes())
                         yield return obj;
                 else if (item is LeafBlock leafBlock)
-                    foreach (var obj in leafBlock.GetNestedDescendantsAndAttributes())
+                    foreach (var obj in leafBlock.GetDescendantsAndAttributes())
                         yield return obj;
                 else if ((attribute = item.TryGetAttributes()) is not null)
                     yield return attribute;
@@ -42,21 +41,20 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested recursive descendants of <paramref name="parent"/> where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranches
-    internal static IEnumerable<MarkdownObject> GetNestedDescendants(this ContainerBlock parent, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranches(this ContainerBlock parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
             foreach (var item in descendants)
             {
                 if (predicate(item))
                     yield return item;
                 else if (item is ContainerBlock containerBlock)
-                    foreach (var obj in containerBlock.GetNestedDescendants(predicate))
+                    foreach (var obj in containerBlock.GetBranches(predicate))
                         yield return obj;
                 else if (item is LeafBlock leafBlock)
-                    foreach (var obj in leafBlock.GetNestedDescendants(predicate))
+                    foreach (var obj in leafBlock.GetBranches(predicate))
                         yield return obj;
             }
     }
@@ -68,19 +66,18 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Direct descendants of <paramref name="parent"/> where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranches
-    internal static IEnumerable<MarkdownObject> GetNestedDescendants(this ContainerInline parent, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranches(this ContainerInline parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             foreach (var item in descendants)
             {
                 if (predicate(item))
                     yield return item;
                 else if (item is ContainerInline containerInline)
-                    foreach (var obj in containerInline.GetNestedDescendants(predicate))
+                    foreach (var obj in containerInline.GetBranches(predicate))
                         yield return obj;
             }
         }
@@ -93,12 +90,11 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested recursive descendants where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranches
-    internal static IEnumerable<MarkdownObject> GetNestedDescendants(this LeafBlock parent, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranches(this LeafBlock parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
-        return (parent.Inline is null) ? [] : parent.Inline.GetNestedDescendants(predicate);
+        return (parent.Inline is null) ? [] : parent.Inline.GetBranches(predicate);
     }
 
     /// <summary>
@@ -108,24 +104,23 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested recursive descendants, including <see cref="HtmlAttributes"/>, where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesIncludingAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this ContainerBlock parent, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesIncludingAttributes(this ContainerBlock parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         var attribute = parent.TryGetAttributes();
         if (attribute is not null && predicate(attribute))
             yield return attribute;
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
             foreach (var item in descendants)
             {
                 if (predicate(item))
                     yield return item;
                 else if (item is ContainerBlock containerBlock)
-                    foreach (var obj in containerBlock.GetNestedDescendantsAndAttributes(predicate))
+                    foreach (var obj in containerBlock.GetBranchesIncludingAttributes(predicate))
                         yield return obj;
                 else if (item is LeafBlock leafBlock)
-                    foreach (var obj in leafBlock.GetNestedDescendantsAndAttributes(predicate))
+                    foreach (var obj in leafBlock.GetBranchesIncludingAttributes(predicate))
                         yield return obj;
                 else if ((attribute = item.TryGetAttributes()) is not null && predicate(attribute))
                     yield return attribute;
@@ -139,21 +134,20 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested recursive descendants, including <see cref="HtmlAttributes"/>, where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesIncludingAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this ContainerInline parent, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesIncludingAttributes(this ContainerInline parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         var attribute = parent.TryGetAttributes();
         if (attribute is not null && predicate(attribute))
             yield return attribute;
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
             foreach (var item in descendants)
             {
                 if (predicate(item))
                     yield return item;
                 else if (item is ContainerInline containerInline)
-                    foreach (var obj in containerInline.GetNestedDescendantsAndAttributes(predicate))
+                    foreach (var obj in containerInline.GetBranchesIncludingAttributes(predicate))
                         yield return obj;
                 else if ((attribute = item.TryGetAttributes()) is not null && predicate(attribute))
                     yield return attribute;
@@ -167,8 +161,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested recursive descendants, including <see cref="HtmlAttributes"/>, where <paramref name="predicate"/> returns true.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesIncludingAttributes
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributes(this LeafBlock parent, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesIncludingAttributes(this LeafBlock parent, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
@@ -176,7 +169,7 @@ public static partial class MarkdownExtensionMethods
         if (attribute is not null && predicate(attribute))
             yield return attribute;
         if (parent.Inline is not null)
-            foreach (var item in parent.Inline.GetNestedDescendantsAndAttributes(predicate))
+            foreach (var item in parent.Inline.GetBranchesIncludingAttributes(predicate))
                 yield return item;
     }
 }

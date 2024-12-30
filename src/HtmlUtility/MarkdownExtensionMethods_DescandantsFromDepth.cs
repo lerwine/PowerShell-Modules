@@ -13,12 +13,11 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="ContainerBlock"/>.</param>
     /// <param name="minDepth">The minimum depth of the recursive nested descendants to return. This must not be less than 1.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep, not including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsFromDepth(this ContainerBlock parent, int minDepth)
+    internal static IEnumerable<MarkdownObject> GetDescendantsFromDepth(this ContainerBlock parent, int minDepth)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
                 foreach (var item in descendants)
@@ -37,10 +36,10 @@ public static partial class MarkdownExtensionMethods
                 foreach (var item in descendants)
                 {
                     if (item is ContainerBlock containerBlock)
-                        foreach (var obj in containerBlock.GetNestedDescendantsFromDepth(minDepth))
+                        foreach (var obj in containerBlock.GetDescendantsFromDepth(minDepth))
                             yield return obj;
                     else if (item is LeafBlock leafBlock)
-                        foreach (var obj in leafBlock.GetNestedDescendantsFromDepth(minDepth))
+                        foreach (var obj in leafBlock.GetDescendantsFromDepth(minDepth))
                             yield return obj;
                 }
             }
@@ -53,12 +52,11 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="ContainerInline"/>.</param>
     /// <param name="minDepth">The minimum depth of the recursive nested descendants to return. This must not be less than 1.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep, not including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsFromDepth(this ContainerInline parent, int minDepth)
+    internal static IEnumerable<MarkdownObject> GetDescendantsFromDepth(this ContainerInline parent, int minDepth)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
                 foreach (var item in descendants)
@@ -74,7 +72,7 @@ public static partial class MarkdownExtensionMethods
                 foreach (var item in descendants)
                 {
                     if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendantsFromDepth(minDepth))
+                        foreach (var obj in containerInline.GetDescendantsFromDepth(minDepth))
                             yield return obj;
                 }
             }
@@ -87,11 +85,10 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="LeafBlock"/>.</param>
     /// <param name="minDepth">The minimum depth of the recursive nested descendants to return. This must not be less than 1.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep, not including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsFromDepth(this LeafBlock parent, int minDepth)
+    internal static IEnumerable<MarkdownObject> GetDescendantsFromDepth(this LeafBlock parent, int minDepth)
     {
         Debug.Assert(parent is not null);
-        return (parent.Inline is null) ? [] : parent.Inline.GetNestedDescendantsFromDepth(minDepth);
+        return (parent.Inline is null) ? [] : parent.Inline.GetDescendantsFromDepth(minDepth);
     }
 
     /// <summary>
@@ -100,12 +97,12 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="ContainerBlock"/>.</param>
     /// <param name="minDepth">The minimum depth of the recursive nested descendants to return. This must not be less than 1.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep, including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributesFromDepth(this ContainerBlock parent, int minDepth)
+    internal static IEnumerable<MarkdownObject> GetDescendantsAndAttributesFromDepth(this ContainerBlock parent, int minDepth)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
             {
@@ -116,10 +113,10 @@ public static partial class MarkdownExtensionMethods
                 {
                     yield return item;
                     if (item is ContainerBlock containerBlock)
-                        foreach (var obj in containerBlock.GetNestedDescendantsAndAttributes())
+                        foreach (var obj in containerBlock.GetDescendantsAndAttributes())
                             yield return obj;
                     else if (item is LeafBlock leafBlock)
-                        foreach (var obj in leafBlock.GetNestedDescendantsAndAttributes())
+                        foreach (var obj in leafBlock.GetDescendantsAndAttributes())
                             yield return obj;
                     else if ((attribute = item.TryGetAttributes()) is not null)
                         yield return attribute;
@@ -132,10 +129,10 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerBlock containerBlock)
-                            foreach (var obj in containerBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in containerBlock.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                         else if (item is LeafBlock leafBlock)
-                            foreach (var obj in leafBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in leafBlock.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                         else
                         {
@@ -148,10 +145,10 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerBlock containerBlock)
-                            foreach (var obj in containerBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in containerBlock.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                         else if (item is LeafBlock leafBlock)
-                            foreach (var obj in leafBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in leafBlock.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                     }
             }
@@ -164,12 +161,11 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="ContainerInline"/>.</param>
     /// <param name="minDepth">The minimum depth of the recursive nested descendants to return. This must not be less than 1.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep, including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsAndAttributesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributesFromDepth(this ContainerInline parent, int minDepth)
+    internal static IEnumerable<MarkdownObject> GetDescendantsAndAttributesFromDepth(this ContainerInline parent, int minDepth)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
             {
@@ -180,7 +176,7 @@ public static partial class MarkdownExtensionMethods
                 {
                     yield return item;
                     if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendantsAndAttributes())
+                        foreach (var obj in containerInline.GetDescendantsAndAttributes())
                             yield return obj;
                     else if ((attribute = item.TryGetAttributes()) is not null)
                         yield return attribute;
@@ -193,7 +189,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in containerInline.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                         else
                         {
@@ -206,7 +202,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in containerInline.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                     }
             }
@@ -219,8 +215,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="parent">The parent <see cref="MarkdownObject"/>.</param>
     /// <param name="minDepth">The minimum depth of the recursive nested descendants to return. This must not be less than 1.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep, including <see cref="HtmlAttributes"/>.</returns>
-    // TODO: Rename to DescendantsAndAttributesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributesFromDepth(this LeafBlock parent, int minDepth)
+    internal static IEnumerable<MarkdownObject> GetDescendantsAndAttributesFromDepth(this LeafBlock parent, int minDepth)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(minDepth > 0);
@@ -233,7 +228,7 @@ public static partial class MarkdownExtensionMethods
                     yield return attribute;
             }
         }
-        else if (parent.Inline.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        else if (parent.Inline.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
             {
@@ -244,7 +239,7 @@ public static partial class MarkdownExtensionMethods
                 {
                     yield return item;
                     if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendantsAndAttributes())
+                        foreach (var obj in containerInline.GetDescendantsAndAttributes())
                             yield return obj;
                     else if ((attribute = item.TryGetAttributes()) is not null)
                         yield return attribute;
@@ -257,7 +252,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in containerInline.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                         else
                         {
@@ -270,7 +265,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth))
+                            foreach (var obj in containerInline.GetDescendantsAndAttributesFromDepth(minDepth))
                                 yield return obj;
                     }
             }
@@ -285,13 +280,13 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep where <paramref name="predicate"/> returns true, not including <see cref="HtmlAttributes"/>.</returns>
     /// <remarks>No descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsFromDepth(this ContainerBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesFromDepth(this ContainerBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
                 foreach (var item in descendants)
@@ -299,10 +294,10 @@ public static partial class MarkdownExtensionMethods
                     if (predicate(item))
                         yield return item;
                     else if (item is ContainerBlock containerBlock)
-                        foreach (var obj in containerBlock.GetNestedDescendants(predicate))
+                        foreach (var obj in containerBlock.GetBranches(predicate))
                             yield return obj;
                     else if (item is LeafBlock leafBlock)
-                        foreach (var obj in leafBlock.GetNestedDescendants(predicate))
+                        foreach (var obj in leafBlock.GetBranches(predicate))
                             yield return obj;
                 }
             else
@@ -311,10 +306,10 @@ public static partial class MarkdownExtensionMethods
                 foreach (var item in descendants)
                 {
                     if (item is ContainerBlock containerBlock)
-                        foreach (var obj in containerBlock.GetNestedDescendantsFromDepth(minDepth, predicate))
+                        foreach (var obj in containerBlock.GetBranchesFromDepth(minDepth, predicate))
                             yield return obj;
                     else if (item is LeafBlock leafBlock)
-                        foreach (var obj in leafBlock.GetNestedDescendantsFromDepth(minDepth, predicate))
+                        foreach (var obj in leafBlock.GetBranchesFromDepth(minDepth, predicate))
                             yield return obj;
                 }
             }
@@ -329,13 +324,12 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep where <paramref name="predicate"/> returns true, not including <see cref="HtmlAttributes"/>.</returns>
     /// <remarks>No descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsFromDepth(this ContainerInline parent, int minDepth, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesFromDepth(this ContainerInline parent, int minDepth, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
                 foreach (var item in descendants)
@@ -343,7 +337,7 @@ public static partial class MarkdownExtensionMethods
                     if (predicate(item))
                         yield return item;
                     else if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendants(predicate))
+                        foreach (var obj in containerInline.GetBranches(predicate))
                             yield return obj;
                 }
             else
@@ -352,7 +346,7 @@ public static partial class MarkdownExtensionMethods
                 foreach (var item in descendants)
                 {
                     if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendantsFromDepth(minDepth, predicate))
+                        foreach (var obj in containerInline.GetBranchesFromDepth(minDepth, predicate))
                             yield return obj;
                 }
             }
@@ -367,12 +361,11 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep where <paramref name="predicate"/> returns true, not including <see cref="HtmlAttributes"/>.</returns>
     /// <remarks>No descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsFromDepth(this LeafBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesFromDepth(this LeafBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
-        return (parent.Inline is null) ? [] : parent.Inline.GetNestedDescendantsFromDepth(minDepth, predicate);
+        return (parent.Inline is null) ? [] : parent.Inline.GetBranchesFromDepth(minDepth, predicate);
     }
 
     /// <summary>
@@ -383,13 +376,12 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep where <paramref name="predicate"/> returns true, including <see cref="HtmlAttributes"/>.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesIncludingAttributesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributesFromDepth(this ContainerBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesIncludingAttributesFromDepth(this ContainerBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
             {
@@ -401,10 +393,10 @@ public static partial class MarkdownExtensionMethods
                     if (predicate(item))
                         yield return item;
                     else if (item is ContainerBlock containerBlock)
-                        foreach (var obj in containerBlock.GetNestedDescendantsAndAttributes(predicate))
+                        foreach (var obj in containerBlock.GetBranchesIncludingAttributes(predicate))
                             yield return obj;
                     else if (item is LeafBlock leafBlock)
-                        foreach (var obj in leafBlock.GetNestedDescendantsAndAttributes(predicate))
+                        foreach (var obj in leafBlock.GetBranchesIncludingAttributes(predicate))
                             yield return obj;
                     else if ((attribute = item.TryGetAttributes()) is not null && predicate(attribute))
                         yield return attribute;
@@ -417,10 +409,10 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerBlock containerBlock)
-                            foreach (var obj in containerBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in containerBlock.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                         else if (item is LeafBlock leafBlock)
-                            foreach (var obj in leafBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in leafBlock.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                         else
                         {
@@ -433,10 +425,10 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerBlock containerBlock)
-                            foreach (var obj in containerBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in containerBlock.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                         else if (item is LeafBlock leafBlock)
-                            foreach (var obj in leafBlock.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in leafBlock.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                     }
             }
@@ -451,13 +443,12 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep where <paramref name="predicate"/> returns true, including <see cref="HtmlAttributes"/>.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesIncludingAttributesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributesFromDepth(this ContainerInline parent, int minDepth, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesIncludingAttributesFromDepth(this ContainerInline parent, int minDepth, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         Debug.Assert(minDepth > 0);
-        if (parent.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        if (parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
             {
@@ -469,7 +460,7 @@ public static partial class MarkdownExtensionMethods
                     if (predicate(item))
                         yield return item;
                     else if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendantsAndAttributes(predicate))
+                        foreach (var obj in containerInline.GetBranchesIncludingAttributes(predicate))
                             yield return obj;
                     else if ((attribute = item.TryGetAttributes()) is not null && predicate(attribute))
                         yield return attribute;
@@ -482,7 +473,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in containerInline.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                         else
                         {
@@ -495,7 +486,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in containerInline.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                     }
             }
@@ -510,8 +501,7 @@ public static partial class MarkdownExtensionMethods
     /// <param name="predicate">Function that specifies which descendant object to return.</param>
     /// <returns>Nested desendants at or greater than <paramref name="minDepth"/> levels deep where <paramref name="predicate"/> returns true, including <see cref="HtmlAttributes"/>.</returns>
     /// <remarks>No attributes or descendants of yeilded items will be returned.</remarks>
-    // TODO: Rename to DescendantBranchesIncludingAttributesFromDepth
-    internal static IEnumerable<MarkdownObject> GetNestedDescendantsAndAttributesFromDepth(this LeafBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
+    internal static IEnumerable<MarkdownObject> GetBranchesIncludingAttributesFromDepth(this LeafBlock parent, int minDepth, Func<MarkdownObject, bool> predicate)
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
@@ -525,7 +515,7 @@ public static partial class MarkdownExtensionMethods
                     yield return attribute;
             }
         }
-        else if (parent.Inline.HasDirectDescendants(out IEnumerable<MarkdownObject>? descendants))
+        else if (parent.Inline.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants))
         {
             if (minDepth == 1)
             {
@@ -537,7 +527,7 @@ public static partial class MarkdownExtensionMethods
                     if (predicate(item))
                         yield return item;
                     else if (item is ContainerInline containerInline)
-                        foreach (var obj in containerInline.GetNestedDescendantsAndAttributes(predicate))
+                        foreach (var obj in containerInline.GetBranchesIncludingAttributes(predicate))
                             yield return obj;
                     else if ((attribute = item.TryGetAttributes()) is not null && predicate(attribute))
                         yield return attribute;
@@ -550,7 +540,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in containerInline.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                         else
                         {
@@ -563,7 +553,7 @@ public static partial class MarkdownExtensionMethods
                     foreach (var item in descendants)
                     {
                         if (item is ContainerInline containerInline)
-                            foreach (var obj in containerInline.GetNestedDescendantsAndAttributesFromDepth(minDepth, predicate))
+                            foreach (var obj in containerInline.GetBranchesIncludingAttributesFromDepth(minDepth, predicate))
                                 yield return obj;
                     }
             }

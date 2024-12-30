@@ -66,11 +66,11 @@ public static partial class MarkdownExtensionMethods
         if (type.IsNonAttributeMarkdownObjectType())
         {
             if (source is ContainerBlock containerBlock)
-                return GetNestedDescendants(containerBlock, type.IsInstanceOfType);
+                return GetBranches(containerBlock, type.IsInstanceOfType);
             if (source is ContainerInline containerInline)
-                return GetNestedDescendants(containerInline, type.IsInstanceOfType);
+                return GetBranches(containerInline, type.IsInstanceOfType);
             if (source is LeafBlock leafBlock)
-                return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, type.IsInstanceOfType);
+                return (leafBlock.Inline is null) ? [] : GetBranches(leafBlock.Inline, type.IsInstanceOfType);
         }
         
         return [];
@@ -95,20 +95,20 @@ public static partial class MarkdownExtensionMethods
             if (singleType == MarkdownObjectType)
                 return source.Descendants();
             if (source is ContainerBlock containerBlock)
-                return GetNestedDescendants(containerBlock, singleType.IsInstanceOfType);
+                return GetBranches(containerBlock, singleType.IsInstanceOfType);
             if (source is ContainerInline containerInline)
-                return GetNestedDescendants(containerInline, singleType.IsInstanceOfType);
+                return GetBranches(containerInline, singleType.IsInstanceOfType);
             if (source is LeafBlock leafBlock)
-                return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, singleType.IsInstanceOfType);
+                return (leafBlock.Inline is null) ? [] : GetBranches(leafBlock.Inline, singleType.IsInstanceOfType);
         }
         else if (typeCount > 0)
         {
             if (source is ContainerBlock containerBlock)
-                return GetNestedDescendants(containerBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetBranches(containerBlock, obj => types.Any(t => t.IsInstanceOfType(obj)));
             if (source is ContainerInline containerInline)
-                return GetNestedDescendants(containerInline, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetBranches(containerInline, obj => types.Any(t => t.IsInstanceOfType(obj)));
             if (source is LeafBlock leafBlock)
-                return (leafBlock.Inline is null) ? [] : GetNestedDescendants(leafBlock.Inline, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return (leafBlock.Inline is null) ? [] : GetBranches(leafBlock.Inline, obj => types.Any(t => t.IsInstanceOfType(obj)));
         }
 
         return [];
@@ -133,11 +133,11 @@ public static partial class MarkdownExtensionMethods
         if (type.IsNonAttributeMarkdownObjectType())
         {
             if (source is ContainerBlock containerBlock)
-                return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
+                return GetBranchesToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
             if (source is ContainerInline containerInline)
-                return GetNestedDescendantsToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
+                return GetBranchesToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
             if (source is LeafBlock leafBlock)
-                return GetNestedDescendantsToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
+                return GetBranchesToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
         }
 
         return [];
@@ -165,20 +165,20 @@ public static partial class MarkdownExtensionMethods
             if (type == MarkdownObjectType)
                 return source.Descendants();
             if (source is ContainerBlock containerBlock)
-                return GetNestedDescendantsToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
+                return GetBranchesToDepth(containerBlock, maximumDepth, type.IsInstanceOfType);
             if (source is ContainerInline containerInline)
-                return GetNestedDescendantsToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
+                return GetBranchesToDepth(containerInline, maximumDepth, type.IsInstanceOfType);
             if (source is LeafBlock leafBlock)
-                return GetNestedDescendantsToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
+                return GetBranchesToDepth(leafBlock, maximumDepth, type.IsInstanceOfType);
         }
         else
         {
             if (source is ContainerBlock containerBlock)
-                return GetNestedDescendantsToDepth(containerBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetBranchesToDepth(containerBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
             if (source is ContainerInline containerInline)
-                return GetNestedDescendantsToDepth(containerInline, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetBranchesToDepth(containerInline, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
             if (source is LeafBlock leafBlock)
-                return GetNestedDescendantsToDepth(leafBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
+                return GetBranchesToDepth(leafBlock, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
         }
 
         return [];

@@ -103,8 +103,7 @@ public static partial class MarkdownExtensionMethods
         return false;
     }
 
-    // TODO: Rename to HasDirectDescendant
-    internal static bool HasDirectDescendants(this MarkdownObject? parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
+    internal static bool HasDirectDescendant(this MarkdownObject? parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
     {
         if (parent is not null)
         {

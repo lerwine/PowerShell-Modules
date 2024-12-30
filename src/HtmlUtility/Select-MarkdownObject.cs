@@ -174,7 +174,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     private void GetCurrentAndDescendants(MarkdownObject currentObject)
     {
         WriteObject(currentObject, false);
-        foreach (var c in IncludeAttributes.IsPresent ? currentObject.GetNestedDescendantsAndAttributes() : currentObject.Descendants())
+        foreach (var c in IncludeAttributes.IsPresent ? currentObject.GetDescendantsAndAttributes() : currentObject.Descendants())
         {
             if (Stopping) return;
             WriteObject(c, false);
@@ -186,7 +186,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         if (_singleType.IsInstanceOfType(currentObject))
             WriteObject(currentObject, false);
         // TODO: Logic could probably be better when _singleType is HtmlAttributes
-        foreach (var c in (IncludeAttributes.IsPresent ? currentObject.GetNestedDescendantsAndAttributes() : currentObject.Descendants()).Where(_singleType.IsInstanceOfType))
+        foreach (var c in (IncludeAttributes.IsPresent ? currentObject.GetDescendantsAndAttributes() : currentObject.Descendants()).Where(_singleType.IsInstanceOfType))
         {
             if (Stopping) return;
             WriteObject(c, false);
@@ -215,7 +215,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         if (_multiType.Any(t => t.IsInstanceOfType(currentObject)))
             WriteObject(currentObject, false);
         // TODO: Logic could probably be better when _singleType is HtmlAttributes
-        foreach (var c in (IncludeAttributes.IsPresent ? currentObject.GetNestedDescendantsAndAttributes() : currentObject.Descendants()).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
+        foreach (var c in (IncludeAttributes.IsPresent ? currentObject.GetDescendantsAndAttributes() : currentObject.Descendants()).Where(obj => _multiType.Any(t => t.IsInstanceOfType(obj))))
         {
             if (Stopping) return;
             WriteObject(c, false);
