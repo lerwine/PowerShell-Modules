@@ -103,6 +103,7 @@ public static partial class MarkdownExtensionMethods
         return false;
     }
 
+    // TODO: Rename to HasDirectDescendant
     internal static bool HasDirectDescendants(this MarkdownObject? parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
     {
         if (parent is not null)
@@ -126,6 +127,42 @@ public static partial class MarkdownExtensionMethods
             else if (parent is LeafBlock leafBlock && leafBlock.Inline is not null && leafBlock.Inline.FirstChild is not null)
             {
                 result = leafBlock.Inline.AsEnumerable();
+                return true;
+            }
+        }
+        result = null;
+        return false;
+    }
+
+    internal static bool HasDirectDescendantIncludingAttributes(this MarkdownObject? parent, [NotNullWhen(true)] out IEnumerable<MarkdownObject>? result)
+    {
+        if (parent is not null)
+        {
+            var attributes = parent.TryGetAttributes();
+            if (parent is ContainerInline containerInline)
+            {
+                if (containerInline.FirstChild is not null)
+                {
+                    result = (attributes is null) ? containerInline.AsEnumerable() : ((IEnumerable<MarkdownObject>)[attributes]).Concat(containerInline);
+                    return true;
+                }
+            }
+            else if (parent is ContainerBlock containerBlock)
+            {
+                if (containerBlock.Count > 0)
+                {
+                    result = (attributes is null) ? containerBlock.AsEnumerable() : ((IEnumerable<MarkdownObject>)[attributes]).Concat(containerBlock);
+                    return true;
+                }
+            }
+            else if (parent is LeafBlock leafBlock && leafBlock.Inline is not null && leafBlock.Inline.FirstChild is not null)
+            {
+                result = (attributes is null) ? leafBlock.Inline.AsEnumerable() : ((IEnumerable<MarkdownObject>)[attributes]).Concat(leafBlock.Inline);
+                return true;
+            }
+            if (attributes is not null)
+            {
+                result = [attributes];
                 return true;
             }
         }
