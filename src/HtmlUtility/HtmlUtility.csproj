@@ -25,6 +25,9 @@
     <Content Include="Erwine.Leonard.T.HtmlUtility.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MarkdownFunctions.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="about_Erwine.Leonard.T.HtmlUtility.help.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -87,7 +87,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('Resources/from-md.css', 'Resources/highlight.css', 'Resources/katex-copytex.min.css', 'Resources/katex-copytex.min.js', 'Resources/katex.min.css',
+FileList = @('MarkdownFunctions.ps1', 'Resources/from-md.css', 'Resources/highlight.css', 'Resources/katex-copytex.min.css', 'Resources/katex-copytex.min.js', 'Resources/katex.min.css',
     'Resources/markdown.css', 'Resources/vscode-github.css', 'about_Erwine.Leonard.T.HtmlUtility.help.txt', 'README.md', 'ConvertFrom-HtmlDocument.tests.ps1',
     'ConvertFrom-HtmlString.tests.ps1', 'Select-HtmlNode.tests.ps1', 'Select-MarkdownObject.tests.ps1')
 
