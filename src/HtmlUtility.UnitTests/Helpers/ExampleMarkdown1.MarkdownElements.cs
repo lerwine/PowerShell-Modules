@@ -289,7 +289,7 @@ public static partial class ExampleMarkdown1
             elements.Element31, elements.Element31_Attributes, elements.Element32, elements.Element32_Attributes, elements.Element33, elements.Element33_Attributes, elements.Element34, elements.Element34_0, elements.Element34_0_0, elements.Element34_0_0_0, elements.Element34_0_1, elements.Element34_0_1_0, elements.Element34_0_1_1, elements.Element34_0_1_2, elements.Element34_1, elements.Element34_1_0, elements.Element34_1_0_0, elements.Element34_1_1, elements.Element34_1_1_0,
             elements.Element35, elements.Element35_0, elements.Element35_0_0, elements.Element35_0_1, elements.Element35_0_2, elements.Element36, elements.Element36_0, elements.Element36_1, elements.Element36_2, elements.Element36_3, elements.Element36_4, elements.Element36_5, elements.Element37, elements.Element37_0, elements.Element37_0_0, elements.Element37_0_0_0, elements.Element37_0_0_1, elements.Element37_1, elements.Element37_1_0, elements.Element37_1_0_0, elements.Element37_1_0_1
         */
-        
+
         internal HeadingBlock Element0 => _element0 ??= (HeadingBlock)Document[0];
         internal HtmlAttributes Element0_Attributes => _element0_Attributes ??= Element0.GetAttributes();
         internal LiteralInline Element0_0 => _element0_0 ??= (LiteralInline)Element0.Inline!.FirstChild!;

@@ -14,9 +14,8 @@ public static partial class MarkdownExtensionMethods
     /// <returns>Direct descendants of <paramref name="parent"/>, not including <see cref="HtmlAttributes"/>.</returns>
     internal static IEnumerable<MarkdownObject> GetDirectDescendants(this MarkdownObject parent)
     {
-        if (parent is ContainerBlock || parent is ContainerInline)
-            return (IEnumerable<MarkdownObject>)parent;
-        return (parent is LeafBlock leafBlock && leafBlock.Inline is not null) ? leafBlock.Inline.AsEnumerable() : [];
+        Debug.Assert(parent is not null);
+        return parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants) ? descendants : [];
     }
 
     /// <summary>
@@ -27,12 +26,7 @@ public static partial class MarkdownExtensionMethods
     internal static IEnumerable<MarkdownObject> GetDirectDescendantsAndAttributes(this MarkdownObject parent)
     {
         Debug.Assert(parent is not null);
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            yield return attributes;
-        if (parent.IsMarkdownObjectEnumerable(out IEnumerable<MarkdownObject>? descendants))
-            foreach (var item in descendants)
-                yield return item;
+        return parent.HasDirectDescendantIncludingAttributes(out IEnumerable<MarkdownObject>? descendants) ? descendants : [];
     }
 
     /// <summary>
@@ -45,9 +39,7 @@ public static partial class MarkdownExtensionMethods
     {
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
-        if (parent is ContainerBlock || parent is ContainerInline)
-            return ((IEnumerable<MarkdownObject>)parent).Where(predicate);
-        return (parent is LeafBlock leafBlock && leafBlock.Inline is not null) ? leafBlock.Inline.Where(predicate) : [];
+        return parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants) ? descendants.Where(predicate) : [];
     }
 
     /// <summary>
@@ -63,10 +55,6 @@ public static partial class MarkdownExtensionMethods
         Debug.Assert(parent is not null);
         Debug.Assert(predicate is not null);
         var attributes = parent.TryGetAttributes();
-        if (attributes is not null && predicate(attributes))
-            yield return attributes;
-        if (parent.IsMarkdownObjectEnumerable(out IEnumerable<MarkdownObject>? descendants))
-            foreach (var item in descendants.Where(predicate))
-                yield return item;
+        return parent.HasDirectDescendant(out IEnumerable<MarkdownObject>? descendants) ? attributes.PrependToMarkdownObjectsIfNotNull(descendants) : attributes.EnumerateMarkdownObjectIfNotNull();
     }
 }

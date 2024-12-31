@@ -28,9 +28,9 @@ public partial class MarkdownExtensionsTests
     /// <param name="types"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.TestHelper), nameof(Helpers.TestHelper.GetToReflectionTypesTestData))]
-    public Type[]? ToReflectionTypesTest(IList<MarkdownTokenType>? types)
+    public Type[] ToReflectionTypesTest(IList<MarkdownTokenType> types)
     {
-        return MarkdownExtensionMethods.ToReflectionTypes(types)?.ToArray();
+        return [.. MarkdownExtensionMethods.ToReflectionTypes(types)];
     }
 
     /// <summary>
@@ -93,10 +93,10 @@ public partial class MarkdownExtensionsTests
     /// <param name="includeAttributes"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetDescendantsAtDepthTestData))]
-    public IEnumerable<MarkdownObject> DescendantsAtDepthTest(MarkdownObject? source, int depth, bool? includeAttributes)
+    public IEnumerable<MarkdownObject> DescendantsAtDepthTest(MarkdownObject? source, int depth, bool includeAttributes)
     {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.DescendantsAtDepth(source, depth, includeAttributes.Value);
+        if (includeAttributes)
+            return MarkdownExtensionMethods.DescendantsAtDepthIncludingHtmlAttributes(source, depth);
         return MarkdownExtensionMethods.DescendantsAtDepth(source, depth);
     }
 
@@ -108,10 +108,10 @@ public partial class MarkdownExtensionsTests
     /// <param name="includeAttributes"></param>
     /// <returns></returns>
     [TestCaseSource(typeof(Helpers.ExampleMarkdown1), nameof(Helpers.ExampleMarkdown1.GetDescendantsFromDepthTestData))]
-    public IEnumerable<MarkdownObject> DescendantsFromDepthTest(MarkdownObject? source, int minimumDepth, bool? includeAttributes)
+    public IEnumerable<MarkdownObject> DescendantsFromDepthTest(MarkdownObject? source, int minimumDepth, bool includeAttributes)
     {
-        if (includeAttributes.HasValue)
-            return MarkdownExtensionMethods.DescendantsFromDepth(source, minimumDepth, includeAttributes.Value);
+        if (includeAttributes)
+            return MarkdownExtensionMethods.DescendantsIncludingAttributesFromDepth(source, minimumDepth);
         return MarkdownExtensionMethods.DescendantsFromDepth(source, minimumDepth);
     }
 }

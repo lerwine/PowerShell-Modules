@@ -3,7 +3,16 @@ namespace HtmlUtility;
 public enum MarkdownTokenType
 {
     /// <summary>
-    /// Objects of type Markdig.Syntax.Block
+    /// Matches objects of type <see cref="Markdig.Syntax.MarkdownObject"/>, except for <see cref="Markdig.Renderers.Html.HtmlAttributes"/>.
+    /// </summary>
+    /// <remarks>
+    /// Includes all enum types except: <see cref="HtmlAttributes"/>
+    /// </remarks>
+    [ReflectionType(typeof(Markdig.Syntax.MarkdownObject))]
+    Any,
+
+    /// <summary>
+    /// Matches objects of type <see cref="Markdig.Syntax.Block"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="Abbreviation"/>, <see cref="BlankLineBlock"/>, <see cref="CodeBlock"/>, <see cref="ContainerBlock"/>, <see cref="CustomContainer"/>, <see cref="DefinitionItem"/>, <see cref="DefinitionList"/>, <see cref="DefinitionTerm"/>,
@@ -16,7 +25,7 @@ public enum MarkdownTokenType
     Block,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.BlankLineBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.BlankLineBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="Block"/>
@@ -25,7 +34,7 @@ public enum MarkdownTokenType
     BlankLineBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.ContainerBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.ContainerBlock"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="CustomContainer"/>, <see cref="DefinitionItem"/>, <see cref="DefinitionList"/>, <see cref="Figure"/>, <see cref="FooterBlock"/>, <see cref="Footnote"/>, <see cref="FootnoteGroup"/>,
@@ -36,7 +45,7 @@ public enum MarkdownTokenType
     ContainerBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.CustomContainers.CustomContainer
+    /// Matches objects of type <see cref="Markdig.Extensions.CustomContainers.CustomContainer"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -45,7 +54,7 @@ public enum MarkdownTokenType
     CustomContainer,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.DefinitionLists.DefinitionItem
+    /// Matches objects of type <see cref="Markdig.Extensions.DefinitionLists.DefinitionItem"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -54,7 +63,7 @@ public enum MarkdownTokenType
     DefinitionItem,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.DefinitionLists.DefinitionList
+    /// Matches objects of type <see cref="Markdig.Extensions.DefinitionLists.DefinitionList"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -63,7 +72,7 @@ public enum MarkdownTokenType
     DefinitionList,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Figures.Figure
+    /// Matches objects of type <see cref="Markdig.Extensions.Figures.Figure"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -72,7 +81,7 @@ public enum MarkdownTokenType
     Figure,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Footers.FooterBlock
+    /// Matches objects of type <see cref="Markdig.Extensions.Footers.FooterBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -81,7 +90,7 @@ public enum MarkdownTokenType
     FooterBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Footnotes.Footnote
+    /// Matches objects of type <see cref="Markdig.Extensions.Footnotes.Footnote"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -90,7 +99,7 @@ public enum MarkdownTokenType
     Footnote,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Footnotes.FootnoteGroup
+    /// Matches objects of type <see cref="Markdig.Extensions.Footnotes.FootnoteGroup"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -99,7 +108,7 @@ public enum MarkdownTokenType
     FootnoteGroup,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.LinkReferenceDefinitionGroup
+    /// Matches objects of type <see cref="Markdig.Syntax.LinkReferenceDefinitionGroup"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -108,7 +117,7 @@ public enum MarkdownTokenType
     LinkReferenceDefinitionGroup,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.ListBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.ListBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -117,7 +126,7 @@ public enum MarkdownTokenType
     ListBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.ListItemBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.ListItemBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -126,7 +135,7 @@ public enum MarkdownTokenType
     ListItemBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.MarkdownDocument
+    /// Matches objects of type <see cref="Markdig.Syntax.MarkdownDocument"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -135,7 +144,7 @@ public enum MarkdownTokenType
     MarkdownDocument,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.QuoteBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.QuoteBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -144,7 +153,7 @@ public enum MarkdownTokenType
     QuoteBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Tables.Table
+    /// Matches objects of type <see cref="Markdig.Extensions.Tables.Table"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -153,7 +162,7 @@ public enum MarkdownTokenType
     Table,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Tables.TableCell
+    /// Matches objects of type <see cref="Markdig.Extensions.Tables.TableCell"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -162,7 +171,7 @@ public enum MarkdownTokenType
     TableCell,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Tables.TableRow
+    /// Matches objects of type <see cref="Markdig.Extensions.Tables.TableRow"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="ContainerBlock"/>, <see cref="Block"/>
@@ -171,7 +180,7 @@ public enum MarkdownTokenType
     TableRow,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.LeafBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.LeafBlock"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="Abbreviation"/>, <see cref="CodeBlock"/>, <see cref="DefinitionTerm"/>, <see cref="EmptyBlock"/>, <see cref="FencedCodeBlock"/>, <see cref="FigureCaption"/>, <see cref="FootnoteLinkReferenceDefinition"/>,
@@ -183,7 +192,7 @@ public enum MarkdownTokenType
     LeafBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Abbreviations.Abbreviation
+    /// Matches objects of type <see cref="Markdig.Extensions.Abbreviations.Abbreviation"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -192,7 +201,7 @@ public enum MarkdownTokenType
     Abbreviation,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.CodeBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.CodeBlock"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="FencedCodeBlock"/>, <see cref="MathBlock"/>, <see cref="YamlFrontMatterBlock"/>
@@ -202,7 +211,7 @@ public enum MarkdownTokenType
     CodeBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.FencedCodeBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.FencedCodeBlock"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="MathBlock"/>
@@ -212,7 +221,7 @@ public enum MarkdownTokenType
     FencedCodeBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Mathematics.MathBlock
+    /// Matches objects of type <see cref="Markdig.Extensions.Mathematics.MathBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="FencedCodeBlock"/>, <see cref="CodeBlock"/>, <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -221,7 +230,7 @@ public enum MarkdownTokenType
     MathBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Yaml.YamlFrontMatterBlock
+    /// Matches objects of type <see cref="Markdig.Extensions.Yaml.YamlFrontMatterBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="CodeBlock"/>, <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -230,7 +239,7 @@ public enum MarkdownTokenType
     YamlFrontMatterBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.DefinitionLists.DefinitionTerm
+    /// Matches objects of type <see cref="Markdig.Extensions.DefinitionLists.DefinitionTerm"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -239,7 +248,7 @@ public enum MarkdownTokenType
     DefinitionTerm,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.EmptyBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.EmptyBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -248,7 +257,7 @@ public enum MarkdownTokenType
     EmptyBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Figures.FigureCaption
+    /// Matches objects of type <see cref="Markdig.Extensions.Figures.FigureCaption"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -257,7 +266,7 @@ public enum MarkdownTokenType
     FigureCaption,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.HeadingBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.HeadingBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -266,7 +275,7 @@ public enum MarkdownTokenType
     HeadingBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.HtmlBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.HtmlBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -275,7 +284,7 @@ public enum MarkdownTokenType
     HtmlBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.LinkReferenceDefinition
+    /// Matches objects of type <see cref="Markdig.Syntax.LinkReferenceDefinition"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="FootnoteLinkReferenceDefinition"/>, <see cref="HeadingLinkReferenceDefinition"/>
@@ -285,7 +294,7 @@ public enum MarkdownTokenType
     LinkReferenceDefinition,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Footnotes.FootnoteLinkReferenceDefinition
+    /// Matches objects of type <see cref="Markdig.Extensions.Footnotes.FootnoteLinkReferenceDefinition"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LinkReferenceDefinition"/>, <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -294,7 +303,7 @@ public enum MarkdownTokenType
     FootnoteLinkReferenceDefinition,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.AutoIdentifiers.HeadingLinkReferenceDefinition
+    /// Matches objects of type <see cref="Markdig.Extensions.AutoIdentifiers.HeadingLinkReferenceDefinition"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LinkReferenceDefinition"/>, <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -303,7 +312,7 @@ public enum MarkdownTokenType
     HeadingLinkReferenceDefinition,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.ParagraphBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.ParagraphBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -312,7 +321,7 @@ public enum MarkdownTokenType
     ParagraphBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.ThematicBreakBlock
+    /// Matches objects of type <see cref="Markdig.Syntax.ThematicBreakBlock"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafBlock"/>, <see cref="Block"/>
@@ -321,7 +330,7 @@ public enum MarkdownTokenType
     ThematicBreakBlock,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.Inline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.Inline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="AbbreviationInline"/>, <see cref="AutolinkInline"/>, <see cref="CodeInline"/>, <see cref="ContainerInline"/>, <see cref="CustomContainerInline"/>, <see cref="DelimiterInline"/>, <see cref="EmojiInline"/>,
@@ -332,7 +341,7 @@ public enum MarkdownTokenType
     Inline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.ContainerInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.ContainerInline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="CustomContainerInline"/>, <see cref="DelimiterInline"/>, <see cref="EmphasisDelimiterInline"/>, <see cref="EmphasisInline"/>, <see cref="JiraLink"/>, <see cref="LinkDelimiterInline"/>, <see cref="LinkInline"/>,
@@ -343,7 +352,7 @@ public enum MarkdownTokenType
     ContainerInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Footnotes.FootnoteLink
+    /// Matches objects of type <see cref="Markdig.Extensions.Footnotes.FootnoteLink"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="Inline"/>
@@ -352,7 +361,7 @@ public enum MarkdownTokenType
     FootnoteLink,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.LeafInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.LeafInline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="AbbreviationInline"/>, <see cref="AutolinkInline"/>, <see cref="CodeInline"/>, <see cref="EmojiInline"/>, <see cref="HtmlEntityInline"/>, <see cref="HtmlInline"/>, <see cref="LineBreakInline"/>, <see cref="LiteralInline"/>,
@@ -363,7 +372,7 @@ public enum MarkdownTokenType
     LeafInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Abbreviations.AbbreviationInline
+    /// Matches objects of type <see cref="Markdig.Extensions.Abbreviations.AbbreviationInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -372,7 +381,7 @@ public enum MarkdownTokenType
     AbbreviationInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.AutolinkInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.AutolinkInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -381,7 +390,7 @@ public enum MarkdownTokenType
     AutolinkInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.CodeInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.CodeInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -390,7 +399,7 @@ public enum MarkdownTokenType
     CodeInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.HtmlEntityInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.HtmlEntityInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -399,7 +408,7 @@ public enum MarkdownTokenType
     HtmlEntityInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.HtmlInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.HtmlInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -408,7 +417,7 @@ public enum MarkdownTokenType
     HtmlInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.LineBreakInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.LineBreakInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -417,7 +426,7 @@ public enum MarkdownTokenType
     LineBreakInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.LiteralInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.LiteralInline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="EmojiInline"/>
@@ -427,7 +436,7 @@ public enum MarkdownTokenType
     LiteralInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Emoji.EmojiInline
+    /// Matches objects of type <see cref="Markdig.Extensions.Emoji.EmojiInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LiteralInline"/>, <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -436,7 +445,7 @@ public enum MarkdownTokenType
     EmojiInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Mathematics.MathInline
+    /// Matches objects of type <see cref="Markdig.Extensions.Mathematics.MathInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -445,7 +454,7 @@ public enum MarkdownTokenType
     MathInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.SmartyPants.SmartyPant
+    /// Matches objects of type <see cref="Markdig.Extensions.SmartyPants.SmartyPant"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -454,7 +463,7 @@ public enum MarkdownTokenType
     SmartyPant,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.TaskLists.TaskList
+    /// Matches objects of type <see cref="Markdig.Extensions.TaskLists.TaskList"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LeafInline"/>, <see cref="Inline"/>
@@ -463,7 +472,7 @@ public enum MarkdownTokenType
     TaskList,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.DelimiterInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.DelimiterInline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="EmphasisDelimiterInline"/>, <see cref="LinkDelimiterInline"/>, <see cref="PipeTableDelimiterInline"/>
@@ -473,7 +482,7 @@ public enum MarkdownTokenType
     DelimiterInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.EmphasisDelimiterInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.EmphasisDelimiterInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="DelimiterInline"/>, <see cref="ContainerInline"/>, <see cref="Inline"/>
@@ -482,7 +491,7 @@ public enum MarkdownTokenType
     EmphasisDelimiterInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.LinkDelimiterInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.LinkDelimiterInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="DelimiterInline"/>, <see cref="ContainerInline"/>, <see cref="Inline"/>
@@ -491,7 +500,7 @@ public enum MarkdownTokenType
     LinkDelimiterInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.Tables.PipeTableDelimiterInline
+    /// Matches objects of type <see cref="Markdig.Extensions.Tables.PipeTableDelimiterInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="DelimiterInline"/>, <see cref="ContainerInline"/>, <see cref="Inline"/>
@@ -500,7 +509,7 @@ public enum MarkdownTokenType
     PipeTableDelimiterInline,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.EmphasisInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.EmphasisInline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="CustomContainerInline"/>
@@ -510,7 +519,7 @@ public enum MarkdownTokenType
     EmphasisInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.CustomContainers.CustomContainerInline
+    /// Matches objects of type <see cref="Markdig.Extensions.CustomContainers.CustomContainerInline"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="EmphasisInline"/>, <see cref="ContainerInline"/>, <see cref="Inline"/>
@@ -518,16 +527,14 @@ public enum MarkdownTokenType
     [ReflectionType(typeof(Markdig.Extensions.CustomContainers.CustomContainerInline))]
     CustomContainerInline,
 
-    // TODO: Fix logic - HtmlAttributes is not a type that can be selected
     /// <summary>
-    /// Objects of type Markdig.Renderers.Html.HtmlAttributes
+    /// Matches objects of type <see cref="Markdig.Renderers.Html.HtmlAttributes"/>.
     /// </summary>
     [ReflectionType(typeof(Markdig.Renderers.Html.HtmlAttributes))]
-    [Obsolete("This is not a selectable type")]
     HtmlAttributes,
 
     /// <summary>
-    /// Objects of type Markdig.Syntax.Inlines.LinkInline
+    /// Matches objects of type <see cref="Markdig.Syntax.Inlines.LinkInline"/>.
     /// </summary>
     /// <remarks>
     /// Includes: <see cref="JiraLink"/>
@@ -537,7 +544,7 @@ public enum MarkdownTokenType
     LinkInline,
 
     /// <summary>
-    /// Objects of type Markdig.Extensions.JiraLinks.JiraLink
+    /// Matches objects of type <see cref="Markdig.Extensions.JiraLinks.JiraLink"/>.
     /// </summary>
     /// <remarks>
     /// Included by: <see cref="LinkInline"/>, <see cref="ContainerInline"/>, <see cref="Inline"/>
