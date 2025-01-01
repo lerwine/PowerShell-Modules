@@ -180,7 +180,7 @@ public static class TestHelper
         yield return createTestCaseData([MarkdownTokenType.LinkInline, MarkdownTokenType.HeadingLinkReferenceDefinition],
             [typeof(Markdig.Syntax.Inlines.LinkInline), typeof(Markdig.Extensions.AutoIdentifiers.HeadingLinkReferenceDefinition)]);
         yield return createTestCaseData([MarkdownTokenType.JiraLink], [typeof(Markdig.Extensions.JiraLinks.JiraLink)]);
-        yield return new TestCaseData(Array.Empty<MarkdownTokenType>()).Returns(null);
-        yield return new TestCaseData(null).Returns(null);
+        yield return createTestCaseData([MarkdownTokenType.Any], [typeof(MarkdownObject)]);
+        yield return createTestCaseData([], []);
     }
 }
