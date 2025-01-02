@@ -87,7 +87,6 @@
         "VSCodeNeedsWideBuffer": "true"
     },
     "powershell.scriptAnalysis.enable": true,
-    "powershell.bugReporting.project": "https://github.com/lerwine/PowerShell-Modules",
     "powershell.debugging.createTemporaryIntegratedConsole": true,
     "powershell.developer.editorServicesLogLevel": "Diagnostic",
     "omnisharp.loggingLevel": "trace",
