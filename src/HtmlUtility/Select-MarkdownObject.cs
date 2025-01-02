@@ -64,38 +64,45 @@ public class Select_MarkdownObject : PSCmdlet
 
     private void Process_ExplicitDepth0()
     {
-        // ExplicitDepth: -Depth 0
+        // ExplicitDepth: -Type Any -Depth 0 -IncludeAttributes
+        // ExplicitDepth: -Type Any, HtmlAttributes -Depth 0
+        // ExplicitDepth: -Type Any -Depth 0
         // ExplicitDepth: -Depth 0 -IncludeAttributes
         // ExplicitDepth: -Type HtmlAttributes -Depth 0
-        // ExplicitDepth: -Type Any, HtmlAttributes -Depth 0
-        // ExplicitDepth: -Type Any -Depth 0 -IncludeAttributes
-        // ExplicitDepth: -Type Any -Depth 0
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Any, HtmlAttributes
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Any
-        // RecurseUnmatched: -Type Any, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any -MaxDepth 0 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any -MaxDepth 1 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any -MinDepth 0 -RecurseUnmatchedOnly
+        // ExplicitDepth: -Depth 0
+        // RecurseUnmatched: -Type Any -MinDepth 0 -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 0 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Any -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MaxDepth 0 -RecurseUnmatchedOnly
         WriteObject(InputObject, false);
     }
 
     private void Process_ExplicitDepthWithAttributes1()
     {
+        // ExplicitDepth: -Type Any -Depth 1 -IncludeAttributes
+        // ExplicitDepth: -Type Any, HtmlAttributes -Depth 1
         // ExplicitDepth: -Depth 1 -IncludeAttributes
-        // ExplicitDepth: -Depth 1 -Type HtmlAttributes
-        // ExplicitDepth: -Depth 1 -Type Any, HtmlAttributes
-        // ExplicitDepth: -Depth 1 -IncludeAttributes -Type Any
+        // ExplicitDepth: -Type HtmlAttributes -Depth 1
+        // RecurseUnmatched: -Type Any -MinDepth 1 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 1 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly -MaxDepth 1
-        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly -MaxDepth 2
+        // RecurseUnmatched: -Type Any -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -RecurseUnmatchedOnly
         if (InputObject.HasDirectDescendantIncludingAttributes(out IEnumerable<MarkdownObject>? directDescendants))
             foreach (var obj in directDescendants)
                 WriteObject(obj, false);
@@ -103,11 +110,14 @@ public class Select_MarkdownObject : PSCmdlet
 
     private void Process_ExplicitDepthNoAttributes1()
     {
-        // ExplicitDepth: -Depth 1
         // ExplicitDepth: -Type Any -Depth 1
-        // RecurseUnmatched: -MinDepth 1 -Type Any -RecurseUnmatchedOnly
-        // RecurseUnmatched: -MinDepth 1 -MaxDepth 1 -Type Any -RecurseUnmatchedOnly
-        // RecurseUnmatched: -MinDepth 1 -MaxDepth 2 -Type Any -RecurseUnmatchedOnly
+        // ExplicitDepth: -Depth 1
+        // RecurseUnmatched: -Type Any -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -RecurseUnmatchedOnly
         if (InputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
             foreach (var obj in directDescendants)
                 WriteObject(obj, false);
@@ -116,13 +126,16 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_ExplicitDepthWithAttributesN()
     {
         Debug.Assert(_depth > 1);
-        // ExplicitDepth: -Depth 2 -IncludeAttributes
-        // ExplicitDepth: -Depth 2 -Type HtmlAttributes
-        // ExplicitDepth: -Depth 2 -Type Any, HtmlAttributes
         // ExplicitDepth: -Type Any -Depth 2 -IncludeAttributes
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Any, HtmlAttributes -MinDepth 2
-        // RecurseUnmatched: -MaxDepth 2 -RecurseUnmatchedOnly -Type Any, HtmlAttributes -MinDepth 2
-        // RecurseUnmatched: -MaxDepth 3 -RecurseUnmatchedOnly -Type Any, HtmlAttributes -MinDepth 2
+        // ExplicitDepth: -Type Any, HtmlAttributes -Depth 2
+        // ExplicitDepth: -Depth 2 -IncludeAttributes
+        // ExplicitDepth: -Type HtmlAttributes -Depth 2
+        // RecurseUnmatched: -Type Any -MinDepth 2 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 2 -MaxDepth 3 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         foreach (var obj in InputObject.GetDescendantsAtDepthIncludingAttributes(_depth))
             WriteObject(obj, false);
     }
@@ -130,11 +143,11 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_ExplicitDepthNoAttributesN()
     {
         Debug.Assert(_depth > 1);
+        // ExplicitDepth: -Type Any -Depth 2
         // ExplicitDepth: -Depth 2
-        // ExplicitDepth: -Depth 2 -Type Any
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Any -MinDepth 2
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MaxDepth 2 -Type Any -MinDepth 2
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MaxDepth 3 -Type Any -MinDepth 2
+        // RecurseUnmatched: -Type Any -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Any -MinDepth 2 -RecurseUnmatchedOnly
         foreach (var obj in InputObject.GetDescendantsAtDepth(_depth))
             WriteObject(obj, false);
     }
@@ -143,11 +156,15 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
+        // ExplicitDepth: -Type Block, Inline -Depth 0 -IncludeAttributes
         // ExplicitDepth: -Type Block, Inline, HtmlAttributes -Depth 0
-        // ExplicitDepth: -IncludeAttributes -Type Block, Inline -Depth 0
         // ExplicitDepth: -Type Block, Inline -Depth 0
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 0 -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly -MinDepth 0
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 0 -RecurseUnmatchedOnly
         if (_multiTypes.Any(t => t.IsInstanceOfType(InputObject)))
             WriteObject(InputObject, false);
     }
@@ -156,10 +173,12 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
-        // ExplicitDepth: -Depth 1 -Type Block, Inline, HtmlAttributes
-        // ExplicitDepth: -Depth 1 -Type Block, Inline -IncludeAttributes
+        // ExplicitDepth: -Type Block, Inline -Depth 1 -IncludeAttributes
+        // ExplicitDepth: -Type Block, Inline, HtmlAttributes -Depth 1
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly -MinDepth 1
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -172,7 +191,9 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
-        // ExplicitDepth: -Depth 1 -Type Block, Inline
+        // ExplicitDepth: -Type Block, Inline -Depth 1
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 1 -RecurseUnmatchedOnly
         if (InputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
             foreach (var item in directDescendants.Where(obj => _multiTypes.Any(t => t.IsInstanceOfType(obj))))
                 WriteObject(item, false);
@@ -183,9 +204,10 @@ public class Select_MarkdownObject : PSCmdlet
         Debug.Assert(_depth > 1);
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
-        // ExplicitDepth: -Depth 2 -Type Block, Inline, HtmlAttributes
-        // ExplicitDepth: -Type Block, Inline -IncludeAttributes -Depth 2
-        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly -MinDepth 2
+        // ExplicitDepth: -Type Block, Inline -Depth 2 -IncludeAttributes
+        // ExplicitDepth: -Type Block, Inline, HtmlAttributes -Depth 2
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 2 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
         foreach (var item in InputObject.GetDescendantsAtDepth(_depth - 1))
         {
             var attributes = item.TryGetAttributes();
@@ -203,6 +225,7 @@ public class Select_MarkdownObject : PSCmdlet
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
         // ExplicitDepth: -Type Block, Inline -Depth 2
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
         foreach (var item in InputObject.GetDescendantsAtDepth(_depth).Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
             WriteObject(item, false);
     }
@@ -210,13 +233,15 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_ExplicitDepthMatchedSingleType0()
     {
         Debug.Assert(_singleType is not null);
+        // ExplicitDepth: -Type Block -Depth 0 -IncludeAttributes
         // ExplicitDepth: -Type Block, HtmlAttributes -Depth 0
-        // ExplicitDepth: -IncludeAttributes -Depth 0 -Type Block
         // ExplicitDepth: -Type Block -Depth 0
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block, HtmlAttributes -MaxDepth 0
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 0 -Type Block, HtmlAttributes -MaxDepth 0
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block -MaxDepth 0
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 0 -Type Block -MaxDepth 0
+        // RecurseUnmatched: -Type Block -MinDepth 0 -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MaxDepth 0 -RecurseUnmatchedOnly
         if (_singleType.IsInstanceOfType(InputObject))
             WriteObject(InputObject, false);
     }
@@ -224,12 +249,12 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_ExplicitDepthMatchedSingleTypeWithAttributes1()
     {
         Debug.Assert(_singleType is not null);
+        // ExplicitDepth: -Type Block -Depth 1 -IncludeAttributes
         // ExplicitDepth: -Type Block, HtmlAttributes -Depth 1
-        // ExplicitDepth: -Depth 1 -Type Block -IncludeAttributes
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block, HtmlAttributes -MaxDepth 1
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 1 -Type Block, HtmlAttributes -MaxDepth 1
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block -MaxDepth 1
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 1 -Type Block -MaxDepth 1
+        // RecurseUnmatched: -Type Block -MinDepth 1 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -242,7 +267,8 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_singleType is not null);
         // ExplicitDepth: -Type Block -Depth 1
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 2 -Type Block -MaxDepth 2
+        // RecurseUnmatched: -Type Block -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MaxDepth 1 -RecurseUnmatchedOnly
         if (InputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
             foreach (var item in directDescendants.Where(_singleType.IsInstanceOfType))
                 WriteObject(item, false);
@@ -252,9 +278,10 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_depth > 1);
         Debug.Assert(_singleType is not null);
+        // ExplicitDepth: -Type Block -Depth 2 -IncludeAttributes
         // ExplicitDepth: -Type Block, HtmlAttributes -Depth 2
-        // ExplicitDepth: -IncludeAttributes -Type Block -Depth 2
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 2 -Type Block, HtmlAttributes -MaxDepth 2
+        // RecurseUnmatched: -Type Block -MinDepth 2 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
         foreach (var item in InputObject.GetDescendantsAtDepth(_depth - 1))
         {
             var attributes = item.TryGetAttributes();
@@ -270,17 +297,17 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_depth > 1);
         Debug.Assert(_singleType is not null);
-        // ExplicitDepth: -Depth 2 -Type Block, Inline
+        // RecurseUnmatched: -Type Block -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
         foreach (var item in InputObject.GetDescendantsAtDepth(_depth).Where(_singleType.IsInstanceOfType))
             WriteObject(item, false);
     }
 
     private void Process_RecurseWithAttributes1()
     {
-        // Recurse: -Recurse -IncludeAttributes
-        // Recurse: -Recurse -Type HtmlAttributes
-        // Recurse: -Recurse -Type Any, HtmlAttributes
-        // Recurse: -Type Any -Recurse -IncludeAttributes
+        // Recurse: -Type Any -IncludeAttributes -Recurse
+        // Recurse: -Type Any, HtmlAttributes -Recurse
+        // Recurse: -IncludeAttributes -Recurse
+        // Recurse: -Type HtmlAttributes -Recurse
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -294,8 +321,8 @@ public class Select_MarkdownObject : PSCmdlet
 
     private void Process_RecurseNoAttributes1()
     {
+        // Recurse: -Type Any -Recurse
         // Recurse: -Recurse
-        // Recurse: -Recurse -Type Any
         foreach (var item in InputObject.Descendants())
             WriteObject(item, false);
     }
@@ -304,8 +331,8 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
+        // Recurse: -Type Block, Inline -IncludeAttributes -Recurse
         // Recurse: -Type Block, Inline, HtmlAttributes -Recurse
-        // Recurse: -IncludeAttributes -Recurse -Type Block, Inline
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -330,8 +357,8 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_RecurseMatchedSingleTypeWithAttributes1()
     {
         Debug.Assert(_singleType is not null);
-        // Recurse: -Recurse -Type Block, HtmlAttributes
-        // Recurse: -IncludeAttributes -Type Block -Recurse
+        // Recurse: -Type Block -IncludeAttributes -Recurse
+        // Recurse: -Type Block, HtmlAttributes -Recurse
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -347,22 +374,33 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_RecurseMatchedSingleTypeNoAttributes1()
     {
         Debug.Assert(_singleType is not null);
-        // Recurse: -Recurse -Type Block
+        // Recurse: -Type Block -Recurse
         foreach (var item in InputObject.Descendants().Where(_singleType.IsInstanceOfType))
             WriteObject(item, false);
     }
 
     private static void Process_SkipAll()
     {
+        // RecurseUnmatched: -MinDepth 0 -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MaxDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly -MinDepth 0
     }
 
     private void Process_Attributes1()
     {
+        // RecurseUnmatched: -MinDepth 1 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly -MinDepth 1
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 0 -MaxDepth 1 -Type HtmlAttributes
+        // RecurseUnmatched: -MinDepth 0 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MinDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MinDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -RecurseUnmatchedOnly
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -371,8 +409,10 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_AttributesToDepth()
     {
         Debug.Assert(MaxDepth > 1);
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 1 -MaxDepth 2 -Type HtmlAttributes
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MaxDepth 2 -Type HtmlAttributes
+        // RecurseUnmatched: -MinDepth 1 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -385,9 +425,6 @@ public class Select_MarkdownObject : PSCmdlet
 
     private void Process_Attributes_Recurse()
     {
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type HtmlAttributes
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 0 -Type HtmlAttributes
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 1 -Type HtmlAttributes
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
@@ -402,7 +439,10 @@ public class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_depth > 1);
         Debug.Assert(MaxDepth > _depth);
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 2 -MaxDepth 3 -Type HtmlAttributes
+        // RecurseUnmatched: -MinDepth 2 -MaxDepth 3 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MinDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         foreach (var item in InputObject.GetDescendantsInDepthRange(_depth - 1, MaxDepth - 1))
         {
             var attributes = item.TryGetAttributes();
@@ -414,8 +454,8 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_AttributesAtDepth()
     {
         Debug.Assert(_depth > 1);
-        // RecurseUnmatched: -Type HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly -MinDepth 2
-        // RecurseUnmatched: -RecurseUnmatchedOnly -MinDepth 2 -Type HtmlAttributes
+        // RecurseUnmatched: -Type HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -MinDepth 2 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
         foreach (var item in InputObject.GetDescendantsAtDepth(_depth - 1))
         {
             var attributes = item.TryGetAttributes();
@@ -427,6 +467,7 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_RecurseUnmatchedMatchedTypesWithAttributes0()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
@@ -441,22 +482,25 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_RecurseUnmatchedMatchedTypesWithAttributes1()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block, Inline, HtmlAttributes
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypes1()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block, Inline
         // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypesWithAttributesN()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
@@ -471,50 +515,58 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_RecurseUnmatchedMatchedTypesWithAttributesMaxDepth0()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 1 -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 0 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypesMaxDepth0()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block, Inline -MaxDepth 1 -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypesWithAttributesMaxDepth1()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 2 -MinDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypesMaxDepth1()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, Inline -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Block, Inline -MaxDepth 2 -MinDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypesWithAttributesMaxDepthN()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 3 -MinDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedTypesMaxDepthN()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block, Inline -MaxDepth 3 -MinDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, Inline -MaxDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeWithAttributes0()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block -MinDepth 0 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
@@ -529,22 +581,25 @@ public class Select_MarkdownObject : PSCmdlet
     private void Process_RecurseUnmatchedMatchedSingleTypeWithAttributes1()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block, HtmlAttributes
+        // RecurseUnmatched: -Type Block -MinDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleType1()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -RecurseUnmatchedOnly -Type Block
         // RecurseUnmatched: -Type Block -MinDepth 1 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeWithAttributesN()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block -MinDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
@@ -553,49 +608,54 @@ public class Select_MarkdownObject : PSCmdlet
     {
         // TODO: Implement input processor
         // RecurseUnmatched: -Type Block -MinDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeWithAttributesMaxDepth0()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block, HtmlAttributes -MaxDepth 1 -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MinDepth 0 -MaxDepth 1 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeMaxDepth0()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block -MaxDepth 1 -MinDepth 0 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeWithAttributesMaxDepth1()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block -MinDepth 1 -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MaxDepth 2 -IncludeAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Block, HtmlAttributes -MaxDepth 2 -MinDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeMaxDepth1()
     {
         // TODO: Implement input processor
+        // RecurseUnmatched: -Type Block -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: -Type Block -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: -Type Block -MaxDepth 2 -MinDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeWithAttributesMaxDepthN()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block, HtmlAttributes -MaxDepth 3 -MinDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MinDepth 2 -MaxDepth 3 -IncludeAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
     private void Process_RecurseUnmatchedMatchedSingleTypeMaxDepthN()
     {
         // TODO: Implement input processor
-        // RecurseUnmatched: -Type Block -MaxDepth 3 -MinDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: -Type Block -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
