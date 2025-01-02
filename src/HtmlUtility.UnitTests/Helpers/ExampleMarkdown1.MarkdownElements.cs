@@ -457,9 +457,9 @@ public static partial class ExampleMarkdown1
         public ParagraphBlock Element18_1 => _element18_1 ??= (ParagraphBlock)Element18[1];
         public LiteralInline Element18_1_0 => _element18_1_0 ??= (LiteralInline)Element18_1.Inline!.FirstChild!;
         public FencedCodeBlock Element18_2 => _element18_2 ??= (FencedCodeBlock)Element18[2];
-        public HtmlAttributes Element18_2_Attributes => _element18_2_Attributes ?? Element18_2.GetAttributes();
+        public HtmlAttributes Element18_2_Attributes => _element18_2_Attributes ??= Element18_2.GetAttributes();
         public ParagraphBlock Element18_3 => _element18_3 ??= (ParagraphBlock)Document[19];
-        public CodeInline Element18_3_0 => _element18_3_0 ?? (CodeInline)Element18_3.Inline!.FirstChild!;
+        public CodeInline Element18_3_0 => _element18_3_0 ??= (CodeInline)Element18_3.Inline!.FirstChild!;
 
         public Markdig.Extensions.Tables.Table Element19 => _element19 ??= (Markdig.Extensions.Tables.Table)Document[19];
         /*
