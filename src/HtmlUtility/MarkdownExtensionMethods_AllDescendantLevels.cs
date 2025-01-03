@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace HtmlUtility;
 

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Net;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 

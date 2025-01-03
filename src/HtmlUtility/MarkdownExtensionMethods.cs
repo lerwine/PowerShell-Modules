@@ -1,7 +1,6 @@
 using System.Reflection;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 
 namespace HtmlUtility;
 
@@ -273,7 +272,7 @@ public static partial class MarkdownExtensionMethods
         if (typeCount == 1)
             return (minimumDepth < 2) ? source.GetBranchesToDepth(maximumDepth, types.First().IsInstanceOfType) :
                 (minimumDepth < maximumDepth) ? source.GetBranchesInDepthRange(minimumDepth, maximumDepth, types.First().IsInstanceOfType) : source.GetDescendantsAtDepth(minimumDepth, types.First().IsInstanceOfType);
-        
+
         return (minimumDepth < 2) ? source.GetBranchesToDepth(maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj))) :
             (minimumDepth < maximumDepth) ? source.GetBranchesInDepthRange(minimumDepth, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj))) :
                 source.GetDescendantsAtDepth(minimumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
@@ -290,7 +289,7 @@ public static partial class MarkdownExtensionMethods
             return (minimumDepth < 2) ? source.GetBranchesIncludingAttributesToDepth(maximumDepth, types.First().IsInstanceOfType) :
                 (minimumDepth < maximumDepth) ? source.GetBranchesIncludingAttributesInDepthRange(minimumDepth, maximumDepth, types.First().IsInstanceOfType) :
                     source.GetDescendantsAtDepthIncludingAttributes(minimumDepth, types.First().IsInstanceOfType);
-        
+
         return (minimumDepth < 2) ? source.GetBranchesIncludingAttributesToDepth(maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj))) :
             (minimumDepth < maximumDepth) ? source.GetBranchesIncludingAttributesInDepthRange(minimumDepth, maximumDepth, obj => types.Any(t => t.IsInstanceOfType(obj))) :
                 source.GetDescendantsAtDepthIncludingAttributes(minimumDepth, obj => types.Any(t => t.IsInstanceOfType(obj)));
