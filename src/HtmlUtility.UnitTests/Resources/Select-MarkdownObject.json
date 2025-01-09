@@ -2105,7 +2105,7 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "`Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -2119,7 +2119,7 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "`Block`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -2133,7 +2133,7 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "`Block`, `Inline`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -2273,84 +2273,84 @@
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "`Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRange",
+                    "Name": "WriteAllDescendantsInRange",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "`Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "`Block`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRange",
+                    "Name": "WriteAllDescendantsInRange",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "`Block`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "`Block`, `Inline`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRange",
+                    "Name": "WriteAllDescendantsInRange",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "`Block`, `Inline`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "`HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "`HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "`Block`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "`Block`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "`Block`, `Inline`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "`Block`, `Inline`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDescendantsInRangeIncludingAttributes",
+                    "Name": "WriteAllDescendantsInRangeIncludingAttributes",
                     "IsPrimary": false
                 }
             }
@@ -2779,7 +2779,7 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "IncludeAttributes": false, "Depth": 2, "Type": "`Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -2793,7 +2793,7 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "IncludeAttributes": false, "Depth": 2, "Type": "`Block`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -2807,7 +2807,7 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "IncludeAttributes": false, "Depth": 2, "Type": "`Block`, `Inline`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -3047,10 +3047,10 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": null, "Type": "`HtmlAttributes`",
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": null, "Type": "`HtmlAttributes`",
                 "InputObjectProcessor": {
                     "Name": "WriteAllAttributes",
-                    "IsPrimary": false
+                    "IsPrimary": true
                 }
             },
             {
@@ -3091,21 +3091,21 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": null, "Type": "`HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDirectDescendantsIncludingAttributes",
+                    "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDirectDescendantsIncludingAttributes",
+                    "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": null, "Type": "`Block`, `Inline`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDirectDescendantsIncludingAttributes",
+                    "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
                 }
             },
@@ -3124,9 +3124,9 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": null, "Type": "`HtmlAttributes`",
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": null, "Type": "`HtmlAttributes`",
                 "InputObjectProcessor": {
-                    "Name": "WriteCurrentOrBranchesMatchingSingleTypeOrAttributes",
+                    "Name": "WriteCurrentAllAttributes",
                     "IsPrimary": true
                 }
             },
@@ -3134,7 +3134,7 @@
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`",
                 "InputObjectProcessor": {
                     "Name": "WriteCurrentOrBranchesMatchingSingleTypeOrAttributes",
-                    "IsPrimary": false
+                    "IsPrimary": true
                 }
             },
             {
@@ -3201,7 +3201,7 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": null, "Type": "`HtmlAttributes`",
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": null, "Type": "`HtmlAttributes`",
                 "InputObjectProcessor": {
                     "Name": "WriteAllAttributes",
                     "IsPrimary": false
@@ -3245,56 +3245,100 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": null, "Type": "`HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDirectDescendantsIncludingAttributes",
+                    "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDirectDescendantsIncludingAttributes",
+                    "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": null, "Type": "`Block`, `Inline`, `HtmlAttributes`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDirectDescendantsIncludingAttributes",
+                    "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesFromDepthMatchingSingleType",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesFromDepthMatchingTypes",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`HtmlAttributes`"
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`HtmlAttributes`",
+                "InputObjectProcessor": {
+                    "Name": "WriteAllAttributesFromDepth",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesFromDepthMatchingSingleTypeOrAttributes",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`, `HtmlAttributes`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`, `HtmlAttributes`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesFromDepthMatchingTypesOrAttributes",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Any`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Any`",
+                "InputObjectProcessor": {
+                    "Name": "WriteDescendantsAtDepth",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Any`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Any`",
+                "InputObjectProcessor": {
+                    "Name": "WriteDescendantsAtDepth",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`, `Any`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`, `Any`",
+                "InputObjectProcessor": {
+                    "Name": "WriteDescendantsAtDepth",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`HtmlAttributes`, `Any`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`HtmlAttributes`, `Any`",
+                "InputObjectProcessor": {
+                    "Name": "WriteAttributesAndDescendantsAtDepth",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`, `Any`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `HtmlAttributes`, `Any`",
+                "InputObjectProcessor": {
+                    "Name": "WriteAttributesAndDescendantsAtDepth",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`, `HtmlAttributes`, `Any`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": null, "Type": "`Block`, `Inline`, `HtmlAttributes`, `Any`",
+                "InputObjectProcessor": {
+                    "Name": "WriteAttributesAndDescendantsAtDepth",
+                    "IsPrimary": false
+                }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": null, "MaxDepth": 0, "Type": "`Block`",
@@ -3388,7 +3432,7 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": 1, "Type": "`HtmlAttributes`",
+               "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": 1, "Type": "`HtmlAttributes`",
                 "InputObjectProcessor": {
                     "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
@@ -3451,13 +3495,25 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": null, "MaxDepth": 2, "Type": "`Block`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": null, "MaxDepth": 2, "Type": "`Block`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesUpToDepthMatchingSingleType",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": null, "MaxDepth": 2, "Type": "`Block`, `Inline`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": null, "MaxDepth": 2, "Type": "`Block`, `Inline`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesUpToDepthMatchingTypes",
+                    "IsPrimary": true
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": 2, "Type": "`HtmlAttributes`"
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": 2, "Type": "`HtmlAttributes`",
+                "InputObjectProcessor": {
+                    "Name": "WriteAttributesUpToDepth",
+                    "IsPrimary": true
+                }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": null, "MaxDepth": 2, "Type": "`Block`, `HtmlAttributes`"
@@ -3567,7 +3623,7 @@
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 0, "MaxDepth": 1, "Type": "`Block`, `Inline`"
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": 1, "Type": "`HtmlAttributes`"
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": 1, "Type": "`HtmlAttributes`"
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": 1, "Type": "`Block`, `HtmlAttributes`"
@@ -3612,7 +3668,7 @@
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 0, "MaxDepth": 2, "Type": "`Block`, `Inline`"
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": 2, "Type": "`HtmlAttributes`"
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": 2, "Type": "`HtmlAttributes`"
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 0, "MaxDepth": 2, "Type": "`Block`, `HtmlAttributes`"
@@ -3665,7 +3721,7 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": 1, "Type": "`HtmlAttributes`",
+               "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": 1, "Type": "`HtmlAttributes`",
                 "InputObjectProcessor": {
                     "Name": "WriteAttributesAndDirectDescendants",
                     "IsPrimary": false
@@ -3728,13 +3784,21 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 1, "MaxDepth": 2, "Type": "`Block`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 1, "MaxDepth": 2, "Type": "`Block`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesUpToDepthMatchingSingleType",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 1, "MaxDepth": 2, "Type": "`Block`, `Inline`"
+                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 1, "MaxDepth": 2, "Type": "`Block`, `Inline`",
+                "InputObjectProcessor": {
+                    "Name": "WriteBranchesUpToDepthMatchingTypes",
+                    "IsPrimary": false
+                }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": 2, "Type": "`HtmlAttributes`"
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": 2, "Type": "`HtmlAttributes`"
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 1, "MaxDepth": 2, "Type": "`Block`, `HtmlAttributes`"
@@ -3775,7 +3839,7 @@
                 }
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 2, "Type": "`HtmlAttributes`",
+               "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 2, "Type": "`HtmlAttributes`",
                 "InputObjectProcessor": {
                     "Name": "WriteAttributesAndDescendantsAtDepth",
                     "IsPrimary": false
@@ -3798,21 +3862,21 @@
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 2, "Type": "`Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 2, "Type": "`Block`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
             {
                 "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 2, "Type": "`Block`, `Inline`, `Any`",
                 "InputObjectProcessor": {
-                    "Name": "WriteDedendantsAtDepth",
+                    "Name": "WriteDescendantsAtDepth",
                     "IsPrimary": false
                 }
             },
@@ -3844,7 +3908,7 @@
                 "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false, "MinDepth": 2, "MaxDepth": 3, "Type": "`Block`, `Inline`"
             },
             {
-                "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "Type": "`HtmlAttributes`"
+                "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "Type": "`HtmlAttributes`"
             },
             {
                 "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true, "MinDepth": 2, "MaxDepth": 3, "Type": "`Block`, `HtmlAttributes`"
@@ -3936,11 +4000,22 @@
         { "Name": "WriteAllAttributesPlusDescendantsMatchingTypes", "Description": "Write all recursive descendant `HtmlAttributes` of `InputObject`, plus descendants that match any of the specified multiple types." },
         { "Name": "WriteBranchesMatchingSingleType", "Description": "" },
         { "Name": "WriteBranchesMatchingTypes", "Description": "" },
+        { "Name": "WriteAllAttributes", "Description": "" },
         { "Name": "WriteBranchesMatchingSingleTypeOrAttributes", "Description": "" },
         { "Name": "WriteBranchesMatchingTypesOrAttributes", "Description": "" },
         { "Name": "WriteCurrentOrBranchesMatchingSingleType", "Description": "" },
         { "Name": "WriteCurrentOrBranchesMatchingTypes", "Description": "" },
+        { "Name": "WriteCurrentAllAttributes", "Description": "" },
         { "Name": "WriteCurrentOrBranchesMatchingSingleTypeOrAttributes", "Description": "" },
-        { "Name": "WriteCurrentOrBranchesMatchingTypesOrAttributes", "Description": "" }
+        { "Name": "WriteCurrentOrBranchesMatchingTypesOrAttributes", "Description": "" },
+        { "Name": "WriteBranchesFromDepthMatchingSingleType", "Description": "" },
+        { "Name": "WriteBranchesFromDepthMatchingTypes", "Description": "" },
+        { "Name": "WriteAllAttributesFromDepth", "Description": "" },
+        { "Name": "WriteBranchesFromDepthMatchingSingleTypeOrAttributes", "Description": "" },
+        { "Name": "WriteBranchesFromDepthMatchingTypesOrAttributes", "Description": "" },
+        { "Name": "WriteBranchesUpToDepthMatchingSingleType", "Description": "" },
+        { "Name": "WriteBranchesUpToDepthMatchingTypes", "Description": "" },
+        { "Name": "WriteAttributesUpToDepth", "Description": "" }
+        
     ]
 }
