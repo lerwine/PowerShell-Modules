@@ -210,9 +210,16 @@
                 },
                 "WriteHtmlAttributes": { "type": "boolean" },
                 "IsRecursive": { "type": "boolean" },
-                "NoRecursionOnMatch": { "type": "boolean" }
+                "NoRecursionOnMatch": { "type": "boolean" },
+                "InputObjectProcessor": {
+                    "type": "object",
+                    "properties": {
+                        "Name": { "type": "string" },
+                        "IsPrimary": { "type": "boolean" }
+                    }
+                }
             },
-            "required": ["EffectiveMinDepth", "EffectiveMaxDepth", "IsRecursive", "Type", "WriteHtmlAttributes"]
+            "required": ["EffectiveMinDepth", "EffectiveMaxDepth", "IsRecursive", "Type", "WriteHtmlAttributes", "InputObjectProcessor"]
         }
     }
 }
