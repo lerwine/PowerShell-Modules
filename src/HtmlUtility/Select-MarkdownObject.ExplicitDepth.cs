@@ -469,7 +469,8 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all descendants at the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" /> at that depth.
+    /// Returns all descendants at the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>,
+    /// along with all <see cref="HtmlAttributes" /> at that depth.
     /// </summary>
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribAtDepth(MarkdownObject inputObject)
@@ -605,7 +606,8 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all descendants at the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>, along with all <see cref="HtmlAttributes" /> at that depth.
+    /// Returns all descendants at the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>,
+    /// along with all <see cref="HtmlAttributes" /> at that depth.
     /// </summary>
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribAtDepth(MarkdownObject inputObject)

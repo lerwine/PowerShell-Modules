@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Management.Automation;
-using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
 namespace HtmlUtility;
@@ -119,7 +118,8 @@ public partial class Select_MarkdownObject : PSCmdlet
                 {
                     if (MinDepth > MaxDepth)
                     {
-                        WriteError(new(new ArgumentOutOfRangeException(nameof(MaxDepth), $"{nameof(MaxDepth)} cannot be less than {nameof(MinDepth)}"), "MaxDepthLessThanMinDepth", ErrorCategory.InvalidArgument, MaxDepth));
+                        WriteError(new(new ArgumentOutOfRangeException(nameof(MaxDepth), $"{nameof(MaxDepth)} cannot be less than {nameof(MinDepth)}"), "MaxDepthLessThanMinDepth",
+                            ErrorCategory.InvalidArgument, MaxDepth));
                         throw new PipelineStoppedException();
                     }
                     maxDepth = MaxDepth;
