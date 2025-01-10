@@ -17,7 +17,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     private const string HelpMessage_IncludeAttributes = $"This is ignored when {nameof(Type)} is specified.";
     private List<Type> _multiTypes = null!;
     private Type _singleType = null!;
-    private Action<MarkdownObject> _processInputObject = null!;
+    private Action _processInputObject = null!;
 
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select child objects from.")]
     [ValidateNotNull()]
@@ -187,6 +187,6 @@ public partial class Select_MarkdownObject : PSCmdlet
     {
         Debug.Assert(_processInputObject is not null);
         if (!Stopping)
-            _processInputObject(InputObject);
+            _processInputObject();
     }
 }
