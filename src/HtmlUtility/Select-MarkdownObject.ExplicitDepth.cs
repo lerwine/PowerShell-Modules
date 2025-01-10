@@ -6,6 +6,8 @@ namespace HtmlUtility;
 
 public partial class Select_MarkdownObject
 {
+    private int _depth;
+
     /// <summary>
     /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" />.
     /// </summary>

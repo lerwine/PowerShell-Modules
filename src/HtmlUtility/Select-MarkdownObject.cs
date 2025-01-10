@@ -18,7 +18,6 @@ public partial class Select_MarkdownObject : PSCmdlet
     private const string HelpMessage_IncludeAttributes = $"This is ignored when {nameof(Type)} is specified.";
     private List<Type> _multiTypes = null!;
     private Type _singleType = null!;
-    private int _depth;
     private Action<MarkdownObject> _processInputObject = null!;
 
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select child objects from.")]
@@ -158,36 +157,20 @@ public partial class Select_MarkdownObject : PSCmdlet
                                 break;
                         }
                     else
-                        switch (effectiveMinDepth)
+                        _processInputObject = effectiveMinDepth switch
                         {
-                            case 0:
-                                _depth = MaxDepth;
-                                _processInputObject = (MaxDepth > 1) ? AttributesToDepthInclInputObj : AttributesInputObjAndDirectDesc;
-                                break;
-                            case 1:
-                                _depth = MaxDepth;
-                                _processInputObject = AttributesToDepth;
-                                break;
-                            default:
-                                _depth = effectiveMinDepth;
-                                _processInputObject = AttributesInRange;
-                                break;
-                        }
+                            0 => (MaxDepth > 1) ? AttributesToDepthInclInputObj : AttributesInputObjAndDirectDesc,
+                            1 => AttributesToDepth,
+                            _ => AttributesInRange,
+                        };
                 }
                 else
-                    switch (effectiveMinDepth)
+                    _processInputObject = effectiveMinDepth switch
                     {
-                        case 0:
-                            _processInputObject = AttributesInputObjAndAllDesc;
-                            break;
-                        case 1:
-                            _processInputObject = WriteAllAttributes;
-                            break;
-                        default:
-                            _depth = effectiveMinDepth;
-                            _processInputObject = AttributesFromDepth;
-                            break;
-                    }
+                        0 => AttributesInputObjAndAllDesc,
+                        1 => WriteAllAttributes,
+                        _ => AttributesFromDepth,
+                    };
             }
             else if (ParameterSetName == ParameterSetName_RecurseUnmatched)
                 BeginProcessing_RecurseUnmatched(types!, effectiveMinDepth, maxDepth, includeAttributes);
