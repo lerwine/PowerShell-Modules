@@ -57,142 +57,54 @@ public partial class Select_MarkdownObject : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetName_Recurse, HelpMessage = HelpMessage_IncludeAttributes)]
     public SwitchParameter IncludeAttributes { get; set; }
 
-    private void WriteAttributesOnly(MarkdownObject inputObject)
-    {
-        var attributes = inputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-    }
-
-    private void WriteAttributesInRange(MarkdownObject inputObject)
-    {
-        Debug.Assert(_depth > 1);
-        Debug.Assert(MaxDepth > _depth);
-        foreach (var item in inputObject.DescendantsInDepthRange(_depth - 1, MaxDepth - 1))
-        {
-            var attributes = item.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    private void WriteAttributesAtDepth(MarkdownObject inputObject)
-    {
-        Debug.Assert(_depth > 1);
-        foreach (var item in inputObject.DescendantsAtDepth(_depth - 1))
-        {
-            var attributes = item.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    private void WriteAttributesFromDepth(MarkdownObject inputObject)
-    {
-        Debug.Assert(_depth > 1);
-        foreach (var item in inputObject.DescendantsFromDepth(_depth - 1))
-        {
-            var attributes = item.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    private void WriteAllAttributesRecursive(MarkdownObject inputObject)
-    {
-        var attributes = inputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in inputObject.Descendants())
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-    }
-
-    private void WriteNothing(MarkdownObject inputObject) { }
-
-    private void BeginProcessing_AttributesInRange(int minDepth, int? maxDepth)
-    {
-        if (maxDepth.HasValue)
-            switch (maxDepth.Value)
-            {
-                case 0:
-                    _processInputObject = WriteNothing;
-                    break;
-                case 1:
-                    _processInputObject = WriteAttributesOnly;
-                    break;
-                default:
-                    _depth = minDepth;
-                    _processInputObject = (maxDepth.Value > minDepth) ? WriteAttributesInRange : (minDepth > 1) ? WriteAttributesAtDepth : WriteAttributesOnly;
-                    break;
-            }
-        else if (minDepth > 1)
-        {
-            _depth = minDepth;
-            _processInputObject = WriteAttributesFromDepth;
-        }
-        else
-            _processInputObject = WriteAllAttributesRecursive;
-    }
-
     protected override void BeginProcessing()
     {
         List<Type>? types;
-        bool includeAttributes, hasAnyType, hasAttributesType;
+        bool hasAnyType, hasAttributesType;
 
-        includeAttributes = IncludeAttributes.IsPresent;
         if (ParameterSetName == ParameterSetName_RecurseUnmatched || MyInvocation.BoundParameters.ContainsKey(nameof(Type)))
         {
             hasAnyType = Type.Contains(MarkdownTokenType.Any);
             hasAttributesType = Type.Contains(MarkdownTokenType.HtmlAttributes);
             if (hasAnyType)
-            {
-                if (!includeAttributes)
-                    includeAttributes = hasAttributesType;
                 types = null;
+            else if (hasAttributesType)
+            {
+                if (Type.Length == 1 || (types = Type.Where(t => t != MarkdownTokenType.HtmlAttributes).ToReflectionTypes()).Count == 0)
+                    types = null;
             }
             else
-            {
-                if (hasAttributesType)
-                {
-                    includeAttributes = true;
-                    if (Type.Length == 1 || (types = Type.Where(t => t != MarkdownTokenType.HtmlAttributes).ToReflectionTypes()).Count == 0)
-                        types = null;
-                }
-                else
-                    types = Type.ToReflectionTypes();
-            }
+                types = Type.ToReflectionTypes();
         }
         else
         {
             types = null;
             hasAttributesType = hasAnyType = false;
         }
+        bool includeAttributes = hasAttributesType || IncludeAttributes.IsPresent;
         if (ParameterSetName == ParameterSetName_ExplicitDepth)
         {
-            if (types is null && hasAttributesType && !hasAnyType)
-            {
+            if (hasAttributesType && !hasAnyType)
                 switch (Depth)
                 {
                     case 0:
-                        _processInputObject = WriteNothing;
+                        _processInputObject = AttributesInputObj;
                         break;
                     case 1:
-                        _processInputObject = WriteAttributesOnly;
+                        _processInputObject = AttributesDirectDesc;
                         break;
                     default:
                         _depth = Depth;
-                        _processInputObject = WriteAttributesAtDepth;
+                        _processInputObject = AttributesAtDepth;
                         break;
                 }
-            }
             else
                 BeginProcessing_ExplicitDepth(types, Depth, includeAttributes);
         }
         else if (ParameterSetName == ParameterSetName_Recurse)
         {
-            if (types is null && hasAttributesType && !hasAnyType)
-                _processInputObject = WriteAllAttributesRecursive;
+            if (hasAttributesType && !hasAnyType)
+                _processInputObject = WriteAllAttributes;
             else
                 BeginProcessing_Recurse(types, includeAttributes);
         }
@@ -227,22 +139,58 @@ public partial class Select_MarkdownObject : PSCmdlet
                 maxDepth = null;
             }
 
-            if (ParameterSetName == ParameterSetName_RecurseUnmatched)
+            if (hasAttributesType && !hasAnyType)
             {
-                if (hasAnyType)
-                    BeginProcessing_ExplicitDepth(null, effectiveMinDepth, includeAttributes);
-                else if (types is null)
-                    BeginProcessing_AttributesInRange(effectiveMinDepth, maxDepth);
+                if (maxDepth.HasValue)
+                {
+                    if (effectiveMinDepth == MaxDepth)
+                        switch (effectiveMinDepth)
+                        {
+                            case 0:
+                                _processInputObject = AttributesInputObj;
+                                break;
+                            case 1:
+                                _processInputObject = AttributesDirectDesc;
+                                break;
+                            default:
+                                _depth = effectiveMinDepth;
+                                _processInputObject = AttributesAtDepth;
+                                break;
+                        }
+                    else
+                        switch (effectiveMinDepth)
+                        {
+                            case 0:
+                                _depth = MaxDepth;
+                                _processInputObject = (MaxDepth > 1) ? AttributesToDepthInclInputObj : AttributesInputObjAndDirectDesc;
+                                break;
+                            case 1:
+                                _depth = MaxDepth;
+                                _processInputObject = AttributesToDepth;
+                                break;
+                            default:
+                                _depth = effectiveMinDepth;
+                                _processInputObject = AttributesInRange;
+                                break;
+                        }
+                }
                 else
-                    BeginProcessing_RecurseUnmatched(types!, effectiveMinDepth, maxDepth, includeAttributes);
+                    switch (effectiveMinDepth)
+                    {
+                        case 0:
+                            _processInputObject = AttributesInputObjAndAllDesc;
+                            break;
+                        case 1:
+                            _processInputObject = WriteAllAttributes;
+                            break;
+                        default:
+                            _depth = effectiveMinDepth;
+                            _processInputObject = AttributesFromDepth;
+                            break;
+                    }
             }
-            else if (types is null && hasAttributesType && !hasAnyType)
-            {
-                if (explicitMinDepth || maxDepth.HasValue)
-                    BeginProcessing_AttributesInRange(effectiveMinDepth, maxDepth);
-                else
-                    _processInputObject = WriteAttributesOnly;
-            }
+            else if (ParameterSetName == ParameterSetName_RecurseUnmatched)
+                BeginProcessing_RecurseUnmatched(types!, effectiveMinDepth, maxDepth, includeAttributes);
             else if (maxDepth.HasValue)
                 BeginProcessing_DepthRange(types, effectiveMinDepth, maxDepth.Value, includeAttributes);
             else if (explicitMinDepth)

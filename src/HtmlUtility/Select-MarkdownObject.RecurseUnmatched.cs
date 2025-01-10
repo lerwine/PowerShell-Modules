@@ -5,243 +5,405 @@ using Markdig.Syntax;
 namespace HtmlUtility;
 public partial class Select_MarkdownObject
 {
-    private void WriteAttributesPlusInputObjectOrDirectDescendantsMatchingAnyOf(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it matches any of the specified <see cref="_multiTypes"/>, along with all direct descendants that match any of the specified types, irregardless of whether the <paramref name="inputObject"/> was a match. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        if (_multiTypes.Any(t => t.IsInstanceOfType(inputObject)))
-            WriteObject(inputObject, false);
-        else
-        {
-            var attributes = inputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            if (inputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
-                foreach (var item in directDescendants.Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
-                    WriteObject(item, false);
-        }
+        Debug.Assert(_multiTypes.Count > 1);
+        // TODO: Implement MultiTypeInputObjAndDirectDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
     }
 
-    private void WriteInputObjectOrDirectDescendantsMatchingAnyOf(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" /> or it matches any of the specified <see cref="_multiTypes"/>, along with the <see cref="HtmlAttributes" /> of the <paramref name="inputObject"/> and all direct descendants that match any of the specified types, irregardless of whether the <paramref name="inputObject"/> was a match. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        if (_multiTypes.Any(t => t.IsInstanceOfType(inputObject)))
-            WriteObject(inputObject, false);
-        else if (inputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
-            foreach (var item in directDescendants.Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
-                WriteObject(item, false);
+        Debug.Assert(_multiTypes.Count > 1);
+        // TODO: Implement MultiTypePlusAttribInputObjAndDirectDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusDescendantsInRangeMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it matches any of the specified <see cref="_multiTypes"/>, along with all recursive descendants, up to the specified <see cref="_depth"/>, that match any of the specified types. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeToDepthInclInputObjRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement MultiTypeToDepthInclInputObjRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" /> or it matches any of the specified <see cref="_multiTypes"/>, along with all recursive descendants, up to the specified <see cref="_depth"/>, that match any of the specified types, along with all descendant <see cref="HtmlAttributes" /> up to that depth. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribToDepthInclInputObjRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement MultiTypePlusAttribToDepthInclInputObjRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, up to the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeToDepthRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement MultiTypeToDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, up to the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" /> to that depth. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribToDepthRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement MultiTypePlusAttribToDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeInRangeRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(_depth > 1);
         Debug.Assert(MaxDepth > _depth);
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write HtmlAttributes plus descendants at _depth that match any of _multiTypes or recurse up to MaxDepth
+        // TODO: Implement MultiTypeInRangeRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteDescendantsInRangeMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants, from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" /> within that range. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribInRangeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(_depth > 1);
         Debug.Assert(MaxDepth > _depth);
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write descendants at _depth that match any of _multiTypes or recurse up to MaxDepth
+        // TODO: Implement MultiTypePlusAttribInRangeRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusInputObjectOrDescendantsToDepthMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it matches any of the specified <see cref="_multiTypes"/>, along with all recursive descendants that match any of the specified types. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > 1);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        // TODO: Write input object if it matches any of _multiTypes; otherwise, attributes plus descendants that match any of _multiTypes, otherwise recurse until MaxDepth
+        Debug.Assert(_multiTypes.Count > 1);
+        // TODO: Implement MultiTypeInputObjAndAllDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteInputObjectOrDescendantsToDepthMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" /> or it matches any of the specified <see cref="_multiTypes"/>, along with all recursive descendants that match any of the specified types, along with all descendant <see cref="HtmlAttributes" />. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > 1);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        // TODO: Write input object if it matches any of _multiTypes; otherwise, descendants that match any of _multiTypes, otherwise recurse until MaxDepth
+        Debug.Assert(_multiTypes.Count > 1);
+        // TODO: Implement MultiTypePlusAttribInputObjAndAllDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusDescendantsToDepthMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants that match any of the specified <see cref="_multiTypes"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > 1);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        // TODO: Write attributes plus descendants that match any of _multiTypes, otherwise recurse until MaxDepth
+        Debug.Assert(_multiTypes.Count > 1);
+        // TODO: Implement MultiTypeRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteDescendantsToDepthMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" />. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > 1);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        // TODO: Write descendants that match any of _multiTypes, otherwise recurse until MaxDepth
+        Debug.Assert(_multiTypes.Count > 1);
+        // TODO: Implement MultiTypePlusAttribRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusInputObjectOrDescendantsMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants, starting from the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypeFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_multiTypes is not null);
-        // TODO: Write input object if it matches any of _multiTypes; otherwise, attributes plus descendants that match any of _multiTypes, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteInputObjectOrDescendantsMatchingAnyOfOrRecurse(MarkdownObject inputObject)
-    {
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write input object if it matches any of _multiTypes; otherwise, descendants that match any of _multiTypes, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteAttributesPlusDescendantsMatchingAnyOfOrRecurse(MarkdownObject inputObject)
-    {
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write attributes plus descendants that match any of _multiTypes, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteDescendantsMatchingAnyOfOrRecurse(MarkdownObject inputObject)
-    {
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write descendants that match any of _multiTypes, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteAttributesPlusDescendantsFromDepthMatchingAnyOfOrRecurse(MarkdownObject inputObject)
-    {
+        Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(_depth > 1);
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write attributes plus descendants from _depth that match any of _multiTypes, otherwise recurse
+        // TODO: Implement MultiTypeFromDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteDescendantsFromDepthMatchingAnyOfOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants, starting from the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" /> from that depth. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void MultiTypePlusAttribFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(_depth > 1);
-        Debug.Assert(_multiTypes is not null);
-        // TODO: Write descendants from _depth that match any of _multiTypes, otherwise recurse
+        // TODO: Implement MultiTypePlusAttribFromDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusInputObjectOrDirectDescendantsMatchingType(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it matches the specified <see cref="_singleType"/>, along with all direct descendants that match the specified type, irregardless of whether the <paramref name="inputObject"/> was a match. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        if (_singleType.IsInstanceOfType(inputObject))
-            WriteObject(inputObject, false);
-        else
-        {
-            var attributes = inputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            if (inputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
-                foreach (var item in directDescendants.Where(_singleType.IsInstanceOfType))
-                    WriteObject(item, false);
-        }
+        // TODO: Implement SingleTypeInputObjAndDirectDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
     }
 
-    private void WriteInputObjectOrDirectDescendantsMatchingType(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_singleType"/>, along with the <see cref="HtmlAttributes" /> of the <paramref name="inputObject"/> and all direct descendants that match the specified type, irregardless of whether the <paramref name="inputObject"/> was a match. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        if (_singleType.IsInstanceOfType(inputObject))
-            WriteObject(inputObject, false);
-        else if (inputObject.HasDirectDescendant(out IEnumerable<MarkdownObject>? directDescendants))
-            foreach (var item in directDescendants.Where(_singleType.IsInstanceOfType))
-                WriteObject(item, false);
+        // TODO: Implement SingleTypePlusAttribInputObjAndDirectDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusDescendantsInRangeMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it matches the specified <see cref="_singleType"/>, along with all recursive descendants, up to the specified <see cref="_depth"/>, that match the specified type. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeToDepthInclInputObjRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement SingleTypeToDepthInclInputObjRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_singleType"/>, along with all recursive descendants, up to the specified <see cref="_depth"/>, that match the specified type, along with all descendant <see cref="HtmlAttributes" /> up to that depth. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribToDepthInclInputObjRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement SingleTypePlusAttribToDepthInclInputObjRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, up to the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeToDepthRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement SingleTypeToDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, up to the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>, along with all <see cref="HtmlAttributes" /> to that depth. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribToDepthRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        // TODO: Implement SingleTypePlusAttribToDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeInRangeRnm(MarkdownObject inputObject)
+    {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         Debug.Assert(_depth > 1);
         Debug.Assert(MaxDepth > _depth);
-        Debug.Assert(_singleType is not null);
-        // TODO: Write HtmlAttributes plus descendants at _depth that match _singleType or recurse up to MaxDepth
+        // TODO: Implement SingleTypeInRangeRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteDescendantsInRangeMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants, from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>, along with all <see cref="HtmlAttributes" /> within that range. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribInRangeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         Debug.Assert(_depth > 1);
         Debug.Assert(MaxDepth > _depth);
-        Debug.Assert(_singleType is not null);
-        // TODO: Write descendants at _depth that match _singleType or recurse up to MaxDepth
+        // TODO: Implement SingleTypePlusAttribInRangeRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusInputObjectOrDescendantsToDepthMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it matches the specified <see cref="_singleType"/>, along with all recursive descendants that match the specified type. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > _depth);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Write input object if it matches _singleType; otherwise, attributes plus descendants that match _singleType, otherwise recurse until MaxDepth
+        // TODO: Implement SingleTypeInputObjAndAllDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteInputObjectOrDescendantsToDepthMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns the <paramref name="inputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_singleType"/>, along with all recursive descendants that match the specified type, along with all descendant <see cref="HtmlAttributes" />. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > _depth);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Write input object if it matches _singleType; otherwise, descendants that match _singleType, otherwise recurse until MaxDepth
+        // TODO: Implement SingleTypePlusAttribInputObjAndAllDescRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusDescendantsToDepthMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants that match the specified <see cref="_singleType"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > _depth);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Write attributes plus descendants that match _singleType, otherwise recurse until MaxDepth
+        // TODO: Implement SingleTypeRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteDescendantsToDepthMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants that match the specified <see cref="_singleType"/>s, along with all <see cref="HtmlAttributes" />. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(MaxDepth > _depth);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Write descendants that match _singleType, otherwise recurse until MaxDepth
+        // TODO: Implement SingleTypePlusAttribRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteAttributesPlusInputObjectOrDescendantsMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants, starting from the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypeFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Write input object if it matches _singleType; otherwise, attributes plus descendants that match _singleType, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteInputObjectOrDescendantsMatchingTypeOrRecurse(MarkdownObject inputObject)
-    {
-        Debug.Assert(_singleType is not null);
-        // TODO: Write input object if it matches _singleType; otherwise, descendants that match _singleType, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteAttributesPlusDescendantsMatchingTypeOrRecurse(MarkdownObject inputObject)
-    {
-        Debug.Assert(_singleType is not null);
-        // TODO: Write attributes plus descendants that match _singleType, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteDescendantsMatchingTypeOrRecurse(MarkdownObject inputObject)
-    {
-        Debug.Assert(_singleType is not null);
-        // TODO: Write descendants that match _singleType, otherwise recurse
-        throw new NotImplementedException();
-    }
-
-    private void WriteAttributesPlusDescendantsFromDepthMatchingTypeOrRecurse(MarkdownObject inputObject)
-    {
         Debug.Assert(_depth > 1);
-        Debug.Assert(_singleType is not null);
-        // TODO: Write attributes plus descendants from _depth that match _singleType, otherwise recurse
+        // TODO: Implement SingleTypeFromDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
-    private void WriteDescendantsFromDepthMatchingTypeOrRecurse(MarkdownObject inputObject)
+    /// <summary>
+    /// Returns all recursive descendants, starting from the specified <see cref="_depth"/> from <paramref name="inputObject"/> that match the specified <see cref="_singleType"/>, along with all <see cref="HtmlAttributes" /> from that depth. No descendants of matches will be returned.
+    /// </summary>
+    /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
+    private void SingleTypePlusAttribFromDepthRnm(MarkdownObject inputObject)
     {
-        Debug.Assert(_depth > 1);
+        Debug.Assert(inputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Write descendants from _depth that match _singleType, otherwise recurse
+        Debug.Assert(_depth > 1);
+        // TODO: Implement SingleTypePlusAttribFromDepthRnm
+        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
     }
 
@@ -249,39 +411,39 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(types is not null && types.Count > 0);
         Debug.Assert(!maxDepth.HasValue || maxDepth.Value >= minDepth);
-        // TODO: Implement parameter set RecurseUnmatched
-        if (types.Count > 0)
+        if (types.Count > 1)
         {
             _multiTypes = types;
             if (maxDepth.HasValue)
                 switch (maxDepth.Value)
                 {
                     case 0:
-                        _processInputObject = WriteInputObjectMatchingAnyOf;
+                        _processInputObject = includeAttributes ? MultiTypePlusAttribInputObj : MultiTypeInputObj;
                         break;
                     case 1:
-                        _processInputObject = (minDepth == 1) ? (includeAttributes ? WriteAttributesPlusDirectDescendantsMatchingAnyOf : WriteDirectDescendantsMatchingAnyOf) :
-                            includeAttributes ? WriteAttributesPlusInputObjectOrDirectDescendantsMatchingAnyOf : WriteInputObjectOrDirectDescendantsMatchingAnyOf;
+                        _processInputObject = (minDepth == 1) ? (includeAttributes ? MultiTypePlusAttribDirectDesc : MultiTypeDirectDesc) :
+                            includeAttributes ? MultiTypePlusAttribInputObjAndDirectDescRnm : MultiTypeInputObjAndDirectDescRnm;
                         break;
                     default:
                         if (maxDepth.Value > minDepth)
                             switch (minDepth)
                             {
                                 case 0:
-                                    _processInputObject = includeAttributes ? WriteAttributesPlusInputObjectOrDescendantsToDepthMatchingAnyOfOrRecurse : WriteInputObjectOrDescendantsToDepthMatchingAnyOfOrRecurse;
+                                    _processInputObject = includeAttributes ? MultiTypePlusAttribToDepthInclInputObjRnm : MultiTypeToDepthInclInputObjRnm;
                                     break;
                                 case 1:
-                                    _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsToDepthMatchingAnyOfOrRecurse : WriteDescendantsToDepthMatchingAnyOfOrRecurse;
+                                    _depth = maxDepth.Value;
+                                    _processInputObject = includeAttributes ? MultiTypePlusAttribToDepthRnm : MultiTypeToDepthRnm;
                                     break;
                                 default:
                                     _depth = minDepth;
-                                    _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsInRangeMatchingAnyOfOrRecurse : WriteDescendantsInRangeMatchingAnyOfOrRecurse;
+                                    _processInputObject = includeAttributes ? MultiTypePlusAttribInRangeRnm : MultiTypeInRangeRnm;
                                     break;
                             }
                         else
                         {
                             _depth = minDepth;
-                            _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsAtDepthMatchingAnyOf : WriteDescendantsAtDepthMatchingAnyOf;
+                            _processInputObject = includeAttributes ? MultiTypePlusAttribAtDepth : MultiTypeAtDepth;
                         }
                         break;
                 }
@@ -289,14 +451,14 @@ public partial class Select_MarkdownObject
                 switch (minDepth)
                 {
                     case 0:
-                        _processInputObject = includeAttributes ? WriteAttributesPlusInputObjectOrDescendantsMatchingAnyOfOrRecurse : WriteInputObjectOrDescendantsMatchingAnyOfOrRecurse;
+                        _processInputObject = includeAttributes ? MultiTypePlusAttribInputObjAndAllDescRnm : MultiTypeInputObjAndAllDescRnm;
                         break;
                     case 1:
-                        _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsMatchingAnyOfOrRecurse : WriteDescendantsMatchingAnyOfOrRecurse;
+                        _processInputObject = includeAttributes ? MultiTypePlusAttribRnm : MultiTypeRnm;
                         break;
                     default:
                         _depth = minDepth;
-                        _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsFromDepthMatchingAnyOfOrRecurse : WriteDescendantsFromDepthMatchingAnyOfOrRecurse;
+                        _processInputObject = includeAttributes ? MultiTypePlusAttribFromDepthRnm : MultiTypeFromDepthRnm;
                         break;
                 }
         }
@@ -307,31 +469,32 @@ public partial class Select_MarkdownObject
                 switch (maxDepth.Value)
                 {
                     case 0:
-                        _processInputObject = WriteInputObjectMatchingType;
+                        _processInputObject = includeAttributes ? SingleTypePlusAttribInputObj : SingleTypeInputObj;
                         break;
                     case 1:
-                        _processInputObject = (minDepth == 1) ? (includeAttributes ? WriteAttributesPlusDirectDescendantsMatchingType : WriteDirectDescendantsMatchingType) :
-                            includeAttributes ? WriteAttributesPlusInputObjectOrDirectDescendantsMatchingType : WriteInputObjectOrDirectDescendantsMatchingType;
+                        _processInputObject = (minDepth == 1) ? (includeAttributes ? SingleTypePlusAttribDirectDesc : SingleTypeDirectDesc) :
+                            includeAttributes ? SingleTypePlusAttribInputObjAndDirectDescRnm : SingleTypeInputObjAndDirectDescRnm;
                         break;
                     default:
                         if (maxDepth.Value > minDepth)
                             switch (minDepth)
                             {
                                 case 0:
-                                    _processInputObject = includeAttributes ? WriteAttributesPlusInputObjectOrDescendantsToDepthMatchingTypeOrRecurse : WriteInputObjectOrDescendantsToDepthMatchingTypeOrRecurse;
+                                    _processInputObject = includeAttributes ? SingleTypePlusAttribToDepthInclInputObjRnm : SingleTypeToDepthInclInputObjRnm;
                                     break;
                                 case 1:
-                                    _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsToDepthMatchingTypeOrRecurse : WriteDescendantsToDepthMatchingTypeOrRecurse;
+                                    _depth = maxDepth.Value;
+                                    _processInputObject = includeAttributes ? SingleTypePlusAttribToDepthRnm : SingleTypeToDepthRnm;
                                     break;
                                 default:
                                     _depth = minDepth;
-                                    _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsInRangeMatchingTypeOrRecurse : WriteDescendantsInRangeMatchingTypeOrRecurse;
+                                    _processInputObject = includeAttributes ? SingleTypePlusAttribInRangeRnm : SingleTypeInRangeRnm;
                                     break;
                             }
                         else
                         {
                             _depth = minDepth;
-                            _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsAtDepthMatchingType : WriteDescendantsAtDepthMatchingType;
+                            _processInputObject = includeAttributes ? SingleTypePlusAttribAtDepth : SingleTypeAtDepth;
                         }
                         break;
                 }
@@ -339,14 +502,14 @@ public partial class Select_MarkdownObject
                 switch (minDepth)
                 {
                     case 0:
-                        _processInputObject = includeAttributes ? WriteAttributesPlusInputObjectOrDescendantsMatchingTypeOrRecurse : WriteInputObjectOrDescendantsMatchingTypeOrRecurse;
+                        _processInputObject = includeAttributes ? SingleTypePlusAttribInputObjAndAllDescRnm : SingleTypeInputObjAndAllDescRnm;
                         break;
                     case 1:
-                        _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsMatchingTypeOrRecurse : WriteDescendantsMatchingTypeOrRecurse;
+                        _processInputObject = includeAttributes ? SingleTypeRnm : SingleTypePlusAttribRnm;
                         break;
                     default:
                         _depth = minDepth;
-                        _processInputObject = includeAttributes ? WriteAttributesPlusDescendantsFromDepthMatchingTypeOrRecurse : WriteDescendantsFromDepthMatchingTypeOrRecurse;
+                        _processInputObject = includeAttributes ? SingleTypePlusAttribFromDepthRnm : SingleTypeFromDepthRnm;
                         break;
                 }
         }
