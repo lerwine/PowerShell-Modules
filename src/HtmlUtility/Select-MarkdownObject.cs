@@ -56,7 +56,7 @@ public partial class Select_MarkdownObject : PSCmdlet
     [Parameter(ParameterSetName = ParameterSetName_ExplicitDepth, HelpMessage = HelpMessage_IncludeAttributes)]
     [Parameter(ParameterSetName = ParameterSetName_Recurse, HelpMessage = HelpMessage_IncludeAttributes)]
     public SwitchParameter IncludeAttributes { get; set; }
-    
+
     protected override void BeginProcessing()
     {
         List<Type>? types;
@@ -138,7 +138,7 @@ public partial class Select_MarkdownObject : PSCmdlet
                 effectiveMinDepth = 1;
                 maxDepth = null;
             }
-            
+
             if (hasAttributesType && !hasAnyType)
             {
                 if (maxDepth.HasValue)

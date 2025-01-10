@@ -368,7 +368,7 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 0
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        if ( _multiTypes.Any(t => t.IsInstanceOfType(inputObject)))
+        if (_multiTypes.Any(t => t.IsInstanceOfType(inputObject)))
             WriteObject(inputObject, false);
     }
 
@@ -414,7 +414,7 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
         foreach (var item in inputObject.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
-                WriteObject(item, false);
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -445,7 +445,7 @@ public partial class Select_MarkdownObject
         if (attributes is not null)
             WriteObject(attributes, false);
         foreach (var item in inputObject.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
-                WriteObject(item, false);
+            WriteObject(item, false);
     }
 
     /// <summary>
