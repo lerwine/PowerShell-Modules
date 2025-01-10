@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
 namespace HtmlUtility;
@@ -9,9 +10,9 @@ public partial class Select_MarkdownObject
     /// Returns all recursive descendant <see cref="HtmlAttributes" />.
     /// </summary>
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
-    private void Attributes(MarkdownObject inputObject)
+    private void WriteAllAttributes(MarkdownObject inputObject)
     {
-        // TODO: Implement Attributes
+        Debug.Assert(inputObject is not null);
         // Recurse: Select-MarkdownObject -Recurse -IncludeAttributes
         // DepthRange: Select-MarkdownObject -MinDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1
@@ -20,7 +21,14 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type HtmlAttributes -Recurse -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in inputObject.Descendants())
+        {
+            if ((attributes = item.TryGetAttributes()) is not null)
+                WriteObject(attributes, false);
+        }
     }
 
     /// <summary>
@@ -29,7 +37,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyType(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyType
+        Debug.Assert(inputObject is not null);
         // Recurse: Select-MarkdownObject -Recurse
         // DepthRange: Select-MarkdownObject (no parameters)
         // DepthRange: Select-MarkdownObject -MinDepth 1
@@ -39,7 +47,8 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type Any -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Any -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, Any -Recurse
-        throw new NotImplementedException();
+        foreach (var item in inputObject.Descendants())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -48,7 +57,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttrib(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypePlusAttrib
+        Debug.Assert(inputObject is not null);
         // Recurse: Select-MarkdownObject -Type Any -Recurse -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 1 -IncludeAttributes
@@ -67,7 +76,15 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes, Any -Recurse -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse -IncludeAttributes
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in inputObject.Descendants())
+        {
+            WriteObject(item, false);
+            if ((attributes = item.TryGetAttributes()) is not null)
+                WriteObject(attributes, false);
+        }
     }
 
     /// <summary>
@@ -76,10 +93,13 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiType(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiType
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // Recurse: Select-MarkdownObject -Type Block, Inline -Recurse
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1
-        throw new NotImplementedException();
+        foreach (var item in inputObject.Descendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -88,14 +108,25 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttrib(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypePlusAttrib
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // Recurse: Select-MarkdownObject -Type Block, Inline -Recurse -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Recurse -IncludeAttributes
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in inputObject.Descendants())
+        {
+            if (_multiTypes.Any(t => t.IsInstanceOfType(item)))
+                WriteObject(item, false);
+            if ((attributes = item.TryGetAttributes()) is not null)
+                WriteObject(attributes, false);
+        }
     }
 
     /// <summary>
@@ -104,10 +135,12 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleType(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleType
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // Recurse: Select-MarkdownObject -Type Block -Recurse
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1
-        throw new NotImplementedException();
+        foreach (var item in inputObject.Descendants().Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -116,14 +149,24 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttrib(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypePlusAttrib
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // Recurse: Select-MarkdownObject -Type Block -Recurse -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse -IncludeAttributes
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in inputObject.Descendants())
+        {
+            if (_singleType.IsInstanceOfType(item))
+                WriteObject(item, false);
+            if ((attributes = item.TryGetAttributes()) is not null)
+                WriteObject(attributes, false);
+        }
     }
 
     private void BeginProcessing_Recurse(List<Type>? types, bool includeAttributes)

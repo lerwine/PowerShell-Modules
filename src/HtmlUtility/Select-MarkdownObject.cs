@@ -104,7 +104,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         else if (ParameterSetName == ParameterSetName_Recurse)
         {
             if (hasAttributesType && !hasAnyType)
-                _processInputObject = Attributes;
+                _processInputObject = WriteAllAttributes;
             else
                 BeginProcessing_Recurse(types, includeAttributes);
         }
@@ -181,7 +181,7 @@ public partial class Select_MarkdownObject : PSCmdlet
                             _processInputObject = AttributesInputObjAndAllDesc;
                             break;
                         case 1:
-                            _processInputObject = Attributes;
+                            _processInputObject = WriteAllAttributes;
                             break;
                         default:
                             _depth = effectiveMinDepth;
