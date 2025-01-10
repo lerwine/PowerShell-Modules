@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 
 namespace HtmlUtility;
@@ -11,7 +12,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement AttributesInputObj
+        Debug.Assert(inputObject is not null);
         // ExplicitDepth: Select-MarkdownObject -Depth 0
         // DepthRange: Select-MarkdownObject -MaxDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 0
@@ -24,7 +25,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type HtmlAttributes -Depth 0 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (inputObject is HtmlAttributes)
+            WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -33,7 +35,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement AttributesDirectDesc
+        Debug.Assert(inputObject is not null);
         // ExplicitDepth: Select-MarkdownObject -Depth 1
         // DepthRange: Select-MarkdownObject -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes
@@ -49,7 +51,9 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type HtmlAttributes -Depth 1 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
     }
 
     /// <summary>
@@ -58,7 +62,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement AttributesAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Depth 2
         // DepthRange: Select-MarkdownObject -MinDepth 2 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 2
@@ -67,7 +72,12 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type HtmlAttributes -Depth 2
         // ExplicitDepth: Select-MarkdownObject -Type HtmlAttributes -Depth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDescendantsAtDepth(_depth - 1))
+        {
+            var attributes = item.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+        }
     }
 
     /// <summary>
@@ -76,7 +86,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypeInputObj
+        Debug.Assert(inputObject is not null);
         // ExplicitDepth: Select-MarkdownObject -Depth 0
         // DepthRange: Select-MarkdownObject -MaxDepth 0
         // DepthRange: Select-MarkdownObject -Type Any -MaxDepth 0
@@ -105,7 +115,8 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Any -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Any -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (inputObject is not HtmlAttributes)
+            WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -114,7 +125,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypePlusAttribInputObj
+        Debug.Assert(inputObject is not null);
         // ExplicitDepth: Select-MarkdownObject -Type Any -Depth 0
         // DepthRange: Select-MarkdownObject -Type Any -MaxDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MaxDepth 0 -IncludeAttributes
@@ -158,7 +169,7 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -167,7 +178,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypeDirectDesc
+        Debug.Assert(inputObject is not null);
         // ExplicitDepth: Select-MarkdownObject -Depth 1
         // DepthRange: Select-MarkdownObject -Type Any
         // DepthRange: Select-MarkdownObject -Type Block, Any
@@ -201,7 +212,8 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDirectDescendants())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -210,7 +222,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypePlusAttribDirectDesc
+        Debug.Assert(inputObject is not null);
         // ExplicitDepth: Select-MarkdownObject -Type Any -Depth 1
         // DepthRange: Select-MarkdownObject -Type Any -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -IncludeAttributes
@@ -266,7 +278,8 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDirectDescendantsAndAttributes())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -275,7 +288,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypeAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Depth 2
         // DepthRange: Select-MarkdownObject -MaxDepth 1
         // DepthRange: Select-MarkdownObject -MinDepth 2 -MaxDepth 2
@@ -295,7 +309,8 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDescendantsAtDepth(_depth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -304,7 +319,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement AnyTypePlusAttribAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Any -Depth 2
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2 -MaxDepth 2 -IncludeAttributes
@@ -333,7 +349,8 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDescendantsAtDepthIncludingAttributes(_depth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -342,14 +359,17 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypeInputObj
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 0
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 0
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if ( _multiTypes.Any(t => t.IsInstanceOfType(inputObject)))
+            WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -358,7 +378,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypePlusAttribInputObj
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 0
@@ -371,7 +393,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Depth 0 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (inputObject is HtmlAttributes || _multiTypes.Any(t => t.IsInstanceOfType(inputObject)))
+            WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -380,7 +403,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypeDirectDesc
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 1
         // DepthRange: Select-MarkdownObject -Type Block, Inline
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 1
@@ -388,7 +413,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 1
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+                WriteObject(item, false);
     }
 
     /// <summary>
@@ -397,7 +423,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypePlusAttribDirectDesc
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 1
         // DepthRange: Select-MarkdownObject -Type Block, Inline -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes
@@ -413,7 +441,11 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Depth 1 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in inputObject.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+                WriteObject(item, false);
     }
 
     /// <summary>
@@ -422,12 +454,16 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypeAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 2
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 2
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDescendantsAtDepth(_depth).Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -436,7 +472,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement MultiTypePlusAttribAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline -Depth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 2
@@ -445,7 +484,14 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Depth 2
         // ExplicitDepth: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Depth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var parent in inputObject.GetDescendantsAtDepth(_depth - 1))
+        {
+            var attributes = parent.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in parent.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+                WriteObject(item, false);
+        }
     }
 
     /// <summary>
@@ -454,14 +500,16 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypeInputObj
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 0
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 0
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 0
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 0
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (_singleType.IsInstanceOfType(inputObject))
+            WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -470,7 +518,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInputObj(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypePlusAttribInputObj
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 0
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 0
@@ -483,7 +532,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 0 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 0 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (inputObject is HtmlAttributes || _singleType.IsInstanceOfType(inputObject))
+            WriteObject(inputObject, false);
     }
 
     /// <summary>
@@ -492,7 +542,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypeDirectDesc
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 1
         // DepthRange: Select-MarkdownObject -Type Block
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 1
@@ -500,7 +551,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 1
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDirectDescendants().Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -509,7 +561,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribDirectDesc(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypePlusAttribDirectDesc
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 1
         // DepthRange: Select-MarkdownObject -Type Block -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes
@@ -525,7 +578,11 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 1 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var attributes = inputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in inputObject.GetDirectDescendants().Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -534,12 +591,15 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypeAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 2
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 2
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 2
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in inputObject.GetDescendantsAtDepth(_depth).Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -548,7 +608,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribAtDepth(MarkdownObject inputObject)
     {
-        // TODO: Implement SingleTypePlusAttribAtDepth
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 2
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 2
@@ -557,7 +619,14 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 2
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var parent in inputObject.GetDescendantsAtDepth(_depth - 1))
+        {
+            var attributes = parent.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in parent.GetDirectDescendants().Where(_singleType.IsInstanceOfType))
+                WriteObject(item, false);
+        }
     }
 
     private void BeginProcessing_ExplicitDepth(List<Type>? types, int depth, bool includeAttributes)
