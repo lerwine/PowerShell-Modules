@@ -11,6 +11,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement AttributesInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1
@@ -25,6 +26,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AttributesToDepth
         // DepthRange: Select-MarkdownObject -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2
@@ -43,6 +46,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AttributesToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2
@@ -57,6 +62,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement AttributesInRange
         // DepthRange: Select-MarkdownObject -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3
@@ -71,6 +79,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement AttributesInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0
@@ -85,6 +94,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AttributesFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AttributesFromDepth
         // DepthRange: Select-MarkdownObject -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2
@@ -99,6 +110,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AnyTypeToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 2
         throw new NotImplementedException();
@@ -110,6 +123,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AnyTypePlusAttribToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
@@ -129,6 +144,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement AnyTypeInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 1
         throw new NotImplementedException();
@@ -140,6 +156,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement AnyTypePlusAttribInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -MaxDepth 1 -IncludeAttributes
@@ -162,6 +179,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AnyTypeToDepth
         // DepthRange: Select-MarkdownObject -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Any -MaxDepth 2
@@ -180,6 +199,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AnyTypePlusAttribToDepth
         // DepthRange: Select-MarkdownObject -Type Any -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MaxDepth 2 -IncludeAttributes
@@ -211,6 +232,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement AnyTypeInRange
         // DepthRange: Select-MarkdownObject -MinDepth 2 -MaxDepth 3
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -MaxDepth 3
@@ -225,6 +249,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement AnyTypePlusAttribInRange
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2 -MaxDepth 3 -IncludeAttributes
@@ -248,6 +275,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypeToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2
         throw new NotImplementedException();
@@ -259,6 +290,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypePlusAttribToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2
@@ -272,6 +307,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypeInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 1
         throw new NotImplementedException();
@@ -283,6 +321,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypePlusAttribInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 1
@@ -296,6 +337,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypeToDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 2
@@ -308,6 +353,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypePlusAttribToDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 2
@@ -324,6 +373,11 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement MultiTypeInRange
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 3
         throw new NotImplementedException();
@@ -335,6 +389,11 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement MultiTypePlusAttribInRange
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 3
@@ -348,6 +407,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypeToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2
         throw new NotImplementedException();
@@ -359,6 +421,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribToDepthInclInputObj(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypePlusAttribToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2
@@ -372,6 +437,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypeInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1
         throw new NotImplementedException();
@@ -383,6 +450,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInputObjAndDirectDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypePlusAttribInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1
@@ -396,6 +465,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypeToDepth
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2
@@ -408,6 +480,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribToDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypePlusAttribToDepth
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2
@@ -424,6 +499,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement SingleTypeInRange
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3
         throw new NotImplementedException();
@@ -435,6 +514,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInRange(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement SingleTypePlusAttribInRange
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3
@@ -449,6 +532,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement AnyTypeInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0
@@ -463,6 +547,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement AnyTypePlusAttribInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -IncludeAttributes
@@ -482,6 +567,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypeFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AnyTypeFromDepth
         // DepthRange: Select-MarkdownObject -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2
@@ -496,6 +583,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void AnyTypePlusAttribFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement AnyTypePlusAttribFromDepth
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2 -IncludeAttributes
@@ -515,6 +604,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement MultiTypeInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0
         throw new NotImplementedException();
@@ -526,6 +616,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement MultiTypePlusAttribInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0
@@ -539,6 +630,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypeFromDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2
         throw new NotImplementedException();
@@ -550,6 +643,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypePlusAttribFromDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -IncludeAttributes
         throw new NotImplementedException();
@@ -561,6 +656,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement SingleTypeInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0
         throw new NotImplementedException();
@@ -572,6 +668,7 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInputObjAndAllDesc(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
         // TODO: Implement SingleTypePlusAttribInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0
@@ -585,6 +682,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypeFromDepth
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2
         throw new NotImplementedException();
@@ -596,6 +695,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribFromDepth(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypePlusAttribFromDepth
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2

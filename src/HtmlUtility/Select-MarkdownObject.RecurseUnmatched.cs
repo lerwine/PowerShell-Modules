@@ -11,6 +11,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypeInputObjAndDirectDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -22,6 +25,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypePlusAttribInputObjAndDirectDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -33,6 +39,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeToDepthInclInputObjRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypeToDepthInclInputObjRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -44,6 +54,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribToDepthInclInputObjRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypePlusAttribToDepthInclInputObjRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -55,6 +69,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeToDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypeToDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
@@ -67,6 +85,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribToDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypePlusAttribToDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
@@ -79,6 +101,11 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInRangeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement MultiTypeInRangeRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -90,6 +117,11 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInRangeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement MultiTypePlusAttribInRangeRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -101,6 +133,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypeInputObjAndAllDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -112,6 +147,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypePlusAttribInputObjAndAllDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -123,6 +161,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypeRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -134,6 +175,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
         // TODO: Implement MultiTypePlusAttribRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -145,6 +189,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypeFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypeFromDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -156,6 +204,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void MultiTypePlusAttribFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_multiTypes is not null);
+        Debug.Assert(_multiTypes.Count > 1);
+        Debug.Assert(_depth > 1);
         // TODO: Implement MultiTypePlusAttribFromDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -167,6 +219,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypeInputObjAndDirectDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -178,6 +232,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInputObjAndDirectDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypePlusAttribInputObjAndDirectDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -189,6 +245,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeToDepthInclInputObjRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypeToDepthInclInputObjRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -200,6 +259,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribToDepthInclInputObjRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypePlusAttribToDepthInclInputObjRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -211,6 +273,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeToDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypeToDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
@@ -223,6 +288,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribToDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypePlusAttribToDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
@@ -235,6 +303,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInRangeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement SingleTypeInRangeRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -246,6 +318,10 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInRangeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
+        Debug.Assert(MaxDepth > _depth);
         // TODO: Implement SingleTypePlusAttribInRangeRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -257,6 +333,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypeInputObjAndAllDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -268,6 +346,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribInputObjAndAllDescRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypePlusAttribInputObjAndAllDescRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -279,6 +359,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypeRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -290,6 +372,8 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
         // TODO: Implement SingleTypePlusAttribRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -301,6 +385,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypeFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypeFromDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
@@ -312,6 +399,9 @@ public partial class Select_MarkdownObject
     /// <param name="inputObject">The <see cref="MarkdownObject"/> to process.</param>
     private void SingleTypePlusAttribFromDepthRnm(MarkdownObject inputObject)
     {
+        Debug.Assert(inputObject is not null);
+        Debug.Assert(_singleType is not null);
+        Debug.Assert(_depth > 1);
         // TODO: Implement SingleTypePlusAttribFromDepthRnm
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
         throw new NotImplementedException();
