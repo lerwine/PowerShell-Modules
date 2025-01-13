@@ -31,7 +31,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all recursive descendants, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns all recursive descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyType()
     {
@@ -47,6 +47,18 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type Block, Inline, Any -Recurse
         foreach (var item in InputObject.Descendants())
             WriteObject(item, false);
+    }
+
+    private void AnyTypePlusAttrib(MarkdownObject parent)
+    {
+        var attributes = parent.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in InputObject.GetDirectDescendants())
+        {
+            WriteObject(item, false);
+            AnyTypePlusAttrib(item);
+        }
     }
 
     /// <summary>
@@ -73,15 +85,7 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes, Any -Recurse -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse -IncludeAttributes
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.Descendants())
-        {
-            WriteObject(item, false);
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
+        AnyTypePlusAttrib(InputObject);
     }
 
     /// <summary>
@@ -98,6 +102,19 @@ public partial class Select_MarkdownObject
             WriteObject(item, false);
     }
 
+    private void MultiTypePlusAttrib(MarkdownObject parent)
+    {
+        var attributes = parent.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in InputObject.GetDirectDescendants())
+        {
+            if (_multiTypes.Any(t => t.IsInstanceOfType(item)))
+                WriteObject(item, false);
+            MultiTypePlusAttrib(item);
+        }
+    }
+
     /// <summary>
     /// Returns all recursive descendants that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" />.
     /// </summary>
@@ -112,16 +129,7 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Recurse -IncludeAttributes
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.Descendants())
-        {
-            if (_multiTypes.Any(t => t.IsInstanceOfType(item)))
-                WriteObject(item, false);
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
+        MultiTypePlusAttrib(InputObject);
     }
 
     /// <summary>
@@ -137,6 +145,19 @@ public partial class Select_MarkdownObject
             WriteObject(item, false);
     }
 
+    private void SingleTypePlusAttrib(MarkdownObject parent)
+    {
+        var attributes = parent.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in InputObject.GetDirectDescendants())
+        {
+            if (_singleType.IsInstanceOfType(item))
+                WriteObject(item, false);
+            SingleTypePlusAttrib(item);
+        }
+    }
+
     /// <summary>
     /// Returns all recursive descendants that match the specified <see cref="_singleType"/>s, along with all <see cref="HtmlAttributes" />.
     /// </summary>
@@ -150,16 +171,7 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse -IncludeAttributes
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.Descendants())
-        {
-            if (_singleType.IsInstanceOfType(item))
-                WriteObject(item, false);
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
+        SingleTypePlusAttrib(InputObject);
     }
 
     private void BeginProcessing_Recurse(List<Type>? types, bool includeAttributes)
