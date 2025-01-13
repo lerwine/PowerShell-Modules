@@ -117,7 +117,7 @@
             },
             "required": ["DepthRange", "ExplicitDepth", "Recurse", "RecurseUnmatched"]
         },
-        "InputObjectProcessors": {
+        "ProcessRecordMethods": {
             "type": "array",
             "items": {
                 "type": "object",
@@ -129,7 +129,7 @@
             }
         }
     },
-    "required": ["ParameterSets", "InputObjectProcessors"],
+    "required": ["ParameterSets", "ProcessRecordMethods"],
     "$defs": {
         "MatchableTypeCount": { "type": "integer", "minimum": 0, "maximum": 2 },
         "RangeOptions": {
@@ -186,17 +186,17 @@
                         { "type": "null" },
                         {
                             "enum": [
-                                "`Block`",
-                                "`HtmlAttributes`",
-                                "`Any`",
-                                "`Block`, `Inline`",
-                                "`Block`, `HtmlAttributes`",
-                                "`Block`, `Any`",
-                                "`HtmlAttributes`, `Any`",
-                                "`Block`, `Inline`, `HtmlAttributes`",
-                                "`Block`, `Inline`, `Any`",
-                                "`Block`, `HtmlAttributes`, `Any`",
-                                "`Block`, `Inline`, `HtmlAttributes`, `Any`"
+                                "'Block'",
+                                "'HtmlAttributes'",
+                                "'Any'",
+                                "'Block', 'Inline'",
+                                "'Block', 'HtmlAttributes'",
+                                "'Block', 'Any'",
+                                "'HtmlAttributes', 'Any'",
+                                "'Block', 'Inline', 'HtmlAttributes'",
+                                "'Block', 'Inline', 'Any'",
+                                "'Block', 'HtmlAttributes', 'Any'",
+                                "'Block', 'Inline', 'HtmlAttributes', 'Any'"
                             ]
                         }
                     ]
@@ -211,7 +211,7 @@
                 "WriteHtmlAttributes": { "type": "boolean" },
                 "IsRecursive": { "type": "boolean" },
                 "NoRecursionOnMatch": { "type": "boolean" },
-                "InputObjectProcessor": {
+                "ProcessRecordMethod": {
                     "type": "object",
                     "properties": {
                         "Name": { "type": "string" },
@@ -219,7 +219,7 @@
                     }
                 }
             },
-            "required": ["EffectiveMinDepth", "EffectiveMaxDepth", "IsRecursive", "Type", "WriteHtmlAttributes", "InputObjectProcessor"]
+            "required": ["EffectiveMinDepth", "EffectiveMaxDepth", "IsRecursive", "Type", "WriteHtmlAttributes", "ProcessRecordMethod"]
         }
     }
 }
