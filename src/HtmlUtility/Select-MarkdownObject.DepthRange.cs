@@ -7,222 +7,9 @@ namespace HtmlUtility;
 public partial class Select_MarkdownObject
 {
     /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" />; otherwise the <see cref="HtmlAttributes" /> of the <see cref="InputObject"/> is returned, if present.
-    /// </summary>
-    private void AttributesInputObjAndDirectDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    /// <summary>
-    /// Returns all recursive descendant <see cref="HtmlAttributes" /> up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/>.
-    /// </summary>
-    private void AttributesToDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var parent in InputObject.GetDescendantsToDepth(MaxDepth - 1))
-        {
-            if ((attributes = parent.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" />; otherwise all recursive descendant <see cref="HtmlAttributes" /> up to the specified <see cref="MaxDepth"/>
-    /// will be returned.
-    /// </summary>
-    private void AttributesToDepthInclInputObj()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var parent in InputObject.GetDescendantsToDepth(MaxDepth - 1))
-            {
-                if ((attributes = parent.TryGetAttributes()) is not null)
-                    WriteObject(attributes, false);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Returns all recursive descendant <see cref="HtmlAttributes" /> within the specified range from <see cref="MinDepth"/> to <see cref="MaxDepth"/>, relative to <see cref="InputObject"/>.
-    /// </summary>
-    private void AttributesInRange()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MinDepth > 1);
-        Debug.Assert(MaxDepth > MinDepth);
-        // DepthRange: Select-MarkdownObject -MinDepth 2 -MaxDepth 3 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        foreach (var parent in InputObject.GetDescendantsInDepthRange(MinDepth - 1, MaxDepth - 1))
-        {
-            var attributes = parent.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" />; otherwise all recursive descendant <see cref="HtmlAttributes" /> will be returned.
-    /// </summary>
-    private void AttributesInputObjAndAllDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        // DepthRange: Select-MarkdownObject -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var parent in InputObject.Descendants())
-            {
-                if ((attributes = parent.TryGetAttributes()) is not null)
-                    WriteObject(attributes, false);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Returns all recursive descendant <see cref="HtmlAttributes" /> starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>.
-    /// </summary>
-    private void AttributesFromDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MinDepth > 1);
-        // DepthRange: Select-MarkdownObject -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
-        foreach (var parent in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-        {
-            var attributes = parent.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var item in parent.Descendants())
-            {
-                if ((attributes = item.TryGetAttributes()) is not null)
-                    WriteObject(attributes, false);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all recursive descendants up to the specified <see cref="MaxDepth"/>,
-    /// <i>NOT</i> including <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void AnyTypeToDepthInclInputObj()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MaxDepth > 1);
-        if (InputObject is HtmlAttributes)
-            return;
-
-        WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth))
-            WriteObject(item, false);
-    }
-
-    private void AnyTypePlusAttribToDepth(MarkdownObject parent, int maxDepth)
-    {
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        if (maxDepth > 1)
-        {
-            maxDepth--;
-            foreach (var item in parent.GetDirectDescendants())
-            {
-                WriteObject(item, false);
-                AnyTypePlusAttribToDepth(item, maxDepth);
-            }
-        }
-        else
-            foreach (var item in parent.GetDirectDescendants())
-                WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> along with all recursive descendants up to the specified <see cref="MaxDepth"/>, including <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void AnyTypePlusAttribToDepthInclInputObj()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        WriteObject(InputObject, false);
-        if (InputObject is not HtmlAttributes)
-            AnyTypePlusAttribToDepth(InputObject, MaxDepth);
-    }
-
-    /// <summary>
     /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all direct descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyTypeInputObjAndDirectDesc()
+    private void WriteInputObjAndDirectDesc()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -238,7 +25,7 @@ public partial class Select_MarkdownObject
     /// <summary>
     /// Returns the <see cref="InputObject"/>, along with all direct descendants, including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyTypePlusAttribInputObjAndDirectDesc()
+    private void WriteInputObjAttribAndDirectDesc()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -270,9 +57,279 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
+    /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all direct descendants that match the specified type,
+    /// irregardless of whether the <see cref="InputObject"/> was a match.
+    /// </summary>
+    private void WriteTypePredicatedInputObjAndDirectDesc()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1
+        if (_predicate(InputObject))
+            WriteObject(InputObject, false);
+        foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>,
+    /// along with the <see cref="HtmlAttributes" /> of the <see cref="InputObject"/> and all direct descendants that match the specified type,
+    /// irregardless of whether the <see cref="InputObject"/> was a match.
+    /// </summary>
+    private void WriteAttribAndTypePredicatedInputObjAndDirectDesc()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            if (_predicate(InputObject))
+                WriteObject(InputObject, false);
+            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+                WriteObject(item, false);
+        }
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" />; otherwise the <see cref="HtmlAttributes" /> of the <see cref="InputObject"/> is returned, if present.
+    /// </summary>
+    private void WriteAttributesInputObjOrDirectDesc()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 1 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            var attributes = InputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+        }
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all recursive descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteRecurseInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        // DepthRange: Select-MarkdownObject -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0
+        if (InputObject is HtmlAttributes)
+            return;
+        WriteObject(InputObject, false);
+        foreach (var item in InputObject.Descendants())
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> along with all recursive descendants, including <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteRecurseInclAttribAndInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
+        WriteObject(InputObject, false);
+        if (InputObject is not HtmlAttributes)
+            WriteRecursePlusAttrib(InputObject);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants that match the specified type.
+    /// </summary>
+    private void WriteRecurseTypePredicatedInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0
+        if (InputObject is HtmlAttributes)
+            return;
+        if (_predicate(InputObject))
+            WriteObject(InputObject);
+        WriteRecurseTypePredicatedPlusAttrib(InputObject);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>,
+    /// along with all recursive descendants that match the specified type, along with all descendant <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteRecurseTypePredicatedInclInputObjAndAttrib()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -IncludeAttributes
+        if (_predicate(InputObject))
+            WriteObject(InputObject);
+        else if (InputObject is HtmlAttributes)
+        {
+            WriteObject(InputObject);
+            return;
+        }
+        WriteRecurseTypePredicatedPlusAttrib(InputObject);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" />; otherwise all recursive descendant <see cref="HtmlAttributes" /> will be returned.
+    /// </summary>
+    private void WriteRecurseAttribInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        // DepthRange: Select-MarkdownObject -MinDepth 0 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            var attributes = InputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var parent in InputObject.Descendants())
+            {
+                if ((attributes = parent.TryGetAttributes()) is not null)
+                    WriteObject(attributes, false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteFromDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MinDepth > 1);
+        // DepthRange: Select-MarkdownObject -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth))
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>, including <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteFromDepthInclAttrib()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MinDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
+            WriteRecursePlusAttrib(item);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>.
+    /// </summary>
+    private void WriteTypePredicatedFromDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        Debug.Assert(MinDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth).Where(_predicate))
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
+    /// along with all <see cref="HtmlAttributes" /> from that depth.
+    /// </summary>
+    private void WriteAttribAndTypePredicatedFromDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        Debug.Assert(MinDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -IncludeAttributes
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
+        {
+            if (_predicate(item))
+                WriteObject(item, false);
+            WriteRecurseTypePredicatedPlusAttrib(item);
+        }
+    }
+
+    /// <summary>
+    /// Returns all recursive descendant <see cref="HtmlAttributes" /> starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>.
+    /// </summary>
+    private void WriteAttributesFromDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MinDepth > 1);
+        // DepthRange: Select-MarkdownObject -MinDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
+        foreach (var parent in InputObject.GetDescendantsFromDepth(MinDepth - 1))
+        {
+            var attributes = parent.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in parent.Descendants())
+            {
+                if ((attributes = item.TryGetAttributes()) is not null)
+                    WriteObject(attributes, false);
+            }
+        }
+    }
+
+    /// <summary>
     /// Returns all recursive descendants up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyTypeToDepth()
+    private void WriteToDepth()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -290,10 +347,29 @@ public partial class Select_MarkdownObject
             WriteObject(item, false);
     }
 
+    private void WriteToDepthInclAttrib(MarkdownObject parent, int maxDepth)
+    {
+        var attributes = parent.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        if (maxDepth > 1)
+        {
+            maxDepth--;
+            foreach (var item in parent.GetDirectDescendants())
+            {
+                WriteObject(item, false);
+                WriteToDepthInclAttrib(item, maxDepth);
+            }
+        }
+        else
+            foreach (var item in parent.GetDirectDescendants())
+                WriteObject(item, false);
+    }
+
     /// <summary>
     /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/>, along with all <see cref="HtmlAttributes" /> to that depth.
     /// </summary>
-    private void AnyTypePlusAttribToDepth()
+    private void WriteToDepthInclAttrib()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -320,13 +396,207 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        AnyTypePlusAttribToDepth(InputObject, MaxDepth);
+        WriteToDepthInclAttrib(InputObject, MaxDepth);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all recursive descendants up to the specified <see cref="MaxDepth"/>,
+    /// <i>NOT</i> including <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteToDepthInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MaxDepth > 1);
+        if (InputObject is HtmlAttributes)
+            return;
+
+        WriteObject(InputObject, false);
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth))
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> along with all recursive descendants up to the specified <see cref="MaxDepth"/>, including <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteToDepthInclAttribAndInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        WriteObject(InputObject, false);
+        if (InputObject is not HtmlAttributes)
+            WriteToDepthInclAttrib(InputObject, MaxDepth);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>.
+    /// </summary>
+    private void WriteTypePredicatedToDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_predicate))
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants, up to the specified <see cref="MaxDepth"/>,
+    /// that match the specified type.
+    /// </summary>
+    private void WriteTypePredicatedToDepthInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2
+        if (_predicate(InputObject))
+            WriteObject(InputObject, false);
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_predicate))
+            WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>, along with all recursive descendants,
+    /// up to the specified <see cref="MaxDepth"/>, that match the specified type, along with all descendant <see cref="HtmlAttributes" /> up to that depth.
+    /// </summary>
+    private void WriteAttribAndTypePredicatedToDepthInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            if (_predicate(InputObject))
+                WriteObject(InputObject, false);
+            WriteAttribAndTypePredicatedToDepth(InputObject, MaxDepth);
+        }
+    }
+
+    private void WriteAttribAndTypePredicatedToDepth(MarkdownObject parent, int maxDepth)
+    {
+        // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        var attributes = parent.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        if (maxDepth > 1)
+        {
+            maxDepth--;
+            foreach (var item in parent.GetDirectDescendants())
+            {
+                if (_predicate(item))
+                    WriteObject(item, false);
+                WriteAttribAndTypePredicatedToDepth(item, maxDepth);
+            }
+        }
+        else
+            foreach (var item in parent.GetDirectDescendants().Where(_predicate))
+                WriteObject(item, false);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
+    /// along with all <see cref="HtmlAttributes" /> to that depth.
+    /// </summary>
+    private void WriteAttribAndTypePredicatedToDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
+        WriteAttribAndTypePredicatedToDepth(InputObject, MaxDepth);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendant <see cref="HtmlAttributes" /> up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/>.
+    /// </summary>
+    private void WriteAttributesToDepth()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -MinDepth 1 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
+        var attributes = InputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var parent in InputObject.GetDescendantsToDepth(MaxDepth - 1))
+        {
+            if ((attributes = parent.TryGetAttributes()) is not null)
+                WriteObject(attributes, false);
+        }
+    }
+
+    /// <summary>
+    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" />; otherwise all recursive descendant <see cref="HtmlAttributes" /> up to the specified <see cref="MaxDepth"/>
+    /// will be returned.
+    /// </summary>
+    private void WriteAttributesToDepthInclInputObj()
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
+        Debug.Assert(MaxDepth > 1);
+        // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            var attributes = InputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var parent in InputObject.GetDescendantsToDepth(MaxDepth - 1))
+            {
+                if ((attributes = parent.TryGetAttributes()) is not null)
+                    WriteObject(attributes, false);
+            }
+        }
     }
 
     /// <summary>
     /// Returns all recursive descendants from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyTypeInRange()
+    private void WriteInRange()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -344,7 +614,7 @@ public partial class Select_MarkdownObject
     /// <summary>
     /// Returns all recursive descendants from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <see cref="InputObject"/>, including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyTypePlusAttribInRange()
+    private void WriteInRangeInclAttrib()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -365,151 +635,14 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
         foreach (var parent in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-            AnyTypePlusAttribToDepth(parent, MaxDepth - MinDepth);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants, up to the specified <see cref="MaxDepth"/>,
-    /// that match the specified type.
-    /// </summary>
-    private void TypePredicatedToDepthInclInputObj()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2
-        if (_predicate(InputObject))
-            WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_predicate))
-            WriteObject(item, false);
-    }
-
-    private void TypePredicatedPlusAttribToDepth(MarkdownObject parent, int maxDepth)
-    {
-        // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        if (maxDepth > 1)
-        {
-            maxDepth--;
-            foreach (var item in parent.GetDirectDescendants())
-            {
-                if (_predicate(item))
-                    WriteObject(item, false);
-                TypePredicatedPlusAttribToDepth(item, maxDepth);
-            }
-        }
-        else
-            foreach (var item in parent.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>, along with all recursive descendants,
-    /// up to the specified <see cref="MaxDepth"/>, that match the specified type, along with all descendant <see cref="HtmlAttributes" /> up to that depth.
-    /// </summary>
-    private void TypePredicatedPlusAttribToDepthInclInputObj()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            if (_predicate(InputObject))
-                WriteObject(InputObject, false);
-            TypePredicatedPlusAttribToDepth(InputObject, MaxDepth);
-        }
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all direct descendants that match the specified type,
-    /// irregardless of whether the <see cref="InputObject"/> was a match.
-    /// </summary>
-    private void TypePredicatedInputObjAndDirectDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1
-        if (_predicate(InputObject))
-            WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
-            WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>,
-    /// along with the <see cref="HtmlAttributes" /> of the <see cref="InputObject"/> and all direct descendants that match the specified type,
-    /// irregardless of whether the <see cref="InputObject"/> was a match.
-    /// </summary>
-    private void TypePredicatedPlusAttribInputObjAndDirectDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            if (_predicate(InputObject))
-                WriteObject(InputObject, false);
-            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
-        }
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>.
-    /// </summary>
-    private void TypePredicatedToDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2
-        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_predicate))
-            WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
-    /// along with all <see cref="HtmlAttributes" /> to that depth.
-    /// </summary>
-    private void TypePredicatedPlusAttribToDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        Debug.Assert(MaxDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        TypePredicatedPlusAttribToDepth(InputObject, MaxDepth);
+            WriteToDepthInclAttrib(parent, MaxDepth - MinDepth);
     }
 
     /// <summary>
     /// Returns all recursive descendants, within the specified range from <see cref="MinDepth"/> to <see cref="MaxDepth"/>, relative to <see cref="InputObject"/>,
     /// that match the specified <see cref="_predicate"/>.
     /// </summary>
-    private void TypePredicatedInRange()
+    private void WriteTypePredicatedInRange()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
@@ -525,7 +658,7 @@ public partial class Select_MarkdownObject
     /// Returns all recursive descendants, within the specified range from <see cref="MinDepth"/> to <see cref="MaxDepth"/>, relative to <see cref="InputObject"/>,
     /// that match the specified <see cref="_predicate"/>, along with all <see cref="HtmlAttributes" /> within that range.
     /// </summary>
-    private void TypePredicatedPlusAttribInRange()
+    private void WriteAttribAndTypePredicatedInRange()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
@@ -537,161 +670,28 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         int depth = MaxDepth - MinDepth;
         foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
-            TypePredicatedPlusAttribToDepth(parent, depth);
+            WriteAttribAndTypePredicatedToDepth(parent, depth);
     }
 
     /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all recursive descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
+    /// Returns all recursive descendant <see cref="HtmlAttributes" /> within the specified range from <see cref="MinDepth"/> to <see cref="MaxDepth"/>, relative to <see cref="InputObject"/>.
     /// </summary>
-    private void AnyTypeInputObjAndAllDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        // DepthRange: Select-MarkdownObject -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0
-        if (InputObject is HtmlAttributes)
-            return;
-        WriteObject(InputObject, false);
-        foreach (var item in InputObject.Descendants())
-            WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> along with all recursive descendants, including <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void AnyTypePlusAttribInputObjAndAllDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
-        WriteObject(InputObject, false);
-        if (InputObject is not HtmlAttributes)
-            AnyTypePlusAttrib(InputObject);
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void AnyTypeFromDepth()
+    private void WriteAttributesInRange()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
         Debug.Assert(_predicate is null);
         Debug.Assert(MinDepth > 1);
-        // DepthRange: Select-MarkdownObject -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth))
-            WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>, including <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void AnyTypePlusAttribFromDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is null);
-        Debug.Assert(_predicate is null);
-        Debug.Assert(MinDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-            AnyTypePlusAttrib(item);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants that match the specified type.
-    /// </summary>
-    private void TypePredicatedInputObjAndAllDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0
-        if (InputObject is HtmlAttributes)
-            return;
-        if (_predicate(InputObject))
-            WriteObject(InputObject);
-        TypePredicatedPlusAttrib(InputObject);
-    }
-
-    /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>,
-    /// along with all recursive descendants that match the specified type, along with all descendant <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void TypePredicatedPlusAttribInputObjAndAllDesc()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -IncludeAttributes
-        if (_predicate(InputObject))
-            WriteObject(InputObject);
-        else if (InputObject is HtmlAttributes)
+        Debug.Assert(MaxDepth > MinDepth);
+        // DepthRange: Select-MarkdownObject -MinDepth 2 -MaxDepth 3 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
+        foreach (var parent in InputObject.GetDescendantsInDepthRange(MinDepth - 1, MaxDepth - 1))
         {
-            WriteObject(InputObject);
-            return;
-        }
-        TypePredicatedPlusAttrib(InputObject);
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants, starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>.
-    /// </summary>
-    private void TypePredicatedFromDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        Debug.Assert(MinDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth).Where(_predicate))
-            WriteObject(item, false);
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants, starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
-    /// along with all <see cref="HtmlAttributes" /> from that depth.
-    /// </summary>
-    private void TypePredicatedPlusAttribFromDepth()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        Debug.Assert(MinDepth > 1);
-        // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -IncludeAttributes
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-        {
-            if (_predicate(item))
-                WriteObject(item, false);
-            TypePredicatedPlusAttrib(item);
+            var attributes = parent.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
         }
     }
 
@@ -704,10 +704,10 @@ public partial class Select_MarkdownObject
             if (types is null)
                 _processInputObject = minDepth switch
                 {
-                    0 => (maxDepth > 1) ? (includeAttributes ? AnyTypePlusAttribToDepthInclInputObj : AnyTypeToDepthInclInputObj) :
-                                                includeAttributes ? AnyTypePlusAttribInputObjAndDirectDesc : AnyTypeInputObjAndDirectDesc,
-                    1 => includeAttributes ? AnyTypePlusAttribToDepth : AnyTypeToDepth,
-                    _ => includeAttributes ? AnyTypePlusAttribInRange : AnyTypeInRange,
+                    0 => (maxDepth > 1) ? (includeAttributes ? WriteToDepthInclAttribAndInputObj : WriteToDepthInclInputObj) :
+                                                includeAttributes ? WriteInputObjAttribAndDirectDesc : WriteInputObjAndDirectDesc,
+                    1 => includeAttributes ? WriteToDepthInclAttrib : WriteToDepth,
+                    _ => includeAttributes ? WriteInRangeInclAttrib : WriteInRange,
                 };
             else
             {
@@ -717,10 +717,10 @@ public partial class Select_MarkdownObject
                     _predicate = (MarkdownObject a) => _types.Any(t => t.IsInstanceOfType(a));
                     _processInputObject = minDepth switch
                     {
-                        0 => (maxDepth > 1) ? (includeAttributes ? TypePredicatedPlusAttribToDepthInclInputObj : TypePredicatedToDepthInclInputObj) :
-                                                    includeAttributes ? TypePredicatedPlusAttribInputObjAndDirectDesc : TypePredicatedInputObjAndDirectDesc,
-                        1 => includeAttributes ? TypePredicatedPlusAttribToDepth : TypePredicatedToDepth,
-                        _ => includeAttributes ? TypePredicatedPlusAttribInRange : TypePredicatedInRange,
+                        0 => (maxDepth > 1) ? (includeAttributes ? WriteAttribAndTypePredicatedToDepthInclInputObj : WriteTypePredicatedToDepthInclInputObj) :
+                                                    includeAttributes ? WriteAttribAndTypePredicatedInputObjAndDirectDesc : WriteTypePredicatedInputObjAndDirectDesc,
+                        1 => includeAttributes ? WriteAttribAndTypePredicatedToDepth : WriteTypePredicatedToDepth,
+                        _ => includeAttributes ? WriteAttribAndTypePredicatedInRange : WriteTypePredicatedInRange,
                     };
                 }
                 else
@@ -728,10 +728,10 @@ public partial class Select_MarkdownObject
                     _predicate = types[0].IsInstanceOfType;
                     _processInputObject = minDepth switch
                     {
-                        0 => (maxDepth > 1) ? (includeAttributes ? TypePredicatedPlusAttribToDepthInclInputObj : TypePredicatedToDepthInclInputObj) :
-                                                    includeAttributes ? TypePredicatedPlusAttribInputObjAndDirectDesc : TypePredicatedInputObjAndDirectDesc,
-                        1 => includeAttributes ? TypePredicatedPlusAttribToDepth : TypePredicatedToDepth,
-                        _ => includeAttributes ? TypePredicatedPlusAttribInRange : TypePredicatedInRange,
+                        0 => (maxDepth > 1) ? (includeAttributes ? WriteAttribAndTypePredicatedToDepthInclInputObj : WriteTypePredicatedToDepthInclInputObj) :
+                                                    includeAttributes ? WriteAttribAndTypePredicatedInputObjAndDirectDesc : WriteTypePredicatedInputObjAndDirectDesc,
+                        1 => includeAttributes ? WriteAttribAndTypePredicatedToDepth : WriteTypePredicatedToDepth,
+                        _ => includeAttributes ? WriteAttribAndTypePredicatedInRange : WriteTypePredicatedInRange,
                     };
                 }
             }
@@ -746,9 +746,9 @@ public partial class Select_MarkdownObject
         if (types is null)
             _processInputObject = minDepth switch
             {
-                0 => includeAttributes ? AnyTypePlusAttribInputObjAndAllDesc : AnyTypeInputObjAndAllDesc,
-                1 => includeAttributes ? AnyTypePlusAttrib : AnyType,
-                _ => includeAttributes ? AnyTypePlusAttribFromDepth : AnyTypeFromDepth,
+                0 => includeAttributes ? WriteRecurseInclAttribAndInputObj : WriteRecurseInclInputObj,
+                1 => includeAttributes ? WriteRecursePlusAttrib : WriteRecurse,
+                _ => includeAttributes ? WriteFromDepthInclAttrib : WriteFromDepth,
             };
         else
         {
@@ -758,9 +758,9 @@ public partial class Select_MarkdownObject
                 _predicate = (MarkdownObject a) => _types.Any(t => t.IsInstanceOfType(a));
                 _processInputObject = minDepth switch
                 {
-                    0 => includeAttributes ? TypePredicatedPlusAttribInputObjAndAllDesc : TypePredicatedInputObjAndAllDesc,
-                    1 => includeAttributes ? TypePredicatedPlusAttrib : TypePredicated,
-                    _ => includeAttributes ? TypePredicatedPlusAttribFromDepth : TypePredicatedFromDepth,
+                    0 => includeAttributes ? WriteRecurseTypePredicatedInclInputObjAndAttrib : WriteRecurseTypePredicatedInclInputObj,
+                    1 => includeAttributes ? WriteRecurseTypePredicatedPlusAttrib : WriteRecurseTypePredicated,
+                    _ => includeAttributes ? WriteAttribAndTypePredicatedFromDepth : WriteTypePredicatedFromDepth,
                 };
             }
             else
@@ -768,9 +768,9 @@ public partial class Select_MarkdownObject
                 _predicate = types[0].IsInstanceOfType;
                 _processInputObject = minDepth switch
                 {
-                    0 => includeAttributes ? TypePredicatedPlusAttribInputObjAndAllDesc : TypePredicatedInputObjAndAllDesc,
-                    1 => includeAttributes ? TypePredicatedPlusAttrib : TypePredicated,
-                    _ => includeAttributes ? TypePredicatedPlusAttribFromDepth : TypePredicatedFromDepth,
+                    0 => includeAttributes ? WriteRecurseTypePredicatedInclInputObjAndAttrib : WriteRecurseTypePredicatedInclInputObj,
+                    1 => includeAttributes ? WriteRecurseTypePredicatedPlusAttrib : WriteRecurseTypePredicated,
+                    _ => includeAttributes ? WriteAttribAndTypePredicatedFromDepth : WriteTypePredicatedFromDepth,
                 };
             }
         }
@@ -780,19 +780,19 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(types is null || types.Count > 0);
         if (types is null)
-            _processInputObject = includeAttributes ? AnyTypePlusAttribDirectDesc : AnyTypeDirectDesc;
+            _processInputObject = includeAttributes ? WriteAttribAndDirectDesc : WriteDirectDesc;
         else
         {
             _types = types;
             if (types.Count > 1)
             {
                 _predicate = (MarkdownObject a) => _types.Any(t => t.IsInstanceOfType(a));
-                _processInputObject = includeAttributes ? TypePredicatedPlusAttribDirectDesc : TypePredicatedDirectDesc;
+                _processInputObject = includeAttributes ? WriteAttribAndTypePredicatedDirectDesc : WriteTypePredicatedDirectDesc;
             }
             else
             {
                 _predicate = types[0].IsInstanceOfType;
-                _processInputObject = includeAttributes ? TypePredicatedPlusAttribDirectDesc : TypePredicatedDirectDesc;
+                _processInputObject = includeAttributes ? WriteAttribAndTypePredicatedDirectDesc : WriteTypePredicatedDirectDesc;
             }
         }
     }

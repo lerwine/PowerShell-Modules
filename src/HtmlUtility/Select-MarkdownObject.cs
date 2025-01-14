@@ -86,14 +86,14 @@ public partial class Select_MarkdownObject : PSCmdlet
                 switch (Depth)
                 {
                     case 0:
-                        _processInputObject = AttributesInputObj;
+                        _processInputObject = WriteAttributesInputObj;
                         break;
                     case 1:
-                        _processInputObject = AttributesDirectDesc;
+                        _processInputObject = WriteAttributesDirectDesc;
                         break;
                     default:
                         _depth = Depth;
-                        _processInputObject = AttributesAtDepth;
+                        _processInputObject = WriteAttributesAtDepth;
                         break;
                 }
             else
@@ -102,7 +102,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         else if (ParameterSetName == ParameterSetName_Recurse)
         {
             if (hasAttributesType && !hasAnyType)
-                _processInputObject = WriteAllAttributes;
+                _processInputObject = WriteRecurseAttributes;
             else
                 BeginProcessing_Recurse(types, includeAttributes);
         }
@@ -146,30 +146,30 @@ public partial class Select_MarkdownObject : PSCmdlet
                         switch (effectiveMinDepth)
                         {
                             case 0:
-                                _processInputObject = AttributesInputObj;
+                                _processInputObject = WriteAttributesInputObj;
                                 break;
                             case 1:
-                                _processInputObject = AttributesDirectDesc;
+                                _processInputObject = WriteAttributesDirectDesc;
                                 break;
                             default:
                                 _depth = effectiveMinDepth;
-                                _processInputObject = AttributesAtDepth;
+                                _processInputObject = WriteAttributesAtDepth;
                                 break;
                         }
                     else
                         _processInputObject = effectiveMinDepth switch
                         {
-                            0 => (MaxDepth > 1) ? AttributesToDepthInclInputObj : AttributesInputObjAndDirectDesc,
-                            1 => AttributesToDepth,
-                            _ => AttributesInRange,
+                            0 => (MaxDepth > 1) ? WriteAttributesToDepthInclInputObj : WriteAttributesInputObjOrDirectDesc,
+                            1 => WriteAttributesToDepth,
+                            _ => WriteAttributesInRange,
                         };
                 }
                 else
                     _processInputObject = effectiveMinDepth switch
                     {
-                        0 => AttributesInputObjAndAllDesc,
-                        1 => WriteAllAttributes,
-                        _ => AttributesFromDepth,
+                        0 => WriteRecurseAttribInclInputObj,
+                        1 => WriteRecurseAttributes,
+                        _ => WriteAttributesFromDepth,
                     };
             }
             else if (ParameterSetName == ParameterSetName_RecurseUnmatched)
