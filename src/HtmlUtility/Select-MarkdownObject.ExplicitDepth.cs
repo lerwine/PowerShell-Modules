@@ -80,7 +80,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is *NOT* <see cref="HtmlAttributes" /> (no recursion).
+    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" /> (no recursion).
     /// </summary>
     private void AnyTypeInputObj()
     {
@@ -170,7 +170,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns the direct descendants, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns the direct descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeDirectDesc()
     {
@@ -278,7 +278,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all descendants at the specified <see cref="_depth"/> from <see cref="InputObject"/>, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns all descendants at the specified <see cref="_depth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeAtDepth()
     {

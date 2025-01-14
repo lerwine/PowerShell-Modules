@@ -148,8 +148,8 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is *NOT* <see cref="HtmlAttributes" />, along with all recursive descendants up to the specified <see cref="MaxDepth"/>,
-    /// *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all recursive descendants up to the specified <see cref="MaxDepth"/>,
+    /// <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeToDepthInclInputObj()
     {
@@ -204,7 +204,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is *NOT* <see cref="HtmlAttributes" />, along with all direct descendants, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all direct descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeInputObjAndDirectDesc()
     {
@@ -250,7 +250,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all recursive descendants up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/>, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns all recursive descendants up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeToDepth()
     {
@@ -301,7 +301,7 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all recursive descendants from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <see cref="InputObject"/>, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns all recursive descendants from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeInRange()
     {
@@ -352,6 +352,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(MaxDepth > 1);
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2
+        if (_multiTypes.Any(t => t.IsInstanceOfType(InputObject)))
+            WriteObject(InputObject, false);
         foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
             WriteObject(item, false);
     }
@@ -369,12 +371,13 @@ public partial class Select_MarkdownObject
             maxDepth--;
             foreach (var item in parent.GetDirectDescendants())
             {
-                WriteObject(item, false);
+                if (_multiTypes.Any(t => t.IsInstanceOfType(item)))
+                    WriteObject(item, false);
                 MultiTypePlusAttribToDepth(item, maxDepth);
             }
         }
         else
-            foreach (var item in parent.GetDirectDescendants())
+            foreach (var item in parent.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
                 WriteObject(item, false);
     }
 
@@ -410,9 +413,11 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
-        // TODO: Implement MultiTypeInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 1
-        throw new NotImplementedException();
+        if (_multiTypes.Any(t => t.IsInstanceOfType(InputObject)))
+            WriteObject(InputObject, false);
+        foreach (var item in InputObject.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -425,11 +430,21 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
-        // TODO: Implement MultiTypePlusAttribInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 1
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            if (_multiTypes.Any(t => t.IsInstanceOfType(InputObject)))
+                WriteObject(InputObject, false);
+            var attributes = InputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in InputObject.GetDirectDescendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+                WriteObject(item, false);
+        }
     }
 
     /// <summary>
@@ -441,10 +456,10 @@ public partial class Select_MarkdownObject
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement MultiTypeToDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 2
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -457,14 +472,13 @@ public partial class Select_MarkdownObject
         Debug.Assert(_multiTypes is not null);
         Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement MultiTypePlusAttribToDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        throw new NotImplementedException();
+        MultiTypePlusAttribToDepth(InputObject, MaxDepth);
     }
 
     /// <summary>
@@ -478,9 +492,9 @@ public partial class Select_MarkdownObject
         Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        // TODO: Implement MultiTypeInRange
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 3
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsInDepthRange(MinDepth, MaxDepth).Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -494,11 +508,12 @@ public partial class Select_MarkdownObject
         Debug.Assert(_multiTypes.Count > 1);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        // TODO: Implement MultiTypePlusAttribInRange
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 3
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -MaxDepth 3 -IncludeAttributes
-        throw new NotImplementedException();
+        int depth = MaxDepth - MinDepth;
+        foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
+            MultiTypePlusAttribToDepth(parent, depth);
     }
 
     /// <summary>
@@ -510,9 +525,34 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_singleType is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypeToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2
-        throw new NotImplementedException();
+        if (_singleType.IsInstanceOfType(InputObject))
+            WriteObject(InputObject, false);
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
+    }
+
+    private void SingleTypePlusAttribToDepth(MarkdownObject parent, int maxDepth)
+    {
+        // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2
+        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
+        var attributes = parent.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        if (maxDepth > 1)
+        {
+            maxDepth--;
+            foreach (var item in parent.GetDirectDescendants())
+            {
+                if (_singleType.IsInstanceOfType(item))
+                    WriteObject(item, false);
+                SingleTypePlusAttribToDepth(item, maxDepth);
+            }
+        }
+        else
+            foreach (var item in parent.GetDirectDescendants().Where(_singleType.IsInstanceOfType))
+                WriteObject(item, false);
     }
 
     /// <summary>
@@ -524,11 +564,17 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_singleType is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypePlusAttribToDepthInclInputObj
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            if (_singleType.IsInstanceOfType(InputObject))
+                WriteObject(InputObject, false);
+            SingleTypePlusAttribToDepth(InputObject, MaxDepth);
+        }
     }
 
     /// <summary>
@@ -539,9 +585,11 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Implement SingleTypeInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1
-        throw new NotImplementedException();
+        if (_singleType.IsInstanceOfType(InputObject))
+            WriteObject(InputObject, false);
+        foreach (var item in InputObject.GetDirectDescendants().Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -553,11 +601,18 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_singleType is not null);
-        // TODO: Implement SingleTypePlusAttribInputObjAndDirectDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+        {
+            if (_singleType.IsInstanceOfType(InputObject))
+                WriteObject(InputObject, false);
+            foreach (var item in InputObject.GetDirectDescendants().Where(_singleType.IsInstanceOfType))
+                WriteObject(item, false);
+        }
     }
 
     /// <summary>
@@ -568,10 +623,10 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_singleType is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypeToDepth
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -583,14 +638,13 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_singleType is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypePlusAttribToDepth
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        throw new NotImplementedException();
+        SingleTypePlusAttribToDepth(InputObject, MaxDepth);
     }
 
     /// <summary>
@@ -603,9 +657,9 @@ public partial class Select_MarkdownObject
         Debug.Assert(_singleType is not null);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        // TODO: Implement SingleTypeInRange
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsInDepthRange(MinDepth, MaxDepth).Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -618,26 +672,30 @@ public partial class Select_MarkdownObject
         Debug.Assert(_singleType is not null);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        // TODO: Implement SingleTypePlusAttribInRange
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        int depth = MaxDepth - MinDepth;
+        foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
+            SingleTypePlusAttribToDepth(parent, depth);
     }
 
     /// <summary>
-    /// Returns the <see cref="InputObject"/> if it is *NOT* <see cref="HtmlAttributes" />, along with all recursive descendants, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns the <see cref="InputObject"/> if it is <i>NOT</i> <see cref="HtmlAttributes" />, along with all recursive descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeInputObjAndAllDesc()
     {
         Debug.Assert(InputObject is not null);
-        // TODO: Implement AnyTypeInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            return;
+        WriteObject(InputObject, false);
+        foreach (var item in InputObject.Descendants())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -646,7 +704,6 @@ public partial class Select_MarkdownObject
     private void AnyTypePlusAttribInputObjAndAllDesc()
     {
         Debug.Assert(InputObject is not null);
-        // TODO: Implement AnyTypePlusAttribInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -IncludeAttributes
@@ -656,22 +713,24 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
-        throw new NotImplementedException();
+        WriteObject(InputObject, false);
+        if (InputObject is not HtmlAttributes)
+            AnyTypePlusAttrib(InputObject);
     }
 
     /// <summary>
-    /// Returns all recursive descendants starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>, *NOT* including <see cref="HtmlAttributes" />.
+    /// Returns all recursive descendants starting from the specified <see cref="MinDepth"/> from <see cref="InputObject"/>, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
     private void AnyTypeFromDepth()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement AnyTypeFromDepth
         // DepthRange: Select-MarkdownObject -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -681,7 +740,6 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement AnyTypePlusAttribFromDepth
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 2 -IncludeAttributes
@@ -691,7 +749,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
+            AnyTypePlusAttrib(item);
     }
 
     /// <summary>
@@ -700,9 +759,12 @@ public partial class Select_MarkdownObject
     private void MultiTypeInputObjAndAllDesc()
     {
         Debug.Assert(InputObject is not null);
-        // TODO: Implement MultiTypeInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            return;
+        if (_multiTypes.Any(t => t.IsInstanceOfType(InputObject)))
+            WriteObject(InputObject);
+        MultiTypePlusAttrib(InputObject);
     }
 
     /// <summary>
@@ -712,11 +774,17 @@ public partial class Select_MarkdownObject
     private void MultiTypePlusAttribInputObjAndAllDesc()
     {
         Debug.Assert(InputObject is not null);
-        // TODO: Implement MultiTypePlusAttribInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -IncludeAttributes
-        throw new NotImplementedException();
+        if (_multiTypes.Any(t => t.IsInstanceOfType(InputObject)))
+            WriteObject(InputObject);
+        else if (InputObject is HtmlAttributes)
+        {
+            WriteObject(InputObject);
+            return;
+        }
+        MultiTypePlusAttrib(InputObject);
     }
 
     /// <summary>
@@ -726,9 +794,9 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement MultiTypeFromDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth).Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -739,9 +807,13 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement MultiTypePlusAttribFromDepth
         // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 2 -IncludeAttributes
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
+        {
+            if (_multiTypes.Any(t => t.IsInstanceOfType(item)))
+                WriteObject(item, false);
+            MultiTypePlusAttrib(item);
+        }
     }
 
     /// <summary>
@@ -750,9 +822,12 @@ public partial class Select_MarkdownObject
     private void SingleTypeInputObjAndAllDesc()
     {
         Debug.Assert(InputObject is not null);
-        // TODO: Implement SingleTypeInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            return;
+        if (_singleType.IsInstanceOfType(InputObject))
+            WriteObject(InputObject);
+        SingleTypePlusAttrib(InputObject);
     }
 
     /// <summary>
@@ -762,11 +837,17 @@ public partial class Select_MarkdownObject
     private void SingleTypePlusAttribInputObjAndAllDesc()
     {
         Debug.Assert(InputObject is not null);
-        // TODO: Implement SingleTypePlusAttribInputObjAndAllDesc
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -IncludeAttributes
-        throw new NotImplementedException();
+        if (_singleType.IsInstanceOfType(InputObject))
+            WriteObject(InputObject);
+        else if (InputObject is HtmlAttributes)
+        {
+            WriteObject(InputObject);
+            return;
+        }
+        SingleTypePlusAttrib(InputObject);
     }
 
     /// <summary>
@@ -776,9 +857,9 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement SingleTypeFromDepth
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth).Where(_singleType.IsInstanceOfType))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -789,13 +870,17 @@ public partial class Select_MarkdownObject
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement SingleTypePlusAttribFromDepth
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -IncludeAttributes
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
+        {
+            if (_singleType.IsInstanceOfType(item))
+                WriteObject(item, false);
+            SingleTypePlusAttrib(item);
+        }
     }
 
     private void BeginProcessing_DepthRange(List<Type>? types, int minDepth, int maxDepth, bool includeAttributes)
