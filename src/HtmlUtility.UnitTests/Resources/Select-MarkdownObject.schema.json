@@ -8,69 +8,54 @@
             "properties": {
                 "DepthRange": {
                     "type": "array",
-                    "items": [
-                        {
-                            "allOf": [
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "MatchableTypeCount": { "$ref": "#/$defs/MatchableTypeCount" },
-                                        "TypeContainsHtmlAttributes": { "type": "boolean" },
-                                        "TypeContainsAny": { "type": "boolean" },
-                                        "IncludeAttributes": { "type": "boolean" }
-                                    },
-                                    "required": ["MatchableTypeCount", "IncludeAttributes"]
-                                }, {
-                                    "$ref": "#/$defs/RangeOptions"
-                                }, {
-                                    "$ref": "#/$defs/ParameterMetaData"
-                                }
-                            ]
-                        }
-                    ]
+                    "items": {
+                        "allOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "IncludeAttributes": { "type": "boolean" }
+                                },
+                                "required": ["IncludeAttributes"]
+                            }, {
+                                "$ref": "#/$defs/ParameterCommon"
+                            }, {
+                                "$ref": "#/$defs/RangeOptions"
+                            }
+                        ]
+                    }
                 },
                 "ExplicitDepth": {
                     "type": "array",
-                    "items": [
-                        {
-                            "allOf": [
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "MatchableTypeCount": { "$ref": "#/$defs/MatchableTypeCount" },
-                                        "Depth": { "type": "integer", "minimum": 0, "maximum": 2 },
-                                        "TypeContainsHtmlAttributes": { "type": "boolean" },
-                                        "TypeContainsAny": { "type": "boolean" },
-                                        "IncludeAttributes": { "type": "boolean", "default": false }
-                                    },
-                                    "required": ["MatchableTypeCount", "Depth", "IncludeAttributes"]
-                                }, {
-                                    "$ref": "#/$defs/ParameterMetaData"
-                                }
-                            ]
-                        }
-                    ]
+                    "items": {
+                        "allOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "Depth": { "type": "integer", "minimum": 0, "maximum": 2 },
+                                    "IncludeAttributes": { "type": "boolean", "default": false }
+                                },
+                                "required": ["Depth", "IncludeAttributes"]
+                            }, {
+                                "$ref": "#/$defs/ParameterCommon"
+                            }
+                        ]
+                    }
                 },
                 "Recurse": {
                     "type": "array",
-                    "items": [
-                        {
-                            "allOf": [
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "MatchableTypeCount": { "$ref": "#/$defs/MatchableTypeCount" },
-                                        "TypeContainsHtmlAttributes": { "type": "boolean" },
-                                        "TypeContainsAny": { "type": "boolean" },
-                                        "IncludeAttributes": { "type": "boolean", "default": false }
-                                    },
-                                    "required": ["MatchableTypeCount", "IncludeAttributes"]
-                                }, {
-                                    "$ref": "#/$defs/ParameterMetaData"
-                                }
-                            ]
-                        }
-                    ]
+                    "items": {
+                        "allOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "IncludeAttributes": { "type": "boolean", "default": false }
+                                },
+                                "required": ["IncludeAttributes"]
+                            }, {
+                                "$ref": "#/$defs/ParameterCommon"
+                            }
+                        ]
+                    }
                 },
                 "RecurseUnmatched": {
                     "type": "array",
@@ -78,37 +63,9 @@
                         {
                             "allOf": [
                                 {
-                                    "oneOf": [
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "MatchableTypeCount": { "type": "integer", "minimum": 1, "maximum": 2 },
-                                                "TypeContainsHtmlAttributes": { "type": "boolean" },
-                                                "TypeContainsAny": { "type": "boolean" }
-                                            },
-                                            "required": ["MatchableTypeCount"]
-                                        }, {
-                                            "type": "object",
-                                            "properties": {
-                                                "MatchableTypeCount": { "const": 0 },
-                                                "TypeContainsHtmlAttributes": { "const": true },
-                                                "TypeContainsAny": { "type": "boolean" }
-                                            },
-                                            "required": ["MatchableTypeCount"]
-                                        }, {
-                                            "type": "object",
-                                            "properties": {
-                                                "MatchableTypeCount": { "const": 0 },
-                                                "TypeContainsHtmlAttributes": { "type": "boolean" },
-                                                "TypeContainsAny": { "const": true }
-                                            },
-                                            "required": ["MatchableTypeCount"]
-                                        }
-                                    ]
-                                }, {
                                     "$ref": "#/$defs/RangeOptions"
                                 }, {
-                                    "$ref": "#/$defs/ParameterMetaData"
+                                    "$ref": "#/$defs/ParameterCommon"
                                 }
                             ]
                         }
@@ -123,15 +80,15 @@
                 "type": "object",
                 "properties": {
                     "Name": { "type": "string" },
+                    "PrimaryParameterSet": { "type": "string" },
                     "Description": { "type": "string" }
                 },
-                "required": ["Name"]
+                "required": ["Name", "PrimaryParameterSet"]
             }
         }
     },
     "required": ["ParameterSets", "ProcessRecordMethods"],
     "$defs": {
-        "MatchableTypeCount": { "type": "integer", "minimum": 0, "maximum": 2 },
         "RangeOptions": {
             "oneOf": [
                 {
@@ -178,11 +135,30 @@
                 }
             ]
         },
-        "ParameterMetaData": {
+        "ParameterCommon": {
             "type": "object",
             "properties": {
+                "MetaData": {
+                    "type": "object",
+                    "properties": {
+                        "NoRecursionOnMatch": { "type": "boolean" },
+                        "IsRecursive": { "type": "boolean" },
+                        "EffectiveMinDepth": { "type": "integer" },
+                        "EffectiveMaxDepth": {
+                            "anyOf": [
+                                { "type": "null" },
+                                { "type": "integer" }
+                            ]
+                        },
+                        "WriteHtmlAttributes": { "type": "boolean" },
+                        "MatchableTypeCount": { "type": "integer", "minimum": 0, "maximum": 2 },
+                        "TypeContainsHtmlAttributes": { "type": "boolean" },
+                        "TypeContainsAny": { "type": "boolean" }
+                    },
+                    "required": ["NoRecursionOnMatch", "IsRecursive", "EffectiveMinDepth", "EffectiveMaxDepth", "WriteHtmlAttributes", "MatchableTypeCount", "TypeContainsHtmlAttributes", "TypeContainsAny"]
+                },
                 "Type": {
-                    "oneOf": [
+                    "anyOf": [
                         { "type": "null" },
                         {
                             "enum": [
@@ -201,25 +177,9 @@
                         }
                     ]
                 },
-                "EffectiveMinDepth": { "type": "integer" },
-                "EffectiveMaxDepth": {
-                    "anyOf": [
-                        { "type": "null" },
-                        { "type": "integer" }
-                    ]
-                },
-                "WriteHtmlAttributes": { "type": "boolean" },
-                "IsRecursive": { "type": "boolean" },
-                "NoRecursionOnMatch": { "type": "boolean" },
-                "ProcessRecordMethod": {
-                    "type": "object",
-                    "properties": {
-                        "Name": { "type": "string" },
-                        "IsPrimary": { "type": "boolean" }
-                    }
-                }
+                "ProcessRecordMethod": { "type": "string" }
             },
-            "required": ["EffectiveMinDepth", "EffectiveMaxDepth", "IsRecursive", "Type", "WriteHtmlAttributes", "ProcessRecordMethod"]
+            "required": ["MetaData", "Type", "ProcessRecordMethod"]
         }
     }
 }
