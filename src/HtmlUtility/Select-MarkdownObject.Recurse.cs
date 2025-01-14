@@ -67,6 +67,8 @@ public partial class Select_MarkdownObject
     private void AnyTypePlusAttrib()
     {
         Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is null);
+        Debug.Assert(_predicate is null);
         // Recurse: Select-MarkdownObject -Type Any -Recurse -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 1 -IncludeAttributes
@@ -89,89 +91,47 @@ public partial class Select_MarkdownObject
     }
 
     /// <summary>
-    /// Returns all recursive descendants that match any of the specified <see cref="_multiTypes"/>.
+    /// Returns all recursive descendants that match the specified <see cref="_predicate"/>.
     /// </summary>
-    private void MultiType()
+    private void TypePredicated()
     {
         Debug.Assert(InputObject is not null);
-        Debug.Assert(_multiTypes is not null);
-        Debug.Assert(_multiTypes.Count > 1);
-        // Recurse: Select-MarkdownObject -Type Block, Inline -Recurse
-        // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1
-        foreach (var item in InputObject.Descendants().Where(a => _multiTypes.Any(t => t.IsInstanceOfType(a))))
-            WriteObject(item, false);
-    }
-
-    private void MultiTypePlusAttrib(MarkdownObject parent)
-    {
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.GetDirectDescendants())
-        {
-            if (_multiTypes.Any(t => t.IsInstanceOfType(item)))
-                WriteObject(item, false);
-            MultiTypePlusAttrib(item);
-        }
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants that match any of the specified <see cref="_multiTypes"/>, along with all <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void MultiTypePlusAttrib()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_multiTypes is not null);
-        Debug.Assert(_multiTypes.Count > 1);
-        // Recurse: Select-MarkdownObject -Type Block, Inline -Recurse -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -IncludeAttributes
-        // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Recurse
-        // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -Recurse -IncludeAttributes
-        MultiTypePlusAttrib(InputObject);
-    }
-
-    /// <summary>
-    /// Returns all recursive descendants that match the specified <see cref="_singleType"/>.
-    /// </summary>
-    private void SingleType()
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_singleType is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
         // Recurse: Select-MarkdownObject -Type Block -Recurse
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1
-        foreach (var item in InputObject.Descendants().Where(_singleType.IsInstanceOfType))
+        foreach (var item in InputObject.Descendants().Where(_predicate))
             WriteObject(item, false);
     }
 
-    private void SingleTypePlusAttrib(MarkdownObject parent)
+    private void TypePredicatedPlusAttrib(MarkdownObject parent)
     {
         var attributes = parent.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
         foreach (var item in InputObject.GetDirectDescendants())
         {
-            if (_singleType.IsInstanceOfType(item))
+            if (_predicate(item))
                 WriteObject(item, false);
-            SingleTypePlusAttrib(item);
+            TypePredicatedPlusAttrib(item);
         }
     }
 
     /// <summary>
-    /// Returns all recursive descendants that match the specified <see cref="_singleType"/>s, along with all <see cref="HtmlAttributes" />.
+    /// Returns all recursive descendants that match the specified <see cref="_predicate"/>, along with all <see cref="HtmlAttributes" />.
     /// </summary>
-    private void SingleTypePlusAttrib()
+    private void TypePredicatedPlusAttrib()
     {
         Debug.Assert(InputObject is not null);
-        Debug.Assert(_singleType is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
         // Recurse: Select-MarkdownObject -Type Block -Recurse -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse -IncludeAttributes
-        SingleTypePlusAttrib(InputObject);
+        TypePredicatedPlusAttrib(InputObject);
     }
 
     private void BeginProcessing_Recurse(List<Type>? types, bool includeAttributes)
@@ -179,15 +139,14 @@ public partial class Select_MarkdownObject
         Debug.Assert(types is null || types.Count > 0);
         if (types is null)
             _processInputObject = includeAttributes ? AnyTypePlusAttrib : AnyType;
-        else if (types.Count > 0)
-        {
-            _multiTypes = types;
-            _processInputObject = includeAttributes ? MultiTypePlusAttrib : MultiType;
-        }
         else
         {
-            _singleType = types[0];
-            _processInputObject = includeAttributes ? SingleTypePlusAttrib : SingleType;
+            _types = types;
+            if (types.Count > 0)
+                _predicate = (MarkdownObject a) => _types.Any(t => t.IsInstanceOfType(a));
+            else
+                _predicate = types[0].IsInstanceOfType;
+            _processInputObject = includeAttributes ? TypePredicatedPlusAttrib : TypePredicated;
         }
     }
 }

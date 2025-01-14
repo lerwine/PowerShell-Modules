@@ -15,8 +15,8 @@ public partial class Select_MarkdownObject : PSCmdlet
     private const string HelpMessage_MinDepth = "The inclusive minimum depth of child Markdown objects to return. This implies nested child object recursion.";
     private const string HelpMessage_MaxDepth = "The inclusive maximum depth of child Markdown objects to return. This implies nested child object recursion.";
     private const string HelpMessage_IncludeAttributes = $"This is ignored when {nameof(Type)} is specified.";
-    private List<Type> _multiTypes = null!;
-    private Type _singleType = null!;
+    private List<Type> _types = null!;
+    private Func<MarkdownObject, bool> _predicate = null!;
     private Action _processInputObject = null!;
 
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, HelpMessage = "Markdown object to select child objects from.")]
