@@ -56,7 +56,7 @@ public partial class Select_MarkdownObject
         foreach (var item in InputObject.GetDirectDescendants())
             WriteRecurseUnmatchedInclInputObjOrAttrib(item);
     }
-    
+
     /// <summary>
     /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants that match the specified type.
     /// No descendants of matches will be returned.
@@ -170,7 +170,7 @@ public partial class Select_MarkdownObject
                     WriteObject(item, false);
         }
     }
-/// 
+
     /// <summary>
     /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
     /// along with all <see cref="HtmlAttributes" /> to that depth.
@@ -188,7 +188,7 @@ public partial class Select_MarkdownObject
         foreach (var item in InputObject.GetDirectDescendants())
             WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(item, maxDepth);
     }
-/// 
+
     /// <summary>
     /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants, up to the specified <see cref="MaxDepth"/>,
     /// that match the specified type.
@@ -203,7 +203,7 @@ public partial class Select_MarkdownObject
         WriteRecurseUnmatchedToDepthInclInputObj(InputObject, MaxDepth);
     }
 
-    /// /// <summary>
+    /// <summary>
     /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>,
     /// along with all recursive descendants, up to the specified <see cref="MaxDepth"/>, that match the specified type, along with all descendant <see cref="HtmlAttributes" /> up to that depth.
     /// No descendants of matches will be returned.
@@ -236,7 +236,7 @@ public partial class Select_MarkdownObject
             WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
     }
 
-    /// /// <summary>
+    /// <summary>
     /// Returns all recursive descendants, from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
     /// along with all <see cref="HtmlAttributes" /> within that range.
     /// No descendants of matches will be returned.
