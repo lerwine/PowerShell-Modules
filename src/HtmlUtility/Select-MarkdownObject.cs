@@ -82,7 +82,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         bool includeAttributes = hasAttributesType || IncludeAttributes.IsPresent;
         if (ParameterSetName == ParameterSetName_ExplicitDepth)
         {
-            if (hasAttributesType && !hasAnyType)
+            if (types is null && hasAttributesType && !hasAnyType)
                 switch (Depth)
                 {
                     case 0:
@@ -101,7 +101,7 @@ public partial class Select_MarkdownObject : PSCmdlet
         }
         else if (ParameterSetName == ParameterSetName_Recurse)
         {
-            if (hasAttributesType && !hasAnyType)
+            if (types is null && hasAttributesType && !hasAnyType)
                 _processInputObject = WriteRecurseAttributes;
             else
                 BeginProcessing_Recurse(types, includeAttributes);
@@ -138,7 +138,7 @@ public partial class Select_MarkdownObject : PSCmdlet
                 maxDepth = null;
             }
 
-            if (hasAttributesType && !hasAnyType)
+            if (types is null && hasAttributesType && !hasAnyType)
             {
                 if (maxDepth.HasValue)
                 {
