@@ -12,11 +12,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeDirectDesc"
+                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -36,11 +36,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -108,11 +108,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObjAndAllDesc"
+                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseTypePredicatedInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndAllDesc"
+                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseTypePredicatedInclInputObjAndAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -132,11 +132,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndAllDesc"
+                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseTypePredicatedInclInputObjAndAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndAllDesc"
+                "MinDepth": 0, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseTypePredicatedInclInputObjAndAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -204,11 +204,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleType"
+                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseTypePredicated"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttrib"
+                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseTypePredicatedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -228,11 +228,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttrib"
+                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseTypePredicatedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttrib"
+                "MinDepth": 1, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseTypePredicatedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -300,11 +300,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeFromDepth"
+                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribFromDepth"
+                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -324,19 +324,19 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribFromDepth"
+                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribFromDepth"
+                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'Inline', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribFromDepth"
+                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": false, "Type": "'Block', 'Inline', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'Inline', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribFromDepth"
+                "MinDepth": 2, "MaxDepth": null, "IncludeAttributes": true, "Type": "'Block', 'Inline', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": true, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": false },
@@ -396,11 +396,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObj"
+                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -420,11 +420,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": null, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -492,11 +492,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeDirectDesc"
+                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -516,11 +516,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -588,11 +588,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeToDepth"
+                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod":"WriteTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribToDepth"
+                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -612,11 +612,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepth"
+                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepth"
+                "MinDepth": null, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -684,11 +684,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObj"
+                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -708,11 +708,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": 0, "MaxDepth": 0, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -780,11 +780,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObjAndDirectDesc"
+                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObjAndDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndDirectDesc"
+                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInputObjAndDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -804,11 +804,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndDirectDesc"
+                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInputObjAndDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndDirectDesc"
+                "MinDepth": 0, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInputObjAndDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -876,11 +876,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeToDepthInclInputObj"
+                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedToDepthInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribToDepthInclInputObj"
+                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepthInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -900,11 +900,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepthInclInputObj"
+                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepthInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepthInclInputObj"
+                "MinDepth": 0, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepthInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -972,11 +972,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeDirectDesc"
+                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -996,11 +996,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": 1, "MaxDepth": 1, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1068,11 +1068,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeToDepth"
+                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod":"WriteTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribToDepth"
+                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1092,11 +1092,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepth"
+                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepth"
+                "MinDepth": 1, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1164,11 +1164,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeAtDepth"
+                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1188,11 +1188,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "MinDepth": 2, "MaxDepth": 2, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1260,11 +1260,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInRange"
+                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribInRange"
+                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1284,11 +1284,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInRange"
+                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInRange"
+                "MinDepth": 2, "MaxDepth": 3, "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1358,11 +1358,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": false, "Depth": 0, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObj"
+                "IncludeAttributes": false, "Depth": 0, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": true, "Depth": 0, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "IncludeAttributes": true, "Depth": 0, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1382,11 +1382,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": false, "Depth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "IncludeAttributes": false, "Depth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": true, "Depth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "IncludeAttributes": true, "Depth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1454,11 +1454,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": false, "Depth": 1, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeDirectDesc"
+                "IncludeAttributes": false, "Depth": 1, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": true, "Depth": 1, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "IncludeAttributes": true, "Depth": 1, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1478,11 +1478,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": false, "Depth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "IncludeAttributes": false, "Depth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": true, "Depth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "IncludeAttributes": true, "Depth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1550,11 +1550,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": false, "Depth": 2, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeAtDepth"
+                "IncludeAttributes": false, "Depth": 2, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": true, "Depth": 2, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "IncludeAttributes": true, "Depth": 2, "Type": "'Block'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1574,11 +1574,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": false, "Depth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "IncludeAttributes": false, "Depth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": true, "Depth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "IncludeAttributes": true, "Depth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1648,11 +1648,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "SingleType"
+                "IncludeAttributes": false, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseTypePredicated"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "SingleTypePlusAttrib"
+                "IncludeAttributes": true, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseTypePredicatedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1672,11 +1672,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttrib"
+                "IncludeAttributes": false, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseTypePredicatedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttrib"
+                "IncludeAttributes": true, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseTypePredicatedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1738,7 +1738,7 @@
         "RecurseUnmatched": [
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": null, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeRnm"
+                "MinDepth": null, "MaxDepth": null, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatched"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1750,7 +1750,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": null, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribRnm"
+                "MinDepth": null, "MaxDepth": null, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseUnmatchedPlusAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1782,7 +1782,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": null, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObjAndAllDescRnm"
+                "MinDepth": 0, "MaxDepth": null, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatchedInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1794,7 +1794,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": null, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndAllDescRnm"
+                "MinDepth": 0, "MaxDepth": null, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseUnmatchedInclInputObjOrAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1870,7 +1870,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": null, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeFromDepthRnm"
+                "MinDepth": 2, "MaxDepth": null, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatchedFromDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1882,7 +1882,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": null, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribFromDepthRnm"
+                "MinDepth": 2, "MaxDepth": null, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseUnmatchedFromDepthOrAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": null, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1914,7 +1914,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 0, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObj"
+                "MinDepth": null, "MaxDepth": 0, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1926,7 +1926,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": null, "MaxDepth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -1958,7 +1958,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 1, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeDirectDesc"
+                "MinDepth": null, "MaxDepth": 1, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -1970,7 +1970,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": null, "MaxDepth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2002,7 +2002,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": null, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeToDepthRnm"
+                "MinDepth": null, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatchedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2014,7 +2014,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": null, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepthRnm"
+                "MinDepth": null, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseUnmatchedToDepthOrAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2046,7 +2046,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 0, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObj"
+                "MinDepth": 0, "MaxDepth": 0, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2058,7 +2058,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObj"
+                "MinDepth": 0, "MaxDepth": 0, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedOrAttribInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 0, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2090,7 +2090,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 1, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInputObjAndDirectDescRnm"
+                "MinDepth": 0, "MaxDepth": 1, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedInputObjOrDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2102,7 +2102,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInputObjAndDirectDescRnm"
+                "MinDepth": 0, "MaxDepth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteTypePredicatedInputObjDirectDescOrAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2134,7 +2134,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 0, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeToDepthInclInputObjRnm"
+                "MinDepth": 0, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatchedToDepthInclInputObjOrAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2146,7 +2146,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 0, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepthInclInputObjRnm"
+                "MinDepth": 0, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseUnmatchedPlusAttribToDepthInclInputObj"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 0, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2178,7 +2178,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": 1, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeDirectDesc"
+                "MinDepth": 1, "MaxDepth": 1, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2190,7 +2190,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribDirectDesc"
+                "MinDepth": 1, "MaxDepth": 1, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedDirectDesc"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 1, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2222,7 +2222,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 1, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeToDepthRnm"
+                "MinDepth": 1, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatchedToDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2234,7 +2234,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 1, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribToDepthRnm"
+                "MinDepth": 1, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteRecurseUnmatchedToDepthOrAttrib"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 1, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2266,7 +2266,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeAtDepth"
+                "MinDepth": 2, "MaxDepth": 2, "Type": "'Block'", "ProcessRecordMethod": "WriteTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2278,7 +2278,7 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribAtDepth"
+                "MinDepth": 2, "MaxDepth": 2, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedAtDepth"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": false, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 2, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
@@ -2310,11 +2310,11 @@
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": false },
-                "MinDepth": 2, "MaxDepth": 3, "Type": "'Block'", "ProcessRecordMethod": "SingleTypeInRangeRnm"
+                "MinDepth": 2, "MaxDepth": 3, "Type": "'Block'", "ProcessRecordMethod": "WriteRecurseUnmatchedInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 3, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInRangeRnm"
+                "MinDepth": 2, "MaxDepth": 3, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "WriteAttribAndTypePredicatedInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": false, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": false },
@@ -2323,10 +2323,6 @@
             {
                 "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 0, "TypeContainsHtmlAttributes": true },
                 "MinDepth": 2, "MaxDepth": 3, "Type": "'HtmlAttributes'", "ProcessRecordMethod": "WriteAttributesInRange"
-            },
-            {
-                "MetaData": { "NoRecursionOnMatch": false, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 1, "TypeContainsHtmlAttributes": true },
-                "MinDepth": 2, "MaxDepth": 3, "Type": "'Block', 'HtmlAttributes'", "ProcessRecordMethod": "SingleTypePlusAttribInRange"
             },
             {
                 "MetaData": { "NoRecursionOnMatch": true, "IsRecursive": true, "EffectiveMinDepth": 2, "EffectiveMaxDepth": 3, "WriteHtmlAttributes": true, "TypeContainsAny": false, "MatchableTypeCount": 2, "TypeContainsHtmlAttributes": true },
