@@ -7,33 +7,9 @@ namespace HtmlUtility;
 public partial class Select_MarkdownObject
 {
     /// <summary>
-    /// Returns all recursive descendant <see cref="HtmlAttributes" />.
-    /// </summary>
-    private void WriteAllAttributes()
-    {
-        Debug.Assert(InputObject is not null);
-        // Recurse: Select-MarkdownObject -Recurse -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -MinDepth 1 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1
-        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -IncludeAttributes
-        // Recurse: Select-MarkdownObject -Type HtmlAttributes -Recurse
-        // Recurse: Select-MarkdownObject -Type HtmlAttributes -Recurse -IncludeAttributes
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -RecurseUnmatchedOnly
-        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.Descendants())
-        {
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
-    }
-
-    /// <summary>
     /// Returns all recursive descendants, <i>NOT</i> including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyType()
+    private void WriteRecurse()
     {
         Debug.Assert(InputObject is not null);
         // Recurse: Select-MarkdownObject -Recurse
@@ -49,7 +25,7 @@ public partial class Select_MarkdownObject
             WriteObject(item, false);
     }
 
-    private void AnyTypePlusAttrib(MarkdownObject parent)
+    private void WriteRecursePlusAttrib(MarkdownObject parent)
     {
         var attributes = parent.TryGetAttributes();
         if (attributes is not null)
@@ -57,14 +33,14 @@ public partial class Select_MarkdownObject
         foreach (var item in InputObject.GetDirectDescendants())
         {
             WriteObject(item, false);
-            AnyTypePlusAttrib(item);
+            WriteRecursePlusAttrib(item);
         }
     }
 
     /// <summary>
     /// Returns all recursive descendants, including <see cref="HtmlAttributes" />.
     /// </summary>
-    private void AnyTypePlusAttrib()
+    private void WriteRecursePlusAttrib()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
@@ -87,13 +63,13 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes, Any -Recurse -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse -IncludeAttributes
-        AnyTypePlusAttrib(InputObject);
+        WriteRecursePlusAttrib(InputObject);
     }
 
     /// <summary>
     /// Returns all recursive descendants that match the specified <see cref="_predicate"/>.
     /// </summary>
-    private void TypePredicated()
+    private void WriteRecurseTypePredicated()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
@@ -104,7 +80,7 @@ public partial class Select_MarkdownObject
             WriteObject(item, false);
     }
 
-    private void TypePredicatedPlusAttrib(MarkdownObject parent)
+    private void WriteRecurseTypePredicatedPlusAttrib(MarkdownObject parent)
     {
         var attributes = parent.TryGetAttributes();
         if (attributes is not null)
@@ -113,14 +89,14 @@ public partial class Select_MarkdownObject
         {
             if (_predicate(item))
                 WriteObject(item, false);
-            TypePredicatedPlusAttrib(item);
+            WriteRecurseTypePredicatedPlusAttrib(item);
         }
     }
 
     /// <summary>
     /// Returns all recursive descendants that match the specified <see cref="_predicate"/>, along with all <see cref="HtmlAttributes" />.
     /// </summary>
-    private void TypePredicatedPlusAttrib()
+    private void WriteRecurseTypePredicatedPlusAttrib()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
@@ -131,14 +107,38 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse -IncludeAttributes
-        TypePredicatedPlusAttrib(InputObject);
+        WriteRecurseTypePredicatedPlusAttrib(InputObject);
+    }
+
+    /// <summary>
+    /// Returns all recursive descendant <see cref="HtmlAttributes" />.
+    /// </summary>
+    private void WriteRecurseAttributes()
+    {
+        Debug.Assert(InputObject is not null);
+        // Recurse: Select-MarkdownObject -Recurse -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -MinDepth 1 -IncludeAttributes
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1
+        // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -IncludeAttributes
+        // Recurse: Select-MarkdownObject -Type HtmlAttributes -Recurse
+        // Recurse: Select-MarkdownObject -Type HtmlAttributes -Recurse -IncludeAttributes
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -RecurseUnmatchedOnly
+        // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
+        var attributes = InputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in InputObject.Descendants())
+        {
+            if ((attributes = item.TryGetAttributes()) is not null)
+                WriteObject(attributes, false);
+        }
     }
 
     private void BeginProcessing_Recurse(List<Type>? types, bool includeAttributes)
     {
         Debug.Assert(types is null || types.Count > 0);
         if (types is null)
-            _processInputObject = includeAttributes ? AnyTypePlusAttrib : AnyType;
+            _processInputObject = includeAttributes ? WriteRecursePlusAttrib : WriteRecurse;
         else
         {
             _types = types;
@@ -146,7 +146,7 @@ public partial class Select_MarkdownObject
                 _predicate = (MarkdownObject a) => _types.Any(t => t.IsInstanceOfType(a));
             else
                 _predicate = types[0].IsInstanceOfType;
-            _processInputObject = includeAttributes ? TypePredicatedPlusAttrib : TypePredicated;
+            _processInputObject = includeAttributes ? WriteRecurseTypePredicatedPlusAttrib : WriteRecurseTypePredicated;
         }
     }
 }
