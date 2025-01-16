@@ -5,6 +5,32 @@ using Markdig.Syntax;
 namespace HtmlUtility;
 public partial class Select_MarkdownObject
 {
+    private void WriteRecurseUnmatchedInclInputObj(MarkdownObject inputObject)
+    {
+        if (_predicate(inputObject))
+            WriteObject(inputObject, false);
+        else
+            foreach (var item in inputObject.GetDirectDescendants())
+                WriteRecurseUnmatchedInclInputObj(item);
+    }
+
+    private void WriteRecurseUnmatchedInclInputObjOrAttrib(MarkdownObject inputObject)
+    {
+        Debug.Assert(InputObject is not null);
+        Debug.Assert(_types is not null && _types.Count > 0);
+        Debug.Assert(_predicate is not null);
+        if (_predicate(inputObject))
+            WriteObject(inputObject, false);
+        else
+        {
+            var attributes = inputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in inputObject.GetDirectDescendants())
+                WriteRecurseUnmatchedInclInputObj(item);
+        }
+    }
+
     /// <summary>
     /// Returns all recursive descendants that match the specified <see cref="_predicate"/>.
     /// No descendants of matches will be returned.
@@ -14,9 +40,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        // TODO: Implement SingleTypeRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDirectDescendants())
+            WriteRecurseUnmatchedInclInputObj(item);
     }
 
     /// <summary>
@@ -28,11 +53,10 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        // TODO: Implement SingleTypePlusAttribRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDirectDescendants())
+            WriteRecurseUnmatchedInclInputObjOrAttrib(item);
     }
-
+    
     /// <summary>
     /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants that match the specified type.
     /// No descendants of matches will be returned.
@@ -42,9 +66,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        // TODO: Implement SingleTypeInputObjAndAllDescRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        WriteRecurseUnmatchedInclInputObj(InputObject);
     }
 
     /// <summary>
@@ -57,9 +79,10 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        // TODO: Implement SingleTypePlusAttribInputObjAndAllDescRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+            WriteRecurseUnmatchedInclInputObjOrAttrib(InputObject);
     }
 
     /// <summary>
@@ -72,9 +95,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement SingleTypeFromDepthRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var item in InputObject.GetDescendantsAtDepth(MinDepth))
+            WriteRecurseUnmatchedInclInputObj(item);
     }
 
     /// <summary>
@@ -88,9 +110,29 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
-        // TODO: Implement SingleTypePlusAttribFromDepthRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
+        {
+            var attributes = parent.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in parent.GetDirectDescendants())
+                WriteRecurseUnmatchedInclInputObj(item);
+        }
+    }
+
+    private void WriteRecurseUnmatchedToDepthInclInputObj(MarkdownObject inputObject, int maxDepth)
+    {
+        if (_predicate(inputObject))
+            WriteObject(inputObject, false);
+        else if (maxDepth > 1)
+        {
+            maxDepth--;
+            foreach (var item in inputObject.GetDirectDescendants())
+                WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
+        }
+        else
+            foreach (var item in inputObject.GetDirectDescendants().Where(_predicate))
+                WriteObject(item, false);
     }
 
     /// <summary>
@@ -103,12 +145,32 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypeToDepthRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var maxDepth = MaxDepth - 1;
+        foreach (var item in InputObject.GetDirectDescendants())
+            WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
     }
 
+    private void WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(MarkdownObject inputObject, int maxDepth)
+    {
+        if (_predicate(inputObject))
+            WriteObject(inputObject, false);
+        else
+        {
+            var attributes = inputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            if (maxDepth > 1)
+            {
+                maxDepth--;
+                foreach (var item in inputObject.GetDirectDescendants())
+                    WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
+            }
+            else
+                foreach (var item in inputObject.GetDirectDescendants().Where(_predicate))
+                    WriteObject(item, false);
+        }
+    }
+/// 
     /// <summary>
     /// Returns all recursive descendants, up to the specified <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
     /// along with all <see cref="HtmlAttributes" /> to that depth.
@@ -119,29 +181,29 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypePlusAttribToDepthRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var maxDepth = MaxDepth - 1;
+        var attributes = InputObject.TryGetAttributes();
+        if (attributes is not null)
+            WriteObject(attributes, false);
+        foreach (var item in InputObject.GetDirectDescendants())
+            WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(item, maxDepth);
     }
-
+/// 
     /// <summary>
     /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/>, along with all recursive descendants, up to the specified <see cref="MaxDepth"/>,
     /// that match the specified type.
     /// No descendants of matches will be returned.
     /// </summary>
-    private void WriteRecurseUnmatchedToDepthInclInputObjOrAttrib()
+    private void WriteRecurseUnmatchedToDepthInclInputObj()
     {
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypeToDepthInclInputObjRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        WriteRecurseUnmatchedToDepthInclInputObj(InputObject, MaxDepth);
     }
 
-    /// <summary>
+    /// /// <summary>
     /// Returns the <see cref="InputObject"/> if it is <see cref="HtmlAttributes" /> or it matches the specified <see cref="_predicate"/>,
     /// along with all recursive descendants, up to the specified <see cref="MaxDepth"/>, that match the specified type, along with all descendant <see cref="HtmlAttributes" /> up to that depth.
     /// No descendants of matches will be returned.
@@ -152,9 +214,10 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
-        // TODO: Implement SingleTypePlusAttribToDepthInclInputObjRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes)
+            WriteObject(InputObject, false);
+        else
+            WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(InputObject, MaxDepth);
     }
 
     /// <summary>
@@ -168,12 +231,12 @@ public partial class Select_MarkdownObject
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        // TODO: Implement SingleTypeInRangeRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var maxDepth = MaxDepth - MinDepth;
+        foreach (var item in InputObject.GetDescendantsAtDepth(MinDepth))
+            WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
     }
 
-    /// <summary>
+    /// /// <summary>
     /// Returns all recursive descendants, from the specified <see cref="MinDepth"/> to the <see cref="MaxDepth"/> from <see cref="InputObject"/> that match the specified <see cref="_predicate"/>,
     /// along with all <see cref="HtmlAttributes" /> within that range.
     /// No descendants of matches will be returned.
@@ -185,9 +248,29 @@ public partial class Select_MarkdownObject
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        // TODO: Implement SingleTypePlusAttribInRangeRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        var maxDepth = MaxDepth - MinDepth - 1;
+        if (maxDepth == 0)
+        {
+            foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
+            {
+                var attributes = parent.TryGetAttributes();
+                if (attributes is not null)
+                    WriteObject(attributes, false);
+                foreach (var item in parent.GetDirectDescendants().Where(_predicate))
+                    WriteObject(item, false);
+            }
+        }
+        else
+        {
+            foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
+            {
+                var attributes = parent.TryGetAttributes();
+                if (attributes is not null)
+                    WriteObject(attributes, false);
+                foreach (var item in parent.GetDirectDescendants())
+                    WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
+            }
+        }
     }
 
     /// <summary>
@@ -200,9 +283,11 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        // TODO: Implement SingleTypeInputObjAndDirectDescRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (_predicate(InputObject))
+            WriteObject(InputObject, false);
+        else
+            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+                WriteObject(item, false);
     }
 
     /// <summary>
@@ -214,9 +299,16 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        // TODO: Implement SingleTypePlusAttribInputObjAndDirectDescRnm
-        // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
-        throw new NotImplementedException();
+        if (InputObject is HtmlAttributes || _predicate(InputObject))
+            WriteObject(InputObject, false);
+        else
+        {
+            var attributes = InputObject.TryGetAttributes();
+            if (attributes is not null)
+                WriteObject(attributes, false);
+            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+                WriteObject(item, false);
+        }
     }
 
     private void BeginProcessing_RecurseUnmatched(List<Type> types, int minDepth, int? maxDepth, bool includeAttributes)
@@ -241,7 +333,7 @@ public partial class Select_MarkdownObject
                         if (maxDepth.Value > minDepth)
                             _processInputObject = minDepth switch
                             {
-                                0 => includeAttributes ? WriteRecurseUnmatchedPlusAttribToDepthInclInputObj : WriteRecurseUnmatchedToDepthInclInputObjOrAttrib,
+                                0 => includeAttributes ? WriteRecurseUnmatchedPlusAttribToDepthInclInputObj : WriteRecurseUnmatchedToDepthInclInputObj,
                                 1 => includeAttributes ? WriteRecurseUnmatchedToDepthOrAttrib : WriteRecurseUnmatchedToDepth,
                                 _ => includeAttributes ? WriteRecurseUnmatchedOrAttribInRange : WriteRecurseUnmatchedInRange,
                             };
@@ -277,7 +369,7 @@ public partial class Select_MarkdownObject
                         if (maxDepth.Value > minDepth)
                             _processInputObject = minDepth switch
                             {
-                                0 => includeAttributes ? WriteRecurseUnmatchedPlusAttribToDepthInclInputObj : WriteRecurseUnmatchedToDepthInclInputObjOrAttrib,
+                                0 => includeAttributes ? WriteRecurseUnmatchedPlusAttribToDepthInclInputObj : WriteRecurseUnmatchedToDepthInclInputObj,
                                 1 => includeAttributes ? WriteRecurseUnmatchedToDepthOrAttrib : WriteRecurseUnmatchedToDepth,
                                 _ => includeAttributes ? WriteRecurseUnmatchedOrAttribInRange : WriteRecurseUnmatchedInRange,
                             };
