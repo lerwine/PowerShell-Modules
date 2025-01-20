@@ -15,10 +15,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is null);
         Debug.Assert(_predicate is null);
         // DepthRange: Select-MarkdownObject -MinDepth 0 -MaxDepth 1
-        if (InputObject is HtmlAttributes)
-            return;
-        WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDirectDescendants())
+        foreach (var item in InputObject.GetCurrentAndDirectDescendants())
             WriteObject(item, false);
     }
 
@@ -42,18 +39,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0 -MaxDepth 2
-        WriteObject(InputObject, false);
-        if (InputObject is HtmlAttributes)
-            return;
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.Descendants())
-        {
+        foreach (var item in InputObject.GetAttributesCurrentAndDescendants())
             WriteObject(item, false);
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
     }
 
     /// <summary>
@@ -66,9 +53,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1
-        if (_predicate(InputObject))
-            WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+        foreach (var item in InputObject.GetCurrentAndDirectDescendants(_predicate))
             WriteObject(item, false);
     }
 
@@ -85,15 +70,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            if (_predicate(InputObject))
-                WriteObject(InputObject, false);
-            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
-        }
+        foreach (var item in InputObject.GetAttributesCurrentAndDirectDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -108,14 +86,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 1 -RecurseUnmatchedOnly
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
+        foreach (var item in InputObject.GetAttributesCurrentAndDirectDescendants())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -130,10 +102,7 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Any -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Any -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 0
-        if (InputObject is HtmlAttributes)
-            return;
-        WriteObject(InputObject, false);
-        foreach (var item in InputObject.Descendants())
+        foreach (var item in InputObject.GetCurrentAndDescendants())
             WriteObject(item, false);
     }
 
@@ -154,9 +123,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -IncludeAttributes
-        WriteObject(InputObject, false);
-        if (InputObject is not HtmlAttributes)
-            WriteRecursePlusAttrib(InputObject);
+        foreach (var item in InputObject.GetAttributesCurrentAndDescendants())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -168,11 +136,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0
-        if (InputObject is HtmlAttributes)
-            return;
-        if (_predicate(InputObject))
-            WriteObject(InputObject);
-        WriteRecurseTypePredicatedPlusAttrib(InputObject);
+        foreach (var item in InputObject.GetCurrentAndDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -187,14 +152,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -IncludeAttributes
-        if (_predicate(InputObject))
-            WriteObject(InputObject);
-        else if (InputObject is HtmlAttributes)
-        {
-            WriteObject(InputObject);
-            return;
-        }
-        WriteRecurseTypePredicatedPlusAttrib(InputObject);
+        foreach (var item in InputObject.GetAttributesCurrentAndDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -205,23 +164,11 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is null);
         Debug.Assert(_predicate is null);
-        // DepthRange: Select-MarkdownObject -MinDepth 0 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -RecurseUnmatchedOnly
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var parent in InputObject.Descendants())
-            {
-                if ((attributes = parent.TryGetAttributes()) is not null)
-                    WriteObject(attributes, false);
-            }
-        }
+        foreach (var item in InputObject.GetDescendantAttributesIncludingCurrent())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -259,8 +206,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2 -IncludeAttributes
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-            WriteRecursePlusAttrib(item);
+        foreach (var item in InputObject.GetAttributesAndDescendantsFromDepth(MinDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -273,7 +220,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth).Where(_predicate))
+        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth, _predicate))
             WriteObject(item, false);
     }
 
@@ -292,12 +239,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 2 -IncludeAttributes
-        foreach (var item in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-        {
-            if (_predicate(item))
-                WriteObject(item, false);
-            WriteRecurseTypePredicatedPlusAttrib(item);
-        }
+        foreach (var item in InputObject.GetAttributesAndDescendantsFromDepth(MinDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -309,21 +252,11 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is null);
         Debug.Assert(_predicate is null);
         Debug.Assert(MinDepth > 1);
-        // DepthRange: Select-MarkdownObject -MinDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -RecurseUnmatchedOnly
-        foreach (var parent in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-        {
-            var attributes = parent.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var item in parent.Descendants())
-            {
-                if ((attributes = item.TryGetAttributes()) is not null)
-                    WriteObject(attributes, false);
-            }
-        }
+        foreach (var item in InputObject.GetAttributesFromDepth(MinDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -345,25 +278,6 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, Inline, Any -MinDepth 1 -MaxDepth 2
         foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth))
             WriteObject(item, false);
-    }
-
-    private void WriteToDepthInclAttrib(MarkdownObject parent, int maxDepth)
-    {
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        if (maxDepth > 1)
-        {
-            maxDepth--;
-            foreach (var item in parent.GetDirectDescendants())
-            {
-                WriteObject(item, false);
-                WriteToDepthInclAttrib(item, maxDepth);
-            }
-        }
-        else
-            foreach (var item in parent.GetDirectDescendants())
-                WriteObject(item, false);
     }
 
     /// <summary>
@@ -396,7 +310,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        WriteToDepthInclAttrib(InputObject, MaxDepth);
+        foreach (var item in InputObject.GetAttributesAndDescendantsToDepth(MaxDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -409,11 +324,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is null);
         Debug.Assert(_predicate is null);
         Debug.Assert(MaxDepth > 1);
-        if (InputObject is HtmlAttributes)
-            return;
-
-        WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth))
+        foreach (var item in InputObject.GetCurrentAndDescendantsToDepth(MaxDepth))
             WriteObject(item, false);
     }
 
@@ -435,9 +346,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        WriteObject(InputObject, false);
-        if (InputObject is not HtmlAttributes)
-            WriteToDepthInclAttrib(InputObject, MaxDepth);
+        foreach (var item in InputObject.GetAttributesCurrentAndDescendantsToDepth(MaxDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -451,7 +361,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(MaxDepth > 1);
         // DepthRange: Select-MarkdownObject -Type Block -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2
-        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_predicate))
+        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth, _predicate))
             WriteObject(item, false);
     }
 
@@ -466,9 +376,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2
-        if (_predicate(InputObject))
-            WriteObject(InputObject, false);
-        foreach (var item in InputObject.GetDescendantsToDepth(MaxDepth).Where(_predicate))
+        foreach (var item in InputObject.GetCurrentAndDescendantsToDepth(MaxDepth, _predicate))
             WriteObject(item, false);
     }
 
@@ -485,37 +393,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            if (_predicate(InputObject))
-                WriteObject(InputObject, false);
-            WriteAttribAndTypePredicatedToDepth(InputObject, MaxDepth);
-        }
-    }
-
-    private void WriteAttribAndTypePredicatedToDepth(MarkdownObject parent, int maxDepth)
-    {
-        // DepthRange: Select-MarkdownObject -Type Block, Inline -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2
-        // DepthRange: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        if (maxDepth > 1)
-        {
-            maxDepth--;
-            foreach (var item in parent.GetDirectDescendants())
-            {
-                if (_predicate(item))
-                    WriteObject(item, false);
-                WriteAttribAndTypePredicatedToDepth(item, maxDepth);
-            }
-        }
-        else
-            foreach (var item in parent.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
+        foreach (var item in InputObject.GetAttributesCurrentAndDescendantsToDepth(MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -534,7 +413,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 2 -IncludeAttributes
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
-        WriteAttribAndTypePredicatedToDepth(InputObject, MaxDepth);
+        foreach (var item in InputObject.GetAttributesAndDescendantsToDepth(MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -554,14 +434,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var parent in InputObject.GetDescendantsToDepth(MaxDepth - 1))
-        {
-            if ((attributes = parent.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
+        foreach (var item in InputObject.GetAttributesToDepth(MaxDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -578,19 +452,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 0 -MaxDepth 2 -RecurseUnmatchedOnly
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var parent in InputObject.GetDescendantsToDepth(MaxDepth - 1))
-            {
-                if ((attributes = parent.TryGetAttributes()) is not null)
-                    WriteObject(attributes, false);
-            }
-        }
+        foreach (var item in InputObject.GetAttributesToDepthIncludingCurrent(MaxDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -634,8 +497,8 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline -MinDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes -MinDepth 1 -RecurseUnmatchedOnly
-        foreach (var parent in InputObject.GetDescendantsFromDepth(MinDepth - 1))
-            WriteToDepthInclAttrib(parent, MaxDepth - MinDepth);
+        foreach (var item in InputObject.GetDescendantsInDepthRange(MinDepth, MaxDepth))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -650,7 +513,7 @@ public partial class Select_MarkdownObject
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 3
-        foreach (var item in InputObject.GetDescendantsInDepthRange(MinDepth, MaxDepth).Where(_predicate))
+        foreach (var item in InputObject.GetDescendantsInDepthRange(MinDepth, MaxDepth, _predicate))
             WriteObject(item, false);
     }
 
@@ -668,9 +531,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        int depth = MaxDepth - MinDepth;
-        foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
-            WriteAttribAndTypePredicatedToDepth(parent, depth);
+        foreach (var item in InputObject.GetAttributesAndDescendantsInDepthRange(MinDepth, MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -687,12 +549,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3
         // DepthRange: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        foreach (var parent in InputObject.GetDescendantsInDepthRange(MinDepth - 1, MaxDepth - 1))
-        {
-            var attributes = parent.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
+        foreach (var item in InputObject.GetAttributesInDepthRange(MinDepth, MaxDepth))
+            WriteObject(item, false);
     }
 
     private void BeginProcessing_DepthRange(List<Type>? types, int minDepth, int maxDepth, bool includeAttributes)

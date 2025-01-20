@@ -5,32 +5,6 @@ using Markdig.Syntax;
 namespace HtmlUtility;
 public partial class Select_MarkdownObject
 {
-    private void WriteRecurseUnmatchedInclInputObj(MarkdownObject inputObject)
-    {
-        if (_predicate(inputObject))
-            WriteObject(inputObject, false);
-        else
-            foreach (var item in inputObject.GetDirectDescendants())
-                WriteRecurseUnmatchedInclInputObj(item);
-    }
-
-    private void WriteRecurseUnmatchedInclInputObjOrAttrib(MarkdownObject inputObject)
-    {
-        Debug.Assert(InputObject is not null);
-        Debug.Assert(_types is not null && _types.Count > 0);
-        Debug.Assert(_predicate is not null);
-        if (_predicate(inputObject))
-            WriteObject(inputObject, false);
-        else
-        {
-            var attributes = inputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var item in inputObject.GetDirectDescendants())
-                WriteRecurseUnmatchedInclInputObj(item);
-        }
-    }
-
     /// <summary>
     /// Returns all recursive descendants that match the specified <see cref="_predicate"/>.
     /// No descendants of matches will be returned.
@@ -40,8 +14,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        foreach (var item in InputObject.GetDirectDescendants())
-            WriteRecurseUnmatchedInclInputObj(item);
+        foreach (var item in InputObject.GetTopMostDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -53,8 +27,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        foreach (var item in InputObject.GetDirectDescendants())
-            WriteRecurseUnmatchedInclInputObjOrAttrib(item);
+        foreach (var item in InputObject.GetAttributesAndTopMostDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -66,7 +40,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        WriteRecurseUnmatchedInclInputObj(InputObject);
+        foreach (var item in InputObject.GetCurrentOrTopMostDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -79,10 +54,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-            WriteRecurseUnmatchedInclInputObjOrAttrib(InputObject);
+        foreach (var item in InputObject.GetAttributesAndCurrentOrTopMostDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -95,8 +68,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
-        foreach (var item in InputObject.GetDescendantsAtDepth(MinDepth))
-            WriteRecurseUnmatchedInclInputObj(item);
+        foreach (var item in InputObject.GetTopMostDescendantsFromDepth(MinDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -110,29 +83,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
-        foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
-        {
-            var attributes = parent.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var item in parent.GetDirectDescendants())
-                WriteRecurseUnmatchedInclInputObj(item);
-        }
-    }
-
-    private void WriteRecurseUnmatchedToDepthInclInputObj(MarkdownObject inputObject, int maxDepth)
-    {
-        if (_predicate(inputObject))
-            WriteObject(inputObject, false);
-        else if (maxDepth > 1)
-        {
-            maxDepth--;
-            foreach (var item in inputObject.GetDirectDescendants())
-                WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
-        }
-        else
-            foreach (var item in inputObject.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
+        foreach (var item in InputObject.GetAttributesAndTopMostDescendantsFromDepth(MinDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -145,30 +97,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
-        var maxDepth = MaxDepth - 1;
-        foreach (var item in InputObject.GetDirectDescendants())
-            WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
-    }
-
-    private void WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(MarkdownObject inputObject, int maxDepth)
-    {
-        if (_predicate(inputObject))
-            WriteObject(inputObject, false);
-        else
-        {
-            var attributes = inputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            if (maxDepth > 1)
-            {
-                maxDepth--;
-                foreach (var item in inputObject.GetDirectDescendants())
-                    WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
-            }
-            else
-                foreach (var item in inputObject.GetDirectDescendants().Where(_predicate))
-                    WriteObject(item, false);
-        }
+        foreach (var item in InputObject.GetTopMostDescendantsToDepth(MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -181,12 +111,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(MaxDepth > 1);
-        var maxDepth = MaxDepth - 1;
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.GetDirectDescendants())
-            WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(item, maxDepth);
+        foreach (var item in InputObject.GetTopMostDescendantsToDepth(MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -200,7 +126,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
-        WriteRecurseUnmatchedToDepthInclInputObj(InputObject, MaxDepth);
+        foreach (var item in InputObject.GetCurrentOrTopMostDescendantsToDepth(MaxDepth, _predicate))
+            WriteObject(item, false); ;
     }
 
     /// <summary>
@@ -214,10 +141,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
         Debug.Assert(MaxDepth > 1);
-        if (InputObject is HtmlAttributes)
-            WriteObject(InputObject, false);
-        else
-            WriteRecurseUnmatchedPlusAttribToDepthInclInputObj(InputObject, MaxDepth);
+        foreach (var item in InputObject.GetAttributesAndCurrentOrTopMostDescendantsToDepth(MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -232,8 +157,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
         var maxDepth = MaxDepth - MinDepth;
-        foreach (var item in InputObject.GetDescendantsAtDepth(MinDepth))
-            WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
+        foreach (var item in InputObject.GetTopMostDescendantsInDepthRange(MinDepth, MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -248,29 +173,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_predicate is not null);
         Debug.Assert(MinDepth > 1);
         Debug.Assert(MaxDepth > MinDepth);
-        var maxDepth = MaxDepth - MinDepth - 1;
-        if (maxDepth == 0)
-        {
-            foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
-            {
-                var attributes = parent.TryGetAttributes();
-                if (attributes is not null)
-                    WriteObject(attributes, false);
-                foreach (var item in parent.GetDirectDescendants().Where(_predicate))
-                    WriteObject(item, false);
-            }
-        }
-        else
-        {
-            foreach (var parent in InputObject.GetDescendantsAtDepth(MinDepth - 1))
-            {
-                var attributes = parent.TryGetAttributes();
-                if (attributes is not null)
-                    WriteObject(attributes, false);
-                foreach (var item in parent.GetDirectDescendants())
-                    WriteRecurseUnmatchedToDepthInclInputObj(item, maxDepth);
-            }
-        }
+        foreach (var item in InputObject.GetAttributesAndTopMostDescendantsInDepthRange(MinDepth, MaxDepth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -283,11 +187,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        if (_predicate(InputObject))
-            WriteObject(InputObject, false);
-        else
-            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
+        foreach (var item in InputObject.GetCurrentOrDirectDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -299,16 +200,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(InputObject is not null);
         Debug.Assert(_types is not null && _types.Count > 0);
         Debug.Assert(_predicate is not null);
-        if (InputObject is HtmlAttributes || _predicate(InputObject))
-            WriteObject(InputObject, false);
-        else
-        {
-            var attributes = InputObject.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
-        }
+        foreach (var item in InputObject.GetAttributesCurrentOrDirectDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     private void BeginProcessing_RecurseUnmatched(List<Type> types, int minDepth, int? maxDepth, bool includeAttributes)

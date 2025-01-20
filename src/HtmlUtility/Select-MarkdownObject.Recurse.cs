@@ -25,18 +25,6 @@ public partial class Select_MarkdownObject
             WriteObject(item, false);
     }
 
-    private void WriteRecursePlusAttrib(MarkdownObject parent)
-    {
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.GetDirectDescendants())
-        {
-            WriteObject(item, false);
-            WriteRecursePlusAttrib(item);
-        }
-    }
-
     /// <summary>
     /// Returns all recursive descendants, including <see cref="HtmlAttributes" />.
     /// </summary>
@@ -63,7 +51,8 @@ public partial class Select_MarkdownObject
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes, Any -Recurse -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse
         // Recurse: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -Recurse -IncludeAttributes
-        WriteRecursePlusAttrib(InputObject);
+        foreach (var item in InputObject.GetAttributesAndDirectDescendants())
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -76,21 +65,8 @@ public partial class Select_MarkdownObject
         Debug.Assert(_predicate is not null);
         // Recurse: Select-MarkdownObject -Type Block -Recurse
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 1
-        foreach (var item in InputObject.Descendants().Where(_predicate))
+        foreach (var item in InputObject.GetDescendants(_predicate))
             WriteObject(item, false);
-    }
-
-    private void WriteRecurseTypePredicatedPlusAttrib(MarkdownObject parent)
-    {
-        var attributes = parent.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.GetDirectDescendants())
-        {
-            if (_predicate(item))
-                WriteObject(item, false);
-            WriteRecurseTypePredicatedPlusAttrib(item);
-        }
     }
 
     /// <summary>
@@ -107,7 +83,8 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -IncludeAttributes
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse
         // Recurse: Select-MarkdownObject -Type Block, HtmlAttributes -Recurse -IncludeAttributes
-        WriteRecurseTypePredicatedPlusAttrib(InputObject);
+        foreach (var item in InputObject.GetAttributesAndDirectDescendants(_predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -127,11 +104,8 @@ public partial class Select_MarkdownObject
         var attributes = InputObject.TryGetAttributes();
         if (attributes is not null)
             WriteObject(attributes, false);
-        foreach (var item in InputObject.Descendants())
-        {
-            if ((attributes = item.TryGetAttributes()) is not null)
-                WriteObject(attributes, false);
-        }
+        foreach (var item in InputObject.GetDescendantAttributes())
+            WriteObject(item, false);
     }
 
     private void BeginProcessing_Recurse(List<Type>? types, bool includeAttributes)

@@ -210,7 +210,7 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 1 -MaxDepth 2 -RecurseUnmatchedOnly
-        foreach (var item in InputObject.GetDirectDescendantsAndAttributes())
+        foreach (var item in InputObject.GetAttributesAndDirectDescendants())
             WriteObject(item, false);
     }
 
@@ -283,10 +283,9 @@ public partial class Select_MarkdownObject
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, Inline, HtmlAttributes, Any -MinDepth 2 -MaxDepth 3 -RecurseUnmatchedOnly
-        foreach (var item in InputObject.GetDescendantsAtDepthIncludingAttributes(_depth))
+        foreach (var item in InputObject.GetAttributesAndDescendantsAtDepth(_depth))
             WriteObject(item, false);
     }
-
 
     /// <summary>
     /// Returns the <see cref="InputObject"/> if it matches the specified <see cref="_predicate"/> (no recursion).
@@ -345,7 +344,7 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 1
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+        foreach (var item in InputObject.GetDirectDescendants(_predicate))
             WriteObject(item, false);
     }
 
@@ -372,10 +371,7 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 1 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MaxDepth 1 -RecurseUnmatchedOnly
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 1 -MaxDepth 1 -RecurseUnmatchedOnly
-        var attributes = InputObject.TryGetAttributes();
-        if (attributes is not null)
-            WriteObject(attributes, false);
-        foreach (var item in InputObject.GetDirectDescendants().Where(_predicate))
+        foreach (var item in InputObject.GetAttributesAndDirectDescendants(_predicate))
             WriteObject(item, false);
     }
 
@@ -392,7 +388,7 @@ public partial class Select_MarkdownObject
         // DepthRange: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 2
         // ExplicitDepth: Select-MarkdownObject -Type Block -Depth 2
         // RecurseUnmatched: Select-MarkdownObject -Type Block -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        foreach (var item in InputObject.GetDescendantsAtDepth(_depth).Where(_predicate))
+        foreach (var item in InputObject.GetDescendantsAtDepth(_depth, _predicate))
             WriteObject(item, false);
     }
 
@@ -414,14 +410,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 2
         // ExplicitDepth: Select-MarkdownObject -Type Block, HtmlAttributes -Depth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type Block, HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        foreach (var parent in InputObject.GetDescendantsAtDepth(_depth - 1))
-        {
-            var attributes = parent.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-            foreach (var item in parent.GetDirectDescendants().Where(_predicate))
-                WriteObject(item, false);
-        }
+        foreach (var item in InputObject.GetAttributesAndDescendantsAtDepth(_depth, _predicate))
+            WriteObject(item, false);
     }
 
     /// <summary>
@@ -493,12 +483,8 @@ public partial class Select_MarkdownObject
         // ExplicitDepth: Select-MarkdownObject -Type HtmlAttributes -Depth 2
         // ExplicitDepth: Select-MarkdownObject -Type HtmlAttributes -Depth 2 -IncludeAttributes
         // RecurseUnmatched: Select-MarkdownObject -Type HtmlAttributes -MinDepth 2 -MaxDepth 2 -RecurseUnmatchedOnly
-        foreach (var item in InputObject.GetDescendantsAtDepth(_depth - 1))
-        {
-            var attributes = item.TryGetAttributes();
-            if (attributes is not null)
-                WriteObject(attributes, false);
-        }
+        foreach (var item in InputObject.GetAttributesAtDepth(_depth))
+            WriteObject(item, false);
     }
 
     private void BeginProcessing_ExplicitDepth(List<Type>? types, int depth, bool includeAttributes)
