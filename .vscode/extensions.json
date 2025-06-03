@@ -1,6 +1,4 @@
 {
-	// See http://go.microsoft.com/fwlink/?LinkId=827846
-	// for the documentation about the extensions.json format
 	"recommendations": [
 		"aaron-bond.better-comments",
 		"adrianwilczynski.add-reference",
@@ -19,8 +17,8 @@
 		"jRichardeau.vscode-vsproj",
 		"k--kato.docomment",
 		"kreativ-software.csharpextensions",
-		"ms-dotnettools.csdevkit",
 		"ms-dotnettools.csharp",
+		"ms-dotnettools.vscode-dotnet-runtime",
 		"ms-vscode.csharp",
 		"ms-vscode.PowerShell",
 		"patcx.vscode-nuget-gallery",
@@ -36,6 +34,8 @@
 		"yzhang.markdown-all-in-one",
 	],
 	"unwantedRecommendations": [
-		"ms-vscode-remote.remote-wsl"
+		"ms-vscode-remote.remote-wsl",
+		"ms-dotnettools.csdevkit",
+		"ms-dotnettools.vscodeintellicode-csharp"
 	]
 }
