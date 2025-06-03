@@ -441,4 +441,3 @@ public class SortableIPAddress : IEquatable<SortableIPAddress>, IEquatable<IPAdd
 
     public static bool operator >=(SortableIPAddress left, SortableIPAddress right) => left is null ? right is null : left.CompareTo(right) >= 0;
 }
-
